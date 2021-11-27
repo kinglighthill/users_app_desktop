@@ -1,6 +1,6 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.model.Connect;
+import com.scholarly.utme.data.model.Connect;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
