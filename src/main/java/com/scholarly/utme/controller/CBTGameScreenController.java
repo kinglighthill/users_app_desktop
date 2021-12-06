@@ -1,0 +1,362 @@
+package com.scholarly.utme.controller;
+
+import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.viewmodels.CBTGameScreenVM;
+import com.scholarly.utme.viewmodels.CBTGameScreenVM.QuestionState;
+import com.scholarly.utme.viewmodels.PracticeScreenVM;
+import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
+import de.saxsys.mvvmfx.FxmlPath;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.animation.FadeTransition;
+import javafx.beans.binding.Bindings;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.media.*;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+@FxmlPath("/layouts/CBTGameScreen.fxml")
+public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initializable {
+
+
+    @InjectViewModel
+    private CBTGameScreenVM viewModel;
+
+    @FXML
+    private ImageView bookmarkImage, calculatorImage;
+
+    @FXML
+    private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton;
+
+    @FXML
+    private Label questionNumberLabel, questionLabel, pageTitle, fiftyFiftyCount;
+
+    @FXML
+    private HBox questionLayout;
+
+    private Stage calculatorStage = new Stage();
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        List<Button> options = new ArrayList<>();
+        options.add(optionBButton);
+        options.add(optionCButton);
+        options.add(optionAButton);
+        options.add(optionDButton);
+
+        viewModel.processInitialData(getInitialData());
+
+        setupQuestionView();
+
+        ImageView view = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
+        view.setFitHeight(30);
+        view.setPreserveRatio(true);
+
+        backButton.setGraphic(view);
+
+        viewModel.selectedQuestionProperty().addListener((observableValue, number, t1) -> {
+            changeSelectedQuestion(t1.intValue());
+        });
+
+        viewModel.fiftyFiftyCountProperty().addListener((observableValue, number, t1) -> {
+            updateFiftyFiftyButton(t1.intValue());
+        });
+        updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
+
+        fiftyFiftyButton.setOnAction(event -> {
+            viewModel.setFiftyFiftyCount(viewModel.getFiftyFiftyCount() - 1);
+            fiftyFiftyButton.setDisable(true);
+            QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
+
+            String optionAnswer = questionState.getQuestion().getOptionAnswer();
+
+            int enabled = 0;
+
+            for (int i = 0; i < options.size(); i++) {
+                if (!options.get(i).isDisabled()) {
+                    enabled++;
+                }
+            }
+
+            if (enabled > 1) {
+                options.stream()
+                        .unordered()
+                        .filter(button -> !button.getText().equalsIgnoreCase(optionAnswer) && !button.isDisabled())
+                        .limit(enabled - 2)
+                        .forEach(button -> button.setDisable(true));
+            }
+        });
+
+        optionAButton.setOnAction(event -> {
+            QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
+
+            questionState.getSelectedOptions().add(optionAButton.getText());
+
+            if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionAButton.getText())) {
+                dispatchAnswerCorrect();
+            } else {
+                dispatchAnswerIncorrect();
+                optionAButton.setDisable(true);
+            }
+        });
+
+        optionBButton.setOnAction(event -> {
+            QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
+
+            questionState.getSelectedOptions().add(optionBButton.getText());
+
+            if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionBButton.getText())) {
+                dispatchAnswerCorrect();
+            } else {
+                dispatchAnswerIncorrect();
+                optionBButton.setDisable(true);
+            }
+        });
+
+        optionCButton.setOnAction(event -> {
+            QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
+
+            questionState.getSelectedOptions().add(optionCButton.getText());
+
+            if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionCButton.getText())) {
+                dispatchAnswerCorrect();
+            } else {
+                dispatchAnswerIncorrect();
+                optionCButton.setDisable(true);
+            }
+        });
+
+        optionDButton.setOnAction(event -> {
+            QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
+
+            questionState.getSelectedOptions().add(optionDButton.getText());
+
+            if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionDButton.getText())) {
+                dispatchAnswerCorrect();
+            } else {
+                dispatchAnswerIncorrect();
+                optionDButton.setDisable(true);
+            }
+        });
+
+        String idleStyle =
+                "-fx-background-color: #FFA347;" +
+                "-fx-background-radius: 10";
+
+        String hoveredStyle =
+                "-fx-background-color: #FF8D19;" +
+                        "-fx-background-radius: 10";
+
+
+        fiftyFiftyButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        String idleFiftyFiftyStyle = fiftyFiftyButton.getStyle();
+        String hoveredFiftyFiftyStyle =
+                "-fx-background-color: #73D25E;" +
+                "-fx-background-radius: 500;" +
+                "-fx-border-color: #1B9D01;" +
+                "-fx-border-width: 1;" +
+                "-fx-border-radius: 500";
+
+        fiftyFiftyButton.setOnMouseEntered(e -> {
+            fiftyFiftyButton.setStyle(hoveredFiftyFiftyStyle);
+            fiftyFiftyButton.setTextFill(Color.WHITE);
+        });
+        fiftyFiftyButton.setOnMouseExited(e -> {
+            fiftyFiftyButton.setStyle(idleFiftyFiftyStyle);
+            fiftyFiftyButton.setTextFill(Color.web("#1B9D01"));
+        });
+
+        backButton.setBackground(Background.EMPTY);
+
+        options.forEach(button -> {
+            button.setStyle(idleStyle);
+            button.setOnMouseEntered(e -> button.setStyle(hoveredStyle));
+            button.setOnMouseExited(e -> button.setStyle(idleStyle));
+            button.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 24));
+            button.setTextFill(Color.WHITE);
+        });
+
+        questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 28));
+        fiftyFiftyCount.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        pageTitle.setFont(FontUtil.getFont(GilroyFontFamily.BOLD, 24));
+        questionNumberLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 20));
+
+        questionLabel.setLineSpacing(15);
+
+
+        Image bookmark = new Image(getClass().getResource("/drawable/bookmark_2.png").toString());
+        bookmarkImage.setFitWidth(20);
+        bookmarkImage.setPreserveRatio(true);
+        bookmarkImage.setImage(bookmark);
+
+        Image calculator = new Image(getClass().getResource("/drawable/calculator_2.png").toString());
+        calculatorImage.setFitWidth(35);
+        calculatorImage.setPreserveRatio(true);
+        calculatorImage.setImage(calculator);
+
+        calculatorImage.setOnMouseClicked(mouseEvent -> {
+            onCalculatorClicked();
+        });
+
+        backButton.setOnAction(e -> {
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+    }
+
+    private void updateFiftyFiftyButton(int intValue) {
+
+        fiftyFiftyCount.setText(Integer.toString(intValue));
+
+        if (intValue < 1) {
+            fiftyFiftyButton.setDisable(true);
+        } else {
+            fiftyFiftyButton.setDisable(false);
+        }
+    }
+
+    public void onCalculatorClicked() {
+        System.out.println("Calculator clicked");
+        if (!calculatorStage.isShowing()) {
+            calculatorStage.initModality(Modality.WINDOW_MODAL);
+            calculatorStage.setTitle("Calculator");
+            calculatorStage.setResizable(false);
+
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/layouts/Calculator.fxml"));
+                Scene scene = new Scene(root);
+
+                calculatorStage.setScene(scene);
+                calculatorStage.showAndWait();
+
+            } catch (Exception e) {
+
+            }
+        } else {
+            calculatorStage.toFront();
+        }
+    }
+
+
+    private void showResult() {
+
+    }
+
+    private void dispatchAnswerCorrect() {
+        Media sound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.setStopTime(Duration.millis(700));
+        mediaPlayer.play();
+
+        FadeTransition fadeTransition = new FadeTransition();
+
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+        fadeTransition.setDuration(Duration.millis(500));
+        fadeTransition.setNode(questionLayout);
+
+        fadeTransition.setOnFinished(event -> {
+            viewModel.setSelectedQuestion(viewModel.getSelectedQuestion() + 1);
+
+            FadeTransition reverseTransition = new FadeTransition();
+
+            reverseTransition.setFromValue(0);
+            reverseTransition.setToValue(1);
+
+            reverseTransition.setDuration(Duration.millis(500));
+
+            reverseTransition.setNode(questionLayout);
+
+            reverseTransition.play();
+        });
+
+        fadeTransition.play();
+    }
+
+    private void dispatchAnswerIncorrect() {
+        Media sound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.setStopTime(Duration.millis(500));
+        mediaPlayer.play();
+    }
+
+
+    private void setupQuestionView() {
+        System.out.println("Option answer is -> " + viewModel.getQuestions().get(viewModel.getSelectedQuestion()).getQuestion().getOptionAnswer());
+        List<QuestionState> questions = viewModel.getQuestions();
+        int selectedQuestion = viewModel.getSelectedQuestion();
+
+        questionNumberLabel.setText("Question " + selectedQuestion + " of " + questions.size());
+
+        questionLabel.setText(questions.get(selectedQuestion - 1).getQuestion().getQuestion());
+
+        optionAButton.setText(questions.get(selectedQuestion - 1).getQuestion().getOptionA());
+        optionBButton.setText(questions.get(selectedQuestion - 1).getQuestion().getOptionB());
+        optionCButton.setText(questions.get(selectedQuestion - 1).getQuestion().getOptionC());
+        optionDButton.setText(questions.get(selectedQuestion - 1).getQuestion().getOptionD());
+
+        optionAButton.setDisable(false);
+        optionBButton.setDisable(false);
+        optionCButton.setDisable(false);
+        optionDButton.setDisable(false);
+    }
+
+    private void changeSelectedQuestion(int newValue) {
+        List<QuestionState> questions = viewModel.getQuestions();
+        questionNumberLabel.setText("Question " + newValue + " of " + questions.size());
+
+        questionLabel.setText(questions.get(newValue - 1).getQuestion().getQuestion());
+
+        optionAButton.setText(questions.get(newValue - 1).getQuestion().getOptionA());
+        optionBButton.setText(questions.get(newValue - 1).getQuestion().getOptionB());
+        optionCButton.setText(questions.get(newValue - 1).getQuestion().getOptionC());
+        optionDButton.setText(questions.get(newValue - 1).getQuestion().getOptionD());
+
+        optionAButton.setDisable(false);
+        optionBButton.setDisable(false);
+        optionCButton.setDisable(false);
+        optionDButton.setDisable(false);
+
+        updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
+    }
+
+
+    private InitialData getInitialData() {
+        InitialData data = (InitialData) ViewSwitcher.retrieveData();
+        return data;
+    }
+
+
+    public static class InitialData {
+        public List<SubjectState> questionData;
+        public boolean shuffleQuestions;
+        public boolean shuffleAnswers;
+
+        public InitialData(List<SubjectState> questionData, boolean shuffleQuestions, boolean shuffleAnswers) {
+            this.questionData = questionData;
+            this.shuffleQuestions = shuffleQuestions;
+            this.shuffleAnswers = shuffleAnswers;
+        }
+    }
+}

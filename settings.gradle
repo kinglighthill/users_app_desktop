@@ -1,2 +1,23 @@
 //rootProject.name = "scholarly-jamb-desktop-app"
 rootProject.name = "desktop_app_jamb"
+//include(
+//        "abu_app",
+//        "buk_app",
+//        "funaab_app",
+//        "futa_app",
+//        "futminna_app",
+//        "futo_app",
+//        "imsu_app",
+//        "nda_app",
+//        "oau_app",
+//        "rsust_app",
+//        "ui_app",
+//        "uni_abuja_app",
+//        "uni_illorin_app",
+//        "uniben_app",
+//        "unical_app",
+//        "unilag_app",
+//        "uniport_app",
+//        "unizik_app",
+//        "unn_app"
+//)

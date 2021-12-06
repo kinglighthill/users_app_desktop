@@ -1,4 +1,4 @@
-package com.scholarly.utme.model;
+package com.scholarly.utme.data.model;
 
 import java.sql.*;
 
