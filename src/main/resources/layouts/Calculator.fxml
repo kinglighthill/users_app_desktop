@@ -9,7 +9,7 @@
     <children>
       <VBox prefHeight="100.0" prefWidth="304.0">
          <children>
-              <Label fx:id="expression" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="304.0" style="-fx-background-color: white;" text="35*8">
+              <Label fx:id="expression" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="304.0" style="-fx-background-color: white;">
                   <font>
                       <Font size="25.0" />
                   </font>

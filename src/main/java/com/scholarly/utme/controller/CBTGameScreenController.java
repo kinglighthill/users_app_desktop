@@ -13,6 +13,10 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.*;
 import javafx.fxml.FXML;
@@ -24,6 +28,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -50,6 +56,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     @FXML
     private HBox questionLayout;
 
+    private Stage calculatorStage = new Stage();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -209,6 +216,10 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         calculatorImage.setPreserveRatio(true);
         calculatorImage.setImage(calculator);
 
+        calculatorImage.setOnMouseClicked(mouseEvent -> {
+            onCalculatorClicked();
+        });
+
         backButton.setOnAction(e -> {
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
@@ -222,6 +233,28 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             fiftyFiftyButton.setDisable(true);
         } else {
             fiftyFiftyButton.setDisable(false);
+        }
+    }
+
+    public void onCalculatorClicked() {
+        System.out.println("Calculator clicked");
+        if (!calculatorStage.isShowing()) {
+            calculatorStage.initModality(Modality.WINDOW_MODAL);
+            calculatorStage.setTitle("Calculator");
+            calculatorStage.setResizable(false);
+
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/layouts/Calculator.fxml"));
+                Scene scene = new Scene(root);
+
+                calculatorStage.setScene(scene);
+                calculatorStage.showAndWait();
+
+            } catch (Exception e) {
+
+            }
+        } else {
+            calculatorStage.toFront();
         }
     }
 

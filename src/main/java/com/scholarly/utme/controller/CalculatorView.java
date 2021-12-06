@@ -12,7 +12,7 @@ public class CalculatorView {
     @FXML
     private Label result, expression;
 
-    private String currentValue;
+    private String currentValue = "";
 
     private float number1 = 0;
 
@@ -30,10 +30,10 @@ public class CalculatorView {
         if(start){
             expression.setText("");
             result.setText("");
+            currentValue = "";
             start=false;
         }
         String value=((Button)event.getSource()).getText();
-        result.setText(result.getText() + value);
         expression.setText(expression.getText() + value);
 
         currentValue += value;
@@ -48,16 +48,22 @@ public class CalculatorView {
             if(!operator.isEmpty())
                 return;
 
+            if (currentValue.isEmpty()) {
+                return;
+            }
+
             operator = value;
-            number1 = Float.parseFloat(result.getText());
-            result.setText("");
+            expression.setText(expression.getText() + operator);
+            number1 = Float.parseFloat(currentValue);
+            currentValue = "";
         } else {
             if(operator.isEmpty())
                 return;
 
-            number2 = Float.parseFloat(result.getText());
+            number2 = Float.parseFloat(currentValue);
             float output = calculate.calculateBinaryNumber(number1, number2, operator);
             result.setText(String.valueOf(output));
+            start = true;
             operator = "";
         }
     }
@@ -70,8 +76,9 @@ public class CalculatorView {
             return;
 
         operator = value;
-        number1 = Float.parseFloat(result.getText());
+        number1 = Float.parseFloat(currentValue);
         result.setText("");
+        currentValue = "";
 
         float output = calculate.calculateUnaryNumber(number1,operator);
         result.setText(String.valueOf(output));
@@ -84,5 +91,7 @@ public class CalculatorView {
         operator="";
         start=true;
         result.setText("");
+        expression.setText("");
+        currentValue = "";
     }
 }

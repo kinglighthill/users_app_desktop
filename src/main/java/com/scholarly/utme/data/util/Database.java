@@ -27,7 +27,11 @@ public class Database {
 
         if (!checkConnection()) return false; //can't connect to db
 
-        return checkTables(); //tables didn't exist
+//        if (!initialize()) return false;
+
+        return true;
+
+//        return checkTables(); //tables didn't exist
     }
 
     private static boolean checkDrivers() {
@@ -50,21 +54,44 @@ public class Database {
         }
     }
 
-    private static boolean checkTables() {
-        String checkTables =
-                "select DISTINCT tbl_name from sqlite_master where tbl_name = '" + requiredTable + "'";
+//    private static boolean checkTables() {
+//        String checkTables =
+//                "select DISTINCT tbl_name from sqlite_master where tbl_name = '" + requiredTable + "'";
+//
+//        try (Connection connection = Database.connect()) {
+//            PreparedStatement statement = connection.prepareStatement(checkTables);
+//            ResultSet rs = statement.executeQuery();
+//            while (rs.next()) {
+//                if (rs.getString("tbl_name").equals(requiredTable)) return true;
+//            }
+//        } catch (SQLException exception) {
+//            Logger.getAnonymousLogger().log(Level.SEVERE, LocalDateTime.now() + ": Could not find tables in database");
+//            return false;
+//        }
+//        return false;
+//    }
 
-        try (Connection connection = Database.connect()) {
-            PreparedStatement statement = connection.prepareStatement(checkTables);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                if (rs.getString("tbl_name").equals(requiredTable)) return true;
-            }
-        } catch (SQLException exception) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, LocalDateTime.now() + ": Could not find tables in database");
+
+    private static boolean initialize() {
+        // SQLite connection string
+
+        // SQL statement for creating a new table
+        String sql = "CREATE TABLE IF NOT EXISTS bookmarks (\n"
+                + "	id integer PRIMARY KEY,\n"
+                + "	questionId integer,\n"
+                + "	subjectId integer\n"
+                + ");";
+
+        try (Connection conn = DriverManager.getConnection(location);
+             Statement stmt = conn.createStatement()) {
+            // create a new table
+            stmt.execute(sql);
+
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
             return false;
         }
-        return false;
     }
 
     public static Connection connect() {

@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.data.model.Bookmark;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -292,6 +293,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             ViewSwitcher.showScreen(View.RESULT_SCREEN);
         });
 
+        bookmarkImage.setOnMouseClicked(mouseEvent -> {
+            viewModel.handleBookmarkClicked();
+        });
+
         try {
             bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
             calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
@@ -324,6 +329,15 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private void changeSelectedQuestion(int newValue) {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        List<Bookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getTableName());
+
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+
+        bookmarks.forEach(bookmark -> {
+            if (bookmark.getQuestionId() == questions.get(newValue - 1).getQuestion().getId()) {
+                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+            }
+        });
 
         questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
@@ -354,6 +368,16 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
+
+        List<Bookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getTableName());
+
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+
+        bookmarks.forEach(bookmark -> {
+            if (bookmark.getQuestionId() == questions.get(selectedQuestion - 1).getQuestion().getId()) {
+                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+            }
+        });
 
         prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
         nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
