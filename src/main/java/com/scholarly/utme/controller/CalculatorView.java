@@ -10,7 +10,9 @@ public class CalculatorView {
 
 
     @FXML
-    private Label result;
+    private Label result, expression;
+
+    private String currentValue;
 
     private float number1 = 0;
 
@@ -26,11 +28,15 @@ public class CalculatorView {
     @FXML
     public void processNumber(ActionEvent event) {
         if(start){
+            expression.setText("");
             result.setText("");
             start=false;
         }
         String value=((Button)event.getSource()).getText();
-        result.setText(result.getText()+ value);
+        result.setText(result.getText() + value);
+        expression.setText(expression.getText() + value);
+
+        currentValue += value;
     }
 
 
@@ -38,14 +44,14 @@ public class CalculatorView {
     public void processBinaryOperator(ActionEvent event) {
         String value = ((Button)event.getSource()).getText();
 
-        if(!value.equals("=")){
+        if(!value.equals("=")) {
             if(!operator.isEmpty())
                 return;
 
             operator = value;
             number1 = Float.parseFloat(result.getText());
             result.setText("");
-        }else{
+        } else {
             if(operator.isEmpty())
                 return;
 
@@ -74,7 +80,7 @@ public class CalculatorView {
     }
 
     @FXML
-    public void ClearFunction(ActionEvent event) {
+    public void clearFunction(ActionEvent event) {
         operator="";
         start=true;
         result.setText("");

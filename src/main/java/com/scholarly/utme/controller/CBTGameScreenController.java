@@ -11,7 +11,10 @@ import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;
+import javafx.scene.layout.HBox;
+import javafx.scene.media.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -21,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,7 +45,10 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton;
 
     @FXML
-    private Label questionNumberLabel, questionLabel, pageTitle;
+    private Label questionNumberLabel, questionLabel, pageTitle, fiftyFiftyCount;
+
+    @FXML
+    private HBox questionLayout;
 
 
     @Override
@@ -51,8 +58,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         options.add(optionCButton);
         options.add(optionAButton);
         options.add(optionDButton);
-
-
 
         viewModel.processInitialData(getInitialData());
 
@@ -68,7 +73,14 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             changeSelectedQuestion(t1.intValue());
         });
 
+        viewModel.fiftyFiftyCountProperty().addListener((observableValue, number, t1) -> {
+            updateFiftyFiftyButton(t1.intValue());
+        });
+        updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
+
         fiftyFiftyButton.setOnAction(event -> {
+            viewModel.setFiftyFiftyCount(viewModel.getFiftyFiftyCount() - 1);
+            fiftyFiftyButton.setDisable(true);
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
 
             String optionAnswer = questionState.getQuestion().getOptionAnswer();
@@ -97,7 +109,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
             if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionAButton.getText())) {
                 dispatchAnswerCorrect();
-                viewModel.setSelectedQuestion(viewModel.getSelectedQuestion() + 1);
             } else {
                 dispatchAnswerIncorrect();
                 optionAButton.setDisable(true);
@@ -111,7 +122,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
             if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionBButton.getText())) {
                 dispatchAnswerCorrect();
-                viewModel.setSelectedQuestion(viewModel.getSelectedQuestion() + 1);
             } else {
                 dispatchAnswerIncorrect();
                 optionBButton.setDisable(true);
@@ -125,7 +135,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
             if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionCButton.getText())) {
                 dispatchAnswerCorrect();
-                viewModel.setSelectedQuestion(viewModel.getSelectedQuestion() + 1);
             } else {
                 dispatchAnswerIncorrect();
                 optionCButton.setDisable(true);
@@ -139,7 +148,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
             if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionDButton.getText())) {
                 dispatchAnswerCorrect();
-                viewModel.setSelectedQuestion(viewModel.getSelectedQuestion() + 1);
             } else {
                 dispatchAnswerIncorrect();
                 optionDButton.setDisable(true);
@@ -184,6 +192,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 28));
+        fiftyFiftyCount.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
         pageTitle.setFont(FontUtil.getFont(GilroyFontFamily.BOLD, 24));
         questionNumberLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 20));
 
@@ -205,13 +214,58 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
     }
 
+    private void updateFiftyFiftyButton(int intValue) {
 
-    private void dispatchAnswerCorrect() {
+        fiftyFiftyCount.setText(Integer.toString(intValue));
+
+        if (intValue < 1) {
+            fiftyFiftyButton.setDisable(true);
+        } else {
+            fiftyFiftyButton.setDisable(false);
+        }
+    }
+
+
+    private void showResult() {
 
     }
 
-    private void dispatchAnswerIncorrect() {
+    private void dispatchAnswerCorrect() {
+        Media sound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.setStopTime(Duration.millis(700));
+        mediaPlayer.play();
 
+        FadeTransition fadeTransition = new FadeTransition();
+
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+        fadeTransition.setDuration(Duration.millis(500));
+        fadeTransition.setNode(questionLayout);
+
+        fadeTransition.setOnFinished(event -> {
+            viewModel.setSelectedQuestion(viewModel.getSelectedQuestion() + 1);
+
+            FadeTransition reverseTransition = new FadeTransition();
+
+            reverseTransition.setFromValue(0);
+            reverseTransition.setToValue(1);
+
+            reverseTransition.setDuration(Duration.millis(500));
+
+            reverseTransition.setNode(questionLayout);
+
+            reverseTransition.play();
+        });
+
+        fadeTransition.play();
+    }
+
+    private void dispatchAnswerIncorrect() {
+        Media sound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.setStopTime(Duration.millis(500));
+        mediaPlayer.play();
     }
 
 
@@ -250,6 +304,8 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         optionBButton.setDisable(false);
         optionCButton.setDisable(false);
         optionDButton.setDisable(false);
+
+        updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
     }
 
 

@@ -5,7 +5,7 @@ public class Calculate {
     public float calculateUnaryNumber(float number1,String operator){
         switch (operator) {
             case "√":
-                return (long)Math.sqrt(number1);
+                return (float) Math.sqrt(number1);
             case "Sin":
                 return (float)Math.sin(number1);
             case "Cos":
