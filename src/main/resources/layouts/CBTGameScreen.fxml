@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
 <BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.CBTGameScreenController">
@@ -137,6 +138,109 @@
             </children>
             <padding>
                <Insets left="20.0" right="20.0" />
+            </padding>
+         </VBox>
+
+         <Pane fx:id="resultDialogDimmer" opacity="0.34" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" visible="false" />
+         <VBox fx:id="resultDialog" maxHeight="-Infinity" maxWidth="500.0" prefHeight="330.0" prefWidth="100.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;" visible="false">
+            <children>
+               <Label fx:id="resultLabel" text="Result" textFill="#177803">
+                  <VBox.margin>
+                     <Insets left="20.0" top="20.0" />
+                  </VBox.margin>
+                  <font>
+                     <Font size="18.0" />
+                  </font>
+               </Label>
+               <Line endX="400.0" startX="-100.0" stroke="#ebebeb" strokeWidth="4.0">
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </Line>
+               <HBox prefWidth="200.0">
+                  <children>
+                     <Label fx:id="correctAnswersLabel" text="Correct Answers">
+                        <HBox.margin>
+                           <Insets left="20.0" />
+                        </HBox.margin>
+                        <font>
+                           <Font size="18.0" />
+                        </font></Label>
+                     <Label fx:id="correctAnswers" text="20">
+                        <padding>
+                           <Insets left="20.0" />
+                        </padding>
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                  </children>
+                  <VBox.margin>
+                     <Insets top="25.0" />
+                  </VBox.margin>
+               </HBox>
+               <HBox prefWidth="200.0">
+                  <children>
+                     <Label fx:id="incorrectAnswersLabel" text="Incorrect Answers">
+                        <HBox.margin>
+                           <Insets left="20.0" />
+                        </HBox.margin>
+                        <font>
+                           <Font size="18.0" />
+                        </font></Label>
+                     <Label fx:id="incorrectAnswers" text="30">
+                        <padding>
+                           <Insets left="20.0" />
+                        </padding>
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                  </children>
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </HBox>
+               <HBox prefWidth="200.0">
+                  <children>
+                     <Label fx:id="questionAttemptsLabel" text="Question Attempts">
+                        <HBox.margin>
+                           <Insets left="20.0" />
+                        </HBox.margin>
+                        <font>
+                           <Font size="18.0" />
+                        </font></Label>
+                     <Label fx:id="questionAttempts" text="50">
+                        <padding>
+                           <Insets left="20.0" />
+                        </padding>
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                  </children>
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </HBox>
+               <HBox alignment="TOP_CENTER" maxHeight="45.0" prefHeight="45.0" prefWidth="200.0" spacing="10.0">
+                  <VBox.margin>
+                     <Insets left="20.0" right="20.0" top="45.0" />
+                  </VBox.margin>
+                  <children>
+                     <Button fx:id="exitButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #1B9D01; -fx-border-width: .6;" text="Exit" textFill="#1b9d01" HBox.hgrow="ALWAYS">
+                        <font>
+                           <Font size="18.0" />
+                        </font></Button>
+                     <Button fx:id="showAnswersButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #1B9D01; -fx-background-radius: 5;" text="Show Answers" textFill="WHITE" HBox.hgrow="ALWAYS">
+                        <font>
+                           <Font size="18.0" />
+                        </font></Button>
+                  </children>
+               </HBox>
+            </children>
+            <padding>
+               <Insets bottom="20.0" />
             </padding>
          </VBox>
 

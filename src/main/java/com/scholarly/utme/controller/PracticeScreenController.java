@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.Bookmark;
+//import com.gtranslate.Audio;
+//import com.gtranslate.Language;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -8,9 +10,13 @@ import com.scholarly.utme.viewmodels.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -23,17 +29,25 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @FxmlPath("/layouts/PracticeScreen.fxml")
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable {
@@ -61,9 +75,18 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private Button prevButton, nextButton, exitButton, submitButton;
 
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage;
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon;
 
     private Stage calculatorStage = new Stage();
+
+    @FXML
+    private Pane reportDialogDimmer;
+
+    @FXML
+    private VBox reportDialog;
+
+    @FXML
+    private WebView webView;
 
 
     @Override
@@ -71,11 +94,28 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         viewModel.processInitialData(getInitialData());
 
+
+        try {
+            bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+            calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
+            reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+            speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
+            flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 setupQuestionView();
                 setupTilePane();
             }
+        });
+
+        viewModel.getSubjectBookmarks().forEach((s, bookmarks) -> {
+            bookmarks.addListener((ListChangeListener<? super Bookmark>) change -> {
+
+            });
         });
 
         subjectList.setItems(viewModel.getSubjects());
@@ -95,6 +135,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
                     changeSelectedTile(oldValue.intValue(), newValue.intValue());
                     changeSelectedQuestion(newValue.intValue());
+                }
+            });
+        });
+        viewModel.getSubjectBookmarks().forEach((s, bookmarks) -> {
+            bookmarks.addListener((ListChangeListener<? super Bookmark>) observable -> {
+                if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
+                    updateBookmarkIcon();
                 }
             });
         });
@@ -297,14 +344,26 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             viewModel.handleBookmarkClicked();
         });
 
-        try {
-            bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-            calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
-            speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
-            flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        reportDialogCloseIcon.setOnMouseClicked(mouseEvent -> {
+            hideReportDialog();
+        });
+
+        flagImage.setOnMouseClicked(mouseEvent -> {
+            showReportDialog();
+        });
+
+        speakerImage.setOnMouseClicked(event -> {
+            int selectedQuestion = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName())
+                    .getSelectedQuestion();
+
+            QuestionState questionState = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName())
+                    .getQuestions()
+                    .get(selectedQuestion - 1);
+
+            textToSpeech(questionState.getQuestion().getQuestion());
+        });
 
 //        nextButton.setFocusTraversable(false);
 //        prevButton.setFocusTraversable(false);
@@ -315,6 +374,20 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 //        optionBButton.setFocusTraversable(false);
 //        optionCButton.setFocusTraversable(false);
 //        optionDButton.setFocusTraversable(false);
+    }
+
+    private void updateBookmarkIcon() {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        List<Bookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getTableName());
+
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+
+        bookmarks.forEach(bookmark -> {
+            if (bookmark.getQuestionId() == questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion().getId()) {
+                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+            }
+        });
     }
 
     private void onOptionSelected(int selectedQuestion) {
@@ -332,16 +405,29 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         List<Bookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getTableName());
 
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-
         bookmarks.forEach(bookmark -> {
             if (bookmark.getQuestionId() == questions.get(newValue - 1).getQuestion().getId()) {
                 bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
             }
         });
 
+//        boolean questionIsBookmarked = false;
+//        for (int i = 0; i < bookmarks.size(); i++) {
+//            if (bookmarks.get(i).getQuestionId() == questions.get(newValue - 1).getQuestion().getId()) {
+//                questionIsBookmarked = true;
+//            }
+//        }
+//
+//        if (questionIsBookmarked) {
+//            bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+//        } else {
+//            bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+//        }
+
         questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
         questionLabel.setText(questions.get(newValue - 1).getQuestion().getQuestion());
+        webView.getEngine().loadContent(questions.get(newValue - 1).getQuestion().getQuestion());
 
         optionAButton.setText(" (A) " + questions.get(newValue - 1).getQuestion().getOptionA());
         optionBButton.setText(" (B) " + questions.get(newValue - 1).getQuestion().getOptionB());
@@ -372,9 +458,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         List<Bookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getTableName());
 
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-
         bookmarks.forEach(bookmark -> {
-            if (bookmark.getQuestionId() == questions.get(selectedQuestion - 1).getQuestion().getId()) {
+            if (bookmark.getQuestionId() == questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion().getId()) {
                 bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
             }
         });
@@ -385,6 +470,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
 
         questionLabel.setText(questions.get(selectedQuestion - 1).getQuestion().getQuestion());
+        webView.getEngine().loadContent(questions.get(selectedQuestion - 1).getQuestion().getQuestion());
 
         optionAButton.setText(" (A) " + questions.get(selectedQuestion - 1).getQuestion().getOptionA());
         optionBButton.setText(" (B) " + questions.get(selectedQuestion - 1).getQuestion().getOptionB());
@@ -451,6 +537,88 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     }
 
+
+    private void showReportDialog() {
+        reportDialogDimmer.setVisible(true);
+        reportDialog.setVisible(true);
+
+
+        FadeTransition fadeTransition = new FadeTransition();
+
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(0.5);
+        fadeTransition.setDuration(Duration.millis(500));
+        fadeTransition.setNode(reportDialogDimmer);
+
+        ScaleTransition scaleTransition = new ScaleTransition();
+
+        scaleTransition.setFromX(0);
+        scaleTransition.setToX(1);
+        scaleTransition.setFromY(0);
+        scaleTransition.setToY(1);
+        scaleTransition.setNode(reportDialog);
+        scaleTransition.setDuration(Duration.millis(300));
+
+
+        scaleTransition.play();
+        fadeTransition.play();
+    }
+
+    private void hideReportDialog() {
+
+
+        FadeTransition fadeTransition = new FadeTransition();
+
+        fadeTransition.setFromValue(0.5);
+        fadeTransition.setToValue(0);
+        fadeTransition.setDuration(Duration.millis(500));
+        fadeTransition.setNode(reportDialogDimmer);
+
+        ScaleTransition scaleTransition = new ScaleTransition();
+
+        scaleTransition.setFromX(1);
+        scaleTransition.setToX(0);
+        scaleTransition.setFromY(1);
+        scaleTransition.setToY(0);
+        scaleTransition.setNode(reportDialog);
+        scaleTransition.setDuration(Duration.millis(300));
+
+
+        scaleTransition.play();
+        fadeTransition.play();
+
+        scaleTransition.setOnFinished(event -> {
+            reportDialog.setVisible(false);
+        });
+
+        fadeTransition.setOnFinished(event -> {
+            reportDialogDimmer.setVisible(false);
+        });
+    }
+
+    private void textToSpeech(String text) {
+//        Audio audio = Audio.getInstance();
+//        InputStream sound = null;
+//        try {
+//            sound = audio.getAudio(text, Language.ENGLISH);
+//        } catch (IOException ex) {
+//            System.out.println("error converting text to audio");
+//        }
+//        try {
+//            audio.play(sound);
+//        } catch (Exception ex) {
+//            System.out.println("error converting text to audio");
+//        }
+
+        System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+
+        VoiceManager vm = VoiceManager.getInstance();
+        Voice voice = vm.getVoice("kevin16");
+
+        voice.allocate();
+
+        voice.speak(text);
+    }
 
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
