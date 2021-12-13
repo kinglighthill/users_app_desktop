@@ -14,7 +14,9 @@ module com.scholarly.utme {
     requires org.pdfsam.rxjavafx;
     requires sqlite.jdbc;
     requires de.saxsys.mvvmfx;
+//    requires gtranslateapi;
 //    requires kotlin.stdlib;
+    requires freetts;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;

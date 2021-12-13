@@ -12,12 +12,15 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,6 +31,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -48,13 +52,22 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private ImageView bookmarkImage, calculatorImage;
 
     @FXML
-    private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton;
+    private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton, exitButton, showAnswersButton;
 
     @FXML
-    private Label questionNumberLabel, questionLabel, pageTitle, fiftyFiftyCount;
+    private Label questionNumberLabel, questionLabel, pageTitle, fiftyFiftyCount, correctAnswers, incorrectAnswers, questionAttempts, correctAnswersLabel, incorrectAnswersLabel, resultLabel, questionAttemptsLabel;
 
     @FXML
     private HBox questionLayout;
+
+    @FXML
+    private Pane resultDialogDimmer;
+
+    @FXML
+    private VBox resultDialog;
+
+
+
 
     private Stage calculatorStage = new Stage();
 
@@ -115,7 +128,11 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             questionState.getSelectedOptions().add(optionAButton.getText());
 
             if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionAButton.getText())) {
-                dispatchAnswerCorrect();
+                if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
+                    showResult();
+                } else {
+                    dispatchAnswerCorrect();
+                }
             } else {
                 dispatchAnswerIncorrect();
                 optionAButton.setDisable(true);
@@ -128,7 +145,11 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             questionState.getSelectedOptions().add(optionBButton.getText());
 
             if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionBButton.getText())) {
-                dispatchAnswerCorrect();
+                if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
+                    showResult();
+                } else {
+                    dispatchAnswerCorrect();
+                }
             } else {
                 dispatchAnswerIncorrect();
                 optionBButton.setDisable(true);
@@ -141,7 +162,11 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             questionState.getSelectedOptions().add(optionCButton.getText());
 
             if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionCButton.getText())) {
-                dispatchAnswerCorrect();
+                if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
+                    showResult();
+                } else {
+                    dispatchAnswerCorrect();
+                }
             } else {
                 dispatchAnswerIncorrect();
                 optionCButton.setDisable(true);
@@ -154,7 +179,11 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             questionState.getSelectedOptions().add(optionDButton.getText());
 
             if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionDButton.getText())) {
-                dispatchAnswerCorrect();
+                if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
+                    showResult();
+                } else {
+                    dispatchAnswerCorrect();
+                }
             } else {
                 dispatchAnswerIncorrect();
                 optionDButton.setDisable(true);
@@ -188,6 +217,37 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             fiftyFiftyButton.setTextFill(Color.web("#1B9D01"));
         });
 
+        exitButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        String idleExitButtonStyle = exitButton.getStyle();
+        String hoveredExitButtonStyle =
+                "-fx-background-color:#F1F9F0;" +
+                        "-fx-background-radius: 5;" +
+                        "-fx-border-color: #1B9D01;" +
+                        "-fx-border-width: 0.6;" +
+                        "-fx-border-radius: 5";
+
+        exitButton.setOnMouseEntered(e -> {
+            exitButton.setStyle(hoveredExitButtonStyle);
+        });
+        exitButton.setOnMouseExited(e -> {
+            exitButton.setStyle(idleExitButtonStyle);
+        });
+
+        showAnswersButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        String idleShowAnswerButtonStyle = showAnswersButton.getStyle();
+        String hoveredShowAnswerButtonStyle =
+                "-fx-background-color: #157D01;" +
+                        "-fx-background-radius: 5;";
+
+        showAnswersButton.setOnMouseEntered(e -> {
+            showAnswersButton.setStyle(hoveredShowAnswerButtonStyle);
+        });
+        showAnswersButton.setOnMouseExited(e -> {
+            showAnswersButton.setStyle(idleShowAnswerButtonStyle);
+        });
+
+
+
         backButton.setBackground(Background.EMPTY);
 
         options.forEach(button -> {
@@ -202,6 +262,14 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         fiftyFiftyCount.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
         pageTitle.setFont(FontUtil.getFont(GilroyFontFamily.BOLD, 24));
         questionNumberLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 20));
+
+        resultLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        correctAnswersLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        correctAnswers.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        incorrectAnswersLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        incorrectAnswers.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        questionAttempts.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        questionAttemptsLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
 
         questionLabel.setLineSpacing(15);
 
@@ -222,6 +290,14 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         backButton.setOnAction(e -> {
             ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+        exitButton.setOnAction(e -> {
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+        showAnswersButton.setOnAction(event -> {
+            ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
+            ViewSwitcher.passData(data);
+            ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });
     }
 
@@ -259,8 +335,37 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     }
 
 
-    private void showResult() {
 
+    private void showResult() {
+        resultDialogDimmer.setVisible(true);
+        resultDialog.setVisible(true);
+
+        viewModel.setCorrectAnswers(viewModel.getCorrectAnswers() + 1);
+        viewModel.setQuestionAttempts(viewModel.getQuestionAttempts() + 1);
+
+        FadeTransition fadeTransition = new FadeTransition();
+
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(0.5);
+        fadeTransition.setDuration(Duration.millis(500));
+        fadeTransition.setNode(resultDialogDimmer);
+
+        ScaleTransition scaleTransition = new ScaleTransition();
+
+        scaleTransition.setFromX(0);
+        scaleTransition.setToX(1);
+        scaleTransition.setFromY(0);
+        scaleTransition.setToY(1);
+        scaleTransition.setNode(resultDialog);
+        scaleTransition.setDuration(Duration.millis(300));
+
+
+        scaleTransition.play();
+        fadeTransition.play();
+
+        questionAttempts.setText(String.valueOf(viewModel.getQuestionAttempts()));
+        correctAnswers.setText(String.valueOf(viewModel.getCorrectAnswers()));
+        incorrectAnswers.setText(String.valueOf(viewModel.getIncorrectAnswers()));
     }
 
     private void dispatchAnswerCorrect() {
@@ -292,6 +397,9 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         fadeTransition.play();
+
+        viewModel.setCorrectAnswers(viewModel.getCorrectAnswers() + 1);
+        viewModel.setQuestionAttempts(viewModel.getQuestionAttempts() + 1);
     }
 
     private void dispatchAnswerIncorrect() {
@@ -299,11 +407,14 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setStopTime(Duration.millis(500));
         mediaPlayer.play();
+
+        viewModel.setIncorrectAnswers(viewModel.getIncorrectAnswers() + 1);
+        viewModel.setQuestionAttempts(viewModel.getQuestionAttempts() + 1);
     }
 
 
     private void setupQuestionView() {
-        System.out.println("Option answer is -> " + viewModel.getQuestions().get(viewModel.getSelectedQuestion()).getQuestion().getOptionAnswer());
+        System.out.println("Option answer is -> " + viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1).getQuestion().getOptionAnswer());
         List<QuestionState> questions = viewModel.getQuestions();
         int selectedQuestion = viewModel.getSelectedQuestion();
 

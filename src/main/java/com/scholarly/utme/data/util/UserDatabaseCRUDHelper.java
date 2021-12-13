@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 /**
  *  Helper class for CRUD operations
  */
-public class CRUDHelper {
+public class UserDatabaseCRUDHelper {
 
     public static Object read(String tableName, String fieldName, int fieldDataType,
                               String indexFieldName, int indexDataType, Object index) {
@@ -20,7 +20,7 @@ public class CRUDHelper {
         queryBuilder.append(indexFieldName);
         queryBuilder.append(" = ");
         queryBuilder.append(convertObjectToSQLField(index, indexDataType));
-        try (Connection connection = Database.connect()) {
+        try (Connection connection = UserDataDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(queryBuilder.toString());
             try (ResultSet rs = statement.executeQuery()) {
                 rs.next();
@@ -59,7 +59,7 @@ public class CRUDHelper {
         queryBuilder.append(" = ");
         queryBuilder.append(convertObjectToSQLField(index, indexDataType));
 
-        try (Connection conn = Database.connect()) {
+        try (Connection conn = UserDataDatabase.connect()) {
             PreparedStatement pstmt = conn.prepareStatement(queryBuilder.toString());
 
             return pstmt.executeUpdate(); //number of affected rows
@@ -95,7 +95,7 @@ public class CRUDHelper {
         }
         queryBuilder.append(");");
 
-        try (Connection conn = Database.connect()) {
+        try (Connection conn = UserDataDatabase.connect()) {
             PreparedStatement pstmt = conn.prepareStatement(queryBuilder.toString());
 
             int affectedRows = pstmt.executeUpdate();
@@ -120,7 +120,7 @@ public class CRUDHelper {
     public static int delete(String tableName, int id) {
         String sql = "DELETE FROM " + tableName + " WHERE id = ?";
 
-        try (Connection conn = Database.connect()) {
+        try (Connection conn = UserDataDatabase.connect()) {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
             return pstmt.executeUpdate();

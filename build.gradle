@@ -84,6 +84,10 @@ dependencies {
     // mvvmfx
     implementation 'de.saxsys:mvvmfx:1.8.0'
 
+    implementation 'net.sf.sociaal:freetts:1.2.2'
+
+
+
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")

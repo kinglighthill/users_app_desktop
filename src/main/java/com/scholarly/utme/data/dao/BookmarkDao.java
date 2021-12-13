@@ -1,16 +1,13 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.Bookmark;
-import com.scholarly.utme.data.model.ObjectiveQuestion;
-import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.util.CRUDHelper;
-import com.scholarly.utme.data.util.Database;
+import com.scholarly.utme.data.util.UserDataDatabase;
+import com.scholarly.utme.data.util.UserDatabaseCRUDHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,18 +37,19 @@ public class BookmarkDao {
 
         query = "SELECT * FROM " + tableName + " WHERE subjectId = " + subjectId;
 
-        try (Connection connection = Database.connect()) {
+        try (Connection connection = UserDataDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             bookmarks.clear();
             while (rs.next()) {
                 bookmarks.add(new Bookmark(
                         rs.getInt(idColumn),
-                        rs.getInt(subjectIdColumn),
                         rs.getInt(questionIdColumn),
+                        rs.getInt(subjectIdColumn),
                         rs.getInt(yearIdColumn)));
             }
 
+            System.out.println("Got bookmarks of length -> " + bookmarks.size());
 
             return bookmarks;
         } catch (SQLException e) {
@@ -64,17 +62,22 @@ public class BookmarkDao {
         }
     }
 
-    public static void deleteBookmark(int id) {
-        CRUDHelper.delete(tableName, id);
+    public static int deleteBookmark(int id) {
+        int deletedId = UserDatabaseCRUDHelper.delete(tableName, id);
+
+        System.out.println("Bookmark of id -> " + deletedId + " has been deleted");
+
+        return deletedId;
     }
 
     public static int createBookmark(int questionId, int subjectId, int yearId) {
-        int id = (int) CRUDHelper.create(
+        int id = (int) UserDatabaseCRUDHelper.create(
                 tableName,
                 new String[]{"questionId", "subjectId", "yearId"},
                 new Object[]{questionId, subjectId, yearId},
                 new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER});
 
+        System.out.println("Bookmark created with id -> " + id);
         return id;
     }
 
@@ -82,7 +85,7 @@ public class BookmarkDao {
 
         String query = "SELECT * FROM " + tableName;
 
-        try (Connection connection = Database.connect()) {
+        try (Connection connection = UserDataDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             bookmarks.clear();
