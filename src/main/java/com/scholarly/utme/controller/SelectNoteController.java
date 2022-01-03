@@ -11,15 +11,19 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -31,8 +35,14 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
     @InjectViewModel
     private SelectNoteVM viewModel;
 
+//    @FXML
+//    private ListView<Subject> subjectList;
+
     @FXML
-    private ListView<Subject> subjectList;
+    private VBox subjectListVBox, topicListVBox;
+
+    @FXML
+    private ScrollPane subjectListScrollPane, topicListScrollPane;
 
     @FXML
     private ListView<Topic> topicList;
@@ -44,14 +54,31 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
     private Button commenceButton, backButton;
 
 
+    final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
+    final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
+    final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        subjectList.setItems(viewModel.getSubjects());
-        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
-            if (c.getList().size() == 1) {
-                Subject subject = c.getList().get(0);
-                viewModel.setSelectedSubject(subject);
+//        subjectList.setItems(viewModel.getSubjects());
+//        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
+//            if (c.getList().size() == 1) {
+//                Subject subject = c.getList().get(0);
+//                viewModel.setSelectedSubject(subject);
+//                emptyTopicListLabel.setVisible(false);
+//            } else {
+//                viewModel.setSelectedSubject(null);
+//                emptyTopicListLabel.setVisible(true);
+//            }
+//        });
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+        toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (newValue != null) {
+                Subject selectedSubject = (Subject) newValue.getUserData();
+                viewModel.setSelectedSubject(selectedSubject);
                 emptyTopicListLabel.setVisible(false);
             } else {
                 viewModel.setSelectedSubject(null);
@@ -59,22 +86,122 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
             }
         });
 
+        viewModel.getSubjects().forEach(subject -> {
+            ToggleButton button = new ToggleButton();
+            button.setUserData(subject);
+            toggleGroup.getToggles().add(button);
 
-        topicList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Topic>) c -> {
-            if (c.getList().size() == 1) {
-                Topic topic = c.getList().get(0);
-                viewModel.setSelectedTopic(topic);
+
+            button.setMinHeight(70);
+            button.setMaxHeight(70);
+            button.setPadding(new Insets(0, 0, 0, 20));
+            button.setAlignment(Pos.BASELINE_LEFT);
+            button.setMaxWidth(Double.MAX_VALUE);
+            button.setText(subject.getSubjectName());
+
+            button.setStyle(IDLE_BUTTON_STYLE);
+            button.setOnMouseEntered(e -> {
+                if (!button.isSelected()) {
+                    button.setStyle(HOVERED_BUTTON_STYLE);
+                }
+            });
+            button.setOnMouseExited(e -> {
+                if (!button.isSelected()) {
+                    button.setStyle(IDLE_BUTTON_STYLE);
+                }
+            });
+
+            button.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    button.setStyle(PRESSED_STYLE);
+                    button.setTextFill(Color.WHITE);
+                } else {
+                    button.setStyle(IDLE_BUTTON_STYLE);
+                    button.setTextFill(Color.BLACK);
+                }
+            });
+
+            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 13));
+
+            subjectListVBox.getChildren().add(button);
+        });
+
+
+        ToggleGroup topicListToggleGroup = new ToggleGroup();
+        topicListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (newValue != null) {
+                Topic selectedTopic = (Topic) newValue.getUserData();
+                viewModel.setSelectedTopic(selectedTopic);
+
                 if (!commenceButton.isVisible()) {
                     showCommenceButton();
                 }
             } else {
                 hideCommenceButton();
-                viewModel.setSelectedTopic(null);
             }
         });
+
         viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
-            topicList.setItems(viewModel.getSubjectTopics().get(newValue.getSubjectName()));
+            topicListToggleGroup.getToggles().clear();
+            topicListVBox.getChildren().clear();
+
+            if (newValue != null) {
+                viewModel.getSubjectTopics().get(newValue.getSubjectName()).forEach(topic -> {
+                    ToggleButton button = new ToggleButton();
+                    button.setUserData(topic);
+                    topicListToggleGroup.getToggles().add(button);
+
+
+                    button.setMinHeight(48);
+                    button.setMaxHeight(48);
+                    button.setPadding(new Insets(0, 0, 0, 20));
+                    button.setAlignment(Pos.BASELINE_LEFT);
+                    button.setMaxWidth(Double.MAX_VALUE);
+                    button.setText(topic.getTitle());
+
+                    button.setStyle(IDLE_BUTTON_STYLE);
+                    button.setOnMouseEntered(e -> {
+                        if (!button.isSelected()) {
+                            button.setStyle(HOVERED_BUTTON_STYLE);
+                        }
+                    });
+                    button.setOnMouseExited(e -> {
+                        if (!button.isSelected()) {
+                            button.setStyle(IDLE_BUTTON_STYLE);
+                        }
+                    });
+
+                    button.selectedProperty().addListener((observe, old, newVal) -> {
+                        if (newVal) {
+                            button.setStyle(PRESSED_STYLE);
+                            button.setTextFill(Color.WHITE);
+                        } else {
+                            button.setStyle(IDLE_BUTTON_STYLE);
+                            button.setTextFill(Color.BLACK);
+                        }
+                    });
+
+                    button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
+
+                    topicListVBox.getChildren().add(button);
+                });
+            }
         });
+
+
+//        topicList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Topic>) c -> {
+//            if (c.getList().size() == 1) {
+//                Topic topic = c.getList().get(0);
+//                viewModel.setSelectedTopic(topic);
+//                if (!commenceButton.isVisible()) {
+//                    showCommenceButton();
+//                }
+//            } else {
+//                hideCommenceButton();
+//                viewModel.setSelectedTopic(null);
+//            }
+//        });
 
         commenceButton.setOnAction(event -> {
             NotesScreenController.InitialData data = new NotesScreenController.InitialData(viewModel.getSelectedSubject(), viewModel.getSubjectTopics().get(viewModel.getSelectedSubject().getSubjectName()), viewModel.getSelectedTopic());
@@ -105,7 +232,21 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         fadeTransition.setDuration(Duration.millis(500));
         fadeTransition.setNode(commenceButton);
 
-        fadeTransition.play();
+        TranslateTransition translateTransition = new TranslateTransition();
+
+        translateTransition.setFromX(1);
+
+        ScaleTransition scaleTransition = new ScaleTransition();
+
+        scaleTransition.setFromX(0);
+        scaleTransition.setFromY(0);
+        scaleTransition.setToX(1);
+        scaleTransition.setToY(1);
+        scaleTransition.setDuration(Duration.millis(200));
+        scaleTransition.setNode(commenceButton);
+
+        scaleTransition.play();
+//        fadeTransition.play();
     }
 
     private void hideCommenceButton() {
@@ -117,9 +258,23 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         fadeTransition.setNode(commenceButton);
 
         fadeTransition.setOnFinished(event -> {
-            commenceButton.setVisible(true);
+            commenceButton.setVisible(false);
         });
 
-        fadeTransition.play();
+        ScaleTransition scaleTransition = new ScaleTransition();
+
+        scaleTransition.setFromX(1);
+        scaleTransition.setFromY(1);
+        scaleTransition.setToX(0);
+        scaleTransition.setToY(0);
+        scaleTransition.setDuration(Duration.millis(300));
+        scaleTransition.setNode(commenceButton);
+
+        scaleTransition.setOnFinished(event -> {
+            commenceButton.setVisible(false);
+        });
+
+        scaleTransition.play();
+//        fadeTransition.play();
     }
 }

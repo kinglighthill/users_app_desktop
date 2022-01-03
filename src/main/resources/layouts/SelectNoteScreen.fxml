@@ -28,11 +28,11 @@
     <center>
         <StackPane prefHeight="200.0" prefWidth="100.0">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #EDEDED;">
                <children>
-                  <VBox prefHeight="716.0" prefWidth="344.0" style="-fx-background-color: #F7F7F7;">
+                  <VBox prefHeight="716.0" prefWidth="344.0" style="-fx-background-color: #EDEDED;">
                      <children>
-                        <Label fx:id="subjectsTitle" prefHeight="17.0" prefWidth="361.0" style="-fx-background-color: #ffffff;" text="Subjects">
+                        <Label fx:id="subjectsTitle" prefHeight="17.0" prefWidth="361.0" style="-fx-background-color: #ffffff;" text="Subjects" textFill="#105801">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
@@ -40,18 +40,18 @@
                               <Insets bottom="20.0" left="20.0" top="20.0" />
                            </padding>
                         </Label>
-                        <Line endX="244.0" startX="-100.0" stroke="#ededed" strokeWidth="5.0">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </Line>
-                        <ListView fx:id="subjectList" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #F7F7F7;" VBox.vgrow="ALWAYS" />
+                        <Region prefHeight="5.0" prefWidth="200.0" />
+                        <ScrollPane fx:id="subjectListScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-border-color: #EDEDED;" VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="subjectListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #F7F7F7;" />
+                           </content>
+                        </ScrollPane>
                      </children>
                   </VBox>
-                  <Line layoutY="-100.0" startY="300.0" stroke="#ededed" strokeWidth="5.0" />
+                  <Region prefHeight="200.0" prefWidth="5.0" />
                   <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                       <children>
-                          <Label fx:id="topicsTitle" prefHeight="57.0" prefWidth="2000.0" style="-fx-background-color: #ffffff;" text="Topics">
+                          <Label fx:id="topicsTitle" prefHeight="57.0" prefWidth="2000.0" style="-fx-background-color: #ffffff;" text="Topics" textFill="#105801">
                               <VBox.margin>
                                   <Insets />
                               </VBox.margin>
@@ -59,14 +59,18 @@
                                   <Insets bottom="20.0" left="20.0" top="20.0" />
                               </padding>
                           </Label>
-                          <Line endX="200.0" startX="-100.0" stroke="#ededed" strokeWidth="5.0">
+                          <Line endX="200.0" fill="BLACK" startX="-100.0" stroke="#ebebeb00" strokeWidth="5.0">
                               <VBox.margin>
                                   <Insets />
                               </VBox.margin>
                           </Line>
                         <StackPane fx:id="topicStackPane" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <ListView fx:id="topicList" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #F7F7F7;" />
+                              <ScrollPane fx:id="topicListScrollPane" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                                 <content>
+                                    <VBox fx:id="topicListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #F7F7F7;" />
+                                 </content>
+                              </ScrollPane>
                               <Label fx:id="emptyTopicListLabel" text="Select a Subject" />
                            </children>
                         </StackPane>

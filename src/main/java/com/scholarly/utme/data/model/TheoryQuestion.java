@@ -1,6 +1,6 @@
 package com.scholarly.utme.data.model;
 
-public class TheoryQuestion {
+public class TheoryQuestion implements Question {
 
     private int Id;
     private int subjectId;

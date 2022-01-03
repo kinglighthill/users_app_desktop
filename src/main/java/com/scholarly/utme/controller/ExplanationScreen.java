@@ -136,12 +136,12 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
 
         questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
-        questionLabel.setText(questions.get(newValue - 1).getQuestion().getQuestion());
+        questionLabel.setText(questions.get(newValue - 1).getObjectiveQuestion().getQuestion());
 
-        optionA.setText(" (A) " + questions.get(newValue - 1).getQuestion().getOptionA());
-        optionB.setText(" (B) " + questions.get(newValue - 1).getQuestion().getOptionB());
-        optionC.setText(" (C) " + questions.get(newValue - 1).getQuestion().getOptionC());
-        optionD.setText(" (D) " + questions.get(newValue - 1).getQuestion().getOptionD());
+        optionA.setText(" (A) " + questions.get(newValue - 1).getObjectiveQuestion().getOptionA());
+        optionB.setText(" (B) " + questions.get(newValue - 1).getObjectiveQuestion().getOptionB());
+        optionC.setText(" (C) " + questions.get(newValue - 1).getObjectiveQuestion().getOptionC());
+        optionD.setText(" (D) " + questions.get(newValue - 1).getObjectiveQuestion().getOptionD());
 
         optionA.setTextFill(Color.DARKGRAY);
         optionB.setTextFill(Color.DARKGRAY);
@@ -149,69 +149,69 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
         optionD.setTextFill(Color.DARKGRAY);
 
         String selectedOption = questions.get(newValue - 1).getSelectedOption();
-        String questionAnswer = questions.get(newValue - 1).getQuestion().getOptionAnswer();
+        String questionAnswer = questions.get(newValue - 1).getObjectiveQuestion().getOptionAnswer();
 
         if (selectedOption != null) {
             if (selectedOption.equalsIgnoreCase(questionAnswer)) {
-                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionA())) {
+                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
                     optionA.setTextFill(Color.GREEN);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionB())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
                     optionB.setTextFill(Color.GREEN);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionC())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
                     optionC.setTextFill(Color.GREEN);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionD())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
                     optionD.setTextFill(Color.GREEN);
                 }
             } else {
-                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionA())) {
+                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
                     optionA.setTextFill(Color.RED);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionB())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
                     optionB.setTextFill(Color.RED);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionC())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
                     optionC.setTextFill(Color.RED);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionD())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
                     optionD.setTextFill(Color.RED);
                 }
 
-                if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionA())) {
+                if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
                     optionA.setTextFill(Color.GREEN);
                 }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionB())) {
+                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
                     optionB.setTextFill(Color.GREEN);
                 }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionC())) {
+                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
                     optionC.setTextFill(Color.GREEN);
                 }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionD())) {
+                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
                     optionD.setTextFill(Color.GREEN);
                 }
             }
             noOptionSelected.setVisible(false);
         }
         else {
-            if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionA())) {
+            if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
                 optionA.setTextFill(Color.GREEN);
             }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionB())) {
+            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
                 optionB.setTextFill(Color.GREEN);
             }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionC())) {
+            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
                 optionC.setTextFill(Color.GREEN);
             }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionD())) {
+            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
                 optionD.setTextFill(Color.GREEN);
             }
 
             noOptionSelected.setVisible(true);
         }
 
-        explanationLabel.setText(questions.get(newValue - 1).getQuestion().getAnswerExplanation());
+        explanationLabel.setText(questions.get(newValue - 1).getObjectiveQuestion().getAnswerExplanation());
     }
 
     private void setupQuestionView() {
@@ -224,12 +224,12 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
 
         questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
 
-        questionLabel.setText(questions.get(selectedQuestion - 1).getQuestion().getQuestion());
+        questionLabel.setText(questions.get(selectedQuestion - 1).getObjectiveQuestion().getQuestion());
 
-        optionA.setText(" (A) " + questions.get(selectedQuestion - 1).getQuestion().getOptionA());
-        optionB.setText(" (B) " + questions.get(selectedQuestion - 1).getQuestion().getOptionB());
-        optionC.setText(" (C) " + questions.get(selectedQuestion - 1).getQuestion().getOptionC());
-        optionD.setText(" (D) " + questions.get(selectedQuestion - 1).getQuestion().getOptionD());
+        optionA.setText(" (A) " + questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA());
+        optionB.setText(" (B) " + questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB());
+        optionC.setText(" (C) " + questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC());
+        optionD.setText(" (D) " + questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD());
 
         optionA.setTextFill(Color.DARKGRAY);
         optionB.setTextFill(Color.DARKGRAY);
@@ -237,69 +237,69 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
         optionD.setTextFill(Color.DARKGRAY);
 
         String selectedOption = questions.get(selectedQuestion - 1).getSelectedOption();
-        String questionAnswer = questions.get(selectedQuestion - 1).getQuestion().getOptionAnswer();
+        String questionAnswer = questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionAnswer();
 
         if (selectedOption != null) {
             if (selectedOption.equalsIgnoreCase(questionAnswer)) {
-                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionA())) {
+                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
                     optionA.setTextFill(Color.GREEN);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionB())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
                     optionB.setTextFill(Color.GREEN);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionC())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
                     optionC.setTextFill(Color.GREEN);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionD())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
                     optionD.setTextFill(Color.GREEN);
                 }
             } else {
-                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionA())) {
+                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
                     optionA.setTextFill(Color.RED);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionB())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
                     optionB.setTextFill(Color.RED);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionC())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
                     optionC.setTextFill(Color.RED);
                 }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionD())) {
+                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
                     optionD.setTextFill(Color.RED);
                 }
 
-                if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionA())) {
+                if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
                     optionA.setTextFill(Color.GREEN);
                 }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionB())) {
+                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
                     optionB.setTextFill(Color.GREEN);
                 }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionC())) {
+                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
                     optionC.setTextFill(Color.GREEN);
                 }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionD())) {
+                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
                     optionD.setTextFill(Color.GREEN);
                 }
             }
             noOptionSelected.setVisible(false);
         }
         else {
-            if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionA())) {
+            if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
                 optionA.setTextFill(Color.GREEN);
             }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionB())) {
+            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
                 optionB.setTextFill(Color.GREEN);
             }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionC())) {
+            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
                 optionC.setTextFill(Color.GREEN);
             }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getQuestion().getOptionD())) {
+            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
                 optionD.setTextFill(Color.GREEN);
             }
 
             noOptionSelected.setVisible(true);
         }
 
-        explanationLabel.setText(questions.get(selectedQuestion - 1).getQuestion().getAnswerExplanation());
+        explanationLabel.setText(questions.get(selectedQuestion - 1).getObjectiveQuestion().getAnswerExplanation());
     }
 
     private void setupTilePane() {
@@ -312,7 +312,7 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
             Rectangle r = new Rectangle(30, 30);
             r.setFill(Color.web("#ededed"));
 
-            if (questions.get(i - 1).getQuestion().getOptionAnswer().equalsIgnoreCase(questions.get(i-1).getSelectedOption())) {
+            if (questions.get(i - 1).getObjectiveQuestion().getOptionAnswer().equalsIgnoreCase(questions.get(i-1).getSelectedOption())) {
                 r.setStroke(Color.GREEN);
                 r.setStrokeWidth(2);
             } else if (questions.get(i-1).getSelectedOption() != null) {

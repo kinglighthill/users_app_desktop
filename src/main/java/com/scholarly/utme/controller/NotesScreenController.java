@@ -51,6 +51,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     @FXML
     private Button backButton, prevButton, nextButton, practiceTopicButton;
 
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         viewModel.initialize(getInitialData());
