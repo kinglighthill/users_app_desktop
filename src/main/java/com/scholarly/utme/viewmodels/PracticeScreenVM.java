@@ -4,11 +4,14 @@ import com.scholarly.utme.controller.PracticeScreenController;
 import com.scholarly.utme.controller.PracticeScreenController.InitialData;
 import com.scholarly.utme.data.dao.BookmarkDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
+import com.scholarly.utme.data.dao.TheoryQuestionDao;
 import com.scholarly.utme.data.dao.YearsDao;
 import com.scholarly.utme.data.model.Bookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
+import com.scholarly.utme.data.model.Question;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
+import com.scholarly.utme.viewmodels.SubjectListItemVM.Type;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
@@ -44,6 +47,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
+    private Type questionType;
+
 
 
     public PracticeScreenVM() {
@@ -54,26 +59,55 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
         subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).collect(Collectors.toList()));
 
+//        List<QuestionState> questionStates = new Arra;
+
         data.questionData.forEach(subjectState -> {
 
-            List<QuestionState> questionStates = ObjectiveQuestionDao
-                    .getQuestions(
-                            subjectState.getSubject().getTableName(),
-                            subjectState.getSelectedYear().getId(),
-                            false
-                    )
-                    .stream()
-                    .map(question -> new QuestionState(question, null))
-                    .collect(Collectors.toList());
+            questionType = subjectState.getType();
 
-            ObservableList<Bookmark> bookmarks = BookmarkDao
-                    .getBookmarks(
-                            subjectState.getSubject().getId()
-                    );
+            if (subjectState.getType() == Type.OBJECTIVE) {
 
-            subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
+                List<QuestionState> questionStates = ObjectiveQuestionDao
+                        .getQuestions(
+                                subjectState.getSubject().getTableName(),
+                                subjectState.getSelectedYear().getId(),
+                                false
+                        )
+                        .stream()
+                        .map(question -> new QuestionState(question, Type.OBJECTIVE, null))
+                        .collect(Collectors.toList());
 
-            subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
+                ObservableList<Bookmark> bookmarks = BookmarkDao
+                        .getBookmarks(
+                                subjectState.getSubject().getId()
+                        );
+
+                subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
+
+                subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
+
+            } else if (subjectState.getType() == Type.THEORY) {
+
+                List<QuestionState> questionStates = TheoryQuestionDao
+                        .getQuestions(
+                                subjectState.getSubject().getTableName(),
+                                subjectState.getSelectedYear().getId(),
+                                false
+                        )
+                        .stream()
+                        .map(question -> new QuestionState(question, Type.THEORY, null))
+                        .collect(Collectors.toList());
+
+                ObservableList<Bookmark> bookmarks = BookmarkDao
+                        .getBookmarks(
+                                subjectState.getSubject().getId()
+                        );
+
+                subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
+
+                subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
+
+            }
 
         });
 
@@ -138,7 +172,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
             result.setSubjectName(s);
             result.setTotalQuestions(subjectQuestionsState.getQuestions().size());
-            result.setYear(YearsDao.getYear(subjectQuestionsState.getQuestions().get(0).getQuestion().getYearId()).get().getYear());
+            result.setYear(YearsDao.getYear(((ObjectiveQuestion)subjectQuestionsState.getQuestions().get(0).getQuestion()).getYearId()).get().getYear());
 
 
             for (int i = 0; i < subjectQuestionsState.getQuestions().size(); i++) {
@@ -146,7 +180,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                 if (questionState.selectedOption != null) {
                     attempts++;
                 }
-                if (Objects.equals(questionState.selectedOption, questionState.getQuestion().getOptionAnswer())) {
+                if (Objects.equals(questionState.selectedOption, ((ObjectiveQuestion) questionState.getQuestion()).getOptionAnswer())) {
                     correctAnswers += 1;
                 }
             }
@@ -162,6 +196,11 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         });
 
         return results;
+    }
+
+
+    public Type getQuestionType() {
+        return questionType;
     }
 
     @Override
@@ -180,7 +219,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
 
         ObservableList<Bookmark> bookmarks = subjectBookmarks.get(selectedSubject.get().getTableName());
-        ObjectiveQuestion question = questions.get(selectedQuestion - 1).getQuestion();
+        ObjectiveQuestion question = (ObjectiveQuestion)  questions.get(selectedQuestion - 1).getQuestion();
 
         boolean currentQuestionBookmarked = false;
         Bookmark bookmarkToDelete = null;
@@ -236,20 +275,30 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
     }
 
     public static class QuestionState {
-        private ObjectiveQuestion question;
+        private Question question;
+        private Type questionType;
         private String selectedOption;
 
-        public QuestionState(ObjectiveQuestion question, String selectedOption) {
+        public QuestionState(Question question, Type questionType, String selectedOption) {
             this.question = question;
+            this.questionType = questionType;
             this.selectedOption = selectedOption;
         }
 
-        public ObjectiveQuestion getQuestion() {
+        public Question getQuestion() {
             return question;
+        }
+
+        public ObjectiveQuestion getObjectiveQuestion() {
+            return (ObjectiveQuestion) question;
         }
 
         public String getSelectedOption() {
             return selectedOption;
+        }
+
+        public Type getQuestionType() {
+            return questionType;
         }
 
         public void setSelectedOption(String selectedOption) {

@@ -19,6 +19,7 @@
              <ToggleButton fx:id="videosButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" text="Videos" />
              <ToggleButton fx:id="audiosButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" text="Audios" />
              <ToggleButton fx:id="learningCenterButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" text="Learning Center" />
+            <ToggleButton fx:id="studyNotesButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" text="Study Notes" />
          </children>
       </VBox>
    </left>

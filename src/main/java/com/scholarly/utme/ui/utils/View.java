@@ -12,7 +12,10 @@ public enum View {
     PRACTICE_SCREEN("/layouts/PracticeScreen.fxml", PracticeScreenController.class),
     STUDY_PAST_QUESTION_SCREEN("/layouts/StudyPastQuestionsScreen.fxml", StudyPastQuestScreenController.class),
     CBT_GAME_SCREEN("/layouts/CBTGameScreen.fxml", CBTGameScreenController.class),
+    SELECT_NOTE_SCREEN("/layouts/SelectNoteScreen.fxml", SelectNoteController.class),
+    NOTES_SCREEN("/layouts/NotesScreen.fxml", NotesScreenController.class),
     EXPLANATION_SCREEN("/layouts/ExplanationScreen.fxml", ExplanationScreen.class);
+
 
 
     private String viewPath;

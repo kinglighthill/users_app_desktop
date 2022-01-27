@@ -64,6 +64,7 @@ public class CRUDHelper {
 
             return pstmt.executeUpdate(); //number of affected rows
         } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not add person to database");

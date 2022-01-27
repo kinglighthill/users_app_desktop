@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.NotesScreenController">
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER_LEFT">
+            <children>
+                <Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" />
+                <Label fx:id="pageTitle" alignment="TOP_LEFT" text="Notes" textFill="WHITE">
+                    <padding>
+                        <Insets left="20.0" />
+                    </padding>
+                    <font>
+                        <Font size="24.0" />
+                    </font>
+                </Label>
+            <HBox alignment="CENTER_RIGHT" fillHeight="false" maxWidth="1.7976931348623157E308" prefWidth="300.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <ImageView fx:id="settingsIcon" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </ImageView>
+               </children></HBox>
+            </children>
+            <padding>
+                <Insets left="10.0" />
+            </padding>
+        </HBox>
+    </top>
+    <center>
+        <StackPane prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #CCCBCB;">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefWidth="200.0" style="-fx-background-color: #ffffff;">
+                     <children>
+                        <Label fx:id="subjectLabel" text="English Language" textFill="#105801">
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Circle fill="#d4d4d4" radius="4.0" stroke="TRANSPARENT" strokeType="INSIDE">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </Circle>
+                        <Label fx:id="topicLabel" text="Label" textFill="#8f8f8f">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Region prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="practiceTopicButton" mnemonicParsing="false" style="-fx-background-color: #1B9D01; -fx-background-radius: 5; -fx-border-color: #1B9D01; -fx-border-radius: 5;" text="Practice Topic" textFill="WHITE">
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets bottom="12.0" left="20.0" right="20.0" top="12.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" top="10.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox prefHeight="716.0" prefWidth="293.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" style="-fx-background-color: #ffffff;">
+                                 <children>
+                                    <ImageView fx:id="notesImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <HBox.margin>
+                                          <Insets left="20.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label fx:id="topicTitle" alignment="CENTER" text="Topics" textFill="#105801">
+                                       <HBox.margin>
+                                          <Insets left="20.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="15.0" top="15.0" />
+                                 </padding>
+                              </HBox>
+                              <Line endX="190.0" startX="-100.0" stroke="#ededed" strokeWidth="5.0" />
+                              <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #ffffff; -fx-region-background: #ffffff; -fx-background-color: #ffffff;" VBox.vgrow="ALWAYS">
+                                 <content>
+                                    <VBox fx:id="topicVBox" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </VBox>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #ffffff; -fx-background-color: #CCCBCB;">
+                                 <content>
+                                    <VBox fx:id="contentLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0">
+                                       <padding>
+                                          <Insets bottom="20.0" left="25.0" right="25.0" top="25.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                              </ScrollPane>
+                              <HBox maxHeight="-Infinity" maxWidth="-Infinity" StackPane.alignment="BOTTOM_RIGHT">
+                                 <children>
+                                    <Button fx:id="prevButton" mnemonicParsing="false" style="-fx-background-color: #ffffff; -fx-border-color: #1B9D01; -fx-border-radius: 5; -fx-border-width: 0.6;">
+                                       <padding>
+                                          <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+                                       </padding>
+                                    </Button>
+                                    <Button fx:id="nextButton" mnemonicParsing="false" style="-fx-background-color: #ffffff; -fx-border-color: #1B9D01; -fx-border-radius: 5; -fx-border-width: 0.6;">
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                       <padding>
+                                          <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+                                       </padding>
+                                    </Button>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="25.0" right="25.0" />
+                                 </padding>
+                              </HBox>
+                              <VBox fx:id="noteOptions" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" style="-fx-background-color: #ffffff;" visible="false" StackPane.alignment="BOTTOM_CENTER">
+                                 <children>
+                                    <HBox prefHeight="5.0" prefWidth="200.0" style="-fx-background-color: #EDEBEB;" />
+                                    <ImageView fx:id="closeIconNoteOptionLayout" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                       <VBox.margin>
+                                          <Insets left="20.0" top="20.0" />
+                                       </VBox.margin></ImageView>
+                                    <HBox prefWidth="200.0">
+                                       <children>
+                                          <HBox fx:id="addNoteButton" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-border-color: #1B9D01; -fx-border-width: 0.5;">
+                                             <children>
+                                                <ImageView fx:id="note_icon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <Label fx:id="addNoteText" text="Add Note">
+                                                   <HBox.margin>
+                                                      <Insets left="15.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets right="20.0" />
+                                             </HBox.margin>
+                                             <padding>
+                                                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                             </padding>
+                                          </HBox>
+
+                                          <HBox fx:id="bookmarkButton" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-border-color: #1B9D01; -fx-border-width: 0.5;">
+                                             <children>
+                                                <ImageView fx:id="bookmark_icon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <Label fx:id="bookmarkText" text="Bookmark">
+                                                   <HBox.margin>
+                                                      <Insets left="15.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets right="20.0" />
+                                             </HBox.margin>
+                                             <padding>
+                                                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                             </padding>
+                                          </HBox>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets left="20.0" top="25.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                    <Label fx:id="highlightHeader" text="Highlight">
+                                       <VBox.margin>
+                                          <Insets left="20.0" top="30.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <HBox fx:id="highlightColors" alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="8.0">
+                                       <VBox.margin>
+                                          <Insets bottom="30.0" left="20.0" top="10.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children></VBox>
+                           </children>
+                        </StackPane>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="1.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+            <StackPane fx:id="imageViewLayout" prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <ImageView fx:id="closeIconImageViewLayout" fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT">
+                     <StackPane.margin>
+                        <Insets left="25.0" top="25.0" />
+                     </StackPane.margin>
+                  </ImageView>
+                  <ImageView fx:id="imageViewLarge" fitHeight="700.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </StackPane>
+         </children>
+        </StackPane>
+    </center>
+</BorderPane>
