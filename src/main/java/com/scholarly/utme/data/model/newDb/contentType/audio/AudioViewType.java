@@ -1,8 +1,9 @@
 package com.scholarly.utme.data.model.newDb.contentType.audio;
 
+import com.scholarly.utme.data.model.newDb.contentType.ContentType;
 import com.scholarly.utme.data.model.newDb.contentType.Title;
 
-public class AudioViewType {
+public class AudioViewType extends ContentType {
     private Title title;
     private AudioBody body;
 

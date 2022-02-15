@@ -1,9 +1,12 @@
 package com.scholarly.utme.viewmodels;
 
+
 import com.scholarly.utme.data.dao.SubjectDao;
-import com.scholarly.utme.data.dao.TopicDao;
+import com.scholarly.utme.data.dao.newDb.SubTopicDao;
+import com.scholarly.utme.data.dao.newDb.TopicDao;
 import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.model.Topic;
+import com.scholarly.utme.data.model.newDb.SubTopic;
+import com.scholarly.utme.data.model.newDb.Topic;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -15,9 +18,11 @@ public class SelectNoteVM implements ViewModel {
 
     private ObservableList<Subject> subjects = FXCollections.observableArrayList();
     private HashMap<String, ObservableList<Topic>> subjectTopics = new HashMap<>();
+    private HashMap<String, ObservableList<SubTopic>> subjectSubTopics = new HashMap<>();
 
     private SimpleObjectProperty<Subject> selectedSubject = new SimpleObjectProperty<>(null);
     private SimpleObjectProperty<Topic> selectedTopic = new SimpleObjectProperty<>(null);
+    private SimpleObjectProperty<SubTopic> selectedSubTopic = new SimpleObjectProperty<>(null);
 
     public SelectNoteVM() {
 
@@ -26,7 +31,11 @@ public class SelectNoteVM implements ViewModel {
         subjects.addAll(subjectList);
 
         subjects.forEach(subject -> {
-            subjectTopics.put(subject.getSubjectName(), TopicDao.getTopics(subject.getTableName() + "_topics"));
+            subjectTopics.put(subject.getSubjectName(), TopicDao.getTopics("note_" + subject.getTableName() + "_topics"));
+        });
+
+        subjects.forEach(subject -> {
+            subjectSubTopics.put(subject.getSubjectName(), SubTopicDao.getSubTopics("note_" + subject.getTableName() + "_sub_topics"));
         });
     }
 
@@ -37,6 +46,10 @@ public class SelectNoteVM implements ViewModel {
 
     public HashMap<String, ObservableList<Topic>> getSubjectTopics() {
         return subjectTopics;
+    }
+
+    public HashMap<String, ObservableList<SubTopic>> getSubjectSubTopics() {
+        return subjectSubTopics;
     }
 
     public Subject getSelectedSubject() {
@@ -61,5 +74,17 @@ public class SelectNoteVM implements ViewModel {
 
     public void setSelectedTopic(Topic selectedTopic) {
         this.selectedTopic.set(selectedTopic);
+    }
+
+    public SubTopic getSelectedSubTopic() {
+        return selectedSubTopic.get();
+    }
+
+    public SimpleObjectProperty<SubTopic> selectedSubTopicProperty() {
+        return selectedSubTopic;
+    }
+
+    public void setSelectedSubTopic(SubTopic selectedSubTopic) {
+        this.selectedSubTopic.set(selectedSubTopic);
     }
 }

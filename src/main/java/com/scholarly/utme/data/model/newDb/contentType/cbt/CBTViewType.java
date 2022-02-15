@@ -1,8 +1,9 @@
 package com.scholarly.utme.data.model.newDb.contentType.cbt;
 
+import com.scholarly.utme.data.model.newDb.contentType.ContentType;
 import com.scholarly.utme.data.model.newDb.contentType.Title;
 
-public class CBTViewType {
+public class CBTViewType extends ContentType {
     private Title title;
     private CBTBody body;
 

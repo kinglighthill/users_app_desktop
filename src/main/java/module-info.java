@@ -14,9 +14,8 @@ module com.scholarly.utme {
     requires org.pdfsam.rxjavafx;
     requires sqlite.jdbc;
     requires de.saxsys.mvvmfx;
-//    requires gtranslateapi;
-//    requires kotlin.stdlib;
     requires freetts;
+    requires com.google.gson;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;
@@ -27,6 +26,17 @@ module com.scholarly.utme {
     exports com.scholarly.utme.data.model;
 
     opens com.scholarly.utme.ui.listcells to javafx.fxml;
+    opens com.scholarly.utme.data.model.newDb.contentType to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.text to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.image to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.table to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.audio to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.video to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.webview to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.html to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.cbt to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.orderedList to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.unorderedList to com.google.gson;
     opens com.scholarly.utme to de.saxsys.mvvmfx, javafx.fxml;
     opens com.scholarly.utme.viewmodels to de.saxsys.mvvmfx, javafx.fxml;
     opens com.scholarly.utme.controller to de.saxsys.mvvmfx, javafx.fxml;

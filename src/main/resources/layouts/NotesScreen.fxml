@@ -76,12 +76,12 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" prefWidth="200.0" style="-fx-background-color: #ffffff;">
                                  <children>
-                                    <ImageView fx:id="notesImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="notesImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <HBox.margin>
                                           <Insets left="20.0" />
                                        </HBox.margin>
                                     </ImageView>
-                                    <Label fx:id="topicTitle" alignment="CENTER" text="Topics" textFill="#105801">
+                                    <Label fx:id="topicTitle" alignment="CENTER" text="Sub-Topics" textFill="#105801">
                                        <HBox.margin>
                                           <Insets left="20.0" />
                                        </HBox.margin>

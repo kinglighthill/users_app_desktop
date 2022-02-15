@@ -1,6 +1,24 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.data.model.*;
+
+import com.scholarly.utme.data.model.Highlights;
+import com.scholarly.utme.data.model.Note;
+import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.Section;
+import com.scholarly.utme.data.model.newDb.SubTopic;
+import com.scholarly.utme.data.model.newDb.Topic;
+import com.scholarly.utme.data.model.newDb.contentType.ContentType;
+import com.scholarly.utme.data.model.newDb.contentType.ContentTypes;
+import com.scholarly.utme.data.model.newDb.contentType.audio.AudioViewType;
+import com.scholarly.utme.data.model.newDb.contentType.cbt.CBTViewType;
+import com.scholarly.utme.data.model.newDb.contentType.html.HtmlViewType;
+import com.scholarly.utme.data.model.newDb.contentType.image.ImageViewType;
+import com.scholarly.utme.data.model.newDb.contentType.orderedList.OrderedListViewType;
+import com.scholarly.utme.data.model.newDb.contentType.table.TableViewType;
+import com.scholarly.utme.data.model.newDb.contentType.text.TextViewType;
+import com.scholarly.utme.data.model.newDb.contentType.unorderedList.UnorderedListViewType;
+import com.scholarly.utme.data.model.newDb.contentType.video.VideoViewType;
+import com.scholarly.utme.data.model.newDb.contentType.webview.WebViewType;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -11,6 +29,7 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,11 +37,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.web.WebView;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -42,6 +63,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         ORANGE("#FFD0A6");
 
         public final String colorCode;
+
 
         HighlightColors(String colorCode) {
             this.colorCode = colorCode;
@@ -78,7 +100,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
 
 
-    private SubSection selectedSubSection;
+    private Section selectedSection;
 
     private int defaultFontSize = 16;
 
@@ -94,9 +116,11 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         ToggleGroup topicListToggleGroup = new ToggleGroup();
 
-        viewModel.getTopics().forEach(topic -> {
+        topicLabel.setText(viewModel.getTopic().getTitle());
+
+        viewModel.getSubTopics().forEach(subTopic -> {
             ToggleButton button = new ToggleButton();
-            button.setUserData(topic);
+            button.setUserData(subTopic);
             topicListToggleGroup.getToggles().add(button);
 
 
@@ -105,7 +129,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             button.setPadding(new Insets(0, 0, 0, 20));
             button.setAlignment(Pos.BASELINE_LEFT);
             button.setMaxWidth(Double.MAX_VALUE);
-            button.setText(topic.getTitle());
+            button.setText(subTopic.getTitle());
 
             button.setStyle(IDLE_BUTTON_STYLE);
             button.setOnMouseEntered(e -> {
@@ -124,9 +148,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                     button.setStyle(PRESSED_STYLE);
                     button.setTextFill(Color.WHITE);
 
-                    viewModel.setSelectedTopic(topic);
-                    renderNote(topic);
-                    topicLabel.setText(topic.getTitle());
+                    viewModel.setSelectedSubTopic(subTopic);
+                    renderNote(subTopic);
+//                    topicLabel.setText(subTopic.getTitle());
                 } else {
                     button.setStyle(IDLE_BUTTON_STYLE);
                     button.setTextFill(Color.BLACK);
@@ -135,7 +159,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 }
             });
 
-            if (topic == viewModel.getSelectedTopic()) {
+            if (subTopic == viewModel.getSelectedSubTopic()) {
                 topicListToggleGroup.selectToggle(button);
             }
 
@@ -157,7 +181,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                             circle.setRadius(15);
 
                             circle.setOnMouseClicked(event -> {
-                                viewModel.handleHighlight(selectedSubSection, colorCode);
+                                viewModel.handleHighlight(selectedSection, colorCode);
                                 hideNoteOptions();
                             });
 
@@ -166,19 +190,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         .collect(Collectors.toList())
         );
 
-        viewModel.getSectionsHighlights().forEach((integer, highlights) -> {
-            highlights.addListener((ListChangeListener<? super Highlights>) c -> {
-                System.out.println("Highlight list changed");
-                Section highlightSection = null;
-                for(int i = 0; i < viewModel.getSections().size(); i++) {
-                    if (integer == viewModel.getSections().get(i).getId()) {
-                        highlightSection = viewModel.getSections().get(i);
-                    }
-                }
-                if (highlightSection.getTopicId() == viewModel.getSelectedTopic().getId()) {
-                    renderNote(viewModel.getSelectedTopic());
-                }
-            });
+        viewModel.getSubjectHighlights().addListener((ListChangeListener<? super Highlights>) c -> {
+            System.out.println("Highlight list changed");
+            renderNote(viewModel.getSelectedSubTopic());
         });
 
         notesImage.setImage(new Image(getClass().getResource("/drawable/notes.png").toString()));
@@ -190,16 +204,16 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         view.setPreserveRatio(true);
 
         settingsIcon.setImage(new Image(getClass().getResource("/drawable/preferences.png").toString()));
-        settingsIcon.setOnMouseClicked(event -> {
-            Dialog<Double> dialog = createSettingsDialog(defaultFontSize);
-            Optional<Double> result = dialog.showAndWait();
-
-            if (result.isPresent()) {
-                defaultFontSize = result.get().intValue();
-                renderNote(viewModel.getSelectedTopic());
-            }
-
-        });
+//        settingsIcon.setOnMouseClicked(event -> {
+//            Dialog<Double> dialog = createSettingsDialog(defaultFontSize);
+//            Optional<Double> result = dialog.showAndWait();
+//
+//            if (result.isPresent()) {
+//                defaultFontSize = result.get().intValue();
+//                renderNote(viewModel.getSelectedTopic());
+//            }
+//
+//        });
 
         closeIconImageViewLayout.setImage(new Image(getClass().getResource("/drawable/close_icon_white.png").toString()));
         closeIconImageViewLayout.setOnMouseClicked(event -> {
@@ -236,20 +250,20 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
-        prevButton.setOnAction(event -> {
-//            if (topicList.getSelectionModel().getSelectedIndex() > 0) {
-//                topicList.getSelectionModel().select(topicList.getSelectionModel().getSelectedIndex() - 1);
+//        prevButton.setOnAction(event -> {
+////            if (topicList.getSelectionModel().getSelectedIndex() > 0) {
+////                topicList.getSelectionModel().select(topicList.getSelectionModel().getSelectedIndex() - 1);
+////            }
+//
+//            int currentIndex = viewModel.getTopics().indexOf(((Topic) topicListToggleGroup.getSelectedToggle().getUserData()));
+//            if (currentIndex > 0) {
+//                topicListToggleGroup.getToggles().forEach(toggle -> {
+//                    if (toggle.getUserData() == viewModel.getTopics().get(currentIndex - 1)) {
+//                        topicListToggleGroup.selectToggle(toggle);
+//                    }
+//                });
 //            }
-
-            int currentIndex = viewModel.getTopics().indexOf(((Topic) topicListToggleGroup.getSelectedToggle().getUserData()));
-            if (currentIndex > 0) {
-                topicListToggleGroup.getToggles().forEach(toggle -> {
-                    if (toggle.getUserData() == viewModel.getTopics().get(currentIndex - 1)) {
-                        topicListToggleGroup.selectToggle(toggle);
-                    }
-                });
-            }
-        });
+//        });
 
         nextButton.setOnAction(event -> {
 //            if (topicList.getSelectionModel().getSelectedIndex() < topicList.getItems().size() - 1) {
@@ -263,12 +277,12 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         addNoteButton.setOnMouseClicked(event -> {
 
-            List<Note> notes = viewModel.getSectionsNotes().get(selectedSubSection.getSectionId());
+            List<Note> notes = viewModel.getSubjectNotes();
 
             String currentNote = null;
 
             for (int i = 0; i < notes.size(); i++) {
-                if (notes.get(i).getNoteId() == selectedSubSection.getId()) {
+                if (notes.get(i).getNoteId() == selectedSection.getId()) {
                     currentNote = notes.get(i).getNote();
                     break;
                 }
@@ -279,7 +293,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Optional<String> result = noteDialog.showAndWait();
 
             result.ifPresent(note -> {
-                viewModel.addNote(selectedSubSection, note);
+                viewModel.addNote(selectedSection, note);
             });
 
             hideNoteOptions();
@@ -287,91 +301,165 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     }
 
-    private void renderNote(Topic topic) {
+    private void renderNote(SubTopic subTopic) {
         List<Node> contentElements = new ArrayList<>();
 
 
-        contentElements.addAll(
-                viewModel.getSections()
-                        .stream()
-                        .filter(section -> section.getTopicId() == topic.getId())
-                        .map(section -> {
-                            if (section.getContent() != null) {
-                                Label header = new Label();
-                                header.setText(section.getContent());
-                                header.setWrapText(true);
-                                header.setUnderline(true);
-                                header.setLineSpacing(8);
-                                header.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
+        viewModel.getSubTopicSections()
+                .get(subTopic.getId())
+                .forEach(section -> {
 
-                                return header;
-                            } else {
-                                ImageView image = new ImageView(new Image(getClass().getResource("/drawable/dummy_image.jpg").toString()));
-                                image.setFitHeight(240);
-                                image.setPreserveRatio(true);
+                    ContentType contentType = ContentTypes.convert(section);
+                    if (contentType instanceof TextViewType) {
+                        TextViewType textViewType = (TextViewType) contentType;
 
-                                return image;
+                        if (textViewType.getTitle() != null) {
+                            contentElements.add(getTitle(textViewType.getTitle().getText()));
+                        }
+
+                        Label body = new Label();
+                        body.setText(textViewType.getBody().getText());
+                        body.setWrapText(true);
+                        body.setLineSpacing(8);
+                        body.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 17));
+
+
+
+                        List<Highlights> highlights = viewModel.getSubjectHighlights();
+                        for (int i = 0; i < highlights.size(); i ++) {
+                            if (highlights.get(i).getNoteId() == section.getId()) {
+                                body.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web(highlights.get(i).getColor()), null, null)}, null));
                             }
-                        })
-                        .collect(Collectors.toList())
-        );
+                        }
+                        body.setOnMouseClicked(event -> {
+                            if (!noteOptions.isVisible()) {
+                                showNoteOptions(section);
+                            } else {
+                                hideNoteOptions();
+                            }
+                        });
+
+                        contentElements.add(body);
 
 
+                    }
+                    else if (contentType instanceof HtmlViewType) {
+                        HtmlViewType viewType = (HtmlViewType) contentType;
 
-        for (int i = 0; i < viewModel.getSections().size(); i++) {
-            Section section = viewModel.getSections().get(i);
-            if (section.getTopicId() == topic.getId()) {
-                List<Highlights> highlights = viewModel.getSectionsHighlights().get(section.getId());
-                contentElements.addAll(
-                        viewModel.getSectionsSubSections().get(section.getId())
-                                .stream()
-                                .map(subSection -> {
-                                    if (subSection.getContent() != null) {
-                                        Label header = new Label();
-                                        header.setUserData(subSection);
-                                        header.setText(subSection.getContent());
-                                        header.setWrapText(true);
-                                        header.setLineSpacing(5);
-                                        header.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, defaultFontSize));
+                        if (viewType.getTitle() != null) {
 
-                                        for (int j = 0; j < highlights.size(); j ++) {
-                                            if (highlights.get(j).getNoteId() == subSection.getId()) {
-                                                header.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web(highlights.get(j).getColor()), null, null)}, null));
-                                            }
-                                        }
-                                        header.setOnMouseClicked(event -> {
-                                            if (!noteOptions.isVisible()) {
-                                                showNoteOptions(subSection);
-                                            } else {
-                                                hideNoteOptions();
-                                            }
-                                        });
-                                        return header;
-                                    } else {
-                                        Image image = new Image(getClass().getResource("/drawable/dummy_image.jpg").toString());
-                                        ImageView imageView = new ImageView(image);
-                                        imageView.setFitHeight(240);
-                                        imageView.setPreserveRatio(true);
+                            WebView webView = new WebView();
+                            webView.getEngine().loadContent(viewType.getBody().getText());
 
-                                        imageView.setImage(image);
-                                        imageView.setOnMouseClicked(event -> {
-                                            showImageViewLayout(image);
-                                        });
-                                        return imageView;
-                                    }
-                                })
-                                .collect(Collectors.toList())
-                );
-            }
-        }
+                            contentElements.add(webView);
+                        }
+                        WebView webView = new WebView();
+                        webView.getEngine().loadContent(viewType.getBody().getText());
+
+                        contentElements.add(webView);
+
+                    }
+                    else if (contentType instanceof WebViewType) {
+                        WebViewType viewType = (WebViewType) contentType;
+
+                        if (viewType.getTitle() != null) {
+                            contentElements.add(getTitle(viewType.getTitle().getText()));
+                        }
+                        WebView webView = new WebView();
+                        webView.getEngine().loadContent(viewType.getBody().getText());
+
+                        contentElements.add(webView);
+
+                    }
+                    else if (contentType instanceof ImageViewType) {
+                        ImageViewType imageViewType = (ImageViewType) contentType;
+
+                        ImageView image = new ImageView(new Image(getClass().getResource("/drawable/dummy_image.jpg").toString()));
+                        image.setFitHeight(240);
+                        image.setPreserveRatio(true);
+
+                        contentElements.add(image);
+
+                    }
+                    else if (contentType instanceof CBTViewType) {
+
+                    }
+                    else if (contentType instanceof OrderedListViewType) {
+                        OrderedListViewType viewType = (OrderedListViewType) contentType;
+
+                        if (viewType.getTitle() != null) {
+                            contentElements.add(getTitle(viewType.getTitle().getText()));
+                        }
+
+                        ListView<String> contentList = new ListView<>();
+
+                        contentList.setItems(FXCollections.observableArrayList(Arrays.asList(viewType.getBody().getList())));
+
+                        contentElements.add(contentList);
+
+                    }
+                    else if (contentType instanceof UnorderedListViewType) {
+
+                        UnorderedListViewType viewType = (UnorderedListViewType) contentType;
+
+                        if (viewType.getTitle() != null) {
+                            contentElements.add(getTitle(viewType.getTitle().getText()));
+                        }
+
+                        ListView<String> contentList = new ListView<>();
+
+                        contentList.setItems(FXCollections.observableArrayList(Arrays.asList(viewType.getBody().getList())));
+
+                        contentElements.add(contentList);
+
+                    }
+                    else if (contentType instanceof TableViewType) {
+                        TableViewType viewType = (TableViewType) contentType;
+
+                        TableView tableView = new TableView();
+
+                        for (int i = 0; i < viewType.getBody().getHeader().length; i++) {
+                            TableColumn<Map, String> column = new TableColumn<>(viewType.getBody().getHeader()[i]);
+                            column.setCellValueFactory(new MapValueFactory<>(i));
+
+                            tableView.getColumns().add(column);
+                        }
+
+                        for (int i = 0; i < viewType.getBody().getRows().length; i++) {
+                            Map<Integer, Object> item = new HashMap<>();
+                            for (int j = 0; j < viewType.getBody().getRows()[i].length; j++) {
+                                item.put(j, viewType.getBody().getRows()[i][j]);
+                            }
+
+                            tableView.getItems().add(item);
+                        }
+
+                        contentElements.add(tableView);
+
+                    }
+                    else if (contentType instanceof AudioViewType) {
+
+                    } else if (contentType instanceof VideoViewType) {
+
+                    }
+                });
 
 
         contentLayout.getChildren().clear();
         contentLayout.getChildren().addAll(contentElements);
     }
 
-    private void showNoteOptions(SubSection subSection) {
-        selectedSubSection = subSection;
+    private Label getTitle(String text) {
+        Label title = new Label();
+        title.setText(text);
+        title.setWrapText(true);
+        title.setUnderline(true);
+        title.setLineSpacing(8);
+        title.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
+        return title;
+    }
+    private void showNoteOptions(Section section) {
+        selectedSection = section;
 
         noteOptions.setVisible(true);
         TranslateTransition slideUp = new TranslateTransition();
@@ -418,7 +506,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     }
 
     private void hideNoteOptions() {
-        selectedSubSection = null;
+        selectedSection = null;
 
         TranslateTransition slideUp = new TranslateTransition();
 
@@ -524,25 +612,31 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     public static class InitialData {
         private Subject subject;
-        private List<Topic> topics;
-        private Topic selectedTopic;
+        private Topic topic;
+        private List<SubTopic> subTopics;
+        private SubTopic selectedSubTopic;
 
-        public InitialData(Subject subject, List<Topic> topics, Topic selectedTopic) {
+        public InitialData(Subject subject, Topic topic, List<SubTopic> subTopics, SubTopic selectedSubTopic) {
             this.subject = subject;
-            this.topics = topics;
-            this.selectedTopic = selectedTopic;
+            this.topic = topic;
+            this.subTopics = subTopics;
+            this.selectedSubTopic = selectedSubTopic;
         }
 
         public Subject getSubject() {
             return subject;
         }
 
-        public Topic getSelectedTopic() {
-            return selectedTopic;
+        public Topic getTopic() {
+            return topic;
         }
 
-        public List<Topic> getTopics() {
-            return topics;
+        public List<SubTopic> getSubTopics() {
+            return subTopics;
+        }
+
+        public SubTopic getSelectedSubTopic() {
+            return selectedSubTopic;
         }
     }
 }

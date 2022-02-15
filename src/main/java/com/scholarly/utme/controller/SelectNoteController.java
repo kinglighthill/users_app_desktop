@@ -2,7 +2,8 @@ package com.scholarly.utme.controller;
 
 
 import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.model.Topic;
+import com.scholarly.utme.data.model.newDb.SubTopic;
+import com.scholarly.utme.data.model.newDb.Topic;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -25,9 +26,11 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import javafx.util.Pair;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/SelectNoteScreen.fxml")
 public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializable {
@@ -131,8 +134,9 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         topicListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 
             if (newValue != null) {
-                Topic selectedTopic = (Topic) newValue.getUserData();
-                viewModel.setSelectedTopic(selectedTopic);
+                Pair<Topic, SubTopic> selectedTopic = (Pair<Topic, SubTopic>) newValue.getUserData();
+                viewModel.setSelectedTopic(selectedTopic.getKey());
+                viewModel.setSelectedSubTopic(selectedTopic.getValue());
 
                 if (!commenceButton.isVisible()) {
                     showCommenceButton();
@@ -148,43 +152,57 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
             if (newValue != null) {
                 viewModel.getSubjectTopics().get(newValue.getSubjectName()).forEach(topic -> {
-                    ToggleButton button = new ToggleButton();
-                    button.setUserData(topic);
-                    topicListToggleGroup.getToggles().add(button);
+
+                    VBox vBox = new VBox();
+                    TitledPane titledPane = new TitledPane(topic.getTitle(), vBox);
+
+                    viewModel.getSubjectSubTopics().get(newValue.getSubjectName()).forEach(subTopic -> {
+                        if (subTopic.getTopicId() == topic.getId()) {
+                            ToggleButton button = new ToggleButton();
+                            Pair<Topic, SubTopic> data = new Pair<>(topic, subTopic);
+                            button.setUserData(data);
+                            topicListToggleGroup.getToggles().add(button);
 
 
-                    button.setMinHeight(48);
-                    button.setMaxHeight(48);
-                    button.setPadding(new Insets(0, 0, 0, 20));
-                    button.setAlignment(Pos.BASELINE_LEFT);
-                    button.setMaxWidth(Double.MAX_VALUE);
-                    button.setText(topic.getTitle());
+                            button.setMinHeight(48);
+                            button.setMaxHeight(48);
+                            button.setPadding(new Insets(0, 0, 0, 20));
+                            button.setAlignment(Pos.BASELINE_LEFT);
+                            button.setMaxWidth(Double.MAX_VALUE);
+                            button.setText(subTopic.getTitle());
 
-                    button.setStyle(IDLE_BUTTON_STYLE);
-                    button.setOnMouseEntered(e -> {
-                        if (!button.isSelected()) {
-                            button.setStyle(HOVERED_BUTTON_STYLE);
-                        }
-                    });
-                    button.setOnMouseExited(e -> {
-                        if (!button.isSelected()) {
                             button.setStyle(IDLE_BUTTON_STYLE);
+                            button.setOnMouseEntered(e -> {
+                                if (!button.isSelected()) {
+                                    button.setStyle(HOVERED_BUTTON_STYLE);
+                                }
+                            });
+                            button.setOnMouseExited(e -> {
+                                if (!button.isSelected()) {
+                                    button.setStyle(IDLE_BUTTON_STYLE);
+                                }
+                            });
+
+                            button.selectedProperty().addListener((observe, old, newVal) -> {
+                                if (newVal) {
+                                    button.setStyle(PRESSED_STYLE);
+                                    button.setTextFill(Color.WHITE);
+                                } else {
+                                    button.setStyle(IDLE_BUTTON_STYLE);
+                                    button.setTextFill(Color.BLACK);
+                                }
+                            });
+
+                            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
+
+                            vBox.getChildren().add(button);
                         }
                     });
 
-                    button.selectedProperty().addListener((observe, old, newVal) -> {
-                        if (newVal) {
-                            button.setStyle(PRESSED_STYLE);
-                            button.setTextFill(Color.WHITE);
-                        } else {
-                            button.setStyle(IDLE_BUTTON_STYLE);
-                            button.setTextFill(Color.BLACK);
-                        }
-                    });
 
-                    button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
 
-                    topicListVBox.getChildren().add(button);
+
+                    topicListVBox.getChildren().add(titledPane);
                 });
             }
         });
@@ -204,7 +222,14 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 //        });
 
         commenceButton.setOnAction(event -> {
-            NotesScreenController.InitialData data = new NotesScreenController.InitialData(viewModel.getSelectedSubject(), viewModel.getSubjectTopics().get(viewModel.getSelectedSubject().getSubjectName()), viewModel.getSelectedTopic());
+            NotesScreenController.InitialData data = new NotesScreenController.InitialData(
+                    viewModel.getSelectedSubject(),
+                    viewModel.getSelectedTopic(),
+                    viewModel.getSubjectSubTopics().get(
+                            viewModel.getSelectedSubject().getSubjectName()
+                    ).stream().filter(subTopic -> subTopic.getTopicId() == viewModel.getSelectedTopic().getId()).collect(Collectors.toList()),
+                    viewModel.getSelectedSubTopic()
+            );
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.NOTES_SCREEN);
         });
