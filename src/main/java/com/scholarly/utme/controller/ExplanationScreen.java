@@ -3,6 +3,7 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.viewmodels.CBTGameScreenVM;
 import com.scholarly.utme.viewmodels.ExplanationScreenVM;
 import com.scholarly.utme.viewmodels.PracticeScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -126,118 +127,125 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
 
 
     public void onCalculatorClicked(MouseEvent mouseEvent) {
-
+        // TODO
     }
 
-    private void changeSelectedQuestion(int newValue) {
-        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
-        List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
-        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
-
-        questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
-
-        questionLabel.setText(questions.get(newValue - 1).getObjectiveQuestion().getQuestion());
-
-        optionA.setText(" (A) " + questions.get(newValue - 1).getObjectiveQuestion().getOptionA());
-        optionB.setText(" (B) " + questions.get(newValue - 1).getObjectiveQuestion().getOptionB());
-        optionC.setText(" (C) " + questions.get(newValue - 1).getObjectiveQuestion().getOptionC());
-        optionD.setText(" (D) " + questions.get(newValue - 1).getObjectiveQuestion().getOptionD());
-
-        optionA.setTextFill(Color.DARKGRAY);
-        optionB.setTextFill(Color.DARKGRAY);
-        optionC.setTextFill(Color.DARKGRAY);
-        optionD.setTextFill(Color.DARKGRAY);
-
-        String selectedOption = questions.get(newValue - 1).getSelectedOption();
-        String questionAnswer = questions.get(newValue - 1).getObjectiveQuestion().getOptionAnswer();
-
-        if (selectedOption != null) {
-            if (selectedOption.equalsIgnoreCase(questionAnswer)) {
-                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
-                    optionA.setTextFill(Color.GREEN);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
-                    optionB.setTextFill(Color.GREEN);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
-                    optionC.setTextFill(Color.GREEN);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
-                    optionD.setTextFill(Color.GREEN);
-                }
-            } else {
-                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
-                    optionA.setTextFill(Color.RED);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
-                    optionB.setTextFill(Color.RED);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
-                    optionC.setTextFill(Color.RED);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
-                    optionD.setTextFill(Color.RED);
-                }
-
-                if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
-                    optionA.setTextFill(Color.GREEN);
-                }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
-                    optionB.setTextFill(Color.GREEN);
-                }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
-                    optionC.setTextFill(Color.GREEN);
-                }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
-                    optionD.setTextFill(Color.GREEN);
-                }
-            }
-            noOptionSelected.setVisible(false);
-        }
-        else {
-            if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
-                optionA.setTextFill(Color.GREEN);
-            }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
-                optionB.setTextFill(Color.GREEN);
-            }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
-                optionC.setTextFill(Color.GREEN);
-            }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
-                optionD.setTextFill(Color.GREEN);
-            }
-
-            noOptionSelected.setVisible(true);
-        }
-
-        explanationLabel.setText(questions.get(newValue - 1).getObjectiveQuestion().getAnswerExplanation());
-    }
-
+    /**
+     * Initializes question layout
+     */
     private void setupQuestionView() {
         PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
         List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
-        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
+        PracticeScreenVM.QuestionState question = questions.get(subjectQuestionsState.getSelectedQuestion());
 
         prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
         nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
 
-        questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
+        questionOverviewLabel.setText("Question " + subjectQuestionsState.getSelectedQuestion() + " of " + questions.size());
 
-        questionLabel.setText(questions.get(selectedQuestion - 1).getObjectiveQuestion().getQuestion());
+        questionLabel.setText(question.getObjectiveQuestion().getQuestion());
 
-        optionA.setText(" (A) " + questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA());
-        optionB.setText(" (B) " + questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB());
-        optionC.setText(" (C) " + questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC());
-        optionD.setText(" (D) " + questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD());
+        optionA.setText(" (A) " + question.getObjectiveQuestion().getOptionA());
+        optionB.setText(" (B) " + question.getObjectiveQuestion().getOptionB());
+        optionC.setText(" (C) " + question.getObjectiveQuestion().getOptionC());
+        optionD.setText(" (D) " + question.getObjectiveQuestion().getOptionD());
 
         optionA.setTextFill(Color.DARKGRAY);
         optionB.setTextFill(Color.DARKGRAY);
         optionC.setTextFill(Color.DARKGRAY);
         optionD.setTextFill(Color.DARKGRAY);
 
-        String selectedOption = questions.get(selectedQuestion - 1).getSelectedOption();
-        String questionAnswer = questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionAnswer();
+        String selectedOption = question.getSelectedOption();
+        String questionAnswer = question.getObjectiveQuestion().getOptionAnswer();
+
+        if (selectedOption != null) {
+            if (selectedOption.equalsIgnoreCase(questionAnswer)) {
+                if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
+                    optionA.setTextFill(Color.GREEN);
+                }
+                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
+                    optionB.setTextFill(Color.GREEN);
+                }
+                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
+                    optionC.setTextFill(Color.GREEN);
+                }
+                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
+                    optionD.setTextFill(Color.GREEN);
+                }
+            } else {
+                if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
+                    optionA.setTextFill(Color.RED);
+                }
+                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
+                    optionB.setTextFill(Color.RED);
+                }
+                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
+                    optionC.setTextFill(Color.RED);
+                }
+                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
+                    optionD.setTextFill(Color.RED);
+                }
+
+                if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
+                    optionA.setTextFill(Color.GREEN);
+                }
+                else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
+                    optionB.setTextFill(Color.GREEN);
+                }
+                else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
+                    optionC.setTextFill(Color.GREEN);
+                }
+                else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
+                    optionD.setTextFill(Color.GREEN);
+                }
+            }
+            noOptionSelected.setVisible(false);
+        }
+        else {
+            if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
+                optionA.setTextFill(Color.GREEN);
+            }
+            else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
+                optionB.setTextFill(Color.GREEN);
+            }
+            else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
+                optionC.setTextFill(Color.GREEN);
+            }
+            else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
+                optionD.setTextFill(Color.GREEN);
+            }
+
+            noOptionSelected.setVisible(true);
+        }
+
+        explanationLabel.setText(question.getObjectiveQuestion().getAnswerExplanation());
+    }
+
+    /**
+     * Changes selected question of the explanation screen and re-renders views
+     * @param questionNumber number of the selected question
+     */
+    private void changeSelectedQuestion(int questionNumber) {
+        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
+        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
+
+        questionOverviewLabel.setText("Question " + questionNumber + " of " + questions.size());
+
+        questionLabel.setText(questions.get(questionNumber - 1).getObjectiveQuestion().getQuestion());
+
+        optionA.setText(" (A) " + questions.get(questionNumber - 1).getObjectiveQuestion().getOptionA());
+        optionB.setText(" (B) " + questions.get(questionNumber - 1).getObjectiveQuestion().getOptionB());
+        optionC.setText(" (C) " + questions.get(questionNumber - 1).getObjectiveQuestion().getOptionC());
+        optionD.setText(" (D) " + questions.get(questionNumber - 1).getObjectiveQuestion().getOptionD());
+
+        optionA.setTextFill(Color.DARKGRAY);
+        optionB.setTextFill(Color.DARKGRAY);
+        optionC.setTextFill(Color.DARKGRAY);
+        optionD.setTextFill(Color.DARKGRAY);
+
+        String selectedOption = questions.get(questionNumber - 1).getSelectedOption();
+        String questionAnswer = questions.get(questionNumber - 1).getObjectiveQuestion().getOptionAnswer();
 
         if (selectedOption != null) {
             if (selectedOption.equalsIgnoreCase(questionAnswer)) {
@@ -299,9 +307,12 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
             noOptionSelected.setVisible(true);
         }
 
-        explanationLabel.setText(questions.get(selectedQuestion - 1).getObjectiveQuestion().getAnswerExplanation());
+        explanationLabel.setText(questions.get(questionNumber - 1).getObjectiveQuestion().getAnswerExplanation());
     }
 
+    /**
+     * Initializes question tiles at bottom of the screen
+     */
     private void setupTilePane() {
         PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
         List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
@@ -335,21 +346,28 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
             });
         }
     }
+
+    /**
+     * Changes selected question tile at bottom of the screen
+     * @param oldSelectedQuestion old selected question
+     * @param newSelectedQuestion new question selected
+     */
     private void changeSelectedTile(int oldSelectedQuestion, int newSelectedQuestion) {
 
         StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestion - 1);
         StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestion - 1);
 
-        Rectangle selectedQuestionRectangle = (Rectangle) selectedQuestionPane.getChildren().get(0);
+
         Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
         Label oldQuestionText = (Label) oldQuestionPane.getChildren().get(1);
-
 
 
         oldQuestionText.setTextFill(Color.BLACK);
         selectedQuestionText.setTextFill(Color.RED);
 
     }
+
+
 
     public InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();

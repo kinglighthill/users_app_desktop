@@ -250,27 +250,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
-//        prevButton.setOnAction(event -> {
-////            if (topicList.getSelectionModel().getSelectedIndex() > 0) {
-////                topicList.getSelectionModel().select(topicList.getSelectionModel().getSelectedIndex() - 1);
-////            }
-//
-//            int currentIndex = viewModel.getTopics().indexOf(((Topic) topicListToggleGroup.getSelectedToggle().getUserData()));
-//            if (currentIndex > 0) {
-//                topicListToggleGroup.getToggles().forEach(toggle -> {
-//                    if (toggle.getUserData() == viewModel.getTopics().get(currentIndex - 1)) {
-//                        topicListToggleGroup.selectToggle(toggle);
-//                    }
-//                });
-//            }
-//        });
-
-        nextButton.setOnAction(event -> {
-//            if (topicList.getSelectionModel().getSelectedIndex() < topicList.getItems().size() - 1) {
-//                topicList.getSelectionModel().select(topicList.getSelectionModel().getSelectedIndex() + 1);
-//            }
-        });
-
         backButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
         });
