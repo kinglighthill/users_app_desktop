@@ -67,26 +67,26 @@ public class SubjectListItemVM implements ViewModel {
 
         years = YearsDao.getYears();
 
-        subjectState.onNext(new SubjectState(subject, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
+        subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
 
         mapPropertiesToState();
     }
 
     public void mapPropertiesToState() {
         subjectSelected.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new SubjectState(subject, newValue, shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
+            subjectState.onNext(new SubjectState(subject, type, newValue, shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
         }));
         shuffleQuestions.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new SubjectState(subject, subjectSelected.get(), newValue, shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
+            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), newValue, shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
         }));
         shuffleOptions.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new SubjectState(subject, subjectSelected.get(), shuffleQuestions.get(), newValue, selectedYearProperty.get(), selectedNumberOfQuestions.get()));
+            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), newValue, selectedYearProperty.get(), selectedNumberOfQuestions.get()));
         }));
         selectedYearProperty.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new SubjectState(subject, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), newValue, selectedNumberOfQuestions.get()));
+            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), newValue, selectedNumberOfQuestions.get()));
         }));
         selectedNumberOfQuestions.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new SubjectState(subject, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), newValue));
+            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), newValue));
         }));
     }
 
@@ -203,6 +203,7 @@ public class SubjectListItemVM implements ViewModel {
 
     public class SubjectState {
         private Subject subject;
+        private Type type;
 
         private Boolean isSelected;
         private Boolean shuffleQuestions;
@@ -211,8 +212,9 @@ public class SubjectListItemVM implements ViewModel {
         private Year selectedYear;
         private Integer numberOfQuestions;
 
-        public SubjectState(Subject subject, Boolean isSelected, Boolean shuffleQuestions, Boolean shuffleOptions, Year selectedYear, Integer numberOfQuestions) {
+        public SubjectState(Subject subject, Type type, Boolean isSelected, Boolean shuffleQuestions, Boolean shuffleOptions, Year selectedYear, Integer numberOfQuestions) {
             this.subject = subject;
+            this.type = type;
             this.isSelected = isSelected;
             this.shuffleQuestions = shuffleQuestions;
             this.shuffleOptions = shuffleOptions;
@@ -222,6 +224,10 @@ public class SubjectListItemVM implements ViewModel {
 
         public Subject getSubject() {
             return subject;
+        }
+
+        public Type getType() {
+            return type;
         }
 
         public Boolean getSelected() {

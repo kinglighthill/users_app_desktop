@@ -109,6 +109,7 @@ public class UserDatabaseCRUDHelper {
                 }
             }
         } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not add item to database");

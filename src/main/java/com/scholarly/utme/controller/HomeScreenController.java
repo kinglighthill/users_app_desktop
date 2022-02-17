@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller;
 
 
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.HomeScreenVM;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
 import de.saxsys.mvvmfx.FluentViewLoader;
@@ -24,7 +26,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
     private ToggleGroup toggleGroup;
 
     @FXML
-    private ToggleButton practiceButton, lessonNoteButton, cbtGameButton, videosButton, audiosButton, learningCenterButton;
+    private ToggleButton practiceButton, lessonNoteButton, cbtGameButton, videosButton, audiosButton, learningCenterButton, studyNotesButton;
 
     @FXML
     private StackPane contentPane;
@@ -55,6 +57,12 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         cbtGameButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
+            }
+        });
+
+        studyNotesButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
             }
         });
 

@@ -85,7 +85,6 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
 
         // Timeline Animation
         Timeline animation = new Timeline(new KeyFrame(Duration.millis(5000), eventHandler));
-
         animation.setCycleCount(Timeline.INDEFINITE);
         animation.play();
     }
@@ -131,6 +130,10 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
         });
     }
 
+
+    /**
+     * Shows login UI for authentication
+     */
     private void showLoginUI() {
         Label headerLabel = new Label("Login");
         Button backButton = new Button("back");
@@ -176,6 +179,9 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
         });
     }
 
+    /**
+     * Shows sign up UI for authentication
+     */
     private void showSignUpUI() {
         Label headerLabel = new Label("Sign Up");
         Button backButton = new Button("back");

@@ -31,7 +31,6 @@ public class BookmarkDao {
 
 
     public static ObservableList<Bookmark> getBookmarks(int subjectId) {
-        ObservableList<Bookmark> bookmarks = FXCollections.observableArrayList();
 
         String query;
 

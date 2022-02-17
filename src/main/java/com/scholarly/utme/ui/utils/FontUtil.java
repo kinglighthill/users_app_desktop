@@ -3,6 +3,7 @@ package com.scholarly.utme.ui.utils;
 import javafx.scene.text.Font;
 
 public class FontUtil {
+
     public enum GilroyFontFamily {
         THIN("/fonts/gilroy_thin.otf"),
         LIGHT("/fonts/gilroy_light.otf"),

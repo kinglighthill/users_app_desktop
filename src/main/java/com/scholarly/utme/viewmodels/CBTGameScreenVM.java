@@ -48,7 +48,7 @@ public class CBTGameScreenVM implements ViewModel {
 
             List<PracticeScreenVM.QuestionState> practiceQuestionState = questionStates
                     .stream()
-                    .map(questionState -> new PracticeScreenVM.QuestionState(questionState.question, null))
+                    .map(questionState -> new PracticeScreenVM.QuestionState(questionState.question, SubjectListItemVM.Type.OBJECTIVE, null))
                     .collect(Collectors.toList());
 
             questions.addAll(questionStates);
