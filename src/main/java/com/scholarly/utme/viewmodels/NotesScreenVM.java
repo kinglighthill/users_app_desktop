@@ -3,85 +3,74 @@ package com.scholarly.utme.viewmodels;
 import com.scholarly.utme.controller.NotesScreenController.InitialData;
 import com.scholarly.utme.data.dao.HighlightsDao;
 import com.scholarly.utme.data.dao.NoteDao;
-import com.scholarly.utme.data.dao.SectionDao;
-import com.scholarly.utme.data.dao.SubSectionDao;
-import com.scholarly.utme.data.model.*;
+import com.scholarly.utme.data.dao.newDb.SectionDao;
+import com.scholarly.utme.data.model.Highlights;
+import com.scholarly.utme.data.model.Note;
+import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.Section;
+import com.scholarly.utme.data.model.newDb.SubTopic;
+import com.scholarly.utme.data.model.newDb.Topic;
+import com.scholarly.utme.data.model.newDb.contentType.ContentType;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class NotesScreenVM implements ViewModel {
 
     Subject subject;
-    ObservableList<Topic> topics = FXCollections.observableArrayList();
-    SimpleObjectProperty<Topic> selectedTopic = new SimpleObjectProperty<>(null);
+    Topic topic;
+    ObservableList<SubTopic> subTopics = FXCollections.observableArrayList();
+    SimpleObjectProperty<SubTopic> selectedSubTopic = new SimpleObjectProperty<>(null);
 
-    ObservableList<Section> sections = FXCollections.emptyObservableList();
-    HashMap<Integer, ObservableList<SubSection>> sectionsSubSections = new HashMap<>();
-    HashMap<Integer, ObservableList<Highlights>> sectionsHighlights = new HashMap<>();
-    HashMap<Integer, ObservableList<Note>> sectionsNotes = new HashMap<>();
+    HashMap<Integer, ObservableList<Section>> subTopicSections = new HashMap<>();
+    ObservableList<Highlights> subjectHighlights = FXCollections.observableArrayList();
+    ObservableList<Note> subjectNotes = FXCollections.observableArrayList();
 
     public NotesScreenVM() {}
 
     public void initialize(InitialData data) {
         subject = data.getSubject();
-        selectedTopic.set(data.getSelectedTopic());
-        topics.addAll(data.getTopics());
+        topic = data.getTopic();
+        selectedSubTopic.set(data.getSelectedSubTopic());
+        subTopics.addAll(data.getSubTopics());
 
-        sections = SectionDao.getSections(subject.getTableName() + "_sections");
-
-
-        sections.forEach(section -> {
-            sectionsSubSections.put(section.getId(), SubSectionDao.getSubSections(subject.getTableName() + "_sub_sections", section.getId()));
-            sectionsHighlights.put(section.getId(), HighlightsDao.getHighlights(subject.getTableName() + "_sub_sections"));
-            sectionsNotes.put(section.getId(), NoteDao.getNotes(subject.getTableName() + "_sub_sections"));
+        subTopics.forEach(subTopic -> {
+            subTopicSections.put(subTopic.getId(), SectionDao.getSections("note_" + subject.getTableName() + "_sections", subTopic.getSectionId()));
+            subjectHighlights = HighlightsDao.getHighlights("note_" + subject.getTableName() + "_sections");
+            subjectNotes = NoteDao.getNotes("note_" + subject.getTableName() + "_sections");
         });
     }
 
 
-    public void handleHighlight(SubSection selectedSubSection, String colorCode) {
-        for (int i = 0; i < sections.size(); i++) {
-            if (sections.get(i).getTopicId() == selectedTopic.get().getId()) {
-                ObservableList<Highlights> highlightsList = sectionsHighlights.get(sections.get(i).getId());
+    public void handleHighlight(Section selectedSection, String colorCode) {
 
-                boolean highlighted = false;
+        boolean highlighted = false;
 
-                for (int j = 0; j < highlightsList.size(); j++) {
-                    Highlights currentHighlight = highlightsList.get(j);
-                    if (highlightsList.get(j).getNoteId() == selectedSubSection.getId()) {
-                        if (highlightsList.get(j).getColor().equals(colorCode)) {
-                            HighlightsDao.deleteHighlight(highlightsList.get(j).getId());
-                            highlightsList.remove(j);
-                        } else {
-                            HighlightsDao.updateHighlight(new Highlights(currentHighlight.getId(), currentHighlight.getNoteTableName(), currentHighlight.getNoteId(), colorCode));
-                            highlightsList.clear();
-                            highlightsList.addAll(HighlightsDao.getHighlights(subject.getTableName() + "_sub_sections"));
-                        }
-                        highlighted = true;
-                        break;
-                    }
+        for (int i = 0; i < subjectHighlights.size(); i++) {
+            Highlights currentHighlight = subjectHighlights.get(i);
+            if (subjectHighlights.get(i).getNoteId() == selectedSection.getId()) {
+                if (subjectHighlights.get(i).getColor().equals(colorCode)) {
+                    HighlightsDao.deleteHighlight(subjectHighlights.get(i).getId());
+                    subjectHighlights.remove(i);
+                } else {
+                    HighlightsDao.updateHighlight(new Highlights(currentHighlight.getId(), currentHighlight.getNoteTableName(), currentHighlight.getNoteId(), colorCode));
+                    subjectHighlights.clear();
+                    subjectHighlights.addAll(HighlightsDao.getHighlights("note_" + subject.getTableName() + "_sections"));
                 }
-
-                if (!highlighted) {
-                    HighlightsDao.createHighlight(subject.getTableName() + "_sub_sections", selectedSubSection.getId(), colorCode);
-                    highlightsList.clear();
-                    highlightsList.addAll(HighlightsDao.getHighlights(subject.getTableName() + "_sub_sections"));
-                }
-
+                highlighted = true;
                 break;
             }
         }
+
+        if (!highlighted) {
+            HighlightsDao.createHighlight("note_" + subject.getTableName() + "_sections", selectedSection.getId(), colorCode);
+            subjectHighlights.clear();
+            subjectHighlights.addAll(HighlightsDao.getHighlights("note_" + subject.getTableName() + "_sections"));
+        }
     }
-
-
-    public HashMap<Integer, ObservableList<Highlights>> getSectionsHighlights() {
-        return sectionsHighlights;
-    }
-
 
     public Subject getSubject() {
         return subject;
@@ -91,70 +80,73 @@ public class NotesScreenVM implements ViewModel {
         this.subject = subject;
     }
 
-    public Topic getSelectedTopic() {
-        return selectedTopic.get();
+    public Topic getTopic() {
+        return topic;
     }
 
-    public SimpleObjectProperty<Topic> selectedTopicProperty() {
-        return selectedTopic;
+    public void setTopic(Topic topic) {
+        this.topic = topic;
     }
 
-    public void setSelectedTopic(Topic selectedTopic) {
-        this.selectedTopic.set(selectedTopic);
+    public ObservableList<SubTopic> getSubTopics() {
+        return subTopics;
     }
 
-    public ObservableList<Section> getSections() {
-        return sections;
+    public void setSubTopics(ObservableList<SubTopic> subTopics) {
+        this.subTopics = subTopics;
     }
 
-    public void setSections(ObservableList<Section> sections) {
-        this.sections = sections;
+    public SubTopic getSelectedSubTopic() {
+        return selectedSubTopic.get();
     }
 
-    public HashMap<Integer, ObservableList<SubSection>> getSectionsSubSections() {
-        return sectionsSubSections;
+    public SimpleObjectProperty<SubTopic> selectedSubTopicProperty() {
+        return selectedSubTopic;
     }
 
-    public void setSectionsSubSections(HashMap<Integer, ObservableList<SubSection>> sectionsSubSections) {
-        this.sectionsSubSections = sectionsSubSections;
+    public void setSelectedSubTopic(SubTopic selectedSubTopic) {
+        this.selectedSubTopic.set(selectedSubTopic);
     }
 
-    public ObservableList<Topic> getTopics() {
-        return topics;
+    public HashMap<Integer, ObservableList<Section>> getSubTopicSections() {
+        return subTopicSections;
     }
 
-    public HashMap<Integer, ObservableList<Note>> getSectionsNotes() {
-        return sectionsNotes;
+    public void setSubTopicSections(HashMap<Integer, ObservableList<Section>> subTopicSections) {
+        this.subTopicSections = subTopicSections;
     }
 
-    public void addNote(SubSection selectedSubSection, String note) {
-        for (int i = 0; i < sections.size(); i++) {
-            if (sections.get(i).getTopicId() == selectedTopic.get().getId()) {
-                ObservableList<Note> noteList = sectionsNotes.get(sections.get(i).getId());
 
-                boolean highlighted = false;
+    public void addNote(Section selectedSection, String note) {
 
-                for (int j = 0; j < noteList.size(); j++) {
-                    Note currentNote = noteList.get(j);
-                    if (noteList.get(j).getNoteId() == selectedSubSection.getId()) {
-                        {
-                            NoteDao.updateNote(new Note(currentNote.getId(), currentNote.getNoteTableName(), currentNote.getNoteId(), note));
-                            noteList.clear();
-                            noteList.addAll(NoteDao.getNotes(subject.getTableName() + "_sub_sections"));
-                        }
-                        highlighted = true;
-                        break;
-                    }
+        boolean noted = false;
+
+        for (int i = 0; i < subjectNotes.size(); i++) {
+            Note currentNote = subjectNotes.get(i);
+            if (subjectNotes.get(i).getNoteId() == selectedSection.getId()) {
+                {
+                    NoteDao.updateNote(new Note(currentNote.getId(), currentNote.getNoteTableName(), currentNote.getNoteId(), note));
+                    subjectNotes.clear();
+                    subjectNotes.addAll(NoteDao.getNotes("note_" + subject.getTableName() + "_sections"));
                 }
-
-                if (!highlighted) {
-                    NoteDao.createNote(subject.getTableName() + "_sub_sections", selectedSubSection.getId(), note);
-                    noteList.clear();
-                    noteList.addAll(NoteDao.getNotes(subject.getTableName() + "_sub_sections"));
-                }
-
+                noted = true;
                 break;
             }
         }
+
+        if (!noted) {
+            NoteDao.createNote("note_" + subject.getTableName() + "_sections", selectedSection.getId(), note);
+            subjectNotes.clear();
+            subjectNotes.addAll(NoteDao.getNotes("note_" + subject.getTableName() + "_sections"));
+        }
+    }
+
+
+    public ObservableList<Highlights> getSubjectHighlights() {
+        return subjectHighlights;
+    }
+
+    public ObservableList<Note> getSubjectNotes() {
+        return subjectNotes;
     }
 }

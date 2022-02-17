@@ -86,7 +86,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         ImageView view = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
         view.setFitHeight(30);
         view.setPreserveRatio(true);
-
         backButton.setGraphic(view);
 
         viewModel.selectedQuestionProperty().addListener((observableValue, number, t1) -> {
@@ -138,7 +137,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                 optionAButton.setDisable(true);
             }
         });
-
         optionBButton.setOnAction(event -> {
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
 
@@ -155,7 +153,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                 optionBButton.setDisable(true);
             }
         });
-
         optionCButton.setOnAction(event -> {
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
 
@@ -172,7 +169,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                 optionCButton.setDisable(true);
             }
         });
-
         optionDButton.setOnAction(event -> {
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
 
@@ -327,7 +323,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                 calculatorStage.showAndWait();
 
             } catch (Exception e) {
-
+                System.out.println(e.getMessage());
             }
         } else {
             calculatorStage.toFront();
@@ -414,18 +410,17 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
 
     private void setupQuestionView() {
-        System.out.println("Option answer is -> " + viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1).getQuestion().getOptionAnswer());
         List<QuestionState> questions = viewModel.getQuestions();
-        int selectedQuestion = viewModel.getSelectedQuestion();
+        QuestionState selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1);
 
         questionNumberLabel.setText("Question " + selectedQuestion + " of " + questions.size());
 
-        questionLabel.setText(questions.get(selectedQuestion - 1).getQuestion().getQuestion());
+        questionLabel.setText(selectedQuestion.getQuestion().getQuestion());
 
-        optionAButton.setText(questions.get(selectedQuestion - 1).getQuestion().getOptionA());
-        optionBButton.setText(questions.get(selectedQuestion - 1).getQuestion().getOptionB());
-        optionCButton.setText(questions.get(selectedQuestion - 1).getQuestion().getOptionC());
-        optionDButton.setText(questions.get(selectedQuestion - 1).getQuestion().getOptionD());
+        optionAButton.setText(selectedQuestion.getQuestion().getOptionA());
+        optionBButton.setText(selectedQuestion.getQuestion().getOptionB());
+        optionCButton.setText(selectedQuestion.getQuestion().getOptionC());
+        optionDButton.setText(selectedQuestion.getQuestion().getOptionD());
 
         optionAButton.setDisable(false);
         optionBButton.setDisable(false);
@@ -435,14 +430,16 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
     private void changeSelectedQuestion(int newValue) {
         List<QuestionState> questions = viewModel.getQuestions();
+        QuestionState selectedQuestion = questions.get(newValue - 1);
+
         questionNumberLabel.setText("Question " + newValue + " of " + questions.size());
 
-        questionLabel.setText(questions.get(newValue - 1).getQuestion().getQuestion());
+        questionLabel.setText(selectedQuestion.getQuestion().getQuestion());
 
-        optionAButton.setText(questions.get(newValue - 1).getQuestion().getOptionA());
-        optionBButton.setText(questions.get(newValue - 1).getQuestion().getOptionB());
-        optionCButton.setText(questions.get(newValue - 1).getQuestion().getOptionC());
-        optionDButton.setText(questions.get(newValue - 1).getQuestion().getOptionD());
+        optionAButton.setText(selectedQuestion.getQuestion().getOptionA());
+        optionBButton.setText(selectedQuestion.getQuestion().getOptionB());
+        optionCButton.setText(selectedQuestion.getQuestion().getOptionC());
+        optionDButton.setText(selectedQuestion.getQuestion().getOptionD());
 
         optionAButton.setDisable(false);
         optionBButton.setDisable(false);

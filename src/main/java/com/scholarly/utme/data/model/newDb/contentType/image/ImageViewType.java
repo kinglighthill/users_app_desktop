@@ -1,8 +1,9 @@
 package com.scholarly.utme.data.model.newDb.contentType.image;
 
+import com.scholarly.utme.data.model.newDb.contentType.ContentType;
 import com.scholarly.utme.data.model.newDb.contentType.Title;
 
-public class ImageViewType {
+public class ImageViewType extends ContentType {
     private Title title;
     private ImageBody body;
 

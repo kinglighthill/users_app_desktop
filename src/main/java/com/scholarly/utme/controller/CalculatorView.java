@@ -6,6 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
+/**
+ * Calculator view controller to handle calcultor logic and operations
+ */
 public class CalculatorView {
 
 
