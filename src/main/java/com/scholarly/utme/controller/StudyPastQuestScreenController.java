@@ -1,10 +1,8 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.SubjectQuestionsState;
