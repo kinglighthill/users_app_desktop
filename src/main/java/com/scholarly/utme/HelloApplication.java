@@ -24,9 +24,9 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 //        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/layouts/authentication_screen.fxml"));
-//        Scene scene = new Scene(fxmlLoader.load());
-//        stage.setTitle("Scholarly UTME");
-//        stage.setScene(scene);
+////        Scene scene = new Scene(fxmlLoader.load());
+////        stage.setTitle("Scholarly UTME");
+////        stage.setScene(scene);
 
         System.out.println("Databases are ok..." + (Database.isOK() && UserDataDatabase.isOK()));
 
