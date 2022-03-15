@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.data.model.User;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.AuthenticationVM;
@@ -10,6 +11,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,16 +30,22 @@ import java.util.ResourceBundle;
 @FxmlPath("/layouts/authentication_screen.fxml")
 public class AuthenticationController implements FxmlView<AuthenticationVM>, Initializable {
 
+    @FXML
     public HBox root;
 
+    @FXML
     public VBox imageSliderSection;
+
+    @FXML
     public Pane pane;
 
+    @FXML
     public Separator separator;
 
+    @FXML
     public VBox authenticationSection;
 
-
+    Label loginInfoLabel, resetInfoLabel, signupInfoLabel;
 
     // Global ImageView array variable;
     ImageView[] imgView = new ImageView[3];
@@ -136,13 +144,13 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
      */
     private void showLoginUI() {
         Label headerLabel = new Label("Login");
-        Button backButton = new Button("back");
+
 
         HBox topBar = new HBox();
         topBar.setSpacing(15);
         topBar.setAlignment(Pos.CENTER_LEFT);
 
-        topBar.getChildren().addAll(backButton, headerLabel);
+        topBar.getChildren().addAll(headerLabel);
 
         VBox.setMargin(topBar, new Insets(40, 0, 0, 20));
 
@@ -156,20 +164,35 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
         PasswordField passwordField = new PasswordField();
         VBox.setMargin(passwordField, new Insets(10, 0, 0, 20));
 
+        loginInfoLabel = new Label();
+        loginInfoLabel.setVisible(false);
+        VBox.setMargin(loginInfoLabel, new Insets(15, 0, 0, 20));
 
         Button loginButton = new Button("Login");
         VBox.setMargin(loginButton, new Insets(40, 0, 0, 20));
+
+        HBox backAndForgotPassButton = new HBox();
+        VBox.setMargin(backAndForgotPassButton, new Insets(20, 0, 0, 20));
+
+
+        Button backButton = new Button("Back");
+        HBox.setMargin(backButton, new Insets(0, 10, 0, 0));
+
         Button forgotPasswordButton = new Button("Forgot Password?");
-        VBox.setMargin(forgotPasswordButton, new Insets(15, 0, 0, 20));
+        HBox.setMargin(forgotPasswordButton, new Insets(0, 0, 0, 10));
+
+        backAndForgotPassButton.getChildren().clear();
+        backAndForgotPassButton.getChildren().addAll(backButton, forgotPasswordButton);
 
 
 
         authenticationSection.getChildren().clear();
-        authenticationSection.getChildren().addAll(topBar, credential, credentialTextField, passwordLabel, passwordField, loginButton, forgotPasswordButton);
+        authenticationSection.getChildren().addAll(topBar, credential, credentialTextField, passwordLabel, passwordField, loginInfoLabel, loginButton, backAndForgotPassButton);
 
 
         loginButton.setOnAction(e -> {
-            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+            validateLoginInput(credentialTextField, passwordField);
+
         });
         backButton.setOnAction(e -> {
             showDefaultAuthenticationSection();
@@ -180,11 +203,28 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
     }
 
     /**
+     * Validates user authentication details before login
+     * @param credentialField the email address or username entered
+     * @param passwordField the user's password
+     */
+    private void validateLoginInput(TextField credentialField, PasswordField passwordField) {
+        String credential = credentialField.getText().trim();
+        String password = passwordField.getText().trim();
+
+        if (credential.contains("@") && !password.isEmpty()){
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+        }else {
+            loginInfoLabel.setText("Please enter a valid email or password");
+            loginInfoLabel.setVisible(true);
+        }
+    }
+
+    /**
      * Shows sign up UI for authentication
      */
     private void showSignUpUI() {
         Label headerLabel = new Label("Sign Up");
-        Button backButton = new Button("back");
+        Button backButton = new Button("Back");
 
         HBox topBar = new HBox();
         topBar.setSpacing(15);
@@ -204,6 +244,11 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
         TextField lastNameTextField = new TextField();
         VBox.setMargin(lastNameTextField, new Insets(10, 0, 0, 20));
 
+        Label phone = new Label("Phone number");
+        VBox.setMargin(phone, new Insets(20, 0, 0, 20));
+        TextField phoneTextField = new TextField();
+        VBox.setMargin(phoneTextField, new Insets(10, 0, 0, 20));
+
         Label email = new Label("Email");
         VBox.setMargin(email, new Insets(20, 0, 0, 20));
         TextField emailTextField = new TextField();
@@ -214,6 +259,8 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
         PasswordField passwordField = new PasswordField();
         VBox.setMargin(passwordField, new Insets(10, 0, 0, 20));
 
+        signupInfoLabel = new Label();
+        VBox.setMargin(signupInfoLabel, new Insets(20, 0, 0, 20));
 
         Button signUpButton = new Button("Sign Up");
         VBox.setMargin(signUpButton, new Insets(40, 0, 0, 20));
@@ -221,30 +268,32 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
 
 
         authenticationSection.getChildren().clear();
-        authenticationSection.getChildren().addAll(topBar, firstName, firstNameTextField, lastName, lastNameTextField, email, emailTextField, passwordLabel, passwordField, signUpButton);
+        authenticationSection.getChildren().addAll(topBar, firstName, firstNameTextField, lastName, lastNameTextField, phone, phoneTextField, email, emailTextField, passwordLabel, passwordField, signupInfoLabel, signUpButton);
 
 
         backButton.setOnAction(e -> {
             showDefaultAuthenticationSection();
         });
         signUpButton.setOnAction(e -> {
-            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+            showLoginUI();
+           // validateSignupInput(firstNameTextField, lastNameTextField, phoneTextField, emailTextField, passwordField);
+
         });
     }
 
     private void showForgotPasswordUI() {
         Label headerLabel = new Label("Forgot Password");
-        Button backButton = new Button("back");
+
 
         HBox topBar = new HBox();
         topBar.setSpacing(15);
         topBar.setAlignment(Pos.CENTER_LEFT);
 
-        topBar.getChildren().addAll(backButton, headerLabel);
+        topBar.getChildren().addAll(headerLabel);
 
         VBox.setMargin(topBar, new Insets(40, 0, 0, 20));
 
-        Label description = new Label("Enter your email address below. An email with a reset link will be sent shortly afterward.");
+        Label description = new Label("Enter your email address below. An email with a reset link will be sent shortly.");
         VBox.setMargin(description, new Insets(20, 0, 0, 20));
 
         Label email = new Label("Email");
@@ -252,20 +301,54 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
         TextField emailTextField = new TextField();
         VBox.setMargin(emailTextField, new Insets(10, 0, 0, 20));
 
+        resetInfoLabel = new Label();
+        VBox.setMargin(resetInfoLabel, new Insets(10, 0, 0, 20));
+        resetInfoLabel.setVisible(false);
+
+        HBox hbox = new HBox();
+        VBox.setMargin(hbox, new Insets(40, 0, 0, 20));
+
+        Button backButton = new Button("Back");
+        HBox.setMargin(backButton, new Insets(0, 10, 0, 0));
 
         Button proceedButton = new Button("Proceed");
-        VBox.setMargin(proceedButton, new Insets(40, 0, 0, 20));
+        VBox.setMargin(proceedButton, new Insets(0, 10, 0, 20));
 
-
+        hbox.getChildren().clear();
+        hbox.getChildren().addAll(backButton, proceedButton);
 
         authenticationSection.getChildren().clear();
-        authenticationSection.getChildren().addAll(topBar, description, email, emailTextField, proceedButton);
+        authenticationSection.getChildren().addAll(topBar, description, email, emailTextField, resetInfoLabel, hbox);
 
         backButton.setOnAction(e -> {
             showLoginUI();
         });
         proceedButton.setOnAction(e -> {
             showLoginUI();
+           // validateEmailInput(emailTextField);
         });
+    }
+
+    /*private void validateEmailInput(TextField emailText){
+        String email = emailText.getText().trim();
+
+        if (email.contains("@")) {
+            resetPassword(email);
+            resetInfoLabel.setText("A password reset link has been sent to the above email address");
+            resetInfoLabel.setVisible(true);
+
+        } else {
+            resetInfoLabel.setText("Please enter a valid email address");
+            resetInfoLabel.setVisible(true);
+
+        }
+    }
+*/
+    private void authenticateUser(User user){
+        //TODO
+    }
+
+    private void resetPassword(String email){
+        // TODO
     }
 }
