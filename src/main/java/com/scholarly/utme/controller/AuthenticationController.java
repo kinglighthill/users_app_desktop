@@ -343,12 +343,11 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
             showLoginUI();
         });
         proceedButton.setOnAction(e -> {
-            showLoginUI();
-           // validateEmailInput(emailTextField);
+            validateEmailInput(emailTextField);
         });
     }
 
-    /*private void validateEmailInput(TextField emailText){
+    private void validateEmailInput(TextField emailText){
         String email = emailText.getText().trim();
 
         if (email.contains("@")) {
@@ -362,7 +361,6 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
 
         }
     }
-*/
     private void authenticateUser(User user){
         //TODO
     }
