@@ -70,6 +70,4 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         toggleGroup.selectToggle(practiceButton);
     }
 
-
-
 }
