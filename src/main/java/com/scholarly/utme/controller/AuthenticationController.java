@@ -275,10 +275,29 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
             showDefaultAuthenticationSection();
         });
         signUpButton.setOnAction(e -> {
-            showLoginUI();
-           // validateSignupInput(firstNameTextField, lastNameTextField, phoneTextField, emailTextField, passwordField);
+            validateSignupInput(firstNameTextField, lastNameTextField, phoneTextField, emailTextField, passwordField);
 
         });
+    }
+
+    private void validateSignupInput(TextField firstNameText, TextField lastNameText, TextField phoneText, TextField emailText, PasswordField passwordText){
+        String firstName = firstNameText.getText().trim();
+        String lastName = lastNameText.getText().trim();
+        String phone = phoneText.getText().trim();
+        String email = emailText.getText().trim();
+        String password = passwordText.getText().trim();
+
+        if (!firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty() && !email.isEmpty() && !password.isEmpty()){
+            User newUser = new User(firstName, lastName, phone, email, password);
+            authenticateUser(newUser);
+            signupInfoLabel.setText("Account created successfully!");
+            showLoginUI();
+        }else {
+            signupInfoLabel.setText("Kindly fill out all fields");
+            signupInfoLabel.setVisible(true);
+        }
+
+
     }
 
     private void showForgotPasswordUI() {
