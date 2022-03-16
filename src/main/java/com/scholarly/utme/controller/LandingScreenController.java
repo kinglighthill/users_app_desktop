@@ -15,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.shape.Circle;
 
 import java.net.URL;
@@ -29,9 +28,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     @FXML
     private ListView<Course> recentlyViewedListView;
 
-    @FXML private FlowPane flowPane;
-
-    @FXML private Button logoutButton;
+    @FXML
+    private Button logoutButton, practiceButton, pastQuestionsButton, cbtGameButton, videosButton, audioButton, studyNotesButton, learningCenterButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -58,16 +56,40 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             System.out.println(e.getMessage());
         }
 
-        // Flow pane setup
+        practiceButton.setOnAction(e -> {
+            ViewSwitcher.passData(practiceButton);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
 
-        Button button1 = new Button("Practice");
-        Button button2 = new Button("Lesson");
-        Button button3 = new Button("Videos");
-        Button button4 = new Button("Audio");
-        Button button5 = new Button("Novels");
-        Button button6 = new Button("Learning Center");
+        pastQuestionsButton.setOnAction(e -> {
+            ViewSwitcher.passData(pastQuestionsButton);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
 
-        flowPane.getChildren().addAll(button1, button2, button3, button4, button5, button6);
+        cbtGameButton.setOnAction(e -> {
+            ViewSwitcher.passData(cbtGameButton);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+
+        videosButton.setOnAction(e -> {
+            ViewSwitcher.passData(videosButton);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+
+        audioButton.setOnAction(e -> {
+            ViewSwitcher.passData(audioButton);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+
+        learningCenterButton.setOnAction(e -> {
+            ViewSwitcher.passData(learningCenterButton);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+
+        studyNotesButton.setOnAction(e -> {
+            ViewSwitcher.passData(studyNotesButton);
+            ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
+        });
 
         logoutButton.setOnAction(e -> {
             ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
