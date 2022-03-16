@@ -11,6 +11,8 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
@@ -66,8 +68,30 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             }
         });
 
+        Button selectedButton = (Button) ViewSwitcher.retrieveData();
+        String buttonId = selectedButton.getId();
 
-        toggleGroup.selectToggle(practiceButton);
+        ToggleButton selectedToggle = selectToggle(buttonId);
+
+        toggleGroup.selectToggle(selectedToggle);
+    }
+
+    /**
+     * Accepts a Button ID and retrieves the corresponding ToggleButton
+     * @param buttonId the id of the Button
+     * @return a ToggleButton corresponding to the Button ID
+     */
+    private ToggleButton selectToggle(String buttonId){
+        return switch (buttonId) {
+            case "practiceButton" -> practiceButton;
+            case "pastQuestionsButton" -> lessonNoteButton;
+            case "cbtGameButton" -> cbtGameButton;
+            case "videosButton" -> videosButton;
+            case "audioButton" -> audiosButton;
+            case "learningCenterButton" -> learningCenterButton;
+            case "studyNotesButton" -> studyNotesButton;
+            default -> null;
+        };
     }
 
 }
