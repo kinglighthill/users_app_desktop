@@ -1,17 +1,14 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.landing_screen;
 
-import com.scholarly.utme.controller.landing_screen.*;
 import com.scholarly.utme.data.model.Course;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.LandingScreenVM;
+import com.scholarly.utme.viewmodels.landing_screen.LandingScreenVM;
 import com.scholarly.utme.viewmodels.landing_screen.*;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.ViewTuple;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -23,7 +20,7 @@ import javafx.scene.shape.Circle;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-@FxmlPath("/layouts/landing_screen.fxml")
+@FxmlPath("/layouts/landing_screen/landing_screen.fxml")
 public class LandingScreenController implements FxmlView<LandingScreenVM>, Initializable {
 
     @FXML
