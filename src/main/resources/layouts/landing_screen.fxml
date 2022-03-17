@@ -151,17 +151,28 @@
 <!--                                <Insets top="20.0" />-->
 <!--                            </padding>-->
                         </ListView>
-                        <Label text="Scholarly Catalog">
-                            <padding>
-                                <Insets left="10.0" top="40.0" bottom="20.0" />
-                            </padding></Label>
 
-                        <FlowPane fx:id="flowPane" hgap="10.0" vgap="20.0">
-                            <VBox.margin>
-                                <Insets left="20.0" />
-                            </VBox.margin>
+                        <VBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="150.0">
+                            <children>
+                                <Label text="Scholarly Catalog">
+                                    <padding>
+                                        <Insets left="10.0" top="40.0" bottom="20.0" />
+                                    </padding></Label>
 
-                        </FlowPane>
+                                <HBox alignment="CENTER_LEFT" prefHeight="80" prefWidth="150.0">
+                                    <children>
+                                        <Button fx:id="practiceButton" text="Practice" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                                        <Button fx:id="pastQuestionsButton" text="Past Questions" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                                        <Button fx:id="cbtGameButton" text="CBT Game" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                                        <Button fx:id="videosButton" text="Videos" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                                        <Button fx:id="audioButton" text="Audios" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                                        <Button fx:id="learningCenterButton" text="Learning Center" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                                        <Button fx:id="studyNotesButton" text="Study Notes" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+
                     </children>
                 </VBox>
 
