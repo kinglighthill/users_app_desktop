@@ -40,6 +40,9 @@ module com.scholarly.utme {
     opens com.scholarly.utme to de.saxsys.mvvmfx, javafx.fxml;
     opens com.scholarly.utme.viewmodels to de.saxsys.mvvmfx, javafx.fxml;
     opens com.scholarly.utme.controller to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.controller.landing_screen to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.viewmodels.landing_screen to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts to de.saxsys.mvvmfx, javafx.fxml;
+    opens layouts.landing_screen to de.saxsys.mvvmfx, javafx.fxml;
     exports com.scholarly.utme.data.model.newDb;
 }
