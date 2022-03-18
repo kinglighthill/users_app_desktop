@@ -1,40 +1,37 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.landing_screen;
 
 import com.scholarly.utme.data.model.Course;
 import com.scholarly.utme.ui.cellFactories.RecentlyViewedCellFactory;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.LandingScreenVM;
+import com.scholarly.utme.viewmodels.landing_screen.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.shape.Circle;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-@FxmlPath("/layouts/landing_screen.fxml")
-public class LandingScreenController implements FxmlView<LandingScreenVM>, Initializable {
+@FxmlPath("/layouts/landing_screen/landing_screen_home.fxml")
+public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM>, Initializable {
 
-    public ImageView profileImage, appIcon, bell;
-
-    @FXML
-    private ListView<Course> recentlyViewedListView;
+    @InjectViewModel
+    private LandingScreenHomeVM viewModel;
 
     @FXML
-    private Button logoutButton, practiceButton, pastQuestionsButton, cbtGameButton, videosButton, audioButton, studyNotesButton, learningCenterButton;
+    ListView<Course> recentlyViewedListView;
+
+    @FXML
+    private Button practiceButton, pastQuestionsButton, cbtGameButton, videosButton, audioButton, studyNotesButton, learningCenterButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        final Circle clip = new Circle(15, 15, 15);
-        profileImage.setClip(clip);
 
         String defaultImageURL = getClass().getResource("/drawable/app_logo.png").toString();
         ObservableList<Course> items = FXCollections.observableArrayList(
@@ -47,14 +44,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         recentlyViewedListView.setItems(items);
 
         recentlyViewedListView.setCellFactory(new RecentlyViewedCellFactory());
-
-        try {
-            profileImage.setImage(new Image(getClass().getResource("/drawable/profileImage.jpg").toString()));
-            appIcon.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
-            bell.setImage(new Image(getClass().getResource("/drawable/bell_icon.png").toString()));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
 
         practiceButton.setOnAction(e -> {
             ViewSwitcher.passData(practiceButton);
@@ -91,8 +80,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
         });
 
-        logoutButton.setOnAction(e -> {
-            ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
-        });
+
     }
 }

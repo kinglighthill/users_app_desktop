@@ -8,7 +8,7 @@
 <?import javafx.scene.text.*?>
 
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.LandingScreenController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.landing_screen.LandingScreenController">
 
     <left>
 
@@ -31,7 +31,7 @@
                             </HBox.margin></ImageView>
                     </children></HBox>
                 <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="5.0" />
-                <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Home">
+                <ToggleButton fx:id="homeButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Home">
                     <VBox.margin>
                         <Insets />
                     </VBox.margin>
@@ -40,9 +40,9 @@
                     </opaqueInsets>
                     <padding>
                         <Insets left="20.0" />
-                    </padding></Button>
+                    </padding></ToggleButton>
                 <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="2.0" />
-                <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Account">
+                <ToggleButton fx:id="accountButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Account">
                     <VBox.margin>
                         <Insets />
                     </VBox.margin>
@@ -51,9 +51,9 @@
                     </opaqueInsets>
                     <padding>
                         <Insets left="20.0" />
-                    </padding></Button>
+                    </padding></ToggleButton>
                 <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="2.0" />
-                <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Activate">
+                <ToggleButton fx:id="activateButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Activate">
                     <VBox.margin>
                         <Insets />
                     </VBox.margin>
@@ -62,9 +62,9 @@
                     </opaqueInsets>
                     <padding>
                         <Insets left="20.0" />
-                    </padding></Button>
+                    </padding></ToggleButton>
                 <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="2.0" />
-                <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Apps">
+                <ToggleButton fx:id="appsButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Apps">
                     <VBox.margin>
                         <Insets />
                     </VBox.margin>
@@ -73,9 +73,9 @@
                     </opaqueInsets>
                     <padding>
                         <Insets left="20.0" />
-                    </padding></Button>
+                    </padding></ToggleButton>
                 <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="2.0" />
-                <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Updates">
+                <ToggleButton fx:id="updatesButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Updates">
                     <VBox.margin>
                         <Insets />
                     </VBox.margin>
@@ -84,11 +84,11 @@
                     </opaqueInsets>
                     <padding>
                         <Insets left="20.0" />
-                    </padding></Button>
+                    </padding></ToggleButton>
                 <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="2.0" />
                 <HBox alignment="BOTTOM_LEFT" VBox.vgrow="ALWAYS">
                     <children>
-                        <Button fx:id="logoutButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Logout">
+                        <Button fx:id="logoutButton" alignment="BASELINE_CENTER" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Logout">
                             <VBox.margin>
                                 <Insets />
                             </VBox.margin>
@@ -141,37 +141,38 @@
                             </children>
                         </HBox>
                         <Line startX="-100.0" stroke="#f5f5f5" strokeWidth="5.0" HBox.hgrow="ALWAYS"/>
-                        <Label style="-fx-background-color: #FFFFFF;" text="Recently Viewed">
-                            <padding>
-                                <Insets left="10.0" top="10.0" bottom="20.0" />
-                            </padding>
-                        </Label>
-                        <ListView fx:id="recentlyViewedListView" orientation="HORIZONTAL" prefHeight="99.0" prefWidth="424.0">
+
+                        <StackPane fx:id="homeContentPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="592.0" HBox.hgrow="ALWAYS">
+
+                        </StackPane>
+<!--                        <Label style="-fx-background-color: #FFFFFF;" text="Recently Viewed">-->
 <!--                            <padding>-->
-<!--                                <Insets top="20.0" />-->
+<!--                                <Insets left="10.0" top="10.0" bottom="20.0" />-->
 <!--                            </padding>-->
-                        </ListView>
+<!--                        </Label>-->
+<!--                        <ListView fx:id="recentlyViewedListView" orientation="HORIZONTAL" prefHeight="99.0" prefWidth="424.0">-->
+<!--                        </ListView>-->
 
-                        <VBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="150.0">
-                            <children>
-                                <Label text="Scholarly Catalog">
-                                    <padding>
-                                        <Insets left="10.0" top="40.0" bottom="20.0" />
-                                    </padding></Label>
+<!--                        <VBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="150.0">-->
+<!--                            <children>-->
+<!--                                <Label text="Scholarly Catalog">-->
+<!--                                    <padding>-->
+<!--                                        <Insets left="10.0" top="40.0" bottom="20.0" />-->
+<!--                                    </padding></Label>-->
 
-                                <HBox alignment="CENTER_LEFT" prefHeight="80" prefWidth="150.0">
-                                    <children>
-                                        <Button fx:id="practiceButton" text="Practice" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                                        <Button fx:id="pastQuestionsButton" text="Past Questions" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                                        <Button fx:id="cbtGameButton" text="CBT Game" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                                        <Button fx:id="videosButton" text="Videos" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                                        <Button fx:id="audioButton" text="Audios" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                                        <Button fx:id="learningCenterButton" text="Learning Center" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                                        <Button fx:id="studyNotesButton" text="Study Notes" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                                    </children>
-                                </HBox>
-                            </children>
-                        </VBox>
+<!--                                <HBox alignment="CENTER_LEFT" prefHeight="80" prefWidth="150.0">-->
+<!--                                    <children>-->
+<!--                                        <Button fx:id="practiceButton" text="Practice" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
+<!--                                        <Button fx:id="pastQuestionsButton" text="Past Questions" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
+<!--                                        <Button fx:id="cbtGameButton" text="CBT Game" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
+<!--                                        <Button fx:id="videosButton" text="Videos" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
+<!--                                        <Button fx:id="audioButton" text="Audios" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
+<!--                                        <Button fx:id="learningCenterButton" text="Learning Center" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
+<!--                                        <Button fx:id="studyNotesButton" text="Study Notes" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
+<!--                                    </children>-->
+<!--                                </HBox>-->
+<!--                            </children>-->
+<!--                        </VBox>-->
 
                     </children>
                 </VBox>
