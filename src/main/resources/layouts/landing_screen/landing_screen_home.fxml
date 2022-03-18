@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.scholarly.utme.controller.landing_screen.LandingScreenHomeController"
+           prefHeight="400.0" prefWidth="600.0">
+
+
+    <Label style="-fx-background-color: #FFFFFF;" text="Recently Viewed">
+        <padding>
+            <Insets left="10.0" top="10.0" bottom="20.0" />
+        </padding>
+    </Label>
+    <ListView fx:id="recentlyViewedListView" orientation="HORIZONTAL" prefHeight="99.0" prefWidth="424.0">
+    </ListView>
+
+    <VBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="150.0">
+        <children>
+            <Label text="Scholarly Catalog">
+                <padding>
+                    <Insets left="10.0" top="40.0" bottom="20.0" />
+                </padding></Label>
+
+            <HBox alignment="CENTER_LEFT" prefHeight="80" prefWidth="150.0">
+                <children>
+                    <Button fx:id="practiceButton" text="Practice" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                    <Button fx:id="pastQuestionsButton" text="Past Questions" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                    <Button fx:id="cbtGameButton" text="CBT Game" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                    <Button fx:id="videosButton" text="Videos" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                    <Button fx:id="audioButton" text="Audios" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                    <Button fx:id="learningCenterButton" text="Learning Center" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                    <Button fx:id="studyNotesButton" text="Study Notes" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                </children>
+            </HBox>
+        </children>
+    </VBox>
+
+</VBox>
