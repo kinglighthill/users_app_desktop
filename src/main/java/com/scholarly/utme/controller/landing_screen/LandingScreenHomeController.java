@@ -2,6 +2,7 @@ package com.scholarly.utme.controller.landing_screen;
 
 import com.scholarly.utme.data.model.Course;
 import com.scholarly.utme.ui.cellFactories.RecentlyViewedCellFactory;
+import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screen.LandingScreenHomeVM;
@@ -12,8 +13,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,55 +30,70 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     ListView<Course> recentlyViewedListView;
 
     @FXML
-    private Button practiceButton, pastQuestionsButton, cbtGameButton, videosButton, audioButton, studyNotesButton, learningCenterButton;
+    private Panel practicePanel, pastQuestionsPanel, cbtGamePanel, videosPanel, audioPanel, studyNotesPanel, learningCenterPanel;
+
+    @FXML
+    private Label practiceLabel, pastQuestionsLabel, cbtGameLabel, videosLabel, audiosLabel, studyNotesLabel, learningCenterLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         String defaultImageURL = getClass().getResource("/drawable/app_logo.png").toString();
         ObservableList<Course> items = FXCollections.observableArrayList(
-                new Course("Math 101", defaultImageURL),
-                new Course("Chem 202", defaultImageURL),
-                new Course("Eng 103", defaultImageURL),
-                new Course("Phy 212", defaultImageURL)
+                new Course("Mathematics", defaultImageURL),
+                new Course("Physics", defaultImageURL),
+                new Course("Economics", defaultImageURL),
+                new Course("English Language", defaultImageURL)
         );
 
         recentlyViewedListView.setItems(items);
 
         recentlyViewedListView.setCellFactory(new RecentlyViewedCellFactory());
 
-        practiceButton.setOnAction(e -> {
-            ViewSwitcher.passData(practiceButton);
+
+        // Set fontStyles for the Label texts
+        practiceLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        pastQuestionsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        cbtGameLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        videosLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        audiosLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        learningCenterLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        studyNotesLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+
+
+        practicePanel.setOnMouseClicked(e -> {
+            ViewSwitcher.passData(practicePanel);
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
-        pastQuestionsButton.setOnAction(e -> {
-            ViewSwitcher.passData(pastQuestionsButton);
+
+        pastQuestionsPanel.setOnMouseClicked(e -> {
+            ViewSwitcher.passData(pastQuestionsPanel);
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
-        cbtGameButton.setOnAction(e -> {
-            ViewSwitcher.passData(cbtGameButton);
+        cbtGamePanel.setOnMouseClicked(e -> {
+            ViewSwitcher.passData(cbtGamePanel);
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
-        videosButton.setOnAction(e -> {
-            ViewSwitcher.passData(videosButton);
+        videosPanel.setOnMouseClicked(e -> {
+            ViewSwitcher.passData(videosPanel);
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
-        audioButton.setOnAction(e -> {
-            ViewSwitcher.passData(audioButton);
+        audioPanel.setOnMouseClicked(e -> {
+            ViewSwitcher.passData(audioPanel);
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
-        learningCenterButton.setOnAction(e -> {
-            ViewSwitcher.passData(learningCenterButton);
+        learningCenterPanel.setOnMouseClicked(e -> {
+            ViewSwitcher.passData(learningCenterPanel);
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
-        studyNotesButton.setOnAction(e -> {
-            ViewSwitcher.passData(studyNotesButton);
+        studyNotesPanel.setOnMouseClicked(e -> {
+            ViewSwitcher.passData(studyNotesPanel);
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
         });
 

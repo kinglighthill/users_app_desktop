@@ -6,7 +6,7 @@
 <fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" >
    <graphic>
 
-      <Button fx:id="itemButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Math 101">
+      <Button fx:id="itemButton" mnemonicParsing="false" prefHeight="60.0" prefWidth="150.0" >
          <graphic>
             <ImageView fx:id="itemImage" fitHeight="26.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" />
          </graphic>
