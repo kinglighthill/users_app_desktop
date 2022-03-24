@@ -88,6 +88,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         studyNotesButton.setFocusTraversable(false);
 
+
         Panel selectedMenuOption = (Panel) ViewSwitcher.retrieveData();
         String optionId = selectedMenuOption.getId();
         ToggleButton selectedToggle = selectToggle(optionId);
