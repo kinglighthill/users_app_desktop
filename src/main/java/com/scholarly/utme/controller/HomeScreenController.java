@@ -13,8 +13,6 @@ import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
@@ -129,4 +127,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         fadeTransition.play();
     }
 
+    public void homeTextClicked() {
+        ViewSwitcher.showScreen(View.LANDING_SCREEN);
+    }
 }
