@@ -165,22 +165,29 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 subjectStates = selectedTheorySubjects;
             }
 
-            Object initialData = null;
+            if (selectedObjectiveSubjects.size() > 0 && selectedTheorySubjects.size() > 0) {
 
-            if (selectedOption == SubjectListOption.PRACTICE) {
-                initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
-                ViewSwitcher.passData(initialData);
-                ViewSwitcher.showScreen(View.PRACTICE_SCREEN);
-            } else if (selectedOption == SubjectListOption.STUDY) {
-                initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
-                ViewSwitcher.passData(initialData);
-                ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
-            } else if (selectedOption == SubjectListOption.CBT_GAME) {
-                initialData = new CBTGameScreenController.InitialData(subjectStates, false, false);
-                ViewSwitcher.passData(initialData);
-                ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
+                Object initialData = null;
+
+                if (selectedOption == SubjectListOption.PRACTICE) {
+                    initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
+                    ViewSwitcher.passData(initialData);
+                    ViewSwitcher.showScreen(View.PRACTICE_SCREEN);
+                } else if (selectedOption == SubjectListOption.STUDY) {
+                    initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
+                    ViewSwitcher.passData(initialData);
+                    ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
+                } else if (selectedOption == SubjectListOption.CBT_GAME) {
+                    initialData = new CBTGameScreenController.InitialData(subjectStates, false, false);
+                    ViewSwitcher.passData(initialData);
+                    ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
+                }
+            }else {
+                System.out.println("Please select at least one subject");
             }
+
         });
+
     }
 
     /**

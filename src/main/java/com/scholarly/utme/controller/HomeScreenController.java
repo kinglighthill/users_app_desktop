@@ -72,9 +72,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         cbtGameButton.setFocusTraversable(false);
 
         studyNotesButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            // We're using oldValue because the studyNotesButton selectedProperty's newValue is 'false' because it was initially toggled to 'true' when user navigated from the SELECT_NOTE_SCREEN
-            // The oldValue is now 'true' thus making the button toggle when selectedProperty is changed
-            if (oldValue) {
+            if (newValue) {
                 animate(contentPane);
                 ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
             }
@@ -103,7 +101,9 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             ToggleButton selectedToggle = selectToggle(selectedMenuOption);
 
             toggleGroup.selectToggle(selectedToggle);
-            toggleGroup.getSelectedToggle().setSelected(true);
+            // We're using 'false' because the studyNotesButton selectedProperty's was initially toggled to 'true' when user navigated from the HOME_SCREEN to SELECT_NOTE_SCREEN
+            // This will make the button toggle when clicked thus switching selectedProperty to true
+            toggleGroup.getSelectedToggle().setSelected(false);
         }
 
     }
