@@ -44,7 +44,7 @@
 
                 <children>
                     <Panel fx:id="practicePanel" GridPane.columnIndex="0" GridPane.rowIndex="0" minHeight="120.0"
-                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                           prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                         <Label fx:id="practiceLabel" text="Practice" textFill="white" alignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
@@ -56,7 +56,7 @@
                     </Panel>
 
                     <Panel fx:id="pastQuestionsPanel" GridPane.columnIndex="1" GridPane.rowIndex="0" minHeight="120.0"
-                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                           prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                         <Label fx:id="pastQuestionsLabel" text="Past Questions" textFill="white" alignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
@@ -68,7 +68,7 @@
                     </Panel>
 
                     <Panel fx:id="cbtGamePanel" GridPane.columnIndex="2" GridPane.rowIndex="0" minHeight="120.0"
-                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                           prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                         <Label fx:id="cbtGameLabel" text="CBT Game" textFill="white" alignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
@@ -80,7 +80,7 @@
                     </Panel>
 
                     <Panel fx:id="videosPanel" GridPane.columnIndex="3" GridPane.rowIndex="0" minHeight="120.0"
-                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                           prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                         <Label fx:id="videosLabel" text="Videos" textFill="white" alignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
@@ -92,7 +92,7 @@
                     </Panel>
 
                     <Panel fx:id="audioPanel" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="120.0"
-                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                           prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                         <Label fx:id="audiosLabel" text="Audios" textFill="white" alignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
@@ -104,7 +104,7 @@
                     </Panel>
 
                     <Panel fx:id="learningCenterPanel" GridPane.columnIndex="1" GridPane.rowIndex="1" minHeight="120.0"
-                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                           prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                         <Label fx:id="learningCenterLabel" text="Learning Center" textFill="white" alignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
@@ -116,7 +116,7 @@
                     </Panel>
 
                     <Panel fx:id="studyNotesPanel" GridPane.columnIndex="2" GridPane.rowIndex="1" minHeight="120.0"
-                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                           prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                         <Label fx:id="studyNotesLabel" text="Study Notes" textFill="white" alignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
