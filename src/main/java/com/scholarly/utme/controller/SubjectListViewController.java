@@ -21,7 +21,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -165,6 +168,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 subjectStates = selectedTheorySubjects;
             }
 
+            // Make sure at least a subject is selected before the start of practice, study or cbt game
             if (selectedObjectiveSubjects.size() > 0 || selectedTheorySubjects.size() > 0) {
 
                 Object initialData = null;
@@ -183,6 +187,14 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                     ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
                 }
             }else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Select at least one subject for practice");
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
+                alert.showAndWait();
+
                 System.out.println("Please select at least one subject");
             }
 
