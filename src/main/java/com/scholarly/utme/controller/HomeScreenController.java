@@ -45,7 +45,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         toggleGroup = new ToggleGroup();
 
 
-        toggleGroup.getToggles().addAll(practiceButton, cbtGameButton, lessonNoteButton, videosButton, audiosButton, learningCenterButton);
+        toggleGroup.getToggles().addAll(practiceButton, cbtGameButton, lessonNoteButton, videosButton, audiosButton, learningCenterButton, studyNotesButton);
 
         practiceButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -72,7 +72,9 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         cbtGameButton.setFocusTraversable(false);
 
         studyNotesButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
+            // We're using oldValue because the studyNotesButton selectedProperty's newValue is 'false' because it was initially toggled to 'true' when user navigated from the SELECT_NOTE_SCREEN
+            // The oldValue is now 'true' thus making the button toggle when selectedProperty is changed
+            if (oldValue) {
                 animate(contentPane);
                 ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
             }
@@ -88,13 +90,22 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         studyNotesButton.setFocusTraversable(false);
 
+        if (ViewSwitcher.retrieveData() instanceof  Panel){
+            Panel selectedMenuOption = (Panel) ViewSwitcher.retrieveData();
+            String optionId = selectedMenuOption.getId();
+            ToggleButton selectedToggle = selectToggle(optionId);
 
-        Panel selectedMenuOption = (Panel) ViewSwitcher.retrieveData();
-        String optionId = selectedMenuOption.getId();
-        ToggleButton selectedToggle = selectToggle(optionId);
+            toggleGroup.selectToggle(selectedToggle);
+            toggleGroup.getSelectedToggle().setSelected(true);
 
-        toggleGroup.selectToggle(selectedToggle);
-        toggleGroup.getSelectedToggle().setSelected(true);
+        }else if (ViewSwitcher.retrieveData() instanceof String){
+            String selectedMenuOption = (String) ViewSwitcher.retrieveData();
+            ToggleButton selectedToggle = selectToggle(selectedMenuOption);
+
+            toggleGroup.selectToggle(selectedToggle);
+            toggleGroup.getSelectedToggle().setSelected(true);
+        }
+
     }
 
     /**
