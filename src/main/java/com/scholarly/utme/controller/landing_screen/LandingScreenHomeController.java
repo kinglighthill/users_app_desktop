@@ -9,12 +9,17 @@ import com.scholarly.utme.viewmodels.landing_screen.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MultipleSelectionModel;
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.input.MouseEvent;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
@@ -29,6 +34,8 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     ListView<Course> recentlyViewedListView;
 
+    ObservableList<Course> recentlyViewedCourses = FXCollections.observableArrayList();
+
     @FXML
     private Panel practicePanel, pastQuestionsPanel, cbtGamePanel, videosPanel, audioPanel, studyNotesPanel, learningCenterPanel;
 
@@ -39,16 +46,22 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     public void initialize(URL location, ResourceBundle resources) {
 
         String defaultImageURL = getClass().getResource("/drawable/app_logo.png").toString();
-        ObservableList<Course> items = FXCollections.observableArrayList(
-                new Course("Mathematics", defaultImageURL),
-                new Course("Physics", defaultImageURL),
-                new Course("Economics", defaultImageURL),
-                new Course("English Language", defaultImageURL)
-        );
 
-        recentlyViewedListView.setItems(items);
+        ObservableList<String> recentlyViewedSubjects = viewModel.getRecentlyViewedSubjects();
+
+        // Create courses representing the recently viewed subjects
+        for (String recentlyViewedSubject : recentlyViewedSubjects) {
+            recentlyViewedCourses.add(new Course(recentlyViewedSubject, defaultImageURL));
+        }
 
         recentlyViewedListView.setCellFactory(new RecentlyViewedCellFactory());
+
+        /*recentlyViewedListView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) ->
+                        System.out.println("Selected item: " + newValue)
+        );*/
+
+        recentlyViewedListView.setItems(recentlyViewedCourses);
 
 
         // Set fontStyles for the Label texts

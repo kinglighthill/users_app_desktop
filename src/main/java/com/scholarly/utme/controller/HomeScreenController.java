@@ -42,6 +42,9 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         ViewTuple<SubjectListViewController, SubjectListViewVM> viewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
         SubjectListViewController subjectListController = viewTuple.getCodeBehind();
 
+//        ViewTuple<SubjectListItemView, SubjectListItemVM> subjectListItemViewTuple = FluentViewLoader.fxmlView(SubjectListItemView.class).load();
+//        SubjectListItemView subjectListItemView = subjectListItemViewTuple.getCodeBehind();
+
         contentPane.getChildren().add(viewTuple.getView());
 
         toggleGroup = new ToggleGroup();
@@ -90,13 +93,22 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         studyNotesButton.setFocusTraversable(false);
 
-        Panel selectedMenuOption = (Panel) ViewSwitcher.retrieveData();
-        String optionId = selectedMenuOption.getId();
-        ToggleButton selectedToggle = selectToggle(optionId);
+        //Panel selectedMenuOption = (Panel) ViewSwitcher.retrieveData();
+        if (ViewSwitcher.retrieveData() instanceof Panel){
+            Panel selectedMenuOption = (Panel) ViewSwitcher.retrieveData();
+            String optionId = selectedMenuOption.getId();
+            ToggleButton selectedToggle = selectToggle(optionId);
 
-        toggleGroup.selectToggle(selectedToggle);
-        toggleGroup.getSelectedToggle().setSelected(true);
+            toggleGroup.selectToggle(selectedToggle);
+            toggleGroup.getSelectedToggle().setSelected(true);
+        }else {
+           // subjectListItemView.selectSubject((String) ViewSwitcher.retrieveData());
+            System.out.println("SelectedMenuOption is null");
+        }
+
     }
+
+
 
     /**
      * Accepts a Button ID and retrieves the corresponding ToggleButton

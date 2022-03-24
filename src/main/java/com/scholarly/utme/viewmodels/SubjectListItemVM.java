@@ -21,6 +21,7 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SubjectListItemVM implements ViewModel {
 
@@ -59,8 +60,6 @@ public class SubjectListItemVM implements ViewModel {
 
     private BehaviorSubject<SubjectState> subjectState = BehaviorSubject.create();
 
-
-
     public SubjectListItemVM(Subject subject) {
         this.subject = subject;
         subjectName.set(subject.getSubjectName());
@@ -70,6 +69,10 @@ public class SubjectListItemVM implements ViewModel {
         subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
 
         mapPropertiesToState();
+    }
+
+    public SubjectListItemVM(){
+
     }
 
     public void mapPropertiesToState() {
@@ -87,6 +90,12 @@ public class SubjectListItemVM implements ViewModel {
         }));
         selectedNumberOfQuestions.addListener(((observable, oldValue, newValue) -> {
             subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), newValue));
+        }));
+    }
+
+    public void selectSubject(String subjectName){
+        subjectSelected.addListener(((observable, oldValue, newValue) -> {
+            subjectState.onNext(new SubjectState(new Subject(0, null, subjectName, 0, null, null, null, null), type, true, shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
         }));
     }
 
@@ -138,7 +147,7 @@ public class SubjectListItemVM implements ViewModel {
 
         questionNumbers.clear();
         if (type == Type.OBJECTIVE) {
-            Observable.just(ObjectiveQuestionDao.getQuestions(subject.getTableName(), year.getId(), false))
+            Observable.just(Objects.requireNonNull(ObjectiveQuestionDao.getQuestions(subject.getTableName(), year.getId(), false)))
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();
@@ -162,7 +171,7 @@ public class SubjectListItemVM implements ViewModel {
 //            for ( int i = 1; i <= questionList.size(); i++) {
 //                questionNumbers.add(i);
 //            }
-            Observable.just(TheoryQuestionDao.getQuestions(subject.getTableName(), year.getId(), false))
+            Observable.just(Objects.requireNonNull(TheoryQuestionDao.getQuestions(subject.getTableName(), year.getId(), false)))
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();
