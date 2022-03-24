@@ -7,10 +7,14 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
+<?import org.controlsfx.control.GridCell?>
+<?import org.controlsfx.control.GridView?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.text.Font?>
 <VBox xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.scholarly.utme.controller.landing_screen.LandingScreenHomeController"
-           prefHeight="400.0" prefWidth="600.0">
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.scholarly.utme.controller.landing_screen.LandingScreenHomeController"
+      prefHeight="500.0" prefWidth="600.0">
 
 
     <Label style="-fx-background-color: #FFFFFF;" text="Recently Viewed">
@@ -18,7 +22,10 @@
             <Insets left="10.0" top="10.0" bottom="20.0" />
         </padding>
     </Label>
-    <ListView fx:id="recentlyViewedListView" orientation="HORIZONTAL" prefHeight="99.0" prefWidth="424.0">
+    <ListView fx:id="recentlyViewedListView" orientation="HORIZONTAL" minHeight="120.0" prefWidth="424.0">
+        <VBox.margin>
+            <Insets left="10.0" right="10.0"/>
+        </VBox.margin>
     </ListView>
 
     <VBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="150.0">
@@ -28,17 +35,102 @@
                     <Insets left="10.0" top="40.0" bottom="20.0" />
                 </padding></Label>
 
-            <HBox alignment="CENTER_LEFT" prefHeight="80" prefWidth="150.0">
+
+            <GridPane prefHeight="300" prefWidth="450" alignment="CENTER_LEFT" hgap="5.0" vgap="5.0">
+                <padding>
+                    <Insets left="10.0" right="10.0"/>
+                </padding>
+
+
                 <children>
-                    <Button fx:id="practiceButton" text="Practice" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                    <Button fx:id="pastQuestionsButton" text="Past Questions" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                    <Button fx:id="cbtGameButton" text="CBT Game" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                    <Button fx:id="videosButton" text="Videos" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                    <Button fx:id="audioButton" text="Audios" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                    <Button fx:id="learningCenterButton" text="Learning Center" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
-                    <Button fx:id="studyNotesButton" text="Study Notes" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>
+                    <Panel fx:id="practicePanel" GridPane.columnIndex="0" GridPane.rowIndex="0" minHeight="120.0"
+                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                        <Label fx:id="practiceLabel" text="Practice" textFill="white" alignment="CENTER" >
+                            <padding>
+                                <Insets left="65"/>
+                            </padding>
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
+                    </Panel>
+
+                    <Panel fx:id="pastQuestionsPanel" GridPane.columnIndex="1" GridPane.rowIndex="0" minHeight="120.0"
+                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                        <Label fx:id="pastQuestionsLabel" text="Past Questions" textFill="white" alignment="CENTER" >
+                            <padding>
+                                <Insets left="65"/>
+                            </padding>
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
+                    </Panel>
+
+                    <Panel fx:id="cbtGamePanel" GridPane.columnIndex="2" GridPane.rowIndex="0" minHeight="120.0"
+                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                        <Label fx:id="cbtGameLabel" text="CBT Game" textFill="white" alignment="CENTER" >
+                            <padding>
+                                <Insets left="65"/>
+                            </padding>
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
+                    </Panel>
+
+                    <Panel fx:id="videosPanel" GridPane.columnIndex="3" GridPane.rowIndex="0" minHeight="120.0"
+                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                        <Label fx:id="videosLabel" text="Videos" textFill="white" alignment="CENTER" >
+                            <padding>
+                                <Insets left="65"/>
+                            </padding>
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
+                    </Panel>
+
+                    <Panel fx:id="audioPanel" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="120.0"
+                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                        <Label fx:id="audiosLabel" text="Audios" textFill="white" alignment="CENTER" >
+                            <padding>
+                                <Insets left="65"/>
+                            </padding>
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
+                    </Panel>
+
+                    <Panel fx:id="learningCenterPanel" GridPane.columnIndex="1" GridPane.rowIndex="1" minHeight="120.0"
+                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                        <Label fx:id="learningCenterLabel" text="Learning Center" textFill="white" alignment="CENTER" >
+                            <padding>
+                                <Insets left="65"/>
+                            </padding>
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
+                    </Panel>
+
+                    <Panel fx:id="studyNotesPanel" GridPane.columnIndex="2" GridPane.rowIndex="1" minHeight="120.0"
+                           prefWidth="250.0" style="-fx-background-color: #105801;" GridPane.hgrow="ALWAYS">
+                        <Label fx:id="studyNotesLabel" text="Study Notes" textFill="white" alignment="CENTER" >
+                            <padding>
+                                <Insets left="65"/>
+                            </padding>
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
+                    </Panel>
+
                 </children>
-            </HBox>
+
+            </GridPane>
+
         </children>
     </VBox>
 

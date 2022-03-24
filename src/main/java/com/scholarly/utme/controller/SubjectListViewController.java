@@ -1,6 +1,5 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.utils.NoSelectionModel;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -13,18 +12,19 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
 import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
+import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -126,9 +126,11 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         tabMenu.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue.getText().equalsIgnoreCase("Objective")) {
                 selectedTab = "Objective";
+                animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedObjectiveSubjects);
             } else {
                 selectedTab = "Theory";
+                animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedTheorySubjects);
             }
         }));
@@ -179,6 +181,19 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
             }
         });
+    }
+
+    /**
+     * Plays a FadeTransition showing screen change when changing menu options
+     * @param node on which the transition is played
+     */
+    public void animate(Node node){
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), node);
+
+        fadeTransition.setFromValue(0.1);
+        fadeTransition.setToValue(1.0);
+
+        fadeTransition.play();
     }
 
     public void setOption(SubjectListOption option) {
