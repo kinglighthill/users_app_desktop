@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class BookmarkDao {
 
-    private static final String tableName = "bookmarks";
+    private static final String tableName = "question_bookmarks";
 
     private static final String idColumn = "id";
     private static final String questionIdColumn = "questionId";

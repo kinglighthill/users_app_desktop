@@ -165,7 +165,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 subjectStates = selectedTheorySubjects;
             }
 
-            if (selectedObjectiveSubjects.size() > 0 && selectedTheorySubjects.size() > 0) {
+            if (selectedObjectiveSubjects.size() > 0 || selectedTheorySubjects.size() > 0) {
 
                 Object initialData = null;
 

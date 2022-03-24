@@ -365,6 +365,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         });
 
         exitButton.setOnAction(event -> {
+            ViewSwitcher.passData("practicePanel");
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
