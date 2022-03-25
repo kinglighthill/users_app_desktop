@@ -27,8 +27,6 @@ import static com.scholarly.utme.controller.SubjectListViewController.*;
 @FxmlPath("/layouts/HomeScreen.fxml")
 public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializable {
 
-    private ToggleGroup toggleGroup;
-
     @FXML
     private ToggleButton practiceButton, lessonNoteButton, cbtGameButton, videosButton, audiosButton, learningCenterButton, studyNotesButton;
 
@@ -42,7 +40,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         contentPane.getChildren().add(viewTuple.getView());
 
-        toggleGroup = new ToggleGroup();
+        ToggleGroup toggleGroup = new ToggleGroup();
 
 
         toggleGroup.getToggles().addAll(practiceButton, cbtGameButton, lessonNoteButton, videosButton, audiosButton, learningCenterButton, studyNotesButton);
