@@ -144,6 +144,15 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         hideAnswerButton.setOnAction(event -> {
 
+            int selectedQuestion = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName())
+                    .getSelectedQuestion();
+
+            SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName());
+
+            questionsState.getQuestions().get(selectedQuestion - 1).setShowExplanation(false);
+
             showCorrectAnswerButton.setVisible(true);
             showExplanationButton.setVisible(false);
             explanationTitle.setVisible(false);
@@ -262,7 +271,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             correctAnswerTitle.setVisible(true);
             showCorrectAnswerButton.setVisible(false);
 
-           // hideAnswerButton.setText("Hide Explanation");
+            hideAnswerButton.setText("Hide Explanation");
             hideAnswerButton.setVisible(true);
 
 
