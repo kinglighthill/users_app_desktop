@@ -18,6 +18,10 @@ import com.sun.speech.freetts.VoiceManager;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.beans.binding.Bindings;
@@ -40,12 +44,10 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
 import java.net.URL;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @FxmlPath("/layouts/PracticeScreen.fxml")
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable {
@@ -396,6 +398,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     .get(selectedQuestion - 1);
 
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+                System.out.println("Question: " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
                 textToSpeech(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
             } else {
                 textToSpeech(((TheoryQuestion) questionState.getQuestion()).getQuestion());
@@ -778,12 +781,28 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
 
-        VoiceManager vm = VoiceManager.getInstance();
+        CompositeDisposable disposables = new CompositeDisposable();
+
+        disposables.add(
+                Observable.just(VoiceManager.getInstance().getVoice("kevin16"))
+                        .observeOn(JavaFxScheduler.platform())
+                        .subscribe(
+                                voice -> {
+                                    voice.allocate();
+                                    voice.speak(text);
+                                }
+                        )
+        );
+
+        disposables.dispose();
+
+
+        /*VoiceManager vm = VoiceManager.getInstance();
         Voice voice = vm.getVoice("kevin16");
 
         voice.allocate();
 
-        voice.speak(text);
+        voice.speak(text);*/
     }
 
     private InitialData getInitialData() {

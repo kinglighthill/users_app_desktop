@@ -7,9 +7,12 @@ import com.scholarly.utme.viewmodels.StudyPastScreenVM;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
+import com.sun.speech.freetts.VoiceManager;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -26,6 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
 import java.net.URL;
 import java.util.List;
@@ -153,6 +157,40 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+
+        speakerImage.setOnMouseClicked(event -> {
+            int selectedQuestion = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName())
+                    .getSelectedQuestion();
+
+            SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName());
+
+            String currentQuestion = questionsState.getQuestions().get(selectedQuestion - 1).getQuestion().getQuestion();
+
+            textToSpeech(currentQuestion);
+        });
+
+    }
+
+    private void textToSpeech(String text){
+        System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+
+        CompositeDisposable disposables = new CompositeDisposable();
+
+        disposables.add(
+                Observable.just(VoiceManager.getInstance().getVoice("kevin16"))
+                        .observeOn(JavaFxScheduler.platform())
+                        .subscribe(
+                                voice -> {
+                                    voice.allocate();
+                                    voice.speak(text);
+                                }
+                        )
+        );
+
+        disposables.dispose();
     }
 
     public void onCalculatorClicked(MouseEvent mouseEvent) {
