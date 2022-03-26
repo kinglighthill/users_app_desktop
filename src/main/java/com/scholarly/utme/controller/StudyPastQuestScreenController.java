@@ -50,7 +50,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     private Label questionOverviewLabel, questionLabel, optionA, optionB, optionC, optionD, explanationLabel, explanationTitle, correctAnswerTitle, correctAnswerLabel;
 
     @FXML
-    private Button prevButton, nextButton, exitButton, showCorrectAnswerButton, showExplanationButton;
+    private Button prevButton, nextButton, exitButton, showCorrectAnswerButton, showExplanationButton, hideAnswerButton;
 
     @FXML
     private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage;
@@ -138,6 +138,18 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             updateExplanationView();
         });
 
+        hideAnswerButton.setOnAction(event -> {
+
+            showCorrectAnswerButton.setVisible(true);
+            showExplanationButton.setVisible(false);
+            explanationTitle.setVisible(false);
+            explanationLabel.setVisible(false);
+            correctAnswerLabel.setVisible(false);
+            correctAnswerTitle.setVisible(false);
+            hideAnswerButton.setVisible(false);
+
+        });
+
         tilePane.setVgap(10);
         tilePane.setHgap(10);
 
@@ -193,13 +205,16 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         if (!questionState.isShowExplanation() && !questionState.isShowAnswer()) {
             System.out.println("showing default explanation view");
             showCorrectAnswerButton.setVisible(true);
-            showExplanationButton.setVisible(true);
+            showExplanationButton.setVisible(false);
             explanationTitle.setVisible(false);
             explanationLabel.setVisible(false);
             correctAnswerLabel.setVisible(false);
             correctAnswerTitle.setVisible(false);
 
+            hideAnswerButton.setVisible(false);
+
         } else if (questionState.isShowExplanation()) {
+
             System.out.println("showing explanation and answer view");
             explanationTitle.setVisible(true);
             explanationLabel.setVisible(true);
@@ -209,11 +224,20 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             correctAnswerTitle.setVisible(true);
             showCorrectAnswerButton.setVisible(false);
 
+           // hideAnswerButton.setText("Hide Explanation");
+            hideAnswerButton.setVisible(true);
+
+
         } else if (questionState.isShowAnswer()) {
+
             System.out.println("showing show answer view alone");
             correctAnswerLabel.setVisible(true);
             correctAnswerTitle.setVisible(true);
             showCorrectAnswerButton.setVisible(false);
+            showExplanationButton.setVisible(true);
+
+            hideAnswerButton.setText("Hide Answer");
+            hideAnswerButton.setVisible(true);
         }
     }
 
