@@ -115,11 +115,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             }
         });
 
-        viewModel.getSubjectBookmarks().forEach((s, bookmarks) -> {
+        /*viewModel.getSubjectBookmarks().forEach((s, bookmarks) -> {
             bookmarks.addListener((ListChangeListener<? super Bookmark>) change -> {
 
             });
-        });
+        });*/
 
         subjectList.setItems(viewModel.getSubjects());
         subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
@@ -421,7 +421,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         List<Bookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getTableName());
 
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+       // bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
 
         bookmarks.forEach(bookmark -> {
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {

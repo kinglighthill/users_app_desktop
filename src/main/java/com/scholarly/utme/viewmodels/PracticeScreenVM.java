@@ -59,8 +59,6 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
         subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).collect(Collectors.toList()));
 
-//        List<QuestionState> questionStates = new Arra;
-
         data.questionData.forEach(subjectState -> {
 
             questionType = subjectState.getType();
@@ -77,6 +75,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .map(question -> new QuestionState(question, Type.OBJECTIVE, null))
                         .collect(Collectors.toList());
 
+                subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
+
                 ObservableList<Bookmark> bookmarks = BookmarkDao
                         .getBookmarks(
                                 subjectState.getSubject().getId()
@@ -84,7 +84,6 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
                 subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
 
-                subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
 
             } else if (subjectState.getType() == Type.THEORY) {
 
@@ -98,6 +97,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .map(question -> new QuestionState(question, Type.THEORY, null))
                         .collect(Collectors.toList());
 
+                subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
+
                 ObservableList<Bookmark> bookmarks = BookmarkDao
                         .getBookmarks(
                                 subjectState.getSubject().getId()
@@ -105,7 +106,12 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
                 subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
 
-                subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
+                /*if (!bookmarks.isEmpty()){
+                    System.out.println("Got subject bookmark with id: " + bookmarks.get(1).getId());
+                }else {
+                    System.out.println("Bookmark is empty");
+                }*/
+
 
             }
 
@@ -224,17 +230,20 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         boolean currentQuestionBookmarked = false;
         Bookmark bookmarkToDelete = null;
 
-        for (int i = 0; i < bookmarks.size(); i++) {
-            if (bookmarks.get(i).getQuestionId() == question.getId()) {
+        for (Bookmark bookmark : bookmarks) {
+            if (bookmark.getQuestionId() == question.getId()) {
                 currentQuestionBookmarked = true;
-                bookmarkToDelete = bookmarks.get(i);
+                bookmarkToDelete = bookmark;
             }
         }
 
         if (currentQuestionBookmarked) {
             int deletedId = BookmarkDao.deleteBookmark(bookmarkToDelete.getId());
+            System.out.println("Deleted bookmark with id: " + deletedId);
         } else {
             int createdId = BookmarkDao.createBookmark(question.getId(), question.getSubjectId(), question.getYearId());
+            currentQuestionBookmarked = true;
+            System.out.println("Created bookmark with id: " + createdId);
         }
 
         ObservableList<Bookmark> newBookmarks = BookmarkDao

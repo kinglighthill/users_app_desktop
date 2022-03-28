@@ -1,8 +1,12 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.data.model.Bookmark;
+import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.TheoryQuestion;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.viewmodels.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.SubjectQuestionsState;
@@ -93,6 +97,14 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
                 if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
                     changeSelectedTile(oldValue.intValue(), newValue.intValue());
                     changeSelectedQuestion(newValue.intValue());
+                }
+            });
+        });
+
+        viewModel.getSubjectBookmarks().forEach((s, bookmarks) -> {
+            bookmarks.addListener((ListChangeListener<? super Bookmark>) observable -> {
+                if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
+                    updateBookmarkIcon();
                 }
             });
         });
@@ -193,6 +205,65 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             textToSpeech(currentQuestion);
         });
 
+        bookmarkImage.setOnMouseClicked(event -> {
+            viewModel.handleBookmarkClicked();
+
+            int selectedQuestion = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName())
+                    .getSelectedQuestion();
+
+            SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName());
+
+            questionsState.getQuestions().get(selectedQuestion - 1).setIsBookmarked(true);
+
+
+
+
+           // updateBookmarkIcon();
+        });
+
+       // updateBookmarkIcon();
+
+    }
+
+    private void updateBookmarkIcon() {
+
+        /*// Delete this later
+        int selectedQuestion = viewModel.getSubjectsQuestions()
+                .get(viewModel.getSelectedSubject().getTableName())
+                .getSelectedQuestion();
+
+        SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
+                .get(viewModel.getSelectedSubject().getTableName());
+
+        questionsState.getQuestions().get(selectedQuestion - 1).setShowExplanation(false);
+
+*/
+
+
+        // Keep this
+
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        List<Bookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getTableName());
+
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+
+        if (questions.get(subjectQuestionsState.getSelectedQuestion() - 1).isBookmarked()){
+            System.out.println("Current question is bookmarked");
+        }
+
+
+
+        bookmarks.forEach(bookmark -> {
+            if (bookmark.getQuestionId() == questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion().getId()){
+
+                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+            }else {
+                System.out.println("Cannot set bookmark image");
+            }
+        });
     }
 
     private void textToSpeech(String text){
@@ -390,6 +461,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
+        System.out.println("Got data -> " + data);
         return data;
     }
 

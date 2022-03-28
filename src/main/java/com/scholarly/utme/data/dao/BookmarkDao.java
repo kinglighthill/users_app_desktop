@@ -48,7 +48,7 @@ public class BookmarkDao {
                         rs.getInt(yearIdColumn)));
             }
 
-            System.out.println("Got bookmarks of length -> " + bookmarks.size());
+            System.out.println("Got bookmarks of length -> " + bookmarks.size() + " from Db");
 
             return bookmarks;
         } catch (SQLException e) {
@@ -64,7 +64,7 @@ public class BookmarkDao {
     public static int deleteBookmark(int id) {
         int deletedId = UserDatabaseCRUDHelper.delete(tableName, id);
 
-        System.out.println("Bookmark of id -> " + deletedId + " has been deleted");
+        System.out.println("Bookmark of id -> " + deletedId + " has been deleted from Db");
 
         return deletedId;
     }
@@ -76,7 +76,7 @@ public class BookmarkDao {
                 new Object[]{questionId, subjectId, yearId},
                 new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER});
 
-        System.out.println("Bookmark created with id -> " + id);
+        System.out.println("Bookmark created with id -> " + id + " in Db");
         return id;
     }
 

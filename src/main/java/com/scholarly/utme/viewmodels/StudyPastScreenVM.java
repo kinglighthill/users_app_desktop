@@ -2,7 +2,9 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.controller.PracticeScreenController;
 import com.scholarly.utme.controller.StudyPastQuestScreenController;
+import com.scholarly.utme.data.dao.BookmarkDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
+import com.scholarly.utme.data.model.Bookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
 import de.saxsys.mvvmfx.ViewModel;
@@ -29,6 +31,8 @@ public class StudyPastScreenVM implements ViewModel {
 
     private HashMap<String, SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
+    private HashMap<String, ObservableList<Bookmark>> subjectBookmarks = new HashMap<>();
+
 
     public void processInitialData(StudyPastQuestScreenController.InitialData data) {
 
@@ -42,10 +46,22 @@ public class StudyPastScreenVM implements ViewModel {
                             subjectState.getSelectedYear().getId(),
                             false
                     ).stream()
-                    .map(objectiveQuestion -> new QuestionState(objectiveQuestion, false, false))
+                    .map(objectiveQuestion -> new QuestionState(objectiveQuestion, false, false, false))
                     .collect(Collectors.toList());
 
             subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
+
+            ObservableList<Bookmark> bookmarks = BookmarkDao
+                    .getBookmarks(
+                            subjectState.getSubject().getId()
+                    );
+
+            subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
+
+            /*assert bookmarks != null;
+            if (!bookmarks.isEmpty()){
+                System.out.println("Got subject bookmark with id: " + bookmarks.get(1).getId());
+            }*/
 
         });
     }
@@ -70,9 +86,48 @@ public class StudyPastScreenVM implements ViewModel {
         this.selectedSubject.set(selectedSubject);
     }
 
-    public void hideAnswerAndExplanation() {
-
+    public HashMap<String, ObservableList<Bookmark>> getSubjectBookmarks() {
+        return subjectBookmarks;
     }
+
+    public void handleBookmarkClicked() {
+
+       SubjectQuestionsState subjectQuestionsState = subjectsQuestions.get(selectedSubject.get().getTableName());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
+
+        ObservableList<Bookmark> bookmarks = subjectBookmarks.get(selectedSubject.get().getTableName());
+        ObjectiveQuestion question = questions.get(selectedQuestion - 1).getQuestion();
+
+        boolean currentQuestionBookmarked = false;
+        Bookmark bookmarkToDelete = null;
+
+        for (Bookmark bookmark : bookmarks) {
+            if (bookmark.getQuestionId() == question.getId()) {
+                currentQuestionBookmarked = true;
+                bookmarkToDelete = bookmark;
+            }
+        }
+
+        if (currentQuestionBookmarked) {
+            int deletedId = BookmarkDao.deleteBookmark(bookmarkToDelete.getId());
+            System.out.println("Deleted bookmark with id: " + deletedId);
+        } else {
+            int createdId = BookmarkDao.createBookmark(question.getId(), question.getSubjectId(), question.getYearId());
+            System.out.println("Created bookmark with id: " + createdId);
+
+        }
+
+        ObservableList<Bookmark> newBookmarks = BookmarkDao
+                .getBookmarks(
+                        question.getSubjectId()
+                );
+
+        subjectBookmarks.get(selectedSubject.get().getTableName()).clear();
+        assert newBookmarks != null;
+        subjectBookmarks.get(selectedSubject.get().getTableName()).addAll(newBookmarks);
+    }
+
 
     public static class SubjectQuestionsState {
         private SimpleIntegerProperty selectedQuestion = new SimpleIntegerProperty();
@@ -105,11 +160,13 @@ public class StudyPastScreenVM implements ViewModel {
         private ObjectiveQuestion question;
         private boolean showAnswer;
         private boolean showExplanation;
+        private boolean isBookmarked;
 
-        public QuestionState(ObjectiveQuestion question, boolean showAnswer, boolean showExplanation) {
+        public QuestionState(ObjectiveQuestion question, boolean showAnswer, boolean showExplanation, boolean isBookmarked) {
             this.question = question;
             this.showAnswer = showAnswer;
             this.showExplanation = showExplanation;
+            this.isBookmarked = isBookmarked;
         }
 
         public ObjectiveQuestion getQuestion() {
@@ -122,6 +179,14 @@ public class StudyPastScreenVM implements ViewModel {
 
         public boolean isShowExplanation() {
             return showExplanation;
+        }
+
+        public boolean isBookmarked(){
+            return isBookmarked;
+        }
+
+        public void setIsBookmarked(boolean isBookmarked){
+            this.isBookmarked = isBookmarked;
         }
 
         public void setShowAnswer(boolean showAnswer) {
