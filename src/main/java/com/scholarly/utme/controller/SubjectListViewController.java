@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.NoSelectionModel;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -168,34 +169,46 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 subjectStates = selectedTheorySubjects;
             }
 
-            // Make sure at least a subject is selected before the start of practice, study or cbt game
+            // Ensure at least a subject is selected before the start of practice, study or cbt game
             if (selectedObjectiveSubjects.size() > 0 || selectedTheorySubjects.size() > 0) {
 
-                Object initialData = null;
+                // Ensure time(hours and minutes) selected is greater than 0
+                if (!hoursChoiceBox.getSelectionModel().isSelected(0) || !minutesChoiceBox.getSelectionModel().isSelected(0)){
 
-                if (selectedOption == SubjectListOption.PRACTICE) {
-                    initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
-                    ViewSwitcher.passData(initialData);
-                    ViewSwitcher.showScreen(View.PRACTICE_SCREEN);
-                } else if (selectedOption == SubjectListOption.STUDY) {
-                    initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
-                    ViewSwitcher.passData(initialData);
-                    ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
-                } else if (selectedOption == SubjectListOption.CBT_GAME) {
-                    initialData = new CBTGameScreenController.InitialData(subjectStates, false, false);
-                    ViewSwitcher.passData(initialData);
-                    ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
+                    Object initialData = null;
+
+                    if (selectedOption == SubjectListOption.PRACTICE) {
+                        initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
+                        ViewSwitcher.passData(initialData);
+                        ViewSwitcher.showScreen(View.PRACTICE_SCREEN);
+                    } else if (selectedOption == SubjectListOption.STUDY) {
+                        initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
+                        ViewSwitcher.passData(initialData);
+                        ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
+                    } else if (selectedOption == SubjectListOption.CBT_GAME) {
+                        initialData = new CBTGameScreenController.InitialData(subjectStates, false, false);
+                        ViewSwitcher.passData(initialData);
+                        ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
+                    }
+
+                }else {
+                    Alerts.info(
+                            this.getClass(),
+                                    "Message",
+                                    null,
+                                    "Select a time greater than 0"
+                            ).show();
                 }
-            }else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Select at least one subject for practice");
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
-                alert.showAndWait();
 
-                System.out.println("Please select at least one subject");
+
+            }else {
+                Alerts.info(
+                        this.getClass(),
+                        "Message",
+                        null,
+                        "Select at least one subject for practice"
+                ).show();
+
             }
 
         });
