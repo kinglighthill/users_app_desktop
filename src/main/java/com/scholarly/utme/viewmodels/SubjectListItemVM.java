@@ -59,8 +59,6 @@ public class SubjectListItemVM implements ViewModel {
 
     private BehaviorSubject<SubjectState> subjectState = BehaviorSubject.create();
 
-
-
     public SubjectListItemVM(Subject subject) {
         this.subject = subject;
         subjectName.set(subject.getSubjectName());
@@ -72,6 +70,9 @@ public class SubjectListItemVM implements ViewModel {
         mapPropertiesToState();
     }
 
+    /**
+     * Maps the current selection property of every subject to the SubjectState of each selected subject
+     */
     public void mapPropertiesToState() {
         subjectSelected.addListener(((observable, oldValue, newValue) -> {
             subjectState.onNext(new SubjectState(subject, type, newValue, shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
@@ -88,6 +89,15 @@ public class SubjectListItemVM implements ViewModel {
         selectedNumberOfQuestions.addListener(((observable, oldValue, newValue) -> {
             subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), newValue));
         }));
+    }
+
+    /**
+     * Invalidates all previous subject selection properties
+     */
+    public void invalidate() {
+        subjectSelected.set(false);
+        shuffleQuestions.set(false);
+        shuffleOptions.set(false);
     }
 
     public String getSubjectName() {
@@ -201,7 +211,7 @@ public class SubjectListItemVM implements ViewModel {
     }
 
 
-    public class SubjectState {
+    public static class SubjectState {
         private Subject subject;
         private Type type;
 
