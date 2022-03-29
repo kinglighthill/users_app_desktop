@@ -82,7 +82,7 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
     }
 
     /**
-     * Invalidates all selections (used when the user changes selection between 'Practice', 'Past Question' or 'CBT Game')
+     * Invalidates all previous selections (called when the user changes selection between 'Practice', 'Past Question' or 'CBT Game')
      */
     public void invalidateSubjectStates() {
         objectiveSubjects.forEach(SubjectListItemVM::invalidate);
