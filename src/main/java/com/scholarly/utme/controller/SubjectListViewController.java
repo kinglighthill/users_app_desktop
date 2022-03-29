@@ -3,13 +3,11 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.ui.utils.NoSelectionModel;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.viewmodels.HomeScreenVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.FxmlPath;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.*;
 import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
 import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
 import javafx.animation.FadeTransition;
@@ -20,6 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
@@ -72,7 +71,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
 
     private String selectedTab = "Objective";
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -195,7 +193,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
                 alert.showAndWait();
 
-                System.out.println("Please select at least one subject");
+               // System.out.println("Please select at least one subject");
             }
 
         });
@@ -218,16 +216,19 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     public void setOption(SubjectListOption option) {
         if (option == SubjectListOption.PRACTICE) {
             selectedOption = SubjectListOption.PRACTICE;
+            viewModel.invalidateSubjectStates();
             timeSettingsLabel.setVisible(true);
             hoursSelector.setVisible(true);
             minutesSelector.setVisible(true);
         } else if (option == SubjectListOption.STUDY) {
             selectedOption = SubjectListOption.STUDY;
+            viewModel.invalidateSubjectStates();
             timeSettingsLabel.setVisible(false);
             hoursSelector.setVisible(false);
             minutesSelector.setVisible(false);
         } else if (option == SubjectListOption.CBT_GAME) {
             selectedOption = SubjectListOption.CBT_GAME;
+            viewModel.invalidateSubjectStates();
             timeSettingsLabel.setVisible(false);
             hoursSelector.setVisible(false);
             minutesSelector.setVisible(false);
