@@ -50,10 +50,14 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
                             .subscribe(
                                     subjectState -> {
                                         if (subjectState.getSelected()) {
-                                            System.out.println("subject selected.. adding to selected list in map");
+                                            System.out.println("subject obj selected.. adding to selected list in map");
                                             selectedObjectiveSubjects.put(subjectState.getSubject().getTableName(), subjectState);
+
+                                            System.out.println("SubjectStates (shuffleQuestion): " + subjectState.getShuffleQuestions());
+
+
                                         } else {
-                                            System.out.println("subject unselected.. removing from selected list");
+                                            System.out.println("subject obj unselected.. removing from selected list");
                                             selectedObjectiveSubjects.remove(subjectState.getSubject().getTableName());
                                         }
                                     }

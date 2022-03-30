@@ -117,6 +117,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         viewModel.getSelectedObjectiveSubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
             selectedObjectiveSubjects.clear();
             selectedObjectiveSubjects.addAll(viewModel.getSelectedObjectiveSubjects().values());
+           // System.out.println("selectedObjectiveSubjects -> " + viewModel.getSelectedObjectiveSubjects().values().toString());
         });
 
         viewModel.getSelectedTheorySubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
