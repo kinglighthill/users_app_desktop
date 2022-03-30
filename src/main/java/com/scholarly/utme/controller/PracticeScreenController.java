@@ -398,7 +398,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     .get(selectedQuestion - 1);
 
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-                System.out.println("Question: " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
+               // System.out.println("Question: " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
                 textToSpeech(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
             } else {
                 textToSpeech(((TheoryQuestion) questionState.getQuestion()).getQuestion());
@@ -766,7 +766,26 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void textToSpeech(String text) {
-//        Audio audio = Audio.getInstance();
+
+        System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+
+        CompositeDisposable disposables = new CompositeDisposable();
+
+        // Using RxJava's Disposable to play the speech on a background thread to avoid blocking the UI
+        // 'doOnNext' runs its block of code on the specified background thread the disposable is subscribed on
+        disposables.add(
+                Observable.just(VoiceManager.getInstance().getVoice("kevin16"))
+                        .subscribeOn(Schedulers.io())
+                        .doOnNext(voice -> {
+                            voice.allocate();
+                            voice.speak(text);
+                        })
+                        .observeOn(JavaFxScheduler.platform())
+                        .subscribe()
+
+        );
+
+//          Audio audio = Audio.getInstance();
 //        InputStream sound = null;
 //        try {
 //            sound = audio.getAudio(text, Language.ENGLISH);
@@ -779,30 +798,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 //            System.out.println("error converting text to audio");
 //        }
 
-        System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
-
-        CompositeDisposable disposables = new CompositeDisposable();
-
-        disposables.add(
-                Observable.just(VoiceManager.getInstance().getVoice("kevin16"))
-                        .observeOn(JavaFxScheduler.platform())
-                        .subscribe(
-                                voice -> {
-                                    voice.allocate();
-                                    voice.speak(text);
-                                }
-                        )
-        );
-
-        disposables.dispose();
-
-
-        /*VoiceManager vm = VoiceManager.getInstance();
-        Voice voice = vm.getVoice("kevin16");
-
-        voice.allocate();
-
-        voice.speak(text);*/
     }
 
     private InitialData getInitialData() {

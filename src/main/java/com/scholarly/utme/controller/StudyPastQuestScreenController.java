@@ -13,6 +13,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -200,18 +201,20 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         CompositeDisposable disposables = new CompositeDisposable();
 
+        // Using RxJava's Disposable to play the speech on a background thread to avoid blocking the UI
+        // 'doOnNext' runs its block of code on the specified background thread the disposable is subscribed on
         disposables.add(
                 Observable.just(VoiceManager.getInstance().getVoice("kevin16"))
+                        .subscribeOn(Schedulers.io())
+                        .doOnNext(voice -> {
+                            voice.allocate();
+                            voice.speak(text);
+                        })
                         .observeOn(JavaFxScheduler.platform())
-                        .subscribe(
-                                voice -> {
-                                    voice.allocate();
-                                    voice.speak(text);
-                                }
-                        )
+                        .subscribe()
         );
 
-        disposables.dispose();
+       // disposables.dispose();
     }
 
     public void onCalculatorClicked(MouseEvent mouseEvent) {
