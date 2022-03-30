@@ -1,15 +1,14 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.NoSelectionModel;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.viewmodels.HomeScreenVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.FxmlPath;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.*;
 import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
 import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
 import javafx.animation.FadeTransition;
@@ -20,8 +19,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -69,7 +72,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
 
     private String selectedTab = "Objective";
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -165,22 +167,52 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 subjectStates = selectedTheorySubjects;
             }
 
-            Object initialData = null;
+            // Ensure at least a subject is selected before the start of practice, study or cbt game
+            if (selectedObjectiveSubjects.size() > 0 || selectedTheorySubjects.size() > 0) {
 
-            if (selectedOption == SubjectListOption.PRACTICE) {
-                initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
-                ViewSwitcher.passData(initialData);
-                ViewSwitcher.showScreen(View.PRACTICE_SCREEN);
-            } else if (selectedOption == SubjectListOption.STUDY) {
-                initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
-                ViewSwitcher.passData(initialData);
-                ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
-            } else if (selectedOption == SubjectListOption.CBT_GAME) {
-                initialData = new CBTGameScreenController.InitialData(subjectStates, false, false);
-                ViewSwitcher.passData(initialData);
-                ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
+                // Ensure time(hours and minutes) selected is greater than 0
+                if (!hoursChoiceBox.getSelectionModel().isSelected(0) || !minutesChoiceBox.getSelectionModel().isSelected(0)){
+
+                    Object initialData = null;
+
+                    if (selectedOption == SubjectListOption.PRACTICE) {
+                        initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
+                        ViewSwitcher.passData(initialData);
+                        ViewSwitcher.showScreen(View.PRACTICE_SCREEN);
+                    } else if (selectedOption == SubjectListOption.STUDY) {
+                        initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
+                        ViewSwitcher.passData(initialData);
+                        ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
+                    } else if (selectedOption == SubjectListOption.CBT_GAME) {
+                        initialData = new CBTGameScreenController.InitialData(subjectStates, false, false);
+                        ViewSwitcher.passData(initialData);
+                        ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
+                    }
+
+                }else {
+                    Alerts.info(
+                            this.getClass(),
+                                    "Message",
+                                    null,
+                                    "Select a time greater than 0"
+                            ).show();
+                }
+
+
+            }else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Select at least one subject for practice");
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
+                alert.showAndWait();
+
+               // System.out.println("Please select at least one subject");
             }
+
         });
+
     }
 
     /**
@@ -199,16 +231,19 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     public void setOption(SubjectListOption option) {
         if (option == SubjectListOption.PRACTICE) {
             selectedOption = SubjectListOption.PRACTICE;
+            viewModel.invalidateSubjectStates();
             timeSettingsLabel.setVisible(true);
             hoursSelector.setVisible(true);
             minutesSelector.setVisible(true);
         } else if (option == SubjectListOption.STUDY) {
             selectedOption = SubjectListOption.STUDY;
+            viewModel.invalidateSubjectStates();
             timeSettingsLabel.setVisible(false);
             hoursSelector.setVisible(false);
             minutesSelector.setVisible(false);
         } else if (option == SubjectListOption.CBT_GAME) {
             selectedOption = SubjectListOption.CBT_GAME;
+            viewModel.invalidateSubjectStates();
             timeSettingsLabel.setVisible(false);
             hoursSelector.setVisible(false);
             minutesSelector.setVisible(false);

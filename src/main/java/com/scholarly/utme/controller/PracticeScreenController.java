@@ -18,6 +18,10 @@ import com.sun.speech.freetts.VoiceManager;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.beans.binding.Bindings;
@@ -25,6 +29,7 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -32,26 +37,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
 
 @FxmlPath("/layouts/PracticeScreen.fxml")
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable {
@@ -84,10 +80,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private Stage calculatorStage = new Stage();
 
     @FXML
-    private Pane reportDialogDimmer;
+    private Pane dialogDimmer, exitDialogDimmer;
 
     @FXML
     private VBox reportDialog;
+
+    @FXML
+    private DialogPane exitDialog;
 
     @FXML
     private WebView webView;
@@ -364,8 +363,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             timeLabel.setText(timeText);
         });
 
-        exitButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        exitButton.setOnMouseClicked(event -> {
+            showExitDialog();
         });
 
         submitButton.setOnAction(event -> {
@@ -399,6 +398,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     .get(selectedQuestion - 1);
 
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+                System.out.println("Question: " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
                 textToSpeech(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
             } else {
                 textToSpeech(((TheoryQuestion) questionState.getQuestion()).getQuestion());
@@ -669,8 +669,46 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
 
+    private void showExitDialog() {
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        // Change dialog icon
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
+        dialog.setTitle("Confirm Exit");
+
+        exitDialogDimmer.setVisible(true);
+        exitDialog.setVisible(true);
+
+        dialog.getDialogPane().setContent(exitDialog);
+
+        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-background-radius: 10;");
+
+        dialog.getDialogPane().setMinSize(350, 80);
+
+        //Adding buttons to the dialog pane
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == ButtonType.YES){
+                exitDialogDimmer.setVisible(false);
+                ViewSwitcher.passData("practicePanel");
+                ViewSwitcher.showScreen(View.HOME_SCREEN);
+            }else if (buttonType == ButtonType.NO){
+                exitDialogDimmer.setVisible(false);
+            }
+            return null;
+        });
+
+        dialog.show();
+
+    }
+
+
     private void showReportDialog() {
-        reportDialogDimmer.setVisible(true);
+        dialogDimmer.setVisible(true);
         reportDialog.setVisible(true);
 
 
@@ -679,7 +717,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(0.5);
         fadeTransition.setDuration(Duration.millis(500));
-        fadeTransition.setNode(reportDialogDimmer);
+        fadeTransition.setNode(dialogDimmer);
 
         ScaleTransition scaleTransition = new ScaleTransition();
 
@@ -703,7 +741,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         fadeTransition.setFromValue(0.5);
         fadeTransition.setToValue(0);
         fadeTransition.setDuration(Duration.millis(500));
-        fadeTransition.setNode(reportDialogDimmer);
+        fadeTransition.setNode(dialogDimmer);
 
         ScaleTransition scaleTransition = new ScaleTransition();
 
@@ -723,7 +761,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         });
 
         fadeTransition.setOnFinished(event -> {
-            reportDialogDimmer.setVisible(false);
+            dialogDimmer.setVisible(false);
         });
     }
 
@@ -743,12 +781,28 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
 
-        VoiceManager vm = VoiceManager.getInstance();
+        CompositeDisposable disposables = new CompositeDisposable();
+
+        disposables.add(
+                Observable.just(VoiceManager.getInstance().getVoice("kevin16"))
+                        .observeOn(JavaFxScheduler.platform())
+                        .subscribe(
+                                voice -> {
+                                    voice.allocate();
+                                    voice.speak(text);
+                                }
+                        )
+        );
+
+        disposables.dispose();
+
+
+        /*VoiceManager vm = VoiceManager.getInstance();
         Voice voice = vm.getVoice("kevin16");
 
         voice.allocate();
 
-        voice.speak(text);
+        voice.speak(text);*/
     }
 
     private InitialData getInitialData() {

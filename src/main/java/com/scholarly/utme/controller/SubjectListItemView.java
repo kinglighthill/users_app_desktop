@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 public class SubjectListItemView implements FxmlView<SubjectListItemVM>, Initializable {
 
     @FXML
-    private CheckBox subjectCheckBox, shuffleQuestionsCheckBox, shuffleOptionsCheckBox;
+    public CheckBox subjectCheckBox, shuffleQuestionsCheckBox, shuffleOptionsCheckBox;
 
     @FXML
     private ChoiceBox<Year> yearChoiceBox;
