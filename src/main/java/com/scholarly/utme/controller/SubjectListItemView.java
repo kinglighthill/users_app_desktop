@@ -73,7 +73,7 @@ public class SubjectListItemView implements FxmlView<SubjectListItemVM>, Initial
 
         subRoot.getChildren().removeAll(divider, optionPanel);
         viewModel.subjectSelectedProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("selected property changed to -> " + newValue + " from -> " + oldValue);
+            System.out.println("subject selected property changed to -> " + newValue + " from -> " + oldValue);
             if (newValue) {
                 subRoot.getChildren().addAll(divider, optionPanel);
             } else {
@@ -81,6 +81,10 @@ public class SubjectListItemView implements FxmlView<SubjectListItemVM>, Initial
             }
         });
 
+        /*viewModel.shuffleQuestionsProperty().addListener(((observable, oldValue, newValue) -> {
+            System.out.println("shuffle question property changed to -> " + newValue + " from -> " + oldValue);
+            viewModel.setShuffleQuestions(newValue);
+        }));*/
 
 
     }

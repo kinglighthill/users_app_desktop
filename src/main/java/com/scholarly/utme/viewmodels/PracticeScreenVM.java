@@ -71,7 +71,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .getQuestions(
                                 subjectState.getSubject().getTableName(),
                                 subjectState.getSelectedYear().getId(),
-                                false
+                                subjectState.getShuffleQuestions()
                         )
                         .stream()
                         .map(question -> new QuestionState(question, Type.OBJECTIVE, null))
@@ -92,7 +92,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .getQuestions(
                                 subjectState.getSubject().getTableName(),
                                 subjectState.getSelectedYear().getId(),
-                                false
+                                subjectState.getShuffleQuestions()
                         )
                         .stream()
                         .map(question -> new QuestionState(question, Type.THEORY, null))

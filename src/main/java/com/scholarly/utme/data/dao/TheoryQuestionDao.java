@@ -38,7 +38,7 @@ public class TheoryQuestionDao {
         if (!shuffled) {
             query = "SELECT * FROM " + tableName + " WHERE year_id = " + yearId;
         } else {
-            query = "SELECT * FROM " + tableName + " WHERE year_id = " + yearId + " ORDER BY RAND()";
+            query = "SELECT * FROM " + tableName + " WHERE year_id = " + yearId + " ORDER BY RANDOM()";
         }
 
         try (Connection connection = Database.connect()) {
