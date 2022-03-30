@@ -155,7 +155,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             questionsState.getQuestions().get(selectedQuestion - 1).setShowExplanation(false);
 
             showCorrectAnswerButton.setVisible(true);
-            showExplanationButton.setVisible(false);
+            showExplanationButton.setVisible(true);
             explanationTitle.setVisible(false);
             explanationLabel.setVisible(false);
             correctAnswerLabel.setVisible(false);
@@ -255,7 +255,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         if (!questionState.isShowExplanation() && !questionState.isShowAnswer()) {
             System.out.println("showing default explanation view");
             showCorrectAnswerButton.setVisible(true);
-            showExplanationButton.setVisible(false);
+            showExplanationButton.setVisible(true);
             explanationTitle.setVisible(false);
             explanationLabel.setVisible(false);
             correctAnswerLabel.setVisible(false);
