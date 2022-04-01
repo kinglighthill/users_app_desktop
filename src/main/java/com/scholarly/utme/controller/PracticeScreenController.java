@@ -13,14 +13,12 @@ import com.scholarly.utme.viewmodels.PracticeScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
-import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
@@ -29,7 +27,6 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -65,6 +62,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private ListView<Subject> subjectList;
 
     private ToggleGroup toggleGroup = new ToggleGroup();
+
     @FXML
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
 
@@ -72,7 +70,16 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private Label questionOverviewLabel, questionLabel, timeLabel;
 
     @FXML
-    private Button prevButton, nextButton, exitButton, submitButton;
+    private TextField enterCorrectAnswerField;
+
+    @FXML
+    private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
+
+    @FXML
+    private VBox incorrectAnswerPane;
+
+    @FXML
+    private Button prevButton, nextButton, exitButton, submitButton, submitReport;
 
     @FXML
     private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon;
@@ -404,6 +411,27 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 textToSpeech(((TheoryQuestion) questionState.getQuestion()).getQuestion());
             }
         });
+
+
+        /******************** Report Question Section ************************/
+
+        incorrectAnswerPane.getChildren().remove(enterCorrectAnswerField);
+
+        questionErrorCheckBox.selectedProperty().addListener(
+                (observable, oldValue, newValue) -> submitReport.setDisable(!newValue));
+
+        incorrectAnswerCheckBox.selectedProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    submitReport.setDisable(!newValue);
+                    if (newValue){
+                        incorrectAnswerPane.getChildren().add(enterCorrectAnswerField);
+                    }else {
+                        incorrectAnswerPane.getChildren().remove(enterCorrectAnswerField);
+                    }
+                });
+
+        okayCheckBox.selectedProperty().addListener(
+                (observable, oldValue, newValue) -> submitReport.setDisable(!newValue));
 
 //        nextButton.setFocusTraversable(false);
 //        prevButton.setFocusTraversable(false);

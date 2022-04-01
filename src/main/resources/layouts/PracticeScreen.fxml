@@ -247,7 +247,7 @@
 
             </content>
          </DialogPane>
-         <VBox fx:id="reportDialog" maxHeight="400.0" maxWidth="500.0" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
+         <VBox fx:id="reportDialog" maxHeight="350.0" maxWidth="500.0" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
             <children>
                <HBox alignment="CENTER_LEFT" prefWidth="200.0">
                   <children>
@@ -274,38 +274,38 @@
                      <Insets top="20.0" />
                   </VBox.margin>
                </Line>
-               <CheckBox mnemonicParsing="false" prefHeight="17.0" prefWidth="638.0" text="There is an error in the question">
+               <CheckBox fx:id="questionErrorCheckBox" mnemonicParsing="false" prefHeight="17.0" prefWidth="638.0" text="There is an error in the question">
                   <VBox.margin>
                      <Insets left="20.0" right="20.0" top="25.0" />
                   </VBox.margin>
                </CheckBox>
-               <VBox prefWidth="100.0">
+               <VBox fx:id="incorrectAnswerPane" prefWidth="100.0">
                   <children>
-                     <CheckBox mnemonicParsing="false" prefHeight="17.0" prefWidth="638.0" text="Answer is not correct">
+                     <CheckBox fx:id="incorrectAnswerCheckBox" mnemonicParsing="false" prefHeight="17.0" prefWidth="638.0" text="Answer is not correct">
                         <VBox.margin>
                            <Insets left="20.0" right="20.0" top="30.0" />
                         </VBox.margin>
                      </CheckBox>
-                     <TextField prefHeight="30.0" promptText="Type the correct answer... (Optional)">
+                     <TextField fx:id="enterCorrectAnswerField" prefHeight="30.0" promptText="Type the correct answer... (Optional)" >
                         <VBox.margin>
                            <Insets left="20.0" right="20.0" top="10.0" />
                         </VBox.margin>
                      </TextField>
                   </children>
                </VBox>
-               <CheckBox mnemonicParsing="false" prefHeight="17.0" prefWidth="638.0" text="There is an error in the question">
+               <CheckBox fx:id="okayCheckBox" mnemonicParsing="false" prefHeight="17.0" prefWidth="638.0" text="Everything is okay">
                   <VBox.margin>
                      <Insets left="20.0" right="20.0" top="30.0" />
                   </VBox.margin>
                </CheckBox>
-               <CheckBox mnemonicParsing="false" prefHeight="17.0" prefWidth="638.0" text="There is an error in the question">
+               <!--<CheckBox mnemonicParsing="false" prefHeight="17.0" prefWidth="638.0" text="There is an error in the question">
                   <VBox.margin>
                      <Insets left="20.0" right="20.0" top="30.0" />
                   </VBox.margin>
-               </CheckBox>
-               <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" text="Submit">
+               </CheckBox>-->
+               <Button fx:id="submitReport" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" text="Submit" disable="true" >
                   <VBox.margin>
-                     <Insets bottom="30.0" left="20.0" right="20.0" top="35.0" />
+                     <Insets bottom="20.0" left="20.0" right="20.0" top="35.0" />
                   </VBox.margin>
                </Button>
 
