@@ -123,6 +123,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                                 }
                         )
         );
+
+        System.out.println("PracticeScreenVM: (Shuffle Options) " + data.questionData.get(0).getShuffleOptions());
     }
 
 

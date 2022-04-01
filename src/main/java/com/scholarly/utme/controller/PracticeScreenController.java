@@ -23,7 +23,9 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -97,6 +99,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     @FXML
     private WebView webView;
+
+    ObservableList<RadioButton> optionsList = FXCollections.observableArrayList();
 
 
     @Override
@@ -179,7 +183,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         tilePane.setVgap(10);
         tilePane.setHgap(10);
 
-        toggleGroup.getToggles().addAll(optionAButton, optionBButton, optionCButton, optionDButton);
+        optionsList.addAll(optionAButton, optionBButton, optionCButton, optionDButton);
+
+        toggleGroup.getToggles().addAll(optionsList.stream().toList());
+
+        Collections.shuffle(optionsList);
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
 
@@ -597,7 +605,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             questionLabel.setText(question.getQuestion());
 
             String questionText = question.getQuestion();
-
 
 
             if (questionText.contains("<img")) {
