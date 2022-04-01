@@ -74,6 +74,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                                 subjectState.getShuffleQuestions()
                         )
                         .stream()
+                        .limit(subjectState.getNumberOfQuestions())
                         .map(question -> new QuestionState(question, Type.OBJECTIVE, null))
                         .collect(Collectors.toList());
 

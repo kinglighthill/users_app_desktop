@@ -680,6 +680,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             });
         }
     }
+
     private void changeSelectedTile(int oldSelectedQuestion, int newSelectedQuestion) {
 
         StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestion - 1);
