@@ -2,19 +2,18 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.data.dao.SubjectTheoryDao;
-import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
-import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -23,7 +22,8 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
     private ObservableList<SubjectListItemVM> objectiveSubjects = FXCollections.observableArrayList();
     private ObservableList<SubjectListItemVM> theorySubjects = FXCollections.observableArrayList();
 
-    private ObservableMap<String, SubjectState> selectedObjectiveSubjects = FXCollections.observableHashMap();
+    private Map<String, SubjectState> linkedHashMap = new LinkedHashMap<>();
+    private ObservableMap<String, SubjectState> selectedObjectiveSubjects = FXCollections.observableMap(linkedHashMap); // LinkedHashMap because it maintains insertion order
 
     public ObservableMap<String, SubjectState> getSelectedObjectiveSubjects() {
         return selectedObjectiveSubjects;
@@ -50,10 +50,11 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
                             .subscribe(
                                     subjectState -> {
                                         if (subjectState.getSelected()) {
-                                            System.out.println("subject obj selected.. adding to selected list in map");
+                                            System.out.println("subject obj: " + subjectState.getSubject() + " selected.. adding to selected list in map");
                                             selectedObjectiveSubjects.put(subjectState.getSubject().getTableName(), subjectState);
 
-                                            System.out.println("SubjectStates (shuffleQuestion): " + subjectState.getShuffleQuestions());
+                                            System.out.println("Selected Objective Subjects: (Key Set) -> " + selectedObjectiveSubjects.keySet());
+                                          //  System.out.println("SubjectStates (shuffleQuestion): " + subjectState.getShuffleQuestions());
 
 
                                         } else {
