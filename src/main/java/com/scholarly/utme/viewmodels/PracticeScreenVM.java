@@ -59,8 +59,6 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
         subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).collect(Collectors.toList()));
 
-//        List<QuestionState> questionStates = new Arra;
-
         data.questionData.forEach(subjectState -> {
 
             questionType = subjectState.getType();
