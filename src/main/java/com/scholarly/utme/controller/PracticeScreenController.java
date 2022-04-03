@@ -6,7 +6,6 @@ import com.scholarly.utme.data.model.Bookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.TheoryQuestion;
-import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.PracticeScreenVM;
@@ -46,6 +45,7 @@ import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @FxmlPath("/layouts/PracticeScreen.fxml")
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable {
@@ -133,19 +133,29 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
             if (c.getList().size() == 1) {
                 Subject subject = c.getList().get(0);
+                System.out.println("Content of C -> " + c);
                 viewModel.setSelectedSubject(subject);
             } else {
                 viewModel.setSelectedSubject(null);
             }
         });
 
-        subjectList.getSelectionModel().select(0);
+        // Integer value to track subjectList subject selection
+        AtomicInteger subjectListSelectionIndex = new AtomicInteger(0);
+
+        subjectList.getSelectionModel().select(subjectListSelectionIndex.get());
 
         viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
             subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
+
                 if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
-                    changeSelectedTile(oldValue.intValue(), newValue.intValue());
-                    changeSelectedQuestion(newValue.intValue());
+
+                    if (newValue.intValue() <= subjectQuestionsState.getQuestions().size()){
+                        changeSelectedTile(oldValue.intValue(), newValue.intValue());
+                        changeSelectedQuestion(newValue.intValue());
+
+                    }
+
                 }
             });
         });
@@ -158,23 +168,76 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         });
 
         prevButton.setOnAction(event -> {
+            nextButton.setDisable(false);
+            SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+            List<QuestionState> questions = subjectQuestionsState.getQuestions();
+
             int selectedQuestion = viewModel.getSubjectsQuestions()
                     .get(viewModel.getSelectedSubject().getTableName())
                     .getSelectedQuestion();
 
-            viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
-                    .setSelectedQuestion(selectedQuestion - 1);
+//            System.out.println("Selected question index -> " + selectedQuestion);
+//            System.out.println("SubjectList selected item index -> " + subjectList.getSelectionModel().getSelectedIndex());
+//            System.out.println("Subject List Selection Index -> " + subjectListSelectionIndex);
+
+
+            if (subjectList.getSelectionModel().getSelectedIndex() == 0) {
+
+                viewModel.getSubjectsQuestions()
+                        .get(viewModel.getSelectedSubject().getTableName())
+                        .setSelectedQuestion(selectedQuestion - 1);
+
+                if (selectedQuestion == 2) {
+                    prevButton.setDisable(true);
+                }
+
+
+            }else {
+
+                if (selectedQuestion == 1) {
+
+                    subjectList.getSelectionModel().select(subjectListSelectionIndex.decrementAndGet());
+
+                }else {
+                    viewModel.getSubjectsQuestions()
+                            .get(viewModel.getSelectedSubject().getTableName())
+                            .setSelectedQuestion(selectedQuestion - 1);
+                }
+
+            }
+
         });
 
         nextButton.setOnAction(event -> {
+            prevButton.setDisable(false);
+            SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+            List<QuestionState> questions = subjectQuestionsState.getQuestions();
+
             int selectedQuestion = viewModel.getSubjectsQuestions()
                     .get(viewModel.getSelectedSubject().getTableName())
                     .getSelectedQuestion();
 
-            viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
-                    .setSelectedQuestion(selectedQuestion + 1);
+
+            if (selectedQuestion == questions.size()){
+
+                subjectList.getSelectionModel().select(subjectListSelectionIndex.incrementAndGet());
+
+                System.out.println("Selected question index -> " + selectedQuestion);
+                System.out.println("SubjectList selected item index -> " + subjectList.getSelectionModel().getSelectedIndex());
+                System.out.println("Subject List Selection Index -> " + subjectListSelectionIndex);
+
+                if (subjectList.getItems().size() == subjectListSelectionIndex.get()){
+
+                    nextButton.setDisable(true);
+
+                }
+
+            }else {
+                viewModel.getSubjectsQuestions()
+                        .get(viewModel.getSelectedSubject().getTableName())
+                        .setSelectedQuestion(selectedQuestion + 1);
+            }
+
         });
 
         tilePane.setVgap(10);
@@ -369,6 +432,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             }
 
             timeLabel.setText(timeText);
+
+            // TODO: Implement time elapsed here
         });
 
         exitButton.setOnAction(event -> {
@@ -584,8 +649,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             }
         });
 
-        prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
-        nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
+       // prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
+       // nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
+
+        System.out.println("Index of the selected subject in subjectList: " + subjectList.getSelectionModel().getSelectedIndex());
+        if (subjectList.getSelectionModel().getSelectedIndex() + 1 == selectedQuestion - 1){
+            prevButton.setDisable(true);
+        }
 
         questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
 
