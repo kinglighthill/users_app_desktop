@@ -54,7 +54,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
     private BarChart<CategoryAxis, NumberAxis> barChart;
 
     @FXML
-    private Button showExplanationButton;
+    private Button showExplanationButton, exitButton;;
 
     private InitialData data;
 
@@ -155,6 +155,10 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
             ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
+        });
+
+        exitButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
     }
