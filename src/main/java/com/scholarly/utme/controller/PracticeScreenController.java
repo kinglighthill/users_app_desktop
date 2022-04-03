@@ -414,7 +414,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             optionCButton.setVisible(false);
             optionDButton.setVisible(false);
 
-            submitButton.setVisible(false);
+
 
         }
 
@@ -789,13 +789,20 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.YES){
-                exitDialogDimmer.setVisible(false);
 
-                ResultScreenController.InitialData initialData =
-                        new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
-                ViewSwitcher.passData(initialData);
-                ViewSwitcher.showScreen(View.RESULT_SCREEN);
+            if (buttonType == ButtonType.YES){
+
+                if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+                    exitDialogDimmer.setVisible(false);
+
+                    ResultScreenController.InitialData initialData =
+                            new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                    ViewSwitcher.passData(initialData);
+                    ViewSwitcher.showScreen(View.RESULT_SCREEN);
+                }else {
+                    //TODO: Implement Theory submit button and Theory result screen
+                    System.out.println("Implement Theory Submit button here");
+                }
 
             }else if (buttonType == ButtonType.NO){
                 exitDialogDimmer.setVisible(false);
@@ -843,7 +850,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.show();
 
     }
-
 
     private void showReportDialog() {
         dialogDimmer.setVisible(true);
