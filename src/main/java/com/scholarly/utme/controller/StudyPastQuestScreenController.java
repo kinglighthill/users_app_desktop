@@ -3,6 +3,7 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.SubjectQuestionsState;
@@ -191,30 +192,9 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
             String currentQuestion = questionsState.getQuestions().get(selectedQuestion - 1).getQuestion().getQuestion();
 
-            textToSpeech(currentQuestion);
+            TextToSpeech.play(currentQuestion);
         });
 
-    }
-
-    private void textToSpeech(String text){
-        System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
-
-        CompositeDisposable disposables = new CompositeDisposable();
-
-        // Using RxJava's Disposable to play the speech on a background thread to avoid blocking the UI
-        // 'doOnNext' runs its block of code on the specified background thread the disposable is subscribed on
-        disposables.add(
-                Observable.just(VoiceManager.getInstance().getVoice("kevin16"))
-                        .subscribeOn(Schedulers.io())
-                        .doOnNext(voice -> {
-                            voice.allocate();
-                            voice.speak(text);
-                        })
-                        .observeOn(JavaFxScheduler.platform())
-                        .subscribe()
-        );
-
-       // disposables.dispose();
     }
 
     public void onCalculatorClicked(MouseEvent mouseEvent) {
