@@ -4,20 +4,18 @@ import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.CBTGameScreenVM;
 import com.scholarly.utme.viewmodels.CBTGameScreenVM.QuestionState;
-import com.scholarly.utme.viewmodels.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -30,8 +28,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -44,12 +40,11 @@ import java.util.ResourceBundle;
 @FxmlPath("/layouts/CBTGameScreen.fxml")
 public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initializable {
 
-
     @InjectViewModel
     private CBTGameScreenVM viewModel;
 
     @FXML
-    private ImageView bookmarkImage, calculatorImage;
+    private ImageView bookmarkImage, calculatorImage, speakerImage;;
 
     @FXML
     private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton, exitButton, showAnswersButton;
@@ -269,6 +264,13 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         questionLabel.setLineSpacing(15);
 
+        Image speaker = new Image(getClass().getResource("/drawable/speaker.png").toString());
+        speakerImage.setPreserveRatio(true);
+        speakerImage.setImage(speaker);
+
+        speakerImage.setOnMouseClicked(mouseEvent -> {
+            onSpeakerImageClicked();
+        });
 
         Image bookmark = new Image(getClass().getResource("/drawable/bookmark_2.png").toString());
         bookmarkImage.setFitWidth(20);
@@ -306,6 +308,14 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         } else {
             fiftyFiftyButton.setDisable(false);
         }
+    }
+
+    public void onSpeakerImageClicked() {
+        List<QuestionState> questions = viewModel.getQuestions();
+        QuestionState selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1);
+        String question = selectedQuestion.getQuestion().getQuestion();
+
+        TextToSpeech.play(question);
     }
 
     public void onCalculatorClicked() {

@@ -8,6 +8,7 @@ import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.TheoryQuestion;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.SubjectQuestionsState;
@@ -470,9 +471,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                // System.out.println("Question: " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
-                textToSpeech(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
+                TextToSpeech.play(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
             } else {
-                textToSpeech(((TheoryQuestion) questionState.getQuestion()).getQuestion());
+                TextToSpeech.play(((TheoryQuestion) questionState.getQuestion()).getQuestion());
             }
         });
 
@@ -904,24 +905,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void textToSpeech(String text) {
-
-        System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
-
-        CompositeDisposable disposables = new CompositeDisposable();
-
-        // Using RxJava's Disposable to play the speech on a background thread to avoid blocking the UI
-        // 'doOnNext' runs its block of code on the specified background thread the disposable is subscribed on
-        disposables.add(
-                Observable.just(VoiceManager.getInstance().getVoice("kevin16"))
-                        .subscribeOn(Schedulers.io())
-                        .doOnNext(voice -> {
-                            voice.allocate();
-                            voice.speak(text);
-                        })
-                        .observeOn(JavaFxScheduler.platform())
-                        .subscribe()
-
-        );
 
 //          Audio audio = Audio.getInstance();
 //        InputStream sound = null;
