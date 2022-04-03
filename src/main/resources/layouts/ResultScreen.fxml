@@ -107,7 +107,7 @@
             <Separator orientation="VERTICAL" prefHeight="200.0" scaleX="2.0" />
             <VBox alignment="BOTTOM_LEFT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button fx:id="showExplanationButton" mnemonicParsing="false" prefHeight="51.0" prefWidth="194.0" text="Show Explanations">
+                  <Button fx:id="showExplanationButton" mnemonicParsing="false" prefHeight="51.0" prefWidth="194.0" text="Show All Answers">
                      <VBox.margin>
                         <Insets bottom="69.0" left="10.0" right="10.0" />
                      </VBox.margin>
