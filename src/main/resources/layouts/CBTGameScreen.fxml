@@ -239,6 +239,10 @@
                         <font>
                            <Font size="18.0" />
                         </font></Button>
+                     <Button fx:id="playAgainButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #1B9D01; -fx-border-width: .6;" text="Play Again" textFill="#1b9d01" HBox.hgrow="ALWAYS">
+                        <font>
+                           <Font size="18.0" />
+                        </font></Button>
                      <Button fx:id="showAnswersButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #1B9D01; -fx-background-radius: 5;" text="Show Answers" textFill="WHITE" HBox.hgrow="ALWAYS">
                         <font>
                            <Font size="18.0" />
