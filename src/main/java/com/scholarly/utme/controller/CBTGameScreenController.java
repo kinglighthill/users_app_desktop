@@ -412,8 +412,9 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private void setupQuestionView() {
         List<QuestionState> questions = viewModel.getQuestions();
         QuestionState selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1);
+        int selectedQuestionNumber = selectedQuestion.getQuestion().getQuestionNumber();
 
-        questionNumberLabel.setText("Question " + selectedQuestion + " of " + questions.size());
+        questionNumberLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
         questionLabel.setText(selectedQuestion.getQuestion().getQuestion());
 
