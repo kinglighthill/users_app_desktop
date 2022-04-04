@@ -49,7 +49,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private ImageView bookmarkImage, calculatorImage, speakerImage, reportImage, reportDialogCloseIcon;
 
     @FXML
-    private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton, exitButton, showAnswersButton, submitReport;
+    private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton, exitButton, showAnswersButton, playAgainButton;
 
     @FXML
     private Label questionNumberLabel, questionLabel, pageTitle, fiftyFiftyCount, correctAnswers, incorrectAnswers, questionAttempts, correctAnswersLabel, incorrectAnswersLabel, resultLabel, questionAttemptsLabel;
@@ -62,13 +62,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
     @FXML
     private VBox resultDialog, reportDialog, incorrectAnswerPane;
-
-    @FXML
-    private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
-
-    @FXML
-    private TextField enterCorrectAnswerField;
-
+  
     private Stage calculatorStage = new Stage();
 
     @Override
@@ -229,6 +223,22 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             exitButton.setStyle(idleExitButtonStyle);
         });
 
+        playAgainButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        String idlePlayAgainButtonStyle = playAgainButton.getStyle();
+        String hoveredPlayAgainButtonStyle =
+                "-fx-background-color:#F1F9F0;" +
+                        "-fx-background-radius: 5;" +
+                        "-fx-border-color: #1B9D01;" +
+                        "-fx-border-width: 0.6;" +
+                        "-fx-border-radius: 5";
+
+        playAgainButton.setOnMouseEntered(e -> {
+            playAgainButton.setStyle(hoveredPlayAgainButtonStyle);
+        });
+        playAgainButton.setOnMouseExited(e -> {
+            playAgainButton.setStyle(idlePlayAgainButtonStyle);
+        });
+
         showAnswersButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
         String idleShowAnswerButtonStyle = showAnswersButton.getStyle();
         String hoveredShowAnswerButtonStyle =
@@ -300,10 +310,16 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         backButton.setOnAction(e -> {
+            ViewSwitcher.passData("cbtGamePanel");
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
         exitButton.setOnAction(e -> {
+            ViewSwitcher.passData("cbtGamePanel");
             ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+        playAgainButton.setOnAction(event -> {
+            hideResult();
+
         });
         showAnswersButton.setOnAction(event -> {
             ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
@@ -511,6 +527,42 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         questionAttempts.setText(String.valueOf(viewModel.getQuestionAttempts()));
         correctAnswers.setText(String.valueOf(viewModel.getCorrectAnswers()));
         incorrectAnswers.setText(String.valueOf(viewModel.getIncorrectAnswers()));
+    }
+
+    private void hideResult() {
+        viewModel.setQuestions(viewModel.getQuestions());
+        viewModel.setSelectedQuestion(1);
+        viewModel.setCorrectAnswers(0);
+        viewModel.setQuestionAttempts(0);
+        viewModel.setIncorrectAnswers(0);
+
+        FadeTransition fadeTransition = new FadeTransition();
+
+        fadeTransition.setFromValue(0.5);
+        fadeTransition.setToValue(0);
+        fadeTransition.setDuration(Duration.millis(700));
+        fadeTransition.setNode(resultDialogDimmer);
+
+        ScaleTransition scaleTransition = new ScaleTransition();
+
+        scaleTransition.setFromX(1);
+        scaleTransition.setToX(0);
+        scaleTransition.setFromY(1);
+        scaleTransition.setToY(0);
+        scaleTransition.setNode(resultDialog);
+        scaleTransition.setDuration(Duration.millis(300));
+
+
+        scaleTransition.play();
+        fadeTransition.play();
+
+        fadeTransition.setOnFinished(event -> {
+            resultDialogDimmer.setVisible(false);
+        });
+        scaleTransition.setOnFinished(event -> {
+            resultDialog.setVisible(false);
+        });
+
     }
 
     private void dispatchAnswerCorrect() {
