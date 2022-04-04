@@ -67,7 +67,7 @@ public class SubjectListItemView implements FxmlView<SubjectListItemVM>, Initial
             viewModel.loadQuestionNumbersList(newValue);
             viewModel.setSelectedYearProperty(newValue);
         });
-        yearChoiceBox.setValue(viewModel.getYears().get(0));
+        yearChoiceBox.setValue(viewModel.getAvailableYears().get(0));
 
 
 
@@ -80,11 +80,6 @@ public class SubjectListItemView implements FxmlView<SubjectListItemVM>, Initial
                 subRoot.getChildren().removeAll(divider, optionPanel);
             }
         });
-
-        /*viewModel.shuffleQuestionsProperty().addListener(((observable, oldValue, newValue) -> {
-            System.out.println("shuffle question property changed to -> " + newValue + " from -> " + oldValue);
-            viewModel.setShuffleQuestions(newValue);
-        }));*/
 
 
     }
