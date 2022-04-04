@@ -78,7 +78,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
 
     @FXML
-    private VBox incorrectAnswerPane;
+    private VBox incorrectAnswerPane, reportDialog;
 
     @FXML
     private Button prevButton, nextButton, exitButton, submitButton, submitReport;
@@ -90,9 +90,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     @FXML
     private Pane dialogDimmer, exitDialogDimmer;
-
-    @FXML
-    private VBox reportDialog;
 
     @FXML
     private DialogPane exitDialog;
