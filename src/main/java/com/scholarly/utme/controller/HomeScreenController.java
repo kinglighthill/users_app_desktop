@@ -8,9 +8,11 @@ import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
 import de.saxsys.mvvmfx.*;
 import javafx.animation.FadeTransition;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
@@ -45,32 +47,53 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         practiceButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                animate(contentPane);
                 subjectListController.setOption(SubjectListOption.PRACTICE);
+                animate(contentPane);
+
+                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
+                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+                }
+            }
+            if (oldValue) {
+                subjectListController.setOption(SubjectListOption.PRACTICE);
+                animate(contentPane);
             }
         });
         practiceButton.setFocusTraversable(false);
 
         lessonNoteButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                animate(contentPane);
                 subjectListController.setOption(SubjectListOption.STUDY);
+                animate(contentPane);
+
+                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
+                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+                }
+            }
+            if (oldValue) {
+                subjectListController.setOption(SubjectListOption.STUDY);
+                animate(contentPane);
             }
         });
         lessonNoteButton.setFocusTraversable(false);
 
         cbtGameButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                animate(contentPane);
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
+                animate(contentPane);
+                subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
+            }
+            if (oldValue) {
+                subjectListController.setOption(SubjectListOption.CBT_GAME);
+                animate(contentPane);
             }
         });
         cbtGameButton.setFocusTraversable(false);
 
         studyNotesButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                animate(contentPane);
                 ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
+                animate(contentPane);
             }
         });
 

@@ -97,7 +97,7 @@
       </HBox>
    </right>
    <center>
-      <TabPane fx:id="tabMenu" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane fx:id="tabMenu" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" >
         <tabs>
           <Tab fx:id="objectiveTab" text="Objective">
             <content>

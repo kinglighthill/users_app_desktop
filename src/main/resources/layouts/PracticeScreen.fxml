@@ -236,7 +236,6 @@
          <DialogPane fx:id="exitDialog"  style="-fx-background-color: white; -fx-background-radius: 10;" visible="false" >
             <contentText>
 
-
             </contentText>
          </DialogPane>
          <VBox fx:id="reportDialog" maxHeight="350.0" maxWidth="500.0" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
