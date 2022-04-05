@@ -49,10 +49,16 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private ImageView bookmarkImage, calculatorImage, speakerImage, reportImage, reportDialogCloseIcon;
 
     @FXML
-    private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton, exitButton, showAnswersButton, playAgainButton;
+    private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton, exitButton, showAnswersButton, playAgainButton, submitReport;
 
     @FXML
     private Label questionNumberLabel, questionLabel, pageTitle, fiftyFiftyCount, correctAnswers, incorrectAnswers, questionAttempts, correctAnswersLabel, incorrectAnswersLabel, resultLabel, questionAttemptsLabel;
+
+    @FXML
+    private TextField enterCorrectAnswerField;
+
+    @FXML
+    private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
 
     @FXML
     private HBox questionLayout;
