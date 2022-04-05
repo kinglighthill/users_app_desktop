@@ -2,10 +2,7 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.controller.PracticeScreenController;
 import com.scholarly.utme.controller.PracticeScreenController.InitialData;
-import com.scholarly.utme.data.dao.BookmarkDao;
-import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
-import com.scholarly.utme.data.dao.TheoryQuestionDao;
-import com.scholarly.utme.data.dao.YearsDao;
+import com.scholarly.utme.data.dao.*;
 import com.scholarly.utme.data.model.Bookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Question;
@@ -169,7 +166,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
             double correctAnswers = 0;
 
 
-            result.setSubjectName(s);
+            result.setSubjectName(SubjectDao.getSubjectName(s));
             result.setTotalQuestions(subjectQuestionsState.getQuestions().size());
             result.setYear(YearsDao.getYear(((ObjectiveQuestion)subjectQuestionsState.getQuestions().get(0).getQuestion()).getYearId()).get().getYear());
 

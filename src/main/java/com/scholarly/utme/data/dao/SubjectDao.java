@@ -32,6 +32,26 @@ public class SubjectDao {
         updateSubjectsFromDB();
     }
 
+    public static String getSubjectName(String subjectTableName) {
+        String query = "SELECT " + subjectNameColumn + " FROM " + tableName + " WHERE " + tableNameColumn + " = '" + subjectTableName + "'";
+        System.out.println(query);
+
+        try (Connection connection = Database.connect()) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            String subjectName = "";
+            while (rs.next()) {
+                subjectName = rs.getString(subjectNameColumn);
+            }
+            return subjectName;
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Subjects from database ");
+            return null;
+        }
+    }
+
     private static void updateSubjectsFromDB() {
 
         String query = "SELECT * FROM " + tableName;
