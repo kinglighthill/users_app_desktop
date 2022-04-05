@@ -44,6 +44,8 @@ public class SubjectListItemVM implements ViewModel {
 
     private SimpleStringProperty subjectName = new SimpleStringProperty("");
     private ObservableList<Year> years;
+    private ObservableList<Year> availableYears;
+
     private ObservableList<Integer> questionNumbers = FXCollections.observableArrayList();
 
     private Type type;
@@ -64,11 +66,13 @@ public class SubjectListItemVM implements ViewModel {
         this.subject = subject;
         subjectName.set(subject.getSubjectName());
 
-        years = YearsDao.getYears();
+       // years = YearsDao.getYears();
 
         subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
 
         mapPropertiesToState();
+
+        years = YearsDao.getAvailableYearsForSubject(subject.getTableName());
     }
 
     /**
@@ -111,6 +115,10 @@ public class SubjectListItemVM implements ViewModel {
 
     public ObservableList<Year> getYears() {
         return years;
+    }
+
+    public ObservableList<Year> getAvailableYears() {
+        return availableYears;
     }
 
     public ObservableList<Integer> getQuestionNumbers() {

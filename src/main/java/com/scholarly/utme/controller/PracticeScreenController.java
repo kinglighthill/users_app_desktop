@@ -842,18 +842,18 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.YES){
+            if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
                 ViewSwitcher.passData("practicePanel");
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
-            }else if (buttonType == ButtonType.NO){
+            } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
             }
             return buttonType;
         });
 
         dialog.showAndWait();
-
+    }
  
     private void showTimeUpDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -880,7 +880,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES){
                 exitDialogDimmer.setVisible(false);
-
                 ResultScreenController.InitialData initialData =
                         new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
                 ViewSwitcher.passData(initialData);

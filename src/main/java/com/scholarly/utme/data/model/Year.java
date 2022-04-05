@@ -16,6 +16,10 @@ public class Year {
         this.isAvailable = isAvailable;
     }
 
+    public Year(String year) {
+        this.year = year;
+    }
+
     public int getId() {
         return id;
     }
@@ -58,6 +62,6 @@ public class Year {
 
     @Override
     public String toString() {
-        return shortDescription;
+        return year;
     }
 }

@@ -81,11 +81,6 @@ public class SubjectListItemView implements FxmlView<SubjectListItemVM>, Initial
             }
         });
 
-        /*viewModel.shuffleQuestionsProperty().addListener(((observable, oldValue, newValue) -> {
-            System.out.println("shuffle question property changed to -> " + newValue + " from -> " + oldValue);
-            viewModel.setShuffleQuestions(newValue);
-        }));*/
-
 
     }
 }
