@@ -59,7 +59,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
     @FXML
     private CheckBox questionErrorCheckBox, okayCheckBox, incorrectAnswerCheckBox;
-
+    
     @FXML
     private HBox questionLayout;
 

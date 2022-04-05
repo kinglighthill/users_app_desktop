@@ -112,7 +112,9 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .subscribe(
 
                                 it -> {
-                                    time.set(time.get() - 1);
+                                    if (time.get() != 0) {
+                                        time.set(time.get() - 1);
+                                    }
                                 }
                         )
         );
