@@ -78,7 +78,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
 
     @FXML
-    private VBox incorrectAnswerPane;
+    private VBox incorrectAnswerPane, reportDialog;
 
     @FXML
     private Button prevButton, nextButton, exitButton, submitButton, submitReport;
@@ -90,9 +90,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     @FXML
     private Pane dialogDimmer, exitDialogDimmer;
-
-    @FXML
-    private VBox reportDialog;
 
     @FXML
     private DialogPane exitDialog;
@@ -415,7 +412,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             optionCButton.setVisible(false);
             optionDButton.setVisible(false);
 
-            submitButton.setVisible(false);
+
 
         }
 
@@ -434,6 +431,12 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             timeLabel.setText(timeText);
 
+            if (newValue.intValue() == 0) {
+
+                showTimeUpDialog();
+            }
+
+
             // TODO: Implement time elapsed here
         });
 
@@ -442,7 +445,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         });
 
         submitButton.setOnAction(event -> {
-
             showSubmitDialog();
 
         });
@@ -790,21 +792,30 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.YES){
-                exitDialogDimmer.setVisible(false);
 
-                ResultScreenController.InitialData initialData =
-                        new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
-                ViewSwitcher.passData(initialData);
-                ViewSwitcher.showScreen(View.RESULT_SCREEN);
+            if (buttonType == ButtonType.YES){
+
+                if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+                    exitDialogDimmer.setVisible(false);
+
+                    ResultScreenController.InitialData initialData =
+                            new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                    ViewSwitcher.passData(initialData);
+                    ViewSwitcher.showScreen(View.RESULT_SCREEN);
+                }else {
+                    ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                    ViewSwitcher.passData(data);
+                    ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
+                    //TODO: Implement Theory result screen
+                }
 
             }else if (buttonType == ButtonType.NO){
                 exitDialogDimmer.setVisible(false);
             }
-            return null;
+            return buttonType;
         });
 
-        dialog.show();
+        dialog.showAndWait();
     }
 
     private void showExitDialog() {
@@ -831,20 +842,61 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.YES){
+            if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
                 ViewSwitcher.passData("practicePanel");
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
-            }else if (buttonType == ButtonType.NO){
+            } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
             }
-            return null;
+            return buttonType;
         });
 
-        dialog.show();
-
+        dialog.showAndWait();
     }
+ 
+    private void showTimeUpDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
 
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        // Change dialog icon
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
+        dialog.setTitle("Time Up");
+
+        exitDialogDimmer.setVisible(true);
+        exitDialog.setVisible(true);
+        exitDialog.setContentText("Time Up! Do you want to submit?");
+
+        dialog.getDialogPane().setContent(exitDialog);
+
+        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-background-radius: 10;");
+
+        dialog.getDialogPane().setMinSize(350, 80);
+
+        //Adding buttons to the dialog pane
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == ButtonType.YES){
+                exitDialogDimmer.setVisible(false);
+
+                ResultScreenController.InitialData initialData =
+                        new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                ViewSwitcher.passData(initialData);
+                ViewSwitcher.showScreen(View.RESULT_SCREEN);
+
+            }else if (buttonType == ButtonType.NO){
+                exitDialogDimmer.setVisible(false);
+
+                ViewSwitcher.passData("practicePanel");
+                ViewSwitcher.showScreen(View.HOME_SCREEN);
+            }
+            return buttonType;
+        });
+
+        dialog.showAndWait();
+    }
 
     private void showReportDialog() {
         dialogDimmer.setVisible(true);

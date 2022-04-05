@@ -67,7 +67,7 @@ public class SubjectListItemView implements FxmlView<SubjectListItemVM>, Initial
             viewModel.loadQuestionNumbersList(newValue);
             viewModel.setSelectedYearProperty(newValue);
         });
-        yearChoiceBox.setValue(viewModel.getAvailableYears().get(0));
+        yearChoiceBox.setValue(viewModel.getYears().get(0));
 
 
 

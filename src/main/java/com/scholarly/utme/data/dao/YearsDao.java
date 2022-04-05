@@ -25,6 +25,8 @@ public class YearsDao {
     private static final String isNewColumn = "is_new";
     private static final String availableColumn = "available";
 
+    private static final String tableNamePlusIdColumn = tableName + "." + idColumn;
+
     private static final ObservableList<Year> years;
 
     private static final ObservableList<Year> availableYears;
@@ -39,14 +41,19 @@ public class YearsDao {
     public static ObservableList<Year> getAvailableYearsForSubject(String subjectTableName) {
         ObservableList<Year> subjectAvailableYears = FXCollections.observableArrayList();
 
-        String query = "SELECT DISTINCT " + yearColumn + " FROM " + tableName + " JOIN " + subjectTableName + " ON " + subjectTableName + ".year_id = " + tableName + "." + idColumn;
+        String query = "SELECT DISTINCT " + tableNamePlusIdColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + tableName + " JOIN " + subjectTableName + " ON " + subjectTableName + ".year_id = " + tableNamePlusIdColumn;
 
         try (Connection connection = Database.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 subjectAvailableYears.add(
-                        new Year(rs.getString(yearColumn))
+                        new Year(
+                                rs.getInt(idColumn),
+                                rs.getString(yearColumn),
+                                rs.getString(shortDescriptionColumn),
+                                rs.getInt(isNewColumn),
+                                rs.getInt(availableColumn))
                 );
 
             }
