@@ -800,8 +800,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     ViewSwitcher.passData(initialData);
                     ViewSwitcher.showScreen(View.RESULT_SCREEN);
                 }else {
-                    //TODO: Implement Theory submit button and Theory result screen
-                    System.out.println("Implement Theory Submit button here");
+                    ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                    ViewSwitcher.passData(data);
+                    ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
+                    //TODO: Implement Theory result screen
                 }
 
             }else if (buttonType == ButtonType.NO){
