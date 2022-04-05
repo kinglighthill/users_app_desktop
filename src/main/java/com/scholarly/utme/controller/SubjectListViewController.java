@@ -51,9 +51,10 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     ChoiceBox<Integer> hoursChoiceBox, minutesChoiceBox;
 
     @FXML
-    private TabPane tabMenu;
+    TabPane tabMenu;
 
-    @FXML Tab objectiveTab;
+    @FXML
+    Tab objectiveTab, theoryTab;
 
     @FXML
     private TableView<SubjectState> questionOverviewTable;
