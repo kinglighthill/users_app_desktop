@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.HelloApplication;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -125,6 +126,9 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
         barChart.getData().add(dataSeries1);
 
         table.setItems(viewModel.getResults());
+
+        String hideEmptyRowsStyle = ".table-row-cell:empty { -fx-background-color: white; }"
+                + ".table-row-cell:empty .table-cell {  -fx-border-width: 0px;  }";
 
         subjectColumn.setCellValueFactory( param -> {
             return new SimpleStringProperty(param.getValue().getSubjectName());
