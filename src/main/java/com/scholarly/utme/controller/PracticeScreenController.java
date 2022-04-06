@@ -485,20 +485,56 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         incorrectAnswerPane.getChildren().remove(enterCorrectAnswerField);
 
         questionErrorCheckBox.selectedProperty().addListener(
-                (observable, oldValue, newValue) -> submitReport.setDisable(!newValue));
+                (observable, oldValue, newValue) -> {
+                    submitReport.setDisable(!newValue);
+
+                    // Ensure okayCheckBox is not selected
+                    if (okayCheckBox.isSelected()){
+                        okayCheckBox.setSelected(false);
+                        submitReport.setDisable(false);
+                    }
+                    if (incorrectAnswerCheckBox.isSelected()) {
+                        submitReport.setDisable(false);
+                    }
+
+                });
 
         incorrectAnswerCheckBox.selectedProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     submitReport.setDisable(!newValue);
+
+                    // Ensure okayCheckBox is not selected
+                    if (okayCheckBox.isSelected()){
+                        okayCheckBox.setSelected(false);
+                        questionErrorCheckBox.setSelected(false);
+                        submitReport.setDisable(false);
+                    }
+                    if (questionErrorCheckBox.isSelected()){
+                        submitReport.setDisable(false);
+                    }
+
                     if (newValue){
                         incorrectAnswerPane.getChildren().add(enterCorrectAnswerField);
+
                     }else {
                         incorrectAnswerPane.getChildren().remove(enterCorrectAnswerField);
                     }
                 });
 
         okayCheckBox.selectedProperty().addListener(
-                (observable, oldValue, newValue) -> submitReport.setDisable(!newValue));
+                (observable, oldValue, newValue) -> {
+                    submitReport.setDisable(!newValue);
+
+                    // Ensure only okayCheckBox can be selected at a time
+                    if (newValue) {
+                        if (questionErrorCheckBox.isSelected() || incorrectAnswerCheckBox.isSelected()){
+                            questionErrorCheckBox.setSelected(false);
+                            incorrectAnswerCheckBox.setSelected(false);
+                            okayCheckBox.setSelected(true);
+                            submitReport.setDisable(false);
+                        }
+                    }
+                });
 
 //        nextButton.setFocusTraversable(false);
 //        prevButton.setFocusTraversable(false);
