@@ -348,20 +348,13 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                 (observable, oldValue, newValue) -> {
                     submitReport.setDisable(!newValue);
 
-                    // Make sure only one selection is made at a time
-                    if (newValue){
-                        if (okayCheckBox.isSelected()){
-                            okayCheckBox.setSelected(false);
-                            submitReport.setDisable(false);
-                        }
-                        if (incorrectAnswerCheckBox.isSelected()) {
-                            incorrectAnswerCheckBox.setSelected(false);
-                            submitReport.setDisable(false);
-                        }
-                    }else {
-                        if (incorrectAnswerCheckBox.isSelected()) {
-                            submitReport.setDisable(false);
-                        }
+                    // Ensure okayCheckBox is not selected
+                    if (okayCheckBox.isSelected()){
+                        okayCheckBox.setSelected(false);
+                        submitReport.setDisable(false);
+                    }
+                    if (incorrectAnswerCheckBox.isSelected()) {
+                        submitReport.setDisable(false);
                     }
 
                 });
@@ -370,14 +363,18 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                 (observable, oldValue, newValue) -> {
                     submitReport.setDisable(!newValue);
 
-                    // Make sure only one selection is made at a time
+                    // Ensure okayCheckBox is not selected
+                    if (okayCheckBox.isSelected()){
+                        okayCheckBox.setSelected(false);
+                        questionErrorCheckBox.setSelected(false);
+                        submitReport.setDisable(false);
+                    }
+                    if (questionErrorCheckBox.isSelected()){
+                        submitReport.setDisable(false);
+                    }
+
                     if (newValue){
                         incorrectAnswerPane.getChildren().add(enterCorrectAnswerField);
-                        if (okayCheckBox.isSelected() || questionErrorCheckBox.isSelected()){
-                            okayCheckBox.setSelected(false);
-                            questionErrorCheckBox.setSelected(false);
-                            submitReport.setDisable(false);
-                        }
 
                     }else {
                         incorrectAnswerPane.getChildren().remove(enterCorrectAnswerField);
@@ -388,11 +385,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                 (observable, oldValue, newValue) -> {
                     submitReport.setDisable(!newValue);
 
-                    // Make sure only one selection is made at a time
+                    // Ensure only okayCheckBox can be selected at a time
                     if (newValue) {
                         if (questionErrorCheckBox.isSelected() || incorrectAnswerCheckBox.isSelected()){
                             questionErrorCheckBox.setSelected(false);
                             incorrectAnswerCheckBox.setSelected(false);
+                            okayCheckBox.setSelected(true);
                             submitReport.setDisable(false);
                         }
                     }
