@@ -42,6 +42,7 @@ public class StudyPastScreenVM implements ViewModel {
                             subjectState.getSelectedYear().getId(),
                             false
                     ).stream()
+                    .limit(subjectState.getNumberOfQuestions())
                     .map(objectiveQuestion -> new QuestionState(objectiveQuestion, false, false))
                     .collect(Collectors.toList());
 

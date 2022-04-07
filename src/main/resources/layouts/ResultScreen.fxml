@@ -27,79 +27,87 @@
       </VBox>
    </top>
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label text="Your Average Score">
-               <padding>
-                  <Insets left="20.0" top="20.0" />
-               </padding>
-               <font>
-                  <Font name="Gill Sans MT Bold" size="14.0" />
-               </font>
-            </Label>
-            <Label fx:id="averageScoreLabel" text="80%">
-               <VBox.margin>
-                  <Insets left="20.0" top="15.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="Gill Sans MT Bold" size="40.0" />
-               </font>
-            </Label>
-            <Separator prefWidth="200.0">
-               <VBox.margin>
-                  <Insets top="20.0" />
-               </VBox.margin>
-            </Separator>
-            <Label text="Bar Chart">
-               <VBox.margin>
-                  <Insets left="20.0" top="30.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="Gill Sans MT Bold" size="14.0" />
-               </font>
-            </Label>
-            <BarChart fx:id="barChart">
-              <xAxis>
-                <CategoryAxis side="BOTTOM" fx:id="xAxis" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis fx:id="yAxis" autoRanging="false" side="LEFT" upperBound="100.0" />
-              </yAxis>
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" top="15.0" />
-               </VBox.margin>
-            </BarChart>
-            <Separator prefWidth="200.0">
-               <VBox.margin>
-                  <Insets top="20.0" />
-               </VBox.margin>
-            </Separator>
-            <Label text="Score Breakdown">
-               <VBox.margin>
-                  <Insets left="20.0" top="35.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="Gill Sans MT Bold" size="14.0" />
-               </font>
-            </Label>
-            <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0">
-              <columns>
-                <TableColumn fx:id="subjectColumn" text="Subject" />
-                <TableColumn fx:id="yearColumn" text="Year" />
-                  <TableColumn fx:id="totalQuestionsColumn" text="Total Questions" />
-                  <TableColumn fx:id="attemptsColumn" text="Attempts" />
-                  <TableColumn fx:id="correctAnswersColumn" text="Correct Answers" />
-                  <TableColumn fx:id="percentageColumn" text="Percentage (%)" />
-              </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-               <VBox.margin>
-                  <Insets left="20.0" right="20.0" top="20.0" />
-               </VBox.margin>
-            </TableView>
-         </children>
-      </VBox>
+      <ScrollPane prefHeight="300.0" prefWidth="300.0" BorderPane.alignment="CENTER" fitToWidth="true" >
+
+         <VBox >
+            <children>
+               <Label text="Your Average Score">
+                  <padding>
+                     <Insets left="20.0" top="20.0" />
+                  </padding>
+                  <font>
+                     <Font name="Gill Sans MT Bold" size="14.0" />
+                  </font>
+               </Label>
+               <Label fx:id="averageScoreLabel" text="80%">
+                  <VBox.margin>
+                     <Insets left="20.0" top="15.0" />
+                  </VBox.margin>
+                  <font>
+                     <Font name="Gill Sans MT Bold" size="40.0" />
+                  </font>
+               </Label>
+               <Separator prefWidth="200.0">
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </Separator>
+               <Label text="Bar Chart">
+                  <VBox.margin>
+                     <Insets left="20.0" top="30.0" />
+                  </VBox.margin>
+                  <font>
+                     <Font name="Gill Sans MT Bold" size="14.0" />
+                  </font>
+               </Label>
+               <BarChart fx:id="barChart">
+
+                  <xAxis>
+                     <CategoryAxis side="BOTTOM" fx:id="xAxis" />
+                  </xAxis>
+                  <yAxis>
+                     <NumberAxis fx:id="yAxis" autoRanging="false" side="LEFT" upperBound="100.0" />
+                  </yAxis>
+                  <VBox.margin>
+                     <Insets left="5.0" right="5.0" top="15.0" />
+                  </VBox.margin>
+               </BarChart>
+               <Separator prefWidth="200.0">
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </Separator>
+               <Label text="Score Breakdown">
+                  <VBox.margin>
+                     <Insets left="20.0" top="15.0" />
+                  </VBox.margin>
+                  <font>
+                     <Font name="Gill Sans MT Bold" size="14.0" />
+                  </font>
+               </Label>
+
+               <TableView fx:id="table" prefHeight="200" prefWidth="200" >
+                  <columns>
+                     <TableColumn fx:id="subjectColumn" text="Subject" />
+                     <TableColumn fx:id="yearColumn" text="Year" />
+                     <TableColumn fx:id="totalQuestionsColumn" text="Total Questions" />
+                     <TableColumn fx:id="attemptsColumn" text="Attempts" />
+                     <TableColumn fx:id="correctAnswersColumn" text="Correct Answers" />
+                     <TableColumn fx:id="percentageColumn" text="Percentage (%)" />
+                  </columns>
+                  <columnResizePolicy>
+                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                  </columnResizePolicy>
+                  <VBox.margin>
+                     <Insets left="20.0" right="20.0" top="20.0" />
+                  </VBox.margin>
+               </TableView>
+
+            </children>
+         </VBox>
+
+      </ScrollPane>
+
    </center>
    <right>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -107,9 +115,9 @@
             <Separator orientation="VERTICAL" prefHeight="200.0" scaleX="2.0" />
             <VBox alignment="BOTTOM_LEFT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button fx:id="showExplanationButton" mnemonicParsing="false" prefHeight="51.0" prefWidth="194.0" text="Show Explanations">
+                  <Button fx:id="showExplanationButton" mnemonicParsing="false" prefHeight="51.0" prefWidth="194.0" text="Show All Answers">
                      <VBox.margin>
-                        <Insets bottom="69.0" left="10.0" right="10.0" />
+                        <Insets bottom="49.0" left="10.0" right="10.0" />
                      </VBox.margin>
                   </Button>
                </children>
@@ -118,6 +126,23 @@
       </HBox>
    </right>
    <left>
-      <ListView fx:id="subjectListView" prefHeight="946.0" prefWidth="239.0" BorderPane.alignment="CENTER" />
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+
+            <VBox alignment="BOTTOM_LEFT" prefHeight="946.0" prefWidth="239.0" HBox.hgrow="ALWAYS" BorderPane.alignment="CENTER">
+               <children>
+                  <ListView fx:id="subjectListView" prefHeight="946.0" prefWidth="239.0" BorderPane.alignment="BASELINE_CENTER"/>
+
+                  <Button fx:id="exitButton" mnemonicParsing="false" minHeight="40.0" prefHeight="80.0" prefWidth="164.0" text="Exit">
+                     <VBox.margin>
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+            <Separator orientation="VERTICAL" prefHeight="200.0" scaleX="2.0" />
+         </children>
+      </HBox>
+
    </left>
 </BorderPane>

@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.HelloApplication;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -54,7 +55,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
     private BarChart<CategoryAxis, NumberAxis> barChart;
 
     @FXML
-    private Button showExplanationButton;
+    private Button showExplanationButton, exitButton;;
 
     private InitialData data;
 
@@ -126,6 +127,9 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
         table.setItems(viewModel.getResults());
 
+        String hideEmptyRowsStyle = ".table-row-cell:empty { -fx-background-color: white; }"
+                + ".table-row-cell:empty .table-cell {  -fx-border-width: 0px;  }";
+
         subjectColumn.setCellValueFactory( param -> {
             return new SimpleStringProperty(param.getValue().getSubjectName());
         });
@@ -155,6 +159,10 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
             ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
+        });
+
+        exitButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
     }

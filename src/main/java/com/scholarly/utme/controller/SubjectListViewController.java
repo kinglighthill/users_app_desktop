@@ -51,9 +51,10 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     ChoiceBox<Integer> hoursChoiceBox, minutesChoiceBox;
 
     @FXML
-    private TabPane tabMenu;
+    TabPane tabMenu;
 
-    @FXML Tab objectiveTab;
+    @FXML
+    Tab objectiveTab, theoryTab;
 
     @FXML
     private TableView<SubjectState> questionOverviewTable;
@@ -117,6 +118,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         viewModel.getSelectedObjectiveSubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
             selectedObjectiveSubjects.clear();
             selectedObjectiveSubjects.addAll(viewModel.getSelectedObjectiveSubjects().values());
+           // System.out.println("selectedObjectiveSubjects -> " + viewModel.getSelectedObjectiveSubjects().values().toString());
         });
 
         viewModel.getSelectedTheorySubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
@@ -170,23 +172,25 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             // Ensure at least a subject is selected before the start of practice, study or cbt game
             if (selectedObjectiveSubjects.size() > 0 || selectedTheorySubjects.size() > 0) {
 
-                // Ensure time(hours and minutes) selected is greater than 0
-                if (!hoursChoiceBox.getSelectionModel().isSelected(0) || !minutesChoiceBox.getSelectionModel().isSelected(0)){
+                Object initialData = null;
 
-                    Object initialData = null;
+                 if (selectedOption == SubjectListOption.STUDY) {
+                    initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
+                    ViewSwitcher.passData(initialData);
+                    ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
+                } else if (selectedOption == SubjectListOption.CBT_GAME) {
+                    initialData = new CBTGameScreenController.InitialData(subjectStates, false, false);
+                    ViewSwitcher.passData(initialData);
+                    ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
+                }
+
+                // Ensure time(hours and minutes) selected is greater than for CBT Practice
+                if (!hoursChoiceBox.getSelectionModel().isSelected(0) || !minutesChoiceBox.getSelectionModel().isSelected(0)){
 
                     if (selectedOption == SubjectListOption.PRACTICE) {
                         initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
                         ViewSwitcher.passData(initialData);
                         ViewSwitcher.showScreen(View.PRACTICE_SCREEN);
-                    } else if (selectedOption == SubjectListOption.STUDY) {
-                        initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
-                        ViewSwitcher.passData(initialData);
-                        ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
-                    } else if (selectedOption == SubjectListOption.CBT_GAME) {
-                        initialData = new CBTGameScreenController.InitialData(subjectStates, false, false);
-                        ViewSwitcher.passData(initialData);
-                        ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
                     }
 
                 }else {

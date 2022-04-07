@@ -3,6 +3,7 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.SubjectQuestionsState;
@@ -13,6 +14,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -154,7 +156,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             questionsState.getQuestions().get(selectedQuestion - 1).setShowExplanation(false);
 
             showCorrectAnswerButton.setVisible(true);
-            showExplanationButton.setVisible(false);
+            showExplanationButton.setVisible(true);
             explanationTitle.setVisible(false);
             explanationLabel.setVisible(false);
             correctAnswerLabel.setVisible(false);
@@ -190,28 +192,9 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
             String currentQuestion = questionsState.getQuestions().get(selectedQuestion - 1).getQuestion().getQuestion();
 
-            textToSpeech(currentQuestion);
+            TextToSpeech.play(currentQuestion);
         });
 
-    }
-
-    private void textToSpeech(String text){
-        System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
-
-        CompositeDisposable disposables = new CompositeDisposable();
-
-        disposables.add(
-                Observable.just(VoiceManager.getInstance().getVoice("kevin16"))
-                        .observeOn(JavaFxScheduler.platform())
-                        .subscribe(
-                                voice -> {
-                                    voice.allocate();
-                                    voice.speak(text);
-                                }
-                        )
-        );
-
-        disposables.dispose();
     }
 
     public void onCalculatorClicked(MouseEvent mouseEvent) {
@@ -252,7 +235,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         if (!questionState.isShowExplanation() && !questionState.isShowAnswer()) {
             System.out.println("showing default explanation view");
             showCorrectAnswerButton.setVisible(true);
-            showExplanationButton.setVisible(false);
+            showExplanationButton.setVisible(true);
             explanationTitle.setVisible(false);
             explanationLabel.setVisible(false);
             correctAnswerLabel.setVisible(false);

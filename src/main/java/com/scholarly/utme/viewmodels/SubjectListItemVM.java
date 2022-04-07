@@ -3,13 +3,10 @@ package com.scholarly.utme.viewmodels;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.TheoryQuestionDao;
 import com.scholarly.utme.data.dao.YearsDao;
-import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.model.TheoryQuestion;
 import com.scholarly.utme.data.model.Year;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import javafx.beans.property.ObjectProperty;
@@ -28,12 +25,16 @@ public class SubjectListItemVM implements ViewModel {
         return selectedYearProperty.get();
     }
 
-    public ObjectProperty<Year> selectedYearPropertyProperty() {
+    public ObjectProperty<Year> selectedYearProperty() {
         return selectedYearProperty;
     }
 
     public void setSelectedYearProperty(Year selectedYearProperty) {
         this.selectedYearProperty.set(selectedYearProperty);
+    }
+
+    public void setShuffleQuestions(Boolean shuffleQuestions) {
+        this.shuffleQuestions.set(shuffleQuestions);
     }
 
     public enum Type {
@@ -43,6 +44,8 @@ public class SubjectListItemVM implements ViewModel {
 
     private SimpleStringProperty subjectName = new SimpleStringProperty("");
     private ObservableList<Year> years;
+    private ObservableList<Year> availableYears;
+
     private ObservableList<Integer> questionNumbers = FXCollections.observableArrayList();
 
     private Type type;
@@ -63,11 +66,13 @@ public class SubjectListItemVM implements ViewModel {
         this.subject = subject;
         subjectName.set(subject.getSubjectName());
 
-        years = YearsDao.getYears();
+       // years = YearsDao.getYears();
 
         subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
 
         mapPropertiesToState();
+
+        years = YearsDao.getAvailableYearsForSubject(subject.getTableName());
     }
 
     /**
@@ -110,6 +115,10 @@ public class SubjectListItemVM implements ViewModel {
 
     public ObservableList<Year> getYears() {
         return years;
+    }
+
+    public ObservableList<Year> getAvailableYears() {
+        return availableYears;
     }
 
     public ObservableList<Integer> getQuestionNumbers() {

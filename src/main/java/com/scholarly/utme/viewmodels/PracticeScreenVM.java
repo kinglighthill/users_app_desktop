@@ -2,10 +2,7 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.controller.PracticeScreenController;
 import com.scholarly.utme.controller.PracticeScreenController.InitialData;
-import com.scholarly.utme.data.dao.BookmarkDao;
-import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
-import com.scholarly.utme.data.dao.TheoryQuestionDao;
-import com.scholarly.utme.data.dao.YearsDao;
+import com.scholarly.utme.data.dao.*;
 import com.scholarly.utme.data.model.Bookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Question;
@@ -17,10 +14,7 @@ import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
@@ -59,8 +53,6 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
         subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).collect(Collectors.toList()));
 
-//        List<QuestionState> questionStates = new Arra;
-
         data.questionData.forEach(subjectState -> {
 
             questionType = subjectState.getType();
@@ -71,9 +63,10 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .getQuestions(
                                 subjectState.getSubject().getTableName(),
                                 subjectState.getSelectedYear().getId(),
-                                false
+                                subjectState.getShuffleQuestions()
                         )
                         .stream()
+                        .limit(subjectState.getNumberOfQuestions())
                         .map(question -> new QuestionState(question, Type.OBJECTIVE, null))
                         .collect(Collectors.toList());
 
@@ -92,7 +85,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .getQuestions(
                                 subjectState.getSubject().getTableName(),
                                 subjectState.getSelectedYear().getId(),
-                                false
+                                subjectState.getShuffleQuestions()
                         )
                         .stream()
                         .map(question -> new QuestionState(question, Type.THEORY, null))
@@ -117,8 +110,11 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                 Observable.interval(1, TimeUnit.SECONDS, Schedulers.io())
                         .observeOn(JavaFxScheduler.platform())
                         .subscribe(
+
                                 it -> {
-                                    time.set(time.get() - 1);
+                                    if (time.get() != 0) {
+                                        time.set(time.get() - 1);
+                                    }
                                 }
                         )
         );
@@ -170,7 +166,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
             double correctAnswers = 0;
 
 
-            result.setSubjectName(s);
+            result.setSubjectName(SubjectDao.getSubjectName(s));
             result.setTotalQuestions(subjectQuestionsState.getQuestions().size());
             result.setYear(YearsDao.getYear(((ObjectiveQuestion)subjectQuestionsState.getQuestions().get(0).getQuestion()).getYearId()).get().getYear());
 
