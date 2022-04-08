@@ -43,6 +43,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
 import java.net.URL;
@@ -545,6 +546,15 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             webView.getEngine().loadContent(questionText);
 
+            if (viewModel.getShuffleOptions()){
+                Pair<Integer, String> shufflePair = new Pair<>(1, "Option A");
+                Pair<Integer, String> shufflePair2 = new Pair<>(2, "Option B");
+                Pair<Integer, String> shufflePair3 = new Pair<>(3, "Option C");
+                Pair<Integer, String> shufflePair4 = new Pair<>(4, "Option D");
+
+            }
+
+            //TODO: This is where to Shuffle Options
             optionAButton.setText(" (A) " + question.getOptionA());
             optionBButton.setText(" (B) " + question.getOptionB());
             optionCButton.setText(" (C) " + question.getOptionC());
@@ -631,6 +641,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             webView.getEngine().loadContent(questionText);
 
+            //TODO: Another place to Shuffle Options
             optionAButton.setText(" (A) " + question.getOptionA());
             optionBButton.setText(" (B) " + question.getOptionB());
             optionCButton.setText(" (C) " + question.getOptionC());

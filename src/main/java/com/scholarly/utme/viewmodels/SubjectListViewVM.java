@@ -54,6 +54,7 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
                                             selectedObjectiveSubjects.put(subjectState.getSubject().getTableName(), subjectState);
 
                                             System.out.println("SubjectStates (shuffleQuestion): " + subjectState.getShuffleQuestions());
+                                            System.out.println("SubjectStates (shuffleOptions) " + subjectState.getShuffleOptions());
 
 
                                         } else {

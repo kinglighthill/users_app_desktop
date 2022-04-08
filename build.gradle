@@ -43,6 +43,10 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+/*task myJavadocs(type: Javadoc) {
+    source = sourceSets.main.allJava
+}*/
+
 application {
     mainModule = 'com.scholarly.utme'
     mainClass = 'com.scholarly.utme.HelloApplication'
@@ -76,21 +80,27 @@ dependencies {
     /*implementation('org.xerial:sqlite-jdbc:3.36.0.2') {
         exclude group: 'org.sqlite'
     }*/
+
+    // SQL connector
     implementation 'io.github.willena:sqlite-jdbc:3.35.5.3'
 
+    //RxJava
     implementation "io.reactivex.rxjava3:rxjava:3.1.1"
     implementation "org.pdfsam.rxjava3:rxjavafx:3.0.2"
 
     // mvvmfx
     implementation 'de.saxsys:mvvmfx:1.8.0'
 
+    // Text-to-speech
     implementation 'net.sf.sociaal:freetts:1.2.2'
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.9'
 
-    // SQL connector
-   // implementation 'org.xerial:sqlite-jdbc:3.36.0.1'
+    // Cache
+    implementation 'javax.cache.implementation:cache-ri:0.5'
+
+    implementation 'javax.cache:cache-api:1.1.1'
 
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")

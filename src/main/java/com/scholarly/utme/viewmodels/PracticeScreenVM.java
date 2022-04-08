@@ -17,10 +17,7 @@ import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
@@ -38,6 +35,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
     private ObservableList<Subject> subjects = FXCollections.observableArrayList();
 
     private ObjectProperty<Subject> selectedSubject = new SimpleObjectProperty<>();
+
+    private Boolean shuffleOptions = false;
 
     private SimpleLongProperty time = new SimpleLongProperty();
 
@@ -64,6 +63,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         data.questionData.forEach(subjectState -> {
 
             questionType = subjectState.getType();
+
+            shuffleOptions = subjectState.getShuffleOptions();
 
             if (subjectState.getType() == Type.OBJECTIVE) {
 
@@ -150,6 +151,10 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     public void setSelectedSubject(Subject selectedSubject) {
         this.selectedSubject.set(selectedSubject);
+    }
+
+    public boolean getShuffleOptions() {
+        return shuffleOptions;
     }
 
 
