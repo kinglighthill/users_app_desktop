@@ -20,13 +20,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
+import javafx.util.Pair;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -39,6 +38,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
     private Boolean shuffleOptions = false;
 
     private SimpleLongProperty time = new SimpleLongProperty();
+
+    private SimpleBooleanProperty shuffleOptionsProperty = new SimpleBooleanProperty(false);
 
     private HashMap<String, SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
@@ -64,7 +65,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
             questionType = subjectState.getType();
 
-            shuffleOptions = subjectState.getShuffleOptions();
+            shuffleOptions = subjectState.getShuffleOptions();;
 
             if (subjectState.getType() == Type.OBJECTIVE) {
 
@@ -157,6 +158,13 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         return shuffleOptions;
     }
 
+    public void setShuffleOptions(boolean shuffleOptions) {
+        this.shuffleOptions = shuffleOptions;
+    }
+
+    public SimpleBooleanProperty shuffleOptionsProperty() {
+        return shuffleOptionsProperty;
+    }
 
 
     public long getTime() {
@@ -314,6 +322,16 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         }
     }
 
+    public static class OptionState {
+        private Question question;
+        private List<String> optionsList;
+
+        public OptionState(Question question, List<String> optionsList) {
+            this.question = question;
+            this.optionsList = optionsList;
+        }
+
+    }
 
 
     public class Result {

@@ -156,6 +156,7 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
         optionD.setTextFill(Color.DARKGRAY);
 
         String selectedOption = question.getSelectedOption();
+        System.out.println("Selected Option in Explanation Screen -> " + selectedOption);
         String questionAnswer = question.getObjectiveQuestion().getOptionAnswer();
 
         if (selectedOption != null) {
@@ -245,6 +246,7 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
         optionD.setTextFill(Color.DARKGRAY);
 
         String selectedOption = questions.get(questionNumber - 1).getSelectedOption();
+        System.out.println("Selected Option in Explanation Screen -> " + selectedOption);
         String questionAnswer = questions.get(questionNumber - 1).getObjectiveQuestion().getOptionAnswer();
 
         if (selectedOption != null) {

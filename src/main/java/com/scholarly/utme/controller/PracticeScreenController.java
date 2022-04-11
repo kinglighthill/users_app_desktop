@@ -43,7 +43,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.util.Pair;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
 import java.net.URL;
@@ -101,7 +100,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @FXML
     private WebView webView;
 
-    ObservableList<RadioButton> optionsList = FXCollections.observableArrayList();
+    ObservableList<RadioButton> optionButtonsList = FXCollections.observableArrayList();
 
 
     @Override
@@ -122,6 +121,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+               // optionButtonsList.addAll(optionAButton, optionBButton, optionCButton, optionDButton);
+
+               // toggleGroup.getToggles().addAll(optionButtonsList.stream().toList());
+
                 setupQuestionView();
                 setupTilePane();
             }
@@ -184,12 +187,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         tilePane.setVgap(10);
         tilePane.setHgap(10);
 
-        optionsList.addAll(optionAButton, optionBButton, optionCButton, optionDButton);
-
-        toggleGroup.getToggles().addAll(optionsList.stream().toList());
-
-        Collections.shuffle(optionsList);
-
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
 
             optionAButton.setOnAction(event -> {
@@ -210,7 +207,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     onOptionSelected(selectedQuestion);
                 }
 
-                questionState.setSelectedOption(question.getOptionA());
+                questionState.setSelectedOption(getOption(optionButtonsList.get(0).getId()));
+               // System.out.println("Selected Option (A) -> " + question.getOptionA());
+                System.out.println("Selected Option (A) -> " + getOption(optionButtonsList.get(0).getId()));
 
             });
             optionAButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -231,7 +230,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     }
 
 
-                    questionState.setSelectedOption(question.getOptionA());
+                    questionState.setSelectedOption(getOption(optionButtonsList.get(0).getId()));
+                  //  System.out.println("Selected Option (A) -> " + question.getOptionA());
+                    System.out.println("Selected Option (A) -> " + getOption(optionButtonsList.get(0).getId()));
                 }
             });
 
@@ -251,7 +252,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     onOptionSelected(selectedQuestion);
                 }
 
-                questionState.setSelectedOption(question.getOptionB());
+                questionState.setSelectedOption(getOption(optionButtonsList.get(1).getId()));
+               // System.out.println("Selected Option (B) -> " + question.getOptionB());
+                System.out.println("Selected Option (B) -> " + getOption(optionButtonsList.get(1).getId()));
             });
             optionBButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
@@ -270,7 +273,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                         onOptionSelected(selectedQuestion);
                     }
 
-                    questionState.setSelectedOption(question.getOptionB());
+                    questionState.setSelectedOption(getOption(optionButtonsList.get(1).getId()));
+                   // System.out.println("Selected Option (B) -> " + question.getOptionB());
+                    System.out.println("Selected Option (B) -> " + getOption(optionButtonsList.get(1).getId()));
                 }
             });
 
@@ -290,7 +295,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     onOptionSelected(selectedQuestion);
                 }
 
-                questionState.setSelectedOption(question.getOptionC());
+                questionState.setSelectedOption(getOption(optionButtonsList.get(2).getId()));
+               // System.out.println("Selected Option (C) -> " + question.getOptionC());
+                System.out.println("Selected Option (C) -> " + getOption(optionButtonsList.get(2).getId()));
             });
             optionCButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
@@ -309,7 +316,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                         onOptionSelected(selectedQuestion);
                     }
 
-                    questionState.setSelectedOption(question.getOptionC());
+                    questionState.setSelectedOption(getOption(optionButtonsList.get(2).getId()));
+                  //  System.out.println("Selected Option (C) -> " + question.getOptionC());
+                    System.out.println("Selected Option (C) -> " + getOption(optionButtonsList.get(2).getId()));
                 }
             });
 
@@ -329,7 +338,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     onOptionSelected(selectedQuestion);
                 }
 
-                questionState.setSelectedOption(question.getOptionD());
+                questionState.setSelectedOption(getOption(optionButtonsList.get(3).getId()));
+               // System.out.println("Selected Option (D) -> " + question.getOptionD());
+                System.out.println("Selected Option (D) -> " + getOption(optionButtonsList.get(3).getId()));
             });
             optionDButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
@@ -348,7 +359,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                         onOptionSelected(selectedQuestion);
                     }
 
-                    questionState.setSelectedOption(question.getOptionD());
+                    questionState.setSelectedOption(getOption(optionButtonsList.get(3).getId()));
+                   // System.out.println("Selected Option (D) -> " + question.getOptionD());
+                    System.out.println("Selected Option (D) -> " + getOption(optionButtonsList.get(3).getId()));
                 }
             });
 
@@ -379,7 +392,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             timeLabel.setText(timeText);
         });
 
-        exitButton.setOnMouseClicked(event -> {
+        exitButton.setOnAction(event -> {
+            optionButtonsList.clear();
+            toggleGroup.getToggles().removeAll();
             showExitDialog();
         });
 
@@ -546,19 +561,55 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             webView.getEngine().loadContent(questionText);
 
-            if (viewModel.getShuffleOptions()){
-                Pair<Integer, String> shufflePair = new Pair<>(1, "Option A");
-                Pair<Integer, String> shufflePair2 = new Pair<>(2, "Option B");
-                Pair<Integer, String> shufflePair3 = new Pair<>(3, "Option C");
-                Pair<Integer, String> shufflePair4 = new Pair<>(4, "Option D");
+            optionButtonsList.clear();
+            System.out.println("Options button list cleared");
+            optionButtonsList.addAll(optionAButton, optionBButton, optionCButton, optionDButton);
 
+            toggleGroup.getToggles().clear();
+            System.out.println("Toggle group list cleared");
+            toggleGroup.getToggles().addAll(optionButtonsList.stream().toList());
+
+
+            System.out.println("Options list size -> " + optionButtonsList.size());
+
+            if (viewModel.getShuffleOptions()) {
+
+                for (RadioButton option: optionButtonsList){
+                    System.out.println("Option (Before Shuffle): -> " + option);
+                }
+
+                Collections.shuffle(optionButtonsList);
+
+                for (int i = 0; i < optionButtonsList.size(); i++) {
+                    System.out.println("Option (After Shuffle): -> " + optionButtonsList.get(i));
+
+                    if (i == 0) {
+                        System.out.println("OptionId -> " + optionButtonsList.get(i).getId());
+                        optionAButton.setText(" (A) " + getOption(optionButtonsList.get(i).getId()));
+                    }else if (i == 1) {
+                        System.out.println("OptionId -> " + optionButtonsList.get(i).getId());
+                        optionBButton.setText(" (B) " + getOption(optionButtonsList.get(i).getId()));
+                    }else if (i == 2) {
+                        System.out.println("OptionId -> " + optionButtonsList.get(i).getId());
+                        optionCButton.setText(" (C) " + getOption(optionButtonsList.get(i).getId()));
+                    } else if (i == 3) {
+                        System.out.println("OptionId -> " + optionButtonsList.get(i).getId());
+                        optionDButton.setText(" (D) " + getOption(optionButtonsList.get(i).getId()));
+                    }
+                }
+
+            }else {
+
+                optionButtonsList.get(0).setText(question.getOptionA());
+                optionButtonsList.get(1).setText(question.getOptionB());
+                optionButtonsList.get(2).setText(question.getOptionC());
+                optionButtonsList.get(3).setText(question.getOptionD());
+
+                optionAButton.setText(" (A) " + optionButtonsList.get(0).getText());
+                optionBButton.setText(" (B) " + optionButtonsList.get(1).getText());
+                optionCButton.setText(" (C) " + optionButtonsList.get(2).getText());
+                optionDButton.setText(" (D) " + optionButtonsList.get(3).getText());
             }
-
-            //TODO: This is where to Shuffle Options
-            optionAButton.setText(" (A) " + question.getOptionA());
-            optionBButton.setText(" (B) " + question.getOptionB());
-            optionCButton.setText(" (C) " + question.getOptionC());
-            optionDButton.setText(" (D) " + question.getOptionD());
 
             String selectedOption = questions.get(newValue - 1).getSelectedOption();
             if (selectedOption != null) {
@@ -641,11 +692,56 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             webView.getEngine().loadContent(questionText);
 
-            //TODO: Another place to Shuffle Options
-            optionAButton.setText(" (A) " + question.getOptionA());
-            optionBButton.setText(" (B) " + question.getOptionB());
-            optionCButton.setText(" (C) " + question.getOptionC());
-            optionDButton.setText(" (D) " + question.getOptionD());
+            optionButtonsList.clear();
+            optionButtonsList.addAll(optionAButton, optionBButton, optionCButton, optionDButton);
+
+            toggleGroup.getToggles().clear();
+            toggleGroup.getToggles().addAll(optionButtonsList.stream().toList());
+
+
+            System.out.println("Options list size (setupQuestionView) -> " + optionButtonsList.size());
+
+            if (viewModel.getShuffleOptions()) {
+
+                for (RadioButton option: optionButtonsList){
+                    System.out.println("Option (Before Shuffle): -> " + option);
+                }
+
+                Collections.shuffle(optionButtonsList);
+
+                for (int i = 0; i < optionButtonsList.size(); i++) {
+                    System.out.println("Option (After Shuffle): -> " + optionButtonsList.get(i));
+
+                    if (i == 0) {
+                        System.out.println("OptionId -> " + optionButtonsList.get(i).getId());
+                        optionAButton.setText(" (A) " + getOption(optionButtonsList.get(i).getId()));
+                    }else if (i == 1) {
+                        System.out.println("OptionId -> " + optionButtonsList.get(i).getId());
+                        optionBButton.setText(" (B) " + getOption(optionButtonsList.get(i).getId()));
+                    }else if (i == 2) {
+                        System.out.println("OptionId -> " + optionButtonsList.get(i).getId());
+                        optionCButton.setText(" (C) " + getOption(optionButtonsList.get(i).getId()));
+                    } else if (i == 3) {
+                        System.out.println("OptionId -> " + optionButtonsList.get(i).getId());
+                        optionDButton.setText(" (D) " + getOption(optionButtonsList.get(i).getId()));
+                    }
+                }
+
+//                viewModel.setShuffleOptions(false);
+//                System.out.println("Set shuffleOptions to false");
+
+            }else {
+                optionButtonsList.get(0).setText(question.getOptionA());
+                optionButtonsList.get(1).setText(question.getOptionB());
+                optionButtonsList.get(2).setText(question.getOptionC());
+                optionButtonsList.get(3).setText(question.getOptionD());
+
+                optionAButton.setText(" (A) " + optionButtonsList.get(0).getText());
+                optionBButton.setText(" (B) " + optionButtonsList.get(1).getText());
+                optionCButton.setText(" (C) " + optionButtonsList.get(2).getText());
+                optionDButton.setText(" (D) " + optionButtonsList.get(3).getText());
+            }
+
 
             String selectedOption = questions.get(selectedQuestion - 1).getSelectedOption();
             if (selectedOption != null) {
@@ -668,6 +764,27 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             questionLabel.setText(question.getQuestion());
             webView.getEngine().loadContent(question.getQuestion());
         }
+    }
+
+    /**
+     * Helper method that converts a ToggleButton ID to its corresponding question option from Db
+     * @param toggleButtonId the ID representing a particular ToggleButton
+     * @return the Option string of the particular ToggleButton
+     */
+    private String getOption(String toggleButtonId) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
+        ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion();
+
+        return switch (toggleButtonId) {
+            case "optionAButton" -> question.getOptionA();
+            case "optionBButton" -> question.getOptionB();
+            case "optionCButton" -> question.getOptionC();
+            case "optionDButton" -> question.getOptionD();
+            default -> question.getOptionE();
+        };
+
     }
 
     private void setupTilePane() {
