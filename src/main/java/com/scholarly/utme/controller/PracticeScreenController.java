@@ -412,7 +412,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             optionCButton.setVisible(false);
             optionDButton.setVisible(false);
 
-            submitButton.setVisible(false);
+
 
         }
 
@@ -485,20 +485,56 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         incorrectAnswerPane.getChildren().remove(enterCorrectAnswerField);
 
         questionErrorCheckBox.selectedProperty().addListener(
-                (observable, oldValue, newValue) -> submitReport.setDisable(!newValue));
+                (observable, oldValue, newValue) -> {
+                    submitReport.setDisable(!newValue);
+
+                    // Ensure okayCheckBox is not selected
+                    if (okayCheckBox.isSelected()){
+                        okayCheckBox.setSelected(false);
+                        submitReport.setDisable(false);
+                    }
+                    if (incorrectAnswerCheckBox.isSelected()) {
+                        submitReport.setDisable(false);
+                    }
+
+                });
 
         incorrectAnswerCheckBox.selectedProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     submitReport.setDisable(!newValue);
+
+                    // Ensure okayCheckBox is not selected
+                    if (okayCheckBox.isSelected()){
+                        okayCheckBox.setSelected(false);
+                        questionErrorCheckBox.setSelected(false);
+                        submitReport.setDisable(false);
+                    }
+                    if (questionErrorCheckBox.isSelected()){
+                        submitReport.setDisable(false);
+                    }
+
                     if (newValue){
                         incorrectAnswerPane.getChildren().add(enterCorrectAnswerField);
+
                     }else {
                         incorrectAnswerPane.getChildren().remove(enterCorrectAnswerField);
                     }
                 });
 
         okayCheckBox.selectedProperty().addListener(
-                (observable, oldValue, newValue) -> submitReport.setDisable(!newValue));
+                (observable, oldValue, newValue) -> {
+                    submitReport.setDisable(!newValue);
+
+                    // Ensure only okayCheckBox can be selected at a time
+                    if (newValue) {
+                        if (questionErrorCheckBox.isSelected() || incorrectAnswerCheckBox.isSelected()){
+                            questionErrorCheckBox.setSelected(false);
+                            incorrectAnswerCheckBox.setSelected(false);
+                            okayCheckBox.setSelected(true);
+                            submitReport.setDisable(false);
+                        }
+                    }
+                });
 
 //        nextButton.setFocusTraversable(false);
 //        prevButton.setFocusTraversable(false);
@@ -792,13 +828,22 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.YES){
-                exitDialogDimmer.setVisible(false);
 
-                ResultScreenController.InitialData initialData =
-                        new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
-                ViewSwitcher.passData(initialData);
-                ViewSwitcher.showScreen(View.RESULT_SCREEN);
+            if (buttonType == ButtonType.YES){
+
+                if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+                    exitDialogDimmer.setVisible(false);
+
+                    ResultScreenController.InitialData initialData =
+                            new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                    ViewSwitcher.passData(initialData);
+                    ViewSwitcher.showScreen(View.RESULT_SCREEN);
+                }else {
+                    ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                    ViewSwitcher.passData(data);
+                    ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
+                    //TODO: Implement Theory result screen
+                }
 
             }else if (buttonType == ButtonType.NO){
                 exitDialogDimmer.setVisible(false);
@@ -833,20 +878,19 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.YES){
+            if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
                 ViewSwitcher.passData("practicePanel");
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
-            }else if (buttonType == ButtonType.NO){
+            } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
             }
             return buttonType;
         });
 
         dialog.showAndWait();
-
     }
-
+ 
     private void showTimeUpDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
 
@@ -872,7 +916,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES){
                 exitDialogDimmer.setVisible(false);
-
                 ResultScreenController.InitialData initialData =
                         new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
                 ViewSwitcher.passData(initialData);

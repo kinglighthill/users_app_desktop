@@ -1,5 +1,6 @@
 package com.scholarly.utme.ui.utils;
 
+import com.scholarly.utme.HelloApplication;
 import com.scholarly.utme.controller.PracticeScreenController;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,9 @@ public class ViewSwitcher {
     public static void showScreen(View view) {
         try {
             Parent root = FluentViewLoader.fxmlView(view.getControllerClass()).load().getView();
+
+            String cssResource = HelloApplication.class.getResource("/styles/main.css").toExternalForm();
+            root.getStylesheets().add(cssResource);
 
             rootScene.setRoot(root);
         } catch (Exception e) {
