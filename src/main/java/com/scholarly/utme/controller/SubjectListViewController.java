@@ -4,7 +4,7 @@ import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.NoSelectionModel;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.HomeScreenVM;
+import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
@@ -19,17 +19,16 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 @FxmlPath("/layouts/SubjectListView.fxml")
 public class SubjectListViewController implements FxmlView<SubjectListViewVM>, Initializable {
@@ -72,10 +71,20 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     private ObservableList<SubjectState> selectedTheorySubjects = FXCollections.observableArrayList();
 
 
-    private String selectedTab = "Objective";
+    private final String PREF_KEY_SELECTED_TAB = "SELECTED_TAB";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Preferences tabPreferences = AppPreferences.getPreferences();
+        String lastSelectedTab = tabPreferences.get(PREF_KEY_SELECTED_TAB, "Objective");
+
+        if (lastSelectedTab.equalsIgnoreCase("Objective")){
+            tabMenu.getSelectionModel().select(objectiveTab);
+        }else if (lastSelectedTab.equalsIgnoreCase("Theory")){
+            tabMenu.getSelectionModel().select(theoryTab);
+        }
+
+
         objectiveList.setItems(viewModel.getObjectiveSubjects());
         theoryList.setItems(viewModel.getTheorySubjects());
 
@@ -126,14 +135,15 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             selectedTheorySubjects.addAll(viewModel.getSelectedTheorySubjects().values());
         });
 
-
         tabMenu.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue.getText().equalsIgnoreCase("Objective")) {
-                selectedTab = "Objective";
+                tabMenu.getSelectionModel().select(objectiveTab);
+                tabPreferences.put(PREF_KEY_SELECTED_TAB, "Objective");
                 animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedObjectiveSubjects);
             } else {
-                selectedTab = "Theory";
+                tabMenu.getSelectionModel().select(theoryTab);
+                tabPreferences.put(PREF_KEY_SELECTED_TAB, "Theory");
                 animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedTheorySubjects);
             }
@@ -163,10 +173,14 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         startButton.setOnAction(event -> {
             List<SubjectState> subjectStates;
 
-            if (selectedTab.equalsIgnoreCase("Objective")) {
+            if (tabMenu.getSelectionModel().getSelectedItem() == objectiveTab) {
                 subjectStates = selectedObjectiveSubjects;
+                //userPreferences.put(SELECTED_TAB_PREF_KEY, "Objective");
+
             } else {
                 subjectStates = selectedTheorySubjects;
+                //userPreferences.put(SELECTED_TAB_PREF_KEY, "Theory");
+
             }
 
             // Ensure at least a subject is selected before the start of practice, study or cbt game
