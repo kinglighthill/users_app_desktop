@@ -16,6 +16,7 @@ module com.scholarly.utme {
     requires de.saxsys.mvvmfx;
     requires freetts;
     requires com.google.gson;
+    requires java.prefs;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;
