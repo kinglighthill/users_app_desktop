@@ -94,7 +94,7 @@
                    <VBox prefHeight="200.0" prefWidth="100.0">
                       <children>
 
-                         <HBox prefHeight="100.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                         <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                             <children>
                                <VBox prefHeight="716.0" prefWidth="293.0">
                                   <children>
@@ -123,10 +123,10 @@
                                      </ScrollPane>
                                   </children>
                                </VBox>
-                               <StackPane prefHeight="150.0" prefWidth="400.0" HBox.hgrow="ALWAYS">
+                               <StackPane prefHeight="150.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                                   <children>
                                      <HBox>
-                                        <ScrollPane fitToWidth="true" maxWidth="300" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #ffffff; -fx-background-color: #CCCBCB;">
+                                        <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #ffffff; -fx-background-color: #CCCBCB;">
                                            <content>
                                               <VBox fx:id="contentLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0">
                                                  <padding>
