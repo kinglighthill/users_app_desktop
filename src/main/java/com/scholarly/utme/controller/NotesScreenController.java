@@ -90,10 +90,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader;
 
     @FXML
-    private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon;
+    private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, refreshIcon;
 
     @FXML
     private Button backButton, prevButton, nextButton, practiceTopicButton;
+
+    @FXML
+    private TextField searchTextField;
 
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
@@ -116,7 +119,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         ToggleGroup topicListToggleGroup = new ToggleGroup();
 
-        topicLabel.setText(viewModel.getTopic().getTitle());
+        //topicLabel.setText(viewModel.getTopic().getTitle());
 
         viewModel.getSubTopics().forEach(subTopic -> {
             ToggleButton button = new ToggleButton();
@@ -198,6 +201,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         notesImage.setImage(new Image(getClass().getResource("/drawable/notes.png").toString()));
         note_icon.setImage(new Image(getClass().getResource("/drawable/note_icon.png").toString()));
         bookmark_icon.setImage(new Image(getClass().getResource("/drawable/bookmark_stroke.png").toString()));
+        searchIcon.setImage(new Image(getClass().getResource("/drawable/search_icon.png").toString()));
+        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon.png").toString()));
+        noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon.png").toString()));
 
         ImageView view = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
         view.setFitHeight(25);
@@ -214,6 +220,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 //            }
 //
 //        });
+
+        /*searchTextField.setOnMouseClicked(event -> {
+            searchIcon.setVisible(false);
+        });*/
 
         closeIconImageViewLayout.setImage(new Image(getClass().getResource("/drawable/close_icon_white.png").toString()));
         closeIconImageViewLayout.setOnMouseClicked(event -> {
@@ -242,13 +252,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
         subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        topicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        //topicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
         topicTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 16));
         addNoteText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
         bookmarkText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
         highlightHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 14));
 
-        practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
+        //practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
         backButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
