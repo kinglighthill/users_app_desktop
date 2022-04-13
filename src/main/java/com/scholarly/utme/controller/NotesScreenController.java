@@ -38,6 +38,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -84,16 +86,19 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private VBox contentLayout, topicVBox, noteOptions;
 
     @FXML
-    private HBox highlightColors, addNoteButton;
+    private HBox highlightColors, addNoteButton, noteTopBar;
 
     @FXML
     private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader;
 
     @FXML
-    private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon;
+    private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, refreshIcon;
 
     @FXML
-    private Button backButton, prevButton, nextButton, practiceTopicButton;
+    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton;
+
+    @FXML
+    private TextField searchTextField;
 
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
@@ -116,7 +121,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         ToggleGroup topicListToggleGroup = new ToggleGroup();
 
-        topicLabel.setText(viewModel.getTopic().getTitle());
+        //topicLabel.setText(viewModel.getTopic().getTitle());
 
         viewModel.getSubTopics().forEach(subTopic -> {
             ToggleButton button = new ToggleButton();
@@ -198,6 +203,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         notesImage.setImage(new Image(getClass().getResource("/drawable/notes.png").toString()));
         note_icon.setImage(new Image(getClass().getResource("/drawable/note_icon.png").toString()));
         bookmark_icon.setImage(new Image(getClass().getResource("/drawable/bookmark_stroke.png").toString()));
+        searchIcon.setImage(new Image(getClass().getResource("/drawable/search_icon.png").toString()));
+        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon.png").toString()));
+        noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon.png").toString()));
 
         ImageView view = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
         view.setFitHeight(25);
@@ -215,6 +223,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 //
 //        });
 
+        /*searchTextField.setOnMouseClicked(event -> {
+            searchIcon.setVisible(false);
+        });*/
+
         closeIconImageViewLayout.setImage(new Image(getClass().getResource("/drawable/close_icon_white.png").toString()));
         closeIconImageViewLayout.setOnMouseClicked(event -> {
             hideImageViewLayout();
@@ -228,27 +240,37 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         backButton.setGraphic(view);
 
         ImageView nextView = new ImageView(new Image(getClass().getResource("/drawable/next_icon.png").toString()));
-        nextView.setFitHeight(20);
+        nextView.setFitHeight(40);
         nextView.setPreserveRatio(true);
 
         nextButton.setGraphic(nextView);
+        nextButton.setShape(new Circle(60.0));
+        nextButton.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(0, 0, 0, 0.25), 0.6, 0.5, 0.0, 5.0));
+        nextButton.setBackground(Background.EMPTY);
 
         ImageView prevView = new ImageView(new Image(getClass().getResource("/drawable/prev_icon.png").toString()));
-        prevView.setFitHeight(20);
+        prevView.setFitHeight(40);
         prevView.setPreserveRatio(true);
 
         prevButton.setGraphic(prevView);
+        prevButton.setShape(new Circle(60.0));
+        prevButton.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(0, 0, 0, 0.25), 0.6, 0.5, 0.0, 5.0));
+        prevButton.setBackground(Background.EMPTY);
         backButton.setBackground(Background.EMPTY);
 
         pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
         subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        topicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        //topicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
         topicTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 16));
         addNoteText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
         bookmarkText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
         highlightHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 14));
+        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
 
-        practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
+        //practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
+
+       // noteTopBar.setEffect(new DropShadow(BlurType.GAUSSIAN, Color.BLACK, 5.0, 1.0, 0.0, 5.0));
+       // noteTopBar.setStyle("-fx-effect: dropshadow(three-pass-box, black, 0.0, 25.0, 0.0,  5.0);");
 
         backButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
@@ -276,7 +298,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             });
 
             hideNoteOptions();
-        });
+        });;
 
     }
 
