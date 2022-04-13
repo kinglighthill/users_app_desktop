@@ -9,6 +9,8 @@
 
 <?import org.controlsfx.control.SearchableComboBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.effect.DropShadow?>
+<?import com.dlsc.formsfx.view.renderer.SectionRenderer?>
 <BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.NotesScreenController">
     <top>
         <HBox alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER_LEFT">
@@ -41,7 +43,7 @@
 
           <top>
 
-             <HBox alignment="CENTER_LEFT" prefWidth="200.0" style="-fx-background-color: #E7F7E9;">
+             <HBox fx:id="noteTopBar" alignment="CENTER_LEFT" prefWidth="200.0" style="-fx-effect: dropshadow(gaussian, black, 10.0, 0.5, 0.0,  5.0); -fx-background-color: #E7F7E9; ">
                 <children>
                    <Label fx:id="subjectLabel" text="English Language" textFill="#105801">
                       <HBox.margin>
@@ -83,6 +85,7 @@
                 <padding>
                    <Insets bottom="10.0" top="10.0" />
                 </padding>
+
              </HBox>
 
           </top>
@@ -96,7 +99,7 @@
 
                          <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                             <children>
-                               <VBox prefHeight="716.0" prefWidth="293.0">
+                               <VBox prefHeight="716.0" prefWidth="253.0">
                                   <children>
                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" style="-fx-background-color: #ffffff;">
                                         <children>
@@ -116,37 +119,65 @@
                                         </padding>
                                      </HBox>
                                      <Line endX="190.0" startX="-100.0" stroke="#ededed" strokeWidth="5.0" />
-                                     <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0"  VBox.vgrow="ALWAYS">
-                                        <content>
-                                           <VBox fx:id="topicVBox" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" />
-                                        </content>
-                                     </ScrollPane>
+
+                                     <StackPane prefHeight="500.0" prefWidth="200.0" HBox.hgrow="ALWAYS" >
+
+                                        <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" >
+                                           <content>
+                                              <VBox fx:id="topicVBox" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" />
+                                           </content>
+                                        </ScrollPane>
+                                        <Button fx:id="quizButton" text="Take Quiz" textFill="#51C46B" mnemonicParsing="false" prefHeight="45" prefWidth="120" StackPane.alignment="BOTTOM_CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5;" >
+                                           <StackPane.margin>
+                                              <Insets bottom="40.0"/>
+                                           </StackPane.margin>
+                                        </Button>
+                                     </StackPane>
+
                                   </children>
                                </VBox>
                                <StackPane prefHeight="150.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                                   <children>
-                                     <HBox>
-                                        <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #ffffff; -fx-background-color: #CCCBCB;">
-                                           <content>
-                                              <VBox fx:id="contentLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0">
-                                                 <padding>
-                                                    <Insets bottom="20.0" left="25.0" right="25.0" top="25.0" />
-                                                 </padding>
-                                              </VBox>
-                                           </content>
-                                        </ScrollPane>
 
-                                     </HBox>
 
+                                     <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #ffffff; -fx-background-color: #CCCBCB;">
+                                        <content>
+                                           <StackPane StackPane.alignment="CENTER">
+                                              <children>
+                                                 <VBox fx:id="contentLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0">
+                                                    <padding>
+                                                       <Insets bottom="20.0" left="25.0" right="25.0" top="25.0" />
+                                                    </padding>
+                                                 </VBox>
+
+                                              </children>
+
+                                           </StackPane>
+
+
+                                        </content>
+                                     </ScrollPane>
+
+                                     <Button fx:id="prevButton" mnemonicParsing="false" prefWidth="50" style="-fx-background-color: #ffffff; -fx-background-radius: 5px; " StackPane.alignment="CENTER_LEFT">
+                                        <StackPane.margin>
+                                           <Insets top="280.0" left="20.0" />
+                                        </StackPane.margin>
+                                     </Button>
+
+                                     <Button fx:id="nextButton" mnemonicParsing="false" prefWidth="50" style="-fx-background-color: #ffffff; -fx-background-radius: 5px; " StackPane.alignment="CENTER_RIGHT">
+                                        <StackPane.margin>
+                                           <Insets top="280.0" right="40.0" />
+                                        </StackPane.margin>
+                                     </Button>
 
                                      <HBox maxHeight="-Infinity" maxWidth="-Infinity" StackPane.alignment="BOTTOM_RIGHT">
                                         <children>
-                                           <Button fx:id="prevButton" mnemonicParsing="false" style="-fx-background-color: #ffffff; -fx-border-color: #1B9D01; -fx-border-radius: 5; -fx-border-width: 0.6;">
+                                           <Button fx:id="prvButton" mnemonicParsing="false" style="-fx-background-color: #ffffff; -fx-border-color: #1B9D01; -fx-border-radius: 5; -fx-border-width: 0.6;">
                                               <padding>
                                                  <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                                               </padding>
                                            </Button>
-                                           <Button fx:id="nextButton" mnemonicParsing="false" style="-fx-background-color: #ffffff; -fx-border-color: #1B9D01; -fx-border-radius: 5; -fx-border-width: 0.6;">
+                                           <Button fx:id="nxtButton" mnemonicParsing="false" style="-fx-background-color: #ffffff; -fx-border-color: #1B9D01; -fx-border-radius: 5; -fx-border-width: 0.6;">
                                               <HBox.margin>
                                                  <Insets left="10.0" />
                                               </HBox.margin>
@@ -159,6 +190,7 @@
                                            <Insets bottom="25.0" right="25.0" />
                                         </padding>
                                      </HBox>
+
                                      <VBox fx:id="noteOptions" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" style="-fx-background-color: #ffffff;" visible="false" StackPane.alignment="BOTTOM_CENTER">
                                         <children>
                                            <HBox prefHeight="5.0" prefWidth="200.0" style="-fx-background-color: #EDEBEB;" />
