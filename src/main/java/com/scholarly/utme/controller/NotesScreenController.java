@@ -20,7 +20,6 @@ import com.scholarly.utme.data.model.newDb.contentType.unorderedList.UnorderedLi
 import com.scholarly.utme.data.model.newDb.contentType.video.VideoViewType;
 import com.scholarly.utme.data.model.newDb.contentType.webview.WebViewType;
 import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.NotesScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -78,15 +77,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private NotesScreenVM viewModel;
 
     @FXML
-    private StackPane imageViewLayout;
-
-
+    private StackPane imageViewLayout, noteLayout;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions;
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane;
 
     @FXML
-    private HBox highlightColors, addNoteButton, noteTopBar;
+    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton;
 
     @FXML
     private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader;
@@ -112,6 +109,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        searchTextField.requestFocus();
         highlightColorsList.addAll(Arrays.stream(HighlightColors.values()).map(highlightColors1 -> highlightColors1.colorCode).collect(Collectors.toList()));
 
         imageViewLayout.setVisible(false);
@@ -122,6 +120,21 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         ToggleGroup topicListToggleGroup = new ToggleGroup();
 
         //topicLabel.setText(viewModel.getTopic().getTitle());
+
+        searchIcon.setImage(new Image(getClass().getResource("/drawable/note_search_icon_1.5x.png").toString()));
+
+        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon_1.5x.png").toString()));
+
+        noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
+        noteSettingsIcon.setOnMouseClicked(event -> {
+            System.out.println("Note settings icon clicked");
+            int stackItems = noteLayout.getChildren().size();
+            System.out.println("StackPane Items -> " + stackItems);
+            settingsPane.setVisible(true);
+        });
+        noteSettingsCloseButton.setOnMouseClicked(event -> {
+            settingsPane.setVisible(false);
+        });
 
         viewModel.getSubTopics().forEach(subTopic -> {
             ToggleButton button = new ToggleButton();
@@ -203,29 +216,31 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         notesImage.setImage(new Image(getClass().getResource("/drawable/notes.png").toString()));
         note_icon.setImage(new Image(getClass().getResource("/drawable/note_icon.png").toString()));
         bookmark_icon.setImage(new Image(getClass().getResource("/drawable/bookmark_stroke.png").toString()));
-        searchIcon.setImage(new Image(getClass().getResource("/drawable/search_icon.png").toString()));
-        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon.png").toString()));
-        noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon.png").toString()));
 
         ImageView view = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
         view.setFitHeight(25);
         view.setPreserveRatio(true);
 
-        settingsIcon.setImage(new Image(getClass().getResource("/drawable/preferences.png").toString()));
-//        settingsIcon.setOnMouseClicked(event -> {
-//            Dialog<Double> dialog = createSettingsDialog(defaultFontSize);
-//            Optional<Double> result = dialog.showAndWait();
-//
-//            if (result.isPresent()) {
-//                defaultFontSize = result.get().intValue();
-//                renderNote(viewModel.getSelectedTopic());
-//            }
-//
-//        });
+        //settingsIcon.setImage(new Image(getClass().getResource("/drawable/preferences.png").toString()));
+        /*settingsIcon.setOnMouseClicked(event -> {
+            Dialog<Double> dialog = createSettingsDialog(defaultFontSize);
+            Optional<Double> result = dialog.showAndWait();
+
+            if (result.isPresent()) {
+                defaultFontSize = result.get().intValue();
+                renderNote(viewModel.getSelectedTopic());
+            }
+
+        });*/
 
         /*searchTextField.setOnMouseClicked(event -> {
             searchIcon.setVisible(false);
         });*/
+
+
+//        settingsPane.setLayoutX(50);
+//        settingsPane.setLayoutY(50);
+//        System.out.println("SettingsPane layoutX -> " + settingsPane.getLayoutX() + " and layoutY -> " + settingsPane.getLayoutY());
 
         closeIconImageViewLayout.setImage(new Image(getClass().getResource("/drawable/close_icon_white.png").toString()));
         closeIconImageViewLayout.setOnMouseClicked(event -> {
@@ -237,7 +252,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             hideNoteOptions();
         });
 
-        backButton.setGraphic(view);
+//        backButton.setGraphic(view);
 
         ImageView nextView = new ImageView(new Image(getClass().getResource("/drawable/next_icon.png").toString()));
         nextView.setFitHeight(40);
@@ -256,9 +271,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         prevButton.setShape(new Circle(60.0));
         prevButton.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(0, 0, 0, 0.25), 0.6, 0.5, 0.0, 5.0));
         prevButton.setBackground(Background.EMPTY);
-        backButton.setBackground(Background.EMPTY);
+//        backButton.setBackground(Background.EMPTY);
 
-        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
+//        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
         subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
         //topicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
         topicTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 16));
@@ -272,9 +287,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
        // noteTopBar.setEffect(new DropShadow(BlurType.GAUSSIAN, Color.BLACK, 5.0, 1.0, 0.0, 5.0));
        // noteTopBar.setStyle("-fx-effect: dropshadow(three-pass-box, black, 0.0, 25.0, 0.0,  5.0);");
 
-        backButton.setOnAction(event -> {
+        /*backButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
-        });
+        });*/
 
         addNoteButton.setOnMouseClicked(event -> {
 
