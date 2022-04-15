@@ -237,11 +237,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             searchIcon.setVisible(false);
         });*/
 
-
-//        settingsPane.setLayoutX(50);
-//        settingsPane.setLayoutY(50);
-//        System.out.println("SettingsPane layoutX -> " + settingsPane.getLayoutX() + " and layoutY -> " + settingsPane.getLayoutY());
-
         closeIconImageViewLayout.setImage(new Image(getClass().getResource("/drawable/close_icon_white.png").toString()));
         closeIconImageViewLayout.setOnMouseClicked(event -> {
             hideImageViewLayout();
@@ -283,9 +278,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
 
         //practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
-
-       // noteTopBar.setEffect(new DropShadow(BlurType.GAUSSIAN, Color.BLACK, 5.0, 1.0, 0.0, 5.0));
-       // noteTopBar.setStyle("-fx-effect: dropshadow(three-pass-box, black, 0.0, 25.0, 0.0,  5.0);");
 
         /*backButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
