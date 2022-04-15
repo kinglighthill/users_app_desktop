@@ -80,7 +80,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private StackPane imageViewLayout, noteLayout;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane;
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onWordClickOverlay;
 
     @FXML
     private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton;
@@ -455,6 +455,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         contentLayout.getChildren().clear();
         contentLayout.getChildren().addAll(contentElements);
+
+        contentLayout.setOnMouseClicked(event -> {
+            onWordClickOverlay.setVisible(true);
+        });
     }
 
     private Label getTitle(String text) {
