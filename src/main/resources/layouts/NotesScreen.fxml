@@ -276,7 +276,7 @@
    </BorderPane>
 
 
-   <VBox fx:id="settingsPane" maxHeight="300" maxWidth="200" style="-fx-background-color: #FFFFFF; -fx-border-radius: 1.0;" StackPane.alignment="TOP_RIGHT" visible="false">
+   <VBox fx:id="noteSettingsLayout" maxHeight="300" maxWidth="200" style="-fx-background-color: #FFFFFF; -fx-border-radius: 1.0;" StackPane.alignment="TOP_RIGHT" visible="false">
       <children>
          <HBox  prefWidth="200">
             <Label text="Aa">
@@ -294,7 +294,6 @@
                </HBox.margin>
             </ComboBox>
 
-
          </HBox>
          <Label text="font size:">
             <VBox.margin>
@@ -305,7 +304,6 @@
          <HBox prefWidth="200">
             <ToggleButton text="small" prefWidth="100" style="-fx-background-color: #4BB036; " textFill="WHITE"/>
             <ToggleButton text="medium" prefWidth="100" style="-fx-background-color: #FFFFFF; " textFill="BLACK"/>
-
             <VBox.margin>
                <Insets left="10.0" top="5.0" right="10.0"/>
             </VBox.margin>
@@ -355,7 +353,6 @@
                </HBox.margin>
             </Circle>
 
-
             <VBox.margin>
                <Insets left="10.0" top="8.0" />
             </VBox.margin>
@@ -367,7 +364,7 @@
          </Line>
 
          <HBox alignment="CENTER" fx:id="noteSettingsCloseButton">
-            <Label text="Close" textFill="#EE8989" alignment="CENTER">
+            <Label text="Close" textFill="#FF0000" alignment="CENTER">
                <font>
                   <Font size="16"/>
                </font>
@@ -376,14 +373,149 @@
                <Insets top="5.0" bottom="5.0" />
             </VBox.margin>
          </HBox>
-
-
       </children>
-
-
       <StackPane.margin>
          <Insets top="65" right="50"/>
       </StackPane.margin>
+   </VBox>
+
+   <VBox fx:id="noteOptionsLayout" maxHeight="200" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-border-radius: 1.0;" StackPane.alignment="CENTER" visible="false">
+
+      <children>
+         <HBox prefWidth="200" >
+
+            <VBox>
+               <ImageView fx:id="noteOptionsNoteIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true"/>
+               <Label text="Note" textFill="black">
+                  <padding>
+                     <Insets top="3.0"/>
+                  </padding>
+               </Label>
+
+               <HBox.margin>
+                  <Insets right="18"/>
+               </HBox.margin>
+            </VBox>
+            <VBox>
+               <ImageView fx:id="noteOptionsBookmarkIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <VBox.margin>
+                     <Insets left="10.0"/>
+                  </VBox.margin>
+               </ImageView>
+               <Label text="Bookmark" textFill="black">
+                  <padding>
+                     <Insets top="3.0"/>
+                  </padding>
+               </Label>
+
+               <HBox.margin>
+                  <Insets right="18"/>
+               </HBox.margin>
+            </VBox>
+            <VBox>
+               <ImageView fx:id="noteOptionsShareIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true"/>
+               <Label text="Share" textFill="black">
+                  <padding>
+                     <Insets top="3.0"/>
+                  </padding>
+               </Label>
+
+               <HBox.margin>
+                  <Insets right="18"/>
+               </HBox.margin>
+            </VBox>
+            <VBox>
+               <ImageView fx:id="noteOptionsReportIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <VBox.margin>
+                     <Insets left="3.0"/>
+                  </VBox.margin>
+               </ImageView>
+               <Label text="Report" textFill="black">
+                  <padding>
+                     <Insets top="3.0"/>
+                  </padding>
+               </Label>
+
+               <HBox.margin>
+                  <Insets right="18"/>
+               </HBox.margin>
+            </VBox>
+            <VBox>
+               <ImageView fx:id="noteOptionsAudioIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true"/>
+               <Label text="Read" textFill="black">
+                  <padding>
+                     <Insets top="3.0"/>
+                  </padding>
+               </Label>
+
+               <!--<HBox.margin>
+                  <Insets right="15"/>
+               </HBox.margin>-->
+            </VBox>
+
+            <VBox.margin>
+               <Insets top="20.0" left="20.0" right="15.0"/>
+            </VBox.margin>
+         </HBox>
+
+         <HBox >
+            <Circle fill="#FFF7C9" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
+               <HBox.margin>
+                  <Insets right="10"/>
+               </HBox.margin>
+            </Circle>
+            <Circle fill="#FFDBED" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
+               <HBox.margin>
+                  <Insets right="10"/>
+               </HBox.margin>
+            </Circle>
+            <Circle fill="#D7FFE0" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
+               <HBox.margin>
+                  <Insets right="10"/>
+               </HBox.margin>
+            </Circle>
+            <Circle fill="#FFE6D5" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
+               <HBox.margin>
+                  <Insets right="10"/>
+               </HBox.margin>
+            </Circle>
+            <Circle fill="#F4DBFF" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
+               <HBox.margin>
+                  <Insets right="10"/>
+               </HBox.margin>
+            </Circle>
+            <Circle fill="#E5FFFF" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
+               <HBox.margin>
+                  <Insets right="10"/>
+               </HBox.margin>
+            </Circle>
+
+            <VBox.margin>
+               <Insets left="15.0" top="35.0" right="10.0"/>
+            </VBox.margin>
+
+         </HBox>
+
+         <Line endX="200.0" startX="-100.0" stroke="#B8B8B8" >
+            <VBox.margin>
+               <Insets top="20.0"/>
+            </VBox.margin>
+         </Line>
+         <HBox alignment="CENTER" fx:id="noteOptionsCloseButton">
+            <Label text="Close" textFill="#FF0000" alignment="CENTER">
+               <font>
+                  <Font size="16"/>
+               </font>
+            </Label>
+            <VBox.margin>
+               <Insets top="5.0" bottom="5.0" />
+            </VBox.margin>
+         </HBox>
+      </children>
+
+      <VBox.margin>
+         <Insets top="20.0"/>
+      </VBox.margin>
 
    </VBox>
 
