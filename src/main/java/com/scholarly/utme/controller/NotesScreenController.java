@@ -84,7 +84,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private VBox contentLayout, topicVBox, noteOptions, settingsPane, onWordClickOverlay;
 
     @FXML
-    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, reportOptionsCloseButton;
+    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, bookmarkToast;
 
     @FXML
     private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader;
@@ -134,6 +134,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             if (!noteSettingsLayout.isVisible()) {
                 Animations.translateIn(noteSettingsLayout);
             }
+
+            // TODO: Use ListActionView to populate the Font Dropdown
             System.out.println("Note settings icon clicked");
             int stackItems = noteLayout.getChildren().size();
             System.out.println("StackPane Items -> " + stackItems);
@@ -144,15 +146,16 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         noteOptionsNoteIcon.setImage(new Image(getClass().getResource("/drawable/note_options_note_icon_2x.png").toString()));
-        noteOptionsBookmarkIcon.setImage(new Image(getClass().getResource("/drawable/note_options_bookmark_icon_2x.png").toString()));
+        noteOptionsBookmarkIcon.setImage(new Image(getClass().getResource("/drawable/note_options_bookmark_icon_1x.png").toString()));
         noteOptionsShareIcon.setImage(new Image(getClass().getResource("/drawable/note_options_share_icon_2x.png").toString()));
         noteOptionsReportIcon.setImage(new Image(getClass().getResource("/drawable/note_options_report_icon_2x.png").toString()));
         noteOptionsAudioIcon.setImage(new Image(getClass().getResource("/drawable/note_options_speaker_icon.png").toString()));
 
-        noteOptionsReportIcon.setOnMouseClicked(event -> {
-            noteOptionsReportNoteLayout.setVisible(true);
-        });
 
+        noteOptionsBookmarkIcon.setOnMouseClicked(event -> {
+            bookmarkToast.setVisible(!bookmarkToast.isVisible());
+        });
+      
         noteOptionsCloseButton.setOnMouseClicked(event -> {
             Animations.translateOut(noteOptionsLayout);
         });
