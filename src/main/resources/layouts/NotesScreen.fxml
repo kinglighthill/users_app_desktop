@@ -12,6 +12,7 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import com.dlsc.formsfx.view.renderer.SectionRenderer?>
 <?import net.synedra.validatorfx.GraphicDecorationStackPane?>
+<?import org.controlsfx.control.ListActionView?>
 <StackPane fx:id="noteLayout" prefHeight="800" prefWidth="1000" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.NotesScreenController">
 
    <BorderPane prefHeight="800" prefWidth="1000" >
@@ -399,7 +400,7 @@
             <VBox>
                <ImageView fx:id="noteOptionsBookmarkIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                   <VBox.margin>
-                     <Insets left="10.0"/>
+                     <Insets left="13.0"/>
                   </VBox.margin>
                </ImageView>
                <Label text="Bookmark" textFill="black">
@@ -518,5 +519,14 @@
       </VBox.margin>
 
    </VBox>
+
+   <HBox fx:id="bookmarkToast" maxHeight="35.0" maxWidth="200.0" style="-fx-background-color: #5C5C5C; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_CENTER" alignment="CENTER" visible="false">
+      <Label text="Bookmarked Successfully" textFill="white">
+
+      </Label>
+      <StackPane.margin>
+         <Insets bottom="35.0"/>
+      </StackPane.margin>
+   </HBox>
 
 </StackPane>
