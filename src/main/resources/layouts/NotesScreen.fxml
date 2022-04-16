@@ -387,22 +387,28 @@
 
    </VBox>
 
-   <VBox fx:id="onWordClickOverlay" maxHeight="200" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-border-radius: 1.0;" StackPane.alignment="CENTER" visible="true">
+   <VBox fx:id="onWordClickOverlay" maxHeight="250" maxWidth="280" style="-fx-background-color: #FFFFFF; -fx-border-radius: 1.0;" StackPane.alignment="CENTER" visible="false">
 
       <children>
-         <Label visible="wordOverlay" text="Chains" textFill="#034801" underline="true">
+         <Label fx:id="wordClicked" text="Chains" textFill="#034801" underline="true">
+            <font>
+               <Font name="System Bold" size="16"/>
+            </font>
             <VBox.margin>
-               <Insets top="30" left="20"/>
+               <Insets top="13" left="20" right="20"/>
             </VBox.margin>
          </Label>
 
-         <Label visible="wordOverlay" text="This is what the content of the overlay link text will look like" textFill="BLACK" >
+         <Label fx:id="wordClickedMeaning" text="This is what the content of the overlay link text will look like" textFill="BLACK" wrapText="true">
             <VBox.margin>
-               <Insets top="30" left="20"/>
+               <Insets top="15" left="20"/>
             </VBox.margin>
          </Label>
       </children>
 
+      <StackPane.margin>
+         <Insets top="65"/>
+      </StackPane.margin>
    </VBox>
 
 </StackPane>

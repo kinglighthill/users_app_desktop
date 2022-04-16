@@ -455,10 +455,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         contentLayout.getChildren().clear();
         contentLayout.getChildren().addAll(contentElements);
-
-        contentLayout.setOnMouseClicked(event -> {
-            onWordClickOverlay.setVisible(true);
-        });
     }
 
     private Label getTitle(String text) {
