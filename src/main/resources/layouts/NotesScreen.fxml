@@ -528,5 +528,111 @@
          <Insets bottom="35.0"/>
       </StackPane.margin>
    </HBox>
+  
+   <VBox fx:id="noteOptionsReportNoteLayout" maxHeight="180" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-border-radius: 1.0;" StackPane.alignment="CENTER" visible="false">
 
+      <children>
+         <HBox alignment="CENTER">
+            <VBox>
+               <ImageView fx:id="reportOptionReportIcon" fitWidth="25.0" fitHeight="25.0" preserveRatio="true" pickOnBounds="true">
+                  <VBox.margin>
+                     <Insets top="15.0" left="5.0"/>
+                  </VBox.margin>
+               </ImageView>
+               <Label text="Report" >
+                  <padding>
+                     <Insets top="5.0" />
+                  </padding>
+               </Label>
+            </VBox>
+         </HBox>
+
+         <HBox spacing="15">
+            <VBox>
+               <ImageView fx:id="notClearIcon" fitWidth="25.0" fitHeight="25.0" preserveRatio="true" pickOnBounds="true">
+                  <VBox.margin>
+                     <Insets left="12.0"/>
+                  </VBox.margin>
+               </ImageView>
+               <Label text="Not Clear">
+
+               </Label>
+            </VBox>
+            <VBox>
+               <ImageView fx:id="aLittleClearIcon" fitWidth="25.0" fitHeight="25.0" preserveRatio="true" pickOnBounds="true">
+                  <VBox.margin>
+                     <Insets left="20.0"/>
+                  </VBox.margin>
+               </ImageView>
+               <Label text="A Little Clear">
+
+               </Label>
+            </VBox>
+            <VBox>
+               <ImageView fx:id="veryClearIcon" fitWidth="25.0" fitHeight="25.0" preserveRatio="true" pickOnBounds="true">
+                  <VBox.margin>
+                     <Insets left="11.0"/>
+                  </VBox.margin>
+               </ImageView>
+               <Label text="Very Clear">
+
+               </Label>
+            </VBox>
+            <VBox>
+               <ImageView fx:id="feedbackIcon" fitWidth="25.0" fitHeight="25.0" preserveRatio="true" pickOnBounds="true">
+                  <VBox.margin>
+                     <Insets left="12.0"/>
+                  </VBox.margin>
+               </ImageView>
+               <Label text="Feedback">
+
+               </Label>
+            </VBox>
+            <VBox.margin>
+               <Insets top="30.0" left="10.0" right="10.0"/>
+            </VBox.margin>
+         </HBox>
+
+         <Line endX="200.0" startX="-100.0" stroke="#B8B8B8" >
+            <VBox.margin>
+               <Insets top="15.0"/>
+            </VBox.margin>
+         </Line>
+         <HBox alignment="CENTER" fx:id="reportOptionsCloseButton">
+            <Label text="Close" textFill="#FF0000" alignment="CENTER">
+               <font>
+                  <Font size="16"/>
+               </font>
+            </Label>
+            <VBox.margin>
+               <Insets top="5.0" bottom="5.0" />
+            </VBox.margin>
+         </HBox>
+
+      </children>
+   </VBox>
+
+   <VBox fx:id="onWordClickOverlay" maxHeight="250" maxWidth="280" style="-fx-background-color: #FFFFFF; -fx-border-radius: 1.0;" StackPane.alignment="CENTER" visible="false">
+
+      <children>
+         <Label fx:id="wordClicked" text="Chains" textFill="#034801" underline="true">
+            <font>
+               <Font name="System Bold" size="16"/>
+            </font>
+            <VBox.margin>
+               <Insets top="13" left="20" right="20"/>
+            </VBox.margin>
+         </Label>
+
+         <Label fx:id="wordClickedMeaning" text="This is what the content of the overlay link text will look like" textFill="BLACK" wrapText="true">
+            <VBox.margin>
+               <Insets top="15" left="20"/>
+            </VBox.margin>
+         </Label>
+      </children>
+
+      <StackPane.margin>
+         <Insets top="65"/>
+      </StackPane.margin>
+   </VBox>
 </StackPane>
