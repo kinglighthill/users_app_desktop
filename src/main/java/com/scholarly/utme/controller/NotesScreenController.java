@@ -83,19 +83,19 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private StackPane imageViewLayout, noteLayout;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout;
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay;
 
     @FXML
-    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay;
+    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton;
 
     @FXML
-    private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, toastText, newNoteText;
+    private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, toastText, newNoteText, dictionaryText;
 
     @FXML
     private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, createNoteBackIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
 
     @FXML
-    private ImageView noteOptionsNoteIcon, noteOptionsBookmarkIcon, noteOptionsShareIcon, noteOptionsReportIcon, noteOptionsAudioIcon, reportOptionReportIcon, notClearIcon, aLittleClearIcon, veryClearIcon, feedbackIcon, dictionaryIcon;
+    private ImageView noteOptionsNoteIcon, noteOptionsBookmarkIcon, noteOptionsShareIcon, noteOptionsReportIcon, noteOptionsAudioIcon, reportOptionReportIcon, notClearIcon, aLittleClearIcon, veryClearIcon, feedbackIcon, dictionarySpeakerIcon, dictionaryIcon;
 
     @FXML
     private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton;
@@ -150,7 +150,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 refreshStatusSecondText.setText("Connect your phone and try again");
                 //refreshStatusSecondText.setTextFill(Paint.valueOf("#51C46B"));
                 //refreshNoteTextContent.getChildren().remove(refreshStatusSecondText);
-                Animations.translateIn(refreshNoteLayout);
+                Animations.translateIn(refreshNoteLayout, 200);
             }
 
         }));
@@ -161,32 +161,29 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             refreshNotesCancelButton.setStyle(IDLE_BUTTON_STYLE);
         });
         refreshNotesCancelButton.setOnMouseClicked(event -> {
-            Animations.translateOut(refreshNoteLayout);
+            Animations.translateOut(refreshNoteLayout, 300);
         });
 
 
         /**************** Note Settings Section ***************/
         noteSettingsIcon.setOnMouseClicked(event -> {
             if (!noteSettingsLayout.isVisible()) {
-                Animations.translateIn(noteSettingsLayout);
+                Animations.translateIn(noteSettingsLayout, 200);
             }
 
             // TODO: Use ListActionView to populate the Font Dropdown
-            System.out.println("Note settings icon clicked");
             int stackItems = noteLayout.getChildren().size();
             System.out.println("StackPane Items -> " + stackItems);
 
         });
         noteSettingsCloseButton.setOnMouseEntered(event -> {
-            System.out.println("Inside this block of code");
             noteSettingsCloseButton.setStyle(HOVERED_BUTTON_STYLE);
         });
         noteSettingsCloseButton.setOnMouseExited(event -> {
-            System.out.println("Inside this other block of code");
             noteSettingsCloseButton.setStyle(IDLE_BUTTON_STYLE);
         });
         noteSettingsCloseButton.setOnMouseClicked(event -> {
-            Animations.translateOut(noteSettingsLayout);
+            Animations.translateOut(noteSettingsLayout, 300);
         });
 
 
@@ -229,7 +226,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             noteOptionsCloseButton.setStyle(IDLE_BUTTON_STYLE);
         });
         noteOptionsCloseButton.setOnMouseClicked(event -> {
-            Animations.translateOut(noteOptionsLayout);
+            Animations.translateOut(noteOptionsLayout, 300);
         });
 
 
@@ -255,13 +252,28 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
 
         /****************** Note Hyperlink Section *******************/
+        dictionaryText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 16));
         dictionaryIcon.setImage(new Image(getClass().getResource("/drawable/dictionary_icon_1x.png").toString()));
+        dictionarySpeakerIcon.setImage(new Image(getClass().getResource("/drawable/dictionary_speaker_icon_2x.png").toString()));
         dictionaryIcon.setOnMouseClicked(event -> {
             onWordClickedOverlay.setVisible(false);
+           // dictionaryMeaningOverlay.setVisible(true);
+            Animations.fadeIn(dictionaryMeaningOverlay, 100);
+        });
+        dictionaryCloseButton.setOnMouseEntered(event -> {
+            dictionaryCloseButton.setStyle(HOVERED_BUTTON_STYLE);
+        });
+        dictionaryCloseButton.setOnMouseExited(event -> {
+            dictionaryCloseButton.setStyle(IDLE_BUTTON_STYLE);
+        });
+        dictionaryCloseButton.setOnMouseClicked(event -> {
+            Animations.fadeOut(dictionaryMeaningOverlay, 300);
         });
 
         contentLayout.setOnMouseClicked(event -> {
-            onWordClickedOverlay.setVisible(true);
+            if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
+                onWordClickedOverlay.setVisible(true);
+            }
             /*if (!noteOptionsLayout.isVisible()) {
                 Animations.translateIn(noteOptionsLayout);
             }*/

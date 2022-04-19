@@ -8,13 +8,13 @@ import javafx.util.Duration;
 
 public class Animations {
 
-    public static void translateIn(Node node) {
+    public static void translateIn(Node node, double duration) {
         node.setVisible(true);
         FadeTransition fadeTransition = new FadeTransition();
 
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1);
-        fadeTransition.setDuration(Duration.millis(500));
+        fadeTransition.setDuration(Duration.millis(duration));
         fadeTransition.setNode(node);
 
         TranslateTransition translateTransition = new TranslateTransition();
@@ -27,18 +27,18 @@ public class Animations {
         scaleTransition.setFromY(0);
         scaleTransition.setToX(1);
         scaleTransition.setToY(1);
-        scaleTransition.setDuration(Duration.millis(200));
+        scaleTransition.setDuration(Duration.millis(duration));
         scaleTransition.setNode(node);
 
         scaleTransition.play();
     }
 
-    public static void translateOut(Node node) {
+    public static void translateOut(Node node, double duration) {
         FadeTransition fadeTransition = new FadeTransition();
 
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);
-        fadeTransition.setDuration(Duration.millis(500));
+        fadeTransition.setDuration(Duration.millis(duration));
         fadeTransition.setNode(node);
 
         fadeTransition.setOnFinished(event -> node.setVisible(false));
@@ -49,12 +49,41 @@ public class Animations {
         scaleTransition.setFromY(1);
         scaleTransition.setToX(0);
         scaleTransition.setToY(0);
-        scaleTransition.setDuration(Duration.millis(300));
+        scaleTransition.setDuration(Duration.millis(duration));
         scaleTransition.setNode(node);
 
         scaleTransition.setOnFinished(event -> node.setVisible(false));
 
         scaleTransition.play();
+    }
+
+    public static void fadeIn(Node node, double duration) {
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(duration));
+        fadeIn.setNode(node);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+        fadeIn.setCycleCount(1);
+        fadeIn.setAutoReverse(false);
+
+        node.setVisible(true);
+        fadeIn.play();
+
+    }
+
+    public static void fadeOut(Node node, double milliseconds) {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(milliseconds));
+        fadeOut.setNode(node);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setCycleCount(1);
+        fadeOut.setAutoReverse(false);
+
+        fadeOut.play();
+
+        fadeOut.setOnFinished(event -> {
+            node.setVisible(false);
+        });
+
     }
 
     public static void fadeInAndOut(Node node) {

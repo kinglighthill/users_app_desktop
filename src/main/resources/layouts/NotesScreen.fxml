@@ -681,9 +681,9 @@
                   <Font size="16"/>
                </font>
             </Label>
-            <padding>
+            <HBox.margin>
                <Insets top="5.0" bottom="5.0" />
-            </padding>
+            </HBox.margin>
          </HBox>
 
       </children>
@@ -727,6 +727,75 @@
          <Insets top="65"/>
       </StackPane.margin>
    </HBox>
+
+   <VBox fx:id="dictionaryMeaningOverlay" maxWidth="300" maxHeight="300" style="-fx-background-color: #FFFFFF; -fx-background-radius: 7;" StackPane.alignment="CENTER" visible="false">
+      <children>
+         <HBox>
+            <ImageView fx:id="dictionarySpeakerIcon" fitWidth="22.0" fitHeight="22.0" preserveRatio="true" pickOnBounds="true">
+
+            </ImageView>
+            <Label fx:id="dictionaryText" text="Microscope">
+               <font>
+                  <Font size="16"/>
+               </font>
+               <HBox.margin>
+                  <Insets left="10.0"/>
+               </HBox.margin>
+            </Label>
+         </HBox>
+         <Label fx:id="dictionaryPronunciationText" text="/Microscope/" style="-fx-font-style: italic">
+            <padding>
+               <Insets top="5.0"/>
+            </padding>
+         </Label>
+
+         <Label text="Noun">
+            <font>
+               <Font size="16"/>
+            </font>
+            <VBox.margin>
+               <Insets top="15.0"/>
+            </VBox.margin>
+         </Label>
+
+         <Label text="Meaning" underline="true">
+            <font>
+               <Font size="16"/>
+            </font>
+            <padding>
+               <Insets top="5.0"/>
+            </padding>
+         </Label>
+
+         <Label fx:id="dictionaryWordMeaning" text="An optical instrument used for viewing very small objects, such as mineral samples or animal or plant cells, typically magnified several hundred times." wrapText="true">
+            <font>
+               <Font size="14"/>
+            </font>
+         </Label>
+
+         <Line endX="200.0" startX="-100.0" stroke="#B8B8B8" >
+            <VBox.margin>
+               <Insets top="15.0"/>
+            </VBox.margin>
+         </Line>
+         <HBox alignment="BOTTOM_CENTER" fx:id="dictionaryCloseButton">
+            <Label text="Close" textFill="#FF0000" alignment="CENTER">
+               <font>
+                  <Font size="16"/>
+               </font>
+               <HBox.margin>
+                  <Insets top="8.0" bottom="8.0" />
+               </HBox.margin>
+            </Label>
+
+         </HBox>
+
+      </children>
+
+      <padding>
+         <Insets top="15.0" left="15.0" right="15.0"/>
+      </padding>
+   </VBox>
 
    <VBox fx:id="onHyperlinkClickedOverlay" maxHeight="250" maxWidth="280" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5.0;" StackPane.alignment="CENTER" visible="false">
 
