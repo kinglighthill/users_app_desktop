@@ -558,10 +558,49 @@
 
    </VBox>
 
-   <HBox fx:id="bookmarkToast" maxHeight="35.0" maxWidth="200.0" style="-fx-background-color: #5C5C5C; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_CENTER" alignment="CENTER" visible="false">
-      <Label text="Bookmarked Successfully" textFill="white">
+   <VBox fx:id="noteOptionsNoteLayout" maxHeight="250" maxWidth="400" style="-fx-background-color: #E7F7E9; -fx-background-radius: 5;" visible="false">
 
-      </Label>
+      <HBox>
+         <ImageView fx:id="createNoteBackIcon" fitWidth="15.0" fitHeight="15.0" preserveRatio="true" pickOnBounds="true">
+
+         </ImageView>
+         <Label fx:id="newNoteText" text="New Note">
+            <HBox.margin>
+               <Insets left="10"/>
+            </HBox.margin>
+         </Label>
+      </HBox>
+
+      <TextArea prefWidth="200" prefHeight="200" promptText="Make Your Note" style="-fx-background-color: #FFFFFF" wrapText="true">
+         <VBox.margin>
+            <Insets top="10"/>
+         </VBox.margin>
+      </TextArea>
+
+      <HBox alignment="BOTTOM_CENTER">
+         <Button fx:id="noteCloseButton" text="Close" textFill="EE8989" style="-fx-background-color: #FFFFFF; -fx-border-color: #EE8989; -fx-background-radius: 4" >
+            <HBox.margin>
+               <Insets top="15" right="40"/>
+            </HBox.margin>
+         </Button>
+         <Button fx:id="noteSaveButton" text="Save Note" textFill="#FFFFFF" style="-fx-background-color: #4BB036; ">
+            <HBox.margin>
+               <Insets top="15" left="40"/>
+            </HBox.margin>
+         </Button>
+      </HBox>
+
+      <padding>
+         <Insets top="15" left="15" bottom="10" right="15"/>
+      </padding>
+   </VBox>
+
+   <HBox fx:id="toastLayout" maxHeight="35.0" maxWidth="200.0" style="-fx-background-color: #5C5C5C; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_CENTER" alignment="CENTER" visible="false">
+      <children>
+         <Label fx:id="toastText" text="Bookmarked Successfully" textFill="white">
+
+         </Label>
+      </children>
       <StackPane.margin>
          <Insets bottom="35.0"/>
       </StackPane.margin>
