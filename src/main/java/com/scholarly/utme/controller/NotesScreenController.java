@@ -47,6 +47,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -82,22 +83,22 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private StackPane imageViewLayout, noteLayout;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onWordClickOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent;
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onWordClickOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout;
 
     @FXML
-    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, bookmarkToast, reportOptionsCloseButton, refreshNotesCancelButton;
+    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton;
 
     @FXML
-    private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText;
+    private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, toastText, newNoteText;
 
     @FXML
-    private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
+    private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, createNoteBackIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
 
     @FXML
     private ImageView noteOptionsNoteIcon, noteOptionsBookmarkIcon, noteOptionsShareIcon, noteOptionsReportIcon, noteOptionsAudioIcon, reportOptionReportIcon, notClearIcon, aLittleClearIcon, veryClearIcon, feedbackIcon;
 
     @FXML
-    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton;
+    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton;
 
     @FXML
     private TextField searchTextField;
@@ -189,10 +190,30 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         noteOptionsShareIcon.setImage(new Image(getClass().getResource("/drawable/note_options_share_icon_1x.png").toString()));
         noteOptionsReportIcon.setImage(new Image(getClass().getResource("/drawable/note_options_report_icon_1x.png").toString()));
         noteOptionsAudioIcon.setImage(new Image(getClass().getResource("/drawable/note_options_audio_icon_1x.png").toString()));
+        createNoteBackIcon.setImage(new Image(getClass().getResource("/drawable/create_note_back_icon_1x.png").toString()));
 
 
+        noteOptionsNoteIcon.setOnMouseClicked(event -> {
+            noteOptionsNoteLayout.setVisible(true);
+//            Dialog<String> noteDialog = createNoteDialog(null);
+//
+//            Optional<String> result = noteDialog.showAndWait();
+        });
+        createNoteBackIcon.setOnMouseClicked(event -> {
+            noteOptionsNoteLayout.setVisible(false);
+        });
+        noteCloseButton.setOnMouseClicked(event -> {
+            noteOptionsLayout.setVisible(false);
+            noteOptionsNoteLayout.setVisible(false);
+
+        });
+        noteSaveButton.setOnMouseClicked(event -> {
+            toastText.setText("Note Saved");
+            Animations.fadeInAndOut(toastLayout);
+        });
         noteOptionsBookmarkIcon.setOnMouseClicked(event -> {
-            Animations.fadeInAndOut(bookmarkToast);
+            toastText.setText("Bookmarked Successfully");
+            Animations.fadeInAndOut(toastLayout);
         });
 
         noteOptionsCloseButton.setOnMouseEntered(event -> {
@@ -371,6 +392,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         bookmarkText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
         highlightHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 14));
         quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+        newNoteText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
 
         //practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
@@ -672,6 +694,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private Dialog<String> createNoteDialog(String note) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Add Note");
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
 
         if (note == null) {
             dialog.setHeaderText("Add new note");
