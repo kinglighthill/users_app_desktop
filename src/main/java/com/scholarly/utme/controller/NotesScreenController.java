@@ -44,6 +44,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
@@ -81,25 +82,28 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private StackPane imageViewLayout, noteLayout;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onWordClickOverlay;
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onWordClickOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent;
 
     @FXML
-    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, bookmarkToast;
+    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, bookmarkToast, reportOptionsCloseButton, refreshNotesCancelButton;
 
     @FXML
-    private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader;
+    private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText;
 
     @FXML
-    private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, refreshIcon, noteOptionsNoteIcon, noteOptionsBookmarkIcon, noteOptionsShareIcon, noteOptionsReportIcon, noteOptionsAudioIcon;
+    private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
 
     @FXML
-    private ImageView reportOptionReportIcon, notClearIcon, aLittleClearIcon, veryClearIcon, feedbackIcon;
+    private ImageView noteOptionsNoteIcon, noteOptionsBookmarkIcon, noteOptionsShareIcon, noteOptionsReportIcon, noteOptionsAudioIcon, reportOptionReportIcon, notClearIcon, aLittleClearIcon, veryClearIcon, feedbackIcon;
 
     @FXML
     private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton;
 
     @FXML
     private TextField searchTextField;
+
+    @FXML
+    private ProgressIndicator refreshNoteProgressIndicator;
 
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
@@ -126,10 +130,37 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         //topicLabel.setText(viewModel.getTopic().getTitle());
 
         searchIcon.setImage(new Image(getClass().getResource("/drawable/note_search_icon_1.5x.png").toString()));
-
         refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon_1.5x.png").toString()));
-
         noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
+        refreshStatusNoUpdateIcon.setImage(new Image(getClass().getResource("/drawable/no_update_found_icon_1x.png").toString()));
+        refreshStatusUpdateFoundIcon.setImage(new Image(getClass().getResource("/drawable/updates_found_icon_1x.png").toString()));
+        refreshStatusNoNetworkIcon.setImage(new Image(getClass().getResource("/drawable/no_network_icon_1x.png").toString()));
+
+        refreshIcon.setOnMouseClicked((event -> {
+            if (!refreshNoteLayout.isVisible()) {
+                refreshStatusContent.getChildren().remove(refreshNoteProgressIndicator);
+                refreshStatusContent.getChildren().remove(refreshStatusNoUpdateIcon);
+                refreshStatusContent.getChildren().remove(refreshStatusUpdateFoundIcon);
+                refreshStatusFirstText.setText("Network Unavailable");
+                refreshStatusFirstText.setTextFill(Paint.valueOf("#EE8989"));
+                refreshStatusFirstText.setPadding(new Insets(10, 0, 0, 0));
+                refreshStatusSecondText.setText("Connect your phone and try again");
+                //refreshStatusSecondText.setTextFill(Paint.valueOf("#51C46B"));
+                //refreshNoteTextContent.getChildren().remove(refreshStatusSecondText);
+                Animations.translateIn(refreshNoteLayout);
+            }
+
+        }));
+        refreshNotesCancelButton.setOnMouseEntered(event -> {
+            refreshNotesCancelButton.setStyle(HOVERED_BUTTON_STYLE);
+        });
+        refreshNotesCancelButton.setOnMouseExited(event -> {
+            refreshNotesCancelButton.setStyle(IDLE_BUTTON_STYLE);
+        });
+        refreshNotesCancelButton.setOnMouseClicked(event -> {
+            Animations.translateOut(refreshNoteLayout);
+        });
+
         noteSettingsIcon.setOnMouseClicked(event -> {
             if (!noteSettingsLayout.isVisible()) {
                 Animations.translateIn(noteSettingsLayout);
