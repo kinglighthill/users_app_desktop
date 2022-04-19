@@ -41,9 +41,7 @@ public class Animations {
         fadeTransition.setDuration(Duration.millis(500));
         fadeTransition.setNode(node);
 
-        fadeTransition.setOnFinished(event -> {
-            node.setVisible(false);
-        });
+        fadeTransition.setOnFinished(event -> node.setVisible(false));
 
         ScaleTransition scaleTransition = new ScaleTransition();
 
@@ -54,10 +52,41 @@ public class Animations {
         scaleTransition.setDuration(Duration.millis(300));
         scaleTransition.setNode(node);
 
-        scaleTransition.setOnFinished(event -> {
-            node.setVisible(false);
-        });
+        scaleTransition.setOnFinished(event -> node.setVisible(false));
 
         scaleTransition.play();
+    }
+
+    public static void fadeInAndOut(Node node) {
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(700));
+        fadeIn.setNode(node);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+        fadeIn.setCycleCount(1);
+        fadeIn.setAutoReverse(false);
+
+        fadeIn.play();
+
+        node.setVisible(!node.isVisible());
+
+        fadeIn.setOnFinished(event2 -> {
+            try {
+                Thread.sleep(1200);
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+            }finally {
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(700));
+                fadeOut.setNode(node);
+                fadeOut.setFromValue(1.0);
+                fadeOut.setToValue(0.0);
+                fadeOut.setCycleCount(1);
+                fadeOut.setAutoReverse(false);
+
+                fadeOut.play();
+
+                fadeOut.setOnFinished(event3 -> node.setVisible(false));
+            }
+
+        });
     }
 }

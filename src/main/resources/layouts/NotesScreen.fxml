@@ -393,43 +393,23 @@
             </VBox.margin>
          </Label>
 
-         <HBox>
-            <Circle fill="#FFF7C9" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="10"/>
-               </HBox.margin>
-            </Circle>
-            <Circle fill="#FFDBED" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="10"/>
-               </HBox.margin>
-            </Circle>
-            <Circle fill="#D7FFE0" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="10"/>
-               </HBox.margin>
-            </Circle>
-            <Circle fill="#FFE6D5" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="15"/>
-               </HBox.margin>
-            </Circle>
+         <HBox spacing="10">
+            <Circle fill="#FFF7C9" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+            <Circle fill="#FFDBED" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+            <Circle fill="#D7FFE0" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+            <Circle fill="#FFE6D5" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
 
             <VBox.margin>
                <Insets left="10.0" top="8.0" />
             </VBox.margin>
          </HBox>
-         <HBox>
-            <Circle fill="#F4DBFF" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="10"/>
-               </HBox.margin>
-            </Circle>
-            <Circle fill="#E5FFFF" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="10"/>
-               </HBox.margin>
-            </Circle>
+         <HBox spacing="10">
+            <Circle fill="#F4DBFF" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+            <Circle fill="#E5FFFF" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
 
             <VBox.margin>
                <Insets left="10.0" top="8.0" />
@@ -441,15 +421,15 @@
             </VBox.margin>
          </Line>
 
-         <HBox alignment="CENTER" fx:id="noteSettingsCloseButton">
+         <HBox alignment="BOTTOM_CENTER" fx:id="noteSettingsCloseButton">
             <Label text="Close" textFill="#FF0000" alignment="CENTER">
                <font>
                   <Font size="16"/>
                </font>
             </Label>
-            <VBox.margin>
+            <padding>
                <Insets top="5.0" bottom="5.0" />
-            </VBox.margin>
+            </padding>
          </HBox>
       </children>
       <StackPane.margin>
@@ -457,16 +437,16 @@
       </StackPane.margin>
    </VBox>
 
-   <VBox fx:id="noteOptionsLayout" maxHeight="200" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-background-radius: 4;" StackPane.alignment="CENTER" visible="false">
+   <VBox fx:id="noteOptionsLayout" maxHeight="200" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5;" StackPane.alignment="CENTER" visible="false">
 
       <children>
          <HBox prefWidth="200" >
 
             <VBox>
-               <ImageView fx:id="noteOptionsNoteIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true"/>
+               <ImageView fx:id="noteOptionsNoteIcon" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true"/>
                <Label text="Note" textFill="black">
                   <padding>
-                     <Insets top="3.0"/>
+                     <Insets top="3.0" left="4.0"/>
                   </padding>
                </Label>
 
@@ -477,7 +457,7 @@
             <VBox>
                <ImageView fx:id="noteOptionsBookmarkIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                   <VBox.margin>
-                     <Insets left="13.0"/>
+                     <Insets left="14.0"/>
                   </VBox.margin>
                </ImageView>
                <Label text="Bookmark" textFill="black">
@@ -519,7 +499,7 @@
                </HBox.margin>
             </VBox>
             <VBox>
-               <ImageView fx:id="noteOptionsAudioIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true"/>
+               <ImageView fx:id="noteOptionsAudioIcon" fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true"/>
                <Label text="Read" textFill="black">
                   <padding>
                      <Insets top="3.0"/>
@@ -536,37 +516,18 @@
             </VBox.margin>
          </HBox>
 
-         <HBox >
-            <Circle fill="#FFF7C9" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="10"/>
-               </HBox.margin>
-            </Circle>
-            <Circle fill="#FFDBED" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="10"/>
-               </HBox.margin>
-            </Circle>
-            <Circle fill="#D7FFE0" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="10"/>
-               </HBox.margin>
-            </Circle>
-            <Circle fill="#FFE6D5" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="10"/>
-               </HBox.margin>
-            </Circle>
-            <Circle fill="#F4DBFF" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="10"/>
-               </HBox.margin>
-            </Circle>
-            <Circle fill="#E5FFFF" radius="18" stroke="TRANSPARENT" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets right="10"/>
-               </HBox.margin>
-            </Circle>
+         <HBox spacing="10">
+            <Circle fill="#FFF7C9" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+            <Circle fill="#FFDBED" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+            <Circle fill="#D7FFE0" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+            <Circle fill="#FFE6D5" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+            <Circle fill="#F4DBFF" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+            <Circle fill="#E5FFFF" radius="18" stroke="TRANSPARENT" strokeType="INSIDE"/>
 
             <VBox.margin>
                <Insets left="15.0" top="35.0" right="10.0"/>
@@ -585,9 +546,9 @@
                   <Font size="16"/>
                </font>
             </Label>
-            <VBox.margin>
+            <padding>
                <Insets top="5.0" bottom="5.0" />
-            </VBox.margin>
+            </padding>
          </HBox>
       </children>
 
@@ -681,9 +642,9 @@
                   <Font size="16"/>
                </font>
             </Label>
-            <VBox.margin>
+            <padding>
                <Insets top="5.0" bottom="5.0" />
-            </VBox.margin>
+            </padding>
          </HBox>
 
       </children>

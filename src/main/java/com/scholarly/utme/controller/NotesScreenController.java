@@ -172,21 +172,35 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             System.out.println("StackPane Items -> " + stackItems);
 
         });
+        noteSettingsCloseButton.setOnMouseEntered(event -> {
+            System.out.println("Inside this block of code");
+            noteSettingsCloseButton.setStyle(HOVERED_BUTTON_STYLE);
+        });
+        noteSettingsCloseButton.setOnMouseExited(event -> {
+            System.out.println("Inside this other block of code");
+            noteSettingsCloseButton.setStyle(IDLE_BUTTON_STYLE);
+        });
         noteSettingsCloseButton.setOnMouseClicked(event -> {
             Animations.translateOut(noteSettingsLayout);
         });
 
-        noteOptionsNoteIcon.setImage(new Image(getClass().getResource("/drawable/note_options_note_icon_2x.png").toString()));
+        noteOptionsNoteIcon.setImage(new Image(getClass().getResource("/drawable/note_options_note_icon_1x.png").toString()));
         noteOptionsBookmarkIcon.setImage(new Image(getClass().getResource("/drawable/note_options_bookmark_icon_1x.png").toString()));
-        noteOptionsShareIcon.setImage(new Image(getClass().getResource("/drawable/note_options_share_icon_2x.png").toString()));
-        noteOptionsReportIcon.setImage(new Image(getClass().getResource("/drawable/note_options_report_icon_2x.png").toString()));
-        noteOptionsAudioIcon.setImage(new Image(getClass().getResource("/drawable/note_options_speaker_icon.png").toString()));
+        noteOptionsShareIcon.setImage(new Image(getClass().getResource("/drawable/note_options_share_icon_1x.png").toString()));
+        noteOptionsReportIcon.setImage(new Image(getClass().getResource("/drawable/note_options_report_icon_1x.png").toString()));
+        noteOptionsAudioIcon.setImage(new Image(getClass().getResource("/drawable/note_options_audio_icon_1x.png").toString()));
 
 
         noteOptionsBookmarkIcon.setOnMouseClicked(event -> {
-            bookmarkToast.setVisible(!bookmarkToast.isVisible());
+            Animations.fadeInAndOut(bookmarkToast);
         });
-      
+
+        noteOptionsCloseButton.setOnMouseEntered(event -> {
+            noteOptionsCloseButton.setStyle(HOVERED_BUTTON_STYLE);
+        });
+        noteOptionsCloseButton.setOnMouseExited(event -> {
+            noteOptionsCloseButton.setStyle(IDLE_BUTTON_STYLE);
+        });
         noteOptionsCloseButton.setOnMouseClicked(event -> {
             Animations.translateOut(noteOptionsLayout);
         });
@@ -199,11 +213,20 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         /********** Note Options Report Layout Section **********/
         reportOptionReportIcon.setImage(new Image(getClass().getResource("/drawable/note_options_report_icon_1x.png").toString()));
-        notClearIcon.setImage(new Image(getClass().getResource("/drawable/not_clear_icon_1x.png").toString()));
-        aLittleClearIcon.setImage(new Image(getClass().getResource("/drawable/not_clear_icon_1x.png").toString()));
-        veryClearIcon.setImage(new Image(getClass().getResource("/drawable/not_clear_icon_1x.png").toString()));
-        feedbackIcon.setImage(new Image(getClass().getResource("/drawable/not_clear_icon_1x.png").toString()));
+        notClearIcon.setImage(new Image(getClass().getResource("/drawable/not_clear_emoji_1x.png").toString()));
+        aLittleClearIcon.setImage(new Image(getClass().getResource("/drawable/a_little_clear_emoji_1x.png").toString()));
+        veryClearIcon.setImage(new Image(getClass().getResource("/drawable/very_clear_emoji_1x.png").toString()));
+        feedbackIcon.setImage(new Image(getClass().getResource("/drawable/feedback_emoji_1x.png").toString()));
 
+        noteOptionsReportIcon.setOnMouseClicked(event -> {
+            noteOptionsReportNoteLayout.setVisible(true);
+        });
+        reportOptionsCloseButton.setOnMouseEntered(event -> {
+            reportOptionsCloseButton.setStyle(HOVERED_BUTTON_STYLE);
+        });
+        reportOptionsCloseButton.setOnMouseExited(event -> {
+            reportOptionsCloseButton.setStyle(IDLE_BUTTON_STYLE);
+        });
         reportOptionsCloseButton.setOnMouseClicked(event -> {
             noteOptionsReportNoteLayout.setVisible(false);
         });
