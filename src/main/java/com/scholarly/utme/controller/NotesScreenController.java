@@ -83,10 +83,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private StackPane imageViewLayout, noteLayout;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onWordClickOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout;
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout;
 
     @FXML
-    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton;
+    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay;
 
     @FXML
     private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, toastText, newNoteText;
@@ -95,7 +95,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, createNoteBackIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
 
     @FXML
-    private ImageView noteOptionsNoteIcon, noteOptionsBookmarkIcon, noteOptionsShareIcon, noteOptionsReportIcon, noteOptionsAudioIcon, reportOptionReportIcon, notClearIcon, aLittleClearIcon, veryClearIcon, feedbackIcon;
+    private ImageView noteOptionsNoteIcon, noteOptionsBookmarkIcon, noteOptionsShareIcon, noteOptionsReportIcon, noteOptionsAudioIcon, reportOptionReportIcon, notClearIcon, aLittleClearIcon, veryClearIcon, feedbackIcon, dictionaryIcon;
 
     @FXML
     private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton;
@@ -137,6 +137,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         refreshStatusUpdateFoundIcon.setImage(new Image(getClass().getResource("/drawable/updates_found_icon_1x.png").toString()));
         refreshStatusNoNetworkIcon.setImage(new Image(getClass().getResource("/drawable/no_network_icon_1x.png").toString()));
 
+
+        /***************** Refresh Notes Section *******************/
         refreshIcon.setOnMouseClicked((event -> {
             if (!refreshNoteLayout.isVisible()) {
                 refreshStatusContent.getChildren().remove(refreshNoteProgressIndicator);
@@ -162,6 +164,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Animations.translateOut(refreshNoteLayout);
         });
 
+
+        /**************** Note Settings Section ***************/
         noteSettingsIcon.setOnMouseClicked(event -> {
             if (!noteSettingsLayout.isVisible()) {
                 Animations.translateIn(noteSettingsLayout);
@@ -185,6 +189,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Animations.translateOut(noteSettingsLayout);
         });
 
+
+        /******************** Note Options Section ************************/
         noteOptionsNoteIcon.setImage(new Image(getClass().getResource("/drawable/note_options_note_icon_1x.png").toString()));
         noteOptionsBookmarkIcon.setImage(new Image(getClass().getResource("/drawable/note_options_bookmark_icon_1x.png").toString()));
         noteOptionsShareIcon.setImage(new Image(getClass().getResource("/drawable/note_options_share_icon_1x.png").toString()));
@@ -226,11 +232,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Animations.translateOut(noteOptionsLayout);
         });
 
-        contentLayout.setOnMouseClicked(event -> {
-            if (!noteOptionsLayout.isVisible()) {
-                Animations.translateIn(noteOptionsLayout);
-            }
-        });
 
         /********** Note Options Report Layout Section **********/
         reportOptionReportIcon.setImage(new Image(getClass().getResource("/drawable/note_options_report_icon_1x.png").toString()));
@@ -250,6 +251,20 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
         reportOptionsCloseButton.setOnMouseClicked(event -> {
             noteOptionsReportNoteLayout.setVisible(false);
+        });
+
+
+        /****************** Note Hyperlink Section *******************/
+        dictionaryIcon.setImage(new Image(getClass().getResource("/drawable/dictionary_icon_1x.png").toString()));
+        dictionaryIcon.setOnMouseClicked(event -> {
+            onWordClickedOverlay.setVisible(false);
+        });
+
+        contentLayout.setOnMouseClicked(event -> {
+            onWordClickedOverlay.setVisible(true);
+            /*if (!noteOptionsLayout.isVisible()) {
+                Animations.translateIn(noteOptionsLayout);
+            }*/
         });
 
         viewModel.getSubTopics().forEach(subTopic -> {

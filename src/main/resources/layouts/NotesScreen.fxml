@@ -689,10 +689,49 @@
       </children>
    </VBox>
 
-   <VBox fx:id="onWordClickOverlay" maxHeight="250" maxWidth="280" style="-fx-background-color: #FFFFFF; -fx-border-radius: 1.0;" StackPane.alignment="CENTER" visible="false">
+   <HBox fx:id="onWordClickedOverlay" maxWidth="200" maxHeight="35" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5.0;" StackPane.alignment="TOP_CENTER" spacing="10" visible="false">
+      <Circle fill="#FFF3B2" radius="12" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+      <Circle fill="#FFB8DC" radius="12" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+      <Circle fill="#C2FFD0" radius="12" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+      <Circle fill="#FFCEAD" radius="12" stroke="TRANSPARENT" strokeType="INSIDE"/>
+
+      <Label text="U" underline="true">
+         <font>
+            <Font size="16"/>
+         </font>
+      </Label>
+
+      <Label text="B" >
+         <font>
+            <Font name="System Bold" size="16"/>
+         </font>
+      </Label>
+      <Label text="I" style="-fx-font-style: italic">
+         <font>
+            <Font size="16" />
+         </font>
+      </Label>
+      <ImageView fx:id="dictionaryIcon" fitWidth="15.0" fitHeight="15.0" preserveRatio="true" pickOnBounds="true">
+         <HBox.margin>
+            <Insets top="5.0"/>
+         </HBox.margin>
+      </ImageView>
+
+      <padding>
+         <Insets left="15.0" right="15.0" top="5.0" bottom="5.0"/>
+      </padding>
+      <StackPane.margin>
+         <Insets top="65"/>
+      </StackPane.margin>
+   </HBox>
+
+   <VBox fx:id="onHyperlinkClickedOverlay" maxHeight="250" maxWidth="280" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5.0;" StackPane.alignment="CENTER" visible="false">
 
       <children>
-         <Label fx:id="wordClicked" text="Chains" textFill="#034801" underline="true">
+         <Label fx:id="hyperlinkClicked" text="Chains" textFill="#034801" underline="true">
             <font>
                <Font name="System Bold" size="16"/>
             </font>
@@ -701,7 +740,7 @@
             </VBox.margin>
          </Label>
 
-         <Label fx:id="wordClickedMeaning" text="This is what the content of the overlay link text will look like" textFill="BLACK" wrapText="true">
+         <Label fx:id="hyperlinkClickedMeaning" text="This is what the content of the overlay link text will look like" textFill="BLACK" wrapText="true">
             <VBox.margin>
                <Insets top="15" left="20"/>
             </VBox.margin>
