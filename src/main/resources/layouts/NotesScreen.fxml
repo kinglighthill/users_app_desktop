@@ -85,7 +85,7 @@
                                                 <VBox fx:id="topicVBox" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" />
                                              </content>
                                           </ScrollPane>
-                                          <Button fx:id="quizButton" text="Take Quiz" textFill="#51C46B" mnemonicParsing="false" prefHeight="45" prefWidth="120" StackPane.alignment="BOTTOM_CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5;" >
+                                          <Button fx:id="quizButton" text="Take Quiz" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="45" prefWidth="120" StackPane.alignment="BOTTOM_CENTER" style="-fx-background-color: #51C46B; -fx-background-radius: 5;" >
                                              <StackPane.margin>
                                                 <Insets bottom="40.0"/>
                                              </StackPane.margin>
@@ -276,8 +276,85 @@
       </center>
    </BorderPane>
 
+   <VBox fx:id="refreshNoteLayout" maxHeight="200" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5" StackPane.alignment="TOP_RIGHT" visible="false">
+      <children>
+         <VBox fx:id="refreshStatusContent" alignment="CENTER" >
+            <children>
+               <ProgressIndicator fx:id="refreshNoteProgressIndicator" minHeight="65" minWidth="65" >
+                  <VBox.margin>
+                     <Insets top="20.0"/>
+                  </VBox.margin>
+               </ProgressIndicator>
+               <ImageView fx:id="refreshStatusNoNetworkIcon" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                  <VBox.margin>
+                     <Insets top="35.0"/>
+                  </VBox.margin>
+               </ImageView>
+               <ImageView fx:id="refreshStatusNoUpdateIcon" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                  <VBox.margin>
+                     <Insets top="35.0"/>
+                  </VBox.margin>
+               </ImageView>
+               <ImageView fx:id="refreshStatusUpdateFoundIcon" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                  <VBox.margin>
+                     <Insets top="35.0"/>
+                  </VBox.margin>
+               </ImageView>
 
-   <VBox fx:id="noteSettingsLayout" maxHeight="300" maxWidth="200" style="-fx-background-color: #FFFFFF; -fx-border-radius: 1.0;" StackPane.alignment="TOP_RIGHT" visible="false">
+               <VBox fx:id="refreshNoteTextContent" minHeight="70.0" alignment="CENTER">
+                  <Label fx:id="refreshStatusFirstText"  textAlignment="CENTER"  wrapText="true" >
+                     <font>
+                        <Font size="16"/>
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="15.0"/>
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="20.0" right="20.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="refreshStatusSecondText" textAlignment="CENTER" wrapText="true" >
+                     <font>
+                        <Font size="14"/>
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="5.0"/>
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="20.0" right="20.0" />
+                     </padding>
+                  </Label>
+               </VBox>
+            </children>
+
+            <VBox.margin>
+               <Insets left="10" top="5.0" />
+            </VBox.margin>
+         </VBox>
+
+         <Line endX="200.0" startX="-100.0" stroke="#B8B8B8" >
+            <VBox.margin>
+               <Insets top="15.0"/>
+            </VBox.margin>
+         </Line>
+
+         <HBox fx:id="refreshNotesCancelButton" alignment="BOTTOM_CENTER" >
+            <Label text="Cancel" textFill="#FF0000" alignment="BOTTOM_CENTER">
+               <font>
+                  <Font size="16"/>
+               </font>
+            </Label>
+            <padding>
+               <Insets top="10.0" bottom="10.0" />
+            </padding>
+         </HBox>
+      </children>
+      <StackPane.margin>
+         <Insets top="65" right="90"/>
+      </StackPane.margin>
+   </VBox>
+
+   <VBox fx:id="noteSettingsLayout" maxHeight="300" maxWidth="200" style="-fx-background-color: #FFFFFF; -fx-background-radius: 4;" StackPane.alignment="TOP_RIGHT" visible="false">
       <children>
          <HBox  prefWidth="200">
             <Label text="Aa">
@@ -380,7 +457,7 @@
       </StackPane.margin>
    </VBox>
 
-   <VBox fx:id="noteOptionsLayout" maxHeight="200" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-border-radius: 1.0;" StackPane.alignment="CENTER" visible="false">
+   <VBox fx:id="noteOptionsLayout" maxHeight="200" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-background-radius: 4;" StackPane.alignment="CENTER" visible="false">
 
       <children>
          <HBox prefWidth="200" >
@@ -529,7 +606,7 @@
       </StackPane.margin>
    </HBox>
   
-   <VBox fx:id="noteOptionsReportNoteLayout" maxHeight="180" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-border-radius: 1.0;" StackPane.alignment="CENTER" visible="false">
+   <VBox fx:id="noteOptionsReportNoteLayout" maxHeight="180" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-background-radius: 4;" StackPane.alignment="CENTER" visible="false">
 
       <children>
          <HBox alignment="CENTER">
