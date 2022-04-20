@@ -46,6 +46,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -83,13 +84,16 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private StackPane imageViewLayout, noteLayout;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay;
+    private TilePane quizTilePane;
+
+    @FXML
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox;
 
     @FXML
     private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton;
 
     @FXML
-    private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, toastText, newNoteText, dictionaryText;
+    private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
 
     @FXML
     private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, createNoteBackIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
@@ -98,10 +102,16 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ImageView noteOptionsNoteIcon, noteOptionsBookmarkIcon, noteOptionsShareIcon, noteOptionsReportIcon, noteOptionsAudioIcon, reportOptionReportIcon, notClearIcon, aLittleClearIcon, veryClearIcon, feedbackIcon, dictionarySpeakerIcon, dictionaryIcon;
 
     @FXML
-    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton;
+    private ImageView quizShareIcon, quizBookmarkIcon, quizReportIcon, quizSpeakerIcon;
+
+    @FXML
+    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton;
 
     @FXML
     private TextField searchTextField;
+
+    @FXML
+    private Rectangle quizQuestionLayout;
 
     @FXML
     private ProgressIndicator refreshNoteProgressIndicator;
@@ -118,7 +128,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        searchTextField.requestFocus();
+
         highlightColorsList.addAll(Arrays.stream(HighlightColors.values()).map(highlightColors1 -> highlightColors1.colorCode).collect(Collectors.toList()));
 
         imageViewLayout.setVisible(false);
@@ -278,6 +288,34 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 Animations.translateIn(noteOptionsLayout);
             }*/
         });
+
+
+        /******************* Note Quiz Section *******************/
+        currentNoteSubject.setText(currentNoteSubject.getText().toUpperCase());
+        currentNoteSubject.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 16));
+        currentNoteSubjectTopic.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 16));
+        quizShareIcon.setImage(new Image(getClass().getResource("/drawable/quiz_share_icon_1x.png").toString()));
+        quizBookmarkIcon.setImage(new Image(getClass().getResource("/drawable/quiz_bookmark_icon_1x.png").toString()));
+        quizReportIcon.setImage(new Image(getClass().getResource("/drawable/quiz_report_icon_1x.png").toString()));
+        quizSpeakerIcon.setImage(new Image(getClass().getResource("/drawable/quiz_speaker_icon_1x.png").toString()));
+        ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/quiz_back_button_icon_1x.png").toString()));
+        ImageView nextIcon = new ImageView(new Image(getClass().getResource("/drawable/quiz_next_button_icon_1x.png").toString()));
+        backIcon.setFitHeight(12);
+        backIcon.setFitWidth(12);
+        backIcon.setPreserveRatio(true);
+        backIcon.setPickOnBounds(true);
+        quizBackButton.setGraphicTextGap(10);
+        quizBackButton.setGraphic(backIcon);
+        nextIcon.setFitHeight(12);
+        nextIcon.setFitWidth(12);
+        nextIcon.setPreserveRatio(true);
+        nextIcon.setPickOnBounds(true);
+        quizNextButton.setGraphic(nextIcon);
+        quizNextButton.setGraphicTextGap(10);
+        setupQuizTilePane();
+        setupQuizQuestion();
+
+
 
         viewModel.getSubTopics().forEach(subTopic -> {
             ToggleButton button = new ToggleButton();
@@ -453,6 +491,34 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     }
 
+    private void setupQuizTilePane() {
+        quizTilePane.getChildren().clear();
+
+        quizTilePane.setHgap(10);
+        quizTilePane.setVgap(10);
+
+        for (int i = 1; i <= 30; i++) {
+            Circle circle = new Circle(15);
+            circle.setFill(Color.web("#FFFFFF"));
+            circle.setStroke(Color.web("#EDEDED"));
+
+            Label questionNumber = new Label(Integer.toString(i));
+
+            StackPane s = new StackPane();
+            Circle dot = new Circle(1);
+            dot.setFill(Paint.valueOf("#000000"));
+            StackPane.setAlignment(dot, Pos.BOTTOM_CENTER);
+            StackPane.setMargin(dot, new Insets(10, 0, 0, 0));
+            s.getChildren().addAll(circle, questionNumber, dot);
+
+            quizTilePane.getChildren().add(s);
+        }
+    }
+
+    private void setupQuizQuestion() {
+        quizQuestion.setText("This zygote undergoes meiosis to form spores. Each spore develops into a new organism.");
+    }
+
     private void renderNote(SubTopic subTopic) {
         List<Node> contentElements = new ArrayList<>();
 
@@ -473,7 +539,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         body.setText(textViewType.getBody().getText());
                         body.setWrapText(true);
                         body.setLineSpacing(8);
-                        body.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 17));
+                        body.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
 
 
 

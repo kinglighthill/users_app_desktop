@@ -888,7 +888,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             return buttonType;
         });
 
-        dialog.showAndWait();
+        dialog.show();
     }
  
     private void showTimeUpDialog() {
