@@ -13,6 +13,8 @@
 <?import com.dlsc.formsfx.view.renderer.SectionRenderer?>
 <?import net.synedra.validatorfx.GraphicDecorationStackPane?>
 <?import org.controlsfx.control.ListActionView?>
+<?import javafx.scene.control.skin.ColorPickerSkin.PickerColorBox?>
+<?import com.sun.javafx.webkit.theme.RenderThemeImpl.FormRadioButton?>
 <StackPane fx:id="noteLayout" prefHeight="800" prefWidth="1000" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.NotesScreenController">
 
    <BorderPane prefHeight="800" prefWidth="1000" >
@@ -220,19 +222,141 @@
             <right>
                <StackPane prefHeight="100" prefWidth="350" >
                   <children>
-                     <VBox>
-                        <HBox>
-                           <VBox>
-                              <Label fx:id="currentNoteSubject" text="Biology"/>
-                              <Label fx:id="currentNoteSubjectTopic" text="Concept Of Living"/>
+                     <VBox fx:id="quizPane" style="-fx-background-color: #FFFFFF">
+                        <HBox spacing="120.0">
+                           <VBox alignment="CENTER_LEFT">
+                              <Label fx:id="currentNoteSubject" text="Biology" textFill="black"/>
+                              <Label fx:id="currentNoteSubjectTopic" text="Concept Of Living" underline="true">
+                                 <padding>
+                                    <Insets top="5.0"/>
+                                 </padding>
+                              </Label>
                            </VBox>
-                           <Button fx:id="submitQuizButton" text="Submit" textFill="#FFFFFF" style="-fx-background-color: #4BB036;" />
+                           <Button fx:id="submitQuizButton" text="Submit" textFill="#FFFFFF" style="-fx-background-color: #51C46B; -fx-background-radius: 4" alignment="CENTER_RIGHT">
+                              <HBox.margin>
+                                 <Insets top="5.0"/>
+                              </HBox.margin>
+                           </Button>
                         </HBox>
+
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: #FFFFFF">
+                           <TilePane fx:id="quizTilePane" prefHeight="120" prefWidth="150" style="-fx-background-color: #FFFFFF">
+
+
+                           </TilePane>
+                           <padding>
+                              <Insets topRightBottomLeft="5.0"/>
+                           </padding>
+                           <VBox.margin>
+                              <Insets top="10.0"/>
+                           </VBox.margin>
+                        </ScrollPane>
+
+                        <VBox fx:id="questionBox" prefWidth="350" prefHeight="80">
+                           <StackPane>
+                              <children>
+                                 <Rectangle fx:id="quizQuestionLayout" width="300" height="80" arcHeight="8.0" arcWidth="8.0" stroke="#EDEDED" fill="#FFFFFF">
+
+                                 </Rectangle>
+                                 <Label fx:id="quizQuestion" wrapText="true" alignment="TOP_CENTER" StackPane.alignment="TOP_CENTER">
+
+                                    <font>
+                                       <Font size="14"/>
+                                    </font>
+                                    <padding>
+                                       <Insets topRightBottomLeft="5.0"/>
+                                    </padding>
+                                 </Label>
+                              </children>
+                           </StackPane>
+                           <VBox.margin>
+                              <Insets top="10.0" left="5.0" right="5.0"/>
+                           </VBox.margin>
+                        </VBox>
+
+                        <VBox fx:id="quizOptionsBox" prefWidth="350" prefHeight="120" spacing="5.0">
+                           <children>
+                              <RadioButton fx:id="quizOptionAButton" prefWidth="350" text="   cell membrane" textAlignment="JUSTIFY" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #51C46B; -fx-border-radius: 10;">
+                                 <padding>
+                                    <Insets left="10.0"/>
+                                 </padding>
+                              </RadioButton>
+                              <RadioButton fx:id="quizOptionBButton" prefWidth="350" text="   cell structure" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #EDEDED; -fx-border-radius: 10;">
+                                 <padding>
+                                    <Insets left="10.0"/>
+                                 </padding>
+                              </RadioButton>
+                              <RadioButton fx:id="quizOptionCButton" prefWidth="350" text="   cell component" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #EDEDED; -fx-border-radius: 10;">
+                                 <padding>
+                                    <Insets left="10.0"/>
+                                 </padding>
+                              </RadioButton>
+                              <RadioButton fx:id="quizOptionDButton" prefWidth="350" text="   cell molecule" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #EDEDED; -fx-border-radius: 10;">
+                                 <padding>
+                                    <Insets left="10.0"/>
+                                 </padding>
+                              </RadioButton>
+                           </children>
+
+                           <VBox.margin>
+                              <Insets top="10.0" left="5.0" right="5.0"/>
+                           </VBox.margin>
+                        </VBox>
+
+                        <HBox spacing="10.0">
+                           <ImageView fx:id="quizShareIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+
+                           </ImageView>
+                           <ImageView fx:id="quizBookmarkIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+
+                           </ImageView>
+                           <ImageView fx:id="quizReportIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+
+                           </ImageView>
+                           <ImageView fx:id="quizSpeakerIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+
+                           </ImageView>
+
+                           <VBox.margin>
+                              <Insets top="10" left="10"/>
+                           </VBox.margin>
+                        </HBox>
+
+                        <StackPane fx:id="backAndNextButtonsPane">
+                           <Button fx:id="quizBackButton" text="Back" StackPane.alignment="CENTER_LEFT" style="-fx-background-color: #FFFFFF; -fx-border-color: #000000; -fx-border-radius: 5;"/>
+
+                           <Button fx:id="quizNextButton" text="Next" textFill="#FFFFFF" contentDisplay="RIGHT" StackPane.alignment="CENTER_RIGHT" style="-fx-background-color: #51C46B; -fx-background-radius: 5;">
+                              <padding>
+                                 <Insets right="10" left="10" top="5" bottom="5"/>
+                              </padding>
+                           </Button>
+                           <VBox.margin>
+                              <Insets top="10" left="10" right="10"/>
+                           </VBox.margin>
+                        </StackPane>
+
+                        <VBox StackPane.alignment="BOTTOM_CENTER">
+
+                           <Button fx:id="quizQuitButton" prefWidth="350" text="Quit" textFill="#FF0000" StackPane.alignment="BOTTOM_CENTER" alignment="BOTTOM_CENTER" style="-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5;" >
+                              <font>
+                                 <Font size="16"/>
+                              </font>
+                              <padding>
+                                 <Insets top="5.0" bottom="5.0" />
+                              </padding>
+                           </Button>
+                           <VBox.margin>
+                              <Insets top="75.0"/>
+                           </VBox.margin>
+                        </VBox>
 
 
                         <StackPane.margin>
                            <Insets topRightBottomLeft="10.0"/>
                         </StackPane.margin>
+                        <padding>
+                           <Insets topRightBottomLeft="10.0"/>
+                        </padding>
                      </VBox>
 
                   </children>
