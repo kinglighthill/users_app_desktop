@@ -218,9 +218,25 @@
             </center>
 
             <right>
-               <Pane prefHeight="100" prefWidth="350" >
+               <StackPane prefHeight="100" prefWidth="350" >
+                  <children>
+                     <VBox>
+                        <HBox>
+                           <VBox>
+                              <Label fx:id="currentNoteSubject" text="Biology"/>
+                              <Label fx:id="currentNoteSubjectTopic" text="Concept Of Living"/>
+                           </VBox>
+                           <Button fx:id="submitQuizButton" text="Submit" textFill="#FFFFFF" style="-fx-background-color: #4BB036;" />
+                        </HBox>
 
-               </Pane>
+
+                        <StackPane.margin>
+                           <Insets topRightBottomLeft="10.0"/>
+                        </StackPane.margin>
+                     </VBox>
+
+                  </children>
+               </StackPane>
 
             </right>
 
