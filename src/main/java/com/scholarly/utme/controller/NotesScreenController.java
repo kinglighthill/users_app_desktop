@@ -87,7 +87,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private TilePane quizTilePane;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox;
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog;
 
     @FXML
     private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton;
@@ -105,7 +105,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ImageView quizShareIcon, quizBookmarkIcon, quizReportIcon, quizSpeakerIcon;
 
     @FXML
-    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton;
+    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitButton;
 
     @FXML
     private TextField searchTextField;
@@ -459,6 +459,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
         newNoteText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
 
+        quizButton.setOnMouseClicked(event -> {
+            Animations.slideIn(quizPane);
+
+        });
+        quizSubmitButton.setOnMouseClicked(event -> {
+            quizSubmitDialog.setVisible(true);
+        });
         //practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
         /*backButton.setOnAction(event -> {
