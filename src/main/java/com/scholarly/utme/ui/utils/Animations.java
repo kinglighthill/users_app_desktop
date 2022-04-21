@@ -98,7 +98,7 @@ public class Animations {
 
         fadeIn.setOnFinished(event2 -> {
             try {
-                Thread.sleep(1200);
+                Thread.sleep(1000);
             } catch (Exception e){
                 System.out.println(e.getMessage());
             }finally {
