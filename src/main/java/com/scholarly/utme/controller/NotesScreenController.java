@@ -90,7 +90,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private Pane dialogDimmer;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog;
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog, quizQuestionPane;
 
     @FXML
     private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton;
@@ -284,12 +284,12 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         contentLayout.setOnMouseClicked(event -> {
-            if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
+            /*if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
                 onWordClickedOverlay.setVisible(true);
-            }
-            /*if (!noteOptionsLayout.isVisible()) {
-                Animations.translateIn(noteOptionsLayout);
             }*/
+            if (!noteOptionsLayout.isVisible()) {
+                Animations.translateIn(noteOptionsLayout, 300);
+            }
         });
 
 
@@ -309,12 +309,23 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         backIcon.setPickOnBounds(true);
         quizBackButton.setGraphicTextGap(10);
         quizBackButton.setGraphic(backIcon);
+        /*quizBackButton.setOnMouseClicked(event -> {
+            if (quizQuestionPane.isVisible()) {
+                Animations.slideOut(quizQuestionPane);
+            }
+        });*/
+
         nextIcon.setFitHeight(12);
         nextIcon.setFitWidth(12);
         nextIcon.setPreserveRatio(true);
         nextIcon.setPickOnBounds(true);
         quizNextButton.setGraphic(nextIcon);
         quizNextButton.setGraphicTextGap(10);
+        quizNextButton.setOnMouseClicked(event -> {
+            if (quizQuestionPane.isVisible()) {
+                Animations.slideIn(quizQuestionPane);
+            }
+        });
         quizButton.setOnMouseClicked(event -> {
             if (!quizPane.isVisible()) {
                 Animations.slideIn(quizPane);
