@@ -253,55 +253,57 @@
                            </VBox.margin>
                         </ScrollPane>
 
-                        <VBox fx:id="questionBox" prefWidth="350" prefHeight="80">
-                           <StackPane>
+                        <VBox fx:id="quizQuestionPane">
+                           <VBox fx:id="questionBox" prefWidth="350" prefHeight="80">
+                              <StackPane>
+                                 <children>
+                                    <Rectangle fx:id="quizQuestionLayout" width="300" height="80" arcHeight="8.0" arcWidth="8.0" stroke="#EDEDED" fill="#FFFFFF">
+
+                                    </Rectangle>
+                                    <Label fx:id="quizQuestion" wrapText="true" alignment="TOP_CENTER" StackPane.alignment="TOP_CENTER">
+
+                                       <font>
+                                          <Font size="14"/>
+                                       </font>
+                                       <padding>
+                                          <Insets topRightBottomLeft="5.0"/>
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </StackPane>
+                              <VBox.margin>
+                                 <Insets top="10.0" left="5.0" right="5.0"/>
+                              </VBox.margin>
+                           </VBox>
+
+                           <VBox fx:id="quizOptionsBox" prefWidth="350" prefHeight="120" spacing="5.0">
                               <children>
-                                 <Rectangle fx:id="quizQuestionLayout" width="300" height="80" arcHeight="8.0" arcWidth="8.0" stroke="#EDEDED" fill="#FFFFFF">
-
-                                 </Rectangle>
-                                 <Label fx:id="quizQuestion" wrapText="true" alignment="TOP_CENTER" StackPane.alignment="TOP_CENTER">
-
-                                    <font>
-                                       <Font size="14"/>
-                                    </font>
+                                 <RadioButton fx:id="quizOptionAButton" prefWidth="350" text="   cell membrane" textAlignment="JUSTIFY" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #51C46B; -fx-border-radius: 10;">
                                     <padding>
-                                       <Insets topRightBottomLeft="5.0"/>
+                                       <Insets left="10.0"/>
                                     </padding>
-                                 </Label>
+                                 </RadioButton>
+                                 <RadioButton fx:id="quizOptionBButton" prefWidth="350" text="   cell structure" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #EDEDED; -fx-border-radius: 10;">
+                                    <padding>
+                                       <Insets left="10.0"/>
+                                    </padding>
+                                 </RadioButton>
+                                 <RadioButton fx:id="quizOptionCButton" prefWidth="350" text="   cell component" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #EDEDED; -fx-border-radius: 10;">
+                                    <padding>
+                                       <Insets left="10.0"/>
+                                    </padding>
+                                 </RadioButton>
+                                 <RadioButton fx:id="quizOptionDButton" prefWidth="350" text="   cell molecule" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #EDEDED; -fx-border-radius: 10;">
+                                    <padding>
+                                       <Insets left="10.0"/>
+                                    </padding>
+                                 </RadioButton>
                               </children>
-                           </StackPane>
-                           <VBox.margin>
-                              <Insets top="10.0" left="5.0" right="5.0"/>
-                           </VBox.margin>
-                        </VBox>
 
-                        <VBox fx:id="quizOptionsBox" prefWidth="350" prefHeight="120" spacing="5.0">
-                           <children>
-                              <RadioButton fx:id="quizOptionAButton" prefWidth="350" text="   cell membrane" textAlignment="JUSTIFY" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #51C46B; -fx-border-radius: 10;">
-                                 <padding>
-                                    <Insets left="10.0"/>
-                                 </padding>
-                              </RadioButton>
-                              <RadioButton fx:id="quizOptionBButton" prefWidth="350" text="   cell structure" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #EDEDED; -fx-border-radius: 10;">
-                                 <padding>
-                                    <Insets left="10.0"/>
-                                 </padding>
-                              </RadioButton>
-                              <RadioButton fx:id="quizOptionCButton" prefWidth="350" text="   cell component" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #EDEDED; -fx-border-radius: 10;">
-                                 <padding>
-                                    <Insets left="10.0"/>
-                                 </padding>
-                              </RadioButton>
-                              <RadioButton fx:id="quizOptionDButton" prefWidth="350" text="   cell molecule" prefHeight="30" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #EDEDED; -fx-border-radius: 10;">
-                                 <padding>
-                                    <Insets left="10.0"/>
-                                 </padding>
-                              </RadioButton>
-                           </children>
-
-                           <VBox.margin>
-                              <Insets top="10.0" left="5.0" right="5.0"/>
-                           </VBox.margin>
+                              <VBox.margin>
+                                 <Insets top="10.0" left="5.0" right="5.0"/>
+                              </VBox.margin>
+                           </VBox>
                         </VBox>
 
                         <HBox spacing="10.0">
@@ -816,10 +818,11 @@
                <font>
                   <Font size="16"/>
                </font>
+               <HBox.margin>
+                  <Insets top="5.0" bottom="5.0" />
+               </HBox.margin>
             </Label>
-            <HBox.margin>
-               <Insets top="5.0" bottom="5.0" />
-            </HBox.margin>
+
          </HBox>
 
       </children>
