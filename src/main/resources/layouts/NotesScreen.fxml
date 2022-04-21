@@ -969,8 +969,30 @@
       <Label text="Are you sure you want to Submit?"/>
 
       <StackPane>
-         <Button fx:id="quizDialogSubmitButton" text="Submit" textFill="#FFFFFF" prefWidth="100" prefHeight="30" StackPane.alignment="CENTER_LEFT" style="-fx-background-color: #51C46B; -fx-background-radius: 5;"/>
-         <Button fx:id="quizDialogCancelButton" text="Cancel" textFill="#EE8989" prefWidth="100" prefHeight="30" StackPane.alignment="CENTER_RIGHT" style="-fx-background-color: #FFFFFF; fx-border-color: #B8B8B8; -fx-border-radius: 5;">
+         <Button fx:id="submitDialogSubmitButton" text="Submit" textFill="#FFFFFF" prefWidth="110" prefHeight="30" StackPane.alignment="CENTER_LEFT" style="-fx-background-color: #51C46B; -fx-background-radius: 5;"/>
+         <Button fx:id="submitDialogCancelButton" text="Cancel" textFill="#EE8989" prefWidth="110" prefHeight="30" StackPane.alignment="CENTER_RIGHT" style="-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5;">
+         </Button>
+         <VBox.margin>
+            <Insets top="30"/>
+         </VBox.margin>
+      </StackPane>
+
+      <padding>
+         <Insets topRightBottomLeft="15"/>
+      </padding>
+   </VBox>
+   <VBox fx:id="quizQuitDialog" spacing="10" maxHeight="150" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5.0;" StackPane.alignment="CENTER" visible="false">
+      <Label text="Confirm">
+         <font>
+            <Font size="14"/>
+         </font>
+      </Label>
+
+      <Label text="Are you sure you want to quit?"/>
+
+      <StackPane>
+         <Button fx:id="quitDialogQuitButton" text="Quit" textFill="#FF9090" prefWidth="110" prefHeight="30" StackPane.alignment="CENTER_LEFT" style="-fx-background-color: #FFFFFF; -fx-border-color: #FF9090; -fx-border-radius: 5;"/>
+         <Button fx:id="quitDialogCancelButton" text="Cancel" textFill="#878787" prefWidth="110" prefHeight="30" StackPane.alignment="CENTER_RIGHT" style="-fx-background-color: #FFFFFF; -fx-border-color: #878787; -fx-border-radius: 5;">
          </Button>
          <VBox.margin>
             <Insets top="30"/>
