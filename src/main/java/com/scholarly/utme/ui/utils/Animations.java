@@ -124,7 +124,7 @@ public class Animations {
 
         slideIn.setFromX(400f);
         slideIn.setToX(0f);
-        slideIn.setDuration(Duration.millis(500));
+        slideIn.setDuration(Duration.millis(400));
         slideIn.setNode(node);
 
         slideIn.play();

@@ -87,6 +87,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private TilePane quizTilePane;
 
     @FXML
+    private Pane dialogDimmer;
+
+    @FXML
     private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog;
 
     @FXML
@@ -105,7 +108,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ImageView quizShareIcon, quizBookmarkIcon, quizReportIcon, quizSpeakerIcon;
 
     @FXML
-    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitButton;
+    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitButton, quizDialogSubmitButton, quizDialogCancelButton;
 
     @FXML
     private TextField searchTextField;
@@ -312,6 +315,19 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         nextIcon.setPickOnBounds(true);
         quizNextButton.setGraphic(nextIcon);
         quizNextButton.setGraphicTextGap(10);
+        quizButton.setOnMouseClicked(event -> {
+            if (!quizPane.isVisible()) {
+                Animations.slideIn(quizPane);
+            }
+        });
+        quizSubmitButton.setOnMouseClicked(event -> {
+            Animations.fadeIn(quizSubmitDialog, 100);
+            dialogDimmer.setVisible(true);
+        });
+        quizDialogCancelButton.setOnMouseClicked(event -> {
+            Animations.fadeOut(quizSubmitDialog, 300);
+            dialogDimmer.setVisible(false);
+        });
         setupQuizTilePane();
         setupQuizQuestion();
 
@@ -459,13 +475,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
         newNoteText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
 
-        quizButton.setOnMouseClicked(event -> {
-            Animations.slideIn(quizPane);
-
-        });
-        quizSubmitButton.setOnMouseClicked(event -> {
-            quizSubmitDialog.setVisible(true);
-        });
         //practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
         /*backButton.setOnAction(event -> {
