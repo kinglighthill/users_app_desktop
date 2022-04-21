@@ -160,7 +160,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 refreshStatusFirstText.setText("Network Unavailable");
                 refreshStatusFirstText.setTextFill(Paint.valueOf("#EE8989"));
                 refreshStatusFirstText.setPadding(new Insets(10, 0, 0, 0));
-                refreshStatusSecondText.setText("Connect your phone and try again");
+                refreshStatusSecondText.setText("Connect your device and try again");
                 //refreshStatusSecondText.setTextFill(Paint.valueOf("#51C46B"));
                 //refreshNoteTextContent.getChildren().remove(refreshStatusSecondText);
                 Animations.translateIn(refreshNoteLayout, 200);
@@ -309,11 +309,11 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         backIcon.setPickOnBounds(true);
         quizBackButton.setGraphicTextGap(10);
         quizBackButton.setGraphic(backIcon);
-        /*quizBackButton.setOnMouseClicked(event -> {
+        quizBackButton.setOnMouseClicked(event -> {
             if (quizQuestionPane.isVisible()) {
                 Animations.slideOut(quizQuestionPane);
             }
-        });*/
+        });
 
         nextIcon.setFitHeight(12);
         nextIcon.setFitWidth(12);
