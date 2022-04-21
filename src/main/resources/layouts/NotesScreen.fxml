@@ -716,12 +716,13 @@
       </TextArea>
 
       <HBox alignment="BOTTOM_CENTER">
-         <Button fx:id="noteCloseButton" text="Close" textFill="EE8989" style="-fx-background-color: #FFFFFF; -fx-border-color: #EE8989; -fx-background-radius: 4" >
+         <Button fx:id="noteCloseButton" text="Close" prefWidth="70" textFill="EE8989" style="-fx-background-color: #FFFFFF; -fx-border-color: #EE8989; -fx-border-radius: 5" >
             <HBox.margin>
                <Insets top="15" right="40"/>
             </HBox.margin>
+
          </Button>
-         <Button fx:id="noteSaveButton" text="Save Note" textFill="#FFFFFF" style="-fx-background-color: #4BB036; ">
+         <Button fx:id="noteSaveButton" text="Save Note" prefWidth="80" textFill="#FFFFFF" style="-fx-background-color: #4BB036; ">
             <HBox.margin>
                <Insets top="15" left="40"/>
             </HBox.margin>
