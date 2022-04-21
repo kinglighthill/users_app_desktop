@@ -15,6 +15,7 @@
 <?import org.controlsfx.control.ListActionView?>
 <?import javafx.scene.control.skin.ColorPickerSkin.PickerColorBox?>
 <?import com.sun.javafx.webkit.theme.RenderThemeImpl.FormRadioButton?>
+<?import org.kordamp.ikonli.javafx.StackedFontIcon?>
 <StackPane fx:id="noteLayout" prefHeight="800" prefWidth="1000" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.NotesScreenController">
 
    <BorderPane prefHeight="800" prefWidth="1000" >
@@ -46,7 +47,7 @@
          </HBox>
       </top>
       <center>
-         <BorderPane prefHeight="600.0" prefWidth="800.0">
+         <BorderPane prefHeight="600.0" prefWidth="800.0" >
 
             <center>
                <StackPane prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #E7F7E9;">
@@ -222,7 +223,7 @@
             <right>
                <StackPane prefHeight="100" prefWidth="350" >
                   <children>
-                     <VBox fx:id="quizPane" style="-fx-background-color: #FFFFFF">
+                     <VBox fx:id="quizPane" style="-fx-background-color: #FFFFFF" visible="false">
                         <HBox spacing="120.0">
                            <VBox alignment="CENTER_LEFT">
                               <Label fx:id="currentNoteSubject" text="Biology" textFill="black"/>
@@ -232,7 +233,7 @@
                                  </padding>
                               </Label>
                            </VBox>
-                           <Button fx:id="submitQuizButton" text="Submit" textFill="#FFFFFF" style="-fx-background-color: #51C46B; -fx-background-radius: 4" alignment="CENTER_RIGHT">
+                           <Button fx:id="quizSubmitButton" text="Submit" textFill="#FFFFFF" style="-fx-background-color: #51C46B; -fx-background-radius: 4" alignment="CENTER_RIGHT">
                               <HBox.margin>
                                  <Insets top="5.0"/>
                               </HBox.margin>
@@ -304,18 +305,13 @@
                         </VBox>
 
                         <HBox spacing="10.0">
-                           <ImageView fx:id="quizShareIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <ImageView fx:id="quizShareIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
 
-                           </ImageView>
-                           <ImageView fx:id="quizBookmarkIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <ImageView fx:id="quizBookmarkIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
 
-                           </ImageView>
-                           <ImageView fx:id="quizReportIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <ImageView fx:id="quizReportIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
 
-                           </ImageView>
-                           <ImageView fx:id="quizSpeakerIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-
-                           </ImageView>
+                           <ImageView fx:id="quizSpeakerIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
 
                            <VBox.margin>
                               <Insets top="10" left="10"/>
@@ -960,4 +956,30 @@
          <Insets top="65"/>
       </StackPane.margin>
    </VBox>
+
+   <Pane fx:id="dialogDimmer" opacity="0.5" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" visible="false" />
+
+   <VBox fx:id="quizSubmitDialog" spacing="10" maxHeight="150" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5.0;" StackPane.alignment="CENTER" visible="false">
+      <Label text="Confirm Submission">
+         <font>
+            <Font size="14"/>
+         </font>
+      </Label>
+
+      <Label text="Are you sure you want to Submit?"/>
+
+      <StackPane>
+         <Button fx:id="quizDialogSubmitButton" text="Submit" textFill="#FFFFFF" prefWidth="100" prefHeight="30" StackPane.alignment="CENTER_LEFT" style="-fx-background-color: #51C46B; -fx-background-radius: 5;"/>
+         <Button fx:id="quizDialogCancelButton" text="Cancel" textFill="#EE8989" prefWidth="100" prefHeight="30" StackPane.alignment="CENTER_RIGHT" style="-fx-background-color: #FFFFFF; fx-border-color: #B8B8B8; -fx-border-radius: 5;">
+         </Button>
+         <VBox.margin>
+            <Insets top="30"/>
+         </VBox.margin>
+      </StackPane>
+
+      <padding>
+         <Insets topRightBottomLeft="15"/>
+      </padding>
+   </VBox>
+
 </StackPane>

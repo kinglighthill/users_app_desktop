@@ -80,9 +80,7 @@ public class Animations {
 
         fadeOut.play();
 
-        fadeOut.setOnFinished(event -> {
-            node.setVisible(false);
-        });
+        fadeOut.setOnFinished(event -> node.setVisible(false));
 
     }
 
@@ -117,5 +115,33 @@ public class Animations {
             }
 
         });
+    }
+
+    public static void slideIn(Node node) {
+        node.setVisible(true);
+
+        TranslateTransition slideIn = new TranslateTransition();
+
+        slideIn.setFromX(400f);
+        slideIn.setToX(0f);
+        slideIn.setDuration(Duration.millis(400));
+        slideIn.setNode(node);
+
+        slideIn.play();
+
+    }
+
+    public static void slideOut(Node node) {
+        TranslateTransition slideOut = new TranslateTransition();
+
+        slideOut.setFromX(0f);
+        slideOut.setToX(400f);
+        slideOut.setDuration(Duration.millis(500));
+        slideOut.setNode(node);
+
+        slideOut.play();
+
+        slideOut.setOnFinished(event -> node.setVisible(false));
+
     }
 }
