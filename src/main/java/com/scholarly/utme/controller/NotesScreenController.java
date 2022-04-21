@@ -90,7 +90,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private Pane dialogDimmer;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog;
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog;
 
     @FXML
     private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton;
@@ -108,7 +108,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ImageView quizShareIcon, quizBookmarkIcon, quizReportIcon, quizSpeakerIcon;
 
     @FXML
-    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitButton, quizDialogSubmitButton, quizDialogCancelButton;
+    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitButton, submitDialogSubmitButton, submitDialogCancelButton, quizQuitButton, quitDialogQuitButton, quitDialogCancelButton;
 
     @FXML
     private TextField searchTextField;
@@ -324,8 +324,21 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Animations.fadeIn(quizSubmitDialog, 100);
             dialogDimmer.setVisible(true);
         });
-        quizDialogCancelButton.setOnMouseClicked(event -> {
+        submitDialogCancelButton.setOnMouseClicked(event -> {
             Animations.fadeOut(quizSubmitDialog, 300);
+            dialogDimmer.setVisible(false);
+        });
+        quizQuitButton.setOnMouseClicked(event -> {
+            Animations.fadeIn(quizQuitDialog, 100);
+            dialogDimmer.setVisible(true);
+        });
+        quitDialogQuitButton.setOnMouseClicked(event -> {
+            Animations.fadeOut(quizQuitDialog, 300);
+            dialogDimmer.setVisible(false);
+            Animations.slideOut(quizPane);
+        });
+        quitDialogCancelButton.setOnMouseClicked(event -> {
+            Animations.fadeOut(quizQuitDialog, 300);
             dialogDimmer.setVisible(false);
         });
         setupQuizTilePane();
