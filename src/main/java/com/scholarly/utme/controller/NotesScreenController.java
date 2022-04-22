@@ -48,9 +48,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.*;
@@ -59,6 +61,12 @@ import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/NotesScreen.fxml")
 public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializable {
+
+    private enum FontSize {
+        SMALL,
+        MEDIUM,
+        LARGE
+    }
 
     private enum HighlightColors {
         PINK("#FABFBF"),
@@ -94,13 +102,19 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ToolBar noteTopBar;
 
     @FXML
+    private ComboBox<Font> fontDropdownList;
+
+    @FXML
     private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog, quizQuestionPane, exitNotesDialog;
 
     @FXML
     private HBox highlightColors, addNoteButton, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton;
 
     @FXML
-    private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
+    private Label pageTitle, subjectLabel, topicLabel, subtopicsText, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, refreshNotesCancelText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
+
+    @FXML
+    private Label fontText, fontSizeText, backgroundText, settingsCloseText;
 
     @FXML
     private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, createNoteBackIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
@@ -134,9 +148,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     private int defaultFontSize = 16;
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        initializeTextFont(FontSize.MEDIUM);
 
         highlightColorsList.addAll(Arrays.stream(HighlightColors.values()).map(highlightColors1 -> highlightColors1.colorCode).collect(Collectors.toList()));
 
@@ -155,11 +170,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         noteBackIcon.setPreserveRatio(true);
         noteBackIcon.setPickOnBounds(true);
         searchIcon.setImage(new Image(getClass().getResource("/drawable/note_search_icon_1.5x.png").toString()));
-        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon_1.5x.png").toString()));
-        noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
-        refreshStatusNoUpdateIcon.setImage(new Image(getClass().getResource("/drawable/no_update_found_icon_1x.png").toString()));
-        refreshStatusUpdateFoundIcon.setImage(new Image(getClass().getResource("/drawable/updates_found_icon_1x.png").toString()));
-        refreshStatusNoNetworkIcon.setImage(new Image(getClass().getResource("/drawable/no_network_icon_1x.png").toString()));
 
         notesBackButton.setBackground(Background.EMPTY);
         notesBackButton.setGraphic(noteBackIcon);
@@ -177,6 +187,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
 
         /***************** Refresh Notes Section *******************/
+        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon_1.5x.png").toString()));
         refreshIcon.setOnMouseClicked((event -> {
             if (!refreshNoteLayout.isVisible()) {
                 refreshStatusContent.getChildren().remove(refreshNoteProgressIndicator);
@@ -204,20 +215,45 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
 
         /**************** Note Settings Section ***************/
+        noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
+        refreshStatusNoUpdateIcon.setImage(new Image(getClass().getResource("/drawable/no_update_found_icon_1x.png").toString()));
+        refreshStatusUpdateFoundIcon.setImage(new Image(getClass().getResource("/drawable/updates_found_icon_1x.png").toString()));
+        refreshStatusNoNetworkIcon.setImage(new Image(getClass().getResource("/drawable/no_network_icon_1x.png").toString()));
         noteSettingsIcon.setOnMouseClicked(event -> {
             if (!noteSettingsLayout.isVisible()) {
                 Animations.translateIn(noteSettingsLayout, 200);
             }
 
-            // TODO: Use ListActionView to populate the Font Dropdown
-//            int stackItems = noteLayout.getChildren().size();
-//            System.out.println("StackPane Items -> " + stackItems);
+            int stackItems = noteLayout.getChildren().size();
+            System.out.println("StackPane Items -> " + stackItems);
 
         });
+        fontDropdownList.setItems(FXCollections.observableArrayList(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size)));
+        fontDropdownList.valueProperty().addListener((observer, oldValue, newValue) -> {
+            fontDropdownList.getSelectionModel().select(newValue);
+            System.out.println("Selected font -> " + newValue.getName());
+        });
+
+        fontDropdownList.setConverter(new StringConverter<Font>() {
+            @Override
+            public String toString(Font font) {
+                if (font.getName().contains("Gilroy")){
+                    return "Gilroy";
+                }
+                return font.getFamily();
+            }
+
+            @Override
+            public Font fromString(String string) {
+                return null;
+            }
+        });
+
+
         ToggleGroup fontSizeToggleGroup = new ToggleGroup();
         fontSizeToggleGroup.getToggles().addAll(fontSmallButton, fontMediumButton, fontLargeButton);
         fontSizeToggleGroup.selectedToggleProperty().addListener((observer, oldValue, newValue) -> {
-            handleFontSizeClicked(newValue);
+            handleFontSizeChanged(newValue);
         });
 
         noteSettingsCloseButton.setOnMouseEntered(event -> {
@@ -326,8 +362,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         /******************* Note Quiz Section *******************/
         currentNoteSubject.setText(currentNoteSubject.getText().toUpperCase());
-        currentNoteSubject.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 16));
-        currentNoteSubjectTopic.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 16));
+
         quizShareIcon.setImage(new Image(getClass().getResource("/drawable/quiz_share_icon_1x.png").toString()));
         quizBookmarkIcon.setImage(new Image(getClass().getResource("/drawable/quiz_bookmark_icon_1x.png").toString()));
         quizReportIcon.setImage(new Image(getClass().getResource("/drawable/quiz_report_icon_1x.png").toString()));
@@ -521,18 +556,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         prevButton.setBackground(Background.EMPTY);
 //        backButton.setBackground(Background.EMPTY);
 
-//        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
-        subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        //topicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-        topicTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 16));
-        addNoteText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
-        bookmarkText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
-        highlightHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 14));
-        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
-        newNoteText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-
-        //practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
-
         /*backButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
         });*/
@@ -561,6 +584,81 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             hideNoteOptions();
         });;
 
+    }
+
+    private void initializeTextFont(FontSize size) {
+        switch (size) {
+            case SMALL -> setFontSizesToSmall();
+            case MEDIUM -> setFontSizesToMedium();
+            case LARGE -> setFontSizesToLarge();
+        }
+
+        /*pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
+        subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+        topicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        topicTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 16));
+        addNoteText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+        bookmarkText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
+        highlightHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 14));
+        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
+        newNoteText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+
+        practiceTopicButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));*/
+    }
+
+    private void setFontSizesToSmall() {
+        subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.SIXTEEN.size));
+        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.TWELVE.size));
+        subtopicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        // Quiz Section Texts
+        currentNoteSubject.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+        currentNoteSubjectTopic.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+        quizQuestion.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+        //Note Update Texts
+        refreshStatusFirstText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+        refreshStatusSecondText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
+        refreshNotesCancelText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+        // Note Settings Texts
+        fontText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWELVE.size));
+        fontSizeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
+        backgroundText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
+        settingsCloseText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+    }
+    private void setFontSizesToMedium() {
+        subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
+        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
+        subtopicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+        // Quiz Section Texts
+        currentNoteSubject.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+        currentNoteSubjectTopic.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+        quizQuestion.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+        //Note Update Texts
+        refreshStatusFirstText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+        refreshStatusSecondText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+        refreshNotesCancelText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+        // Note Settings Texts
+        fontText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.FOURTEEN.size));
+        fontSizeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+        backgroundText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+        settingsCloseText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+    }
+    private void setFontSizesToLarge() {
+        subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY.size));
+        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+        subtopicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.EIGHTEEN.size));
+        // Quiz Section Texts
+        currentNoteSubject.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
+        currentNoteSubjectTopic.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
+        quizQuestion.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
+        //Note Update Texts
+        refreshStatusFirstText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
+        refreshStatusSecondText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+        refreshNotesCancelText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
+        // Note Settings Texts
+        fontText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.SIXTEEN.size));
+        fontSizeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+        backgroundText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+        settingsCloseText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
     }
 
     private void setupQuizTilePane() {
@@ -762,16 +860,22 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         slideUp.play();
     }
 
-    private void handleFontSizeClicked(Toggle newValue) {
+    private void handleFontSizeChanged(Toggle newValue) {
         if (newValue == fontSmallButton){
+            setFontSizesToSmall();
+
             fontSmallButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 5 0 0 5; -fx-border-radius: 5 0 0 5; -fx-text-fill: #FFFFFF;");
             fontMediumButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 0 0 0; -fx-text-fill: #000000;");
             fontLargeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 5 5 0; -fx-text-fill: #000000;");
         }else if (newValue == fontMediumButton) {
+            setFontSizesToMedium();
+
             fontSmallButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5 0 0 5; -fx-text-fill: #000000;");
             fontMediumButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 0 0 0 0; -fx-border-radius: 0 0 0 0; -fx-text-fill: #FFFFFF;");
             fontLargeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 5 5 0; -fx-text-fill: #000000;");
         }else if (newValue == fontLargeButton) {
+            setFontSizesToLarge();
+
             fontSmallButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5 0 0 5; -fx-text-fill: #000000;");
             fontMediumButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 0 0 0; -fx-text-fill: #000000;");
             fontLargeButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 0 5 5 0; -fx-border-radius: 0 5 5 0; -fx-text-fill: #FFFFFF;");
