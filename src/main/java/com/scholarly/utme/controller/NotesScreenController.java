@@ -115,6 +115,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitButton, submitDialogSubmitButton, submitDialogCancelButton, quizQuitButton, quitDialogQuitButton, quitDialogCancelButton, exitDialogExitButton, exitDialogCancelButton, notesBackButton;
 
     @FXML
+    private ToggleButton fontSmallButton, fontMediumButton, fontLargeButton;
+
+    @FXML
     private TextField searchTextField;
 
     @FXML
@@ -126,7 +129,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
-
 
     private Section selectedSection;
 
@@ -208,10 +210,16 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             }
 
             // TODO: Use ListActionView to populate the Font Dropdown
-            int stackItems = noteLayout.getChildren().size();
-            System.out.println("StackPane Items -> " + stackItems);
+//            int stackItems = noteLayout.getChildren().size();
+//            System.out.println("StackPane Items -> " + stackItems);
 
         });
+        ToggleGroup fontSizeToggleGroup = new ToggleGroup();
+        fontSizeToggleGroup.getToggles().addAll(fontSmallButton, fontMediumButton, fontLargeButton);
+        fontSizeToggleGroup.selectedToggleProperty().addListener((observer, oldValue, newValue) -> {
+            handleFontSizeClicked(newValue);
+        });
+
         noteSettingsCloseButton.setOnMouseEntered(event -> {
             noteSettingsCloseButton.setStyle(HOVERED_BUTTON_STYLE);
         });
@@ -307,12 +315,12 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         contentLayout.setOnMouseClicked(event -> {
-            /*if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
+            if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
                 onWordClickedOverlay.setVisible(true);
-            }*/
-            if (!noteOptionsLayout.isVisible()) {
-                Animations.translateIn(noteOptionsLayout, 300);
             }
+            /*if (!noteOptionsLayout.isVisible()) {
+                Animations.translateIn(noteOptionsLayout, 300);
+            }*/
         });
 
 
@@ -752,6 +760,22 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         slideUp.setNode(noteOptions);
 
         slideUp.play();
+    }
+
+    private void handleFontSizeClicked(Toggle newValue) {
+        if (newValue == fontSmallButton){
+            fontSmallButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 5 0 0 5; -fx-border-radius: 5 0 0 5; -fx-text-fill: #FFFFFF;");
+            fontMediumButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 0 0 0; -fx-text-fill: #000000;");
+            fontLargeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 5 5 0; -fx-text-fill: #000000;");
+        }else if (newValue == fontMediumButton) {
+            fontSmallButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5 0 0 5; -fx-text-fill: #000000;");
+            fontMediumButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 0 0 0 0; -fx-border-radius: 0 0 0 0; -fx-text-fill: #FFFFFF;");
+            fontLargeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 5 5 0; -fx-text-fill: #000000;");
+        }else if (newValue == fontLargeButton) {
+            fontSmallButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5 0 0 5; -fx-text-fill: #000000;");
+            fontMediumButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 0 0 0; -fx-text-fill: #000000;");
+            fontLargeButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 0 5 5 0; -fx-border-radius: 0 5 5 0; -fx-text-fill: #FFFFFF;");
+        }
     }
 
     private void showImageViewLayout(Image image) {

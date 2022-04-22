@@ -183,7 +183,7 @@ public class Animations {
 
         slideOut.play();
 
-        //slideOut.setOnFinished(event -> node.setVisible(false));
+        slideOut.setOnFinished(event -> node.setVisible(false));
 
     }
 
