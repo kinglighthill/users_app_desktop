@@ -16,7 +16,10 @@
 <?import javafx.scene.control.skin.ColorPickerSkin.PickerColorBox?>
 <?import com.sun.javafx.webkit.theme.RenderThemeImpl.FormRadioButton?>
 <?import org.kordamp.ikonli.javafx.StackedFontIcon?>
-<BorderPane  xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.NotesScreenController">
+<?import com.dlsc.formsfx.view.controls.SimpleTextControl?>
+<?import com.sun.javafx.charts.Legend?>
+<?import org.controlsfx.dialog.FontSelectorDialog.FontPanel?>
+<BorderPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.NotesScreenController">
    <center>
       <StackPane fx:id="noteLayout" prefHeight="800" prefWidth="1000" >
 
@@ -43,7 +46,7 @@
                                              <Insets left="20.0" />
                                           </HBox.margin>
                                        </ImageView>
-                                       <Label fx:id="topicTitle" alignment="CENTER" text="Sub-Topics" textFill="#105801">
+                                       <Label fx:id="subtopicsText" alignment="CENTER" text="Sub-Topics" textFill="#105801">
                                           <HBox.margin>
                                              <Insets left="20.0" />
                                           </HBox.margin>
@@ -62,10 +65,13 @@
                                           <VBox fx:id="topicVBox" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" VBox.vgrow="ALWAYS"/>
                                        </content>
                                     </ScrollPane>
-                                    <Button fx:id="quizButton" text="Take Quiz" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="45" prefWidth="120" StackPane.alignment="BOTTOM_CENTER" style="-fx-background-color: #51C46B; -fx-background-radius: 5;" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                                    <Button fx:id="quizButton" text="Take Quiz" textFill="#FFFFFF" mnemonicParsing="false" StackPane.alignment="BOTTOM_CENTER" style="-fx-background-color: #51C46B; -fx-background-radius: 5;" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
                                        <StackPane.margin>
                                           <Insets bottom="10.0"/>
                                        </StackPane.margin>
+                                       <padding>
+                                          <Insets topRightBottomLeft="15"/>
+                                       </padding>
                                     </Button>
                                  </StackPane>
 
@@ -345,14 +351,14 @@
                      </Button>
                      <Label fx:id="subjectLabel" text="English Language" textFill="#105801">
                         <HBox.margin>
-                           <Insets bottom="20.0" left="20.0" top="20.0" />
+                           <Insets bottom="20.0" left="10.0" top="20.0" />
                         </HBox.margin>
                      </Label>
 
                      <Region prefWidth="80.0" HBox.hgrow="ALWAYS" />
                      <StackPane prefHeight="30" prefWidth="650" StackPane.alignment="CENTER" HBox.hgrow="ALWAYS">
                         <children>
-                           <TextField fx:id="searchTextField" prefHeight="35" promptText="Search everything" prefWidth="650" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5;" />
+                           <TextField fx:id="searchTextField" prefHeight="35" promptText="Search Notes" prefWidth="650" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5;"/>
                            <ImageView fx:id="searchIcon" StackPane.alignment="CENTER_RIGHT" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                               <StackPane.margin>
                                  <Insets right="30.0" top="5.0" bottom="5.0"/>
@@ -417,9 +423,7 @@
 
                      <VBox fx:id="refreshNoteTextContent" minHeight="70.0" alignment="CENTER">
                         <Label fx:id="refreshStatusFirstText"  textAlignment="CENTER"  wrapText="true" >
-                           <font>
-                              <Font size="16"/>
-                           </font>
+
                            <VBox.margin>
                               <Insets left="10.0" right="10.0" top="15.0"/>
                            </VBox.margin>
@@ -428,15 +432,10 @@
                            </padding>
                         </Label>
                         <Label fx:id="refreshStatusSecondText" textAlignment="CENTER" wrapText="true" >
-                           <font>
-                              <Font size="14"/>
-                           </font>
+
                            <VBox.margin>
                               <Insets left="10.0" right="10.0" top="5.0"/>
                            </VBox.margin>
-                           <padding>
-                              <Insets left="20.0" right="20.0" />
-                           </padding>
                         </Label>
                      </VBox>
                   </children>
@@ -453,10 +452,7 @@
                </Line>
 
                <HBox fx:id="refreshNotesCancelButton" alignment="BOTTOM_CENTER" >
-                  <Label text="Cancel" textFill="#FF0000" alignment="BOTTOM_CENTER">
-                     <font>
-                        <Font size="16"/>
-                     </font>
+                  <Label fx:id="refreshNotesCancelText" text="Cancel" textFill="#FF0000" alignment="BOTTOM_CENTER">
                   </Label>
                   <padding>
                      <Insets top="10.0" bottom="10.0" />
@@ -471,23 +467,21 @@
          <VBox fx:id="noteSettingsLayout" prefWidth="200" prefHeight="200" maxHeight="230" maxWidth="200" style="-fx-background-color: #FFFFFF; -fx-background-radius: 4;" StackPane.alignment="TOP_RIGHT" visible="false">
             <children>
                <HBox  prefWidth="200">
-                  <Label text="Aa">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
+                  <Label fx:id="fontText" text="Aa">
                      <HBox.margin>
                         <Insets left="12.0" top="18.0" right="15.0"/>
                      </HBox.margin>
                   </Label>
 
-                  <ComboBox promptText="Josefine Sans" style="-fx-background-color: #FFFFFF; -fx-text-fill: #51C46B;">
+                  <ComboBox fx:id="fontDropdownList" promptText="Select Font" style="-fx-background-color: #FFFFFF; -fx-text-fill: #51C46B;">
+
                      <HBox.margin>
                         <Insets left="10.0" top="15.0" right="10.0"/>
                      </HBox.margin>
                   </ComboBox>
 
                </HBox>
-               <Label text="font size:">
+               <Label fx:id="fontSizeText" text="font size:">
                   <VBox.margin>
                      <Insets left="12.0" top="10.0" right="10.0"/>
                   </VBox.margin>
@@ -502,7 +496,7 @@
                   </VBox.margin>
                </HBox>
 
-               <Label text="Background:">
+               <Label fx:id="backgroundText" text="Background:">
                   <VBox.margin>
                      <Insets left="12.0" top="30.0" right="10.0"/>
                   </VBox.margin>
@@ -528,13 +522,9 @@
                </Line>
 
                <HBox alignment="BOTTOM_CENTER" fx:id="noteSettingsCloseButton">
-                  <Label text="Close" textFill="#FF0000" alignment="CENTER">
-                     <font>
-                        <Font size="16"/>
-                     </font>
-                  </Label>
+                  <Label fx:id="settingsCloseText" text="Close" textFill="#FF0000" alignment="CENTER"/>
                   <padding>
-                     <Insets top="7.0" bottom="7.0" />
+                     <Insets top="10.0" bottom="10.0" />
                   </padding>
                </HBox>
             </children>
