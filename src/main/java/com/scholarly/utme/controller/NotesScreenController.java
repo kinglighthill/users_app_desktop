@@ -21,6 +21,7 @@ import com.scholarly.utme.data.model.newDb.contentType.video.VideoViewType;
 import com.scholarly.utme.data.model.newDb.contentType.webview.WebViewType;
 import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.NotesScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -90,10 +91,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private Pane dialogDimmer;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog, quizQuestionPane;
+    private ToolBar noteTopBar;
 
     @FXML
-    private HBox highlightColors, addNoteButton, noteTopBar, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton;
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog, quizQuestionPane, exitNotesDialog;
+
+    @FXML
+    private HBox highlightColors, addNoteButton, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton;
 
     @FXML
     private Label pageTitle, subjectLabel, topicLabel, topicTitle, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
@@ -108,7 +112,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ImageView quizShareIcon, quizBookmarkIcon, quizReportIcon, quizSpeakerIcon;
 
     @FXML
-    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitButton, submitDialogSubmitButton, submitDialogCancelButton, quizQuitButton, quitDialogQuitButton, quitDialogCancelButton;
+    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitButton, submitDialogSubmitButton, submitDialogCancelButton, quizQuitButton, quitDialogQuitButton, quitDialogCancelButton, exitDialogExitButton, exitDialogCancelButton, notesBackButton;
+
+    @FXML
+    private ToggleButton fontSmallButton, fontMediumButton, fontLargeButton;
 
     @FXML
     private TextField searchTextField;
@@ -123,7 +130,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
 
-
     private Section selectedSection;
 
     private int defaultFontSize = 16;
@@ -134,8 +140,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         highlightColorsList.addAll(Arrays.stream(HighlightColors.values()).map(highlightColors1 -> highlightColors1.colorCode).collect(Collectors.toList()));
 
-        imageViewLayout.setVisible(false);
-        imageViewLayout.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web("#000000", 0.8), null, null)}, null));
+//        imageViewLayout.setVisible(false);
+//        imageViewLayout.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web("#000000", 0.8), null, null)}, null));
 
         viewModel.initialize(getInitialData());
 
@@ -143,12 +149,31 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         //topicLabel.setText(viewModel.getTopic().getTitle());
 
+        ImageView noteBackIcon = new ImageView(new Image(getClass().getResource("/drawable/notes_back_icon_2x.png").toString()));
+        noteBackIcon.setFitWidth(20);
+        noteBackIcon.setFitHeight(20);
+        noteBackIcon.setPreserveRatio(true);
+        noteBackIcon.setPickOnBounds(true);
         searchIcon.setImage(new Image(getClass().getResource("/drawable/note_search_icon_1.5x.png").toString()));
         refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon_1.5x.png").toString()));
         noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
         refreshStatusNoUpdateIcon.setImage(new Image(getClass().getResource("/drawable/no_update_found_icon_1x.png").toString()));
         refreshStatusUpdateFoundIcon.setImage(new Image(getClass().getResource("/drawable/updates_found_icon_1x.png").toString()));
         refreshStatusNoNetworkIcon.setImage(new Image(getClass().getResource("/drawable/no_network_icon_1x.png").toString()));
+
+        notesBackButton.setBackground(Background.EMPTY);
+        notesBackButton.setGraphic(noteBackIcon);
+        notesBackButton.setOnAction(event -> {
+            Animations.translateIn(exitNotesDialog, 300);
+            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
+        });
+        exitDialogExitButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
+        });
+        exitDialogCancelButton.setOnAction(event -> {
+            Animations.translateOut(exitNotesDialog, 300);
+            Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
+        });
 
 
         /***************** Refresh Notes Section *******************/
@@ -185,10 +210,16 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             }
 
             // TODO: Use ListActionView to populate the Font Dropdown
-            int stackItems = noteLayout.getChildren().size();
-            System.out.println("StackPane Items -> " + stackItems);
+//            int stackItems = noteLayout.getChildren().size();
+//            System.out.println("StackPane Items -> " + stackItems);
 
         });
+        ToggleGroup fontSizeToggleGroup = new ToggleGroup();
+        fontSizeToggleGroup.getToggles().addAll(fontSmallButton, fontMediumButton, fontLargeButton);
+        fontSizeToggleGroup.selectedToggleProperty().addListener((observer, oldValue, newValue) -> {
+            handleFontSizeClicked(newValue);
+        });
+
         noteSettingsCloseButton.setOnMouseEntered(event -> {
             noteSettingsCloseButton.setStyle(HOVERED_BUTTON_STYLE);
         });
@@ -284,12 +315,12 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         contentLayout.setOnMouseClicked(event -> {
-            /*if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
+            if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
                 onWordClickedOverlay.setVisible(true);
-            }*/
-            if (!noteOptionsLayout.isVisible()) {
-                Animations.translateIn(noteOptionsLayout, 300);
             }
+            /*if (!noteOptionsLayout.isVisible()) {
+                Animations.translateIn(noteOptionsLayout, 300);
+            }*/
         });
 
 
@@ -326,31 +357,32 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 Animations.slideIn(quizQuestionPane);
             }
         });
-        quizButton.setOnMouseClicked(event -> {
+        quizButton.setOnAction(event -> {
+//            Animations.slideIn(quizPane);
             if (!quizPane.isVisible()) {
                 Animations.slideIn(quizPane);
             }
         });
         quizSubmitButton.setOnMouseClicked(event -> {
             Animations.fadeIn(quizSubmitDialog, 100);
-            dialogDimmer.setVisible(true);
+            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
         });
         submitDialogCancelButton.setOnMouseClicked(event -> {
             Animations.fadeOut(quizSubmitDialog, 300);
-            dialogDimmer.setVisible(false);
+            Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
         });
         quizQuitButton.setOnMouseClicked(event -> {
             Animations.fadeIn(quizQuitDialog, 100);
-            dialogDimmer.setVisible(true);
+            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
         });
         quitDialogQuitButton.setOnMouseClicked(event -> {
             Animations.fadeOut(quizQuitDialog, 300);
-            dialogDimmer.setVisible(false);
+            Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
             Animations.slideOut(quizPane);
         });
         quitDialogCancelButton.setOnMouseClicked(event -> {
             Animations.fadeOut(quizQuitDialog, 300);
-            dialogDimmer.setVisible(false);
+            Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
         });
         setupQuizTilePane();
         setupQuizQuestion();
@@ -458,10 +490,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             searchIcon.setVisible(false);
         });*/
       
-        closeIconImageViewLayout.setImage(new Image(getClass().getResource("/drawable/close_icon_white.png").toString()));
-        closeIconImageViewLayout.setOnMouseClicked(event -> {
-            hideImageViewLayout();
-        });
+//        closeIconImageViewLayout.setImage(new Image(getClass().getResource("/drawable/close_icon_white.png").toString()));
+//        closeIconImageViewLayout.setOnMouseClicked(event -> {
+//            hideImageViewLayout();
+//        });
 
         closeIconNoteOptionLayout.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
         closeIconNoteOptionLayout.setOnMouseClicked(event -> {
@@ -730,10 +762,26 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         slideUp.play();
     }
 
+    private void handleFontSizeClicked(Toggle newValue) {
+        if (newValue == fontSmallButton){
+            fontSmallButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 5 0 0 5; -fx-border-radius: 5 0 0 5; -fx-text-fill: #FFFFFF;");
+            fontMediumButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 0 0 0; -fx-text-fill: #000000;");
+            fontLargeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 5 5 0; -fx-text-fill: #000000;");
+        }else if (newValue == fontMediumButton) {
+            fontSmallButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5 0 0 5; -fx-text-fill: #000000;");
+            fontMediumButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 0 0 0 0; -fx-border-radius: 0 0 0 0; -fx-text-fill: #FFFFFF;");
+            fontLargeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 5 5 0; -fx-text-fill: #000000;");
+        }else if (newValue == fontLargeButton) {
+            fontSmallButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5 0 0 5; -fx-text-fill: #000000;");
+            fontMediumButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 0 0 0; -fx-text-fill: #000000;");
+            fontLargeButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 0 5 5 0; -fx-border-radius: 0 5 5 0; -fx-text-fill: #FFFFFF;");
+        }
+    }
+
     private void showImageViewLayout(Image image) {
 
-        imageViewLayout.setVisible(true);
-        imageViewLarge.setImage(image);
+//        imageViewLayout.setVisible(true);
+//        imageViewLarge.setImage(image);
 
         FadeTransition fadeTransition = new FadeTransition();
 
@@ -742,7 +790,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         fadeTransition.setDuration(Duration.millis(300));
 
-        fadeTransition.setNode(imageViewLayout);
+//        fadeTransition.setNode(imageViewLayout);
 
         fadeTransition.play();
     }
@@ -755,11 +803,11 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         fadeTransition.setDuration(Duration.millis(300));
 
-        fadeTransition.setNode(imageViewLayout);
-
-        fadeTransition.setOnFinished(event -> {
-            imageViewLayout.setVisible(false);
-        });
+//        fadeTransition.setNode(imageViewLayout);
+//
+//        fadeTransition.setOnFinished(event -> {
+//            imageViewLayout.setVisible(false);
+//        });
         fadeTransition.play();
     }
 

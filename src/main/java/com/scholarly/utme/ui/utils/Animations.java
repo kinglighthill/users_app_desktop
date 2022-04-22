@@ -70,11 +70,39 @@ public class Animations {
 
     }
 
+    public static void fadeIn(Node node, double duration, double fromValue, double toValue) {
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(duration));
+        fadeIn.setNode(node);
+        fadeIn.setFromValue(fromValue);
+        fadeIn.setToValue(toValue);
+        fadeIn.setCycleCount(1);
+        fadeIn.setAutoReverse(false);
+
+        node.setVisible(true);
+
+        fadeIn.play();
+
+    }
+
     public static void fadeOut(Node node, double duration) {
         FadeTransition fadeOut = new FadeTransition(Duration.millis(duration));
         fadeOut.setNode(node);
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
+        fadeOut.setCycleCount(1);
+        fadeOut.setAutoReverse(false);
+
+        fadeOut.play();
+
+        fadeOut.setOnFinished(event -> node.setVisible(false));
+
+    }
+
+    public static void fadeOut(Node node, double duration, double fromValue, double toValue) {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(duration));
+        fadeOut.setNode(node);
+        fadeOut.setFromValue(fromValue);
+        fadeOut.setToValue(toValue);
         fadeOut.setCycleCount(1);
         fadeOut.setAutoReverse(false);
 
@@ -155,7 +183,7 @@ public class Animations {
 
         slideOut.play();
 
-        //slideOut.setOnFinished(event -> node.setVisible(false));
+        slideOut.setOnFinished(event -> node.setVisible(false));
 
     }
 
