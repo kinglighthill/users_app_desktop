@@ -90,7 +90,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private NotesScreenVM viewModel;
 
     @FXML
-    private StackPane imageViewLayout, noteLayout;
+    private StackPane imageViewLayout, noteLayout, quizLayout;
 
     @FXML
     private TilePane quizTilePane;
@@ -105,16 +105,16 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ComboBox<Font> fontDropdownList;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog, quizQuestionPane, exitNotesDialog;
+    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog, quizQuestionPane, exitNotesDialog, quizScorePane;
 
     @FXML
-    private HBox highlightColors, addNoteButton, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton;
+    private HBox highlightColors, addNoteButton, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton, quizScoreCloseButton;
 
     @FXML
     private Label pageTitle, subjectLabel, topicLabel, subtopicsText, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, refreshNotesCancelText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
 
     @FXML
-    private Label fontText, fontSizeText, backgroundText, settingsCloseText;
+    private Label fontText, fontSizeText, backgroundText, settingsCloseText, quizYourScoreText, quizScore;
 
     @FXML
     private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, createNoteBackIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
@@ -123,10 +123,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ImageView noteOptionsNoteIcon, noteOptionsBookmarkIcon, noteOptionsShareIcon, noteOptionsReportIcon, noteOptionsAudioIcon, reportOptionReportIcon, notClearIcon, aLittleClearIcon, veryClearIcon, feedbackIcon, dictionarySpeakerIcon, dictionaryIcon;
 
     @FXML
-    private ImageView quizShareIcon, quizBookmarkIcon, quizReportIcon, quizSpeakerIcon;
+    private ImageView quizShareIcon, quizBookmarkIcon, quizReportIcon, quizSpeakerIcon, quizScoreBar;
 
     @FXML
-    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitButton, submitDialogSubmitButton, submitDialogCancelButton, quizQuitButton, quitDialogQuitButton, quitDialogCancelButton, exitDialogExitButton, exitDialogCancelButton, notesBackButton;
+    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitButton, submitDialogSubmitButton, submitDialogCancelButton, quizQuitButton, quitDialogQuitButton, quitDialogCancelButton, exitDialogExitButton, exitDialogCancelButton, notesBackButton, quizScoreQuitButton, quizScoreAnswersButton;
 
     @FXML
     private ToggleButton fontSmallButton, fontMediumButton, fontLargeButton;
@@ -361,6 +361,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
 
         /******************* Note Quiz Section *******************/
+        //quizLayout.getChildren().remove(quizLayout.getChildren().get(0));
+        //quizLayout.getChildren().remove(quizScorePane);
+        quizYourScoreText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.THIRTY.size));
         currentNoteSubject.setText(currentNoteSubject.getText().toUpperCase());
 
         quizShareIcon.setImage(new Image(getClass().getResource("/drawable/quiz_share_icon_1x.png").toString()));
@@ -421,6 +424,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
         setupQuizTilePane();
         setupQuizQuestion();
+        showQuizScore();
 
 
 
@@ -687,6 +691,29 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     private void setupQuizQuestion() {
         quizQuestion.setText("This zygote undergoes meiosis to form spores. Each spore develops into a new organism.");
+    }
+
+    private void showQuizScore() {
+        quizScoreBar.setImage(new Image(getClass().getResource("/drawable/quiz_score_progress_icon_1x.png").toString()));
+        quizScore.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.THIRTY_FOUR.size));
+
+        quizScoreQuitButton.setOnAction(event -> {
+            //TODO: Slide out Quiz Pane
+        });
+
+        quizScoreAnswersButton.setOnAction(event -> {
+            //TODO: Show Quiz Answers Screen
+        });
+
+        quizScoreCloseButton.setOnMouseEntered(event -> {
+            quizScoreCloseButton.setStyle(HOVERED_BUTTON_STYLE);
+        });
+        quizScoreCloseButton.setOnMouseExited(event -> {
+            quizScoreCloseButton.setStyle(IDLE_BUTTON_STYLE);
+        });
+        quizScoreCloseButton.setOnMouseClicked(event -> {
+            //TODO: Close Quiz Score Screen
+        });
     }
 
     private void renderNote(SubTopic subTopic) {
