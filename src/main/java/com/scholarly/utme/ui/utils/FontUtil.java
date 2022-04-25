@@ -34,7 +34,10 @@ public class FontUtil {
         TWENTY(20),
         TWENTY_TWO(22),
         TWENTY_FOUR(24),
-        TWENTY_SIX(26);
+        TWENTY_SIX(26),
+        THIRTY(30),
+        THIRTY_TWO(32),
+        THIRTY_FOUR(34);
 
         public final int size;
 
