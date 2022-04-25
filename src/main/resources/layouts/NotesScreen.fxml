@@ -352,12 +352,9 @@
                               </VBox.margin>
                            </StackPane>
                            <HBox spacing="30" StackPane.alignment="BOTTOM_CENTER">
-                              <Button fx:id="quizScoreQuitButton" text="Quit" textFill="#F09898" prefWidth="130" prefHeight="40" style="-fx-background-color: #FFFFFF; -fx-border-color: #F09898; -fx-border-radius: 5; -fx-font-size: 14;">
+                              <Button fx:id="quizScoreQuitButton" text="Quit" textFill="#F09898" prefWidth="130" prefHeight="40" style="-fx-background-color: #FFFFFF; -fx-border-color: #F09898; -fx-border-radius: 5; -fx-font-size: 14;"/>
+                              <Button fx:id="quizScoreAnswersButton" text="See Answers" textFill="#FFFFFF" prefWidth="130" prefHeight="40" style="-fx-background-color: #51C46B; -fx-background-radius: 5; -fx-font-size: 14;"/>
 
-                              </Button>
-                              <Button fx:id="quizScoreAnswersButton" text="See Answers" textFill="#FFFFFF" prefWidth="130" prefHeight="40" style="-fx-background-color: #51C46B; -fx-background-radius: 5; -fx-font-size: 14;">
-
-                              </Button>
                               <VBox.margin>
                                  <Insets left="30" right="30" top="40"/>
                               </VBox.margin>
