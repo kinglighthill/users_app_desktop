@@ -108,13 +108,16 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog, quizQuestionPane, exitNotesDialog, quizScorePane;
 
     @FXML
+    private VBox quizExplanationSection;
+
+    @FXML
     private HBox highlightColors, addNoteButton, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton, quizScoreCloseButton;
 
     @FXML
     private Label pageTitle, subjectLabel, topicLabel, subtopicsText, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, refreshNotesCancelText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
 
     @FXML
-    private Label fontText, fontSizeText, backgroundText, settingsCloseText, quizYourScoreText, quizScore;
+    private Label fontText, fontSizeText, backgroundText, settingsCloseText, quizYourScoreText, quizScore, quizExplanationText;
 
     @FXML
     private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, createNoteBackIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
@@ -126,7 +129,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ImageView quizShareIcon, quizBookmarkIcon, quizReportIcon, quizSpeakerIcon, quizScoreBar;
 
     @FXML
-    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitButton, submitDialogSubmitButton, submitDialogCancelButton, quizQuitButton, quitDialogQuitButton, quitDialogCancelButton, exitDialogExitButton, exitDialogCancelButton, notesBackButton, quizScoreQuitButton, quizScoreAnswersButton;
+    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitOrCloseButton, submitDialogSubmitButton, submitDialogCancelButton, quizQuitButton, quitDialogQuitButton, quitDialogCancelButton, exitDialogExitButton, exitDialogCancelButton, notesBackButton, quizScoreQuitButton, quizScoreAnswersButton;
 
     @FXML
     private ToggleButton fontSmallButton, fontMediumButton, fontLargeButton;
@@ -396,14 +399,23 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             }
         });
         quizButton.setOnAction(event -> {
+            quizSubmitOrCloseButton.setText("Submit");
+            quizSubmitOrCloseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
+            quizSubmitOrCloseButton.setTextFill(Paint.valueOf("#FFFFFF"));
+            quizSubmitOrCloseButton.setStyle("-fx-background-color: #51C46B; -fx-background-radius: 4");
 //            Animations.slideIn(quizPane);
             if (!quizPane.isVisible()) {
                 Animations.slideIn(quizPane);
             }
         });
-        quizSubmitButton.setOnMouseClicked(event -> {
-            Animations.fadeIn(quizSubmitDialog, 100);
+        quizSubmitOrCloseButton.setOnAction(event -> {
+            if (quizSubmitOrCloseButton.getText().contains("Submit")) {
+                Animations.fadeIn(quizSubmitDialog, 100);
+            }else {
+                Animations.fadeIn(quizQuitDialog, 100);
+            }
             Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
+
         });
         submitDialogCancelButton.setOnMouseClicked(event -> {
             Animations.fadeOut(quizSubmitDialog, 300);
@@ -702,6 +714,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         quizScoreAnswersButton.setOnAction(event -> {
+            showQuizAnswers();
             //TODO: Show Quiz Answers Screen
         });
 
@@ -714,6 +727,17 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         quizScoreCloseButton.setOnMouseClicked(event -> {
             //TODO: Close Quiz Score Screen
         });
+    }
+
+    private void showQuizAnswers() {
+        quizSubmitOrCloseButton.setText("Close");
+        quizSubmitOrCloseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+        quizSubmitOrCloseButton.setTextFill(Paint.valueOf("#EE8989"));
+        quizSubmitOrCloseButton.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 4");
+
+        quizExplanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
+        Animations.slideIn(quizPane);
+        quizScorePane.setVisible(false);
     }
 
     private void renderNote(SubTopic subTopic) {
