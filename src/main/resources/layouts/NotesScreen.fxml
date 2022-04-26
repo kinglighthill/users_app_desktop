@@ -321,8 +321,8 @@
                            </children>
                         </VBox>
 
-                        <VBox StackPane.alignment="BOTTOM_CENTER">
-                           <StackPane fx:id="backAndNextButtonsPane">
+                        <VBox fx:id="quizBackNextAndQuitButtonsSection" StackPane.alignment="BOTTOM_CENTER">
+                           <StackPane>
                               <Button fx:id="quizBackButton" text="Back" StackPane.alignment="BOTTOM_LEFT" style="-fx-background-color: #FFFFFF; -fx-border-color: #000000; -fx-border-radius: 5;"/>
 
                               <Button fx:id="quizNextButton" text="Next" textFill="#FFFFFF" contentDisplay="RIGHT" StackPane.alignment="BOTTOM_RIGHT" style="-fx-background-color: #51C46B; -fx-background-radius: 5;">
@@ -335,7 +335,7 @@
                               </VBox.margin>
                            </StackPane>
 
-                           <Button fx:id="quizQuitButton" prefWidth="350" text="Quit" textFill="#FF0000" StackPane.alignment="BOTTOM_CENTER" alignment="BOTTOM_CENTER" style="-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5;" visible="true">
+                           <Button fx:id="quizQuitButton" prefWidth="350" text="Quit" textFill="#FF0000" StackPane.alignment="BOTTOM_CENTER" alignment="BOTTOM_CENTER" style="-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5;">
                               <font>
                                  <Font size="16"/>
                               </font>
@@ -344,7 +344,7 @@
                               </padding>
                            </Button>
                            <VBox.margin>
-                              <Insets top="35.0"/>
+                              <Insets top="25.0"/>
                            </VBox.margin>
                         </VBox>
 
