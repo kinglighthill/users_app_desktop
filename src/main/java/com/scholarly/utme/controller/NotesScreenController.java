@@ -108,7 +108,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog, quizQuestionPane, exitNotesDialog, quizScorePane;
 
     @FXML
-    private VBox quizExplanationSection;
+    private VBox quizExplanationSection, quizBackNextAndQuitButtonsSection;
 
     @FXML
     private HBox highlightColors, addNoteButton, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton, quizScoreCloseButton;
@@ -415,6 +415,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 Animations.fadeIn(quizSubmitDialog, 100);
             }else {
                 Animations.fadeIn(quizQuitDialog, 100);
+                if (!quizBackNextAndQuitButtonsSection.getChildren().contains(quizQuitButton)) {
+                    quizBackNextAndQuitButtonsSection.getChildren().add(quizQuitButton);
+                }
             }
             Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
 
@@ -718,12 +721,17 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         quizScore.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.THIRTY_FOUR.size));
 
         quizScoreQuitButton.setOnAction(event -> {
+            Animations.fadeIn(quizQuitDialog, 100);
+            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
+
+            quitDialogQuitButton.setOnAction(event1 -> {
+                Animations.slideOut(quizScorePane);
+            });
             //TODO: Slide out Quiz Pane
         });
 
         quizScoreAnswersButton.setOnAction(event -> {
             showQuizAnswers();
-            //TODO: Show Quiz Answers Screen
         });
 
         quizScoreCloseButton.setOnMouseEntered(event -> {
@@ -745,6 +753,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         quizExplanationButton.setVisible(true);
         quizExplanationSection.getChildren().add(quizExplanationText);
         quizExplanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
+        quizBackNextAndQuitButtonsSection.getChildren().remove(quizQuitButton);
+
         Animations.slideIn(quizPane);
         quizScorePane.setVisible(false);
     }
