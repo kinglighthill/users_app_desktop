@@ -769,6 +769,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                     ContentType contentType = ContentTypes.convert(section);
                     if (contentType instanceof TextViewType) {
+                        System.out.println("ContentType -> TextViewType");
                         TextViewType textViewType = (TextViewType) contentType;
 
                         if (textViewType.getTitle() != null) {
@@ -781,6 +782,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         body.setLineSpacing(8);
                         body.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
 
+//                        if (textViewType.getBody().getText().contains(textViewType.getBody().getLink().getText())) {
+//                            System.out.println("This text contains a link");
+//                        }
 
 
                         List<Highlights> highlights = viewModel.getSubjectHighlights();
@@ -802,6 +806,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                     }
                     else if (contentType instanceof HtmlViewType) {
+                        System.out.println("ContentType -> HTMLViewType");
                         HtmlViewType viewType = (HtmlViewType) contentType;
 
                         if (viewType.getTitle() != null) {
@@ -818,6 +823,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                     }
                     else if (contentType instanceof WebViewType) {
+                        System.out.println("ContentType -> WebViewType");
                         WebViewType viewType = (WebViewType) contentType;
 
                         if (viewType.getTitle() != null) {
@@ -830,6 +836,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                     }
                     else if (contentType instanceof ImageViewType) {
+                        System.out.println("ContentType -> ImageViewType");
                         ImageViewType imageViewType = (ImageViewType) contentType;
 
                         ImageView image = new ImageView(new Image(getClass().getResource("/drawable/dummy_image.jpg").toString()));
@@ -840,9 +847,11 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                     }
                     else if (contentType instanceof CBTViewType) {
+                        System.out.println("ContentType -> CBTViewType");
 
                     }
                     else if (contentType instanceof OrderedListViewType) {
+                        System.out.println("ContentType -> OrderedListViewType");
                         OrderedListViewType viewType = (OrderedListViewType) contentType;
 
                         if (viewType.getTitle() != null) {
@@ -857,6 +866,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                     }
                     else if (contentType instanceof UnorderedListViewType) {
+                        System.out.println("ContentType -> UnorderedListViewType");
 
                         UnorderedListViewType viewType = (UnorderedListViewType) contentType;
 
@@ -872,6 +882,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                     }
                     else if (contentType instanceof TableViewType) {
+                        System.out.println("ContentType -> TableViewType");
                         TableViewType viewType = (TableViewType) contentType;
 
                         TableView tableView = new TableView();
@@ -896,8 +907,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                     }
                     else if (contentType instanceof AudioViewType) {
+                        System.out.println("ContentType -> AudioViewType");
 
                     } else if (contentType instanceof VideoViewType) {
+                        System.out.println("ContentType -> VideoViewType");
 
                     }
                 });
