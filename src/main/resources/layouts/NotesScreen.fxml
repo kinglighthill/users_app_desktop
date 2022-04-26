@@ -200,11 +200,11 @@
             </center>
 
             <right>
-               <StackPane fx:id="quizLayout" prefHeight="100" prefWidth="350" >
+               <StackPane fx:id="quizLayout" prefHeight="100" prefWidth="350">
                   <children>
-                     <VBox fx:id="quizPane" style="-fx-background-color: #FFFFFF" visible="false">
-                        <HBox spacing="120.0">
-                           <VBox alignment="CENTER_LEFT">
+                     <VBox fx:id="quizPane" style="-fx-background-color: #FFFFFF" visible="false" StackPane.alignment="TOP_CENTER">
+                        <HBox spacing="120.0" VBox.vgrow="ALWAYS" StackPane.alignment="TOP_LEFT">
+                           <VBox alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
                               <Label fx:id="currentNoteSubject" text="Biology" textFill="black"/>
                               <Label fx:id="currentNoteSubjectTopic" text="Concept Of Living" underline="true">
                                  <padding>
@@ -212,7 +212,7 @@
                                  </padding>
                               </Label>
                            </VBox>
-                           <Button fx:id="quizSubmitButton" text="Submit" textFill="#FFFFFF" style="-fx-background-color: #51C46B; -fx-background-radius: 4" alignment="CENTER_RIGHT">
+                           <Button fx:id="quizSubmitOrCloseButton" text="Submit" textFill="#FFFFFF" style="-fx-background-color: #51C46B; -fx-background-radius: 4" alignment="CENTER_RIGHT">
                               <HBox.margin>
                                  <Insets top="5.0"/>
                               </HBox.margin>
@@ -227,11 +227,14 @@
                               <Insets topRightBottomLeft="5.0"/>
                            </padding>
                            <VBox.margin>
-                              <Insets top="10.0"/>
+                              <Insets top="5.0"/>
                            </VBox.margin>
                         </ScrollPane>
 
                         <VBox fx:id="quizQuestionPane">
+                           <children>
+
+                           </children>
                            <VBox fx:id="questionBox" prefWidth="350" prefHeight="80">
                               <StackPane>
                                  <children>
@@ -284,36 +287,55 @@
                            </VBox>
                         </VBox>
 
-                        <HBox spacing="10.0">
-                           <ImageView fx:id="quizShareIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
+                        <VBox fx:id="quizExplanationSection">
+                           <children>
+                              <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                                 <ImageView fx:id="quizShareIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
 
-                           <ImageView fx:id="quizBookmarkIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
+                                 <ImageView fx:id="quizBookmarkIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
 
-                           <ImageView fx:id="quizReportIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
+                                 <ImageView fx:id="quizReportIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
 
-                           <ImageView fx:id="quizSpeakerIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
+                                 <ImageView fx:id="quizSpeakerIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
 
-                           <VBox.margin>
-                              <Insets top="10" left="10"/>
-                           </VBox.margin>
-                        </HBox>
+                                 <Label fx:id="quizExplanationButton" StackPane.alignment="CENTER_RIGHT" alignment="CENTER_RIGHT" text="See explanation" textFill="#51C46B" textAlignment="RIGHT" style="-fx-background-color: #FFFFFF" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                                    <HBox.margin>
+                                       <Insets left="110"/>
+                                    </HBox.margin>
+                                 </Label>
 
-                        <StackPane fx:id="backAndNextButtonsPane">
-                           <Button fx:id="quizBackButton" text="Back" StackPane.alignment="CENTER_LEFT" style="-fx-background-color: #FFFFFF; -fx-border-color: #000000; -fx-border-radius: 5;"/>
+                                 <VBox.margin>
+                                    <Insets top="10" left="10"/>
+                                 </VBox.margin>
+                              </HBox>
 
-                           <Button fx:id="quizNextButton" text="Next" textFill="#FFFFFF" contentDisplay="RIGHT" StackPane.alignment="CENTER_RIGHT" style="-fx-background-color: #51C46B; -fx-background-radius: 5;">
-                              <padding>
-                                 <Insets right="10" left="10" top="5" bottom="5"/>
-                              </padding>
-                           </Button>
-                           <VBox.margin>
-                              <Insets top="10" left="10" right="10"/>
-                           </VBox.margin>
-                        </StackPane>
+                              <Label fx:id="quizExplanationText" prefHeight="80" prefWidth="400" text="This zygote undergoes meiosis to form spores. Each spore develops into a new organism." style="-fx-background-color: #E7F7E9; -fx-background-radius: 5;" wrapText="true" VBox.vgrow="ALWAYS">
+                                 <padding>
+                                    <Insets left="10" right="10" top="5" bottom="5"/>
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets top="5" bottom="5"/>
+                                 </VBox.margin>
+                              </Label>
+
+                           </children>
+                        </VBox>
 
                         <VBox StackPane.alignment="BOTTOM_CENTER">
+                           <StackPane fx:id="backAndNextButtonsPane">
+                              <Button fx:id="quizBackButton" text="Back" StackPane.alignment="BOTTOM_LEFT" style="-fx-background-color: #FFFFFF; -fx-border-color: #000000; -fx-border-radius: 5;"/>
 
-                           <Button fx:id="quizQuitButton" prefWidth="350" text="Quit" textFill="#FF0000" StackPane.alignment="BOTTOM_CENTER" alignment="BOTTOM_CENTER" style="-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5;" >
+                              <Button fx:id="quizNextButton" text="Next" textFill="#FFFFFF" contentDisplay="RIGHT" StackPane.alignment="BOTTOM_RIGHT" style="-fx-background-color: #51C46B; -fx-background-radius: 5;">
+                                 <padding>
+                                    <Insets right="10" left="10" top="5" bottom="5"/>
+                                 </padding>
+                              </Button>
+                              <VBox.margin>
+                                 <Insets top="10" left="10" right="10" bottom="15.0"/>
+                              </VBox.margin>
+                           </StackPane>
+
+                           <Button fx:id="quizQuitButton" prefWidth="350" text="Quit" textFill="#FF0000" StackPane.alignment="BOTTOM_CENTER" alignment="BOTTOM_CENTER" style="-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5;" visible="true">
                               <font>
                                  <Font size="16"/>
                               </font>
@@ -322,10 +344,9 @@
                               </padding>
                            </Button>
                            <VBox.margin>
-                              <Insets top="75.0"/>
+                              <Insets top="35.0"/>
                            </VBox.margin>
                         </VBox>
-
 
                         <StackPane.margin>
                            <Insets topRightBottomLeft="10.0"/>
@@ -335,7 +356,7 @@
                         </padding>
                      </VBox>
 
-                     <VBox fx:id="quizScorePane" style="-fx-background-color: #FFFFFF" visible="true" StackPane.alignment="CENTER">
+                     <VBox fx:id="quizScorePane" style="-fx-background-color: #FFFFFF" visible="false" StackPane.alignment="CENTER">
                         <children>
                            <Label fx:id="quizYourScoreText" text="Your Score" textFill="#5C5C5C" textAlignment="CENTER" StackPane.alignment="TOP_CENTER">
                               <VBox.margin>
@@ -344,11 +365,11 @@
                            </Label>
 
                            <StackPane StackPane.alignment="CENTER" >
-                              <ImageView fx:id="quizScoreBar" pickOnBounds="true" />
+                              <ImageView fx:id="quizScoreBar" pickOnBounds="true" fitWidth="250" fitHeight="250" preserveRatio="true"/>
                               <Label fx:id="quizScore" text="12/20" StackPane.alignment="CENTER"/>
 
                               <VBox.margin>
-                                 <Insets left="20" right="20" top="20"/>
+                                 <Insets left="20" right="20" top="20" bottom="40"/>
                               </VBox.margin>
                            </StackPane>
                            <HBox spacing="30" StackPane.alignment="BOTTOM_CENTER">
@@ -356,11 +377,11 @@
                               <Button fx:id="quizScoreAnswersButton" text="See Answers" textFill="#FFFFFF" prefWidth="130" prefHeight="40" style="-fx-background-color: #51C46B; -fx-background-radius: 5; -fx-font-size: 14;"/>
 
                               <VBox.margin>
-                                 <Insets left="30" right="30" top="40"/>
+                                 <Insets left="30" right="30" top="50"/>
                               </VBox.margin>
                            </HBox>
 
-                           <Line endX="200.0" startX="-150.0" stroke="#B8B8B8" VBox.vgrow="ALWAYS" StackPane.alignment="BOTTOM_CENTER">
+                           <Line endX="160.0" startX="-150.0" stroke="#B8B8B8" VBox.vgrow="ALWAYS" StackPane.alignment="BOTTOM_CENTER">
                               <VBox.margin>
                                  <Insets top="20.0"/>
                               </VBox.margin>
@@ -371,14 +392,14 @@
                                     <Font size="16"/>
                                  </font>
                                  <padding>
-                                    <Insets top="10.0" bottom="10" />
+                                    <Insets top="10.0" bottom="10.0" />
                                  </padding>
                               </Label>
                            </HBox>
                         </children>
 
                         <StackPane.margin>
-                           <Insets topRightBottomLeft="10.0"/>
+                           <Insets top="10.0" right="10.0" left="10.0" bottom="15.0"/>
                         </StackPane.margin>
                         <padding>
                            <Insets topRightBottomLeft="10.0"/>
