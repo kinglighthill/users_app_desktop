@@ -117,7 +117,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private Label pageTitle, subjectLabel, topicLabel, subtopicsText, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, refreshNotesCancelText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
 
     @FXML
-    private Label fontText, fontSizeText, backgroundText, settingsCloseText, quizYourScoreText, quizScore, quizExplanationText;
+    private Label fontText, fontSizeText, backgroundText, settingsCloseText, quizYourScoreText, quizScore, quizExplanationText, quizExplanationButton;
 
     @FXML
     private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, createNoteBackIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
@@ -403,6 +403,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             quizSubmitOrCloseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
             quizSubmitOrCloseButton.setTextFill(Paint.valueOf("#FFFFFF"));
             quizSubmitOrCloseButton.setStyle("-fx-background-color: #51C46B; -fx-background-radius: 4");
+            quizExplanationSection.getChildren().remove(quizExplanationText);
+            quizExplanationButton.setVisible(false);
 //            Animations.slideIn(quizPane);
             if (!quizPane.isVisible()) {
                 Animations.slideIn(quizPane);
@@ -421,6 +423,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Animations.fadeOut(quizSubmitDialog, 300);
             Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
         });
+        submitDialogSubmitButton.setOnAction(event -> {
+            Animations.slideIn(quizScorePane);
+            Animations.fadeOut(quizSubmitDialog, 300);
+            Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
+            quizPane.setVisible(false);
+            showQuizScore();
+        });
         quizQuitButton.setOnMouseClicked(event -> {
             Animations.fadeIn(quizQuitDialog, 100);
             Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
@@ -436,7 +445,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
         setupQuizTilePane();
         setupQuizQuestion();
-        showQuizScore();
 
 
 
@@ -734,7 +742,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         quizSubmitOrCloseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
         quizSubmitOrCloseButton.setTextFill(Paint.valueOf("#EE8989"));
         quizSubmitOrCloseButton.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 4");
-
+        quizExplanationButton.setVisible(true);
+        quizExplanationSection.getChildren().add(quizExplanationText);
         quizExplanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
         Animations.slideIn(quizPane);
         quizScorePane.setVisible(false);

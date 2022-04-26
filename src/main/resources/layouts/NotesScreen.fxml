@@ -356,7 +356,7 @@
                         </padding>
                      </VBox>
 
-                     <VBox fx:id="quizScorePane" style="-fx-background-color: #FFFFFF" visible="true" StackPane.alignment="CENTER">
+                     <VBox fx:id="quizScorePane" style="-fx-background-color: #FFFFFF" visible="false" StackPane.alignment="CENTER">
                         <children>
                            <Label fx:id="quizYourScoreText" text="Your Score" textFill="#5C5C5C" textAlignment="CENTER" StackPane.alignment="TOP_CENTER">
                               <VBox.margin>
