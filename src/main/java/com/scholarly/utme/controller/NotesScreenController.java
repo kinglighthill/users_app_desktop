@@ -776,15 +776,22 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                             contentElements.add(getTitle(textViewType.getTitle().getText()));
                         }
 
+                        if (textViewType.getBody().getBodyType() != null) {
+                            System.out.println("TextView Body types -> " + Arrays.toString(textViewType.getBody().getBodyType()));
+                        }else {
+                            System.out.println("TextView Body types -> Null");
+                        }
+                        if (textViewType.getBody().getLink() != null) {
+                            System.out.println("This text contains a link");
+                        }else {
+                            System.out.println("This text doesn't contain a link");
+                        }
+
                         Label body = new Label();
                         body.setText(textViewType.getBody().getText());
                         body.setWrapText(true);
                         body.setLineSpacing(8);
                         body.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-
-//                        if (textViewType.getBody().getText().contains(textViewType.getBody().getLink().getText())) {
-//                            System.out.println("This text contains a link");
-//                        }
 
 
                         List<Highlights> highlights = viewModel.getSubjectHighlights();
