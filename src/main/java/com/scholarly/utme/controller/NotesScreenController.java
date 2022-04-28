@@ -19,10 +19,7 @@ import com.scholarly.utme.data.model.newDb.contentType.text.TextViewType;
 import com.scholarly.utme.data.model.newDb.contentType.unorderedList.UnorderedListViewType;
 import com.scholarly.utme.data.model.newDb.contentType.video.VideoViewType;
 import com.scholarly.utme.data.model.newDb.contentType.webview.WebViewType;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.NotesScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -787,16 +784,24 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                             System.out.println("This text doesn't contain a link");
                         }
 
+//                        CustomWebView webView = new CustomWebView();
+//                        webView.loadContent(textViewType.getBody().getText());
+
                         Label body = new Label();
                         body.setText(textViewType.getBody().getText());
+                        if (textViewType.getBody().getText().contains("<br>")) {
+                            String newText = textViewType.getBody().getText().replaceAll("<br>", System.lineSeparator());
+                            body.setText(newText);
+                        }
                         body.setWrapText(true);
                         body.setLineSpacing(8);
                         body.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
 
-
                         List<Highlights> highlights = viewModel.getSubjectHighlights();
                         for (int i = 0; i < highlights.size(); i ++) {
                             if (highlights.get(i).getNoteId() == section.getId()) {
+//                                System.out.println("Got highlight with id -> " + highlights.get(i).getNoteId());
+//                                System.out.println("Got highlight color -> " + highlights.get(i).getColor());
                                 body.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web(highlights.get(i).getColor()), null, null)}, null));
                             }
                         }
@@ -817,14 +822,11 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         HtmlViewType viewType = (HtmlViewType) contentType;
 
                         if (viewType.getTitle() != null) {
-
-                            WebView webView = new WebView();
-                            webView.getEngine().loadContent(viewType.getBody().getText());
-
-                            contentElements.add(webView);
+                            contentElements.add(getTitle(viewType.getTitle().getText()));
                         }
-                        WebView webView = new WebView();
-                        webView.getEngine().loadContent(viewType.getBody().getText());
+
+                        CustomWebView webView = new CustomWebView();
+                        webView.loadContent(viewType.getBody().getText());
 
                         contentElements.add(webView);
 
@@ -836,8 +838,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         if (viewType.getTitle() != null) {
                             contentElements.add(getTitle(viewType.getTitle().getText()));
                         }
-                        WebView webView = new WebView();
-                        webView.getEngine().loadContent(viewType.getBody().getText());
+                        CustomWebView webView = new CustomWebView();
+                        webView.loadContent(viewType.getBody().getText());
 
                         contentElements.add(webView);
 
