@@ -59,8 +59,8 @@ public enum ContentTypes {
         return gson.fromJson(content, CBTViewType.class);
     });
 
-    private String typeText;
     private int id;
+    private String typeText;
     private Convert converter;
 
     ContentTypes(int id, String typeText, Convert converter) {
