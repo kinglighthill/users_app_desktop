@@ -4,6 +4,7 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.UnorderedListItem;
 import com.scholarly.utme.data.model.newDb.Section;
 import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.newDb.Topic;
@@ -19,6 +20,7 @@ import com.scholarly.utme.data.model.newDb.contentType.text.TextViewType;
 import com.scholarly.utme.data.model.newDb.contentType.unorderedList.UnorderedListViewType;
 import com.scholarly.utme.data.model.newDb.contentType.video.VideoViewType;
 import com.scholarly.utme.data.model.newDb.contentType.webview.WebViewType;
+import com.scholarly.utme.ui.cellFactories.UnorderedListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.NotesScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -29,6 +31,7 @@ import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -883,9 +886,23 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                             contentElements.add(getTitle(viewType.getTitle().getText()));
                         }
 
-                        ListView<String> contentList = new ListView<>();
+                       // contentList.setItems(FXCollections.observableArrayList(Arrays.asList(viewType.getBody().getList())));
+                        String[] content = viewType.getBody().getList();
 
-                        contentList.setItems(FXCollections.observableArrayList(Arrays.asList(viewType.getBody().getList())));
+                        ArrayList<UnorderedListItem> contentItems = new ArrayList<>();
+                        for (int i = 0; i < content.length; i++) {
+                            UnorderedListItem unorderedListItem = new UnorderedListItem(content[i]);
+                            contentItems.add(unorderedListItem);
+                           // System.out.println("UnorderedListItem created with text -> " + unorderedListItem.getText());
+                        }
+
+                        ObservableList<UnorderedListItem> items = FXCollections.observableArrayList(contentItems);
+
+                        ListView<UnorderedListItem> contentList = new ListView<>();
+                        contentList.setItems(items);
+                        contentList.setBackground(Background.EMPTY);
+                        contentList.setCellFactory(new UnorderedListCellFactory());
+                        contentList.setSelectionModel(new NoSelectionModel<>());
 
                         contentElements.add(contentList);
 
