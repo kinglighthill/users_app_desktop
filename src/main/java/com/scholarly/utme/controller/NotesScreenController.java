@@ -848,11 +848,24 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         System.out.println("ContentType -> ImageViewType");
                         ImageViewType imageViewType = (ImageViewType) contentType;
 
-                        ImageView image = new ImageView(new Image(getClass().getResource("/drawable/dummy_image.jpg").toString()));
-                        image.setFitHeight(240);
-                        image.setPreserveRatio(true);
+                        if (imageViewType.getTitle() != null) {
+                            contentElements.add(getTitle(imageViewType.getTitle().getText()));
+                        }
 
-                        contentElements.add(image);
+                        if (imageViewType.getTitle() == null || imageViewType.getBody() == null) {
+                            System.out.println("Empty image");
+                        }else {
+                            Image image = new Image(imageViewType.getBody().getUrl());
+                            ImageView imageView = new ImageView(image);
+
+                            imageView.setFitHeight(imageViewType.getBody().getHeightPx());
+                            imageView.setFitWidth(imageViewType.getBody().getWidthPx());
+                            imageView.setPreserveRatio(true);
+
+                           // System.out.println("Got ImageView with height -> " + imageViewType.getBody().getHeightPx() + " and width -> " + imageViewType.getBody().getWidthPx());
+
+                            contentElements.add(imageView);
+                        }
 
                     }
                     else if (contentType instanceof CBTViewType) {
