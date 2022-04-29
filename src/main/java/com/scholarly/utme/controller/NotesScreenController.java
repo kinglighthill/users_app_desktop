@@ -918,6 +918,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                     else if (contentType instanceof AudioViewType) {
                         System.out.println("ContentType -> AudioViewType");
 
+                        StackPane stackPane = new StackPane();
+                        stackPane.setPrefHeight(50);
+                        stackPane.setPrefWidth(120);
+
+                        VBox vBox = new VBox();
+
+
                     } else if (contentType instanceof VideoViewType) {
                         System.out.println("ContentType -> VideoViewType");
 
