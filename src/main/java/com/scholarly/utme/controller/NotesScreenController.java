@@ -50,6 +50,8 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -967,6 +969,81 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                     }
                     else if (contentType instanceof AudioViewType) {
                         System.out.println("ContentType -> AudioViewType");
+                        AudioViewType viewType = (AudioViewType) contentType;
+
+                        if (viewType.getTitle() != null) {
+                            contentElements.add(getTitle(viewType.getTitle().getText()));
+                        }
+
+                        System.out.println("Got audio -> " + viewType.getBody().getUrl() + " with duration " + viewType.getBody().getDurationSeconds());
+
+                        String mediaSource = viewType.getBody().getUrl();
+
+                        Media media = new Media(mediaSource);
+                        MediaPlayer mediaPlayer = new MediaPlayer(media);
+                        mediaPlayer.setAutoPlay(false);
+                        System.out.println("Media Start time -> " + mediaPlayer.getStartTime() + " and Stop time -> " + mediaPlayer.getStopTime());
+
+                        VBox vBox = new VBox();
+                        vBox.setPrefHeight(80);
+                        vBox.setPrefWidth(120);
+                        vBox.setPadding(new Insets(10, 0, 0, 0));
+                        vBox.setStyle("-fx-background-color: #034801; -fx-background-radius: 20 20 22 22;");
+
+                        StackPane controlsPane = new StackPane();
+                        controlsPane.setPadding(new Insets(10, 15, 10, 25));
+                        controlsPane.setPrefWidth(vBox.getPrefWidth());
+                        controlsPane.setStyle("-fx-background-color: #F7F7F7; -fx-background-radius: 20;");
+
+                        ImageView speakerIcon = new ImageView(new Image(getClass().getResource("/drawable/audio_type_speaker_icon_1x.png").toString()));
+                        speakerIcon.setPreserveRatio(true);
+                        speakerIcon.setPickOnBounds(true);
+                        speakerIcon.setFitWidth(20);
+                        speakerIcon.setFitHeight(20);
+                        StackPane.setAlignment(speakerIcon, Pos.CENTER_RIGHT);
+                        StackPane.setMargin(speakerIcon, new Insets(0, 10, 0, 0));
+                        speakerIcon.setOnMouseClicked(event -> {
+                            mediaPlayer.setMute(!mediaPlayer.isMute());
+
+                        });
+
+                        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/audio_type_play_button_1x.png").toString()));
+                        playIcon.setPreserveRatio(true);
+                        playIcon.setPickOnBounds(true);
+                        playIcon.setFitWidth(20);
+                        playIcon.setFitHeight(20);
+
+                        Button playButton = new Button();
+                        playButton.setBackground(Background.EMPTY);
+                        playButton.setGraphic(playIcon);
+                        StackPane.setAlignment(playButton, Pos.CENTER_LEFT);
+
+                        Label duration = new Label("17:34 / 59:32");
+                        duration.setAlignment(Pos.CENTER);
+                        StackPane.setAlignment(duration, Pos.CENTER_LEFT);
+                        StackPane.setMargin(duration, new Insets(0, 0, 0, 40));
+
+                        controlsPane.getChildren().addAll(playButton, duration, speakerIcon);
+
+                        ImageView equalizerImage = new ImageView(new Image(getClass().getResource("/drawable/audio_type_equalizer_view_1x.png").toString()));
+                        equalizerImage.setPreserveRatio(true);
+                        equalizerImage.setPickOnBounds(true);
+                        StackPane imagePane = new StackPane(equalizerImage);
+                        imagePane.setPadding(new Insets(10, 0, 10, 0));
+                        StackPane.setAlignment(equalizerImage, Pos.CENTER);
+
+                        vBox.getChildren().addAll(imagePane, controlsPane);
+
+                        playButton.setOnAction(event -> {
+                            if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING){
+                                mediaPlayer.pause();
+                            }else {
+                                mediaPlayer.play();
+                            }
+                        });
+
+                        contentElements.add(vBox);
+
 
                     } else if (contentType instanceof VideoViewType) {
                         System.out.println("ContentType -> VideoViewType");
