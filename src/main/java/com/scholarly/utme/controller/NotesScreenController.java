@@ -52,6 +52,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -1047,7 +1049,98 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                     } else if (contentType instanceof VideoViewType) {
                         System.out.println("ContentType -> VideoViewType");
+                        VideoViewType viewType = (VideoViewType) contentType;
 
+                        if (viewType.getTitle() != null) {
+                            contentElements.add(getTitle(viewType.getTitle().getText()));
+                        }
+
+//                        System.out.println("Got video -> " + viewType.getBody().getUrl() + " with duration " + viewType.getBody().getDurationSeconds());
+
+                        String mediaSource = viewType.getBody().getUrl();
+                        String mediaUrl = getClass().getResource("/assets/coding.mp4").toExternalForm();
+
+                        Media media = new Media(mediaUrl);
+                        MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+                        System.out.println("Media Start time -> " + mediaPlayer.getStartTime() + " and Stop time -> " + mediaPlayer.getStopTime());
+                        media.setOnError(() -> {
+                            System.out.println("Media error -> " + media.getError());
+                        });
+                        mediaPlayer.setOnError(() -> {
+                            System.out.println("MediaPlayer error -> " + mediaPlayer.getError());
+                        });
+
+                        MediaView mediaView = new MediaView(mediaPlayer);
+                        mediaView.setSmooth(true);
+                        mediaView.setOnError(event -> {
+                            System.out.println("MediaView error -> " + event.getMediaError().toString());
+                        });
+
+                        DropShadow dropshadow = new DropShadow(20, Color.GRAY);
+                        mediaView.setEffect(dropshadow);
+
+                        StackPane videoPane = new StackPane();
+
+                        Label videoDescription = new Label("Cell structure and functions of cell components ");
+                        videoDescription.setBackground(Background.EMPTY);
+                        videoDescription.setTextFill(Paint.valueOf("#FFFFFF"));
+                        videoDescription.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+
+                        Label duration = new Label("45 mins");
+                        duration.setBackground(Background.EMPTY);
+                        duration.setTextFill(Paint.valueOf("#FFFFFF"));
+                        duration.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+
+                        Button playButton = new Button();
+                        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/video_play_icon_1x.png").toString()));
+                        playButton.setGraphic(playIcon);
+                        playButton.setBackground(Background.EMPTY);
+                        playButton.setOnAction(event -> {
+                            Status status = mediaPlayer.getStatus();
+
+                            if (status == Status.PAUSED
+                                    || status == Status.READY
+                                    || status == Status.STOPPED) {
+                                mediaPlayer.play();
+                            } else {
+                                mediaPlayer.pause();
+                            }
+                        });
+
+                        mediaPlayer.setOnEndOfMedia(() -> {
+                            // Implement later
+                        });
+
+                        StackPane.setAlignment(playButton, Pos.CENTER);
+                        StackPane.setAlignment(videoDescription, Pos.BOTTOM_LEFT);
+                        StackPane.setMargin(videoDescription, new Insets(0, 0, 10, 30));
+                        StackPane.setAlignment(duration, Pos.BOTTOM_RIGHT);
+                        StackPane.setMargin(duration, new Insets(0, 30, 10, 0));
+
+                        videoPane.setOnMouseEntered(event -> {
+                            Status mediaStatus = mediaPlayer.getStatus();
+                            if (mediaStatus == Status.READY) {
+                                if (playButton.isVisible() || videoDescription.isVisible() || duration.isVisible()) {
+                                    return;
+                                }
+                            }
+
+                            Animations.fadeIn(playButton, 300, 300);
+                            Animations.fadeIn(videoDescription, 300, 300);
+                            Animations.fadeIn(duration, 300, 300);
+
+                        });
+                        videoPane.setOnMouseExited(event -> {
+                            Animations.fadeOut(playButton, 300, 1000);
+                            Animations.fadeOut(videoDescription, 300, 1000);
+                            Animations.fadeOut(duration, 300, 1000);
+
+                        });
+                        videoPane.getChildren().addAll(mediaView, playButton, videoDescription, duration);
+
+
+                        contentElements.add(videoPane);
                     }
                 });
 
