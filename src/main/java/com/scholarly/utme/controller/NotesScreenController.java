@@ -31,10 +31,6 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.IntegerBinding;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -59,8 +55,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -997,23 +991,35 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         controlsPane.setPrefWidth(vBox.getPrefWidth());
                         controlsPane.setStyle("-fx-background-color: #F7F7F7; -fx-background-radius: 20;");
 
-                        ImageView speakerIcon = new ImageView(new Image(getClass().getResource("/drawable/audio_type_speaker_icon_1x.png").toString()));
-                        speakerIcon.setPreserveRatio(true);
-                        speakerIcon.setPickOnBounds(true);
-                        speakerIcon.setFitWidth(20);
-                        speakerIcon.setFitHeight(20);
-                        StackPane.setAlignment(speakerIcon, Pos.CENTER_RIGHT);
-                        StackPane.setMargin(speakerIcon, new Insets(0, 10, 0, 0));
-                        speakerIcon.setOnMouseClicked(event -> {
-                            mediaPlayer.setMute(!mediaPlayer.isMute());
-
+                        Image muteIcon = new Image(getClass().getResource("/drawable/audio_type_mute_icon_1x.png").toString());
+                        Image unMuteIcon = new Image(getClass().getResource("/drawable/audio_type_unmute_icon_1x.png").toString());
+                        ImageView speaker = new ImageView(muteIcon);
+                        speaker.setPreserveRatio(true);
+                        speaker.setPickOnBounds(true);
+                        speaker.setFitWidth(20);
+                        speaker.setFitHeight(20);
+                        StackPane.setAlignment(speaker, Pos.CENTER_RIGHT);
+                        StackPane.setMargin(speaker, new Insets(0, 10, 0, 0));
+                        speaker.setOnMouseClicked(event -> {
+                            if (mediaPlayer.getVolume() > 0.0) {
+                                mediaPlayer.setVolume(0.0);
+                                speaker.setImage(unMuteIcon);
+                            }else {
+                                mediaPlayer.setVolume(1.0);
+                                speaker.setImage(muteIcon);
+                            }
                         });
 
-                        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/audio_type_play_button_1x.png").toString()));
+                        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/audio_type_play_icon_1x.png").toString()));
                         playIcon.setPreserveRatio(true);
                         playIcon.setPickOnBounds(true);
                         playIcon.setFitWidth(20);
                         playIcon.setFitHeight(20);
+                        ImageView pauseIcon = new ImageView(new Image(getClass().getResource("/drawable/audio_type_pause_icon_1x.png").toString()));
+                        pauseIcon.setPreserveRatio(true);
+                        pauseIcon.setPickOnBounds(true);
+                        pauseIcon.setFitWidth(20);
+                        pauseIcon.setFitHeight(20);
 
                         Button playButton = new Button();
                         playButton.setBackground(Background.EMPTY);
@@ -1025,7 +1031,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         StackPane.setAlignment(duration, Pos.CENTER_LEFT);
                         StackPane.setMargin(duration, new Insets(0, 0, 0, 40));
 
-                        controlsPane.getChildren().addAll(playButton, duration, speakerIcon);
+                        controlsPane.getChildren().addAll(playButton, duration, speaker);
 
                         ImageView equalizerImage = new ImageView(new Image(getClass().getResource("/drawable/audio_type_equalizer_view_1x.png").toString()));
                         equalizerImage.setPreserveRatio(true);
@@ -1037,11 +1043,28 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         vBox.getChildren().addAll(imagePane, controlsPane);
 
                         playButton.setOnAction(event -> {
-                            if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING){
-                                mediaPlayer.pause();
+                            Status mediaStatus = mediaPlayer.getStatus();
+                            if (mediaStatus != Status.PLAYING){
+                                mediaPlayer.play();
                             }else {
+                                mediaPlayer.pause();
+                            }
+
+                            if (mediaStatus == Status.STOPPED) {
                                 mediaPlayer.play();
                             }
+
+                            if (mediaStatus != Status.PLAYING) {
+                                playButton.setGraphic(pauseIcon);
+                            }else {
+                                playButton.setGraphic(playIcon);
+                            }
+
+                        });
+
+                        mediaPlayer.setOnEndOfMedia(() -> {
+                            playButton.setGraphic(playIcon);
+                            mediaPlayer.seek(mediaPlayer.getStartTime());
                         });
 
                         contentElements.add(vBox);
@@ -1093,18 +1116,18 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         duration.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 
                         Button playButton = new Button();
-                        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/video_play_icon_1x.png").toString()));
+                        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_play_icon_1x.png").toString()));
+                        ImageView pauseIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_pause_icon_1x.png").toString()));
                         playButton.setGraphic(playIcon);
                         playButton.setBackground(Background.EMPTY);
                         playButton.setOnAction(event -> {
                             Status status = mediaPlayer.getStatus();
-
-                            if (status == Status.PAUSED
-                                    || status == Status.READY
-                                    || status == Status.STOPPED) {
+                            if (status == Status.PAUSED || status == Status.READY || status == Status.STOPPED) {
                                 mediaPlayer.play();
+                                playButton.setGraphic(pauseIcon);
                             } else {
                                 mediaPlayer.pause();
+                                playButton.setGraphic(playIcon);
                             }
                         });
 
