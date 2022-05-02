@@ -55,12 +55,14 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 
@@ -860,7 +862,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                             contentElements.add(getTitle(imageViewType.getTitle().getText()));
                         }
 
-                        if (imageViewType.getTitle() == null || imageViewType.getBody() == null) {
+                        if (imageViewType.getBody() == null) {
                             System.out.println("Empty image");
                         }else {
                             Image image = new Image(imageViewType.getBody().getUrl());
@@ -878,6 +880,107 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                     }
                     else if (contentType instanceof CBTViewType) {
                         System.out.println("ContentType -> CBTViewType");
+                        CBTViewType cbtViewType = (CBTViewType) contentType;
+
+                        String questionTitle = "";
+
+                        if (cbtViewType.getTitle() != null) {
+                            questionTitle = cbtViewType.getTitle().getText().toUpperCase();
+                        }
+
+                        VBox cbtVBox = new VBox();
+                        cbtVBox.setPadding(new Insets(20, 20, 30, 20));
+                        cbtVBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #51C46B; -fx-border-radius: 10;");
+                        cbtVBox.setSpacing(10);
+
+                        Label questionTitleLabel = new Label();
+                        questionTitleLabel.setText(questionTitle);
+                        questionTitleLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+                        VBox.setMargin(questionTitleLabel, new Insets(0, 0, 10, 0));
+
+                        Label questionBox = new Label();
+                        questionBox.setText("This zygote undergoes meiosis to form spores. Each spore develops into a new organism.");
+                        questionBox.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+                        questionBox.setWrapText(true);
+                        questionBox.setPadding(new Insets(10));
+                        questionBox.setStyle("-fx-background-color: #E7F7E9; -fx-border-color: #034801; -fx-border-radius: 5; ");
+
+                        RadioButton optionAButton = new RadioButton();
+                        optionAButton.setText("Cell membrane");
+                        optionAButton.setAlignment(Pos.CENTER);
+                        optionAButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+                        optionAButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                        optionAButton.setPadding(new Insets(10));
+
+                        RadioButton optionBButton = new RadioButton();
+                        optionBButton.setText("Cell structure");
+                        optionBButton.setAlignment(Pos.CENTER);
+                        optionBButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+                        optionBButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                        optionBButton.setPadding(new Insets(10));
+
+                        RadioButton optionCButton = new RadioButton();
+                        optionCButton.setText("Cell component");
+                        optionCButton.setAlignment(Pos.CENTER);
+                        optionCButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+                        optionCButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                        optionCButton.setPadding(new Insets(10));
+
+                        questionBox.widthProperty().addListener(((observable, oldValue, newValue) -> {
+                            optionAButton.setMinWidth((Double) newValue);
+                            optionBButton.setMinWidth((Double) newValue);
+                            optionCButton.setMinWidth((Double) newValue);
+                        }));
+
+                        ToggleGroup optionsToggle = new ToggleGroup();
+                        optionsToggle.getToggles().addAll(optionAButton, optionBButton, optionCButton);
+
+                        HBox hBox = new HBox();
+                        VBox.setMargin(hBox, new Insets(15, 0, 0, 5));
+                        Label seeExplanation = new Label("See explanation");
+                        seeExplanation.setAlignment(Pos.CENTER_LEFT);
+                        seeExplanation.setTextFill(Paint.valueOf("#51C46B"));
+                        seeExplanation.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+                        ImageView showExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_show_explanation_icon_1x.png").toString()));
+                        showExplanation.setFitWidth(15);
+                        showExplanation.setFitHeight(15);
+                        showExplanation.setPreserveRatio(true);
+                        showExplanation.setPickOnBounds(true);
+                        ImageView hideExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_hide_explanation_icon_1x.png").toString()));
+                        hideExplanation.setFitWidth(15);
+                        hideExplanation.setFitHeight(15);
+                        hideExplanation.setPreserveRatio(true);
+                        hideExplanation.setPickOnBounds(true);
+                        Button showHideExplanation = new Button();
+                        showHideExplanation.setBackground(Background.EMPTY);
+                        showHideExplanation.setGraphic(showExplanation);
+                        HBox.setMargin(showHideExplanation, new Insets(0, 0, 0, 10));
+
+                        hBox.getChildren().addAll(seeExplanation, showHideExplanation);
+
+                        Label explanationText = new Label();
+                        explanationText.setText("This zygote undergoes meiosis to form spores. Each spore develops into a new organism.");
+                        explanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+                        explanationText.setWrapText(true);
+                        explanationText.setPadding(new Insets(10));
+                        explanationText.setStyle("-fx-border-color: #034801; -fx-border-radius: 5; ");
+
+                        cbtVBox.getChildren().addAll(questionTitleLabel, questionBox, optionAButton, optionBButton, optionCButton, hBox);
+
+                        showHideExplanation.setOnAction(event -> {
+                            if (showHideExplanation.getGraphic() == showExplanation){
+                                showHideExplanation.setGraphic(hideExplanation);
+                                seeExplanation.setText("Hide explanation");
+                                cbtVBox.getChildren().add(explanationText);
+                            }else {
+                                showHideExplanation.setGraphic(showExplanation);
+                                seeExplanation.setText("See explanation");
+                                cbtVBox.getChildren().remove(explanationText);
+                            }
+                        });
+
+                        VBox.setMargin(cbtVBox, new Insets(0, 100, 0, 0));
+                        contentElements.add(cbtVBox);
 
                     }
                     else if (contentType instanceof OrderedListViewType) {
@@ -1168,6 +1271,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 });
 
 
+        contentLayout.setSpacing(10);
         contentLayout.getChildren().clear();
         contentLayout.getChildren().addAll(contentElements);
     }
