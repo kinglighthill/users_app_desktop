@@ -25,4 +25,24 @@ public class FontUtil {
     public static Font getFont(GilroyFontFamily type, int size) {
         return Font.loadFont(FontUtil.class.getResourceAsStream(type.path), size);
     }
+
+    public enum FontSize {
+        TWELVE(12),
+        FOURTEEN(14),
+        SIXTEEN(16),
+        EIGHTEEN(18),
+        TWENTY(20),
+        TWENTY_TWO(22),
+        TWENTY_FOUR(24),
+        TWENTY_SIX(26),
+        THIRTY(30),
+        THIRTY_TWO(32),
+        THIRTY_FOUR(34);
+
+        public final int size;
+
+        FontSize(int  size) {
+            this.size = size;
+        }
+    }
 }

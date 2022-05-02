@@ -70,8 +70,36 @@ public class Animations {
 
     }
 
-    public static void fadeOut(Node node, double milliseconds) {
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(milliseconds));
+    public static void fadeIn(Node node, double duration, double delay) {
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(duration));
+        fadeIn.setNode(node);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+        fadeIn.setCycleCount(1);
+        fadeIn.setAutoReverse(false);
+        fadeIn.setDelay(Duration.millis(delay));
+
+        node.setVisible(true);
+        fadeIn.play();
+
+    }
+
+    public static void fadeIn(Node node, double duration, double fromValue, double toValue) {
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(duration));
+        fadeIn.setNode(node);
+        fadeIn.setFromValue(fromValue);
+        fadeIn.setToValue(toValue);
+        fadeIn.setCycleCount(1);
+        fadeIn.setAutoReverse(false);
+
+        node.setVisible(true);
+
+        fadeIn.play();
+
+    }
+
+    public static void fadeOut(Node node, double duration) {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(duration));
         fadeOut.setNode(node);
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
@@ -80,9 +108,36 @@ public class Animations {
 
         fadeOut.play();
 
-        fadeOut.setOnFinished(event -> {
-            node.setVisible(false);
-        });
+        fadeOut.setOnFinished(event -> node.setVisible(false));
+
+    }
+
+    public static void fadeOut(Node node, double duration, double delay) {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(duration));
+        fadeOut.setNode(node);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setCycleCount(1);
+        fadeOut.setAutoReverse(false);
+        fadeOut.setDelay(Duration.millis(delay));
+
+        fadeOut.play();
+
+        fadeOut.setOnFinished(event -> node.setVisible(false));
+
+    }
+
+    public static void fadeOut(Node node, double duration, double fromValue, double toValue) {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(duration));
+        fadeOut.setNode(node);
+        fadeOut.setFromValue(fromValue);
+        fadeOut.setToValue(toValue);
+        fadeOut.setCycleCount(1);
+        fadeOut.setAutoReverse(false);
+
+        fadeOut.play();
+
+        fadeOut.setOnFinished(event -> node.setVisible(false));
 
     }
 
@@ -100,7 +155,7 @@ public class Animations {
 
         fadeIn.setOnFinished(event2 -> {
             try {
-                Thread.sleep(1200);
+                Thread.sleep(1000);
             } catch (Exception e){
                 System.out.println(e.getMessage());
             }finally {
@@ -117,5 +172,87 @@ public class Animations {
             }
 
         });
+    }
+
+    public static void slideIn(Node node) {
+        node.setVisible(true);
+
+        TranslateTransition slideIn = new TranslateTransition();
+
+        slideIn.setFromX(400f);
+        slideIn.setToX(0f);
+        slideIn.setDuration(Duration.millis(400));
+        slideIn.setNode(node);
+
+        slideIn.play();
+
+    }
+
+    public static void slideIn(Node node, double fromX, double toX, double duration) {
+        node.setVisible(true);
+
+        TranslateTransition slideIn = new TranslateTransition();
+
+        slideIn.setFromX(fromX);
+        slideIn.setToX(toX);
+        slideIn.setDuration(Duration.millis(duration));
+        slideIn.setNode(node);
+
+        slideIn.play();
+
+    }
+
+    public static void slideOut(Node node) {
+        TranslateTransition slideOut = new TranslateTransition();
+
+        slideOut.setFromX(0f);
+        slideOut.setToX(400f);
+        slideOut.setDuration(Duration.millis(400));
+        slideOut.setNode(node);
+
+        slideOut.play();
+
+        slideOut.setOnFinished(event -> node.setVisible(false));
+
+    }
+
+    public static void slideOut(Node node, double fromX, double toX, double duration) {
+
+        TranslateTransition slideOut = new TranslateTransition();
+
+        slideOut.setFromX(fromX);
+        slideOut.setToX(toX);
+        slideOut.setDuration(Duration.millis(duration));
+        slideOut.setNode(node);
+
+        slideOut.play();
+
+        slideOut.setOnFinished(event -> node.setVisible(false));
+    }
+
+    public static void slideLeft(Node node, double fromX, double toX) {
+
+        TranslateTransition slideLeft = new TranslateTransition();
+
+        slideLeft.setFromX(fromX);
+        slideLeft.setToX(toX);
+        slideLeft.setDuration(Duration.millis(400));
+        slideLeft.setNode(node);
+
+        FadeTransition fadeOut = new FadeTransition();
+
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setDuration(Duration.millis(300));
+        fadeOut.setAutoReverse(false);
+        fadeOut.setCycleCount(1);
+
+        fadeOut.play();
+        slideLeft.play();
+
+        slideLeft.setOnFinished(event -> {
+            node.setVisible(false);
+        });
+
     }
 }

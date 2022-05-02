@@ -17,6 +17,7 @@ module com.scholarly.utme {
     requires freetts;
     requires com.google.gson;
     requires java.prefs;
+    requires jdk.jsobject;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;
