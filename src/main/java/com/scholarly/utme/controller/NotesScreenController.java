@@ -892,6 +892,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         cbtVBox.setPadding(new Insets(20, 20, 30, 20));
                         cbtVBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #51C46B; -fx-border-radius: 10;");
                         cbtVBox.setSpacing(10);
+                        VBox.setMargin(cbtVBox, new Insets(20, 0, 0, 0));
 
                         Label questionTitleLabel = new Label();
                         questionTitleLabel.setText(questionTitle);
@@ -997,7 +998,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         for (int i = 0; i < content.length; i++) {
                             OrderedListItem orderedListItem = new OrderedListItem(String.valueOf(i+1), content[i]);
                             contentItems.add(orderedListItem);
-                            System.out.println("OrderedListItem created with index -> " + orderedListItem.getIndex() + " and text -> " + orderedListItem.getText());
+
                         }
 
                         ObservableList<OrderedListItem> items = FXCollections.observableArrayList(contentItems);
@@ -1045,22 +1046,52 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         System.out.println("ContentType -> TableViewType");
                         TableViewType viewType = (TableViewType) contentType;
 
-                        TableView tableView = new TableView();
-
-                        for (int i = 0; i < viewType.getBody().getHeader().length; i++) {
-                            TableColumn<Map, String> column = new TableColumn<>(viewType.getBody().getHeader()[i]);
-                            column.setCellValueFactory(new MapValueFactory<>(i));
-
-                            tableView.getColumns().add(column);
+                        if (viewType.getTitle() != null) {
+                            contentElements.add(getTitle(viewType.getTitle().getText()));
                         }
 
+                        TableView tableView = new TableView();
+
+                        if (viewType.getBody().getHeader() != null) {
+
+                            for (int i = 0; i < viewType.getBody().getHeader().length; i++) {
+
+                                TableColumn<Map, String> column = new TableColumn<>(viewType.getBody().getHeader()[i]);
+
+                                column.setCellValueFactory(new MapValueFactory<>(i));
+
+                                tableView.getColumns().add(column);
+                            }
+
+                        }else {
+                            for (int i = 0; i < viewType.getBody().getRows()[0].length; i++) {
+
+                                TableColumn<Map, String> column = new TableColumn<>();
+
+                                column.setCellValueFactory(new MapValueFactory<>(i));
+
+                                tableView.getColumns().add(column);
+                            }
+                        }
                         for (int i = 0; i < viewType.getBody().getRows().length; i++) {
                             Map<Integer, Object> item = new HashMap<>();
+
                             for (int j = 0; j < viewType.getBody().getRows()[i].length; j++) {
                                 item.put(j, viewType.getBody().getRows()[i][j]);
+                                //  System.out.println("Key: j -> " + j + " -> " + item.get(j));
                             }
 
                             tableView.getItems().add(item);
+                        }
+
+                        if (viewType.getBody().getFooter() != null) {
+                            Map<Integer, Object> footerItem = new HashMap<>();
+
+                            for (int k = 0; k < viewType.getBody().getFooter().length; k++) {
+                                footerItem.put(k, viewType.getBody().getFooter()[k]);
+                                // System.out.println("Key: k -> " + k + " -> " + footerItem.get(k));
+                            }
+                            tableView.getItems().add(footerItem);
                         }
 
                         contentElements.add(tableView);
@@ -1081,7 +1112,12 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         Media media = new Media(mediaSource);
                         MediaPlayer mediaPlayer = new MediaPlayer(media);
                         mediaPlayer.setAutoPlay(false);
-                        System.out.println("Media Start time -> " + mediaPlayer.getStartTime() + " and Stop time -> " + mediaPlayer.getStopTime());
+                        media.setOnError(() -> {
+                            System.out.println("Media error -> " + media.getError());
+                        });
+                        mediaPlayer.setOnError(() -> {
+                            System.out.println("MediaPlayer error -> " + mediaPlayer.getError());
+                        });
 
                         VBox vBox = new VBox();
                         vBox.setPrefHeight(80);
@@ -1092,7 +1128,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         StackPane controlsPane = new StackPane();
                         controlsPane.setPadding(new Insets(10, 15, 10, 25));
                         controlsPane.setPrefWidth(vBox.getPrefWidth());
-                        controlsPane.setStyle("-fx-background-color: #F7F7F7; -fx-background-radius: 20;");
+                        controlsPane.setStyle("-fx-background-color: #E7F7E9; -fx-background-radius: 20;");
 
                         Image muteIcon = new Image(getClass().getResource("/drawable/audio_type_mute_icon_1x.png").toString());
                         Image unMuteIcon = new Image(getClass().getResource("/drawable/audio_type_unmute_icon_1x.png").toString());
@@ -1147,6 +1183,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                         playButton.setOnAction(event -> {
                             Status mediaStatus = mediaPlayer.getStatus();
+                            System.out.println("Media Status -> " + mediaPlayer.getStatus());
                             if (mediaStatus != Status.PLAYING){
                                 mediaPlayer.play();
                             }else {
@@ -1168,12 +1205,14 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         mediaPlayer.setOnEndOfMedia(() -> {
                             playButton.setGraphic(playIcon);
                             mediaPlayer.seek(mediaPlayer.getStartTime());
+                            mediaPlayer.pause();
                         });
 
                         contentElements.add(vBox);
 
 
-                    } else if (contentType instanceof VideoViewType) {
+                    }
+                    else if (contentType instanceof VideoViewType) {
                         System.out.println("ContentType -> VideoViewType");
                         VideoViewType viewType = (VideoViewType) contentType;
 
@@ -1271,7 +1310,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 });
 
 
-        contentLayout.setSpacing(10);
+        contentLayout.setSpacing(20);
         contentLayout.getChildren().clear();
         contentLayout.getChildren().addAll(contentElements);
     }
@@ -1285,6 +1324,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         title.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
         return title;
     }
+
     private void showNoteOptions(Section section) {
         selectedSection = section;
 
@@ -1337,6 +1377,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         fadeTransition.play();
     }
+
     private void hideImageViewLayout() {
 
         FadeTransition fadeTransition = new FadeTransition();
