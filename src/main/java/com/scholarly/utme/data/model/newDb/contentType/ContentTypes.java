@@ -8,6 +8,7 @@ import com.scholarly.utme.data.model.newDb.contentType.html.HtmlViewType;
 import com.scholarly.utme.data.model.newDb.contentType.image.ImageViewType;
 import com.scholarly.utme.data.model.newDb.contentType.orderedList.OrderedListViewType;
 import com.scholarly.utme.data.model.newDb.contentType.table.TableViewType;
+import com.scholarly.utme.data.model.newDb.contentType.tablehh.TableHHViewType;
 import com.scholarly.utme.data.model.newDb.contentType.text.TextViewType;
 import com.scholarly.utme.data.model.newDb.contentType.unorderedList.UnorderedListViewType;
 import com.scholarly.utme.data.model.newDb.contentType.video.VideoViewType;
@@ -34,27 +35,31 @@ public enum ContentTypes {
         Gson gson = new Gson();
         return gson.fromJson(content, TableViewType.class);
     }),
-    ORDERED_LIST(5, "ol", content -> {
+    TABLE_HH(5, "tableHH", content -> {
+        Gson gson = new Gson();
+        return gson.fromJson(content, TableHHViewType.class);
+    }),
+    ORDERED_LIST(6, "ol", content -> {
         Gson gson = new Gson();
         return gson.fromJson(content, OrderedListViewType.class);
     }),
-    UNORDERED_LIST(6, "ul", content -> {
+    UNORDERED_LIST(7, "ul", content -> {
         Gson gson = new Gson();
         return gson.fromJson(content, UnorderedListViewType.class);
     }),
-    IMAGE(7, "image", content -> {
+    IMAGE(8, "image", content -> {
         Gson gson = new Gson();
         return gson.fromJson(content, ImageViewType.class);
     }),
-    VIDEO(8, "video", content -> {
+    VIDEO(9, "video", content -> {
         Gson gson = new Gson();
         return gson.fromJson(content, VideoViewType.class);
     }),
-    AUDIO(9, "audio", content -> {
+    AUDIO(10, "audio", content -> {
         Gson gson = new Gson();
         return gson.fromJson(content, AudioViewType.class);
     }),
-    CBT(10, "cbt", content -> {
+    CBT(11, "cbt", content -> {
         Gson gson = new Gson();
         return gson.fromJson(content, CBTViewType.class);
     });
