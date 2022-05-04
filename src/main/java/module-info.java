@@ -18,6 +18,7 @@ module com.scholarly.utme {
     requires com.google.gson;
     requires java.prefs;
     requires jdk.jsobject;
+    requires org.apache.commons.collections4;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;
@@ -32,6 +33,7 @@ module com.scholarly.utme {
     opens com.scholarly.utme.data.model.newDb.contentType.text to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.image to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.table to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.tablehh to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.audio to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.video to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.webview to com.google.gson;

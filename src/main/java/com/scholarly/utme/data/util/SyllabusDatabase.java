@@ -16,7 +16,7 @@ public class SyllabusDatabase {
      * Location of database
      */
 
-    private static final String location = HelloApplication.class.getResource("/assets/note_syllabus.db").toExternalForm();
+    private static final String location = HelloApplication.class.getResource("/assets/note_syllabus_update.db").toExternalForm();
 
 
     /**
