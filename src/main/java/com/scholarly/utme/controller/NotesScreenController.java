@@ -841,6 +841,28 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                                     contentElements.add(definitionBox);
                                 }
+                                else if (textViewType.getBody().getBodyType()[0].equalsIgnoreCase("quote")) {
+                                    ImageView quoteImage = new ImageView(new Image(getClass().getResource("/drawable/note_content_quote_icon_1x.png").toString()));
+                                    quoteImage.setPreserveRatio(true);
+                                    quoteImage.setPickOnBounds(true);
+
+                                    Label quote = new Label("Living things are made up of plants and animals. They range from tiny microscopic plants/animals");
+                                    quote.setWrapText(true);
+                                    quote.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM_ITALIC, FontUtil.FontSize.FOURTEEN.size));
+
+                                    Label author = new Label("-");
+                                    author.setText(author.getText() + "Charles Darwin");
+                                    author.setTextFill(Paint.valueOf("#F4D242"));
+                                    author.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+
+                                    VBox quoteBox = new VBox(10);
+                                    quoteBox.setPadding(new Insets(10));
+                                    VBox.setMargin(quoteBox, new Insets(15));
+                                    quoteBox.getChildren().addAll(quoteImage, quote, author);
+                                    quoteBox.setAlignment(Pos.CENTER);
+
+                                    contentElements.add(quoteBox);
+                                }
                             }
 
                             if (textViewType.getBody().getLink() != null) {
