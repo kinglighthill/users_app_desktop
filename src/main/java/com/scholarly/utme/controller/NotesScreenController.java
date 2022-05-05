@@ -848,6 +848,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                                     Label quote = new Label("Living things are made up of plants and animals. They range from tiny microscopic plants/animals");
                                     quote.setWrapText(true);
+                                    quote.setTextAlignment(TextAlignment.CENTER);
                                     quote.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM_ITALIC, FontUtil.FontSize.FOURTEEN.size));
 
                                     Label author = new Label("-");
@@ -862,6 +863,41 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                                     quoteBox.setAlignment(Pos.CENTER);
 
                                     contentElements.add(quoteBox);
+                                }
+                                else if (textViewType.getBody().getBodyType()[0].equalsIgnoreCase("dyk")) {
+                                    Label didyouknow = new Label("DID YOU\nKNOW?");
+                                    didyouknow.setWrapText(true);
+                                    didyouknow.setTextFill(Paint.valueOf("#F4D242"));
+                                    didyouknow.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY_TWO.size));
+
+                                    ImageView bulbImage = new ImageView(new Image(getClass().getResource("/drawable/bulb_icon_1x.png").toString()));
+                                    bulbImage.setPreserveRatio(true);
+                                    bulbImage.setPickOnBounds(true);
+
+                                    HBox textAndImageBox = new HBox(15, didyouknow, bulbImage);
+                                    textAndImageBox.setAlignment(Pos.CENTER);
+
+                                    Label didyouknowText = new Label("There is enough DNA in the average person's body to stretch from the sun to Pluto and back ");
+                                    didyouknowText.setWrapText(true);
+                                    didyouknowText.setTextAlignment(TextAlignment.CENTER);
+                                    didyouknowText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM_ITALIC, FontUtil.FontSize.FOURTEEN.size));
+
+                                    VBox didyouknowBox = new VBox(20);
+                                    didyouknowBox.setAlignment(Pos.CENTER);
+                                    didyouknowBox.setPadding(new Insets(30, 20, 30, 20));
+                                    didyouknowBox.setStyle("-fx-background-color: #E7F7E9; -fx-border-radius: 5;");
+                                    didyouknowBox.getChildren().addAll(textAndImageBox, didyouknowText);
+                                    VBox.setMargin(didyouknowBox, new Insets(10));
+
+                                    didyouknowBox.widthProperty().addListener((observable, oldValue, newValue) -> {
+                                        didyouknowText.setPrefWidth(newValue.doubleValue()/1.2);
+                                    });
+
+                                    contentLayout.widthProperty().addListener((observable, oldValue, newValue) -> {
+                                        didyouknowBox.setMaxWidth(newValue.doubleValue()/2);
+                                    });
+
+                                    contentElements.add(didyouknowBox);
                                 }
                             }
 
