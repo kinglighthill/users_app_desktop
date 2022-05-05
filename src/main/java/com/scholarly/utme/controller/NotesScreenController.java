@@ -899,6 +899,33 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                                     contentElements.add(didyouknowBox);
                                 }
+                                else if (textViewType.getBody().getBodyType()[0].equalsIgnoreCase("reference")) {
+                                    Label references = new Label("References");
+                                    references.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+                                    references.setTextAlignment(TextAlignment.CENTER);
+                                    references.setAlignment(Pos.CENTER);
+
+                                    Label reference1 = new Label("Ndu, F.O. C. Ndu, Abun A. and Aina J.O. (2001)\n" +
+                                            "Senior Secondary School Biology:\n" +
+                                            "Books 1 -3, Lagos: Longman \n");
+                                    reference1.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+                                    reference1.setTextAlignment(TextAlignment.CENTER);
+
+                                    Label reference2 = new Label("Ndu, F.O. C. Ndu, Abun A. and Aina J.O. (2001)\n" +
+                                            "Senior Secondary School Biology:\n" +
+                                            "Books 1 -3, Lagos: Longman \n");
+                                    reference2.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+                                    reference2.setTextAlignment(TextAlignment.CENTER);
+
+                                    VBox referenceBox = new VBox(15);
+                                    referenceBox.setPadding(new Insets(20, 0, 20, 0));
+                                    referenceBox.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #5C5C5C;");
+                                    referenceBox.getChildren().addAll(references, reference1, reference2);
+                                    referenceBox.setAlignment(Pos.CENTER);
+                                    VBox.setMargin(referenceBox, new Insets(20));
+
+                                    contentElements.add(referenceBox);
+                                }
                             }
 
                             if (textViewType.getBody().getLink() != null) {
