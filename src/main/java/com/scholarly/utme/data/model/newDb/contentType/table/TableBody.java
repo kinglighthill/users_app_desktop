@@ -1,7 +1,5 @@
 package com.scholarly.utme.data.model.newDb.contentType.table;
 
-import java.util.List;
-
 public class TableBody {
     private String[] header;
     private String[][] rows;

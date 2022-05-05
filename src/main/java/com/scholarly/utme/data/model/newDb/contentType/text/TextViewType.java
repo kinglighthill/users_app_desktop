@@ -1,9 +1,9 @@
 package com.scholarly.utme.data.model.newDb.contentType.text;
 
-import com.scholarly.utme.data.model.newDb.contentType.ContentType;
+import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
 import com.scholarly.utme.data.model.newDb.contentType.Title;
 
-public class TextViewType extends ContentType {
+public class TextViewType extends ContentViewType {
     private Title title;
     private TextBody body;
 
