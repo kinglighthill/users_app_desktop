@@ -53,6 +53,7 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -825,6 +826,21 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                                     contentElements.add(exampleBox);
                                 }
+                                else if (textViewType.getBody().getBodyType()[0].equalsIgnoreCase("definition")) {
+                                    Label definition = new Label("These are very tiny organisms ranging from 0.1 to 10 µm in length. They can only be seen through the high power of a light microscope. They can be spherical (coccus) or rod-like (bacillus) in shape. They can also occur singly, in groups or in chains.These are very tiny organisms ranging from 0.1 to 10 µm in length. They can only be seen through the high power of a light microscope.");
+                                    definition.setWrapText(true);
+                                    definition.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+
+                                    Line stroke = new Line(0, 0, 0, 100);
+                                    stroke.setStroke(Paint.valueOf("#51C46B"));
+                                    stroke.setStrokeWidth(3);
+
+                                    HBox definitionBox = new HBox(15);
+                                    definitionBox.setPadding(new Insets(15));
+                                    definitionBox.getChildren().addAll(stroke, definition);
+
+                                    contentElements.add(definitionBox);
+                                }
                             }
 
                             if (textViewType.getBody().getLink() != null) {
@@ -1216,14 +1232,16 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         if (viewType.getBody().getRows() != null) {
                             System.out.println("Number of Maps -> " + viewType.getBody().getRows().size());
 
-                            // Values List of the first map in Rows[]. It is used to set the ColumnConstraints for the Table Columns
-                            List<String> firstMapValuesList = viewType.getBody().getRows().get(0).values().iterator().next();
+                            if (viewType.getBody().getHeader() == null) {
+                                // Values List of the first map in Rows[]. It is used to set the ColumnConstraints for the Table Columns
+                                List<String> firstMapValuesList = viewType.getBody().getRows().get(0).values().iterator().next();
 
-                            ColumnConstraints[] columnConstraint = new ColumnConstraints[firstMapValuesList.size()+1];
-                            for (int i = 0; i < firstMapValuesList.size()+1; i++) {
-                                columnConstraint[i] = new ColumnConstraints();
-                                columnConstraint[i].setPercentWidth(100.0 / firstMapValuesList.size()+1);
-                                tableGrid.getColumnConstraints().add(columnConstraint[i]);
+                                ColumnConstraints[] columnConstraint = new ColumnConstraints[firstMapValuesList.size()+1];
+                                for (int i = 0; i < firstMapValuesList.size()+1; i++) {
+                                    columnConstraint[i] = new ColumnConstraints();
+                                    columnConstraint[i].setPercentWidth(100.0 / firstMapValuesList.size()+1);
+                                    tableGrid.getColumnConstraints().add(columnConstraint[i]);
+                                }
                             }
 
                             for (int row = 0; row < viewType.getBody().getRows().size(); row++) {
