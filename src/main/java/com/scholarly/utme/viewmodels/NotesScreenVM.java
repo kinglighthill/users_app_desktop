@@ -10,7 +10,6 @@ import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.Section;
 import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.newDb.Topic;
-import com.scholarly.utme.data.model.newDb.contentType.ContentType;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;

@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public enum ContentTypes {
+public enum ContentViewTypes {
     TEXT(1,"text", content -> {
         Gson gson = new Gson();
         return gson.fromJson(content, TextViewType.class);
@@ -68,7 +68,7 @@ public enum ContentTypes {
     private String typeText;
     private Convert converter;
 
-    ContentTypes(int id, String typeText, Convert converter) {
+    ContentViewTypes(int id, String typeText, Convert converter) {
         this.id = id;
         this.typeText = typeText;
         this.converter = converter;
@@ -78,16 +78,16 @@ public enum ContentTypes {
         return typeText;
     }
 
-    public ContentType getContentType(String content) {
+    public ContentViewType getContentType(String content) {
         return converter.convert(content);
     }
 
-    public static ContentType convert(Section section) {
-        List<ContentTypes> contentTypesList = Arrays.stream(ContentTypes.values()).collect(Collectors.toList());
+    public static ContentViewType convert(Section section) {
+        List<ContentViewTypes> contentViewTypesList = Arrays.stream(ContentViewTypes.values()).collect(Collectors.toList());
 
-        for (int i = 0; i < contentTypesList.size(); i++) {
-            if (contentTypesList.get(i).id == section.getContentViewTypeId()) {
-                return contentTypesList.get(i).getContentType(section.getContent());
+        for (int i = 0; i < contentViewTypesList.size(); i++) {
+            if (contentViewTypesList.get(i).id == section.getContentViewTypeId()) {
+                return contentViewTypesList.get(i).getContentType(section.getContent());
             }
         }
 
@@ -95,6 +95,6 @@ public enum ContentTypes {
     }
 
     private interface Convert {
-        public ContentType convert(String content);
+        public ContentViewType convert(String content);
     }
 }

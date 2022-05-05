@@ -1,9 +1,9 @@
 package com.scholarly.utme.data.model.newDb.contentType.tablehh;
 
-import com.scholarly.utme.data.model.newDb.contentType.ContentType;
+import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
 import com.scholarly.utme.data.model.newDb.contentType.Title;
 
-public class TableHHViewType extends ContentType {
+public class TableHHViewType extends ContentViewType {
     private Title title;
     private TableHHBody body;
 

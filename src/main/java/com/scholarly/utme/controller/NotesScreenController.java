@@ -9,8 +9,8 @@ import com.scholarly.utme.data.model.UnorderedListItem;
 import com.scholarly.utme.data.model.newDb.Section;
 import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.newDb.Topic;
-import com.scholarly.utme.data.model.newDb.contentType.ContentType;
-import com.scholarly.utme.data.model.newDb.contentType.ContentTypes;
+import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
+import com.scholarly.utme.data.model.newDb.contentType.ContentViewTypes;
 import com.scholarly.utme.data.model.newDb.contentType.audio.AudioViewType;
 import com.scholarly.utme.data.model.newDb.contentType.cbt.CBTViewType;
 import com.scholarly.utme.data.model.newDb.contentType.html.HtmlViewType;
@@ -55,6 +55,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -772,62 +773,102 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 .get(subTopic.getId())
                 .forEach(section -> {
 
-                    ContentType contentType = ContentTypes.convert(section);
-                    if (contentType instanceof TextViewType) {
-                        System.out.println("ContentType -> TextViewType");
-                        TextViewType textViewType = (TextViewType) contentType;
+                    ContentViewType contentViewType = ContentViewTypes.convert(section);
+                    if (contentViewType instanceof TextViewType) {
+                        System.out.println("ContentViewType -> TextViewType");
+                        TextViewType textViewType = (TextViewType) contentViewType;
 
                         if (textViewType.getTitle() != null) {
                             contentElements.add(getTitle(textViewType.getTitle().getText()));
                         }
 
-                        if (textViewType.getBody().getBodyType() != null) {
-                            System.out.println("TextView Body types -> " + Arrays.toString(textViewType.getBody().getBodyType()));
-                        }else {
-                            System.out.println("TextView Body types -> Null");
-                        }
-                        if (textViewType.getBody().getLink() != null) {
-                            System.out.println("This text contains a link");
-                        }else {
-                            System.out.println("This text doesn't contain a link");
-                        }
+                        if (textViewType.getBody() != null) {
 
+                            if (textViewType.getBody().getBodyType() != null) {
+                                System.out.println("TextView Body types -> " + Arrays.toString(textViewType.getBody().getBodyType()));
+
+                                if (textViewType.getBody().getBodyType()[0].equalsIgnoreCase("example")) {
+                                    VBox exampleBox = new VBox();
+                                    exampleBox.setStyle("-fx-background-color: #FFFFFF");
+
+                                    Label label = new Label("EXAMPLES");
+                                    label.setTextFill(Paint.valueOf("#FFFFFF"));
+                                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+                                    label.setAlignment(Pos.CENTER);
+                                    label.setStyle("-fx-background-color: #034801");
+                                    label.setPadding(new Insets(7, 0, 7, 0));
+
+                                    exampleBox.widthProperty().addListener((observable, oldValue, newValue) -> {
+                                        label.setPrefWidth((Double) newValue);
+                                    });
+
+                                    String[] dummyContent = {"Undergoes", "Cell Membrane", "Develop", "Component", "Structure"};
+
+                                    ArrayList<UnorderedListItem> contentItems = new ArrayList<>();
+
+                                    for (int i = 0; i < dummyContent.length; i++) {
+                                        UnorderedListItem unorderedListItem = new UnorderedListItem(dummyContent[i]);
+                                        contentItems.add(unorderedListItem);
+                                    }
+
+                                    ObservableList<UnorderedListItem> items = FXCollections.observableArrayList(contentItems);
+
+                                    ListView<UnorderedListItem> contentList = new ListView<>();
+                                    contentList.setItems(items);
+                                    contentList.setBackground(Background.EMPTY);
+                                    contentList.setCellFactory(new UnorderedListCellFactory());
+                                    contentList.setSelectionModel(new NoSelectionModel<>());
+                                    contentList.setPadding(new Insets(15, 0, 0, 15));
+
+                                    VBox.setMargin(exampleBox, new Insets(10, 10, 10, 10));
+                                    exampleBox.getChildren().addAll(label, contentList);
+
+                                    contentElements.add(exampleBox);
+                                }
+                            }
+
+                            if (textViewType.getBody().getLink() != null) {
+                                System.out.println("This text contains a link");
+                            }else {
+                                System.out.println("This text doesn't contain a link");
+                            }
+
+
+                            Label body = new Label();
+                            body.setText(textViewType.getBody().getText());
+                            if (textViewType.getBody().getText().contains("<br>")) {
+                                String newText = textViewType.getBody().getText().replaceAll("<br>", System.lineSeparator());
+                                body.setText(newText);
+                            }
+                            body.setWrapText(true);
+                            body.setLineSpacing(8);
+                            body.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+
+                            List<Highlights> highlights = viewModel.getSubjectHighlights();
+                            for (int i = 0; i < highlights.size(); i ++) {
+                                if (highlights.get(i).getNoteId() == section.getId()) {
+//                                System.out.println("Got highlight with id -> " + highlights.get(i).getNoteId());
+//                                System.out.println("Got highlight color -> " + highlights.get(i).getColor());
+                                    body.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web(highlights.get(i).getColor()), null, null)}, null));
+                                }
+                            }
+                            body.setOnMouseClicked(event -> {
+                                if (!noteOptions.isVisible()) {
+                                    showNoteOptions(section);
+                                } else {
+                                    hideNoteOptions();
+                                }
+                            });
+
+                            contentElements.add(body);
+                        }
 //                        CustomWebView webView = new CustomWebView();
 //                        webView.loadContent(textViewType.getBody().getText());
 
-                        Label body = new Label();
-                        body.setText(textViewType.getBody().getText());
-                        if (textViewType.getBody().getText().contains("<br>")) {
-                            String newText = textViewType.getBody().getText().replaceAll("<br>", System.lineSeparator());
-                            body.setText(newText);
-                        }
-                        body.setWrapText(true);
-                        body.setLineSpacing(8);
-                        body.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-
-                        List<Highlights> highlights = viewModel.getSubjectHighlights();
-                        for (int i = 0; i < highlights.size(); i ++) {
-                            if (highlights.get(i).getNoteId() == section.getId()) {
-//                                System.out.println("Got highlight with id -> " + highlights.get(i).getNoteId());
-//                                System.out.println("Got highlight color -> " + highlights.get(i).getColor());
-                                body.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web(highlights.get(i).getColor()), null, null)}, null));
-                            }
-                        }
-                        body.setOnMouseClicked(event -> {
-                            if (!noteOptions.isVisible()) {
-                                showNoteOptions(section);
-                            } else {
-                                hideNoteOptions();
-                            }
-                        });
-
-                        contentElements.add(body);
-
-
                     }
-                    else if (contentType instanceof HtmlViewType) {
-                        System.out.println("ContentType -> HTMLViewType");
-                        HtmlViewType viewType = (HtmlViewType) contentType;
+                    else if (contentViewType instanceof HtmlViewType) {
+                        System.out.println("ContentViewType -> HTMLViewType");
+                        HtmlViewType viewType = (HtmlViewType) contentViewType;
 
                         if (viewType.getTitle() != null) {
                             contentElements.add(getTitle(viewType.getTitle().getText()));
@@ -839,9 +880,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         contentElements.add(webView);
 
                     }
-                    else if (contentType instanceof WebViewType) {
-                        System.out.println("ContentType -> WebViewType");
-                        WebViewType viewType = (WebViewType) contentType;
+                    else if (contentViewType instanceof WebViewType) {
+                        System.out.println("ContentViewType -> WebViewType");
+                        WebViewType viewType = (WebViewType) contentViewType;
 
                         if (viewType.getTitle() != null) {
                             contentElements.add(getTitle(viewType.getTitle().getText()));
@@ -852,9 +893,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         contentElements.add(webView);
 
                     }
-                    else if (contentType instanceof ImageViewType) {
-                        System.out.println("ContentType -> ImageViewType");
-                        ImageViewType imageViewType = (ImageViewType) contentType;
+                    else if (contentViewType instanceof ImageViewType) {
+                        System.out.println("ContentViewType -> ImageViewType");
+                        ImageViewType imageViewType = (ImageViewType) contentViewType;
 
                         if (imageViewType.getTitle() != null) {
                             contentElements.add(getTitle(imageViewType.getTitle().getText()));
@@ -876,9 +917,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         }
 
                     }
-                    else if (contentType instanceof CBTViewType) {
-                        System.out.println("ContentType -> CBTViewType");
-                        CBTViewType cbtViewType = (CBTViewType) contentType;
+                    else if (contentViewType instanceof CBTViewType) {
+                        System.out.println("ContentViewType -> CBTViewType");
+                        CBTViewType cbtViewType = (CBTViewType) contentViewType;
 
                         String questionTitle = "";
 
@@ -982,9 +1023,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         contentElements.add(cbtVBox);
 
                     }
-                    else if (contentType instanceof OrderedListViewType) {
-                        System.out.println("ContentType -> OrderedListViewType");
-                        OrderedListViewType viewType = (OrderedListViewType) contentType;
+                    else if (contentViewType instanceof OrderedListViewType) {
+                        System.out.println("ContentViewType -> OrderedListViewType");
+                        OrderedListViewType viewType = (OrderedListViewType) contentViewType;
 
                         if (viewType.getTitle() != null) {
                             contentElements.add(getTitle(viewType.getTitle().getText()));
@@ -1010,16 +1051,15 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         contentElements.add(contentList);
 
                     }
-                    else if (contentType instanceof UnorderedListViewType) {
-                        System.out.println("ContentType -> UnorderedListViewType");
+                    else if (contentViewType instanceof UnorderedListViewType) {
+                        System.out.println("ContentViewType -> UnorderedListViewType");
 
-                        UnorderedListViewType viewType = (UnorderedListViewType) contentType;
+                        UnorderedListViewType viewType = (UnorderedListViewType) contentViewType;
 
                         if (viewType.getTitle() != null) {
                             contentElements.add(getTitle(viewType.getTitle().getText()));
                         }
 
-                       // contentList.setItems(FXCollections.observableArrayList(Arrays.asList(viewType.getBody().getList())));
                         String[] content = viewType.getBody().getList();
 
                         ArrayList<UnorderedListItem> contentItems = new ArrayList<>();
@@ -1040,9 +1080,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         contentElements.add(contentList);
 
                     }
-                    else if (contentType instanceof TableViewType) {
-                        System.out.println("ContentType -> TableViewType");
-                        TableViewType viewType = (TableViewType) contentType;
+                    else if (contentViewType instanceof TableViewType) {
+                        System.out.println("ContentViewType -> TableViewType");
+                        TableViewType viewType = (TableViewType) contentViewType;
 
                         if (viewType.getTitle() != null) {
                             contentElements.add(getTitle(viewType.getTitle().getText()));
@@ -1143,9 +1183,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         contentElements.add(tableGrid);
 
                     }
-                    else if (contentType instanceof TableHHViewType) {
-                        System.out.println("ContentType -> TableHHViewType");
-                        TableHHViewType viewType = (TableHHViewType) contentType;
+                    else if (contentViewType instanceof TableHHViewType) {
+                        System.out.println("ContentViewType -> TableHHViewType");
+                        TableHHViewType viewType = (TableHHViewType) contentViewType;
 
                         if (viewType.getTitle() != null) {
                             contentElements.add(getTitle(viewType.getTitle().getText()));
@@ -1245,9 +1285,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                         contentElements.add(tableGrid);
                     }
-                    else if (contentType instanceof AudioViewType) {
-                        System.out.println("ContentType -> AudioViewType");
-                        AudioViewType viewType = (AudioViewType) contentType;
+                    else if (contentViewType instanceof AudioViewType) {
+                        System.out.println("ContentViewType -> AudioViewType");
+                        AudioViewType viewType = (AudioViewType) contentViewType;
 
                         if (viewType.getTitle() != null) {
                             contentElements.add(getTitle(viewType.getTitle().getText()));
@@ -1361,9 +1401,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         }
 
                     }
-                    else if (contentType instanceof VideoViewType) {
-                        System.out.println("ContentType -> VideoViewType");
-                        VideoViewType viewType = (VideoViewType) contentType;
+                    else if (contentViewType instanceof VideoViewType) {
+                        System.out.println("ContentViewType -> VideoViewType");
+                        VideoViewType viewType = (VideoViewType) contentViewType;
 
                         if (viewType.getTitle() != null) {
                             contentElements.add(getTitle(viewType.getTitle().getText()));
