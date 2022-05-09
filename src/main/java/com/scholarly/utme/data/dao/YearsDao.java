@@ -57,7 +57,7 @@ public class YearsDao {
                 );
 
             }
-            System.out.println(subjectTableName + " available years -> " + subjectAvailableYears);
+           // System.out.println(subjectTableName + " available years -> " + subjectAvailableYears);
             return subjectAvailableYears;
 
         } catch (SQLException e) {

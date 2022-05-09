@@ -200,9 +200,6 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                         }
                     });
 
-
-
-
                     topicListVBox.getChildren().add(titledPane);
                 });
             }
