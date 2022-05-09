@@ -41,8 +41,8 @@ public class SubTopicDao {
                         rs.getInt(sectionColumn)));
             }
 
-
             return subTopics;
+
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
@@ -53,7 +53,7 @@ public class SubTopicDao {
         }
     }
 
-    public static ObservableList<SubTopic> getSubTopics(String tableName, int topicId) {
+    public static ObservableList<SubTopic> getSubTopicsWithTopicId(String tableName, int topicId) {
         ObservableList<SubTopic> subTopics = FXCollections.observableArrayList();
 
         String query = "SELECT * FROM " + tableName + " WHERE topic_id = " + topicId;

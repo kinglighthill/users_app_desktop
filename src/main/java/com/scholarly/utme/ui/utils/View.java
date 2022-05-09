@@ -15,7 +15,9 @@ public enum View {
     CBT_GAME_SCREEN("/layouts/CBTGameScreen.fxml", CBTGameScreenController.class),
     SELECT_NOTE_SCREEN("/layouts/SelectNoteScreen.fxml", SelectNoteController.class),
     NOTES_SCREEN("/layouts/NotesScreen.fxml", NotesScreenController.class),
-    EXPLANATION_SCREEN("/layouts/ExplanationScreen.fxml", ExplanationScreen.class);
+    EXPLANATION_SCREEN("/layouts/ExplanationScreen.fxml", ExplanationScreen.class),
+    SELECT_SYLLABUS_SCREEN("/layouts/SelectSyllabusScreen.fxml", SelectSyllabusController.class),
+    SYLLABUS_SCREEN("/layouts/SyllabusScreen.fxml", SyllabusScreenController.class);
 
 
 

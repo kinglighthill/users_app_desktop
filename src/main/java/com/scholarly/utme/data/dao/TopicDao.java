@@ -35,8 +35,8 @@ public class TopicDao {
                         rs.getString(titleColumn)));
             }
 
-
             return topics;
+
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,

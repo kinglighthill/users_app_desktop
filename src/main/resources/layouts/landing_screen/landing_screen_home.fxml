@@ -45,85 +45,73 @@
                 <children>
                     <Panel fx:id="practicePanel" GridPane.columnIndex="0" GridPane.rowIndex="0" minHeight="120.0"
                            prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                        <Label fx:id="practiceLabel" text="Practice" textFill="white" alignment="CENTER" >
+                        <Label fx:id="practiceLabel" text="Practice" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
                             </padding>
-                            <font>
-                                <Font size="18.0"/>
-                            </font>
                         </Label>
                     </Panel>
 
                     <Panel fx:id="pastQuestionsPanel" GridPane.columnIndex="1" GridPane.rowIndex="0" minHeight="120.0"
                            prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                        <Label fx:id="pastQuestionsLabel" text="Past Questions" textFill="white" alignment="CENTER" >
+                        <Label fx:id="pastQuestionsLabel" text="Past Questions" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
                             </padding>
-                            <font>
-                                <Font size="18.0"/>
-                            </font>
                         </Label>
                     </Panel>
 
                     <Panel fx:id="cbtGamePanel" GridPane.columnIndex="2" GridPane.rowIndex="0" minHeight="120.0"
                            prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                        <Label fx:id="cbtGameLabel" text="CBT Game" textFill="white" alignment="CENTER" >
+                        <Label fx:id="cbtGameLabel" text="CBT Game" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
                             </padding>
-                            <font>
-                                <Font size="18.0"/>
-                            </font>
                         </Label>
                     </Panel>
 
                     <Panel fx:id="videosPanel" GridPane.columnIndex="3" GridPane.rowIndex="0" minHeight="120.0"
                            prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                        <Label fx:id="videosLabel" text="Videos" textFill="white" alignment="CENTER" >
+                        <Label fx:id="videosLabel" text="Videos" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
                             </padding>
-                            <font>
-                                <Font size="18.0"/>
-                            </font>
                         </Label>
                     </Panel>
 
                     <Panel fx:id="audioPanel" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="120.0"
                            prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                        <Label fx:id="audiosLabel" text="Audios" textFill="white" alignment="CENTER" >
+                        <Label fx:id="audiosLabel" text="Audios" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
                             </padding>
-                            <font>
-                                <Font size="18.0"/>
-                            </font>
                         </Label>
                     </Panel>
 
                     <Panel fx:id="learningCenterPanel" GridPane.columnIndex="1" GridPane.rowIndex="1" minHeight="120.0"
                            prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                        <Label fx:id="learningCenterLabel" text="Learning Center" textFill="white" alignment="CENTER" >
+                        <Label fx:id="learningCenterLabel" text="Learning Center" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
                             </padding>
-                            <font>
-                                <Font size="18.0"/>
-                            </font>
                         </Label>
                     </Panel>
 
                     <Panel fx:id="studyNotesPanel" GridPane.columnIndex="2" GridPane.rowIndex="1" minHeight="120.0"
                            prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                        <Label fx:id="studyNotesLabel" text="Study Notes" textFill="white" alignment="CENTER" >
+                        <Label fx:id="studyNotesLabel" text="Study Notes" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
                             <padding>
                                 <Insets left="65"/>
                             </padding>
-                            <font>
-                                <Font size="18.0"/>
-                            </font>
+                        </Label>
+                    </Panel>
+
+                    <Panel fx:id="syllabusPanel" GridPane.columnIndex="3" GridPane.rowIndex="1" minHeight="120.0"
+                           prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                        <Label fx:id="syllabusLabel" text="Syllabus" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+                            <padding>
+                                <Insets left="65"/>
+                            </padding>
                         </Label>
                     </Panel>
 

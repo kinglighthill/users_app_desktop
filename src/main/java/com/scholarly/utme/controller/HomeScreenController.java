@@ -107,20 +107,12 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         studyNotesButton.setFocusTraversable(false);
 
-        if (ViewSwitcher.retrieveData() instanceof  Panel){
-            Panel selectedMenuOption = (Panel) ViewSwitcher.retrieveData();
-            String optionId = selectedMenuOption.getId();
-            ToggleButton selectedToggle = selectToggle(optionId);
-
-            toggleGroup.selectToggle(selectedToggle);
-            toggleGroup.getSelectedToggle().setSelected(true);
-
-        }else if (ViewSwitcher.retrieveData() instanceof String){
+        if (ViewSwitcher.retrieveData() instanceof String){
             String selectedMenuOption = (String) ViewSwitcher.retrieveData();
             ToggleButton selectedToggle = selectToggle(selectedMenuOption);
 
             toggleGroup.selectToggle(selectedToggle);
-            // We're using 'false' because the studyNotesButton selectedProperty's was initially toggled to 'true' when user navigated from the HOME_SCREEN to SELECT_NOTE_SCREEN
+            // It is 'false' because the studyNotesButton selectedProperty's was initially toggled to 'true' when user navigated from the HOME_SCREEN to SELECT_NOTE_SCREEN
             // This will make the button toggle when clicked thus switching selectedProperty to true
             toggleGroup.getSelectedToggle().setSelected(false);
         }
