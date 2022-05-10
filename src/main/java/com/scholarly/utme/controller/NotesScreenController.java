@@ -3,9 +3,9 @@ package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
-import com.scholarly.utme.data.model.OrderedListItem;
+import com.scholarly.utme.data.model.listItems.OrderedListItem;
 import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.model.UnorderedListItem;
+import com.scholarly.utme.data.model.listItems.UnorderedListItem;
 import com.scholarly.utme.data.model.newDb.Section;
 import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.newDb.Topic;

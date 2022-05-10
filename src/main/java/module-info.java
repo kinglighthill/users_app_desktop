@@ -52,4 +52,5 @@ module com.scholarly.utme {
     exports com.scholarly.utme.data.model.newDb;
     exports com.scholarly.utme.controller.landing_screen;
     exports com.scholarly.utme.viewmodels.landing_screen;
+    exports com.scholarly.utme.data.model.listItems;
 }

@@ -1,18 +1,17 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.newDb.SyllabusCategory;
 import com.scholarly.utme.data.model.newDb.SyllabusTopic;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.SyllabusScreenVM;
-import com.sun.speech.freetts.PathExtractorImpl;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -24,25 +23,23 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Line;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/SyllabusScreen.fxml")
 public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Initializable {
 
     @FXML
-    private VBox topicVBox;
+    private VBox topicVBox, tabTopicsVBox;
 
     @FXML
     private Button syllabusBackButton;
 
     @FXML
-    private Label subjectLabel, topicsLabel;
+    private Label subjectLabel, topicsLabel, topicItem;
 
     @FXML
     private ImageView searchIcon, refreshIcon, settingsIcon, notesImage;
@@ -51,7 +48,7 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
     private TabPane syllabusTabPane;
 
     @FXML
-    private Tab topicsTab;
+    private Tab topicsTab, genObjectiveTab, recTextsTab;
 
     @FXML
     private StackPane syllabusPane;
@@ -89,7 +86,7 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
             button.selectedProperty().addListener(((observable, oldValue, newValue) -> {
                 if (newValue) {
                     viewModel.setSelectedTopic(topic);
-
+                   // setupTopicsTab(topic);
                     button.setStyle(PRESSED_STYLE);
                     button.setTextFill(Color.WHITE);
                 }else {
@@ -104,7 +101,31 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
             }
 
             topicVBox.getChildren().add(button);
+
+            Label topicItem = new Label();
+            topicItem.setText(topic.getTitle());
+            topicItem.setMinHeight(50);
+
+            topicItem.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+            topicItem.setPadding(new Insets(0, 0, 0, 10));
+            Separator separator = new Separator();
+            tabTopicsVBox.getChildren().addAll(topicItem, separator);
+
+            viewModel.getSubtopics().forEach((s, subTopics) -> {
+               subTopics.stream().filter(subTopic -> subTopic.getTopicId() == topic.getId()).forEach(topicSubtopic -> {
+                   Label subtopicItem = new Label(topicSubtopic.getTitle());
+                   subtopicItem.setPadding(new Insets(10, 0, 10, 10));
+                   subtopicItem.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+                   Separator separator2 = new Separator();
+
+                   tabTopicsVBox.getChildren().addAll(subtopicItem, separator2);
+               });
+
+            });
+
         });
+
+        topicsTab.setContent(tabTopicsVBox);
 
         syllabusBackButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
@@ -125,8 +146,8 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
         settingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
         notesImage.setImage(new Image(getClass().getResource("/drawable/notes.png").toString()));
 
-        syllabusPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-            syllabusTabPane.setTabMinWidth((Double) newValue/3.6);
+        syllabusTabPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            syllabusTabPane.setTabMinWidth((Double) newValue/3.24);
         });
 
 //        Line line = new Line(0, 0, 100, 0);
@@ -139,6 +160,14 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
     private void initializeFonts() {
         subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
         topicsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+    }
+
+    private void setupTopicsTab(SyllabusTopic topic) {
+        VBox topicVBox = new VBox();
+
+        Label topicTitle = new Label();
+
+        topicTitle.setText(topic.getTitle());
     }
 
     private InitialData getInitialData() {

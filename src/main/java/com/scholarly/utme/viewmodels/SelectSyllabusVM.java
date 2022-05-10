@@ -20,12 +20,10 @@ public class SelectSyllabusVM implements ViewModel {
     private ObservableList<Subject> subjects = FXCollections.observableArrayList();
     private HashMap<String, ObservableList<SyllabusCategory>> categories = new HashMap<>();
     private HashMap<String, ObservableList<SyllabusTopic>> syllabusTopics = new HashMap<>();
-    private HashMap<String, ObservableList<SubTopic>> syllabusSubTopics = new HashMap<>();
 
     private SimpleObjectProperty<Subject> selectedSubject = new SimpleObjectProperty<>();
     private SimpleObjectProperty<SyllabusCategory> selectedCategory = new SimpleObjectProperty<>();
     private SimpleObjectProperty<SyllabusTopic> selectedTopic = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<SubTopic> selectedSubTopic = new SimpleObjectProperty<>();
 
     public SelectSyllabusVM() {
         ObservableList<Subject> subjectList = SubjectDao.getSubjects();
@@ -36,8 +34,6 @@ public class SelectSyllabusVM implements ViewModel {
             categories.put(subject.getSubjectName(), SyllabusCategoryDao.getCategories("syllabus_" + subject.getTableName() + "_categories"));
 
             syllabusTopics.put(subject.getSubjectName(), SyllabusTopicDao.getSyllabusTopics("syllabus_" + subject.getTableName() + "_topics"));
-
-            syllabusSubTopics.put(subject.getSubjectName(), SubTopicDao.getSubTopics("syllabus_" + subject.getTableName() + "_sub_topics"));
 
         });
 
@@ -53,10 +49,6 @@ public class SelectSyllabusVM implements ViewModel {
 
     public HashMap<String, ObservableList<SyllabusTopic>> getSyllabusTopics() {
         return syllabusTopics;
-    }
-
-    public HashMap<String, ObservableList<SubTopic>> getSyllabusSubTopics() {
-        return syllabusSubTopics;
     }
 
     public void setSelectedSubject(Subject selectedSubject) {
@@ -95,11 +87,4 @@ public class SelectSyllabusVM implements ViewModel {
         return selectedTopic;
     }
 
-    public void setSelectedSubTopic(SubTopic subTopic) {
-        this.selectedSubTopic.set(subTopic);
-    }
-
-    public SimpleObjectProperty<SubTopic> selectedSubTopicProperty() {
-        return selectedSubTopic;
-    }
 }

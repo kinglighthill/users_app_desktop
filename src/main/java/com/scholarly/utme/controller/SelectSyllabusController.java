@@ -136,8 +136,6 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
 
             if (newValue != null) {
 
-                ObservableList<SubTopic> subTopics = viewModel.getSyllabusSubTopics().get(newValue.getSubjectName());
-
                 ObservableList<SyllabusCategory> categories = viewModel.getCategories().get(newValue.getSubjectName());
 
                 categories.forEach(category -> {
@@ -188,15 +186,6 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
                             });
 
                             vBox.getChildren().add(topicButton);
-
-                            /*subTopics.forEach(subTopic -> {
-                                if (syllabusTopic.getId() == subTopic.getTopicId()) {
-                                    System.out.println("Got subTopic for topic: " + syllabusTopic.getTitle() + " subTopic -> " + subTopic.getTitle());
-
-                                    Pair<SyllabusTopic, SubTopic> data = new Pair<>(syllabusTopic, subTopic);
-                                    topicButton.setUserData(data);
-                                }
-                            });*/
 
                         }
 
