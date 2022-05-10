@@ -75,6 +75,10 @@ public class SelectSyllabusVM implements ViewModel {
         this.selectedCategory.set(selectedCategory);
     }
 
+    public SyllabusCategory getSelectedCategory() {
+        return selectedCategory.get();
+    }
+
     public SimpleObjectProperty<SyllabusCategory> selectedCategoryProperty() {
         return selectedCategory;
     }

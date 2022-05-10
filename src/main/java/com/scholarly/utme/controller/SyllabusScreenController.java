@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.SyllabusCategory;
 import com.scholarly.utme.data.model.newDb.SyllabusTopic;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
@@ -10,25 +11,32 @@ import com.sun.speech.freetts.PathExtractorImpl;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/SyllabusScreen.fxml")
 public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Initializable {
+
+    @FXML
+    private VBox topicVBox;
 
     @FXML
     private Button syllabusBackButton;
@@ -51,16 +59,52 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
     @InjectViewModel
     private SyllabusScreenVM viewModel;
 
+    final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
+    final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
+    final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        viewModel.processInitialData(getInitialData());
 
         initializeViews();
 
         initializeFonts();
 
-        InitialData data = getInitialData();
-        System.out.println("Got data with subject -> " + data.getSubject().getSubjectName() + " and topic -> " + data.getSelectedSyllabusTopic().getTitle());
-        //viewModel.processInitialData(getInitialData());
+        ToggleGroup topicListToggleGroup = new ToggleGroup();
+
+        viewModel.getTopics().forEach(topic -> {
+            ToggleButton button = new ToggleButton();
+            button.setUserData(topic);
+            button.setMinHeight(48);
+            button.setMaxHeight(48);
+            button.setPadding(new Insets(0, 0, 0, 20));
+            button.setAlignment(Pos.BASELINE_LEFT);
+            button.setMaxWidth(Double.MAX_VALUE);
+            button.setText(topic.getTitle());
+            button.setStyle(IDLE_BUTTON_STYLE);
+            topicListToggleGroup.getToggles().add(button);
+
+            button.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    viewModel.setSelectedTopic(topic);
+
+                    button.setStyle(PRESSED_STYLE);
+                    button.setTextFill(Color.WHITE);
+                }else {
+                    button.setStyle(IDLE_BUTTON_STYLE);
+                    button.setTextFill(Color.BLACK);
+                }
+
+            }));
+
+            if (topic == viewModel.getSelectedTopic()) {
+                topicListToggleGroup.selectToggle(button);
+            }
+
+            topicVBox.getChildren().add(button);
+        });
 
         syllabusBackButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
@@ -99,21 +143,34 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
 
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
+        System.out.println("Got data with subject -> " + data.getSubject().getSubjectName() + " and topic -> " + data.getSelectedSyllabusTopic().getTitle());
         return data;
     }
 
 
     public static class InitialData {
         private Subject subject;
+        private SyllabusCategory category;
+        private List<SyllabusTopic> syllabusTopics;
         private SyllabusTopic selectedSyllabusTopic;
 
-        public InitialData(Subject subject, SyllabusTopic selectedSyllabusTopic) {
+        public InitialData(Subject subject, SyllabusCategory category, List<SyllabusTopic> syllabusTopics, SyllabusTopic selectedSyllabusTopic) {
             this.subject = subject;
+            this.category = category;
+            this.syllabusTopics = syllabusTopics;
             this.selectedSyllabusTopic = selectedSyllabusTopic;
         }
 
         public Subject getSubject() {
             return subject;
+        }
+
+        public SyllabusCategory getCategory() {
+            return category;
+        }
+
+        public List<SyllabusTopic> getSyllabusTopics() {
+            return syllabusTopics;
         }
 
         public SyllabusTopic getSelectedSyllabusTopic() {

@@ -27,6 +27,7 @@ import javafx.util.Pair;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/SelectSyllabusScreen.fxml")
 public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Initializable {
@@ -117,8 +118,12 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
         ToggleGroup topicListToggleGroup = new ToggleGroup();
         topicListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                SyllabusTopic selectedTopic = (SyllabusTopic) newValue.getUserData();
+                Pair<SyllabusCategory, SyllabusTopic> userData = (Pair<SyllabusCategory, SyllabusTopic>) newValue.getUserData();
+                SyllabusCategory category = userData.getKey();
+                SyllabusTopic selectedTopic = userData.getValue();
                 viewModel.setSelectedTopic(selectedTopic);
+                viewModel.setSelectedCategory(category);
+                System.out.println("Selected Category -> " + category.getTitle());
                 System.out.println("Selected SyllabusTopic -> " + selectedTopic.getTitle());
 
             }
@@ -145,8 +150,10 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
 
                         if (category.getId() == syllabusTopic.getCategoryId()) {
 
+                            Pair<SyllabusCategory, SyllabusTopic> data = new Pair<>(category, syllabusTopic);
+
                             ToggleButton topicButton = new ToggleButton();
-                            topicButton.setUserData(syllabusTopic);
+                            topicButton.setUserData(data);
                             topicButton.setText(syllabusTopic.getTitle());
                             topicListToggleGroup.getToggles().add(topicButton);
 
@@ -204,6 +211,10 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
         viewSyllabusButton.setOnAction(event -> {
             SyllabusScreenController.InitialData data = new SyllabusScreenController.InitialData(
                     viewModel.getSelectedSubject(),
+                    viewModel.getSelectedCategory(),
+                    viewModel.getSyllabusTopics().get(
+                            viewModel.getSelectedSubject().getSubjectName()
+                    ).stream().filter(syllabusTopic -> syllabusTopic.getCategoryId() == viewModel.getSelectedTopic().getCategoryId()).collect(Collectors.toList()),
                     viewModel.getSelectedTopic()
             );
 

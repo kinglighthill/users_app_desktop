@@ -65,7 +65,7 @@ public class SyllabusTopicDao {
                         rs.getInt(categoryColumn),
                         rs.getInt(orderColumn)));
             }
-            //System.out.println("Got category from DB" + tableName + ": " + categories);
+            System.out.println("Got topics " + topics + " from DB " + tableName + ": with category id " + categoryId);
             return topics;
 
         } catch (Exception e) {

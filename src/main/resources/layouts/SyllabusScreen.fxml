@@ -41,7 +41,7 @@
 
                                     <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                         <content>
-                                            <VBox fx:id="topicVBox" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" VBox.vgrow="ALWAYS"/>
+                                            <VBox fx:id="topicVBox" spacing="5" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" VBox.vgrow="ALWAYS"/>
                                         </content>
                                     </ScrollPane>
 
@@ -67,9 +67,9 @@
                                         </Tab>
 
                                     </tabs>
-                                    <padding>
-                                        <Insets left="30" right="30"/>
-                                    </padding>
+<!--                                    <padding>-->
+<!--                                        <Insets left="30" right="30"/>-->
+<!--                                    </padding>-->
                                 </TabPane>
 
                                 <HBox.margin>
