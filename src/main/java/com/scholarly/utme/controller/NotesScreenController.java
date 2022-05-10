@@ -170,8 +170,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         viewModel.initialize(getInitialData());
 
-        ToggleGroup topicListToggleGroup = new ToggleGroup();
-
         //topicLabel.setText(viewModel.getTopic().getTitle());
 
         ImageView noteBackIcon = new ImageView(new Image(getClass().getResource("/drawable/notes_back_icon_2x.png").toString()));
@@ -456,8 +454,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         setupQuizTilePane();
         setupQuizQuestion();
 
-
-
+        ToggleGroup topicListToggleGroup = new ToggleGroup();
         viewModel.getSubTopics().forEach(subTopic -> {
             ToggleButton button = new ToggleButton();
             button.setUserData(subTopic);
