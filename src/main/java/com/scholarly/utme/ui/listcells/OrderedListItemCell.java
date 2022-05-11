@@ -1,20 +1,14 @@
 package com.scholarly.utme.ui.listcells;
 
-import com.scholarly.utme.data.model.OrderedListItem;
+import com.scholarly.utme.data.model.listItems.OrderedListItem;
 import com.scholarly.utme.ui.utils.FontUtil;
-import de.saxsys.mvvmfx.FxmlPath;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 
 public class OrderedListItemCell extends ListCell<OrderedListItem> {

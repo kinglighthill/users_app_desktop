@@ -1,6 +1,7 @@
 package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.controller.SyllabusScreenController.InitialData;
+import com.scholarly.utme.data.dao.newDb.SubTopicDao;
 import com.scholarly.utme.data.dao.newDb.SyllabusTopicDao;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.Topic;
@@ -22,6 +23,8 @@ public class SyllabusScreenVM implements ViewModel {
 
     private ObservableList<SyllabusTopic> topics = FXCollections.observableArrayList();
 
+    private HashMap<String, ObservableList<SubTopic>> subtopics = new HashMap<>();
+
     public SyllabusScreenVM() {
 
     }
@@ -32,6 +35,8 @@ public class SyllabusScreenVM implements ViewModel {
         selectedTopic.set(data.getSelectedSyllabusTopic());
 
         topics.addAll(data.getSyllabusTopics());
+
+        subtopics.put(selectedSubject.getSubjectName(), SubTopicDao.getSubTopics("syllabus_" + selectedSubject.getTableName() + "_sub_topics"));
 
     }
 
@@ -57,5 +62,9 @@ public class SyllabusScreenVM implements ViewModel {
 
     public ObservableList<SyllabusTopic> getTopics() {
         return topics;
+    }
+
+    public HashMap<String, ObservableList<SubTopic>> getSubtopics() {
+        return subtopics;
     }
 }

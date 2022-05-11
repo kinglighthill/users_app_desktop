@@ -1,4 +1,4 @@
-package com.scholarly.utme.data.model;
+package com.scholarly.utme.data.model.listItems;
 
 public class OrderedListItem {
     private String index;
