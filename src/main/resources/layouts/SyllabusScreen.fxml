@@ -49,7 +49,7 @@
 
                             </VBox>
 
-                            <ScrollPane fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                            <ScrollPane fx:id="syllabusScrollPane" fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
 
                                 <content>
 
