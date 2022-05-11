@@ -70,13 +70,9 @@
                                                     </content>
                                                 </Tab>
 
-                                                <Tab fx:id="genObjectiveTab" text="General Objectives">
+                                                <Tab fx:id="genObjectiveTab" text="General Objectives"/>
 
-                                                </Tab>
-
-                                                <Tab fx:id="recTextsTab" text="Recommended Texts">
-
-                                                </Tab>
+                                                <Tab fx:id="recTextsTab" text="Recommended Texts"/>
 
                                             </tabs>
 

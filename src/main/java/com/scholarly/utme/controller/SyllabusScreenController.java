@@ -23,6 +23,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
 import java.util.List;
@@ -127,6 +128,8 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
 
         topicsTab.setContent(tabTopicsVBox);
 
+        setupObjectivesTab();
+
         syllabusBackButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
         });
@@ -160,6 +163,17 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
     private void initializeFonts() {
         subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
         topicsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+    }
+
+    private void setupObjectivesTab() {
+        String generalObjectives = viewModel.getSyllabusSubject().getGeneralObjectives();
+        Label objectivesLabel = new Label(generalObjectives);
+        objectivesLabel.setWrapText(true);
+        objectivesLabel.setTextAlignment(TextAlignment.JUSTIFY);
+        objectivesLabel.setPadding(new Insets(20, 15, 0, 15));
+        objectivesLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+
+        genObjectiveTab.setContent(objectivesLabel);
     }
 
     private void setupTopicsTab(SyllabusTopic topic) {
