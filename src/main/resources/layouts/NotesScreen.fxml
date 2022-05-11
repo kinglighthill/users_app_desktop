@@ -7,18 +7,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<?import org.controlsfx.control.SearchableComboBox?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
-<?import javafx.scene.effect.DropShadow?>
-<?import com.dlsc.formsfx.view.renderer.SectionRenderer?>
-<?import net.synedra.validatorfx.GraphicDecorationStackPane?>
-<?import org.controlsfx.control.ListActionView?>
-<?import javafx.scene.control.skin.ColorPickerSkin.PickerColorBox?>
-<?import com.sun.javafx.webkit.theme.RenderThemeImpl.FormRadioButton?>
-<?import org.kordamp.ikonli.javafx.StackedFontIcon?>
-<?import com.dlsc.formsfx.view.controls.SimpleTextControl?>
-<?import com.sun.javafx.charts.Legend?>
-<?import org.controlsfx.dialog.FontSelectorDialog.FontPanel?>
+
 <BorderPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.NotesScreenController">
    <center>
       <StackPane fx:id="noteLayout" prefHeight="800" prefWidth="1000" >

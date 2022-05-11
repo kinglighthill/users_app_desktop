@@ -54,6 +54,9 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
     @FXML
     private StackPane syllabusPane;
 
+    @FXML
+    private ScrollPane syllabusScrollPane;
+
     @InjectViewModel
     private SyllabusScreenVM viewModel;
 
@@ -87,7 +90,7 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
             button.selectedProperty().addListener(((observable, oldValue, newValue) -> {
                 if (newValue) {
                     viewModel.setSelectedTopic(topic);
-                   // setupTopicsTab(topic);
+
                     button.setStyle(PRESSED_STYLE);
                     button.setTextFill(Color.WHITE);
                 }else {
@@ -130,6 +133,8 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
 
         setupObjectivesTab();
 
+        setupRecTextsTab();
+
         syllabusBackButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
         });
@@ -152,11 +157,6 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
         syllabusTabPane.widthProperty().addListener((observable, oldValue, newValue) -> {
             syllabusTabPane.setTabMinWidth((Double) newValue/3.24);
         });
-
-//        Line line = new Line(0, 0, 100, 0);
-//        line.setStroke(Paint.valueOf("#000000"));
-//        line.setStrokeWidth(5);
-//        topicsTab.setGraphic(line);
         
     }
 
@@ -174,14 +174,24 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
         objectivesLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
 
         genObjectiveTab.setContent(objectivesLabel);
+        genObjectiveTab.getContent().autosize();
     }
 
-    private void setupTopicsTab(SyllabusTopic topic) {
-        VBox topicVBox = new VBox();
+    private void setupRecTextsTab() {
+        String recommendedText = viewModel.getSyllabusSubject().getRecommendedTexts();
+        Label recTextLabel = new Label(recommendedText);
+        recTextLabel.setWrapText(true);
+        recTextLabel.setTextAlignment(TextAlignment.JUSTIFY);
+        recTextLabel.setPadding(new Insets(20, 15, 0, 15));
+        recTextLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
 
-        Label topicTitle = new Label();
+//        recTextLabel.heightProperty().addListener(((observable, oldValue, newValue) -> {
+//            System.out.println("Rec text label height -> " + newValue.doubleValue());
+//            syllabusPane.setPrefHeight((Double) newValue);
+//        }));
 
-        topicTitle.setText(topic.getTitle());
+        recTextsTab.setContent(recTextLabel);
+        recTextsTab.getContent().autosize();
     }
 
     private InitialData getInitialData() {
