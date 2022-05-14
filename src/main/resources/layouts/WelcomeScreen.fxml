@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.skin.ProgressIndicatorSkin.IndeterminateSpinner.IndicatorPaths?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.shape.Line?>
+<StackPane fx:id="anchorPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.WelcomeScreenController"
+           prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #034801" >
+
+    <StackPane fx:id="welcomeScreen" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+        <children>
+
+            <VBox fx:id="centerVBox" alignment="TOP_CENTER" spacing="20" prefWidth="800" VBox.vgrow="ALWAYS">
+                <StackPane fx:id="presentationImagePane">
+                    <ImageView fx:id="welcomeScreenCenterBackgroundImageView" fitWidth="350" fitHeight="350" preserveRatio="true" pickOnBounds="true" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS"/>
+                    <ImageView fx:id="welcomeScreenCenterImageView" fitWidth="230" fitHeight="230" preserveRatio="true" pickOnBounds="true" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" StackPane.alignment="BOTTOM_CENTER"/>
+
+                </StackPane>
+
+                <VBox alignment="CENTER" spacing="25" prefWidth="600" VBox.vgrow="ALWAYS">
+                    <Label fx:id="advertHeader" text="Access thousands of real JAMB Past Questions" textFill="#FFFFFF" textAlignment="CENTER" />
+                    <Label fx:id="advertExplanation" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper " textFill="#FFFFFF" textAlignment="CENTER" wrapText="true" />
+
+                    <HBox fx:id="separator" alignment="CENTER" spacing="5">
+                        <Separator fx:id="divider1" opacity="0.5"/>
+                        <Separator fx:id="divider2" />
+                        <Separator fx:id="divider3" />
+                        <Separator fx:id="divider4" />
+                        <Separator fx:id="divider5" />
+                    </HBox>
+                    <Button fx:id="nextButton" text="Next" textFill="#FFFFFF" prefWidth="500" style="-fx-background-color: #12AF20; -fx-border-radius: 5">
+                        <padding>
+                            <Insets top="10" bottom="10"/>
+                        </padding>
+                    </Button>
+                    <Button fx:id="skipButton" text="Skip" textFill="#FFFFFF" prefWidth="500" style="-fx-background-color: #034801; "/>
+
+                    <VBox.margin>
+                        <Insets top="50" left="200" right="200" />
+                    </VBox.margin>
+                </VBox>
+
+            </VBox>
+
+            <ImageView fx:id="screenOneRectangleImageView" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_LEFT"/>
+
+            <ImageView fx:id="screenOnePipeImageView" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_RIGHT"/>
+
+            <ImageView fx:id="screenTwoRectangleImageView" preserveRatio="true" pickOnBounds="true" StackPane.alignment="BOTTOM_LEFT" visible="false"/>
+
+            <ImageView fx:id="screenTwoDoughnutImageView" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT" visible="false"/>
+
+            <ImageView fx:id="screenThreeDoughnutImageView" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_LEFT" visible="false"/>
+
+            <ImageView fx:id="screenThreeSemicolonImageView" preserveRatio="true" pickOnBounds="true" StackPane.alignment="BOTTOM_LEFT" visible="false"/>
+
+            <ImageView fx:id="screenThreeDoughnutImageView2" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT" visible="false"/>
+
+            <ImageView fx:id="screenFourPipeImageView" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_LEFT" visible="false"/>
+
+            <ImageView fx:id="screenFourRectangleImageView" preserveRatio="true" pickOnBounds="true" StackPane.alignment="BOTTOM_LEFT" visible="false"/>
+
+            <ImageView fx:id="screenFiveDoughnutImageView" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_LEFT" visible="false"/>
+
+            <ImageView fx:id="screenFiveSemicolonImageView" preserveRatio="true" pickOnBounds="true" StackPane.alignment="BOTTOM_LEFT" visible="false"/>
+
+            <ImageView fx:id="screenFiveRectangleImageView" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT" visible="false"/>
+
+        </children>
+
+
+    </StackPane>
+
+</StackPane>
