@@ -1,8 +1,6 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.data.model.User;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.viewmodels.AuthenticationVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -18,10 +16,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -31,19 +26,22 @@ import java.util.ResourceBundle;
 public class AuthenticationController implements FxmlView<AuthenticationVM>, Initializable {
 
     @FXML
-    public HBox root;
+    private HBox root;
 
     @FXML
-    public VBox imageSliderSection;
+    private VBox imageSliderSection, authenticationSection, footerVBox;
 
     @FXML
-    public Pane pane;
+    private Label scholarlyText, appText, scholarlyFooterText, termsOfServiceText, privacyPolicyText, faqText;
 
     @FXML
-    public Separator separator;
+    private ImageView scholarlyLogo;
 
     @FXML
-    public VBox authenticationSection;
+    private Button signupButton, loginButton;
+
+    @FXML
+    private Pane pane;
 
     Label loginInfoLabel, resetInfoLabel, signupInfoLabel;
 
@@ -54,15 +52,20 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        HBox.setMargin(separator, new Insets(0, 30, 0, 30));
+//        HBox.setMargin(separator, new Insets(0, 30, 0, 30));
         initializeImageSliderSection();
-        showDefaultAuthenticationSection();
+
+        initializeViews();
+
+        initializeFonts();
+
+       // showDefaultAuthenticationSection();
     }
 
     private void initializeImageSliderSection() {
-        VBox.setMargin(pane, new Insets(40, 40, 40, 40));
+        //VBox.setMargin(pane, new Insets(40, 40, 40, 40));
         for (int i = 1; i <= 3; i++) {
-            imgView[i-1] = new ImageView(new Image(getClass().getResource("/drawable/image" + i + ".jpg").toString()));
+            imgView[i-1] = new ImageView(new Image(getClass().getResource("/drawable/login_screen_image" + i + ".jpg").toString()));
             imgView[i-1].setFitWidth(800);
             imgView[i-1].setFitHeight(800);
         }
@@ -97,7 +100,26 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
         animation.play();
     }
 
-    private void showDefaultAuthenticationSection() {
+    private void initializeViews() {
+        scholarlyLogo.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
+
+        loginButton.setBackground(Background.EMPTY);
+
+        //footerVBox.setAlignment(Pos.BOTTOM_CENTER);
+    }
+
+    private void initializeFonts() {
+        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.TWENTY.size));
+        appText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY_SIX.size));
+        signupButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+        loginButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+        scholarlyFooterText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        termsOfServiceText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        privacyPolicyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        faqText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+    }
+
+    /*private void showDefaultAuthenticationSection() {
 
         Label headerLabel = new Label("Welcome to Scholarly Jamb E-learning app");
         VBox.setMargin(headerLabel, new Insets(40, 0, 0, 20));
@@ -139,9 +161,9 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
     }
 
 
-    /**
+    *//**
      * Shows login UI for authentication
-     */
+     *//*
     private void showLoginUI() {
         Label headerLabel = new Label("Login");
 
@@ -202,11 +224,11 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
         });
     }
 
-    /**
+    *//**
      * Validates user authentication details before login
      * @param credentialField the email address or username entered
      * @param passwordField the user's password
-     */
+     *//*
     private void validateLoginInput(TextField credentialField, PasswordField passwordField) {
         String credential = credentialField.getText().trim();
         String password = passwordField.getText().trim();
@@ -219,9 +241,9 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
         }
     }
 
-    /**
+    *//**
      * Shows sign up UI for authentication
-     */
+     *//*
     private void showSignUpUI() {
         Label headerLabel = new Label("Sign Up");
 
@@ -380,5 +402,5 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
 
     private void resetPassword(String email){
         // TODO
-    }
+    }*/
 }
