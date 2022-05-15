@@ -109,7 +109,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
 
         logoutButton.setOnAction(e -> {
-            ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+            ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
         });
 
     }

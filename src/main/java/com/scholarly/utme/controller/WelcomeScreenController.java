@@ -63,7 +63,7 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
         });
 
         skipButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+            ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
         });
 
     }
@@ -78,7 +78,7 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
         } else if (currentScreen == 5) {
             showScreenFive();
         } else if (currentScreen > 5) {
-            ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+            ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
         }
 
     }
