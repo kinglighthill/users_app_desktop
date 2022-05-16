@@ -66,8 +66,15 @@ public class PreAuthenticationController implements FxmlView<PreAuthenticationVM
 
         startImageSlider();
 
-        signupButton.setOnMouseClicked(event -> {
-            System.out.println("Signup button clicked");
+        signupButton.setOnAction(event -> {
+            boolean isSignUpScreenShowing = true;
+            ViewSwitcher.passData(isSignUpScreenShowing);
+            ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+        });
+
+        loginButton.setOnAction(event -> {
+            boolean isSignUpScreenShowing = false;
+            ViewSwitcher.passData(isSignUpScreenShowing);
             ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
         });
     }

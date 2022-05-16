@@ -20,17 +20,6 @@
             <ImageView fx:id="sliderImageView3" preserveRatio="true" pickOnBounds="true" visible="false"/>
         </StackPane>
 
-<!--        <VBox fx:id="imageSliderSection" >-->
-
-<!--            <Pane fx:id="pane">-->
-
-<!--            </Pane>-->
-
-<!--            <HBox>-->
-
-<!--            </HBox>-->
-<!--        </VBox>-->
-
         <VBox fx:id="authenticationSection" spacing="10" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
 
             <HBox >
@@ -67,7 +56,7 @@
             </Button>
 
             <padding>
-                <Insets left="50" top="60"/>
+                <Insets left="100" top="60"/>
             </padding>
         </VBox>
 
