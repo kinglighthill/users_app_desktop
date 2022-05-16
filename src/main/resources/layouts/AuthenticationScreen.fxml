@@ -60,6 +60,7 @@
                         <Insets left="7" top="10" bottom="10"/>
                     </padding>
                 </TextField>
+                <Label fx:id="emailError" text="Please enter a valid email address" textFill="#FF0000" visible="false" />
 
                 <Label fx:id="passwordText" text="Password">
                     <VBox.margin>
@@ -84,6 +85,7 @@
                         <Insets left="7" top="10" bottom="10"/>
                     </padding>
                 </TextField>
+<!--                <Label fx:id="phoneError" text="Please enter a valid phone number" textFill="#FF0000" visible="false" />-->
 
             </VBox>
 
@@ -116,7 +118,7 @@
                     </padding>
                 </Button>
 
-                <HBox alignment="CENTER" spacing="5">
+                <HBox fx:id="haveAccountBox" alignment="CENTER" spacing="5">
                     <Label fx:id="haveAccountText" text="Already have an account?"/>
                     <Label fx:id="loginText" text="Login" textFill="#12AF20"/>
 
