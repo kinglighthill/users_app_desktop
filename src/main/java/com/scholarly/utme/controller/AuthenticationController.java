@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -12,6 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,10 +23,16 @@ import java.util.ResourceBundle;
 public class AuthenticationController implements FxmlView<AuthenticationScreenVM>, Initializable {
 
     @FXML
+    private VBox authenticationSection, signUpSection, googleAndFacebookSection;
+
+    @FXML
+    private HBox forgotPasswordBox;
+
+    @FXML
     private ImageView imageView, appIcon;
 
     @FXML
-    private Label scholarlyText, beTheBestText, signupText, emailText, passwordText, phoneText, continueText, haveAccountText, loginText;
+    private Label scholarlyText, beTheBestText, signupText, emailText, passwordText, phoneText, continueText, haveAccountText, loginText, forgotPasswordText, resetText;
 
     @FXML
     private Button proceedButton, googleButton, facebookButton;
@@ -31,8 +40,15 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     @FXML
     private TextField emailField, passwordField, phoneField;
 
+    private boolean showSignupScreen = true;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        showSignupScreen = (boolean) ViewSwitcher.retrieveData();
+        if (!showSignupScreen) {
+            showLoginScreen();
+        }
 
         initializeViews();
 
@@ -40,6 +56,17 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         proceedButton.setOnAction(event -> {
             System.out.println("Proceed button clicked");
+        });
+
+        loginText.setOnMouseClicked(event -> {
+            if (showSignupScreen) {
+                showLoginScreen();
+
+            }else {
+                showSignupScreen();
+
+            }
+
         });
 
     }
@@ -74,5 +101,29 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         facebookButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
         haveAccountText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
         loginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
+        forgotPasswordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
+        resetText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
+    }
+
+    private void showLoginScreen() {
+        signupText.setText("Log In");
+        haveAccountText.setText("Don't have an account?");
+        loginText.setText("Sign Up");
+        forgotPasswordBox.setVisible(true);
+
+        signUpSection.getChildren().removeAll(phoneText, phoneField);
+
+        showSignupScreen = false;
+    }
+
+    private void showSignupScreen() {
+        signupText.setText("Sign Up");
+        haveAccountText.setText("Already have an account?");
+        loginText.setText("Login");
+        forgotPasswordBox.setVisible(false);
+
+        signUpSection.getChildren().addAll(phoneText, phoneField);
+
+        showSignupScreen = true;
     }
 }

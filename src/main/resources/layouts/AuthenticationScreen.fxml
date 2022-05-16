@@ -43,45 +43,49 @@
         </StackPane>
 
 
-        <VBox fx:id="signUpSection" prefWidth="800" prefHeight="200" spacing="10">
 
-            <Label fx:id="signupText" text="Sign up" textFill="#034801"/>
+        <VBox fx:id="authenticationSection"  prefWidth="800" prefHeight="200" >
 
-            <Label fx:id="emailText" text="Email">
-                <VBox.margin>
-                    <Insets top="30"/>
-                </VBox.margin>
-            </Label>
+            <VBox fx:id="signUpSection" spacing="10">
+                <Label fx:id="signupText" text="Sign up" textFill="#034801"/>
 
-            <TextField fx:id="emailField" promptText="What's your email address" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
-                <padding>
-                    <Insets left="7" top="10" bottom="10"/>
-                </padding>
-            </TextField>
+                <Label fx:id="emailText" text="Email">
+                    <VBox.margin>
+                        <Insets top="30"/>
+                    </VBox.margin>
+                </Label>
 
-            <Label fx:id="passwordText" text="Password">
-                <VBox.margin>
-                    <Insets top="10"/>
-                </VBox.margin>
-            </Label>
+                <TextField fx:id="emailField" promptText="What's your email address" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                    <padding>
+                        <Insets left="7" top="10" bottom="10"/>
+                    </padding>
+                </TextField>
 
-            <PasswordField fx:id="passwordField" promptText="Enter your desired password" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
-                <padding>
-                    <Insets left="7" top="10" bottom="10"/>
-                </padding>
-            </PasswordField>
+                <Label fx:id="passwordText" text="Password">
+                    <VBox.margin>
+                        <Insets top="10"/>
+                    </VBox.margin>
+                </Label>
 
-            <Label fx:id="phoneText" text="Phone">
-                <VBox.margin>
-                    <Insets top="10"/>
-                </VBox.margin>
-            </Label>
+                <PasswordField fx:id="passwordField" promptText="Enter your desired password" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                    <padding>
+                        <Insets left="7" top="10" bottom="10"/>
+                    </padding>
+                </PasswordField>
 
-            <TextField fx:id="phoneField" promptText="Type your phone number" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
-                <padding>
-                    <Insets left="7" top="10" bottom="10"/>
-                </padding>
-            </TextField>
+                <Label fx:id="phoneText" text="Phone">
+                    <VBox.margin>
+                        <Insets top="10"/>
+                    </VBox.margin>
+                </Label>
+
+                <TextField fx:id="phoneField" promptText="Type your phone number" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                    <padding>
+                        <Insets left="7" top="10" bottom="10"/>
+                    </padding>
+                </TextField>
+
+            </VBox>
 
             <Button fx:id="proceedButton" text="Proceed" textFill="#FFFFFF" prefWidth="600" style="-fx-background-color: #12AF20; -fx-border-radius: 10;">
                 <VBox.margin>
@@ -92,7 +96,7 @@
                 </padding>
             </Button>
 
-            <VBox alignment="CENTER" spacing="10">
+            <VBox fx:id="googleAndFacebookSection" alignment="CENTER" spacing="10">
 
                 <Label fx:id="continueText" text="or continue using" >
                     <VBox.margin>
@@ -119,6 +123,14 @@
                     <VBox.margin>
                         <Insets top="20"/>
                     </VBox.margin>
+                </HBox>
+                <HBox fx:id="forgotPasswordBox" alignment="CENTER" spacing="5" visible="false">
+                    <Label fx:id="forgotPasswordText" text="Forgot Password?"/>
+                    <Label fx:id="resetText" text="Reset Password" textFill="#12AF20"/>
+
+                    <HBox.margin>
+                        <Insets top="5"/>
+                    </HBox.margin>
                 </HBox>
 
             </VBox>
