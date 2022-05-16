@@ -10,41 +10,48 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.skin.ProgressIndicatorSkin.IndeterminateSpinner.IndicatorPaths?>
 
-<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.PreAuthenticationController" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #FFFFFF">
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.PreAuthenticationController" style="-fx-background-color: #FFFFFF">
 
-    <HBox fx:id="rootPane" prefWidth="800" prefHeight="600">
+    <HBox fx:id="rootPane">
 
-        <VBox fx:id="imageSliderSection" >
+        <StackPane fx:id="sliderImagePane" >
+            <ImageView fx:id="sliderImageView1" preserveRatio="true" pickOnBounds="true"/>
+            <ImageView fx:id="sliderImageView2" preserveRatio="true" pickOnBounds="true" visible="false"/>
+            <ImageView fx:id="sliderImageView3" preserveRatio="true" pickOnBounds="true" visible="false"/>
+        </StackPane>
 
-            <Pane fx:id="pane">
+<!--        <VBox fx:id="imageSliderSection" >-->
 
-            </Pane>
+<!--            <Pane fx:id="pane">-->
 
-            <HBox>
+<!--            </Pane>-->
 
-            </HBox>
-        </VBox>
+<!--            <HBox>-->
 
-        <VBox fx:id="authenticationSection" alignment="TOP_CENTER" prefWidth="400" spacing="10">
+<!--            </HBox>-->
+<!--        </VBox>-->
 
-            <HBox alignment="CENTER_LEFT" >
+        <VBox fx:id="authenticationSection" spacing="10" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+
+            <HBox >
                 <ImageView fx:id="scholarlyLogo" fitHeight="40" fitWidth="40" preserveRatio="true" pickOnBounds="true"/>
-                <Label fx:id="scholarlyText" text="Scholarly" textFill="#034901" />
+                <Label fx:id="scholarlyText" text="Scholarly" textFill="#034901">
+                    <padding>
+                        <Insets top="5"/>
+                    </padding>
+                </Label>
 
-                <VBox.margin>
-                    <Insets left="30" />
-                </VBox.margin>
             </HBox>
 
-            <Label fx:id="appText" text="JAMB Computer Based Test Application" textFill="#034801" wrapText="true">
+            <Label fx:id="appText" text="JAMB Computer Based Test Application" textFill="#034801" prefWidth="400" wrapText="true">
                 <VBox.margin>
-                    <Insets top="60" left="30" />
+                    <Insets top="60" />
                 </VBox.margin>
             </Label>
 
             <Button fx:id="signupButton" prefWidth="400" text="Sign up" textAlignment="CENTER" textFill="#FFFFFF" style="-fx-background-color: #12AF20; -fx-border-radius: 5;">
                 <VBox.margin>
-                    <Insets top="60" right="25"/>
+                    <Insets top="60"/>
                 </VBox.margin>
                 <padding>
                     <Insets top="8" bottom="8"/>
@@ -52,45 +59,36 @@
             </Button>
             <Button fx:id="loginButton" prefWidth="400" text="Login" textAlignment="CENTER" textFill="#12AF20" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
                 <VBox.margin>
-                    <Insets top="20" right="25"/>
+                    <Insets top="20"/>
                 </VBox.margin>
                 <padding>
                     <Insets top="8" bottom="8"/>
                 </padding>
             </Button>
 
-            <StackPane.margin>
-                <Insets left="60" top="60" />
-            </StackPane.margin>
+            <padding>
+                <Insets left="50" top="60"/>
+            </padding>
         </VBox>
-
-        <VBox fx:id="footerVBox" alignment="BOTTOM_CENTER" prefWidth="550" spacing="20">
-            <HBox spacing="50" style="-fx-background-color: #E5E5E5" alignment="CENTER">
-
-                <Label fx:id="termsOfServiceText" text="Terms of service" textFill="#034801" />
-                <Label fx:id="privacyPolicyText" text="Privacy Policy" textFill="#034801" />
-                <Label fx:id="faqText" text="FAQ" textFill="#034801" />
-
-                <padding>
-                    <Insets top="5" bottom="5"/>
-                </padding>
-            </HBox>
-
-            <Label fx:id="scholarlyFooterText" text="2022 Scholarly Africa" textFill="#034801" alignment="CENTER"/>
-            <StackPane.margin>
-                <Insets bottom="20"/>
-            </StackPane.margin>
-        </VBox>
-
-        <StackPane>
-
-
-
-        </StackPane>
-
 
     </HBox>
 
+    <VBox fx:id="footerVBox" spacing="20" AnchorPane.bottomAnchor="20" AnchorPane.rightAnchor="10" alignment="CENTER">
+        <HBox spacing="100" style="-fx-background-color: #E5E5E5" >
 
-</StackPane>
+            <Label fx:id="termsOfServiceText" text="Terms of service" textFill="#034801" />
+            <Label fx:id="privacyPolicyText" text="Privacy Policy" textFill="#034801" />
+            <Label fx:id="faqText" text="FAQ" textFill="#034801" />
+
+            <padding>
+                <Insets top="5" bottom="5" left="105" right="105"/>
+            </padding>
+        </HBox>
+
+        <Label fx:id="scholarlyFooterText" text="2022 Scholarly Africa" textFill="#034801"/>
+
+    </VBox>
+
+
+</AnchorPane>
 

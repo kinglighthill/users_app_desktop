@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -35,10 +36,13 @@ public class PreAuthenticationController implements FxmlView<PreAuthenticationVM
     private Label scholarlyText, appText, scholarlyFooterText, termsOfServiceText, privacyPolicyText, faqText;
 
     @FXML
-    private ImageView scholarlyLogo;
+    private ImageView scholarlyLogo, sliderImageView1, sliderImageView2, sliderImageView3;
 
     @FXML
     private Button signupButton, loginButton;
+
+    @FXML
+    private StackPane sliderImagePane;
 
     @FXML
     private Pane pane;
@@ -53,12 +57,14 @@ public class PreAuthenticationController implements FxmlView<PreAuthenticationVM
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 //        HBox.setMargin(separator, new Insets(0, 30, 0, 30));
-        initializeImageSliderSection();
+        //initializeImageSliderSection();
         // showDefaultAuthenticationSection();
 
         initializeViews();
 
         initializeFonts();
+
+        startImageSlider();
 
         signupButton.setOnMouseClicked(event -> {
             System.out.println("Signup button clicked");
@@ -66,55 +72,48 @@ public class PreAuthenticationController implements FxmlView<PreAuthenticationVM
         });
     }
 
-    private void initializeImageSliderSection() {
-        //VBox.setMargin(pane, new Insets(40, 40, 40, 40));
-        for (int i = 1; i <= 3; i++) {
-            imgView[i-1] = new ImageView(new Image(getClass().getResource("/drawable/login_screen_image" + i + ".jpg").toString()));
-            imgView[i-1].setFitWidth(800);
-            imgView[i-1].setFitHeight(800);
-            //imgView[i-1].setPreserveRatio(true);
-            imgView[i-1].setPickOnBounds(true);
-        }
 
-        pane.getChildren().add(imgView[imgIndex]);
-
-        EventHandler<ActionEvent> eventHandler = e -> {
-            if (imgIndex < 2) {
-                // Adding Children
-                pane.getChildren().remove(imgView[imgIndex]);
+    private void startImageSlider() {
+        EventHandler<ActionEvent> eventHandler = event -> {
+            if (imgIndex == 0) {
+                Animations.fadeOut(sliderImageView3, 300);
+                if (!sliderImageView1.isVisible()) {
+                    Animations.fadeIn(sliderImageView1, 300);
+                }
                 imgIndex++;
-                pane.getChildren().add(imgView[imgIndex]);
-                FadeTransition ft = new FadeTransition(Duration.millis(1000), imgView[imgIndex]);
-                ft.setFromValue(0);
-                ft.setToValue(1);
-                ft.play();
+            }
+            else if (imgIndex == 1) {
+                Animations.fadeOut(sliderImageView1, 300);
+                Animations.fadeIn(sliderImageView2, 300);
+
+                imgIndex++;
             }
             else if (imgIndex == 2) {
+                Animations.fadeOut(sliderImageView2, 300);
+                Animations.fadeIn(sliderImageView3, 300);
+
                 imgIndex = 0;
-                pane.getChildren().remove(imgView[2]);
-                pane.getChildren().add(imgView[imgIndex]);
-                FadeTransition ft = new FadeTransition(Duration.millis(1000), imgView[imgIndex]);
-                ft.setFromValue(0);
-                ft.setToValue(1);
-                ft.play();
             }
         };
 
         // Timeline Animation
-        Timeline animation = new Timeline(new KeyFrame(Duration.millis(5000), eventHandler));
+        Timeline animation = new Timeline(new KeyFrame(Duration.millis(3000), eventHandler));
         animation.setCycleCount(Timeline.INDEFINITE);
         animation.play();
     }
 
     private void initializeViews() {
         scholarlyLogo.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
-
+        sliderImageView1.setImage(new Image(getClass().getResource("/drawable/auth_screen_image1.jpg").toString()));
+        sliderImageView2.setImage(new Image(getClass().getResource("/drawable/auth_screen_image2.jpg").toString()));
+        sliderImageView3.setImage(new Image(getClass().getResource("/drawable/auth_screen_image3.jpg").toString()));
         loginButton.setBackground(Background.EMPTY);
+
     }
 
     private void initializeFonts() {
         scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.TWENTY.size));
-        appText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY_SIX.size));
+        appText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.THIRTY_FOUR.size));
         signupButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
         loginButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
         scholarlyFooterText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));

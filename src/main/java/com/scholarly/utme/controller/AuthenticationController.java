@@ -23,7 +23,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private ImageView imageView, appIcon;
 
     @FXML
-    private Label scholarlyText, signupText, emailText, passwordText, phoneText, continueText, haveAccountText, loginText;
+    private Label scholarlyText, beTheBestText, signupText, emailText, passwordText, phoneText, continueText, haveAccountText, loginText;
 
     @FXML
     private Button proceedButton, googleButton, facebookButton;
@@ -45,7 +45,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     }
 
     private void initializeViews() {
-        imageView.setImage(new Image(getClass().getResource("/drawable/login_screen_image3.jpg").toString()));
+        imageView.setImage(new Image(getClass().getResource("/drawable/signup_screen_image.jpg").toString()));
         appIcon.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
 
         ImageView googleImage = new ImageView(new Image(getClass().getResource("/drawable/google_icon.png").toString()));
@@ -60,6 +60,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     private void initializeFonts() {
         scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY_SIX.size));
+        beTheBestText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY_SIX.size));
         signupText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.TWENTY.size));
         emailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
         emailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
