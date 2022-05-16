@@ -7,7 +7,8 @@ import de.saxsys.mvvmfx.ViewModel;
 
 public enum View {
     WELCOME_SCREEN("/layouts/WelcomeScreen.fxml", WelcomeScreenController.class),
-    AUTHENTICATION_SCREEN("/layouts/authentication_screen.fxml", AuthenticationController.class),
+    PRE_AUTHENTICATION_SCREEN("/layouts/PreAuthenticationScreen.fxml", PreAuthenticationController.class),
+    AUTHENTICATION_SCREEN("/layouts/AuthenticationScreen.fxml", AuthenticationController.class),
     LANDING_SCREEN("/layouts/landing_screen/landing_screen.fxml", LandingScreenController.class),
     HOME_SCREEN("/layouts/homeScreen.fxml", HomeScreenController.class),
     RESULT_SCREEN("/layouts/ResultScreen.fxml", ResultScreenController.class),

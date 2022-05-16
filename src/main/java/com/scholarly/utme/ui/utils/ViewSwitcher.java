@@ -14,7 +14,7 @@ import java.io.IOException;
 public class ViewSwitcher {
 
     private static Stage stage;
-    private static Scene rootScene = new Scene(new Pane());
+    private static final Scene rootScene = new Scene(new Pane());
 
     public static void showScreen(View view) {
         try {
