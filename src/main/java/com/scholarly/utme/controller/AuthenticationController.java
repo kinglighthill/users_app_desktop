@@ -7,6 +7,7 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -35,18 +36,24 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private Label scholarlyText, beTheBestText, signupText, emailText, passwordText, phoneText, continueText, haveAccountText, loginText, forgotPasswordText, resetText;
 
     @FXML
+    private Label emailError, phoneError;
+
+    @FXML
     private Button proceedButton, googleButton, facebookButton;
 
     @FXML
     private TextField emailField, passwordField, phoneField;
 
-    private boolean showSignupScreen = true;
+    private final Label resetTextInfo = new Label();
+
+    private boolean showingSignupScreen = true;
+    private boolean showingPasswordResetScreen = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        showSignupScreen = (boolean) ViewSwitcher.retrieveData();
-        if (!showSignupScreen) {
+        showingSignupScreen = (boolean) ViewSwitcher.retrieveData();
+        if (!showingSignupScreen) {
             showLoginScreen();
         }
 
@@ -55,17 +62,25 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         initializeFonts();
 
         proceedButton.setOnAction(event -> {
-            System.out.println("Proceed button clicked");
+            if (showingSignupScreen) {
+                emailError.setVisible(!emailField.getText().contains("@"));
+            }
+            if (showingPasswordResetScreen) {
+                resetTextInfo.setVisible(!emailField.getText().isBlank());
+                emailError.setVisible(!emailField.getText().contains("@"));
+            }
         });
 
         loginText.setOnMouseClicked(event -> {
-            if (showSignupScreen) {
+            if (showingSignupScreen) {
                 showLoginScreen();
-
             }else {
                 showSignupScreen();
-
             }
+        });
+
+        resetText.setOnMouseClicked(event -> {
+            showPasswordResetScreen();
 
         });
 
@@ -91,10 +106,12 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         signupText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.TWENTY.size));
         emailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
         emailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        emailError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
         passwordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
         //passwordField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
         phoneText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
         phoneField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        phoneError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
         proceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
         continueText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
         googleButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
@@ -113,7 +130,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         signUpSection.getChildren().removeAll(phoneText, phoneField);
 
-        showSignupScreen = false;
+        showingSignupScreen = false;
     }
 
     private void showSignupScreen() {
@@ -124,6 +141,21 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         signUpSection.getChildren().addAll(phoneText, phoneField);
 
-        showSignupScreen = true;
+        showingSignupScreen = true;
+    }
+
+    private void showPasswordResetScreen() {
+        showingPasswordResetScreen = true;
+        signupText.setText("Reset Password");
+
+        signUpSection.getChildren().removeAll(passwordText, passwordField);
+        googleAndFacebookSection.getChildren().remove(0, googleAndFacebookSection.getChildren().size());
+
+        resetTextInfo.setText("A password reset link has been sent to the above email address");
+        resetTextInfo.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        resetTextInfo.setPadding(new Insets(10, 0, 0, 0));
+        resetTextInfo.setVisible(false);
+        authenticationSection.getChildren().add(resetTextInfo);
+
     }
 }

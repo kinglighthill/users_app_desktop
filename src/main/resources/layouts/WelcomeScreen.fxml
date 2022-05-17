@@ -40,10 +40,10 @@
                             <Insets top="10" bottom="10"/>
                         </padding>
                     </Button>
-                    <Button fx:id="skipButton" text="Skip" textFill="#FFFFFF" prefWidth="500" style="-fx-background-color: #034801; "/>
+                    <Button fx:id="skipButton" text="Skip" textFill="#FFFFFF" prefWidth="500" style="-fx-background-color: #034801; " StackPane.alignment="BOTTOM_CENTER"/>
 
                     <VBox.margin>
-                        <Insets top="50" left="200" right="200" />
+                        <Insets top="50" left="300" right="300" />
                     </VBox.margin>
                 </VBox>
 
