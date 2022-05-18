@@ -32,7 +32,7 @@ public class HelloApplication extends Application {
             System.out.println(e.getMessage());
         }
         ViewSwitcher.setStage(stage);
-        ViewSwitcher.showScreen(View.WELCOME_SCREEN);
+        ViewSwitcher.showScreen(View.LANDING_SCREEN);
 
 //        ViewTuple viewTuple = FluentViewLoader.fxmlView(PracticeScreenController.class).load();
 //

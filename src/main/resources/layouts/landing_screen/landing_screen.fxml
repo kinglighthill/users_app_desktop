@@ -12,81 +12,69 @@
 
     <left>
 
-        <VBox prefHeight="400.0" prefWidth="64.0" style="-fx-background-color: #FFFFFF;">
+        <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="180.0" style="-fx-background-color: #006B17;">
             <children>
-                <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="150.0">
+                <HBox  spacing="5">
                     <children>
-                        <ImageView fx:id="profileImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                            <HBox.margin>
-                                <Insets left="10.0" />
-                            </HBox.margin>
-                        </ImageView>
-                        <Label text="Hi Kenechi">
-                            <HBox.margin>
-                                <Insets left="10.0" />
-                            </HBox.margin></Label>
-                        <ImageView fitHeight="24.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
-                            <HBox.margin>
-                                <Insets left="10.0" />
-                            </HBox.margin></ImageView>
-                    </children></HBox>
-                <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="5.0" />
-                <ToggleButton fx:id="homeButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Home">
+                        <ImageView fx:id="appImage" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                        <Label fx:id="scholarlyText" text="Scholarly" textFill="#FFFFFF"/>
+
+                    </children>
                     <VBox.margin>
-                        <Insets />
+                        <Insets left="20" top="30" bottom="50"/>
                     </VBox.margin>
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
+                </HBox>
+
+                <ToggleButton fx:id="homeButton" text="Home" alignment="CENTER_LEFT" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" style="-fx-background-color: rgba(255, 255, 255, 0.1);">
                     <padding>
-                        <Insets left="20.0" />
-                    </padding></ToggleButton>
-                <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="2.0" />
-                <ToggleButton fx:id="accountButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Account">
-                    <VBox.margin>
-                        <Insets />
-                    </VBox.margin>
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="accountButton" text="Account" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" >
                     <padding>
-                        <Insets left="20.0" />
-                    </padding></ToggleButton>
-                <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="2.0" />
-                <ToggleButton fx:id="activateButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Activate">
-                    <VBox.margin>
-                        <Insets />
-                    </VBox.margin>
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="activateButton" text="Activate" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
                     <padding>
-                        <Insets left="20.0" />
-                    </padding></ToggleButton>
-                <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="2.0" />
-                <ToggleButton fx:id="appsButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Apps">
-                    <VBox.margin>
-                        <Insets />
-                    </VBox.margin>
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="appsButton" text="Apps" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
                     <padding>
-                        <Insets left="20.0" />
-                    </padding></ToggleButton>
-                <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="2.0" />
-                <ToggleButton fx:id="updatesButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Updates">
-                    <VBox.margin>
-                        <Insets />
-                    </VBox.margin>
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="triviaButton" text="Trivia" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
                     <padding>
-                        <Insets left="20.0" />
-                    </padding></ToggleButton>
-                <Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="2.0" />
-                <HBox alignment="BOTTOM_LEFT" VBox.vgrow="ALWAYS">
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="performanceButton" text="Performance" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="updatesButton" text="Updates" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="settingsButton" text="Settings" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <!--<Line endX="66.0" startX="-100.0" stroke="#f5f5f5" strokeWidth="2.0" />-->
+                <!--<HBox alignment="BOTTOM_LEFT" VBox.vgrow="ALWAYS">
                     <children>
                         <Button fx:id="logoutButton" alignment="BASELINE_CENTER" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" text="Logout">
                             <VBox.margin>
@@ -99,86 +87,76 @@
                                 <Insets left="20.0" />
                             </padding></Button>
                     </children>
-                </HBox>
-            </children></VBox>
+                </HBox>-->
+            </children>
+        </VBox>
 
     </left>
 
     <center>
-        <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <children>
-                <Line startY="-100.0" stroke="#f5f5f5" strokeWidth="5.0" />
-                <VBox style="-fx-background-color: #FFFFFF;" HBox.hgrow="ALWAYS">
-                    <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
-                            <children>
-                                <ImageView fx:id="appIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                    <HBox.margin>
-                                        <Insets left="10.0" />
-                                    </HBox.margin>
-                                </ImageView>
-                                <Label text="Scholarly">
-                                    <font>
-                                        <Font name="System Bold" size="16.0" />
-                                    </font>
-                                    <HBox.margin>
-                                        <Insets left="10.0" />
-                                    </HBox.margin>
-                                </Label>
-                                <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" HBox.hgrow="ALWAYS">
-                                    <children>
-                                        <TextField prefHeight="25.0" prefWidth="207.0" promptText="Search here" />
-                                        <ImageView fx:id="bell" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                            <HBox.margin>
-                                                <Insets right="10.0" />
-                                            </HBox.margin>
-                                        </ImageView>
-                                    </children>
-                                    <HBox.margin>
-                                        <Insets left="20.0" />
-                                    </HBox.margin>
-                                </HBox>
-                            </children>
-                        </HBox>
-                        <Line startX="-100.0" stroke="#f5f5f5" strokeWidth="5.0" HBox.hgrow="ALWAYS"/>
+        <StackPane fx:id="homeContentPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="592.0" style="-fx-background-color: #FFFFFF" HBox.hgrow="ALWAYS">
 
-                        <StackPane fx:id="homeContentPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="592.0" HBox.hgrow="ALWAYS">
-
-                        </StackPane>
-<!--                        <Label style="-fx-background-color: #FFFFFF;" text="Recently Viewed">-->
-<!--                            <padding>-->
-<!--                                <Insets left="10.0" top="10.0" bottom="20.0" />-->
-<!--                            </padding>-->
-<!--                        </Label>-->
-<!--                        <ListView fx:id="recentlyViewedListView" orientation="HORIZONTAL" prefHeight="99.0" prefWidth="424.0">-->
-<!--                        </ListView>-->
-
-<!--                        <VBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="150.0">-->
-<!--                            <children>-->
-<!--                                <Label text="Scholarly Catalog">-->
-<!--                                    <padding>-->
-<!--                                        <Insets left="10.0" top="40.0" bottom="20.0" />-->
-<!--                                    </padding></Label>-->
-
-<!--                                <HBox alignment="CENTER_LEFT" prefHeight="80" prefWidth="150.0">-->
-<!--                                    <children>-->
-<!--                                        <Button fx:id="practiceButton" text="Practice" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
-<!--                                        <Button fx:id="pastQuestionsButton" text="Past Questions" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
-<!--                                        <Button fx:id="cbtGameButton" text="CBT Game" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
-<!--                                        <Button fx:id="videosButton" text="Videos" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
-<!--                                        <Button fx:id="audioButton" text="Audios" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
-<!--                                        <Button fx:id="learningCenterButton" text="Learning Center" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
-<!--                                        <Button fx:id="studyNotesButton" text="Study Notes" mnemonicParsing="false" prefHeight="44.0" prefWidth="150.0" alignment="CENTER"/>-->
-<!--                                    </children>-->
-<!--                                </HBox>-->
-<!--                            </children>-->
-<!--                        </VBox>-->
-
-                    </children>
-                </VBox>
-
-            </children>
-        </HBox>
+        </StackPane>
     </center>
 
+
 </BorderPane>
+
+
+
+
+<!--
+<HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+<children>
+    &lt;!&ndash;                <Line startY="-100.0" stroke="#f5f5f5" strokeWidth="5.0" />&ndash;&gt;
+    <VBox style="-fx-background-color: #FFFFFF;" HBox.hgrow="ALWAYS">
+        <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
+                <children>
+                    <Label fx:id="helloText" text="Hello Johnny" textFill="#034801">
+                        <HBox.margin>
+                            <Insets left="20.0" />
+                        </HBox.margin>
+                    </Label>
+
+
+                    <ImageView fx:id="handImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                            <Insets left="20.0" />
+                        </HBox.margin>
+                    </ImageView>
+
+                    <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" HBox.hgrow="ALWAYS">
+                        <children>
+                            <TextField prefHeight="25.0" prefWidth="207.0" promptText="Search here" />
+                            <ImageView fx:id="bell" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                <HBox.margin>
+                                    <Insets right="10.0" />
+                                </HBox.margin>
+                            </ImageView>
+                        </children>
+                        <HBox.margin>
+                            <Insets left="20.0" />
+                        </HBox.margin>
+                    </HBox>
+                </children>
+            </HBox>
+            <Label fx:id="startLearningText" text="Let's start learning" textFill="#034801">
+                <VBox.margin>
+                    <Insets left="20.0" />
+                </VBox.margin>
+            </Label>
+
+            &lt;!&ndash;                        <Line startX="-100.0" stroke="#f5f5f5" strokeWidth="5.0" HBox.hgrow="ALWAYS"/>&ndash;&gt;
+
+
+
+        </children>
+    </VBox>
+
+</children>
+
+<VBox.margin>
+    <Insets left="20"/>
+</VBox.margin>
+</HBox>-->
