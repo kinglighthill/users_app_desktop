@@ -44,7 +44,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
     private ToggleGroup toggleGroup = new ToggleGroup();
 
-    private static final String PRESSED_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1);";
+    private static final String PRESSED_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
     private static final String IDLE_STYLE = "-fx-background-color: #006B17;";
 
     @Override
