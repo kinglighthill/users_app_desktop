@@ -2,8 +2,6 @@ package com.scholarly.utme.controller.landing_screen;
 
 import com.scholarly.utme.data.model.Course;
 import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screen.LandingScreenVM;
 import com.scholarly.utme.viewmodels.landing_screen.*;
 import de.saxsys.mvvmfx.FluentViewLoader;
@@ -44,7 +42,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
     private ToggleGroup toggleGroup = new ToggleGroup();
 
-    private static final String PRESSED_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
+    private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
     private static final String IDLE_STYLE = "-fx-background-color: #006B17;";
 
     @Override
@@ -86,15 +84,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             if (newValue) {
                 homeContentPane.getChildren().clear();
                 homeContentPane.getChildren().add(homeViewTuple.getView());
-                homeButton.setStyle(PRESSED_STYLE);
-
-                accountButton.setStyle(null);
-                activateButton.setStyle(null);
-                appsButton.setStyle(null);
-                triviaButton.setStyle(null);
-                performanceButton.setStyle(null);
-                updatesButton.setStyle(null);
-                settingsButton.setStyle(null);
+                changeButtonStyle(homeButton);
             }
          });
 
@@ -102,15 +92,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
              if (newValue){
                  homeContentPane.getChildren().clear();
                  homeContentPane.getChildren().add(accountViewTuple.getView());
-                 accountButton.setStyle(PRESSED_STYLE);
-
-                 homeButton.setStyle(null);
-                 activateButton.setStyle(null);
-                 appsButton.setStyle(null);
-                 triviaButton.setStyle(null);
-                 performanceButton.setStyle(null);
-                 updatesButton.setStyle(null);
-                 settingsButton.setStyle(null);
+                 changeButtonStyle(accountButton);
              }
          });
 
@@ -118,15 +100,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             if (newValue){
                 homeContentPane.getChildren().clear();
                 homeContentPane.getChildren().add(activateViewTuple.getView());
-                activateButton.setStyle(PRESSED_STYLE);
-
-                homeButton.setStyle(null);
-                accountButton.setStyle(null);
-                appsButton.setStyle(null);
-                triviaButton.setStyle(null);
-                performanceButton.setStyle(null);
-                updatesButton.setStyle(null);
-                settingsButton.setStyle(null);
+                changeButtonStyle(activateButton);
             }
         });
 
@@ -134,15 +108,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             if (newValue){
                 homeContentPane.getChildren().clear();
                 homeContentPane.getChildren().add(appsViewTuple.getView());
-                appsButton.setStyle(PRESSED_STYLE);
-
-                homeButton.setStyle(null);
-                accountButton.setStyle(null);
-                activateButton.setStyle(null);
-                triviaButton.setStyle(null);
-                performanceButton.setStyle(null);
-                updatesButton.setStyle(null);
-                settingsButton.setStyle(null);
+                changeButtonStyle(appsButton);
             }
         });
 
@@ -150,15 +116,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             if (newValue){
                 homeContentPane.getChildren().clear();
                 homeContentPane.getChildren().add(appsViewTuple.getView());
-                triviaButton.setStyle(PRESSED_STYLE);
-
-                homeButton.setStyle(null);
-                accountButton.setStyle(null);
-                activateButton.setStyle(null);
-                appsButton.setStyle(null);
-                performanceButton.setStyle(null);
-                updatesButton.setStyle(null);
-                settingsButton.setStyle(null);
+                changeButtonStyle(triviaButton);
             }
         });
 
@@ -166,15 +124,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             if (newValue){
                 homeContentPane.getChildren().clear();
                 homeContentPane.getChildren().add(appsViewTuple.getView());
-                performanceButton.setStyle(PRESSED_STYLE);
-
-                homeButton.setStyle(null);
-                accountButton.setStyle(null);
-                activateButton.setStyle(null);
-                appsButton.setStyle(null);
-                triviaButton.setStyle(null);
-                updatesButton.setStyle(null);
-                settingsButton.setStyle(null);
+                changeButtonStyle(performanceButton);
             }
         });
 
@@ -182,15 +132,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             if (newValue){
                 homeContentPane.getChildren().clear();
                 homeContentPane.getChildren().add(updatesViewTuple.getView());
-                updatesButton.setStyle(PRESSED_STYLE);
-
-                homeButton.setStyle(null);
-                accountButton.setStyle(null);
-                activateButton.setStyle(null);
-                appsButton.setStyle(null);
-                triviaButton.setStyle(null);
-                performanceButton.setStyle(null);
-                settingsButton.setStyle(null);
+                changeButtonStyle(updatesButton);
             }
         });
 
@@ -198,15 +140,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             if (newValue){
                 homeContentPane.getChildren().clear();
                 homeContentPane.getChildren().add(appsViewTuple.getView());
-                settingsButton.setStyle(PRESSED_STYLE);
-
-                homeButton.setStyle(null);
-                accountButton.setStyle(null);
-                activateButton.setStyle(null);
-                appsButton.setStyle(null);
-                triviaButton.setStyle(null);
-                performanceButton.setStyle(null);
-                updatesButton.setStyle(null);
+                changeButtonStyle(settingsButton);
             }
         });
 
@@ -264,5 +198,18 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY.size));
 
+    }
+
+    private void changeButtonStyle(ToggleButton pressedButton) {
+        homeButton.setStyle(null);
+        accountButton.setStyle(null);
+        activateButton.setStyle(null);
+        appsButton.setStyle(null);
+        triviaButton.setStyle(null);
+        performanceButton.setStyle(null);
+        updatesButton.setStyle(null);
+        settingsButton.setStyle(null);
+
+        pressedButton.setStyle(PRESSED_BUTTON_STYLE);
     }
 }
