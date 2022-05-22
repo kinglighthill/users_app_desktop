@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Separator;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -18,7 +19,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/SubjectListItemView.fxml")
-public class SubjectListItemView implements FxmlView<SubjectListItemVM>, Initializable {
+public class SubjectListItemController implements FxmlView<SubjectListItemVM>, Initializable {
 
     @FXML
     public CheckBox subjectCheckBox, shuffleQuestionsCheckBox, shuffleOptionsCheckBox;
@@ -44,6 +45,7 @@ public class SubjectListItemView implements FxmlView<SubjectListItemVM>, Initial
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initializeViews();
 
         subjectCheckBox.textProperty().bind(viewModel.subjectNameProperty());
         subjectCheckBox.selectedProperty().bindBidirectional(viewModel.subjectSelectedProperty());
@@ -82,5 +84,10 @@ public class SubjectListItemView implements FxmlView<SubjectListItemVM>, Initial
         });
 
 
+    }
+
+    private void initializeViews() {
+        questionNoChoiceBox.setBackground(Background.EMPTY);
+        yearChoiceBox.setBackground(Background.EMPTY);
     }
 }
