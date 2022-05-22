@@ -107,7 +107,7 @@
    <center>
       <TabPane fx:id="tabMenu" prefHeight="200.0" prefWidth="200.0" tabMinHeight="50" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" style="-fx-background-color: #FFFFFF;" >
         <tabs>
-          <Tab fx:id="objectiveTab" text="Objectives">
+          <Tab fx:id="objectiveTab" text="Objective">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="371.0" prefWidth="496.0" style="-fx-background-color: #FFFFFF;">
                      <children>
