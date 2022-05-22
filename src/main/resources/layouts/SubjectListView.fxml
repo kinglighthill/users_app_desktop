@@ -71,7 +71,7 @@
                                               <Font name="Gill Sans MT" size="14.0" />
                                           </font>
                                       </Label>
-                                      <ChoiceBox fx:id="hoursChoiceBox" prefWidth="150.0" style="-fx-background-color: ##FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
+                                      <ChoiceBox fx:id="hoursChoiceBox" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
                                           <VBox.margin>
                                               <Insets top="10.0" />
                                           </VBox.margin>
