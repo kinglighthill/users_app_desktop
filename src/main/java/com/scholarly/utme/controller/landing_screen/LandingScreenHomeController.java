@@ -13,15 +13,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
@@ -38,7 +36,10 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     private BorderPane rootPane;
 
     @FXML
-    private ScrollPane previousSessionScrollPane, performanceScrollPane;
+    private ScrollPane mainScrollPane, previousSessionScrollPane, performanceScrollPane;
+
+    @FXML
+    private StackPane actionsPane;
 
     @FXML
     private GridPane previousSessionGridPane;
@@ -47,10 +48,13 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     private HBox scrollHBox;
 
     @FXML
+    private Button viewDesktopAppButton;
+
+    @FXML
     ListView<Course> recentlyViewedListView;
 
     @FXML
-    private ImageView handImage, notificationIcon, profileImage, biologyIcon, englishIcon, physicsIcon, chemistryIcon, mathematicsIcon, geographyIcon;
+    private ImageView handImage, notificationIcon, profileImage, biologyIcon, englishIcon, physicsIcon, chemistryIcon, mathematicsIcon, geographyIcon, boyWithLaptop;
 
     @FXML
     private ImageView cbtPracticeIcon, videosIcon, novelsIcon, studyNotesIcon, cbtCentresIcon, audioIcon, firstSessionVideoImage, firstSessionPlayIcon, thirdSessionVideoImage, thirdSessionPlayIcon;
@@ -59,13 +63,16 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     private ImageView firstSessionOneStar, firstSessionTwoStar, firstSessionThreeStar, firstSessionFourStar, firstSessionFiveStar, thirdSessionOneStar, thirdSessionTwoStar, thirdSessionThreeStar, thirdSessionFourStar, thirdSessionFiveStar;
 
     @FXML
-    private ImageView secondSessionBookImage, secondSessionAuthorIcon, secondSessionChaptersIcon, fourthSessionBookImage, fourthSessionAuthorIcon, fourthSessionChaptersIcon;
+    private ImageView secondSessionBookImage, secondSessionAuthorIcon, secondSessionChaptersIcon, fourthSessionBookImage, fourthSessionAuthorIcon, fourthSessionChaptersIcon, actionCloseImage, actionCbtPracticeIcon, actionVideosPracticeIcon, actionNovelsPracticeIcon, actionAudioPracticeIcon;
+
+    @FXML
+    private Panel biologyPane, englishPane, physicsPane, chemistryPane, mathematicsPane, geographyPane;
 
     @FXML
     private Panel cbtPracticePanel, pastQuestionsPanel, cbtGamePanel, videosPanel, audioPanel, studyNotesPanel, cbtCentresPanel, syllabusPanel;
 
     @FXML
-    private Panel firstSession, secondSession, thirdSession, fourthSession;
+    private Panel firstSession, secondSession, thirdSession, fourthSession, actionCbtPracticePanel;
 
     @FXML
     private Label helloText, startLearningText, topSubjectsText, biologyText, englishText, physicsText, chemistryText, mathematicsText, geographyText, activitiesText, continueSessionsText;
@@ -79,6 +86,9 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private Label performanceText, previousScoresText, performanceChartText, firstPerformanceCBTText, firstPerformanceCBTDate, firstPerformancePercentText, secondPerformanceCBTText, secondPerformanceCBTDate, secondPerformancePercentText;
 
+    @FXML
+    private Label whichActionText, actionCbtPracticeText, actionVideosPracticeText, actionNovelsPracticeText, actionAudioPracticeText, viewDesktopAppText;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -86,13 +96,14 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         initializeFonts();
 
-        String defaultImageURL = getClass().getResource("/drawable/app_logo.png").toString();
-        ObservableList<Course> items = FXCollections.observableArrayList(
-                new Course("Mathematics", defaultImageURL),
-                new Course("Physics", defaultImageURL),
-                new Course("Economics", defaultImageURL),
-                new Course("English Language", defaultImageURL)
-        );
+        biologyPane.setOnMouseClicked(event -> {
+            mainScrollPane.setOpacity(0.3);
+            actionsPane.setVisible(true);
+        });
+        actionCloseImage.setOnMouseClicked(event -> {
+            mainScrollPane.setOpacity(1.0);
+            actionsPane.setVisible(false);
+        });
 
 //
 //        pastQuestionsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
@@ -100,6 +111,11 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        syllabusLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 
         cbtPracticePanel.setOnMouseClicked(e -> {
+            ViewSwitcher.passData("practicePanel");
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+
+        actionCbtPracticePanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("practicePanel");
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
@@ -145,6 +161,8 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         rootPane.setPadding(new Insets(0,15, 0, 0));
         notificationIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/bell_without_notification.png").toString()));
         handImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/hand_image2.png").toString()));
+        actionCloseImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/action_close_icon.png").toString()));
+        boyWithLaptop.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/boy_with_laptop.jpg").toString()));
 
         profileImage.setImage(new Image(getClass().getResource("/drawable/profileImage.jpg").toString()));
         final Circle clip = new Circle(20, 30, 20);
@@ -189,14 +207,18 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         fourthSessionAuthorIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/session_author_icon.png").toString()));
         fourthSessionChaptersIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/session_chapters_icon.png").toString()));
 
-        previousSessionScrollPane.widthProperty().addListener(((observable, oldValue, newValue) -> {
+        actionCbtPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_practice_icon.png").toString()));
+        actionVideosPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/videos_icon.png").toString()));
+        actionNovelsPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/novels_icon.png").toString()));
+        actionAudioPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/audio_icon.png").toString()));
+
+        mainScrollPane.widthProperty().addListener(((observable, oldValue, newValue) -> {
             firstSession.setPrefWidth((Double) newValue/2);
             secondSession.setPrefWidth((Double) newValue/2);
             thirdSession.setPrefWidth((Double) newValue/2);
             fourthSession.setPrefWidth((Double) newValue/2);
         }));
 
-        previousSessionScrollPane.setBackground(Background.EMPTY);
         performanceScrollPane.setBackground(Background.EMPTY);
         scrollHBox.setBackground(Background.EMPTY);
 
@@ -253,6 +275,15 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         secondPerformanceCBTText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
         secondPerformanceCBTDate.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
         secondPerformancePercentText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.EIGHTEEN.size));
+
+        whichActionText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+        actionCbtPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        actionVideosPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        actionNovelsPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        actionAudioPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+
+        viewDesktopAppText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
+        viewDesktopAppButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 
     }
 }
