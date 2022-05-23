@@ -43,8 +43,9 @@ public class SubjectListItemVM implements ViewModel {
     }
 
     private SimpleStringProperty subjectName = new SimpleStringProperty("");
+    private SimpleStringProperty subjectTableName = new SimpleStringProperty("");
+    private SimpleStringProperty subjectColorName = new SimpleStringProperty("");
     private ObservableList<Year> years;
-    private ObservableList<Year> availableYears;
 
     private ObservableList<Integer> questionNumbers = FXCollections.observableArrayList();
 
@@ -65,6 +66,8 @@ public class SubjectListItemVM implements ViewModel {
     public SubjectListItemVM(Subject subject) {
         this.subject = subject;
         subjectName.set(subject.getSubjectName());
+        subjectTableName.set(subject.getTableName());
+        subjectColorName.set(getColorName(subject.getTableName()));
 
        // years = YearsDao.getYears();
 
@@ -109,16 +112,24 @@ public class SubjectListItemVM implements ViewModel {
         return subjectName.get();
     }
 
+    public String getSubjectTableName() {
+        return subjectTableName.get();
+    }
+
+    public String getSubjectColorName() {
+        return subjectColorName.get();
+    }
+
     public SimpleStringProperty subjectNameProperty() {
         return subjectName;
     }
 
-    public ObservableList<Year> getYears() {
-        return years;
+    public SimpleStringProperty subjectTableNameProperty() {
+        return subjectTableName;
     }
 
-    public ObservableList<Year> getAvailableYears() {
-        return availableYears;
+    public ObservableList<Year> getYears() {
+        return years;
     }
 
     public ObservableList<Integer> getQuestionNumbers() {
@@ -217,6 +228,24 @@ public class SubjectListItemVM implements ViewModel {
 
     public void setSelectedNumberOfQuestions(Integer selectedNumberOfQuestions) {
         this.selectedNumberOfQuestions.set(selectedNumberOfQuestions);
+    }
+
+    private String getColorName(String subjectTableName) {
+        return switch (subjectTableName) {
+            case "english" -> "#E90000";
+            case "mathematics" -> "#E86D1C";
+            case "biology" -> "#009D9A";
+            case "literature" -> "#5A67D8";
+            case "commerce" -> "#56749E";
+            case "economics" -> "#B76623";
+            case "physics" -> "#D68E00";
+            case "chemistry" -> "#00A14B";
+            case "government" -> "#0067C8";
+            case "accounts" -> "#D12C81";
+            case "crs" -> "#005F7A";
+            case "irs" -> "#630F0F";
+            default -> "#00A14B";
+        };
     }
 
 

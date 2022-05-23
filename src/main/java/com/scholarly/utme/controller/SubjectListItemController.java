@@ -10,9 +10,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -22,7 +26,10 @@ import java.util.ResourceBundle;
 public class SubjectListItemController implements FxmlView<SubjectListItemVM>, Initializable {
 
     @FXML
-    public CheckBox subjectCheckBox, shuffleQuestionsCheckBox, shuffleOptionsCheckBox;
+    private StackPane subjectImageBackground;
+
+    @FXML
+    private CheckBox subjectCheckBox, shuffleQuestionsCheckBox, shuffleOptionsCheckBox;
 
     @FXML
     private ChoiceBox<Year> yearChoiceBox;
@@ -39,6 +46,12 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     @FXML
     private HBox optionPanel;
 
+    @FXML
+    private ImageView subjectImage;
+
+    @FXML
+    private Label subjectText;
+
 
     @InjectViewModel
     private SubjectListItemVM viewModel;
@@ -47,7 +60,16 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     public void initialize(URL location, ResourceBundle resources) {
         initializeViews();
 
-        subjectCheckBox.textProperty().bind(viewModel.subjectNameProperty());
+        System.out.println("Subject " + viewModel.getSubjectTableName() + " color name -> " + viewModel.getSubjectColorName());
+        subjectImageBackground.setStyle("-fx-background-radius: 8 0 0 8; -fx-background-color: " + viewModel.getSubjectColorName());
+        try {
+            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/" + viewModel.getSubjectTableName() + "_image.png").toString()));
+        }catch (Exception e){
+            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/irs_image.png").toString()));
+            System.out.println(e.toString());
+        }
+        subjectText.textProperty().bind(viewModel.subjectNameProperty());
+       // subjectCheckBox.textProperty().bind(viewModel.subjectNameProperty());
         subjectCheckBox.selectedProperty().bindBidirectional(viewModel.subjectSelectedProperty());
 
         shuffleQuestionsCheckBox.selectedProperty().bindBidirectional(viewModel.shuffleQuestionsProperty());

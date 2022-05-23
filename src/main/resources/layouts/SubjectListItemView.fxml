@@ -5,22 +5,48 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import javafx.scene.image.ImageView?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <AnchorPane maxWidth="1.7976931348623157E308" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.SubjectListItemController">
    <children>
-      <VBox fx:id="subRoot" prefWidth="600.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #e5e5e5; -fx-border-width: 1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="subRoot" prefWidth="600.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-border-color: #e5e5e5; -fx-border-width: 1; -fx-border-radius: 8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox  alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="490.0">
-               <children>
-                  <CheckBox fx:id="subjectCheckBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="580.0" text="English" HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font name="Gill Sans MT Bold" size="18.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets left="20.0" />
-                     </HBox.margin>
+            <BorderPane  minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="490.0">
+
+               <left>
+                  <StackPane fx:id="subjectImageBackground" minWidth="100" >
+                     <ImageView fx:id="subjectImage"  preserveRatio="true" pickOnBounds="true">
+                        <HBox.margin>
+                           <Insets left="20"/>
+                        </HBox.margin>
+                     </ImageView>
+                     <padding>
+                        <Insets left="30" right="30"/>
+                     </padding>
+                  </StackPane>
+               </left>
+               <center>
+                  <HBox alignment="CENTER_LEFT">
+                     <Label fx:id="subjectText" textFill="#034801" >
+                        <font>
+                           <Font name="Gill Sans MT Bold" size="18.0" />
+                        </font>
+                        <HBox.margin>
+                           <Insets left="250"/>
+                        </HBox.margin>
+                     </Label>
+                  </HBox>
+
+               </center>
+               <right>
+                  <CheckBox fx:id="subjectCheckBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="40.0"  HBox.hgrow="ALWAYS">
+                     <padding>
+                        <Insets topRightBottomLeft="5"/>
+                     </padding>
                   </CheckBox>
-               </children>
-            </HBox>
+               </right>
+
+            </BorderPane>
             <Separator fx:id="divider" opacity="0.5" prefWidth="200.0" />
             <HBox fx:id="optionPanel" prefWidth="200.0">
                <children>
