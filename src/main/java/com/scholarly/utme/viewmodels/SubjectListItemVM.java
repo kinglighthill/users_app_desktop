@@ -44,7 +44,6 @@ public class SubjectListItemVM implements ViewModel {
 
     private SimpleStringProperty subjectName = new SimpleStringProperty("");
     private ObservableList<Year> years;
-    private ObservableList<Year> availableYears;
 
     private ObservableList<Integer> questionNumbers = FXCollections.observableArrayList();
 
@@ -115,10 +114,6 @@ public class SubjectListItemVM implements ViewModel {
 
     public ObservableList<Year> getYears() {
         return years;
-    }
-
-    public ObservableList<Year> getAvailableYears() {
-        return availableYears;
     }
 
     public ObservableList<Integer> getQuestionNumbers() {

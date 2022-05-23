@@ -10,7 +10,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -39,6 +42,12 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     @FXML
     private HBox optionPanel;
 
+    @FXML
+    private ImageView subjectImage;
+
+    @FXML
+    private Label subjectText;
+
 
     @InjectViewModel
     private SubjectListItemVM viewModel;
@@ -47,7 +56,10 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     public void initialize(URL location, ResourceBundle resources) {
         initializeViews();
 
-        subjectCheckBox.textProperty().bind(viewModel.subjectNameProperty());
+//        subjectImage.imageProperty().bind();
+        subjectImage.setImage(new Image(getClass().getResource("/drawable/english_image.png").toString()));
+        subjectText.textProperty().bind(viewModel.subjectNameProperty());
+       // subjectCheckBox.textProperty().bind(viewModel.subjectNameProperty());
         subjectCheckBox.selectedProperty().bindBidirectional(viewModel.subjectSelectedProperty());
 
         shuffleQuestionsCheckBox.selectedProperty().bindBidirectional(viewModel.shuffleQuestionsProperty());
