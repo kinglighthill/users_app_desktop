@@ -232,18 +232,18 @@ public class SubjectListItemVM implements ViewModel {
 
     private String getColorName(String subjectTableName) {
         return switch (subjectTableName) {
-            case "english" -> "#E90000";
-            case "mathematics" -> "#E86D1C";
-            case "biology" -> "#009D9A";
-            case "literature" -> "#5A67D8";
-            case "commerce" -> "#56749E";
-            case "economics" -> "#B76623";
-            case "physics" -> "#D68E00";
-            case "chemistry" -> "#00A14B";
-            case "government" -> "#0067C8";
-            case "accounts" -> "#D12C81";
-            case "crs" -> "#005F7A";
-            case "irs" -> "#630F0F";
+            case "english", "english_theory" -> "#E90000";
+            case "mathematics", "mathematics_theory" -> "#E86D1C";
+            case "biology", "biology_theory" -> "#009D9A";
+            case "literature", "literature_theory" -> "#5A67D8";
+            case "commerce", "commerce_theory" -> "#56749E";
+            case "economics", "economics_theory" -> "#B76623";
+            case "physics", "physics_theory" -> "#D68E00";
+            case "chemistry", "chemistry_theory" -> "#00A14B";
+            case "government", "government_theory" -> "#0067C8";
+            case "accounts", "accounts_theory" -> "#D12C81";
+            case "crs", "crs_theory" -> "#005F7A";
+            case "irs", "irs_theory" -> "#630F0F";
             default -> "#00A14B";
         };
     }

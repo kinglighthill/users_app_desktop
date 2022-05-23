@@ -40,11 +40,15 @@
                </center>
                <right>
                   <CheckBox fx:id="subjectCheckBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="40.0"  HBox.hgrow="ALWAYS">
-                     <padding>
-                        <Insets topRightBottomLeft="5"/>
-                     </padding>
+                     <font>
+                        <Font size="18"/>
+                     </font>
                   </CheckBox>
+
                </right>
+               <padding>
+                  <Insets right="30"/>
+               </padding>
 
             </BorderPane>
             <Separator fx:id="divider" opacity="0.5" prefWidth="200.0" />
