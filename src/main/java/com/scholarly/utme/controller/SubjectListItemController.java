@@ -60,7 +60,6 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     public void initialize(URL location, ResourceBundle resources) {
         initializeViews();
 
-//        subjectImage.imageProperty().bind();
         System.out.println("Subject " + viewModel.getSubjectTableName() + " color name -> " + viewModel.getSubjectColorName());
         subjectImageBackground.setStyle("-fx-background-radius: 8 0 0 8; -fx-background-color: " + viewModel.getSubjectColorName());
         try {
