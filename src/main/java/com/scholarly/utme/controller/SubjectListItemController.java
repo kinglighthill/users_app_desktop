@@ -58,6 +58,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         initializeViews();
 
         System.out.println("Subject " + viewModel.getSubjectTableName() + " color name -> " + viewModel.getSubjectColorName());
