@@ -8,13 +8,9 @@ import com.scholarly.utme.viewmodels.StudyPastScreenVM;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
-import com.sun.speech.freetts.VoiceManager;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -31,7 +27,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
 import java.net.URL;
 import java.util.List;
@@ -360,7 +355,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             if (buttonType == ButtonType.YES){
                 dialogDimmer.setVisible(false);
                 ViewSwitcher.passData("pastQuestionsPanel");
-                ViewSwitcher.showScreen(View.HOME_SCREEN);
+                ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
             }else if (buttonType == ButtonType.NO){;
                 dialogDimmer.setVisible(false);
             }

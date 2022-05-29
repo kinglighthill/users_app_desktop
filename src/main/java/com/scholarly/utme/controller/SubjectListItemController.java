@@ -61,7 +61,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
 
         initializeViews();
 
-        System.out.println("Subject " + viewModel.getSubjectTableName() + " color name -> " + viewModel.getSubjectColorName());
+//        System.out.println("Subject " + viewModel.getSubjectTableName() + " color name -> " + viewModel.getSubjectColorName());
         subjectImageBackground.setStyle("-fx-background-radius: 8 0 0 8; -fx-background-color: " + viewModel.getSubjectColorName());
         try {
             subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/" + viewModel.getSubjectTableName() + "_image.png").toString()));
