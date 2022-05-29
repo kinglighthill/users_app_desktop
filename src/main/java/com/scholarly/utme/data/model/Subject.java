@@ -11,6 +11,9 @@ public class Subject {
     private String subjectColor;
     private String colorName;
 
+    public Subject() {
+    }
+
     public Subject(int id, String tableName, String subjectName, int timeAllotted, String subjectDescription, String shortDescription, String subjectColor, String colorName) {
         this.setId(id);
         this.setTableName(tableName);

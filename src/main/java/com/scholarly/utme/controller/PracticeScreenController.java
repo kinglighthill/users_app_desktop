@@ -6,6 +6,8 @@ import com.scholarly.utme.data.model.Bookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.TheoryQuestion;
+import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
+import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.TextToSpeech;
@@ -37,7 +39,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -59,6 +63,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     @FXML
     private TilePane tilePane;
+
+    @FXML
+    private ScrollPane tileScrollPane;
 
     @FXML
     private ListView<Subject> subjectList;
@@ -84,7 +91,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private Button prevButton, nextButton, exitButton, submitButton, submitReport;
 
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon;
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon, timeImage;
 
     private Stage calculatorStage = new Stage();
 
@@ -102,17 +109,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     public void initialize(URL location, ResourceBundle resources) {
 
         viewModel.processInitialData(getInitialData());
+        
+        initializeViews();
 
-
-        try {
-            bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-            calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
-            reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
-            speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
-            flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        initializeFont();
 
         viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -127,6 +127,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             });
         });
 
+        subjectList.setCellFactory(new PracticeSubjectListCellFactory());
         subjectList.setItems(viewModel.getSubjects());
         subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
             if (c.getList().size() == 1) {
@@ -535,16 +536,32 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                         }
                     }
                 });
+    }
 
-//        nextButton.setFocusTraversable(false);
-//        prevButton.setFocusTraversable(false);
-//        submitButton.setFocusTraversable(false);
-//        exitButton.setFocusTraversable(false);
-//        subjectList.setFocusTraversable(false);
-//        optionAButton.setFocusTraversable(false);
-//        optionBButton.setFocusTraversable(false);
-//        optionCButton.setFocusTraversable(false);
-//        optionDButton.setFocusTraversable(false);
+    private void initializeViews() {
+        subjectList.setBackground(Background.EMPTY);
+        exitButton.setBackground(Background.EMPTY);
+        tileScrollPane.setBackground(Background.EMPTY);
+
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+        calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
+        reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+        speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
+        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
+        timeImage.setImage(new Image(getClass().getResource("/drawable/practice_screen_images/time_image.jpg").toString()));
+
+        ImageView prevImage = new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/prev_btn_icon.png").toString()));
+        prevButton.setGraphicTextGap(15);
+        prevButton.setGraphic(prevImage);
+        ImageView nextImage = new ImageView(getClass().getResource("/drawable/practice_screen_images/next_btn_icon.png").toString());
+        nextButton.setContentDisplay(ContentDisplay.RIGHT);
+        nextButton.setGraphicTextGap(15);
+        nextButton.setGraphic(nextImage);
+    }
+
+    private void initializeFont() {
+        exitButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        submitButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
     }
 
     private void updateBookmarkIcon() {
@@ -767,8 +784,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         tilePane.getChildren().clear();
 
         for (int i=1; i <= questions.size(); i++) {
-            Rectangle r = new Rectangle(30, 30);
-            r.setFill(Color.web("#ededed"));
+            Rectangle r = new Rectangle(35, 35);
+            r.setFill(Color.web("#FFFFFF"));
+            r.setStroke(Paint.valueOf("#12AF20"));
+            r.setStrokeType(StrokeType.OUTSIDE);
+//            r.setStyle("-fx-border-radius: 8; -fx-border-color: #12AF20;");
 
             if (questions.get(i-1).getSelectedOption() != null) {
                 r.setStroke(Color.ORANGE);
@@ -777,7 +797,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             Label l = new Label(Integer.toString(i));
             if (subjectQuestionsState.getSelectedQuestion() == i) {
-                l.setTextFill(Color.RED);
+                r.setFill(Paint.valueOf("#12AF20"));
+                l.setTextFill(Color.WHITE);
             }
             StackPane s = new StackPane(r, l);
             tilePane.getChildren().add(s);
@@ -795,13 +816,16 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestion - 1);
 
         Rectangle selectedQuestionRectangle = (Rectangle) selectedQuestionPane.getChildren().get(0);
+        Rectangle oldQuestionRectangle = (Rectangle) oldQuestionPane.getChildren().get(0);
         Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
         Label oldQuestionText = (Label) oldQuestionPane.getChildren().get(1);
 
 
+        selectedQuestionRectangle.setFill(Paint.valueOf("#12AF20"));
+        oldQuestionRectangle.setFill(Paint.valueOf("#FFFFFF"));
 
         oldQuestionText.setTextFill(Color.BLACK);
-        selectedQuestionText.setTextFill(Color.RED);
+        selectedQuestionText.setTextFill(Color.WHITE);
 
     }
 
