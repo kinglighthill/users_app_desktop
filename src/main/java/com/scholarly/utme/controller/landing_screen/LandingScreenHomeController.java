@@ -8,8 +8,6 @@ import com.scholarly.utme.viewmodels.landing_screen.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -112,12 +110,12 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         cbtPracticePanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("practicePanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
         });
 
         actionCbtPracticePanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("practicePanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
         });
 
 
@@ -133,17 +131,17 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         videosPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("videosPanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
         });
 
         audioPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("audiosPanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
         });
 
         cbtCentresPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("learningCenterPanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
         });
 
         studyNotesPanel.setOnMouseClicked(e -> {

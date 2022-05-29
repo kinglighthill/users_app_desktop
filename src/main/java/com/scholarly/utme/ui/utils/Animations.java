@@ -6,6 +6,9 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
+/**
+ * Utility class used to play different types of animation across the application
+ */
 public class Animations {
 
     public static void translateIn(Node node, double duration) {
@@ -254,5 +257,59 @@ public class Animations {
             node.setVisible(false);
         });
 
+    }
+
+    public static void showDialog(Node dialog, Node dimmer) {
+        dialog.setVisible(true);
+        dimmer.setVisible(true);
+
+        FadeTransition fadeTransition = new FadeTransition();
+
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(0.5);
+        fadeTransition.setDuration(Duration.millis(500));
+        fadeTransition.setNode(dimmer);
+
+        ScaleTransition scaleTransition = new ScaleTransition();
+
+        scaleTransition.setFromX(0);
+        scaleTransition.setToX(1);
+        scaleTransition.setFromY(0);
+        scaleTransition.setToY(1);
+        scaleTransition.setNode(dialog);
+        scaleTransition.setDuration(Duration.millis(300));
+
+        scaleTransition.play();
+        fadeTransition.play();
+    }
+
+    public static void hideDialog(Node dialog, Node dimmer) {
+        FadeTransition fadeTransition = new FadeTransition();
+
+        fadeTransition.setFromValue(0.5);
+        fadeTransition.setToValue(0);
+        fadeTransition.setDuration(Duration.millis(500));
+        fadeTransition.setNode(dimmer);
+
+        ScaleTransition scaleTransition = new ScaleTransition();
+
+        scaleTransition.setFromX(1);
+        scaleTransition.setToX(0);
+        scaleTransition.setFromY(1);
+        scaleTransition.setToY(0);
+        scaleTransition.setNode(dialog);
+        scaleTransition.setDuration(Duration.millis(300));
+
+
+        scaleTransition.play();
+        fadeTransition.play();
+
+        scaleTransition.setOnFinished(event -> {
+            dialog.setVisible(false);
+        });
+
+        fadeTransition.setOnFinished(event -> {
+            dimmer.setVisible(false);
+        });
     }
 }

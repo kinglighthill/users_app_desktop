@@ -1,6 +1,5 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.HelloApplication;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -162,7 +161,8 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
         });
 
         exitButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.passData("practicePanel");
+            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
         });
 
     }
