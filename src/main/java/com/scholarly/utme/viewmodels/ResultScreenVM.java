@@ -1,6 +1,5 @@
 package com.scholarly.utme.viewmodels;
 
-import com.scholarly.utme.controller.ResultScreenController;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.Result;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -17,6 +16,7 @@ import static com.scholarly.utme.controller.ResultScreenController.*;
 public class ResultScreenVM implements ViewModel, SceneLifecycle {
 
     private SimpleStringProperty averageScore = new SimpleStringProperty("0%");
+    private SimpleStringProperty total = new SimpleStringProperty("0");
     private ObservableList<Result> results = FXCollections.observableArrayList();
 
     private List<Subject> subjectList;
@@ -40,12 +40,17 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
         subjectList = initialData.getSubjects();
         subjectsQuestions = initialData.getSubjectsQuestions();
 
-        double totalScore = 0;
+        int totalScore = 0;
+        double totalPercent = 0;
+        int totalQuestions = 0;
         for (int i = 0; i < results.size(); i++) {
-            totalScore += results.get(i).getPercentage();
+            totalScore += results.get(i).getCorrectAnswers();
+            totalPercent += results.get(i).getPercentage();
+            totalQuestions += results.get(i).getTotalQuestions();
         }
 
-        averageScore.set(String.format("%.1f", (totalScore/results.size())) + "%");
+        total.set(totalScore + "/" + totalQuestions);
+        averageScore.set(String.format("%.1f", (totalPercent/results.size())) + "%");
     }
 
 
@@ -55,6 +60,10 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
 
     public String getAverageScore() {
         return averageScore.get();
+    }
+
+    public SimpleStringProperty totalScoreProperty() {
+        return total;
     }
 
     public SimpleStringProperty averageScoreProperty() {
