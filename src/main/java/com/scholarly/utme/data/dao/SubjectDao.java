@@ -34,7 +34,7 @@ public class SubjectDao {
 
     public static String getSubjectName(String subjectTableName) {
         String query = "SELECT " + subjectNameColumn + " FROM " + tableName + " WHERE " + tableNameColumn + " = '" + subjectTableName + "'";
-        System.out.println(query);
+//        System.out.println(query);
 
         try (Connection connection = Database.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);

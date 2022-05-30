@@ -357,7 +357,6 @@
 
             </children>
          </VBox>
-
          <VBox fx:id="testSummaryDialog" maxHeight="450.0" maxWidth="450.0" prefHeight="200.0" prefWidth="150.0" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
             <children>
                <Panel prefWidth="200.0">
@@ -382,47 +381,54 @@
                      <Insets bottom="20.0" />
                   </VBox.margin>
                </Panel>
-
-               <VBox spacing="20" prefWidth="200.0" prefHeight="200" alignment="CENTER" style="-fx-background-color: #F4FFF5; -fx-background-radius: 8;">
-                  <children>
-                     <ImageView fx:id="summaryBookImage" preserveRatio="true" pickOnBounds="true"/>
-                     <Label text="CBT Practice Ended" textFill="#053500">
-                        <font>
-                           <Font name="System Bold" size="16"/>
-                        </font>
-                     </Label>
-                     <Label text="Your score" textFill="#053500"/>
-                     <Label text="150/400" textFill="#053500">
-                        <font>
-                           <Font name="System Bold" size="20"/>
-                        </font>
-                     </Label>
-
-                     <HBox alignment="CENTER" spacing="15">
-                        <Button fx:id="homePageButton" text="Back to home page" textFill="#12AF20" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
-                           <padding>
-                              <Insets topRightBottomLeft="8"/>
-                           </padding>
-                        </Button>
-                        <Button fx:id="resultAnalysisButton" text="See result analysis" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
-                           <padding>
-                              <Insets topRightBottomLeft="8"/>
-                           </padding>
-                        </Button>
-                        <VBox.margin>
-                           <Insets top="20"/>
-                        </VBox.margin>
-                     </HBox>
-
-                  </children>
+               <VBox spacing="15" prefWidth="200.0" prefHeight="200" alignment="CENTER"
+                     style="-fx-background-color: #F4FFF5; -fx-background-radius: 8;">
                   <padding>
                      <Insets top="20" bottom="40"/>
                   </padding>
+                  <ImageView fx:id="summaryBookImage" preserveRatio="true" pickOnBounds="true"/>
+                  <Label text="CBT Practice Ended" textFill="#053500">
+                     <font>
+                        <Font name="System Bold" size="20"/>
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="10"/>
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Your score" textFill="#053500">
+                     <font>
+                        <Font size="14"/>
+                     </font>
+                  </Label>
+                  <Label fx:id="scoreText" textFill="#053500">
+                     <font>
+                        <Font name="System Bold" size="30"/>
+                     </font>
+                  </Label>
+
+                  <HBox alignment="CENTER" spacing="15">
+                     <Button fx:id="homePageButton" text="Back to home page" textFill="#12AF20"
+                             style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
+                        <padding>
+                           <Insets topRightBottomLeft="8"/>
+                        </padding>
+                     </Button>
+                     <Button fx:id="resultAnalysisButton" text="See result analysis" textFill="white"
+                             style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+                        <padding>
+                           <Insets topRightBottomLeft="8"/>
+                        </padding>
+                     </Button>
+                     <VBox.margin>
+                        <Insets top="20"/>
+                     </VBox.margin>
+                  </HBox>
+
                </VBox>
             </children>
 
             <padding>
-               <Insets topRightBottomLeft="30"/>
+               <Insets left="30" right="30" bottom="30" top="20"/>
             </padding>
          </VBox>
 

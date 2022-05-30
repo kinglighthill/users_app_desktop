@@ -71,7 +71,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
 
     @FXML
-    private Label questionOverviewLabel, questionLabel, timeLabel;
+    private Label questionOverviewLabel, questionLabel, timeLabel, scoreText;
 
     @FXML
     private TextField enterCorrectAnswerField;
@@ -99,6 +99,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @FXML
     private WebView webView;
 
+    int totalScore = 0;
+    int totalQuestions = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -440,6 +442,12 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         submitButton.setOnAction(event -> {
             showSubmitDialog();
+
+            viewModel.getResults().forEach(result -> {
+                 totalScore += result.getCorrectAnswers();
+                 totalQuestions += result.getTotalQuestions();
+            });
+            scoreText.setText(totalScore + "/" + totalQuestions);
         });
 
         testSummaryCloseIcon.setOnMouseClicked(event -> {
