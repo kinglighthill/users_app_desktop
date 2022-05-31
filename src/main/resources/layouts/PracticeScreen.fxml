@@ -214,9 +214,6 @@
                            </font>
                         </RadioButton>
                         <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" spacing="15">
-                           <VBox.margin>
-                              <Insets bottom="20.0" top="20.0" />
-                           </VBox.margin>
                            <children>
                               <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="449.0" >
                                  <children>
@@ -237,15 +234,13 @@
                                  </VBox.margin>
                               </HBox>
                               <Separator prefWidth="200.0" />
-
                            </children>
+                           <VBox.margin>
+                              <Insets bottom="20.0" top="20.0" />
+                           </VBox.margin>
                         </VBox>
                         <ScrollPane fx:id="tileScrollPane" prefWidth="600" prefHeight="300" fitToWidth="true" >
-                           <TilePane fx:id="tilePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
-<!--                              <padding>-->
-<!--                                 <Insets top="20.0" left="20" bottom="20" />-->
-<!--                              </padding>-->
-                           </TilePane>
+                           <TilePane fx:id="tilePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;"/>
                            <VBox.margin>
                               <Insets bottom="20"/>
                            </VBox.margin>
