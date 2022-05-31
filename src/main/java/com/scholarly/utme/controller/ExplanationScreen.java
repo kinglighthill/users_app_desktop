@@ -16,6 +16,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,6 +24,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -47,6 +51,9 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
     private ScrollPane tileScrollPane;
 
     @FXML
+    private StackPane explanationPane, explanationVideo;
+
+    @FXML
     private ListView<Subject> subjectList;
 
     @FXML
@@ -59,11 +66,16 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
 
     @FXML
+    private ToggleButton textExplanation, videoExplanation;
+
+    @FXML
     private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, optionAIcon, optionBIcon, optionCIcon, optionDIcon;
 
     private Image correctImage;
 
     private Image incorrectImage;
+
+    private String explanationVideoUrl;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -73,6 +85,8 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
         initializeViews();
 
         initializeFont();
+
+        setupVideoPlayer();
 
         viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -133,11 +147,39 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
         tilePane.setVgap(10);
         tilePane.setHgap(10);
 
+        ToggleGroup explanationGroup = new ToggleGroup();
+        explanationGroup.getToggles().addAll(textExplanation, videoExplanation);
+        explanationGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue == textExplanation) {
+                textExplanation.setStyle("-fx-background-color: #12AF20; -fx-border-color: #12AF20;");
+                textExplanation.setTextFill(Paint.valueOf("#FFFFFF"));
+                videoExplanation.setStyle("-fx-border-color: #12AF20;");
+                videoExplanation.setTextFill(Paint.valueOf("#12AF20"));
+
+                explanationPane.getChildren().remove(explanationVideo);
+                if (!explanationPane.getChildren().contains(explanationLabel)) {
+                    explanationPane.getChildren().add(explanationLabel);
+                }
+
+            }else if (newValue == videoExplanation) {
+                explanationVideo.setVisible(true);
+                videoExplanation.setStyle("-fx-background-color: #12AF20; -fx-border-color: #12AF20;");
+                videoExplanation.setTextFill(Paint.valueOf("#FFFFFF"));
+                textExplanation.setStyle("-fx-border-color: #12AF20;");
+                textExplanation.setTextFill(Paint.valueOf("#12AF20"));
+
+                explanationPane.getChildren().remove(explanationLabel);
+                if (!explanationPane.getChildren().contains(explanationVideo)) {
+                    explanationPane.getChildren().add(explanationVideo);
+                }
+
+            }
+        }));
+
         exitButton.setOnAction(event -> {
             ViewSwitcher.passData("practicePanel");
             ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
         });
-
 
     }
 
@@ -146,6 +188,8 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
         exitButton.setBackground(Background.EMPTY);
         prevButton.setBackground(Background.EMPTY);
         tileScrollPane.setBackground(Background.EMPTY);
+        textExplanation.setBackground(Background.EMPTY);
+        videoExplanation.setBackground(Background.EMPTY);
 
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
         calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
@@ -166,6 +210,52 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
 
     private void initializeFont() {
         exitButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+    }
+
+    private void setupVideoPlayer() {
+        explanationVideoUrl = getClass().getResource("/assets/coding.mp4").toExternalForm();
+
+        Media media = new Media(explanationVideoUrl);
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        media.setOnError(() -> {
+            System.out.println("Media error -> " + media.getError());
+        });
+        mediaPlayer.setOnError(() -> {
+            System.out.println("MediaPlayer error -> " + mediaPlayer.getError());
+        });
+
+        MediaView mediaView = new MediaView(mediaPlayer);
+        mediaView.setFitWidth(280);
+        mediaView.setFitHeight(300);
+        mediaView.setSmooth(true);
+        mediaView.setOnError(event -> {
+            System.out.println("MediaView error -> " + event.getMediaError().toString());
+        });
+
+        Button playButton = new Button();
+        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_play_icon_1x.png").toString()));
+        playIcon.setFitHeight(45);
+        playIcon.setFitWidth(45);
+        ImageView pauseIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_pause_icon_1x.png").toString()));
+        pauseIcon.setFitHeight(45);
+        pauseIcon.setFitWidth(45);
+        playButton.setGraphic(playIcon);
+        playButton.setBackground(Background.EMPTY);
+        playButton.setOnAction(event -> {
+            MediaPlayer.Status status = mediaPlayer.getStatus();
+            if (status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.READY || status == MediaPlayer.Status.STOPPED) {
+                mediaPlayer.play();
+                playButton.setGraphic(pauseIcon);
+            } else {
+                mediaPlayer.pause();
+                playButton.setGraphic(playIcon);
+            }
+        });
+
+        StackPane.setAlignment(playButton, Pos.CENTER);
+
+        explanationVideo.getChildren().addAll(mediaView, playButton);
+
     }
 
     public void onCalculatorClicked(MouseEvent mouseEvent) {
@@ -424,7 +514,6 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
     private void setupTilePane() {
         PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
         List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
-        System.out.println("Number of questions -> " + questions.size());
 
         tilePane.getChildren().clear();
 

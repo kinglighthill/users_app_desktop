@@ -810,17 +810,17 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             r.setFill(Color.web("#FFFFFF"));
             r.setStroke(Paint.valueOf("#12AF20"));
             r.setStrokeType(StrokeType.OUTSIDE);
-//            r.setStyle("-fx-border-radius: 8; -fx-border-color: #12AF20;");
-
-            if (questions.get(i-1).getSelectedOption() != null) {
-                r.setStroke(Color.ORANGE);
-                r.setStrokeWidth(2);
-            }
 
             Label l = new Label(Integer.toString(i));
-            if (subjectQuestionsState.getSelectedQuestion() == i) {
+
+            if (questions.get(i-1).getSelectedOption() != null) {
                 r.setFill(Paint.valueOf("#12AF20"));
                 l.setTextFill(Color.WHITE);
+            }
+
+            if (subjectQuestionsState.getSelectedQuestion() == i) {
+                r.setStroke(Color.ORANGE);
+                r.setStrokeWidth(2);
             }
             StackPane s = new StackPane(r, l);
             tilePane.getChildren().add(s);
@@ -846,8 +846,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         selectedQuestionRectangle.setFill(Paint.valueOf("#12AF20"));
         oldQuestionRectangle.setFill(Paint.valueOf("#FFFFFF"));
 
-        oldQuestionText.setTextFill(Color.BLACK);
         selectedQuestionText.setTextFill(Color.WHITE);
+        oldQuestionText.setTextFill(Color.BLACK);
 
     }
 
