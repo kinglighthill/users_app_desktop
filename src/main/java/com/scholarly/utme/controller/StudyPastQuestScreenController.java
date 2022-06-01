@@ -355,7 +355,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             if (buttonType == ButtonType.YES){
                 dialogDimmer.setVisible(false);
                 ViewSwitcher.passData("pastQuestionsPanel");
-                ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+                ViewSwitcher.showScreen(View.HOME_SCREEN);
             }else if (buttonType == ButtonType.NO){;
                 dialogDimmer.setVisible(false);
             }

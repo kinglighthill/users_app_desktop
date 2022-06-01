@@ -13,7 +13,6 @@ public class Database {
     /**
      * Location of database
      */
-
     private static final String location = HelloApplication.class.getResource("/assets/databaseFile.db").toExternalForm();
 
 

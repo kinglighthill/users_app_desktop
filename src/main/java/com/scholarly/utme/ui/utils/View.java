@@ -10,7 +10,7 @@ public enum View {
     PRE_AUTHENTICATION_SCREEN("/layouts/PreAuthenticationScreen.fxml", PreAuthenticationController.class),
     AUTHENTICATION_SCREEN("/layouts/AuthenticationScreen.fxml", AuthenticationController.class),
     LANDING_SCREEN("/layouts/landing_screen/landing_screen.fxml", LandingScreenController.class),
-    SELECT_SUBJECT_SCREEN("/layouts/SelectSubjectScreen.fxml", SelectSubjectScreenController.class),
+    HOME_SCREEN("/layouts/HomeScreen.fxml", HomeScreenController.class),
     RESULT_SCREEN("/layouts/ResultScreen.fxml", ResultScreenController.class),
     PRACTICE_SCREEN("/layouts/PracticeScreen.fxml", PracticeScreenController.class),
     STUDY_PAST_QUESTION_SCREEN("/layouts/StudyPastQuestionsScreen.fxml", StudyPastQuestScreenController.class),

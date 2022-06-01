@@ -24,11 +24,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Background;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/ResultScreen.fxml")
 public class ResultScreenController implements FxmlView<ResultScreenVM>, Initializable {
@@ -174,7 +172,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
         exitButton.setOnAction(event -> {
             ViewSwitcher.passData("practicePanel");
-            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
     }

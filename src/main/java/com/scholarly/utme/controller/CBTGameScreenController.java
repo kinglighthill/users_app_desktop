@@ -317,11 +317,11 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         backButton.setOnAction(e -> {
             ViewSwitcher.passData("cbtGamePanel");
-            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
         exitButton.setOnAction(e -> {
             ViewSwitcher.passData("cbtGamePanel");
-            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
         playAgainButton.setOnAction(event -> {
             hideResult();

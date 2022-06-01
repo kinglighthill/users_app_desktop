@@ -20,8 +20,6 @@ import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,7 +39,6 @@ import javafx.scene.shape.StrokeType;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
@@ -924,7 +921,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
                 ViewSwitcher.passData("practicePanel");
-                ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+                ViewSwitcher.showScreen(View.HOME_SCREEN);
             } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
             }
@@ -968,7 +965,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 exitDialogDimmer.setVisible(false);
 
                 ViewSwitcher.passData("practicePanel");
-                ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+                ViewSwitcher.showScreen(View.HOME_SCREEN);
             }
             return buttonType;
         });

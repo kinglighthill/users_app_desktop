@@ -7,7 +7,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.skin.ProgressIndicatorSkin.IndeterminateSpinner.IndicatorPaths?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.SelectSubjectScreenController" style="-fx-background-color: #FFFFFF">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.HomeScreenController" style="-fx-background-color: #FFFFFF">
    <left>
       <VBox prefHeight="400.0" prefWidth="184.0" BorderPane.alignment="CENTER" style="-fx-background-color: #006B17;">
          <children>
@@ -22,12 +22,17 @@
                   <Insets left="30"/>
                </padding>
             </ToggleButton>
-             <ToggleButton fx:id="lessonNoteButton" text="Study Past Questions" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0">
+             <ToggleButton fx:id="pastQuestionButton" text="Study Past Questions" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0">
                 <padding>
                    <Insets left="30"/>
                 </padding>
              </ToggleButton>
             <ToggleButton fx:id="cbtGameButton" text="CBT Game" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
+               <padding>
+                  <Insets left="30"/>
+               </padding>
+            </ToggleButton>
+            <ToggleButton fx:id="novelsButton" text="Novels" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
                <padding>
                   <Insets left="30"/>
                </padding>
@@ -57,12 +62,10 @@
    </left>
    <center>
       <Panel>
-
          <top>
             <HBox spacing="15" alignment="CENTER_LEFT">
                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
-               <Label fx:id="cbtPracticeText" text="CBT Practice" textFill="#034801"/>
-
+               <Label fx:id="pageTitle" text="CBT Practice" textFill="#034801"/>
                <padding>
                   <Insets top="20" left="20" bottom="20"/>
                </padding>
@@ -77,6 +80,6 @@
          </HBox>
 
       </Panel>
-
    </center>
+
 </BorderPane>
