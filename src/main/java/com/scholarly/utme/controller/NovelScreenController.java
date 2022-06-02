@@ -156,13 +156,11 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
     @SuppressWarnings("unchecked")
     private void initializeViews() {
         List<ButtonBase> buttons = FXCollections.observableArrayList(dontShowButton, dismissButton, jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton);
-
         for (ButtonBase button : buttons) {
             button.setBackground(Background.EMPTY);
         }
 
         List<ListView<Novel>> listViews = FXCollections.observableArrayList(jambProseList, africanProseList, nonAfricanProseList, africanDramaList, nonAfricanDramaList, shakespeareanTextList, africanPoetryList, nonAfricanPoetryList);
-
         for (ListView<Novel> listView : listViews) {
             listView.setBackground(Background.EMPTY);
         }
