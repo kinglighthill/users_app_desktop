@@ -161,9 +161,9 @@
                                 </Button>
                             </right>
                             <bottom>
-                                <ListView fx:id="africanPoetryList" orientation="HORIZONTAL" prefHeight="250">
+                                <ListView fx:id="africanPoetryList" orientation="HORIZONTAL" prefHeight="270">
                                     <padding>
-                                        <Insets top="15"/>
+                                        <Insets top="10"/>
                                     </padding>
                                 </ListView>
                             </bottom>
@@ -181,9 +181,9 @@
                                 </Button>
                             </right>
                             <bottom>
-                                <ListView fx:id="nonAfricanPoetryList" orientation="HORIZONTAL" prefHeight="250">
+                                <ListView fx:id="nonAfricanPoetryList" orientation="HORIZONTAL" prefHeight="270">
                                     <padding>
-                                        <Insets top="15"/>
+                                        <Insets top="10"/>
                                     </padding>
                                 </ListView>
                             </bottom>
