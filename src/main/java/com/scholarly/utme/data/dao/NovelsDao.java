@@ -1,8 +1,6 @@
 package com.scholarly.utme.data.dao;
 
-import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.model.novelsDb.Novel;
-import com.scholarly.utme.data.util.Database;
+import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.util.NovelsDatabase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

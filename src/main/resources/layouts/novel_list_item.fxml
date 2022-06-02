@@ -10,7 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" >
     <graphic>
-        <VBox spacing="10" alignment="CENTER" style="-fx-border-color: #12AF20; -fx-border-radius: 10;">
+        <VBox fx:id="novelBox" spacing="10" alignment="CENTER" style="-fx-border-color: #12AF20; -fx-border-radius: 10;">
             <ImageView fx:id="novelImage"/>
             <VBox>
                 <Label fx:id="name"/>
@@ -21,7 +21,7 @@
             </VBox>
 
             <padding>
-                <Insets left="7" right="7"/>
+                <Insets left="6" right="6"/>
             </padding>
         </VBox>
     </graphic>

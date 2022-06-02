@@ -1,4 +1,4 @@
-package com.scholarly.utme.data.model.novelsDb;
+package com.scholarly.utme.data.model.novels;
 
 public class Novel {
 
@@ -143,5 +143,18 @@ public class Novel {
     @Override
     public String toString() {
         return name;
+    }
+
+    public enum Genre {
+        PROSE(1),
+        DRAMA(2),
+        TEXT(3),
+        POETRY(4);
+
+        private int id;
+
+        Genre(int id) {
+            this.id = id;
+        }
     }
 }

@@ -5,7 +5,7 @@ import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.HomeScreenVM;
-import com.scholarly.utme.viewmodels.NovelListViewVM;
+import com.scholarly.utme.viewmodels.NovelScreenVM;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
 import de.saxsys.mvvmfx.*;
 import javafx.animation.FadeTransition;
@@ -54,7 +54,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         SubjectListViewController subjectListController = subjectListViewTuple.getCodeBehind();
         contentPane.getChildren().add(SUBJECT_LIST_INDEX, subjectListViewTuple.getView());
 
-        ViewTuple<NovelListViewController, NovelListViewVM> novelListViewTuple = FluentViewLoader.fxmlView(NovelListViewController.class).load();
+        ViewTuple<NovelScreenController, NovelScreenVM> novelListViewTuple = FluentViewLoader.fxmlView(NovelScreenController.class).load();
         contentPane.getChildren().add(NOVELS_INDEX, novelListViewTuple.getView());
 
         initializeViews();

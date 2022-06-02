@@ -1,6 +1,6 @@
 package com.scholarly.utme.ui.cellFactories;
 
-import com.scholarly.utme.data.model.novelsDb.Novel;
+import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.ui.listcells.NovelListItemCell;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
