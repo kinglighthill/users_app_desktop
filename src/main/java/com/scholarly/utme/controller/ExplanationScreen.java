@@ -178,7 +178,7 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
 
         exitButton.setOnAction(event -> {
             ViewSwitcher.passData("practicePanel");
-            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
     }

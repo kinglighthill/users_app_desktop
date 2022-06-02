@@ -301,6 +301,6 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
     public void backButtonClicked() {
         ViewSwitcher.passData("studyNotesPanel");
-        ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+        ViewSwitcher.showScreen(View.HOME_SCREEN);
     }
 }

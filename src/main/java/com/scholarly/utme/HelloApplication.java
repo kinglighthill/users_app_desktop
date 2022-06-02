@@ -1,6 +1,7 @@
 package com.scholarly.utme;
 
 import com.scholarly.utme.data.util.Database;
+import com.scholarly.utme.data.util.NovelsDatabase;
 import com.scholarly.utme.data.util.UserDataDatabase;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -19,7 +20,7 @@ public class HelloApplication extends Application {
 ////        stage.setTitle("Scholarly UTME");
 ////        stage.setScene(scene);
 
-        System.out.println("Databases are ok..." + (Database.isOK() && UserDataDatabase.isOK()));
+        System.out.println("Databases are ok..." + (Database.isOK() && UserDataDatabase.isOK() && NovelsDatabase.isOK()));
 
         try {
             InputStream iconStream = HelloApplication.class.getResourceAsStream("/drawable/app_logo.png");

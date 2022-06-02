@@ -110,12 +110,12 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         cbtPracticePanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("practicePanel");
-            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
         actionCbtPracticePanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("practicePanel");
-            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
 
@@ -131,17 +131,17 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         videosPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("videosPanel");
-            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
         audioPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("audiosPanel");
-            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
         cbtCentresPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("learningCenterPanel");
-            ViewSwitcher.showScreen(View.SELECT_SUBJECT_SCREEN);
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
         studyNotesPanel.setOnMouseClicked(e -> {
