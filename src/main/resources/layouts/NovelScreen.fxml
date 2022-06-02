@@ -101,9 +101,9 @@
                                 </Button>
                             </right>
                             <bottom>
-                                <ListView fx:id="africanDramaList" orientation="HORIZONTAL" prefHeight="250">
+                                <ListView fx:id="africanDramaList" orientation="HORIZONTAL" prefHeight="270">
                                     <padding>
-                                        <Insets top="15"/>
+                                        <Insets top="10"/>
                                     </padding>
                                 </ListView>
                             </bottom>
@@ -121,9 +121,9 @@
                                 </Button>
                             </right>
                             <bottom>
-                                <ListView fx:id="nonAfricanDramaList" orientation="HORIZONTAL" prefHeight="250">
+                                <ListView fx:id="nonAfricanDramaList" orientation="HORIZONTAL" prefHeight="270">
                                     <padding>
-                                        <Insets top="15"/>
+                                        <Insets top="10"/>
                                     </padding>
                                 </ListView>
                             </bottom>
@@ -141,9 +141,9 @@
                                 </Button>
                             </right>
                             <bottom>
-                                <ListView fx:id="shakespeareanTextList" orientation="HORIZONTAL" prefHeight="250">
+                                <ListView fx:id="shakespeareanTextList" orientation="HORIZONTAL" prefHeight="270">
                                     <padding>
-                                        <Insets top="15"/>
+                                        <Insets top="10"/>
                                     </padding>
                                 </ListView>
                             </bottom>

@@ -61,8 +61,8 @@ public class NovelScreenVM implements ViewModel {
                 novelList.add(novel);
             }
         }
-        // Return only the first five novels in the list
-        return FXCollections.observableList(novelList.stream().limit(5).collect(Collectors.toList()));
+        // Return only the first four novels in the list
+        return FXCollections.observableList(novelList.stream().limit(4).collect(Collectors.toList()));
     }
 
     public void setSelectedNovel(Novel selectedNovel) {

@@ -77,7 +77,6 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
         africanProseList.setCellFactory(new NovelListCellFactory());
         africanProseList.setItems(viewModel.getNovels(Type.AFRICAN, Genre.PROSE));
-
         africanProseList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
@@ -87,7 +86,6 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
         nonAfricanProseList.setCellFactory(new NovelListCellFactory());
         nonAfricanProseList.setItems(viewModel.getNovels(Type.NON_AFRICAN, Genre.PROSE));
-
         nonAfricanProseList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
@@ -95,13 +93,40 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             authorLabel.setText(viewModel.getAuthor(newValue));
         }));
 
+        africanDramaList.setCellFactory(new NovelListCellFactory());
+        africanDramaList.setItems(viewModel.getNovels(Type.AFRICAN, Genre.DRAMA));
+        africanDramaList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
+            novelDescription.setText(newValue.getAbout());
+            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
+            authorLabel.setText(viewModel.getAuthor(newValue));
+        }));
+
+        nonAfricanDramaList.setCellFactory(new NovelListCellFactory());
+        nonAfricanDramaList.setItems(viewModel.getNovels(Type.NON_AFRICAN, Genre.DRAMA));
+        nonAfricanDramaList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
+            novelDescription.setText(newValue.getAbout());
+            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
+            authorLabel.setText(viewModel.getAuthor(newValue));
+        }));
+
+        shakespeareanTextList.setCellFactory(new NovelListCellFactory());
+        shakespeareanTextList.setItems(viewModel.getNovels(Type.SHAKESPEAREAN, Genre.TEXT));
+        shakespeareanTextList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
+            novelDescription.setText(newValue.getAbout());
+            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
+            authorLabel.setText(viewModel.getAuthor(newValue));
+        }));
+
+
         dismissButton.setOnAction(event -> {
             if (dontShowButton.isSelected()) {
                 centerBox.getChildren().remove(0);
             }else {
                 centerBox.getChildren().get(0).setVisible(false);
             }
-
         });
 
     }
@@ -114,6 +139,12 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         africanProseButton.setBackground(Background.EMPTY);
         nonAfricanProseList.setBackground(Background.EMPTY);
         nonAfricanProseButton.setBackground(Background.EMPTY);
+        africanDramaList.setBackground(Background.EMPTY);
+        africanDramaButton.setBackground(Background.EMPTY);
+        nonAfricanDramaList.setBackground(Background.EMPTY);
+        nonAfricanDramaButton.setBackground(Background.EMPTY);
+        shakespeareanTextList.setBackground(Background.EMPTY);
+        shakespeareanTextButton.setBackground(Background.EMPTY);
 
 
         authorIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/author_icon.png").toString()));
@@ -126,12 +157,18 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         jambProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
         africanProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
         nonAfricanProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+        africanDramaLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+        nonAfricanDramaLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+        shakespeareanLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
 
         dontShowButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
         dismissButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
         jambProseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
         africanProseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
         nonAfricanProseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
+        africanDramaButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
+        nonAfricanDramaButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
+        shakespeareanTextButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
 
         novelDescription.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
     }
