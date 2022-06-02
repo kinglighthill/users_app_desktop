@@ -1,7 +1,8 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.novels.Novel;
-import com.scholarly.utme.data.model.novels.NovelAuthor;
+import com.scholarly.utme.data.model.novels.Novel.Genre;
+import com.scholarly.utme.data.model.novels.Novel.Type;
 import com.scholarly.utme.ui.cellFactories.NovelListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.viewmodels.NovelScreenVM;
@@ -18,7 +19,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -32,19 +32,19 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
     private StackPane centerStackPane;
 
     @FXML
-    private Label infoText, proseText, novelDescription, authorLabel, chaptersLabel;
+    private Label infoText, jambProseLabel, africanProseLabel, nonAfricanProseLabel, africanDramaLabel, nonAfricanDramaLabel, shakespeareanLabel, africanPoetryLabel, nonAfricanPoetryLabel,  novelDescription, authorLabel, chaptersLabel;
 
     @FXML
     private RadioButton dontShowButton;
 
     @FXML
-    private Button dismissButton, viewAllButton;
+    private Button dismissButton, jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton;
 
     @FXML
     private VBox centerBox;
 
     @FXML
-    private ListView<Novel> jambNovelsList;
+    private ListView<Novel> jambProseList, africanProseList, nonAfricanProseList, africanDramaList, nonAfricanDramaList, shakespeareanTextList, africanPoetryList, nonAfricanPoetryList;
 
     @FXML
     private ImageView novelImage, authorIcon, chaptersIcon, timeIcon;
@@ -58,16 +58,16 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         initializeViews();
         initializeFont();
 
-        jambNovelsList.setItems(viewModel.getNovels());
-        jambNovelsList.setCellFactory(new NovelListCellFactory());
+        jambProseList.setCellFactory(new NovelListCellFactory());
+        jambProseList.setItems(viewModel.getNovels(Type.JAMB, Genre.PROSE));
 
-        Novel firstNovel = jambNovelsList.getItems().get(0);
+        Novel firstNovel = jambProseList.getItems().get(0);
         novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + firstNovel.getImagePath()).toString()));
         novelDescription.setText(firstNovel.getAbout());
         chaptersLabel.setText(firstNovel.getChaptersCount() + " chapters");
         authorLabel.setText(viewModel.getAuthor(firstNovel));
 
-        jambNovelsList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        jambProseList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             viewModel.setSelectedNovel(newValue);
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
@@ -75,19 +75,47 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             authorLabel.setText(viewModel.getAuthor(newValue));
         });
 
+        africanProseList.setCellFactory(new NovelListCellFactory());
+        africanProseList.setItems(viewModel.getNovels(Type.AFRICAN, Genre.PROSE));
+
+        africanProseList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
+            novelDescription.setText(newValue.getAbout());
+            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
+            authorLabel.setText(viewModel.getAuthor(newValue));
+        }));
+
+        nonAfricanProseList.setCellFactory(new NovelListCellFactory());
+        nonAfricanProseList.setItems(viewModel.getNovels(Type.NON_AFRICAN, Genre.PROSE));
+
+        nonAfricanProseList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
+            novelDescription.setText(newValue.getAbout());
+            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
+            authorLabel.setText(viewModel.getAuthor(newValue));
+        }));
 
         dismissButton.setOnAction(event -> {
-            centerBox.getChildren().get(0).setVisible(false);
+            if (dontShowButton.isSelected()) {
+                centerBox.getChildren().remove(0);
+            }else {
+                centerBox.getChildren().get(0).setVisible(false);
+            }
+
         });
 
     }
 
     private void initializeViews() {
         centerScrollPane.setBackground(Background.EMPTY);
-        jambNovelsList.setBackground(Background.EMPTY);
-        viewAllButton.setBackground(Background.EMPTY);
+        jambProseList.setBackground(Background.EMPTY);
+        jambProseButton.setBackground(Background.EMPTY);
+        africanProseList.setBackground(Background.EMPTY);
+        africanProseButton.setBackground(Background.EMPTY);
+        nonAfricanProseList.setBackground(Background.EMPTY);
+        nonAfricanProseButton.setBackground(Background.EMPTY);
 
-        novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/life_changer.jpg").toString()));
+
         authorIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/author_icon.png").toString()));
         chaptersIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/chapter_icon.png").toString()));
         timeIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/time_icon.png").toString()));
@@ -95,11 +123,15 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
     private void initializeFont() {
         infoText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        proseText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+        jambProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+        africanProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+        nonAfricanProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
 
         dontShowButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
         dismissButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
-        viewAllButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
+        jambProseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
+        africanProseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
+        nonAfricanProseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
 
         novelDescription.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
     }

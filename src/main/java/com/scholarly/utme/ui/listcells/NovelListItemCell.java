@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class NovelListItemCell extends ListCell<Novel> {
 
@@ -49,7 +50,7 @@ public class NovelListItemCell extends ListCell<Novel> {
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }else {
-            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + item.getImagePath()).toString()));
+            novelImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/drawable/novel_images/" + item.getImagePath())).toString()));
             name.setText(item.getName());
             name.setTextFill(Paint.valueOf("#000000"));
             name.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));

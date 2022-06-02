@@ -140,9 +140,22 @@ public class Novel {
         this.creditId = creditId;
     }
 
-    @Override
-    public String toString() {
-        return name;
+
+    public enum Type {
+        JAMB(1),
+        AFRICAN(2),
+        NON_AFRICAN(3),
+        SHAKESPEAREAN(4);
+
+        private int id;
+
+        Type(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
     public enum Genre {
@@ -155,6 +168,10 @@ public class Novel {
 
         Genre(int id) {
             this.id = id;
+        }
+
+        public int getId() {
+            return id;
         }
     }
 }
