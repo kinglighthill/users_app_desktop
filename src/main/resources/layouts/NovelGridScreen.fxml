@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import org.controlsfx.control.cell.ImageGridCell?>
+<?import org.controlsfx.control.GridView?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.NovelGridScreenController"
+            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;">
+
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
+            <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
+                <font>
+                    <Font name="System Bold" size="20"/>
+                </font>
+            </Label>
+            <padding>
+                <Insets top="20" left="20" bottom="20"/>
+            </padding>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox prefHeight="400.0" prefWidth="184.0" BorderPane.alignment="CENTER" style="-fx-background-color: #006B17;">
+            <children>
+
+                <Separator prefWidth="200.0" />
+                <ToggleButton fx:id="practiceButton" text="JAMB Prose" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;" >
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+                <ToggleButton fx:id="pastQuestionButton" text="African Prose" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+                <ToggleButton fx:id="cbtGameButton" text="Non African Prose" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+                <ToggleButton fx:id="novelsButton" text="African Drama" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+                <ToggleButton fx:id="videosButton" text="Non African Drama" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+                <ToggleButton fx:id="audiosButton" text="Shakespearean Text" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+                <ToggleButton fx:id="learningCenterButton" text="African Poetry" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+                <ToggleButton fx:id="studyNotesButton" text="Non African Poetry" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+            </children>
+        </VBox>
+    </left>
+    <center>
+        <VBox BorderPane.alignment="TOP_CENTER">
+            <TextField promptText="Enter a keyword" prefWidth="50" maxWidth="100" />
+            <GridView fx:id="novelGridView" horizontalCellSpacing="20" verticalCellSpacing="30" cellWidth="100" cellHeight="200"/>
+
+            <padding>
+                <Insets topRightBottomLeft="20"/>
+            </padding>
+        </VBox>
+    </center>
+
+</BorderPane>

@@ -5,6 +5,8 @@ import com.scholarly.utme.data.model.novels.Novel.Genre;
 import com.scholarly.utme.data.model.novels.Novel.Type;
 import com.scholarly.utme.ui.cellFactories.NovelListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.NovelScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -143,6 +145,8 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         }));
 
 
+
+
         dismissButton.setOnAction(event -> {
             if (dontShowButton.isSelected()) {
                 centerBox.getChildren().remove(0);
@@ -155,18 +159,21 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
     @SuppressWarnings("unchecked")
     private void initializeViews() {
-        List<ButtonBase> buttons = FXCollections.observableArrayList(dontShowButton, dismissButton, jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton);
-
+        List<ButtonBase> buttons = FXCollections.observableArrayList(jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton);
         for (ButtonBase button : buttons) {
             button.setBackground(Background.EMPTY);
+
+            button.setOnAction(event -> {
+                ViewSwitcher.showScreen(View.NOVEL_GRID_SCREEN);
+            });
         }
 
         List<ListView<Novel>> listViews = FXCollections.observableArrayList(jambProseList, africanProseList, nonAfricanProseList, africanDramaList, nonAfricanDramaList, shakespeareanTextList, africanPoetryList, nonAfricanPoetryList);
-
         for (ListView<Novel> listView : listViews) {
             listView.setBackground(Background.EMPTY);
         }
 
+        dismissButton.setBackground(Background.EMPTY);
         centerScrollPane.setBackground(Background.EMPTY);
 
         authorIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/author_icon.png").toString()));
