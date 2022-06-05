@@ -153,7 +153,8 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         if (ViewSwitcher.retrieveData() instanceof String){
             String selectedMenuOption = (String) ViewSwitcher.retrieveData();
-            ToggleButton selectedToggle = selectToggle(selectedMenuOption);
+            System.out.println("Selected menu option -> " + selectedMenuOption);
+            ToggleButton selectedToggle = getToggle(selectedMenuOption);
 
             toggleGroup.selectToggle(selectedToggle);
             // It is 'false' because the studyNotesButton selectedProperty's was initially toggled to 'true' when user navigated from the HOME_SCREEN to SELECT_NOTE_SCREEN
@@ -199,16 +200,16 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
      * @param buttonId the id of the Button
      * @return a ToggleButton corresponding to the Button ID
      */
-    private ToggleButton selectToggle(String buttonId){
+    private ToggleButton getToggle(String buttonId){
         return switch (buttonId) {
-            case "practicePanel" -> practiceButton;
-            case "pastQuestionsPanel" -> pastQuestionButton;
-            case "cbtGamePanel" -> cbtGameButton;
-            case "novelsPanel" -> novelsButton;
-            case "videosPanel" -> videosButton;
-            case "audioPanel" -> audiosButton;
-            case "learningCenterPanel" -> learningCenterButton;
-            case "studyNotesPanel" -> studyNotesButton;
+            case "practicePanel", "practiceButton" -> practiceButton;
+            case "pastQuestionsPanel", "pastQuestionsButton" -> pastQuestionButton;
+            case "cbtGamePanel", "cbtGameButton" -> cbtGameButton;
+            case "novelsPanel", "novelsButton" -> novelsButton;
+            case "videosPanel", "videosButton" -> videosButton;
+            case "audioPanel", "audioButton" -> audiosButton;
+            case "learningCenterPanel", "learningCenterButton" -> learningCenterButton;
+            case "studyNotesPanel", "studyNotesButton" -> studyNotesButton;
             default -> null;
         };
     }

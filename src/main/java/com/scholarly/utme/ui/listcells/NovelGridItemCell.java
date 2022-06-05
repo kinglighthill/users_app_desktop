@@ -28,7 +28,7 @@ public class NovelGridItemCell extends GridCell<Novel> {
 
     private void loadFxml() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/novel_grid_item.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/list_items/novel_grid_item.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             loader.load();

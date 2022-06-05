@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
@@ -26,7 +25,7 @@ public class PracticeSubjectListItemCell extends ListCell<Subject> {
 
     private void loadFxml() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/practice_subject_list_item.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/list_items/practice_subject_list_item.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             loader.load();

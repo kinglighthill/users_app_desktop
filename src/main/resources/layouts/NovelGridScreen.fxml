@@ -10,78 +10,52 @@
 <?import javafx.geometry.Insets?>
 <?import org.controlsfx.control.cell.ImageGridCell?>
 <?import org.controlsfx.control.GridView?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.image.ImageView?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.NovelGridScreenController"
             maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;">
 
     <top>
-        <HBox spacing="15" alignment="CENTER_LEFT">
-            <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
-            <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
-                <font>
-                    <Font name="System Bold" size="20"/>
-                </font>
-            </Label>
-            <padding>
-                <Insets top="20" left="20" bottom="20"/>
-            </padding>
-        </HBox>
+        <Panel>
+            <left>
+                <HBox>
+                    <!--<HBox spacing="5" alignment="CENTER" prefWidth="184.0" style="-fx-background-color: #006B17;">
+                        <ImageView fx:id="appImage" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                        <Label fx:id="scholarlyText" text="Scholarly" textFill="#FFFFFF"/>
+                    </HBox>-->
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
+                        <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
+                            <font>
+                                <Font name="System Bold" size="20"/>
+                            </font>
+                        </Label>
+                        <padding>
+                            <Insets top="20" left="20" bottom="20"/>
+                        </padding>
+                    </HBox>
+                </HBox>
+            </left>
+        </Panel>
     </top>
 
-    <left>
-        <VBox prefHeight="400.0" prefWidth="184.0" BorderPane.alignment="CENTER" style="-fx-background-color: #006B17;">
-            <children>
-
-                <Separator prefWidth="200.0" />
-                <ToggleButton fx:id="practiceButton" text="JAMB Prose" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;" >
-                    <padding>
-                        <Insets left="30"/>
-                    </padding>
-                </ToggleButton>
-                <ToggleButton fx:id="pastQuestionButton" text="African Prose" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0">
-                    <padding>
-                        <Insets left="30"/>
-                    </padding>
-                </ToggleButton>
-                <ToggleButton fx:id="cbtGameButton" text="Non African Prose" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-                    <padding>
-                        <Insets left="30"/>
-                    </padding>
-                </ToggleButton>
-                <ToggleButton fx:id="novelsButton" text="African Drama" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-                    <padding>
-                        <Insets left="30"/>
-                    </padding>
-                </ToggleButton>
-                <ToggleButton fx:id="videosButton" text="Non African Drama" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-                    <padding>
-                        <Insets left="30"/>
-                    </padding>
-                </ToggleButton>
-                <ToggleButton fx:id="audiosButton" text="Shakespearean Text" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-                    <padding>
-                        <Insets left="30"/>
-                    </padding>
-                </ToggleButton>
-                <ToggleButton fx:id="learningCenterButton" text="African Poetry" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0">
-                    <padding>
-                        <Insets left="30"/>
-                    </padding>
-                </ToggleButton>
-                <ToggleButton fx:id="studyNotesButton" text="Non African Poetry" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-                    <padding>
-                        <Insets left="30"/>
-                    </padding>
-                </ToggleButton>
-            </children>
-        </VBox>
-    </left>
     <center>
-        <VBox BorderPane.alignment="TOP_CENTER">
-            <TextField promptText="Enter a keyword" prefWidth="50" maxWidth="100" />
-            <GridView fx:id="novelGridView" horizontalCellSpacing="20" verticalCellSpacing="30" cellWidth="100" cellHeight="200"/>
+        <VBox BorderPane.alignment="TOP_LEFT" spacing="20" >
+            <StackPane maxWidth="250">
+                <TextField promptText="Enter a keyword" prefWidth="50" prefHeight="30" style="-fx-background-color: rgba(0, 107, 23, 0.05); -fx-background-radius: 8; -fx-border-color: #12AF20; -fx-border-radius: 8;"/>
+                <ImageView fx:id="searchIcon" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT">
+                    <StackPane.margin>
+                        <Insets right="15"/>
+                    </StackPane.margin>
+                </ImageView>
+                <VBox.margin>
+                    <Insets left="17"/>
+                </VBox.margin>
+            </StackPane>
 
+            <GridView fx:id="novelGridView" horizontalCellSpacing="20" verticalCellSpacing="30" cellWidth="100" cellHeight="200"/>
             <padding>
-                <Insets topRightBottomLeft="20"/>
+                <Insets top="20" right="20" bottom="20" left="10"/>
             </padding>
         </VBox>
     </center>

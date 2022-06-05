@@ -19,7 +19,7 @@ public class UnorderedListItemCell extends ListCell<UnorderedListItem> {
 
     private void loadFXML() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/unordered_list_item.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/list_items/unordered_list_item.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             loader.load();

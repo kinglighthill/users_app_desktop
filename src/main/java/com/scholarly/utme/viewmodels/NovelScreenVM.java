@@ -6,7 +6,6 @@ import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.Novel.Genre;
 import com.scholarly.utme.data.model.novels.Novel.Type;
 import com.scholarly.utme.data.model.novels.NovelAuthor;
-import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -36,8 +35,15 @@ public class NovelScreenVM implements ViewModel {
 
     }
 
-    public ObservableList<Novel> getNovels() {
-        return novels;
+    public ObservableList<Novel> getNovels(Type type, Genre genre) {
+        ObservableList<Novel> novelList = FXCollections.observableArrayList();
+        for (Novel novel : novels) {
+            if (novel.getTypeId() == type.getId() && novel.getGenreId() == genre.getId()) {
+//                System.out.println("Novel -> " + novel.getName());
+                novelList.add(novel);
+            }
+        }
+        return novelList;
     }
 
     public ObservableList<NovelAuthor> getAuthors() {
@@ -53,11 +59,11 @@ public class NovelScreenVM implements ViewModel {
         return null;
     }
 
-    public ObservableList<Novel> getNovels(Type type, Genre genre) {
+    public ObservableList<Novel> getFirstFourNovels(Type type, Genre genre) {
         ObservableList<Novel> novelList = FXCollections.observableArrayList();
         for (Novel novel : novels) {
             if (novel.getTypeId() == type.getId() && novel.getGenreId() == genre.getId()) {
-                System.out.println("Novel -> " + novel.getName());
+//                System.out.println("Novel -> " + novel.getName());
                 novelList.add(novel);
             }
         }

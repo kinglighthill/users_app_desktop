@@ -12,6 +12,7 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -20,12 +21,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Pair;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/NovelScreen.fxml")
 public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializable {
@@ -64,8 +64,10 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         initializeViews();
         initializeFont();
 
-        jambProseList.setCellFactory(new NovelListCellFactory());
-        jambProseList.setItems(viewModel.getNovels(Type.JAMB, Genre.PROSE));
+
+        Pair<String, ObservableList<Novel>> jambProse = new Pair<>(jambProseButton.getId(), viewModel.getNovels(Type.JAMB, Genre.PROSE));
+        jambProseButton.setUserData(jambProse);
+        jambProseList.setItems(viewModel.getFirstFourNovels(Type.JAMB, Genre.PROSE));
 
         Novel firstNovel = jambProseList.getItems().get(0);
         novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + firstNovel.getImagePath()).toString()));
@@ -81,8 +83,10 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             authorLabel.setText(viewModel.getAuthor(newValue));
         });
 
-        africanProseList.setCellFactory(new NovelListCellFactory());
-        africanProseList.setItems(viewModel.getNovels(Type.AFRICAN, Genre.PROSE));
+
+        Pair<String, ObservableList<Novel>> africanProse = new Pair<>(africanProseButton.getId(), viewModel.getNovels(Type.AFRICAN, Genre.PROSE));
+        africanProseButton.setUserData(africanProse);
+        africanProseList.setItems(viewModel.getFirstFourNovels(Type.AFRICAN, Genre.PROSE));
         africanProseList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
@@ -90,8 +94,10 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             authorLabel.setText(viewModel.getAuthor(newValue));
         }));
 
-        nonAfricanProseList.setCellFactory(new NovelListCellFactory());
-        nonAfricanProseList.setItems(viewModel.getNovels(Type.NON_AFRICAN, Genre.PROSE));
+
+        Pair<String, ObservableList<Novel>> nonAfricanProse = new Pair<>(nonAfricanProseButton.getId(), viewModel.getNovels(Type.NON_AFRICAN, Genre.PROSE));
+        nonAfricanProseButton.setUserData(nonAfricanProse);
+        nonAfricanProseList.setItems(viewModel.getFirstFourNovels(Type.NON_AFRICAN, Genre.PROSE));
         nonAfricanProseList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
@@ -99,8 +105,10 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             authorLabel.setText(viewModel.getAuthor(newValue));
         }));
 
-        africanDramaList.setCellFactory(new NovelListCellFactory());
-        africanDramaList.setItems(viewModel.getNovels(Type.AFRICAN, Genre.DRAMA));
+
+        Pair<String, ObservableList<Novel>> africanDrama = new Pair<>(africanDramaButton.getId(), viewModel.getNovels(Type.AFRICAN, Genre.DRAMA));
+        africanDramaButton.setUserData(africanDrama);
+        africanDramaList.setItems(viewModel.getFirstFourNovels(Type.AFRICAN, Genre.DRAMA));
         africanDramaList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
@@ -108,8 +116,10 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             authorLabel.setText(viewModel.getAuthor(newValue));
         }));
 
-        nonAfricanDramaList.setCellFactory(new NovelListCellFactory());
-        nonAfricanDramaList.setItems(viewModel.getNovels(Type.NON_AFRICAN, Genre.DRAMA));
+
+        Pair<String, ObservableList<Novel>> nonAfricanDrama = new Pair<>(nonAfricanDramaButton.getId(), viewModel.getNovels(Type.NON_AFRICAN, Genre.DRAMA));
+        nonAfricanDramaButton.setUserData(nonAfricanDrama);
+        nonAfricanDramaList.setItems(viewModel.getFirstFourNovels(Type.NON_AFRICAN, Genre.DRAMA));
         nonAfricanDramaList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
@@ -117,8 +127,10 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             authorLabel.setText(viewModel.getAuthor(newValue));
         }));
 
-        shakespeareanTextList.setCellFactory(new NovelListCellFactory());
-        shakespeareanTextList.setItems(viewModel.getNovels(Type.SHAKESPEAREAN, Genre.TEXT));
+
+        Pair<String, ObservableList<Novel>> shakespearean = new Pair<>(shakespeareanTextButton.getId(), viewModel.getNovels(Type.SHAKESPEAREAN, Genre.TEXT));
+        shakespeareanTextButton.setUserData(shakespearean);
+        shakespeareanTextList.setItems(viewModel.getFirstFourNovels(Type.SHAKESPEAREAN, Genre.TEXT));
         shakespeareanTextList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
@@ -126,8 +138,10 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             authorLabel.setText(viewModel.getAuthor(newValue));
         }));
 
-        africanPoetryList.setCellFactory(new NovelListCellFactory());
-        africanPoetryList.setItems(viewModel.getNovels(Type.AFRICAN, Genre.POETRY));
+
+        Pair<String, ObservableList<Novel>> africanPoetry = new Pair<>(africanPoetryButton.getId(), viewModel.getNovels(Type.AFRICAN, Genre.POETRY));
+        africanPoetryButton.setUserData(africanPoetry);
+        africanPoetryList.setItems(viewModel.getFirstFourNovels(Type.AFRICAN, Genre.POETRY));
         africanPoetryList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
@@ -135,16 +149,16 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             authorLabel.setText(viewModel.getAuthor(newValue));
         }));
 
-        nonAfricanPoetryList.setCellFactory(new NovelListCellFactory());
-        nonAfricanPoetryList.setItems(viewModel.getNovels(Type.NON_AFRICAN, Genre.POETRY));
+
+        Pair<String, ObservableList<Novel>> nonAfricanPoetry = new Pair<>(nonAfricanPoetryButton.getId(), viewModel.getNovels(Type.NON_AFRICAN, Genre.POETRY));
+        nonAfricanPoetryButton.setUserData(nonAfricanPoetry);
+        nonAfricanPoetryList.setItems(viewModel.getFirstFourNovels(Type.NON_AFRICAN, Genre.POETRY));
         nonAfricanPoetryList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
             chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
             authorLabel.setText(viewModel.getAuthor(newValue));
         }));
-
-
 
 
         dismissButton.setOnAction(event -> {
@@ -164,6 +178,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             button.setBackground(Background.EMPTY);
 
             button.setOnAction(event -> {
+                ViewSwitcher.passData(button.getUserData());
                 ViewSwitcher.showScreen(View.NOVEL_GRID_SCREEN);
             });
         }
@@ -171,6 +186,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         List<ListView<Novel>> listViews = FXCollections.observableArrayList(jambProseList, africanProseList, nonAfricanProseList, africanDramaList, nonAfricanDramaList, shakespeareanTextList, africanPoetryList, nonAfricanPoetryList);
         for (ListView<Novel> listView : listViews) {
             listView.setBackground(Background.EMPTY);
+            listView.setCellFactory(new NovelListCellFactory());
         }
 
         dismissButton.setBackground(Background.EMPTY);
