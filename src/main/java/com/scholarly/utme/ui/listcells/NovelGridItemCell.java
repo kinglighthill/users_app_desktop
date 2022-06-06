@@ -2,6 +2,8 @@ package com.scholarly.utme.ui.listcells;
 
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -17,6 +19,8 @@ import java.util.Objects;
 
 public class NovelGridItemCell extends GridCell<Novel> {
 
+    private Novel novel;
+
     public VBox novelBox;
     public ImageView novelImage;
     public Label name;
@@ -24,6 +28,11 @@ public class NovelGridItemCell extends GridCell<Novel> {
 
     public NovelGridItemCell() {
         loadFxml();
+
+        setOnMouseClicked(event -> {
+            ViewSwitcher.passData(novel);
+            ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
+        });
     }
 
     private void loadFxml() {
@@ -42,6 +51,7 @@ public class NovelGridItemCell extends GridCell<Novel> {
     @Override
     protected void updateItem(Novel item, boolean empty) {
         super.updateItem(item, empty);
+        this.novel = item;
 
         if (empty || item == null) {
             setText(null);

@@ -20,13 +20,8 @@ public class NovelScreenVM implements ViewModel {
 
     private ObservableList<NovelAuthor> authors = FXCollections.observableArrayList();
 
-    private HashMap<String, NovelState> novelStateHashMap = new HashMap<>();
-
     private ObjectProperty<Novel> selectedNovel = new SimpleObjectProperty<>();
 
-    private SimpleStringProperty novelDescription = new SimpleStringProperty();
-
-    private SimpleStringProperty chaptersCount = new SimpleStringProperty();
 
     public NovelScreenVM() {
         novels.addAll(NovelsDao.getNovels());
@@ -39,7 +34,6 @@ public class NovelScreenVM implements ViewModel {
         ObservableList<Novel> novelList = FXCollections.observableArrayList();
         for (Novel novel : novels) {
             if (novel.getTypeId() == type.getId() && novel.getGenreId() == genre.getId()) {
-//                System.out.println("Novel -> " + novel.getName());
                 novelList.add(novel);
             }
         }
@@ -63,7 +57,6 @@ public class NovelScreenVM implements ViewModel {
         ObservableList<Novel> novelList = FXCollections.observableArrayList();
         for (Novel novel : novels) {
             if (novel.getTypeId() == type.getId() && novel.getGenreId() == genre.getId()) {
-//                System.out.println("Novel -> " + novel.getName());
                 novelList.add(novel);
             }
         }
@@ -79,50 +72,9 @@ public class NovelScreenVM implements ViewModel {
         return selectedNovel.get();
     }
 
-    public void setNovelDescription(Novel selectedNovel) {
-        this.novelDescription.set(selectedNovel.getAbout());
-    }
-
     public ObjectProperty<Novel> selectedNovelProperty() {
         return selectedNovel;
     }
 
-    public SimpleStringProperty novelDescriptionProperty() {
-        return novelDescription;
-    }
 
-    public void setChaptersCount(Novel selectedNovel) {
-        this.chaptersCount.set(selectedNovel.getChaptersCount() + " chapters");
-    }
-
-    public SimpleStringProperty chaptersCountProperty() {
-        return chaptersCount;
-    }
-
-
-    public static class NovelState {
-        private Novel novel;
-        private NovelAuthor author;
-
-        public NovelState(Novel novel, NovelAuthor author) {
-            this.novel = novel;
-            this.author = author;
-        }
-
-        public Novel getNovel() {
-            return novel;
-        }
-
-        public void setNovel(Novel novel) {
-            this.novel = novel;
-        }
-
-        public NovelAuthor getAuthor() {
-            return author;
-        }
-
-        public void setAuthor(NovelAuthor author) {
-            this.author = author;
-        }
-    }
 }

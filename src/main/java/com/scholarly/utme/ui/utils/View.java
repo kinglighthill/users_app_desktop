@@ -20,7 +20,8 @@ public enum View {
     EXPLANATION_SCREEN("/layouts/ExplanationScreen.fxml", ExplanationScreen.class),
     SELECT_SYLLABUS_SCREEN("/layouts/SelectSyllabusScreen.fxml", SelectSyllabusController.class),
     SYLLABUS_SCREEN("/layouts/SyllabusScreen.fxml", SyllabusScreenController.class),
-    NOVEL_GRID_SCREEN("/layouts/NovelGridScreen.fxml", NovelGridScreenController.class);
+    NOVEL_GRID_SCREEN("/layouts/NovelGridScreen.fxml", NovelGridScreenController.class),
+    NOVEL_CHAPTER_LIST_SCREEN("/layouts/NovelChapterListScreen.fxml", NovelChapterListController.class);
 
 
 
