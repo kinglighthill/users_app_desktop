@@ -53,7 +53,7 @@
                 </VBox.margin>
             </StackPane>
 
-            <GridView fx:id="novelGridView" horizontalCellSpacing="20" verticalCellSpacing="30" cellWidth="100" cellHeight="200"/>
+            <GridView fx:id="novelGridView" horizontalCellSpacing="30" verticalCellSpacing="30" cellWidth="100" cellHeight="200"/>
             <padding>
                 <Insets top="20" right="20" bottom="20" left="10"/>
             </padding>

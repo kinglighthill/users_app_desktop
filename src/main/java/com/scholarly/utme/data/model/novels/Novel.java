@@ -80,6 +80,10 @@ public class Novel {
         return chaptersCount;
     }
 
+    public String getChapters() {
+        return chaptersCount + " chapters";
+    }
+
     public void setChaptersCount(int chaptersCount) {
         this.chaptersCount = chaptersCount;
     }

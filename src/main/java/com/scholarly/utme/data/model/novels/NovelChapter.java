@@ -4,15 +4,17 @@ public class NovelChapter {
 
     private int id;
     private int position;
+    private String title;
     private String description;
     private String details;
     private int category;
     private int isRead;
     private int novelId;
 
-    public NovelChapter(int id, int position, String description, String details, int category, int isRead, int novelId) {
+    public NovelChapter(int id, int position, String title, String description, String details, int category, int isRead, int novelId) {
         this.id = id;
         this.position = position;
+        this.title = title;
         this.description = description;
         this.details = details;
         this.category = category;
@@ -35,6 +37,14 @@ public class NovelChapter {
     public void setPosition(int position) {
         this.position = position;
     }
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
 
     public String getDescription() {
         return description;

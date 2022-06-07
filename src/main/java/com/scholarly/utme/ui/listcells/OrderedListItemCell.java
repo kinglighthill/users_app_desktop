@@ -26,7 +26,6 @@ public class OrderedListItemCell extends ListCell<OrderedListItem> {
             loader.setController(this);
             loader.setRoot(this);
             loader.load();
-           // System.out.println("OrderedList Loader loaded successfully");
         }
         catch (IOException e) {
             e.printStackTrace();

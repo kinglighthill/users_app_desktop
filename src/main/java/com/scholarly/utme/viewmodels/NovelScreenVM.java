@@ -10,8 +10,8 @@ import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
 
-import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class NovelScreenVM implements ViewModel {
@@ -21,6 +21,14 @@ public class NovelScreenVM implements ViewModel {
     private ObservableList<NovelAuthor> authors = FXCollections.observableArrayList();
 
     private ObjectProperty<Novel> selectedNovel = new SimpleObjectProperty<>();
+
+    private SimpleObjectProperty<Image> novelImage = new SimpleObjectProperty<>();
+
+    private SimpleStringProperty novelDescription = new SimpleStringProperty();
+
+    private SimpleStringProperty novelChapters = new SimpleStringProperty();
+
+    private SimpleStringProperty novelAuthor = new SimpleStringProperty();
 
 
     public NovelScreenVM() {
@@ -66,6 +74,11 @@ public class NovelScreenVM implements ViewModel {
 
     public void setSelectedNovel(Novel selectedNovel) {
         this.selectedNovel.set(selectedNovel);
+        this.novelImage.set(new Image(getClass().getResource("/drawable/novel_images/" + selectedNovel.getImagePath()).toString()));
+        this.novelDescription.set(selectedNovel.getAbout());
+        this.novelChapters.set(selectedNovel.getChapters());
+        this.novelAuthor.set(getAuthor(selectedNovel));
+
     }
 
     public Novel getSelectedNovel() {
@@ -76,5 +89,20 @@ public class NovelScreenVM implements ViewModel {
         return selectedNovel;
     }
 
+    public SimpleObjectProperty<Image> novelImageProperty() {
+        return novelImage;
+    }
+
+    public SimpleStringProperty novelDescriptionProperty() {
+        return novelDescription;
+    }
+
+    public SimpleStringProperty novelChaptersProperty() {
+        return novelChapters;
+    }
+
+    public SimpleStringProperty novelAuthorProperty() {
+        return novelAuthor;
+    }
 
 }

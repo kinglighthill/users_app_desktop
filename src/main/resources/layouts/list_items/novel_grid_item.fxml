@@ -14,7 +14,7 @@
         <VBox fx:id="novelBox" spacing="10" alignment="CENTER" >
 
             <StackPane style="-fx-background-color: #D7D7D7; -fx-background-radius: 8;">
-                <ImageView fx:id="novelImage" fitHeight="170" fitWidth="100">
+                <ImageView fx:id="novelImage" fitHeight="180" fitWidth="120">
                     <StackPane.margin>
                         <Insets topRightBottomLeft="10"/>
                     </StackPane.margin>
