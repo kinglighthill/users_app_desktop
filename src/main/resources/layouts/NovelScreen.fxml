@@ -196,10 +196,7 @@
                 </VBox>
 
             </StackPane>
-
-
         </ScrollPane>
-
     </center>
     <right>
         <HBox spacing="20">

@@ -8,7 +8,6 @@ import javafx.util.Callback;
 
 public class NovelListCellFactory implements Callback<ListView<Novel>, ListCell<Novel>> {
 
-
     @Override
     public ListCell<Novel> call(ListView<Novel> param) {
         return new NovelListItemCell();

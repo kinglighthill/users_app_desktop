@@ -5,11 +5,14 @@ import com.scholarly.utme.data.model.novels.Novel.Genre;
 import com.scholarly.utme.data.model.novels.Novel.Type;
 import com.scholarly.utme.ui.cellFactories.NovelListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.NovelScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -18,12 +21,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Pair;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/NovelScreen.fxml")
 public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializable {
@@ -41,7 +43,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
     private RadioButton dontShowButton;
 
     @FXML
-    private Button dismissButton, jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton;
+    private Button dismissButton, jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton, readButton;
 
     @FXML
     private VBox centerBox;
@@ -62,84 +64,82 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         initializeViews();
         initializeFont();
 
-        jambProseList.setCellFactory(new NovelListCellFactory());
-        jambProseList.setItems(viewModel.getNovels(Type.JAMB, Genre.PROSE));
+        novelImage.imageProperty().bind(viewModel.novelImageProperty());
+        novelDescription.textProperty().bind(viewModel.novelDescriptionProperty());
+        chaptersLabel.textProperty().bind(viewModel.novelChaptersProperty());
+        authorLabel.textProperty().bind(viewModel.novelAuthorProperty());
 
-        Novel firstNovel = jambProseList.getItems().get(0);
-        novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + firstNovel.getImagePath()).toString()));
-        novelDescription.setText(firstNovel.getAbout());
-        chaptersLabel.setText(firstNovel.getChaptersCount() + " chapters");
-        authorLabel.setText(viewModel.getAuthor(firstNovel));
+        Pair<String, ObservableList<Novel>> jambProse = new Pair<>(jambProseButton.getId(), viewModel.getNovels(Type.JAMB, Genre.PROSE));
+        jambProseButton.setUserData(jambProse);
+        jambProseList.setItems(viewModel.getFirstFourNovels(Type.JAMB, Genre.PROSE));
+
+        viewModel.setSelectedNovel(jambProseList.getItems().get(0));
 
         jambProseList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             viewModel.setSelectedNovel(newValue);
-            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
-            novelDescription.setText(newValue.getAbout());
-            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
-            authorLabel.setText(viewModel.getAuthor(newValue));
         });
 
-        africanProseList.setCellFactory(new NovelListCellFactory());
-        africanProseList.setItems(viewModel.getNovels(Type.AFRICAN, Genre.PROSE));
+
+        Pair<String, ObservableList<Novel>> africanProse = new Pair<>(africanProseButton.getId(), viewModel.getNovels(Type.AFRICAN, Genre.PROSE));
+        africanProseButton.setUserData(africanProse);
+        africanProseList.setItems(viewModel.getFirstFourNovels(Type.AFRICAN, Genre.PROSE));
+
         africanProseList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
-            novelDescription.setText(newValue.getAbout());
-            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
-            authorLabel.setText(viewModel.getAuthor(newValue));
+            viewModel.setSelectedNovel(newValue);
         }));
 
-        nonAfricanProseList.setCellFactory(new NovelListCellFactory());
-        nonAfricanProseList.setItems(viewModel.getNovels(Type.NON_AFRICAN, Genre.PROSE));
+
+        Pair<String, ObservableList<Novel>> nonAfricanProse = new Pair<>(nonAfricanProseButton.getId(), viewModel.getNovels(Type.NON_AFRICAN, Genre.PROSE));
+        nonAfricanProseButton.setUserData(nonAfricanProse);
+        nonAfricanProseList.setItems(viewModel.getFirstFourNovels(Type.NON_AFRICAN, Genre.PROSE));
+
         nonAfricanProseList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
-            novelDescription.setText(newValue.getAbout());
-            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
-            authorLabel.setText(viewModel.getAuthor(newValue));
+            viewModel.setSelectedNovel(newValue);
         }));
 
-        africanDramaList.setCellFactory(new NovelListCellFactory());
-        africanDramaList.setItems(viewModel.getNovels(Type.AFRICAN, Genre.DRAMA));
+
+        Pair<String, ObservableList<Novel>> africanDrama = new Pair<>(africanDramaButton.getId(), viewModel.getNovels(Type.AFRICAN, Genre.DRAMA));
+        africanDramaButton.setUserData(africanDrama);
+        africanDramaList.setItems(viewModel.getFirstFourNovels(Type.AFRICAN, Genre.DRAMA));
+
         africanDramaList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
-            novelDescription.setText(newValue.getAbout());
-            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
-            authorLabel.setText(viewModel.getAuthor(newValue));
+            viewModel.setSelectedNovel(newValue);
         }));
 
-        nonAfricanDramaList.setCellFactory(new NovelListCellFactory());
-        nonAfricanDramaList.setItems(viewModel.getNovels(Type.NON_AFRICAN, Genre.DRAMA));
+
+        Pair<String, ObservableList<Novel>> nonAfricanDrama = new Pair<>(nonAfricanDramaButton.getId(), viewModel.getNovels(Type.NON_AFRICAN, Genre.DRAMA));
+        nonAfricanDramaButton.setUserData(nonAfricanDrama);
+        nonAfricanDramaList.setItems(viewModel.getFirstFourNovels(Type.NON_AFRICAN, Genre.DRAMA));
+
         nonAfricanDramaList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
-            novelDescription.setText(newValue.getAbout());
-            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
-            authorLabel.setText(viewModel.getAuthor(newValue));
+            viewModel.setSelectedNovel(newValue);
         }));
 
-        shakespeareanTextList.setCellFactory(new NovelListCellFactory());
-        shakespeareanTextList.setItems(viewModel.getNovels(Type.SHAKESPEAREAN, Genre.TEXT));
+
+        Pair<String, ObservableList<Novel>> shakespearean = new Pair<>(shakespeareanTextButton.getId(), viewModel.getNovels(Type.SHAKESPEAREAN, Genre.TEXT));
+        shakespeareanTextButton.setUserData(shakespearean);
+        shakespeareanTextList.setItems(viewModel.getFirstFourNovels(Type.SHAKESPEAREAN, Genre.TEXT));
+
         shakespeareanTextList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
-            novelDescription.setText(newValue.getAbout());
-            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
-            authorLabel.setText(viewModel.getAuthor(newValue));
+            viewModel.setSelectedNovel(newValue);
         }));
 
-        africanPoetryList.setCellFactory(new NovelListCellFactory());
-        africanPoetryList.setItems(viewModel.getNovels(Type.AFRICAN, Genre.POETRY));
+
+        Pair<String, ObservableList<Novel>> africanPoetry = new Pair<>(africanPoetryButton.getId(), viewModel.getNovels(Type.AFRICAN, Genre.POETRY));
+        africanPoetryButton.setUserData(africanPoetry);
+        africanPoetryList.setItems(viewModel.getFirstFourNovels(Type.AFRICAN, Genre.POETRY));
+
         africanPoetryList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
-            novelDescription.setText(newValue.getAbout());
-            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
-            authorLabel.setText(viewModel.getAuthor(newValue));
+            viewModel.setSelectedNovel(newValue);
         }));
 
-        nonAfricanPoetryList.setCellFactory(new NovelListCellFactory());
-        nonAfricanPoetryList.setItems(viewModel.getNovels(Type.NON_AFRICAN, Genre.POETRY));
+
+        Pair<String, ObservableList<Novel>> nonAfricanPoetry = new Pair<>(nonAfricanPoetryButton.getId(), viewModel.getNovels(Type.NON_AFRICAN, Genre.POETRY));
+        nonAfricanPoetryButton.setUserData(nonAfricanPoetry);
+        nonAfricanPoetryList.setItems(viewModel.getFirstFourNovels(Type.NON_AFRICAN, Genre.POETRY));
+
         nonAfricanPoetryList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
-            novelDescription.setText(newValue.getAbout());
-            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
-            authorLabel.setText(viewModel.getAuthor(newValue));
+            viewModel.setSelectedNovel(newValue);
         }));
 
 
@@ -151,22 +151,32 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             }
         });
 
+        readButton.setOnAction(event -> {
+            ViewSwitcher.passData(viewModel.getSelectedNovel());
+            ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
+        });
+
     }
 
     @SuppressWarnings("unchecked")
     private void initializeViews() {
-        List<ButtonBase> buttons = FXCollections.observableArrayList(dontShowButton, dismissButton, jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton);
-
+        List<ButtonBase> buttons = FXCollections.observableArrayList(jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton);
         for (ButtonBase button : buttons) {
             button.setBackground(Background.EMPTY);
+
+            button.setOnAction(event -> {
+                ViewSwitcher.passData(button.getUserData());
+                ViewSwitcher.showScreen(View.NOVEL_GRID_SCREEN);
+            });
         }
 
         List<ListView<Novel>> listViews = FXCollections.observableArrayList(jambProseList, africanProseList, nonAfricanProseList, africanDramaList, nonAfricanDramaList, shakespeareanTextList, africanPoetryList, nonAfricanPoetryList);
-
         for (ListView<Novel> listView : listViews) {
             listView.setBackground(Background.EMPTY);
+            listView.setCellFactory(new NovelListCellFactory());
         }
 
+        dismissButton.setBackground(Background.EMPTY);
         centerScrollPane.setBackground(Background.EMPTY);
 
         authorIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/author_icon.png").toString()));

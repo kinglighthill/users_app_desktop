@@ -2,35 +2,42 @@ package com.scholarly.utme.ui.listcells;
 
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
+import org.controlsfx.control.GridCell;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public class NovelListItemCell extends ListCell<Novel> {
+public class NovelGridItemCell extends GridCell<Novel> {
+
+    private Novel novel;
 
     public VBox novelBox;
     public ImageView novelImage;
     public Label name;
     public Label chapters;
 
-    public int selectedIndex = 0;
-
-    public NovelListItemCell() {
+    public NovelGridItemCell() {
         loadFxml();
+
+        setOnMouseClicked(event -> {
+            ViewSwitcher.passData(novel);
+            ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
+        });
     }
 
     private void loadFxml() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/list_items/novel_list_item.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/list_items/novel_grid_item.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             loader.load();
@@ -44,6 +51,7 @@ public class NovelListItemCell extends ListCell<Novel> {
     @Override
     protected void updateItem(Novel item, boolean empty) {
         super.updateItem(item, empty);
+        this.novel = item;
 
         if (empty || item == null) {
             setText(null);
@@ -61,5 +69,4 @@ public class NovelListItemCell extends ListCell<Novel> {
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }
-
 }

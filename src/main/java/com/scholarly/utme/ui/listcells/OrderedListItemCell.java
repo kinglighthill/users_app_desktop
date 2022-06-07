@@ -22,11 +22,10 @@ public class OrderedListItemCell extends ListCell<OrderedListItem> {
 
     private void loadFxml() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/ordered_list_item.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/list_items/ordered_list_item.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             loader.load();
-           // System.out.println("OrderedList Loader loaded successfully");
         }
         catch (IOException e) {
             e.printStackTrace();
