@@ -26,6 +26,14 @@ public class NovelListItemCell extends ListCell<Novel> {
 
     public NovelListItemCell() {
         loadFxml();
+
+        selectedProperty().addListener(((observableValue, aBoolean, t1) -> {
+            if (t1) {
+                novelBox.setStyle("-fx-border-color: #12AF20; -fx-border-radius: 8;");
+            }else {
+                novelBox.setStyle(null);
+            }
+        }));
     }
 
     private void loadFxml() {

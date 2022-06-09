@@ -72,6 +72,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         Pair<String, ObservableList<Novel>> jambProse = new Pair<>(jambProseButton.getId(), viewModel.getNovels(Type.JAMB, Genre.PROSE));
         jambProseButton.setUserData(jambProse);
         jambProseList.setItems(viewModel.getFirstFourNovels(Type.JAMB, Genre.PROSE));
+        jambProseList.getSelectionModel().select(0);
 
         viewModel.setSelectedNovel(jambProseList.getItems().get(0));
 

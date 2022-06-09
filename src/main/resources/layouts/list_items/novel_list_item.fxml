@@ -10,8 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" >
     <graphic>
-        <VBox fx:id="novelBox" spacing="10" alignment="CENTER" style="-fx-border-color: #12AF20; -fx-border-radius: 10;">
-
+        <VBox fx:id="novelBox" spacing="10" alignment="CENTER" >
             <StackPane style="-fx-background-color: #D7D7D7; -fx-background-radius: 8;">
                 <ImageView fx:id="novelImage" fitHeight="150" fitWidth="90">
                     <StackPane.margin>

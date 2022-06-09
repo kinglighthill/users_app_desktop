@@ -44,4 +44,32 @@ public class NovelChapterListVM implements ViewModel {
         return null;
     }
 
+
+    public static class NovelState {
+        private Novel novel;
+        private ObservableList<NovelChapter> chapters;
+
+        public NovelState(Novel novel, ObservableList<NovelChapter> chapter) {
+            this.novel = novel;
+            this.chapters = chapter;
+        }
+
+        public Novel getNovel() {
+            return novel;
+        }
+
+        public void setNovel(Novel novel) {
+            this.novel = novel;
+        }
+
+        public ObservableList<NovelChapter> getChapters() {
+            return chapters;
+        }
+
+        public void setChapter(ObservableList<NovelChapter> chapter) {
+            this.chapters = chapter;
+        }
+
+    }
+
 }

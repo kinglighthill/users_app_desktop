@@ -26,10 +26,10 @@ import java.util.ResourceBundle;
 public class NovelChapterListController implements FxmlView<NovelChapterListVM>, Initializable {
 
     @FXML
-    private Button backButton;
+    private Button backButton, readButton;
 
     @FXML
-    private Label pageTitle, novelDescription, authorLabel, chaptersLabel;
+    private Label pageTitle, authorLabel, chaptersLabel;
 
     @FXML
     private ListView<NovelChapter> chaptersList;
@@ -51,12 +51,19 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
 
         pageTitle.setText(viewModel.getNovel().getName());
         novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + viewModel.getNovel().getImagePath()).toString()));
-//        novelDescription.setText(viewModel.getNovel().getAbout());
         authorLabel.setText(viewModel.getAuthor(viewModel.getNovel()));
         chaptersLabel.setText(viewModel.getNovel().getChapters());
 
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
         chaptersList.setItems(viewModel.getChapters());
+        chaptersList.getSelectionModel().select(0);
+
+        readButton.setOnAction(event -> {
+            Object novelData = new NovelChapterListVM.NovelState(viewModel.getNovel(), viewModel.getChapters());
+
+            ViewSwitcher.passData(novelData);
+            ViewSwitcher.showScreen(View.NOVEL_CONTENT_SCREEN);
+        });
 
         backButton.setOnAction(event -> {
             ViewSwitcher.passData("novelsButton");
