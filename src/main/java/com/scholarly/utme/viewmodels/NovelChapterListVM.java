@@ -18,6 +18,8 @@ public class NovelChapterListVM implements ViewModel {
 
     private ObservableList<NovelAuthor> authors = FXCollections.observableArrayList();
 
+    private NovelChapter selectedChapter;
+
 
     public void processInitialData(Novel novel) {
         this.novel.set(novel);
@@ -42,6 +44,50 @@ public class NovelChapterListVM implements ViewModel {
             }
         }
         return null;
+    }
+
+    public void setSelectedChapter(NovelChapter selectedChapter) {
+        this.selectedChapter = selectedChapter;
+    }
+
+    public NovelChapter getSelectedChapter() {
+        return selectedChapter;
+    }
+
+    public static class NovelState {
+        private Novel novel;
+        private ObservableList<NovelChapter> chapters;
+        private NovelChapter selectedChapter;
+
+        public NovelState(Novel novel, ObservableList<NovelChapter> novelChapters, NovelChapter chapter) {
+            this.novel = novel;
+            this.chapters = novelChapters;
+            selectedChapter = chapter;
+        }
+
+        public Novel getNovel() {
+            return novel;
+        }
+
+        public void setNovel(Novel novel) {
+            this.novel = novel;
+        }
+
+        public ObservableList<NovelChapter> getChapters() {
+            return chapters;
+        }
+
+        public void setChapters(ObservableList<NovelChapter> chapter) {
+            this.chapters = chapter;
+        }
+
+        public NovelChapter getSelectedChapter() {
+            return selectedChapter;
+        }
+
+        public void setSelectedChapter(NovelChapter selectedChapter) {
+            this.selectedChapter = selectedChapter;
+        }
     }
 
 }

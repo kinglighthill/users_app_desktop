@@ -17,7 +17,11 @@
     <top>
         <VBox >
             <HBox spacing="15" alignment="CENTER_LEFT">
-                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
+                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9">
+                    <padding>
+                        <Insets topRightBottomLeft="10"/>
+                    </padding>
+                </Button>
                 <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
                     <font>
                         <Font name="System Bold" size="22"/>
@@ -42,7 +46,6 @@
                 </VBox.margin>
             </Label>
             <ListView fx:id="chaptersList" prefWidth="600" prefHeight="600"/>
-
             <padding>
                 <Insets topRightBottomLeft="20"/>
             </padding>
@@ -62,7 +65,6 @@
                         <Insets top="20"/>
                     </VBox.margin>
                 </StackPane>
-
                 <VBox spacing="20">
                     <HBox spacing="10">
                         <ImageView fx:id="authorIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -76,10 +78,8 @@
                         <ImageView fx:id="timeIcon" preserveRatio="true" pickOnBounds="true"/>
                         <Label fx:id="timeText" text="20 mins"/>
                     </HBox>
-
                     <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5;"/>
                 </VBox>
-
             </VBox>
             <HBox.margin>
                 <Insets top="30" bottom="20"/>

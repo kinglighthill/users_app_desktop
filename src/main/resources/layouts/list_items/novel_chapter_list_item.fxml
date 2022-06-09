@@ -11,7 +11,7 @@
 <?import javafx.scene.image.ImageView?>
 <fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
     <graphic>
-        <Panel style="-fx-background-color: #F1F1F1; -fx-background-radius: 5;">
+        <Panel fx:id="panel" style="-fx-background-color: #F1F1F1; -fx-background-radius: 5;">
             <left>
                 <HBox>
                     <Label fx:id="chapterIndex"/>

@@ -189,12 +189,10 @@
                             </bottom>
                         </Panel>
                     </VBox>
-
                     <padding>
                         <Insets top="20" left="18" bottom="20" right="20"/>
                     </padding>
                 </VBox>
-
             </StackPane>
         </ScrollPane>
     </center>

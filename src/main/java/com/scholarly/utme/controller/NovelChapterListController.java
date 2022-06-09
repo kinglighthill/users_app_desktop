@@ -3,7 +3,6 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
-import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.NovelChapterListVM;
@@ -26,10 +25,10 @@ import java.util.ResourceBundle;
 public class NovelChapterListController implements FxmlView<NovelChapterListVM>, Initializable {
 
     @FXML
-    private Button backButton;
+    private Button backButton, readButton;
 
     @FXML
-    private Label pageTitle, novelDescription, authorLabel, chaptersLabel;
+    private Label pageTitle, authorLabel, chaptersLabel;
 
     @FXML
     private ListView<NovelChapter> chaptersList;
@@ -51,12 +50,24 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
 
         pageTitle.setText(viewModel.getNovel().getName());
         novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + viewModel.getNovel().getImagePath()).toString()));
-//        novelDescription.setText(viewModel.getNovel().getAbout());
         authorLabel.setText(viewModel.getAuthor(viewModel.getNovel()));
         chaptersLabel.setText(viewModel.getNovel().getChapters());
 
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
         chaptersList.setItems(viewModel.getChapters());
+        chaptersList.getSelectionModel().select(0);
+        viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
+
+
+        chaptersList.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldValue, newValue) -> {
+            viewModel.setSelectedChapter(newValue);
+        }));
+
+        readButton.setOnAction(event -> {
+            Object novelData = new NovelChapterListVM.NovelState(viewModel.getNovel(), viewModel.getChapters(), viewModel.getSelectedChapter());
+            ViewSwitcher.passData(novelData);
+            ViewSwitcher.showScreen(View.NOVEL_CONTENT_SCREEN);
+        });
 
         backButton.setOnAction(event -> {
             ViewSwitcher.passData("novelsButton");

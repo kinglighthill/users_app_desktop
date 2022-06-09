@@ -10,17 +10,27 @@ import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.io.IOException;
 
 public class NovelChapterListItemCell extends ListCell<NovelChapter> {
 
+    public Panel panel;
     public Label chapterIndex;
     public Label chapterTitle;
     public ImageView padlockIcon;
 
     public NovelChapterListItemCell() {
         loadFxml();
+
+        selectedProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (newValue) {
+                panel.setStyle("-fx-background-color: #12AF20; -fx-background-radius: 5;");
+            }else {
+                panel.setStyle("-fx-background-color: #F1F1F1; -fx-background-radius: 5;");
+            }
+        }));
     }
 
     private void loadFxml() {
