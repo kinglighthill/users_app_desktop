@@ -27,8 +27,8 @@ public class NovelListItemCell extends ListCell<Novel> {
     public NovelListItemCell() {
         loadFxml();
 
-        selectedProperty().addListener(((observableValue, aBoolean, t1) -> {
-            if (t1) {
+        selectedProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (newValue) {
                 novelBox.setStyle("-fx-border-color: #12AF20; -fx-border-radius: 8;");
             }else {
                 novelBox.setStyle(null);

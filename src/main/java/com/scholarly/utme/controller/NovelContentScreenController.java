@@ -36,7 +36,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private Button backButton, prevButton, nextButton;
 
     @FXML
-    private Label chapterIndex, chapterTitle, chapterContent, chapterCount;
+    private Label pageTitle, chapterIndex, chapterTitle, chapterContent, chapterCount;
 
     @FXML
     private HBox chapterHeader;
@@ -57,61 +57,53 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
         chaptersList.setItems(viewModel.getChapters());
-        chaptersList.getSelectionModel().select(0);
-        viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
+        chaptersList.getSelectionModel().select(viewModel.getSelectedChapter());
 
-        chapterContent.setText(viewModel.getSelectedChapter().getDetails());
-        chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
-        chapterCount.setText(viewModel.getSelectedChapter().getPosition() + " of " + chaptersList.getItems().size());
+        chaptersList.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldValue, newValue) -> {
+            viewModel.setSelectedChapter(newValue);
+        }));
 
-        nextButton.setOnAction(event -> {
-            prevButton.setDisable(false);
-            int selectedIndex = chaptersList.getSelectionModel().getSelectedIndex();
-            System.out.println("Chapter List selection index -> " + selectedIndex);
-
-            if (selectedIndex < chaptersList.getItems().size()) {
-                chaptersList.getSelectionModel().select(selectedIndex + 1);
-                viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
-                chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
-                chapterContent.setText(viewModel.getSelectedChapter().getDetails());
-
-                if (viewModel.getSelectedChapter().getPosition() != -1) {
-                    chapterCount.setText(viewModel.getSelectedChapter().getPosition() + " of " + chaptersList.getItems().size());
-                    chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ":");
-                }else {
-                    chapterCount.setText(chaptersList.getSelectionModel().getSelectedIndex() + 1 + " of " + chaptersList.getItems().size());
-                    chapterHeader.getChildren().remove(chapterIndex);
-                }
-            }else {
-                nextButton.setDisable(true);
-            }
-        });
-
-        prevButton.setOnAction(event -> {
-            nextButton.setDisable(false);
+        viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
+            chapterContent.setText(newValue.getDetails());
+            chapterTitle.setText(newValue.getTitle());
             if (!chapterHeader.getChildren().contains(chapterIndex)) {
                 chapterHeader.getChildren().add(0, chapterIndex);
             }
-            int selectedIndex = chaptersList.getSelectionModel().getSelectedIndex();
-            System.out.println("Chapter List selection index -> " + selectedIndex);
-
-            if (selectedIndex > 0) {
-                chaptersList.getSelectionModel().select(selectedIndex - 1);
-                viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
-                chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
-                chapterContent.setText(viewModel.getSelectedChapter().getDetails());
-                if (viewModel.getSelectedChapter().getPosition() != -1) {
-                    chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ":");
-                    chapterCount.setText(viewModel.getSelectedChapter().getPosition() + " of " + chaptersList.getItems().size());
-                }else {
-                    chapterCount.setText(chaptersList.getSelectionModel().getSelectedIndex() + 1 + " of " + chaptersList.getItems().size());
-                }
-
+            if (newValue.getPosition() != -1) {
+                chapterCount.setText(newValue.getPosition() + " of " + chaptersList.getItems().size());
+                chapterIndex.setText("Chapter " + newValue.getPosition() + ":");
             }else {
-                prevButton.setDisable(true);
+                chapterCount.setText(chaptersList.getSelectionModel().getSelectedIndex() + 1 + " of " + chaptersList.getItems().size());
+                chapterHeader.getChildren().remove(chapterIndex);
             }
+        }));
 
 
+        pageTitle.setText(viewModel.getNovel().getName());
+        if (viewModel.getSelectedChapter().getPosition() == -1) {
+            chapterHeader.getChildren().remove(chapterIndex);
+            chapterCount.setText(chaptersList.getSelectionModel().getSelectedIndex() + 1 + " of " + chaptersList.getItems().size());
+        }else {
+            chapterCount.setText(viewModel.getSelectedChapter().getPosition() + " of " + chaptersList.getItems().size());
+        }
+        chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ":");
+        chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
+        chapterContent.setText(viewModel.getSelectedChapter().getDetails());
+
+
+        prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()));
+        nextButton.disableProperty().bind(Bindings.equal(chaptersList.getSelectionModel().selectedIndexProperty(), chaptersList.getItems().size()-1));
+
+        nextButton.setOnAction(event -> {
+            int selectedIndex = chaptersList.getSelectionModel().getSelectedIndex();
+            chaptersList.getSelectionModel().select(selectedIndex + 1);
+            viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
+        });
+
+        prevButton.setOnAction(event -> {
+            int selectedIndex = chaptersList.getSelectionModel().getSelectedIndex();
+            chaptersList.getSelectionModel().select(selectedIndex - 1);
+            viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
         });
 
         backButton.setOnAction(event -> {

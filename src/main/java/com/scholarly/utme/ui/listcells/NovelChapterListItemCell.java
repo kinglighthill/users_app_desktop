@@ -24,8 +24,8 @@ public class NovelChapterListItemCell extends ListCell<NovelChapter> {
     public NovelChapterListItemCell() {
         loadFxml();
 
-        selectedProperty().addListener(((observableValue, aBoolean, t1) -> {
-            if (t1) {
+        selectedProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (newValue) {
                 panel.setStyle("-fx-background-color: #12AF20; -fx-background-radius: 5;");
             }else {
                 panel.setStyle("-fx-background-color: #F1F1F1; -fx-background-radius: 5;");

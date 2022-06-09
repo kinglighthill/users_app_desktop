@@ -20,7 +20,11 @@
                 <left>
                     <HBox spacing="15" alignment="CENTER_LEFT">
                         <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
-
+                        <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
+                            <font>
+                                <Font name="System Bold" size="22"/>
+                            </font>
+                        </Label>
                         <padding>
                             <Insets top="20" left="30" bottom="20"/>
                         </padding>
@@ -66,7 +70,7 @@
     <right>
         <HBox spacing="20" prefHeight="400" prefWidth="400">
             <Separator orientation="VERTICAL"/>
-            <VBox spacing="15" prefHeight="300" prefWidth="300">
+            <VBox spacing="15" prefHeight="300" prefWidth="400">
                 <Label text="Chapters">
                     <font>
                         <Font name="System Bold" size="16"/>
@@ -77,9 +81,12 @@
                 </Label>
                 <ListView fx:id="chaptersList" prefHeight="600"/>
                 <padding>
-                    <Insets top="20"/>
+                    <Insets top="20" bottom="10"/>
                 </padding>
             </VBox>
+            <padding>
+                <Insets right="20"/>
+            </padding>
         </HBox>
     </right>
 

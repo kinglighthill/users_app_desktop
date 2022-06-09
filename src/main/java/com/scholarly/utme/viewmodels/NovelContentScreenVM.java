@@ -22,12 +22,11 @@ public class NovelContentScreenVM implements ViewModel {
 
     private ObjectProperty<NovelChapter> novelChapter = new SimpleObjectProperty<>();
 
-    private SimpleIntegerProperty chapterPosition = new SimpleIntegerProperty();
 
     public void processInitialData(NovelState data) {
         chapters.addAll(data.getChapters());
         novel = data.getNovel();
-
+        novelChapter.set(data.getSelectedChapter());
     }
 
     public Novel getNovel() {
@@ -50,12 +49,5 @@ public class NovelContentScreenVM implements ViewModel {
         return novelChapter;
     }
 
-    public SimpleIntegerProperty selectedPositionProperty() {
-        return new SimpleIntegerProperty(novelChapter.get().getPosition());
-    }
-
-    public SimpleStringProperty novelDetailsProperty() {
-        return new SimpleStringProperty(novelChapter.get().getDetails());
-    }
 
 }

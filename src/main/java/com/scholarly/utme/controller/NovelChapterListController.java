@@ -3,7 +3,6 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
-import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.NovelChapterListVM;
@@ -57,10 +56,15 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
         chaptersList.setItems(viewModel.getChapters());
         chaptersList.getSelectionModel().select(0);
+        viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
+
+
+        chaptersList.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldValue, newValue) -> {
+            viewModel.setSelectedChapter(newValue);
+        }));
 
         readButton.setOnAction(event -> {
-            Object novelData = new NovelChapterListVM.NovelState(viewModel.getNovel(), viewModel.getChapters());
-
+            Object novelData = new NovelChapterListVM.NovelState(viewModel.getNovel(), viewModel.getChapters(), viewModel.getSelectedChapter());
             ViewSwitcher.passData(novelData);
             ViewSwitcher.showScreen(View.NOVEL_CONTENT_SCREEN);
         });
