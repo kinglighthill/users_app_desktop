@@ -21,6 +21,18 @@ public class PracticeSubjectListItemCell extends ListCell<Subject> {
 
     public PracticeSubjectListItemCell() {
         loadFxml();
+
+        selectedProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (newValue) {
+                subjectBox.setStyle("-fx-background-color: #12AF20; -fx-background-radius: 5;");
+                subjectName.setTextFill(Paint.valueOf("#FFFFFF"));
+                radioButton.setSelected(true);
+            }else {
+                subjectBox.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8); -fx-background-radius: 5;");
+                subjectName.setTextFill(Paint.valueOf("#053500"));
+                radioButton.setSelected(false);
+            }
+        }));
     }
 
     private void loadFxml() {
@@ -53,13 +65,4 @@ public class PracticeSubjectListItemCell extends ListCell<Subject> {
         }
     }
 
-    @Override
-    public void updateSelected(boolean selected) {
-
-        if (selected) {
-            subjectName.setTextFill(Paint.valueOf("#FFFFFF"));
-            subjectBox.setStyle("-fx-background-color: #12AF20; -fx-background-radius: 5;");
-            radioButton.setSelected(true);
-        }
-    }
 }

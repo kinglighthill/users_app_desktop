@@ -215,20 +215,20 @@
                         </RadioButton>
                         <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" spacing="15">
                            <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="449.0" >
-                                 <children>
-                                    <Button fx:id="prevButton" mnemonicParsing="false" text="Previous" textFill="#12AF20" style=" -fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                       <padding>
-                                          <Insets left="20" right="20" top="5" bottom="5"/>
-                                       </padding>
-                                    </Button>
-                                    <Region prefWidth="700"/>
-                                    <Button fx:id="nextButton" mnemonicParsing="false" text="Next" textFill="#FFFFFF" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
-                                       <padding>
-                                          <Insets left="25" right="25" top="5" bottom="5"/>
-                                       </padding>
-                                    </Button>
-                                 </children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="449.0">
+                                 <Button fx:id="prevButton" mnemonicParsing="false" text="Previous" textFill="#12AF20"
+                                         style=" -fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
+                                    <padding>
+                                       <Insets left="20" right="20" top="5" bottom="5"/>
+                                    </padding>
+                                 </Button>
+                                 <Region prefWidth="700"/>
+                                 <Button fx:id="nextButton" mnemonicParsing="false" text="Next" textFill="#FFFFFF"
+                                         style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+                                    <padding>
+                                       <Insets left="25" right="25" top="5" bottom="5"/>
+                                    </padding>
+                                 </Button>
                                  <VBox.margin>
                                     <Insets left="10" right="10"/>
                                  </VBox.margin>
@@ -245,7 +245,6 @@
                               <Insets bottom="20"/>
                            </VBox.margin>
                         </ScrollPane>
-
                      </children>
                      <padding>
                         <Insets left="20.0" right="20.0" />
