@@ -71,10 +71,6 @@ public class StudyPastScreenVM implements ViewModel {
         this.selectedSubject.set(selectedSubject);
     }
 
-    public void hideAnswerAndExplanation() {
-
-    }
-
     public static class SubjectQuestionsState {
         private SimpleIntegerProperty selectedQuestion = new SimpleIntegerProperty();
         private List<QuestionState> questions = new ArrayList<>();

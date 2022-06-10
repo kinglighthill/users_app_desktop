@@ -35,10 +35,13 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
     private ToggleButton practiceButton, pastQuestionButton, cbtGameButton, novelsButton, videosButton, audiosButton, learningCenterButton, studyNotesButton;
 
     @FXML
+    private ImageView appImage;
+
+    @FXML
     private Button backButton;
 
     @FXML
-    private Label pageTitle;
+    private Label pageTitle, scholarlyText;
 
     @FXML
     private StackPane contentPane;
@@ -166,22 +169,47 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     private void initializeViews() {
         practiceButton.setBackground(Background.EMPTY);
-        pastQuestionButton.setBackground(Background.EMPTY);
-        cbtGameButton.setBackground(Background.EMPTY);
-        novelsButton.setBackground(Background.EMPTY);
-        videosButton.setBackground(Background.EMPTY);
-        audiosButton.setBackground(Background.EMPTY);
-        learningCenterButton.setBackground(Background.EMPTY);
-        studyNotesButton.setBackground(Background.EMPTY);
-        //backButton.setBackground(Background.EMPTY);
+        practiceButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/cbt_practice_icon.png").toString())));
+        practiceButton.setGraphicTextGap(20);
 
-        final Circle clip = new Circle(15, 15,20);
-        //backButton.setClip(clip);
+        pastQuestionButton.setBackground(Background.EMPTY);
+        pastQuestionButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/past_quest_icon.png").toString())));
+        pastQuestionButton.setGraphicTextGap(20);
+
+        cbtGameButton.setBackground(Background.EMPTY);
+        cbtGameButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/cbt_game_icon.png").toString())));
+        cbtGameButton.setGraphicTextGap(20);
+
+        novelsButton.setBackground(Background.EMPTY);
+        novelsButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/novels_icon.png").toString())));
+        novelsButton.setGraphicTextGap(20);
+
+        videosButton.setBackground(Background.EMPTY);
+        videosButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/videos_icon.png").toString())));
+        videosButton.setGraphicTextGap(20);
+
+        audiosButton.setBackground(Background.EMPTY);
+        audiosButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/audios_icon.png").toString())));
+        audiosButton.setGraphicTextGap(20);
+
+        learningCenterButton.setBackground(Background.EMPTY);
+        learningCenterButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/syllabus_icon.png").toString())));
+        learningCenterButton.setGraphicTextGap(20);
+
+        studyNotesButton.setBackground(Background.EMPTY);
+        studyNotesButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/notes_icon.png").toString())));
+        studyNotesButton.setGraphicTextGap(20);
+
+
+        appImage.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
+
         ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/practice_back_button_icon.png").toString()));
         backButton.setGraphic(backIcon);
     }
 
     private void initializeFonts() {
+        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY.size));
+
         practiceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
         pastQuestionButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
         cbtGameButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));

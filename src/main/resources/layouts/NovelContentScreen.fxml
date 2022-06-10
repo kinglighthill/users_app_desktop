@@ -19,7 +19,11 @@
             <Panel>
                 <left>
                     <HBox spacing="15" alignment="CENTER_LEFT">
-                        <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
+                        <Button fx:id="backButton" style="-fx-background-color: #E7F7E9">
+                            <padding>
+                                <Insets top="8" right="13" bottom="8" left="13" />
+                            </padding>
+                        </Button>
                         <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
                             <font>
                                 <Font name="System Bold" size="22"/>
