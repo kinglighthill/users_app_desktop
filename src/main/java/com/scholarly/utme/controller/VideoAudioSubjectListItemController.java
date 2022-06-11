@@ -1,11 +1,13 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.data.model.MediaSubTopic;
 import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.Topic;
 import com.scholarly.utme.viewmodels.VideoAudioSubjectListItemVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -38,7 +40,7 @@ public class VideoAudioSubjectListItemController implements FxmlView<VideoAudioS
     private ChoiceBox<Topic> topicsChoiceBox;
 
     @FXML
-    private ChoiceBox<SubTopic> subtopicsChoiceBox;
+    private ChoiceBox<MediaSubTopic> subtopicsChoiceBox;
 
     @FXML
     private Separator divider;
@@ -69,8 +71,25 @@ public class VideoAudioSubjectListItemController implements FxmlView<VideoAudioS
         }
 
         subjectText.textProperty().bind(viewModel.subjectNameProperty());
-        topicsChoiceBox.setItems(viewModel.getTopics());
         subjectCheckBox.selectedProperty().bindBidirectional(viewModel.subjectSelectedProperty());
+
+        topicsChoiceBox.setItems(viewModel.getTopics());
+        topicsChoiceBox.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldTopic, newTopic) -> {
+            viewModel.loadSubtopics(newTopic);
+            viewModel.setSelectedTopicProperty(newTopic);
+        }));
+        topicsChoiceBox.setValue(viewModel.getTopics().get(0));
+
+
+        subtopicsChoiceBox.setItems(viewModel.getSubTopics());
+        subtopicsChoiceBox.getItems().addListener((ListChangeListener<? super MediaSubTopic>) c -> {
+            if (c.getList().size() != 0) {
+                subtopicsChoiceBox.setValue(c.getList().get(0));
+            }
+        });
+        subtopicsChoiceBox.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldValue, newValue) -> {
+            viewModel.setSelectedSubtopicProperty(newValue);
+        }));
 
 
         subRoot.getChildren().removeAll(divider, optionPanel);

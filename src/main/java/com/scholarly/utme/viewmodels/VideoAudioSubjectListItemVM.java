@@ -2,16 +2,20 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.data.dao.newDb.SubTopicDao;
 import com.scholarly.utme.data.dao.TopicDao;
+import com.scholarly.utme.data.model.MediaSubTopic;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.Topic;
 import de.saxsys.mvvmfx.ViewModel;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class VideoAudioSubjectListItemVM implements ViewModel {
@@ -29,14 +33,14 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
 
     private ObjectProperty<Topic> selectedTopicProperty = new SimpleObjectProperty<>();
 
-    private ObjectProperty<SubTopic> selectedSubtopicProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<MediaSubTopic> selectedSubtopicProperty = new SimpleObjectProperty<>();
 
     private Subject subject;
 
     private Type type;
 
     private ObservableList<Topic> topics;
-    private ObservableList<SubTopic> subTopics;
+    private static ObservableList<MediaSubTopic> subTopics = FXCollections.observableArrayList();
 
     private BehaviorSubject<VideoAudioSubjectListItemVM.MediaSubjectState> subjectState = BehaviorSubject.create();
 
@@ -48,9 +52,9 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
 
         subjectState.onNext(new MediaSubjectState(subject, type, subjectSelected.get(), selectedTopicProperty.get(), selectedSubtopicProperty.get()));
 
-        System.out.println("Subject table name -> " + subject.getTableName());
+
         topics = TopicDao.getTopics(subject.getTableName() + "_topics");
-//        subTopics = SubTopicDao.getSubTopics(subject.getTableName());
+//        System.out.println("Topics -> " + topics);
     }
 
 
@@ -68,6 +72,13 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
             subjectState.onNext(new VideoAudioSubjectListItemVM.MediaSubjectState(subject, type, subjectSelected.get(), selectedTopicProperty.get(), newValue));
         }));
 
+    }
+
+    /**
+     * Clears all previous subject selection properties
+     */
+    public void invalidate() {
+        subjectSelected.set(false);
     }
 
 
@@ -115,20 +126,30 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
         return subjectColorName.get();
     }
 
-    public SimpleStringProperty subjectColorNameProperty() {
-        return subjectColorName;
+    public void setSelectedTopicProperty(Topic selectedTopic) {
+        this.selectedTopicProperty.set(selectedTopic);
     }
 
-    public void setSubjectColorName(String subjectColorName) {
-        this.subjectColorName.set(subjectColorName);
+    public void setSelectedSubtopicProperty(MediaSubTopic selectedSubtopic) {
+        this.selectedSubtopicProperty.set(selectedSubtopic);
     }
 
     public ObservableList<Topic> getTopics() {
         return topics;
     }
 
-    public ObservableList<SubTopic> getSubTopics() {
+    public ObservableList<MediaSubTopic> getSubTopics() {
         return subTopics;
+    }
+
+    public void loadSubtopics(Topic topic) {
+        subTopics.clear();
+        Observable.just(SubTopicDao.getSubTopicsWithTopicId(subjectTableName.get(), topic.getId()))
+                        .subscribeOn(Schedulers.io())
+                                .blockingSubscribe(it -> {
+                                    subTopics.addAll(it);
+                                });
+//        System.out.println("Subtopics -> " + subTopics);
     }
 
 
@@ -157,9 +178,9 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
         private Boolean isSelected;
 
         private Topic selectedTopic;
-        private SubTopic selectedSubtopic;
+        private MediaSubTopic selectedSubtopic;
 
-        public MediaSubjectState(Subject subject, Type type, Boolean isSelected, Topic selectedTopic, SubTopic selectedSubtopic) {
+        public MediaSubjectState(Subject subject, Type type, Boolean isSelected, Topic selectedTopic, MediaSubTopic selectedSubtopic) {
             this.subject = subject;
             this.type = type;
             this.isSelected = isSelected;
@@ -183,7 +204,7 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
             return selectedTopic;
         }
 
-        public SubTopic getSelectedSubtopic() {
+        public MediaSubTopic getSelectedSubtopic() {
             return selectedSubtopic;
         }
     }
