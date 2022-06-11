@@ -100,7 +100,7 @@ public class SubjectListItemVM implements ViewModel {
     }
 
     /**
-     * Invalidates all previous subject selection properties
+     * Clears all previous subject selection properties
      */
     public void invalidate() {
         subjectSelected.set(false);
