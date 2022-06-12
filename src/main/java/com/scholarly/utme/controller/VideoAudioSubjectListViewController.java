@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.ui.utils.NoSelectionModel;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.VideoAudioSubjectListItemVM;
 import com.scholarly.utme.viewmodels.VideoAudioSubjectListViewVM;
 import de.saxsys.mvvmfx.FluentViewLoader;
@@ -11,6 +13,7 @@ import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
 import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
 import java.net.URL;
@@ -21,6 +24,9 @@ public class VideoAudioSubjectListViewController implements FxmlView<VideoAudioS
 
     @FXML
     private ListView<VideoAudioSubjectListItemVM> subjectList;
+
+    @FXML
+    private Button continueButton;
 
 
     @InjectViewModel
@@ -40,5 +46,9 @@ public class VideoAudioSubjectListViewController implements FxmlView<VideoAudioS
         subjectList.setCellFactory(videoAudioListCellFactory);
         subjectList.setFocusTraversable(false);
 
+
+        continueButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.VIDEOS_GRID_SCREEN);
+        });
     }
 }

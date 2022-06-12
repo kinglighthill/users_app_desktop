@@ -18,22 +18,16 @@
     <top>
         <Panel>
             <left>
-                <HBox>
-                    <!--<HBox spacing="5" alignment="CENTER" prefWidth="184.0" style="-fx-background-color: #006B17;">
-                        <ImageView fx:id="appImage" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
-                        <Label fx:id="scholarlyText" text="Scholarly" textFill="#FFFFFF"/>
-                    </HBox>-->
-                    <HBox spacing="15" alignment="CENTER_LEFT">
-                        <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
-                        <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
-                            <font>
-                                <Font name="System Bold" size="20"/>
-                            </font>
-                        </Label>
-                        <padding>
-                            <Insets top="20" left="20" bottom="20"/>
-                        </padding>
-                    </HBox>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
+                    <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
+                        <font>
+                            <Font name="System Bold" size="20"/>
+                        </font>
+                    </Label>
+                    <padding>
+                        <Insets top="20" left="20" bottom="20"/>
+                    </padding>
                 </HBox>
             </left>
         </Panel>

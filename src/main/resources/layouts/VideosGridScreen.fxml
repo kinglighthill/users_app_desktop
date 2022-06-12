@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.shape.Circle?>
+<?import org.controlsfx.control.GridView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.skin.ProgressIndicatorSkin.IndeterminateSpinner.IndicatorPaths?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.VideosGridScreenController"
+            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <Panel style="-fx-background-color: #FFFFFF;">
+            <left>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
+                    <Label fx:id="pageTitle" text="Videos on Biology" textFill="#034801">
+                        <font>
+                            <Font name="System Bold" size="20"/>
+                        </font>
+                    </Label>
+                    <padding>
+                        <Insets top="20" left="20" bottom="20"/>
+                    </padding>
+                </HBox>
+            </left>
+        </Panel>
+    </top>
+
+    <center>
+        <VBox spacing="30" prefWidth="300" style="-fx-background-color: white;">
+            <StackPane fx:id="searchPane" maxWidth="400" >
+                <TextField  prefHeight="35" promptText="Enter a keyword" style="-fx-background-color: rgba(0, 107, 23, 0.05); -fx-background-radius: 8; -fx-border-color: #12AF20; -fx-border-radius: 8;" />
+                <ImageView fx:id="searchIcon" fitWidth="20" fitHeight="20" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT">
+                    <StackPane.margin>
+                        <Insets right="20"/>
+                    </StackPane.margin>
+                </ImageView>
+            </StackPane>
+
+            <HBox spacing="20">
+                <Button fx:id="mostPopularButton" text="Most Popular" style="-fx-background-color: #F4FFF5; -fx-background-radius: 8;">
+                    <padding>
+                        <Insets top="8" bottom="8" left="13" right="13"/>
+                    </padding>
+                </Button>
+                <Button fx:id="newButton" text="New" style="-fx-background-color: #F4FFF5; -fx-background-radius: 8;">
+                    <padding>
+                        <Insets top="8" bottom="8" left="13" right="13"/>
+                    </padding>
+                </Button>
+                <Button fx:id="highlyRatedButton" text="Highly rated" style="-fx-background-color: #F4FFF5; -fx-background-radius: 8;">
+                    <padding>
+                        <Insets top="8" bottom="8" left="13" right="13"/>
+                    </padding>
+                </Button>
+            </HBox>
+            <GridView fx:id="videosGrid"/>
+            <padding>
+                <Insets left="30" right="30" top="20"/>
+            </padding>
+        </VBox>
+    </center>
+
+    <right>
+        <HBox style="-fx-background-color: white; -fx-background-radius: 5;">
+            <VBox spacing="15" prefWidth="300" style="-fx-background-color: #F4FFF5;">
+                <Label text="Select Topic"/>
+                <ChoiceBox fx:id="topicChoiceBox" prefWidth="200" prefHeight="30" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #12AF20; -fx-border-radius: 5;"/>
+                <Label text="Select Sub-Topic">
+                    <VBox.margin>
+                        <Insets top="20"/>
+                    </VBox.margin>
+                </Label>
+                <ChoiceBox fx:id="subTopicChoiceBox" prefWidth="200" prefHeight="30" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #12AF20; -fx-border-radius: 5;"/>
+
+                <HBox.margin>
+                    <Insets right="30" bottom="50" left="30"/>
+                </HBox.margin>
+                <padding>
+                    <Insets top="50" left="20" right="20"/>
+                </padding>
+            </VBox>
+        </HBox>
+
+    </right>
+</BorderPane>
