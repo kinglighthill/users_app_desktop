@@ -1,9 +1,13 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.data.model.listItems.VideoItem;
+import com.scholarly.utme.ui.cellFactories.VideoGridCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.viewmodels.VideosGridScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
+import org.controlsfx.control.GridView;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,11 +33,28 @@ public class VideosGridScreenController implements FxmlView<VideosGridScreenVM>,
     @FXML
     private ImageView searchIcon;
 
+    @FXML
+    private GridView<VideoItem> videosGrid;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         initializeViews();
         initializeFont();
+
+        VideoItem videoItem = new VideoItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
+        VideoItem videoItem1 = new VideoItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
+        VideoItem videoItem2 = new VideoItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
+        VideoItem videoItem3 = new VideoItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
+        VideoItem videoItem4 = new VideoItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
+
+        ObservableList<VideoItem> items = FXCollections.observableArrayList();
+        items.addAll(videoItem, videoItem1, videoItem2, videoItem3, videoItem4);
+
+        videosGrid.setCellFactory(new VideoGridCellFactory());
+        videosGrid.setItems(items);
+
+
 
     }
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<fx:root type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" >
+
+    <graphic>
+        <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #F4FFF5; -fx-background-radius: 8;">
+
+            <StackPane >
+                <ImageView fx:id="videoImage" fitHeight="120" fitWidth="180">
+                    <StackPane.margin>
+                        <Insets topRightBottomLeft="10"/>
+                    </StackPane.margin>
+                </ImageView>
+                <ImageView fx:id="playIcon" fitHeight="40" fitWidth="40" StackPane.alignment="CENTER"/>
+            </StackPane>
+
+            <Panel prefWidth="50" prefHeight="30">
+                <left>
+                    <Label fx:id="videoTitle" text="Central Nervous System" textFill="#053500"/>
+                </left>
+                <right>
+                    <ImageView fx:id="optionsIcon" />
+                </right>
+            </Panel>
+            <VBox spacing="20">
+                <children>
+                    <Panel>
+                        <left>
+                            <HBox>
+                                <ImageView fx:id="clockIcon" fitWidth="20" fitHeight="20" />
+                                <Label fx:id="timeLabel" text="45 mins"/>
+                            </HBox>
+                        </left>
+                        <right>
+                            <HBox>
+                                <ImageView/>
+                                <ImageView/>
+                                <ImageView/>
+                                <ImageView/>
+                                <ImageView/>
+                                <Label fx:id="videoRating" text="4.5"/>
+                            </HBox>
+                        </right>
+                        <bottom>
+
+                        </bottom>
+                    </Panel>
+
+                    <Label fx:id="videoDescription"
+                           text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae he this thing doesn't want to work"/>
+                </children>
+            </VBox>
+
+            <padding>
+                <Insets topRightBottomLeft="10"/>
+            </padding>
+        </VBox>
+    </graphic>
+</fx:root>

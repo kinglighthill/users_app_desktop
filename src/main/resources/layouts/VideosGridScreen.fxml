@@ -43,6 +43,9 @@
                         <Insets right="20"/>
                     </StackPane.margin>
                 </ImageView>
+                <padding>
+                    <Insets left="30"/>
+                </padding>
             </StackPane>
 
             <HBox spacing="20">
@@ -61,10 +64,13 @@
                         <Insets top="8" bottom="8" left="13" right="13"/>
                     </padding>
                 </Button>
+                <padding>
+                    <Insets left="30"/>
+                </padding>
             </HBox>
-            <GridView fx:id="videosGrid"/>
+            <GridView fx:id="videosGrid" horizontalCellSpacing="40" verticalCellSpacing="20" cellWidth="150" cellHeight="250"/>
             <padding>
-                <Insets left="30" right="30" top="20"/>
+                <Insets right="30" top="20"/>
             </padding>
         </VBox>
     </center>
