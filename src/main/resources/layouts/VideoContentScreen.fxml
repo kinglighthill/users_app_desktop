@@ -61,7 +61,7 @@
 
                 <Label fx:id="videoDescription" wrapText="true" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae "/>
                 <padding>
-                    <Insets left="50" right="50"/>
+                    <Insets left="50" right="40"/>
                 </padding>
             </VBox>
 
@@ -73,11 +73,11 @@
     </center>
 
     <right>
-        <HBox >
+        <HBox style="-fx-background-color: white;">
             <Separator orientation="VERTICAL" />
             <ListView fx:id="videosList" prefWidth="500" style="-fx-background-color: white;">
                 <padding>
-                    <Insets right="20" top="10" bottom="10"/>
+                    <Insets left="10" right="20" top="10" bottom="10"/>
                 </padding>
             </ListView>
         </HBox>
