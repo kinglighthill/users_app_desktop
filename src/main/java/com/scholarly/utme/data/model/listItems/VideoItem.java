@@ -4,10 +4,10 @@ public class VideoItem {
     private String videoUrl;
     private String title;
     private int time;
-    private int rating;
+    private double rating;
     private String description;
 
-    public VideoItem(String videoUrl, String title, int time, int rating, String description) {
+    public VideoItem(String videoUrl, String title, int time, double rating, String description) {
         this.videoUrl = videoUrl;
         this.title = title;
         this.time = time;
@@ -27,7 +27,7 @@ public class VideoItem {
         return time;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 

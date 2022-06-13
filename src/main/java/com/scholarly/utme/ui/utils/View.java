@@ -23,7 +23,8 @@ public enum View {
     NOVEL_GRID_SCREEN("/layouts/NovelGridScreen.fxml", NovelGridScreenController.class),
     NOVEL_CHAPTER_LIST_SCREEN("/layouts/NovelChapterListScreen.fxml", NovelChapterListController.class),
     NOVEL_CONTENT_SCREEN("/layouts/NovelContentScreen.fxml", NovelContentScreenController.class),
-    VIDEOS_GRID_SCREEN("/layouts/VideosGridScreen.fxml", VideosGridScreenController.class);
+    VIDEOS_GRID_SCREEN("/layouts/VideosGridScreen.fxml", VideosGridScreenController.class),
+    VIDEO_CONTENT_SCREEN("/layouts/VideoContentScreen.fxml", VideoContentScreenController.class);
 
 
 

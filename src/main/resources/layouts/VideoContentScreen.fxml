@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.VideoContentScreenController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+            <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
+            <Label fx:id="pageTitle" text="Central Nervous System" textFill="#034801">
+                <font>
+                    <Font name="System Bold" size="20"/>
+                </font>
+            </Label>
+            <padding>
+                <Insets top="20" left="20" bottom="20"/>
+            </padding>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox fx:id="centerPane" spacing="20" prefWidth="400" style="-fx-background-color: white;">
+            <VBox>
+                <StackPane>
+                    <MediaView fx:id="mediaView" fitWidth="750" pickOnBounds="true"/>
+                    <Button fx:id="playButton" StackPane.alignment="CENTER"/>
+                </StackPane>
+
+            </VBox>
+            <VBox spacing="20">
+                <HBox spacing="15">
+                    <HBox  spacing="7">
+                        <ImageView fx:id="bookmarkIcon" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true"/>
+                        <Label text="Bookmark" textFill="#12AF20"/>
+                    </HBox>
+                    <HBox spacing="7">
+                        <ImageView fx:id="shareIcon" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true"/>
+                        <Label text="Share" textFill="#12AF20"/>
+                    </HBox>
+                    <HBox spacing="7">
+                        <ImageView fx:id="rateIcon" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true"/>
+                        <Label text="Rate video" textFill="#12AF20"/>
+                    </HBox>
+
+                    <padding>
+                        <Insets left="10"/>
+                    </padding>
+                </HBox>
+
+                <Separator/>
+
+                <Label fx:id="videoDescription" wrapText="true" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae "/>
+                <padding>
+                    <Insets left="50" right="50"/>
+                </padding>
+            </VBox>
+
+            <padding>
+                <Insets top="20"/>
+            </padding>
+        </VBox>
+
+    </center>
+
+    <right>
+        <HBox >
+            <Separator orientation="VERTICAL" />
+            <ListView fx:id="videosList" prefWidth="500" style="-fx-background-color: white;">
+                <padding>
+                    <Insets right="20" top="10" bottom="10"/>
+                </padding>
+            </ListView>
+        </HBox>
+
+    </right>
+
+</BorderPane>
