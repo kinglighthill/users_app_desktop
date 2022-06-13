@@ -37,8 +37,8 @@
     <center>
         <VBox spacing="30" prefWidth="300" style="-fx-background-color: white;">
             <StackPane fx:id="searchPane" maxWidth="400" >
-                <TextField  prefHeight="35" promptText="Enter a keyword" style="-fx-background-color: rgba(0, 107, 23, 0.05); -fx-background-radius: 8; -fx-border-color: #12AF20; -fx-border-radius: 8;" />
-                <ImageView fx:id="searchIcon" fitWidth="20" fitHeight="20" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT">
+                <TextField  minHeight="40" promptText="Enter a keyword" style="-fx-background-color: rgba(0, 107, 23, 0.05); -fx-background-radius: 8; -fx-border-color: #12AF20; -fx-border-radius: 8;" />
+                <ImageView fx:id="searchIcon" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT">
                     <StackPane.margin>
                         <Insets right="20"/>
                     </StackPane.margin>
@@ -68,9 +68,9 @@
                     <Insets left="30"/>
                 </padding>
             </HBox>
-            <GridView fx:id="videosGrid" horizontalCellSpacing="40" verticalCellSpacing="20" cellWidth="150" cellHeight="250"/>
+            <GridView fx:id="videosGrid" horizontalCellSpacing="45" verticalCellSpacing="20" cellWidth="150" cellHeight="250"/>
             <padding>
-                <Insets right="30" top="20"/>
+                <Insets  top="20"/>
             </padding>
         </VBox>
     </center>
@@ -91,7 +91,7 @@
                     <Insets right="30" bottom="50" left="30"/>
                 </HBox.margin>
                 <padding>
-                    <Insets top="50" left="20" right="20"/>
+                    <Insets top="50" left="10" right="20"/>
                 </padding>
             </VBox>
         </HBox>

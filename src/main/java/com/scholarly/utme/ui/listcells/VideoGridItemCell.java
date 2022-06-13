@@ -19,6 +19,7 @@ public class VideoGridItemCell extends GridCell<VideoItem> {
 
     public ImageView videoImage;
     public ImageView playIcon;
+    public ImageView optionsIcon;
     public Label videoTitle;
     public Label timeLabel;
     public Label videoRating;
@@ -53,11 +54,16 @@ public class VideoGridItemCell extends GridCell<VideoItem> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }else {
             videoImage.setImage(new Image((getClass().getResource("/drawable/video_image_dummy.png")).toString()));
+            playIcon.setImage(new Image(getClass().getResource("/drawable/video_type_play_icon.png").toString()));
+            optionsIcon.setImage(new Image(getClass().getResource("/drawable/video_item_options_icon.png").toString()));
+
+//            videoImage.setStyle("-fx-background-radius: 8; -fx-background-color: rgba(18, 18, 18, 0.5);");
+
             videoTitle.setText(item.getTitle());
             videoTitle.setTextFill(Paint.valueOf("#053500"));
             videoTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
-            timeLabel.setText(String.valueOf(item.getTime()));
+//            timeLabel.setText(String.valueOf(item.getTime()));
             timeLabel.setTextFill(Paint.valueOf("#12AF20"));
 
             clockIcon.setImage(new Image(getClass().getResource("/drawable/clock_icon.png").toString()));

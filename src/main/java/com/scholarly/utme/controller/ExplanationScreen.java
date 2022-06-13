@@ -233,7 +233,7 @@ public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initial
         });
 
         Button playButton = new Button();
-        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_play_icon_1x.png").toString()));
+        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_play_icon.png").toString()));
         playIcon.setFitHeight(45);
         playIcon.setFitWidth(45);
         ImageView pauseIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_pause_icon_1x.png").toString()));
