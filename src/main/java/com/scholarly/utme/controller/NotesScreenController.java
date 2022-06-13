@@ -1547,7 +1547,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         duration.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 
                         Button playButton = new Button();
-                        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_play_icon_1x.png").toString()));
+                        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_play_icon.png").toString()));
                         ImageView pauseIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_pause_icon_1x.png").toString()));
                         playButton.setGraphic(playIcon);
                         playButton.setBackground(Background.EMPTY);
