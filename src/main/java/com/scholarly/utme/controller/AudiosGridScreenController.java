@@ -1,13 +1,11 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.listItems.AudioItem;
-import com.scholarly.utme.data.model.listItems.VideoItem;
 import com.scholarly.utme.ui.cellFactories.AudioGridCellFactory;
-import com.scholarly.utme.ui.cellFactories.VideoGridCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.VideoAudioSubjectListViewVM;
+import com.scholarly.utme.viewmodels.AudiosGridScreenVM;
 import com.scholarly.utme.viewmodels.VideosGridScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -25,8 +23,8 @@ import org.controlsfx.control.GridView;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-@FxmlPath("/layouts/VideosGridScreen.fxml")
-public class VideosGridScreenController implements FxmlView<VideosGridScreenVM>, Initializable {
+@FxmlPath("/layouts/AudiosGridScreen.fxml")
+public class AudiosGridScreenController implements FxmlView<AudiosGridScreenVM>, Initializable {
 
     @FXML
     private StackPane searchPane;
@@ -38,32 +36,32 @@ public class VideosGridScreenController implements FxmlView<VideosGridScreenVM>,
     private ImageView searchIcon;
 
     @FXML
-    private GridView<VideoItem> videosGrid;
+    private GridView<AudioItem> audiosGrid;
 
     @InjectViewModel
-    private VideosGridScreenVM viewModel;
+    private AudiosGridScreenVM viewModel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         initializeViews();
-        initializeFont();
+        initializeFonts();
 
+        AudioItem audioItem = new AudioItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
+        AudioItem audioItem1 = new AudioItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
+        AudioItem audioItem2 = new AudioItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
+        AudioItem audioItem3 = new AudioItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
+        AudioItem audioItem4 = new AudioItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
 
-        VideoItem videoItem = new VideoItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
-        VideoItem videoItem1 = new VideoItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
-        VideoItem videoItem2 = new VideoItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
-        VideoItem videoItem3 = new VideoItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
-        VideoItem videoItem4 = new VideoItem("dummyurl", "Central Nervous System", 45, 4, "dummyDescription");
+        ObservableList<AudioItem> audios = FXCollections.observableArrayList();
+        audios.addAll(audioItem, audioItem1, audioItem2, audioItem3, audioItem4);
 
-        ObservableList<VideoItem> items = FXCollections.observableArrayList();
-        items.addAll(videoItem, videoItem1, videoItem2, videoItem3, videoItem4);
+        audiosGrid.setCellFactory(new AudioGridCellFactory());
+        audiosGrid.setItems(audios);
 
-        videosGrid.setCellFactory(new VideoGridCellFactory());
-        videosGrid.setItems(items);
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData("videosButton");
+            ViewSwitcher.passData("audiosButton");
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
     }
@@ -73,15 +71,12 @@ public class VideosGridScreenController implements FxmlView<VideosGridScreenVM>,
         backButton.setGraphic(backIcon);
 
         searchIcon.setImage(new Image(getClass().getResource("/drawable/search_icon2.png").toString()));
-
-//        searchPane.setBackground(Background.EMPTY);
     }
 
-    private void initializeFont() {
+    private void initializeFonts() {
         mostPopularButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         newButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         highlyRatedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 
     }
-
 }

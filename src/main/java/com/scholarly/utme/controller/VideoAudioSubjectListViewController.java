@@ -14,6 +14,7 @@ import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
 import java.net.URL;
@@ -27,6 +28,9 @@ public class VideoAudioSubjectListViewController implements FxmlView<VideoAudioS
 
     @FXML
     private Button continueButton;
+
+    @FXML
+    private Label headerText;
 
 
     @InjectViewModel
@@ -48,7 +52,17 @@ public class VideoAudioSubjectListViewController implements FxmlView<VideoAudioS
 
 
         continueButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.VIDEOS_GRID_SCREEN);
+            if (viewModel.getType() == VideoAudioSubjectListViewVM.Type.VIDEO) {
+                ViewSwitcher.showScreen(View.VIDEOS_GRID_SCREEN);
+            }
+            if (viewModel.getType() == VideoAudioSubjectListViewVM.Type.AUDIO) {
+                ViewSwitcher.showScreen(View.AUDIOS_GRID_SCREEN);
+            }
+
         });
+    }
+
+    public void setHeaderText(String text) {
+        headerText.setText(text);
     }
 }

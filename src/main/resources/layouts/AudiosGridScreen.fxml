@@ -7,13 +7,11 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.text.Font?>
-<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
-<?import javafx.scene.shape.Circle?>
 <?import org.controlsfx.control.GridView?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.control.skin.ProgressIndicatorSkin.IndeterminateSpinner.IndicatorPaths?>
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.VideosGridScreenController"
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.AudiosGridScreenController"
             maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
 
     <top>
@@ -21,7 +19,7 @@
             <left>
                 <HBox spacing="15" alignment="CENTER_LEFT">
                     <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
-                    <Label fx:id="pageTitle" text="Videos on Biology" textFill="#034801">
+                    <Label fx:id="pageTitle" text="Audios on Biology" textFill="#034801">
                         <font>
                             <Font name="System Bold" size="20"/>
                         </font>
@@ -68,7 +66,7 @@
                     <Insets left="30"/>
                 </padding>
             </HBox>
-            <GridView fx:id="videosGrid" horizontalCellSpacing="45" verticalCellSpacing="20" cellWidth="150" cellHeight="250"/>
+            <GridView fx:id="audiosGrid" horizontalCellSpacing="45" verticalCellSpacing="20" cellWidth="150" cellHeight="250"/>
             <padding>
                 <Insets  top="20"/>
             </padding>
