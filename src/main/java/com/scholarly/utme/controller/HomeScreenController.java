@@ -62,6 +62,8 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         contentPane.getChildren().add(NOVELS_INDEX, novelListViewTuple.getView());
 
         ViewTuple<VideoAudioSubjectListViewController, VideoAudioSubjectListViewVM> videoSubjectListViewTuple = FluentViewLoader.fxmlView(VideoAudioSubjectListViewController.class).load();
+        VideoAudioSubjectListViewController videoAudioSubjectListViewController = videoSubjectListViewTuple.getCodeBehind();
+        VideoAudioSubjectListViewVM videoAudioSubjectListViewVM = videoSubjectListViewTuple.getViewModel();
         contentPane.getChildren().add(VIDEO_SUBJECT_LIST_INDEX, videoSubjectListViewTuple.getView());
 
         contentPane.getChildren().get(NOVELS_INDEX).setVisible(false);
@@ -151,12 +153,24 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 contentPane.getChildren().get(VIDEO_SUBJECT_LIST_INDEX).setVisible(true);
                 contentPane.getChildren().get(SUBJECT_LIST_INDEX).setVisible(false);
                 contentPane.getChildren().get(NOVELS_INDEX).setVisible(false);
+                videoAudioSubjectListViewController.setHeaderText("Choose videos by subject");
+                videoAudioSubjectListViewVM.setType(VideoAudioSubjectListViewVM.Type.VIDEO);
             }
         }));
 
         audiosButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             System.out.println("Selected audio button");
             changeButtonStyle(audiosButton);
+            animate(contentPane);
+            if (newValue) {
+                pageTitle.setText("Audios");
+                contentPane.getChildren().get(VIDEO_SUBJECT_LIST_INDEX).setVisible(true);
+                contentPane.getChildren().get(SUBJECT_LIST_INDEX).setVisible(false);
+                contentPane.getChildren().get(NOVELS_INDEX).setVisible(false);
+                videoAudioSubjectListViewController.setHeaderText("Choose audios by subject");
+                videoAudioSubjectListViewVM.setType(VideoAudioSubjectListViewVM.Type.AUDIO);
+
+            }
         }));
 
         learningCenterButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
@@ -253,7 +267,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             case "cbtGamePanel", "cbtGameButton" -> cbtGameButton;
             case "novelsPanel", "novelsButton" -> novelsButton;
             case "videosPanel", "videosButton" -> videosButton;
-            case "audioPanel", "audioButton" -> audiosButton;
+            case "audiosPanel", "audiosButton" -> audiosButton;
             case "learningCenterPanel", "learningCenterButton" -> learningCenterButton;
             case "studyNotesPanel", "studyNotesButton" -> studyNotesButton;
             default -> null;

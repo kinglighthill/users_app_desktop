@@ -4,6 +4,8 @@ import com.scholarly.utme.data.model.listItems.VideoItem;
 import com.scholarly.utme.ui.cellFactories.VideoGridCellFactory;
 import com.scholarly.utme.ui.cellFactories.VideoListCellFactory;
 import com.scholarly.utme.ui.listcells.VideoListItemCell;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.VideoContentScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -62,7 +64,11 @@ public class VideoContentScreenController implements FxmlView<VideoContentScreen
         items.addAll(videoItem, videoItem1, videoItem2, videoItem3, videoItem4, videoItem5);
 
         videosList.setCellFactory(new VideoListCellFactory());
-        videosList.setItems(items);;
+        videosList.setItems(items);
+
+        backButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.VIDEOS_GRID_SCREEN);
+        });
 
     }
 

@@ -24,7 +24,9 @@ public enum View {
     NOVEL_CHAPTER_LIST_SCREEN("/layouts/NovelChapterListScreen.fxml", NovelChapterListController.class),
     NOVEL_CONTENT_SCREEN("/layouts/NovelContentScreen.fxml", NovelContentScreenController.class),
     VIDEOS_GRID_SCREEN("/layouts/VideosGridScreen.fxml", VideosGridScreenController.class),
-    VIDEO_CONTENT_SCREEN("/layouts/VideoContentScreen.fxml", VideoContentScreenController.class);
+    VIDEO_CONTENT_SCREEN("/layouts/VideoContentScreen.fxml", VideoContentScreenController.class),
+    AUDIOS_GRID_SCREEN("/layouts/AudiosGridScreen.fxml", AudiosGridScreenController.class),
+    AUDIO_CONTENT_SCREEN("layouts/AudioContentScreen.fxml", AudioContentScreenController.class);
 
 
 
