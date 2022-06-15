@@ -3,6 +3,7 @@ package com.scholarly.utme.controller.landing_screen;
 import com.scholarly.utme.data.model.Course;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screen.LandingScreenVM;
 import com.scholarly.utme.viewmodels.landing_screen.*;
@@ -60,23 +61,14 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         ViewTuple<LandingScreenUpdatesController, LandingScreenUpdatesVM> updatesViewTuple = FluentViewLoader.fxmlView(LandingScreenUpdatesController.class).load();
 
+        ViewTuple<LandingScreenTriviaController, LandingScreenTriviaVM> triviaViewTuple = FluentViewLoader.fxmlView(LandingScreenTriviaController.class).load();
+
         homeContentPane.getChildren().add(homeViewTuple.getView());
 
         initializeViews();
 
         initializeFonts();
 
-
-        /*final Circle clip = new Circle(15, 15, 15);
-        profileImage.setClip(clip);
-
-         try {
-            profileImage.setImage(new Image(getClass().getResource("/drawable/profileImage.jpg").toString()));
-            appIcon.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }*/
 
         toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, triviaButton, performanceButton, updatesButton, settingsButton);
 
@@ -117,7 +109,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         triviaButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
                 homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(appsViewTuple.getView());
+                homeContentPane.getChildren().add(triviaViewTuple.getView());
                 changeButtonStyle(triviaButton);
             }
         });

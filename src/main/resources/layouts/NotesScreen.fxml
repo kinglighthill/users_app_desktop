@@ -17,9 +17,7 @@
             <center>
                <StackPane prefHeight="200.0" prefWidth="600.0" style="-fx-background-color: #E7F7E9;" >
                   <children>
-                     <!--<VBox prefHeight="200.0" prefWidth="100.0" >
 
-                     </VBox>-->
                      <HBox prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" >
                         <children>
                            <VBox prefHeight="200.0" prefWidth="253.0" VBox.vgrow="ALWAYS">
