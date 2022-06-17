@@ -46,28 +46,17 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
     @FXML
     private StackPane contentPane;
 
-    private static final int SUBJECT_LIST_INDEX = 0;
-    private static final int NOVELS_INDEX = 1;
-    private static final int VIDEO_SUBJECT_LIST_INDEX = 2;
-
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
         SubjectListViewController subjectListController = subjectListViewTuple.getCodeBehind();
-        contentPane.getChildren().add(SUBJECT_LIST_INDEX, subjectListViewTuple.getView());
 
         ViewTuple<NovelScreenController, NovelScreenVM> novelListViewTuple = FluentViewLoader.fxmlView(NovelScreenController.class).load();
-        contentPane.getChildren().add(NOVELS_INDEX, novelListViewTuple.getView());
 
-        ViewTuple<VideoAudioSubjectListViewController, VideoAudioSubjectListViewVM> videoSubjectListViewTuple = FluentViewLoader.fxmlView(VideoAudioSubjectListViewController.class).load();
-        VideoAudioSubjectListViewController videoAudioSubjectListViewController = videoSubjectListViewTuple.getCodeBehind();
-        VideoAudioSubjectListViewVM videoAudioSubjectListViewVM = videoSubjectListViewTuple.getViewModel();
-        contentPane.getChildren().add(VIDEO_SUBJECT_LIST_INDEX, videoSubjectListViewTuple.getView());
-
-        contentPane.getChildren().get(NOVELS_INDEX).setVisible(false);
-        contentPane.getChildren().get(VIDEO_SUBJECT_LIST_INDEX).setVisible(false);
+        ViewTuple<VideoAudioSubjectListViewController, VideoAudioSubjectListViewVM> videoAudioSubjectListViewTuple = FluentViewLoader.fxmlView(VideoAudioSubjectListViewController.class).load();
+        VideoAudioSubjectListViewController videoAudioSubjectListViewController = videoAudioSubjectListViewTuple.getCodeBehind();
 
         initializeViews();
 
@@ -86,9 +75,8 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
                     subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
                 }
-                contentPane.getChildren().get(SUBJECT_LIST_INDEX).setVisible(true);
-                contentPane.getChildren().get(NOVELS_INDEX).setVisible(false);
-                contentPane.getChildren().get(VIDEO_SUBJECT_LIST_INDEX).setVisible(false);
+                contentPane.getChildren().clear();
+                contentPane.getChildren().add(subjectListViewTuple.getView());
             }
             if (oldValue) {
                 subjectListController.setOption(SubjectListOption.PRACTICE);
@@ -105,9 +93,8 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
                     subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
                 }
-                contentPane.getChildren().get(SUBJECT_LIST_INDEX).setVisible(true);
-                contentPane.getChildren().get(NOVELS_INDEX).setVisible(false);
-                contentPane.getChildren().get(VIDEO_SUBJECT_LIST_INDEX).setVisible(false);
+                contentPane.getChildren().clear();
+                contentPane.getChildren().add(subjectListViewTuple.getView());
             }
             if (oldValue) {
                 subjectListController.setOption(SubjectListOption.STUDY);
@@ -123,9 +110,8 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
                 animate(contentPane);
                 subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
-                contentPane.getChildren().get(SUBJECT_LIST_INDEX).setVisible(true);
-                contentPane.getChildren().get(NOVELS_INDEX).setVisible(false);
-                contentPane.getChildren().get(VIDEO_SUBJECT_LIST_INDEX).setVisible(false);
+                contentPane.getChildren().clear();
+                contentPane.getChildren().add(subjectListViewTuple.getView());
             }
             if (oldValue) {
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
@@ -138,9 +124,8 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             animate(contentPane);
             if (newValue) {
                 pageTitle.setText("Novels");
-                contentPane.getChildren().get(NOVELS_INDEX).setVisible(true);
-                contentPane.getChildren().get(SUBJECT_LIST_INDEX).setVisible(false);
-                contentPane.getChildren().get(VIDEO_SUBJECT_LIST_INDEX).setVisible(false);
+                contentPane.getChildren().clear();
+                contentPane.getChildren().add(novelListViewTuple.getView());
             }
         }));
 
@@ -150,11 +135,10 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             animate(contentPane);
             if (newValue) {
                 pageTitle.setText("Videos");
-                contentPane.getChildren().get(VIDEO_SUBJECT_LIST_INDEX).setVisible(true);
-                contentPane.getChildren().get(SUBJECT_LIST_INDEX).setVisible(false);
-                contentPane.getChildren().get(NOVELS_INDEX).setVisible(false);
-                videoAudioSubjectListViewController.setHeaderText("Choose videos by subject");
-                videoAudioSubjectListViewVM.setType(VideoAudioSubjectListViewVM.Type.VIDEO);
+                contentPane.getChildren().clear();
+                contentPane.getChildren().add(videoAudioSubjectListViewTuple.getView());
+//                videoAudioSubjectListViewController.setHeaderText("Choose videos by subject");
+                videoAudioSubjectListViewController.setType(VideoAudioSubjectListViewVM.Type.VIDEO);
             }
         }));
 
@@ -164,11 +148,10 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             animate(contentPane);
             if (newValue) {
                 pageTitle.setText("Audios");
-                contentPane.getChildren().get(VIDEO_SUBJECT_LIST_INDEX).setVisible(true);
-                contentPane.getChildren().get(SUBJECT_LIST_INDEX).setVisible(false);
-                contentPane.getChildren().get(NOVELS_INDEX).setVisible(false);
-                videoAudioSubjectListViewController.setHeaderText("Choose audios by subject");
-                videoAudioSubjectListViewVM.setType(VideoAudioSubjectListViewVM.Type.AUDIO);
+                contentPane.getChildren().clear();
+                contentPane.getChildren().add(videoAudioSubjectListViewTuple.getView());
+//                videoAudioSubjectListViewController.setHeaderText("Choose audios by subject");
+                videoAudioSubjectListViewController.setType(VideoAudioSubjectListViewVM.Type.AUDIO);
 
             }
         }));
@@ -242,14 +225,14 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
     private void initializeFonts() {
         scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY.size));
 
-        practiceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        pastQuestionButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        cbtGameButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        novelsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        videosButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        audiosButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        learningCenterButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        studyNotesButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        practiceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        pastQuestionButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        cbtGameButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        novelsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        videosButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        audiosButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        learningCenterButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        studyNotesButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 
         pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
 

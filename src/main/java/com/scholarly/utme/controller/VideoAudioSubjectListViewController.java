@@ -65,4 +65,14 @@ public class VideoAudioSubjectListViewController implements FxmlView<VideoAudioS
     public void setHeaderText(String text) {
         headerText.setText(text);
     }
+
+    public void setType(VideoAudioSubjectListViewVM.Type type) {
+        viewModel.setType(type);
+
+        if (type == VideoAudioSubjectListViewVM.Type.VIDEO) {
+            headerText.setText("Choose videos by subject");
+        }else if (type == VideoAudioSubjectListViewVM.Type.AUDIO) {
+            headerText.setText("Choose videos by subject");
+        }
+    }
 }

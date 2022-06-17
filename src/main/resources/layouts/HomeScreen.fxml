@@ -23,42 +23,42 @@
 
             <ToggleButton fx:id="practiceButton" text="CBT Practice" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;" >
                <padding>
-                  <Insets left="20"/>
+                  <Insets left="15"/>
                </padding>
             </ToggleButton>
              <ToggleButton fx:id="pastQuestionButton" text="Study Past Question" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0">
                 <padding>
-                   <Insets left="20"/>
+                   <Insets left="15"/>
                 </padding>
              </ToggleButton>
             <ToggleButton fx:id="cbtGameButton" text="CBT Game" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
                <padding>
-                  <Insets left="20"/>
+                  <Insets left="15"/>
                </padding>
             </ToggleButton>
             <ToggleButton fx:id="novelsButton" text="Novels" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
                <padding>
-                  <Insets left="20"/>
+                  <Insets left="15"/>
                </padding>
             </ToggleButton>
              <ToggleButton fx:id="videosButton" text="Videos" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
                 <padding>
-                   <Insets left="20"/>
+                   <Insets left="15"/>
                 </padding>
              </ToggleButton>
              <ToggleButton fx:id="audiosButton" text="Audios" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
                 <padding>
-                   <Insets left="20"/>
+                   <Insets left="15"/>
                 </padding>
              </ToggleButton>
              <ToggleButton fx:id="learningCenterButton" text="Learning Center" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0">
                 <padding>
-                   <Insets left="20"/>
+                   <Insets left="15"/>
                 </padding>
              </ToggleButton>
             <ToggleButton fx:id="studyNotesButton" text="Study Notes" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
                <padding>
-                  <Insets left="20"/>
+                  <Insets left="15"/>
                </padding>
             </ToggleButton>
          </children>
