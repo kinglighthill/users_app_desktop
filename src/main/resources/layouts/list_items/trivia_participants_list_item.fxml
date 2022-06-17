@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+
+    <graphic>
+        <Panel>
+            <left>
+                <HBox spacing="10" alignment="CENTER">
+                    <ImageView fx:id="playerImage" fitHeight="40" fitWidth="40"/>
+                    <Label fx:id="participantName" text="Uche Umeh" textFill="#053500" alignment="CENTER"/>
+                </HBox>
+            </left>
+            <right>
+                <HBox alignment="CENTER">
+                    <Label fx:id="numOfPoints" text="500 pts" textFill="#12AF20"/>
+                </HBox>
+            </right>
+            <padding>
+                <Insets top="10" bottom="10"/>
+            </padding>
+        </Panel>
+    </graphic>
+
+</fx:root>
