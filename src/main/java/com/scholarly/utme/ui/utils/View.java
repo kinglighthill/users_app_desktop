@@ -2,6 +2,7 @@ package com.scholarly.utme.ui.utils;
 
 import com.scholarly.utme.controller.*;
 import com.scholarly.utme.controller.landing_screen.LandingScreenController;
+import com.scholarly.utme.controller.trivia_screen.TriviaChallengeScreenController;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.ViewModel;
 
@@ -26,7 +27,8 @@ public enum View {
     VIDEOS_GRID_SCREEN("/layouts/VideosGridScreen.fxml", VideosGridScreenController.class),
     VIDEO_CONTENT_SCREEN("/layouts/VideoContentScreen.fxml", VideoContentScreenController.class),
     AUDIOS_GRID_SCREEN("/layouts/AudiosGridScreen.fxml", AudiosGridScreenController.class),
-    AUDIO_CONTENT_SCREEN("layouts/AudioContentScreen.fxml", AudioContentScreenController.class);
+    AUDIO_CONTENT_SCREEN("layouts/AudioContentScreen.fxml", AudioContentScreenController.class),
+    TRIVIA_CHALLENGE_SCREEN("/layouts/trivia_screen/TriviaChallengeScreen.fxml", TriviaChallengeScreenController.class);
 
 
 

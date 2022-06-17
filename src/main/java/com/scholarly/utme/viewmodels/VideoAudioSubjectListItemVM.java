@@ -37,8 +37,6 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
 
     private Subject subject;
 
-    private Type type;
-
     private ObservableList<Topic> topics;
     private static ObservableList<MediaSubTopic> subTopics = FXCollections.observableArrayList();
 
@@ -50,7 +48,7 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
         subjectTableName.set(subject.getTableName());
         subjectColorName.set(getColorName(subject.getTableName()));
 
-        subjectState.onNext(new MediaSubjectState(subject, type, subjectSelected.get(), selectedTopicProperty.get(), selectedSubtopicProperty.get()));
+        subjectState.onNext(new MediaSubjectState(subject, subjectSelected.get(), selectedTopicProperty.get(), selectedSubtopicProperty.get()));
 
 
         topics = TopicDao.getTopics(subject.getTableName() + "_topics");
@@ -63,13 +61,13 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
      */
     public void mapPropertiesToState() {
         subjectSelected.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new VideoAudioSubjectListItemVM.MediaSubjectState(subject, type, newValue, selectedTopicProperty.get(), selectedSubtopicProperty.get()));
+            subjectState.onNext(new VideoAudioSubjectListItemVM.MediaSubjectState(subject, newValue, selectedTopicProperty.get(), selectedSubtopicProperty.get()));
         }));
         selectedTopicProperty.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new VideoAudioSubjectListItemVM.MediaSubjectState(subject, type, subjectSelected.get(), newValue, selectedSubtopicProperty.get()));
+            subjectState.onNext(new VideoAudioSubjectListItemVM.MediaSubjectState(subject, subjectSelected.get(), newValue, selectedSubtopicProperty.get()));
         }));
         selectedSubtopicProperty.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new VideoAudioSubjectListItemVM.MediaSubjectState(subject, type, subjectSelected.get(), selectedTopicProperty.get(), newValue));
+            subjectState.onNext(new VideoAudioSubjectListItemVM.MediaSubjectState(subject, subjectSelected.get(), selectedTopicProperty.get(), newValue));
         }));
 
     }
@@ -79,11 +77,6 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
      */
     public void invalidate() {
         subjectSelected.set(false);
-    }
-
-
-    public void setType(Type type) {
-        this.type = type;
     }
 
     public Subject getSubject() {
@@ -173,16 +166,14 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
 
     public static class MediaSubjectState {
         private Subject subject;
-        private Type type;
 
         private Boolean isSelected;
 
         private Topic selectedTopic;
         private MediaSubTopic selectedSubtopic;
 
-        public MediaSubjectState(Subject subject, Type type, Boolean isSelected, Topic selectedTopic, MediaSubTopic selectedSubtopic) {
+        public MediaSubjectState(Subject subject, Boolean isSelected, Topic selectedTopic, MediaSubTopic selectedSubtopic) {
             this.subject = subject;
-            this.type = type;
             this.isSelected = isSelected;
             this.selectedTopic = selectedTopic;
             this.selectedSubtopic = selectedSubtopic;
@@ -190,10 +181,6 @@ public class VideoAudioSubjectListItemVM implements ViewModel {
 
         public Subject getSubject() {
             return subject;
-        }
-
-        public Type getType() {
-            return type;
         }
 
         public Boolean getSelected() {

@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller.landing_screen;
 
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screen.LandingScreenTriviaVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -46,7 +48,9 @@ public class LandingScreenTriviaController implements FxmlView<LandingScreenTriv
 
         initializeFonts();
 
-
+        startButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.TRIVIA_CHALLENGE_SCREEN);
+        });
 
     }
 

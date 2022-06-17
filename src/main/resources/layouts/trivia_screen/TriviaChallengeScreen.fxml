@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.text.Font?>
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.trivia_screen.TriviaChallengeScreenController"
+           prefHeight="800.0" prefWidth="1000.0">
+
+    <BorderPane>
+        <left>
+            <Panel style="-fx-background-color: #006B17;">
+                <center>
+                    <VBox spacing="20" prefWidth="400" alignment="TOP_CENTER" >
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Button fx:id="backButton" style="-fx-background-color: #0D8421;">
+                                <padding>
+                                    <Insets right="13" bottom="13" top="8" left="8"/>
+                                </padding>
+                            </Button>
+                            <Label text="Challenges" textFill="white">
+                                <font>
+                                    <Font name="Gill Sans MT" size="22"/>
+                                </font>
+                            </Label>
+                        </HBox>
+                        <StackPane>
+                            <TextField fx:id="searchChallenge" promptText="Search for a challenge" style="-fx-background-color: rgba(18, 175, 32, 0.2); -fx-background-radius: 10; -fx-border-color: #12AF20; -fx-border-radius: 10;">
+                                <padding>
+                                    <Insets topRightBottomLeft="10"/>
+                                </padding>
+                            </TextField>
+                            <ImageView />
+                        </StackPane>
+
+                        <HBox spacing="15">
+                            <Button text="Open" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8;"/>
+                            <Button text="Ended" textFill="white" style="-fx-background-color: rgba(44, 189, 57, 0.3); -fx-background-radius: 8;"/>
+                            <Button text="Upcoming" textFill="white" style="-fx-background-color: rgba(44, 189, 57, 0.3); -fx-background-radius: 8;"/>
+                            <VBox.margin>
+                                <Insets top="15"/>
+                            </VBox.margin>
+                        </HBox>
+
+                        <ListView fx:id="challengeList"/>
+
+                        <padding>
+                            <Insets left="25" right="25" top="40" bottom="25"/>
+                        </padding>
+                    </VBox>
+                </center>
+
+                <bottom>
+                    <HBox alignment="CENTER">
+                        <Button fx:id="exitButton" text="Exit" textFill="#ACCDAF"/>
+                        <padding>
+                            <Insets bottom="40"/>
+                        </padding>
+                    </HBox>
+                </bottom>
+
+            </Panel>
+
+        </left>
+        <center>
+            <BorderPane>
+                <top>
+
+                </top>
+                <center>
+
+                </center>
+                <right>
+
+                </right>
+            </BorderPane>
+        </center>
+    </BorderPane>
+
+</StackPane>
