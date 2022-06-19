@@ -10,7 +10,7 @@
 <?import javafx.geometry.Insets?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.text.Font?>
-<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.trivia_screen.TriviaChallengeScreenController"
+<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.trivia_screen.TriviaChallengeScreenController"
            prefHeight="800.0" prefWidth="1000.0">
 
     <BorderPane>
@@ -65,10 +65,9 @@
                         </padding>
                     </HBox>
                 </bottom>
-
             </Panel>
-
         </left>
+
         <center>
             <BorderPane style="-fx-background-color: white;">
                 <top>
@@ -157,5 +156,210 @@
             </BorderPane>
         </center>
     </BorderPane>
+
+    <Pane fx:id="dialogDimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
+
+    <VBox fx:id="newChallengeFirstPane" spacing="15" maxWidth="400" maxHeight="600" alignment="TOP_CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" visible="false" StackPane.alignment="CENTER">
+        <VBox spacing="5">
+            <Panel>
+                <left>
+                    <Label text="Start a new challenge" textFill="#053500">
+                        <font>
+                            <Font name="Gill Sans MT" size="18"/>
+                        </font>
+                    </Label>
+                </left>
+                <right>
+                    <ImageView fx:id="firstStepCloseIcon" fitWidth="30" fitHeight="30" preserveRatio="true" pickOnBounds="true"/>
+                </right>
+            </Panel>
+            <Label text="Step 1" textFill="#12AF20">
+                <font>
+                    <Font name="Gill Sans MT" size="16"/>
+                </font>
+            </Label>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Name of Challenge" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <TextField/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Select Subject" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <ChoiceBox prefWidth="400"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Select Topic" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <ChoiceBox prefWidth="400"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Select Subtopic" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <ChoiceBox prefWidth="400"/>
+        </VBox>
+
+        <Panel>
+            <left>
+                <VBox spacing="5">
+                    <Label text="TIme">
+                        <font>
+                            <Font name="Gill Sans MT" size="14"/>
+                        </font>
+                    </Label>
+                    <HBox spacing="5" alignment="CENTER">
+                        <Label text="Seconds">
+                            <font>
+                                <Font name="Gill Sans MT" size="12"/>
+                            </font>
+                        </Label>
+                        <ChoiceBox/>
+                    </HBox>
+                </VBox>
+            </left>
+            <right>
+                <VBox spacing="5">
+                    <Label text="Date">
+                        <font>
+                            <Font name="Gill Sans MT" size="14"/>
+                        </font>
+                    </Label>
+                    <DatePicker/>
+                </VBox>
+            </right>
+        </Panel>
+
+        <VBox spacing="5">
+            <Label text="Number of Questions">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <ChoiceBox prefWidth="400"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Description">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <TextArea prefHeight="60" prefWidth="400"/>
+        </VBox>
+
+        <Button fx:id="nextButton" text="Next" textFill="white" prefWidth="80" prefHeight="35" style="-fx-background-color: #12AF20;">
+            <VBox.margin>
+                <Insets top="10"/>
+            </VBox.margin>
+        </Button>
+
+        <padding>
+            <Insets top="20" bottom="25" left="30" right="30"/>
+        </padding>
+    </VBox>
+
+    <VBox fx:id="newChallengeSecondPane" spacing="15" maxWidth="400" maxHeight="350" alignment="TOP_CENTER" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false" StackPane.alignment="TOP_CENTER">
+        <VBox spacing="5">
+            <Panel>
+                <left>
+                    <Label text="Start a new challenge" textFill="#053500">
+                        <font>
+                            <Font name="Gill Sans MT" size="18"/>
+                        </font>
+                    </Label>
+                </left>
+                <right>
+                    <ImageView fx:id="secondStepCloseIcon" fitWidth="30" fitHeight="30" preserveRatio="true" pickOnBounds="true"/>
+                </right>
+            </Panel>
+            <Label text="Step 2" textFill="#12AF20">
+                <font>
+                    <Font name="Gill Sans MT" size="16"/>
+                </font>
+            </Label>
+        </VBox>
+        <VBox spacing="5">
+            <Label text="Add participants from your contact list">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <StackPane>
+                <TextField prefHeight="35" promptText="Select from contact list"/>
+                <ImageView fx:id="contactIcon" StackPane.alignment="CENTER_RIGHT">
+                    <StackPane.margin>
+                        <Insets right="20"/>
+                    </StackPane.margin>
+                </ImageView>
+            </StackPane>
+            <HBox spacing="5">
+                <HBox fx:id="contactPane"  spacing="5" alignment="CENTER_LEFT" style="-fx-background-color: #F1F1F1; -fx-background-radius: 15;">
+                    <ImageView fx:id="contactImage" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                    <Label fx:id="contactName" text="Kate Olaolu"/>
+                    <ImageView fx:id="contactRemoveIcon">
+                        <HBox.margin>
+                            <Insets left="10" right="10"/>
+                        </HBox.margin>
+                    </ImageView>
+                </HBox>
+                <HBox fx:id="contact2Pane" spacing="5" alignment="CENTER_LEFT" style="-fx-background-color: #F1F1F1; -fx-background-radius: 15;">
+                    <ImageView fx:id="contact2Image" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                    <Label text="Kate Olaolu"/>
+                    <ImageView fx:id="contact2RemoveIcon">
+                        <HBox.margin>
+                            <Insets left="10" right="10"/>
+                        </HBox.margin>
+                    </ImageView>
+                </HBox>
+            </HBox>
+
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Share invitation link (Optional)">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <StackPane>
+                <TextField prefHeight="35" text="bit.ly/scholarly_trivia"/>
+                <ImageView fx:id="shareIcon" StackPane.alignment="CENTER_RIGHT">
+                    <StackPane.margin>
+                        <Insets right="20"/>
+                    </StackPane.margin>
+                </ImageView>
+            </StackPane>
+        </VBox>
+
+        <Button fx:id="createChallengeBtn" text="Create Challenge" textFill="white" prefWidth="150" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+            <VBox.margin>
+                <Insets top="10"/>
+            </VBox.margin>
+        </Button>
+
+        <padding>
+            <Insets top="20" bottom="25" left="30" right="30"/>
+        </padding>
+        <StackPane.margin>
+            <Insets top="80"/>
+        </StackPane.margin>
+    </VBox>
 
 </StackPane>
