@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.trivia_screen.TriviaChallengeQuizScreenController"
+            prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #006B17;">
+
+    <top>
+        <VBox spacing="35" prefWidth="800">
+            <Panel>
+                <left>
+                    <HBox>
+                        <Label text="Topic: " textFill="white">
+                            <font>
+                                <Font name="Gill Sans MT" size="24"/>
+                            </font>
+                        </Label>
+                        <Label text="Integration" textFill="white">
+                            <font>
+                                <Font name="Gill Sans MT" size="24"/>
+                            </font>
+                        </Label>
+                    </HBox>
+                </left>
+                <right>
+                    <HBox alignment="CENTER">
+                        <StackPane>
+                            <ImageView fx:id="player1" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true">
+                                <StackPane.margin>
+                                    <Insets right="160"/>
+                                </StackPane.margin>
+                            </ImageView>
+                            <ImageView fx:id="player2" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true">
+                                <StackPane.margin>
+                                    <Insets right="110"/>
+                                </StackPane.margin>
+                            </ImageView>
+                            <ImageView fx:id="player3" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true">
+                                <StackPane.margin>
+                                    <Insets right="60"/>
+                                </StackPane.margin>
+                            </ImageView>
+                            <ImageView fx:id="player4" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true">
+                                <StackPane.margin>
+                                    <Insets right="10"/>
+                                </StackPane.margin>
+                            </ImageView>
+                            <Label text="+5 others" textFill="white">
+                                <StackPane.margin>
+                                    <Insets left="100"/>
+                                </StackPane.margin>
+                                <font>
+                                    <Font name="Gill Sans MT" size="16"/>
+                                </font>
+                            </Label>
+                        </StackPane>
+
+                    </HBox>
+                </right>
+                <padding>
+                    <Insets left="40" top="30" right="50"/>
+                </padding>
+            </Panel>
+            <Separator prefWidth="2.0"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" prefWidth="400" BorderPane.alignment="CENTER_LEFT">
+            <StackPane prefWidth="100" prefHeight="300" style="-fx-background-color: white; -fx-background-radius: 5;">
+                <Panel>
+                    <top>
+                        <Panel>
+                            <center>
+                                <Label text="Question 3 of 50" textFill="#053500">
+                                    <font>
+                                        <Font name="Gill Sans MT" size="18"/>
+                                    </font>
+                                </Label>
+                            </center>
+
+                            <right>
+                                <ImageView fx:id="speakerIcon" preserveRatio="true" pickOnBounds="true"/>
+                            </right>
+                        </Panel>
+                    </top>
+                </Panel>
+                <Label fx:id="questionLabel" text="If y(x-1)=z then x=" StackPane.alignment="CENTER"/>
+
+                <padding>
+                    <Insets right="20" top="20"/>
+                </padding>
+            </StackPane>
+
+            <VBox spacing="7">
+                <StackPane>
+                    <Button fx:id="buttonA" text="2y+z" prefHeight="50" prefWidth="850" textFill="white" textAlignment="CENTER" style="-fx-background-color: #32C83F; -fx-background-radius: 5;"/>
+                    <ImageView fx:id="buttonAIcon" fitWidth="50" fitHeight="50" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_LEFT">
+                        <StackPane.margin>
+                            <Insets left="15"/>
+                        </StackPane.margin>
+                    </ImageView>
+                </StackPane>
+                <StackPane>
+                    <Button fx:id="buttonB" text="2y+z" prefHeight="50" prefWidth="850" textFill="white" textAlignment="CENTER" style="-fx-background-color: #32C83F; -fx-background-radius: 5;"/>
+                    <ImageView fx:id="buttonBIcon" fitWidth="50" fitHeight="50" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_LEFT">
+                        <StackPane.margin>
+                            <Insets left="15"/>
+                        </StackPane.margin>
+                    </ImageView>
+                </StackPane>
+                <StackPane>
+                    <Button fx:id="buttonC" text="2y+z" prefHeight="50" prefWidth="850" textFill="white" textAlignment="CENTER" style="-fx-background-color: #32C83F; -fx-background-radius: 5;"/>
+                    <ImageView fx:id="buttonCIcon" fitWidth="50" fitHeight="50" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_LEFT">
+                        <StackPane.margin>
+                            <Insets left="15"/>
+                        </StackPane.margin>
+                    </ImageView>
+                </StackPane>
+                <StackPane>
+                    <Button fx:id="buttonD" text="2y+z" prefHeight="50" prefWidth="850" textFill="white" textAlignment="CENTER" style="-fx-background-color: #32C83F; -fx-background-radius: 5;"/>
+                    <ImageView fx:id="buttonDIcon" fitWidth="50" fitHeight="50" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_LEFT">
+                        <StackPane.margin>
+                            <Insets left="15"/>
+                        </StackPane.margin>
+                    </ImageView>
+                </StackPane>
+
+            </VBox>
+            <BorderPane.margin>
+                <Insets left="40" top="30" right="50"/>
+            </BorderPane.margin>
+        </VBox>
+    </center>
+
+    <right>
+        <VBox spacing="30" alignment="TOP_CENTER">
+            <VBox spacing="20" prefHeight="300" prefWidth="400" alignment="TOP_CENTER" style="-fx-background-color: white; -fx-background-radius: 5;">
+                <Label text="Time remaining" textFill="#053500">
+                    <font>
+                        <Font name="Gill Sans MT" size="16"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets top="20"/>
+                    </VBox.margin>
+                </Label>
+                <ImageView fx:id="clockImage" preserveRatio="true" pickOnBounds="true"/>
+                <HBox spacing="5" alignment="CENTER">
+                    <Label fx:id="hours" text="00 : "/>
+                    <Label fx:id="mins" text="25 : "/>
+                    <Label fx:id="secs" text="02"/>
+                </HBox>
+            </VBox>
+
+            <Button fx:id="exitButton" text="Exit" textFill="white" prefWidth="200" prefHeight="40" alignment="CENTER" style="-fx-border-color: #ACCDAF; -fx-border-radius: 8;" StackPane.alignment="BOTTOM_CENTER"/>
+
+            <BorderPane.margin>
+                <Insets right="50" top="30"/>
+            </BorderPane.margin>
+        </VBox>
+    </right>
+
+</BorderPane>

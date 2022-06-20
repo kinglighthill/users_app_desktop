@@ -6,6 +6,8 @@ import com.scholarly.utme.ui.cellFactories.TriviaChallengeListCellFactory;
 import com.scholarly.utme.ui.cellFactories.TriviaParticipantListCellFactory;
 import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.trivia_screen.TriviaChallengeScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -84,6 +86,10 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
 
 
         joinChallengeBtn.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.TRIVIA_CHALLENGE_QUIZ_SCREEN);
+        });
+
+        newChallengeButton.setOnAction(event -> {
             Animations.showDialog(newChallengeFirstPane, dialogDimmer);
         });
 
