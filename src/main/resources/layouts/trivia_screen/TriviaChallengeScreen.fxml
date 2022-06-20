@@ -362,4 +362,26 @@
         </StackPane.margin>
     </VBox>
 
+    <VBox fx:id="challengeCreatedPane" spacing="15" maxWidth="400" maxHeight="350" alignment="TOP_CENTER" visible="false" style="-fx-background-color: white; -fx-background-radius: 10;" StackPane.alignment="TOP_CENTER">
+        <Panel>
+            <right>
+                <ImageView fx:id="challengeCreatedCloseIcon" fitWidth="30" fitHeight="30" preserveRatio="true" pickOnBounds="true"/>
+            </right>
+        </Panel>
+
+        <ImageView fx:id="challengeCreatedImage" preserveRatio="true" pickOnBounds="true"/>
+
+        <VBox spacing="5" alignment="CENTER">
+            <Label fx:id="challengeCreatedText" text="Challenge created" textFill="#053500"/>
+            <Label fx:id="successfulText" text="Successfully" textFill="#053500"/>
+        </VBox>
+
+        <padding>
+            <Insets top="20" bottom="25" left="30" right="30"/>
+        </padding>
+        <StackPane.margin>
+            <Insets top="80"/>
+        </StackPane.margin>
+    </VBox>
+
 </StackPane>
