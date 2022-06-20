@@ -4,6 +4,7 @@ import com.scholarly.utme.data.model.listItems.TriviaChallengeItem;
 import com.scholarly.utme.data.model.listItems.TriviaParticipantItem;
 import com.scholarly.utme.ui.cellFactories.TriviaChallengeListCellFactory;
 import com.scholarly.utme.ui.cellFactories.TriviaParticipantListCellFactory;
+import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.viewmodels.trivia_screen.TriviaChallengeScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -16,6 +17,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
 import java.net.URL;
@@ -25,13 +29,22 @@ import java.util.ResourceBundle;
 public class TriviaChallengeScreenController implements FxmlView<TriviaChallengeScreenVM>, Initializable {
 
     @FXML
+    private StackPane rootPane;
+
+    @FXML
     private TextField searchChallenge;
 
     @FXML
-    private Button backButton, exitButton, newChallengeButton, joinChallengeBtn;
+    private VBox newChallengeFirstPane, newChallengeSecondPane;
 
     @FXML
-    private ImageView playerImage, challengeImage, timeIcon;
+    private Pane dialogDimmer;
+
+    @FXML
+    private Button backButton, exitButton, newChallengeButton, joinChallengeBtn, nextButton, createChallengeBtn;
+
+    @FXML
+    private ImageView playerImage, challengeImage, timeIcon, firstStepCloseIcon, secondStepCloseIcon, contactIcon, shareIcon, contactImage, contact2Image, contactRemoveIcon, contact2RemoveIcon;
 
     @FXML
     private Label playerName, playerPoints, challengeName, timeLabel, challengeDescription, participantsLabel;
@@ -70,11 +83,34 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
         participantsList.setItems(participants);
 
 
+        joinChallengeBtn.setOnAction(event -> {
+            Animations.showDialog(newChallengeFirstPane, dialogDimmer);
+        });
+
+        firstStepCloseIcon.setOnMouseClicked(event -> {
+            Animations.hideDialog(newChallengeFirstPane, dialogDimmer);
+        });
+
+        nextButton.setOnAction(event -> {
+            newChallengeFirstPane.setVisible(false);
+            newChallengeSecondPane.setVisible(true);
+        });
+
+        secondStepCloseIcon.setOnMouseClicked(event -> {
+            Animations.hideDialog(newChallengeSecondPane, dialogDimmer);
+        });
+
     }
 
     private void initializeViews() {
         timeIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/time_image.png").toString()));
         challengeImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/mathematics_challenge_image.png").toString()));
+        firstStepCloseIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/new_challenge_close_icon.png").toString()));
+        secondStepCloseIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/new_challenge_close_icon.png").toString()));
+        contactIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/contact_icon.png").toString()));
+        shareIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/share_link_icon.png").toString()));
+        contactRemoveIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/remove_contact_icon.png").toString()));
+        contact2RemoveIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/remove_contact_icon.png").toString()));
 
         ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_icon.png").toString()));
         backButton.setGraphic(backIcon);
@@ -84,6 +120,14 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
         playerImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/prev_challenge_player_image.png").toString()));
         Circle profileClip = new Circle(20, 20, 20);
         playerImage.setClip(profileClip);
+
+        Circle contactClip = new Circle(15, 15, 15);
+        contactImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/player_icon.png").toString()));
+        contactImage.setClip(contactClip);
+
+        Circle contact2Clip = new Circle(15, 15, 15);
+        contact2Image.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/player_icon.png").toString()));
+        contact2Image.setClip(contact2Clip);
 
         challengeList.setBackground(Background.EMPTY);
         exitButton.setBackground(Background.EMPTY);
@@ -101,6 +145,8 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
         newChallengeButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
         challengeDescription.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         joinChallengeBtn.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        nextButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        createChallengeBtn.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
 
     }
 }

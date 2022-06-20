@@ -137,7 +137,6 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 pageTitle.setText("Videos");
                 contentPane.getChildren().clear();
                 contentPane.getChildren().add(videoAudioSubjectListViewTuple.getView());
-//                videoAudioSubjectListViewController.setHeaderText("Choose videos by subject");
                 videoAudioSubjectListViewController.setType(VideoAudioSubjectListViewVM.Type.VIDEO);
             }
         }));
@@ -150,7 +149,6 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 pageTitle.setText("Audios");
                 contentPane.getChildren().clear();
                 contentPane.getChildren().add(videoAudioSubjectListViewTuple.getView());
-//                videoAudioSubjectListViewController.setHeaderText("Choose audios by subject");
                 videoAudioSubjectListViewController.setType(VideoAudioSubjectListViewVM.Type.AUDIO);
 
             }
