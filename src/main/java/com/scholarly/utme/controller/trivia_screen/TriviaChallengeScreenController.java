@@ -35,7 +35,7 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
     private TextField searchChallenge;
 
     @FXML
-    private VBox newChallengeFirstPane, newChallengeSecondPane;
+    private VBox newChallengeFirstPane, newChallengeSecondPane, challengeCreatedPane;
 
     @FXML
     private Pane dialogDimmer;
@@ -44,10 +44,10 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
     private Button backButton, exitButton, newChallengeButton, joinChallengeBtn, nextButton, createChallengeBtn;
 
     @FXML
-    private ImageView playerImage, challengeImage, timeIcon, firstStepCloseIcon, secondStepCloseIcon, contactIcon, shareIcon, contactImage, contact2Image, contactRemoveIcon, contact2RemoveIcon;
+    private ImageView playerImage, challengeImage, timeIcon, firstStepCloseIcon, secondStepCloseIcon, challengeCreatedCloseIcon, contactIcon, shareIcon, contactImage, contact2Image, contactRemoveIcon, contact2RemoveIcon, challengeCreatedImage;
 
     @FXML
-    private Label playerName, playerPoints, challengeName, timeLabel, challengeDescription, participantsLabel;
+    private Label playerName, playerPoints, challengeName, timeLabel, challengeDescription, participantsLabel, challengeCreatedText, successfulText;
 
     @FXML
     private ListView<TriviaChallengeItem> challengeList;
@@ -92,12 +92,23 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
         });
 
         nextButton.setOnAction(event -> {
-            newChallengeFirstPane.setVisible(false);
-            newChallengeSecondPane.setVisible(true);
+//            newChallengeFirstPane.setVisible(false);
+//            newChallengeSecondPane.setVisible(true);
+            Animations.fadeOut(newChallengeFirstPane, 100);
+            Animations.fadeIn(newChallengeSecondPane, 200);
         });
 
         secondStepCloseIcon.setOnMouseClicked(event -> {
             Animations.hideDialog(newChallengeSecondPane, dialogDimmer);
+        });
+
+        createChallengeBtn.setOnAction(event -> {
+            Animations.fadeOut(newChallengeSecondPane, 100);
+            Animations.fadeIn(challengeCreatedPane, 200);
+        });
+
+        challengeCreatedCloseIcon.setOnMouseClicked(event -> {
+            Animations.hideDialog(challengeCreatedPane, dialogDimmer);
         });
 
     }
@@ -107,10 +118,12 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
         challengeImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/mathematics_challenge_image.png").toString()));
         firstStepCloseIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/new_challenge_close_icon.png").toString()));
         secondStepCloseIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/new_challenge_close_icon.png").toString()));
+        challengeCreatedCloseIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/new_challenge_close_icon.png").toString()));
         contactIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/contact_icon.png").toString()));
         shareIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/share_link_icon.png").toString()));
         contactRemoveIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/remove_contact_icon.png").toString()));
         contact2RemoveIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/remove_contact_icon.png").toString()));
+        challengeCreatedImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/challenge_created_image.png").toString()));
 
         ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_icon.png").toString()));
         backButton.setGraphic(backIcon);
@@ -147,6 +160,8 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
         joinChallengeBtn.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         nextButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         createChallengeBtn.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
+        challengeCreatedText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        successfulText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 
     }
 }
