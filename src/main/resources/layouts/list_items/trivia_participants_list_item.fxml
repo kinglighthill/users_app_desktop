@@ -13,7 +13,7 @@
             <left>
                 <HBox spacing="10" alignment="CENTER">
                     <ImageView fx:id="playerImage" fitHeight="40" fitWidth="40"/>
-                    <Label fx:id="participantName" text="Uche Umeh" textFill="#053500" alignment="CENTER"/>
+                    <Label fx:id="participantName" text="Uche Umeh" textFill="#053500" alignment="TOP_CENTER"/>
                 </HBox>
             </left>
             <right>
@@ -22,7 +22,7 @@
                 </HBox>
             </right>
             <padding>
-                <Insets top="10" bottom="10"/>
+                <Insets top="5" bottom="5"/>
             </padding>
         </Panel>
     </graphic>
