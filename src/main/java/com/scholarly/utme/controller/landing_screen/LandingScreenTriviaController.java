@@ -56,9 +56,9 @@ public class LandingScreenTriviaController implements FxmlView<LandingScreenTriv
 
     private void initializeViews() {
         centerImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/young_african_students.jpg").toString()));
-        prevChallengeIcon1.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/prev_challenge_icon.png").toString()));
-        prevChallengeIcon2.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/prev_challenge_icon.png").toString()));
-        prevChallengeIcon3.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/prev_challenge_icon.png").toString()));
+        prevChallengeIcon1.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/challenge_image.png").toString()));
+        prevChallengeIcon2.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/challenge_image.png").toString()));
+        prevChallengeIcon3.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/challenge_image.png").toString()));
 
         playerImage1.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/prev_challenge_player_image.png").toString()));
         playerImage2.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/prev_challenge_player_image.png").toString()));

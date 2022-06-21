@@ -229,15 +229,12 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
 
             }else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Select at least one subject for practice");
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
-                alert.showAndWait();
-
-               // System.out.println("Please select at least one subject");
+                Alerts.info(
+                        this.getClass(),
+                        "Message",
+                        null,
+                        "Select at least one subject for practice"
+                ).show();
             }
 
         });

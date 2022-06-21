@@ -55,7 +55,7 @@ public class TriviaChallengeListItemCell extends ListCell<TriviaChallengeItem> {
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }else {
-            challengeImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/prev_challenge_icon.png").toString()));
+            challengeImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/challenge_image.png").toString()));
             playerImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/prev_challenge_player_image.png").toString()));
             Circle clip = new Circle(15, 15, 15);
             playerImage.setClip(clip);

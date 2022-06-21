@@ -1,16 +1,19 @@
 package com.scholarly.utme.controller.trivia_screen;
 
+import com.scholarly.utme.ui.utils.Alerts;
+import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.viewmodels.trivia_screen.TriviaChallengeScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
 import java.net.URL;
@@ -20,16 +23,22 @@ import java.util.ResourceBundle;
 public class TriviaChallengeQuizScreenController implements FxmlView<TriviaChallengeScreenVM>, Initializable {
 
     @FXML
-    private ImageView clockImage, speakerIcon, buttonAIcon, buttonBIcon, buttonCIcon, buttonDIcon;
+    private Pane dialogDimmer;
 
     @FXML
-    private ImageView player1, player2, player3, player4;
+    private VBox challengeEndedPane;
 
     @FXML
-    private Label questionLabel;
+    private ImageView clockImage, challengeImage, speakerIcon, buttonAIcon, buttonBIcon, buttonCIcon, buttonDIcon;
 
     @FXML
-    private Button exitButton, buttonA, buttonB, buttonC, buttonD;
+    private ImageView player1, player2, player3, player4, challengeEndedCloseIcon;
+
+    @FXML
+    private Label questionLabel, challengeEndedText, yourScoreText, scoreText;
+
+    @FXML
+    private Button exitButton, buttonA, buttonB, buttonC, buttonD, homePageButton, rankingsButton, resultButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -37,11 +46,38 @@ public class TriviaChallengeQuizScreenController implements FxmlView<TriviaChall
         initializeViews();
         initializeFonts();
 
+        challengeEndedCloseIcon.setOnMouseClicked(event -> {
+            Animations.hideDialog(challengeEndedPane, dialogDimmer);
+        });
+
+        exitButton.setOnAction(event -> {
+            Animations.fadeIn(dialogDimmer, 200);
+            Dialog<ButtonType> dialog = Alerts.dialog(
+                    this.getClass(),
+                    "Confirm Exit",
+                    null,
+                    "Are you sure you want to exit?"
+            );
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    Animations.showDialog(challengeEndedPane, dialogDimmer);
+                }else {
+                    Animations.fadeOut(dialogDimmer, 100);
+                }
+                return buttonType;
+            });
+
+            dialog.show();
+
+        });
+
     }
 
     private void initializeViews() {
         clockImage.setImage(new Image(getClass().getResource("/drawable/practice_screen_images/time_image.jpg").toString()));
         speakerIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/question_volume_icon.png").toString()));
+        challengeImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/challenge_image.png").toString()));
+        challengeEndedCloseIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/new_challenge_close_icon.png").toString()));
 
         buttonAIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/option_a_btn.png").toString()));
         buttonBIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/option_b_btn.png").toString()));
@@ -62,13 +98,21 @@ public class TriviaChallengeQuizScreenController implements FxmlView<TriviaChall
         player4.setClip(clip4);
 
         exitButton.setBackground(Background.EMPTY);
+        homePageButton.setBackground(Background.EMPTY);
+        rankingsButton.setBackground(Background.EMPTY);
+        resultButton.setBackground(Background.EMPTY);
     }
 
     private void initializeFonts() {
-        questionLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        challengeEndedText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        questionLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 18));
         buttonA.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
         buttonB.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
         buttonC.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
         buttonD.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+
+        yourScoreText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        scoreText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
+
     }
 }
