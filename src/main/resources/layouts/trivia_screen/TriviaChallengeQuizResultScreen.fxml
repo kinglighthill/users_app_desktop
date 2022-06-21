@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<BorderPane prefHeight="1000.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.scholarly.utme.controller.trivia_screen.TriviaChallengeQuizResultScreenController">
+    <top>
+        <VBox prefHeight="60.0" prefWidth="600.0" BorderPane.alignment="CENTER" style="-fx-background-color: white;">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="120.0" prefWidth="200.0">
+                    <children>
+                        <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+                        <Label text="Result Analysis">
+                            <font>
+                                <Font name="Gill Sans MT Bold" size="18.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <padding>
+                        <Insets left="20.0" />
+                    </padding>
+                </HBox>
+            </children>
+        </VBox>
+    </top>
+    <center>
+        <ScrollPane prefHeight="300.0" prefWidth="300.0" BorderPane.alignment="CENTER" fitToWidth="true" >
+
+            <VBox style="-fx-background-color: white">
+                <children>
+                    <HBox spacing="20">
+                        <VBox>
+                            <Label text="Total Subject Score">
+                                <padding>
+                                    <Insets left="30.0" top="20.0" />
+                                </padding>
+                                <font>
+                                    <Font name="Gill Sans MT Bold" size="14.0" />
+                                </font>
+                            </Label>
+                            <Label fx:id="totalScoreLabel" text="80">
+                                <VBox.margin>
+                                    <Insets left="30.0" top="15.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font name="Gill Sans MT Bold" size="40.0" />
+                                </font>
+                            </Label>
+                        </VBox>
+                        <VBox>
+                            <Label text="Your Average Score">
+                                <padding>
+                                    <Insets left="20.0" top="20.0" />
+                                </padding>
+                                <font>
+                                    <Font name="Gill Sans MT Bold" size="14.0" />
+                                </font>
+                            </Label>
+                            <Label fx:id="averageScoreLabel" text="80%">
+                                <VBox.margin>
+                                    <Insets left="20.0" top="15.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font name="Gill Sans MT Bold" size="40.0" />
+                                </font>
+                            </Label>
+                        </VBox>
+
+                    </HBox>
+
+                    <Separator prefWidth="200.0">
+                        <VBox.margin>
+                            <Insets top="20.0" />
+                        </VBox.margin>
+                    </Separator>
+                    <Label text="Bar Chart">
+                        <VBox.margin>
+                            <Insets left="30.0" top="30.0" />
+                        </VBox.margin>
+                        <font>
+                            <Font name="Gill Sans MT Bold" size="14.0" />
+                        </font>
+                    </Label>
+                    <BarChart fx:id="barChart">
+                        <xAxis>
+                            <CategoryAxis side="BOTTOM" fx:id="xAxis" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis fx:id="yAxis" autoRanging="false" side="LEFT" />
+                        </yAxis>
+                        <VBox.margin>
+                            <Insets left="5.0" right="5.0" top="15.0" />
+                        </VBox.margin>
+                    </BarChart>
+                    <Separator prefWidth="200.0">
+                        <VBox.margin>
+                            <Insets top="20.0" />
+                        </VBox.margin>
+                    </Separator>
+                    <Label text="Score Breakdown">
+                        <VBox.margin>
+                            <Insets left="30.0" top="15.0" />
+                        </VBox.margin>
+                        <font>
+                            <Font name="Gill Sans MT Bold" size="14.0" />
+                        </font>
+                    </Label>
+
+                    <TableView fx:id="table" prefHeight="200" prefWidth="200" >
+                        <columns>
+                            <TableColumn fx:id="subjectColumn" text="Subject" />
+                            <TableColumn fx:id="yearColumn" text="Year" />
+                            <TableColumn fx:id="totalQuestionsColumn" text="Total Questions" />
+                            <TableColumn fx:id="attemptsColumn" text="Attempts" />
+                            <TableColumn fx:id="correctAnswersColumn" text="Correct Answers" />
+                            <TableColumn fx:id="percentageColumn" text="Percentage (%)" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                        <VBox.margin>
+                            <Insets left="30.0" right="20.0" top="20.0" bottom="15" />
+                        </VBox.margin>
+                    </TableView>
+
+                </children>
+
+            </VBox>
+
+        </ScrollPane>
+
+    </center>
+    <right>
+        <HBox prefHeight="100.0" prefWidth="300.0" BorderPane.alignment="CENTER" >
+            <children>
+                <VBox spacing="30" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" style="-fx-background-radius: 5;">
+                    <Button fx:id="showExplanationButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="170.0"
+                            text="Go to explanation" textFill="white" style="-fx-background-color: #12AF20;">
+                        <VBox.margin>
+                            <Insets top="40.0" left="10.0" right="10.0"/>
+                        </VBox.margin>
+                    </Button>
+
+                    <VBox spacing="20" alignment="CENTER">
+                        <Label fx:id="rankingText" text="Participants Ranking"/>
+                        <ListView fx:id="participantsList">
+                            <padding>
+                                <Insets left="20" right="30"/>
+                            </padding>
+                        </ListView>
+                    </VBox>
+                </VBox>
+            </children>
+        </HBox>
+    </right>
+    <!--<left>
+        <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <VBox alignment="BOTTOM_LEFT" prefHeight="946.0" prefWidth="239.0" HBox.hgrow="ALWAYS"
+                  BorderPane.alignment="CENTER" style="-fx-background-color: #006B17;">
+                <children>
+                    <Label text="Subjects" textFill="#FFFFFF">
+                        <font>
+                            <Font name="Gill Sans MT" size="16"/>
+                        </font>
+                        <padding>
+                            <Insets left="20" bottom="10" top="20"/>
+                        </padding>
+                    </Label>
+                    <ListView fx:id="subjectListView" prefHeight="946.0" prefWidth="239.0"
+                              BorderPane.alignment="BASELINE_CENTER">
+                        <padding>
+                            <Insets left="10" right="10"/>
+                        </padding>
+                    </ListView>
+
+                    <Button fx:id="exitButton" mnemonicParsing="false" minHeight="40.0" prefHeight="80.0" prefWidth="164.0" text="Exit" textFill="white" style="-fx-border-color: #ACCDAF; -fx-border-radius: 8;">
+                        <VBox.margin>
+                            <Insets bottom="15.0" left="10.0" right="10.0" top="15.0"/>
+                        </VBox.margin>
+                    </Button>
+                </children>
+            </VBox>
+            &lt;!&ndash;         <Separator orientation="VERTICAL" prefHeight="200.0" scaleX="2.0"/>&ndash;&gt;
+        </HBox>
+
+    </left>-->
+</BorderPane>

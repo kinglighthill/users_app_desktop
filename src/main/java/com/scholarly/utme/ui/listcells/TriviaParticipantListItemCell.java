@@ -50,14 +50,20 @@ public class TriviaParticipantListItemCell extends ListCell<TriviaParticipantIte
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }else {
+            initializeFonts();
             playerImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/prev_challenge_player_image.png").toString()));
             Circle clip = new Circle(18, 18, 18);
             playerImage.setClip(clip);
 
-            participantName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
-            numOfPoints.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+            participantName.setText(item.getName());
+            numOfPoints.setText(String.valueOf(item.getPoints()));
 
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
+    }
+
+    private void initializeFonts() {
+        participantName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        numOfPoints.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
     }
 }
