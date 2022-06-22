@@ -70,7 +70,7 @@ public class TriviaChallengeQuizScreenController implements FxmlView<TriviaChall
         });
 
         resultButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.TRIVIA_CHALLENGE_QUIZ_RESULT_SCREEN);
+            ViewSwitcher.showScreen(View.TRIVIA_QUIZ_RESULT_SCREEN);
         });
 
     }
