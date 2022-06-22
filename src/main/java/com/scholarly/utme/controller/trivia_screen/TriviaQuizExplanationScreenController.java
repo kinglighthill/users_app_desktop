@@ -1,5 +1,7 @@
 package com.scholarly.utme.controller.trivia_screen;
 
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.trivia_screen.TriviaQuizExplanationScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -28,6 +30,10 @@ public class TriviaQuizExplanationScreenController implements FxmlView<TriviaQui
 
         initializeViews();
         initializeFonts();
+
+        backButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.TRIVIA_CHALLENGE_SCREEN);
+        });
 
     }
 

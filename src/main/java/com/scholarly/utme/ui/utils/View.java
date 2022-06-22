@@ -2,10 +2,7 @@ package com.scholarly.utme.ui.utils;
 
 import com.scholarly.utme.controller.*;
 import com.scholarly.utme.controller.landing_screen.LandingScreenController;
-import com.scholarly.utme.controller.trivia_screen.TriviaQuizExplanationScreenController;
-import com.scholarly.utme.controller.trivia_screen.TriviaQuizResultScreenController;
-import com.scholarly.utme.controller.trivia_screen.TriviaChallengeQuizScreenController;
-import com.scholarly.utme.controller.trivia_screen.TriviaChallengeScreenController;
+import com.scholarly.utme.controller.trivia_screen.*;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.ViewModel;
 
@@ -34,7 +31,8 @@ public enum View {
     TRIVIA_CHALLENGE_SCREEN("/layouts/trivia_screen/TriviaChallengeScreen.fxml", TriviaChallengeScreenController.class),
     TRIVIA_CHALLENGE_QUIZ_SCREEN("/layouts/trivia_screen/TriviaChallengeQuizScreen.fxml", TriviaChallengeQuizScreenController.class),
     TRIVIA_QUIZ_RESULT_SCREEN("/layouts/trivia_screen/TriviaQuizResultScreen.fxml", TriviaQuizResultScreenController.class),
-    TRIVIA_QUIZ_EXPLANATION_SCREEN("/layouts/trivia_screen/TriviaQuizExplanationScreen.fxml", TriviaQuizExplanationScreenController.class);
+    TRIVIA_QUIZ_EXPLANATION_SCREEN("/layouts/trivia_screen/TriviaQuizExplanationScreen.fxml", TriviaQuizExplanationScreenController.class),
+    TRIVIA_RANKING_SCREEN("/layouts/trivia_screen/TriviaRankingScreen.fxml", TriviaRankingScreenController.class);
 
 
 

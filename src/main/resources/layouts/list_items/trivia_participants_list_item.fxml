@@ -6,7 +6,7 @@
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
-<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #F1F1F1;">
 
     <graphic>
         <Panel>
@@ -22,7 +22,7 @@
                 </HBox>
             </right>
             <padding>
-                <Insets top="5" bottom="5"/>
+                <Insets top="5" bottom="5" left="20" right="20"/>
             </padding>
         </Panel>
     </graphic>

@@ -1,10 +1,7 @@
 package com.scholarly.utme.controller.landing_screen;
 
 import com.scholarly.utme.data.model.Course;
-import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screen.LandingScreenVM;
 import com.scholarly.utme.viewmodels.landing_screen.*;
 import de.saxsys.mvvmfx.FluentViewLoader;

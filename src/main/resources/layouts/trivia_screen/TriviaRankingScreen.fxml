@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import org.controlsfx.control.GridView?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.trivia_screen.TriviaRankingScreenController"
+            prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;">
+
+    <top>
+        <VBox prefHeight="60.0" prefWidth="600.0" BorderPane.alignment="CENTER" style="-fx-background-color: white;">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="120.0" prefWidth="200.0">
+                    <children>
+                        <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+                        <Label text="Trivia Ranking">
+                            <font>
+                                <Font name="Gill Sans MT Bold" size="18.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <padding>
+                        <Insets left="20.0" />
+                    </padding>
+                </HBox>
+            </children>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <HBox alignment="CENTER" prefWidth="700" prefHeight="800">
+            <ListView fx:id="rankingsList" prefHeight="600"  prefWidth="500" >
+                <padding>
+                    <Insets top="30"/>
+                </padding>
+            </ListView>
+            <Separator/>
+        </HBox>
+    </center>
+
+    <right>
+        <StackPane prefWidth="500" style="-fx-background-color: white;">
+            <children>
+                <VBox style="-fx-background-color: #F1F1F1;" prefHeight="600" alignment="CENTER" >
+                    <children>
+                        <GridView fx:id="rankingGrid" prefHeight="400" prefWidth="500" verticalCellSpacing="20" horizontalCellSpacing="20" style="-fx-background-color: white;">
+                            <padding>
+                                <Insets top="80" left="20"/>
+                            </padding>
+                        </GridView>
+                    </children>
+                    <StackPane.margin>
+                        <Insets topRightBottomLeft="20"/>
+                    </StackPane.margin>
+                </VBox>
+            </children>
+        </StackPane>
+    </right>
+
+</BorderPane>
