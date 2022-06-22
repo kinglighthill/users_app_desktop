@@ -1,17 +1,14 @@
 package com.scholarly.utme.controller.trivia_screen;
 
-import com.scholarly.utme.controller.ExplanationScreen;
 import com.scholarly.utme.controller.ResultScreenController;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.listItems.TriviaParticipantItem;
-import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.cellFactories.TriviaParticipantListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.PracticeScreenVM;
-import com.scholarly.utme.viewmodels.ResultScreenVM;
-import com.scholarly.utme.viewmodels.trivia_screen.TriviaChallengeQuizResultScreenVM;
+import com.scholarly.utme.viewmodels.trivia_screen.TriviaQuizResultScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -34,11 +31,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
-@FxmlPath("/layouts/trivia_screen/TriviaChallengeQuizResultScreen.fxml")
-public class TriviaChallengeQuizResultScreenController implements FxmlView<TriviaChallengeQuizResultScreenVM>, Initializable {
+@FxmlPath("/layouts/trivia_screen/TriviaQuizResultScreen.fxml")
+public class TriviaQuizResultScreenController implements FxmlView<TriviaQuizResultScreenVM>, Initializable {
 
     @InjectViewModel
-    private TriviaChallengeQuizResultScreenVM viewModel;
+    private TriviaQuizResultScreenVM viewModel;
 
     @FXML
     private Label averageScoreLabel, totalScoreLabel, rankingText;
@@ -140,10 +137,9 @@ public class TriviaChallengeQuizResultScreenController implements FxmlView<Trivi
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);*/
         });
 
-        /*exitButton.setOnAction(event -> {
-            ViewSwitcher.passData("practicePanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
-        });*/
+        backButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.TRIVIA_CHALLENGE_SCREEN);
+        });
 
     }
 

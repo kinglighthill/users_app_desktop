@@ -11,7 +11,7 @@ import javafx.collections.ObservableList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TriviaChallengeQuizResultScreenVM implements ViewModel {
+public class TriviaQuizResultScreenVM implements ViewModel {
 
     private SimpleStringProperty averageScore = new SimpleStringProperty("0%");
     private SimpleStringProperty total = new SimpleStringProperty("0");
