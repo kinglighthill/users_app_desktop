@@ -63,7 +63,7 @@ public class TriviaRankingScreenController implements FxmlView<TriviaRankingScre
 
 
         TriviaParticipantItem winner1 = new TriviaParticipantItem(1, "", "Uche Umeh", 500);
-        TriviaParticipantItem winner2 = new TriviaParticipantItem(2, "", "John Uzo", 400);
+        TriviaParticipantItem winner2 = new TriviaParticipantItem(2, "", "John Uzodinma", 400);
         TriviaParticipantItem winner3 = new TriviaParticipantItem(3, "", "Kingsley Ugwu", 300);
 
         ObservableList<TriviaParticipantItem> winners = FXCollections.observableArrayList(winner1, winner2, winner3);

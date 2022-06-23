@@ -38,7 +38,7 @@
         <HBox alignment="CENTER" prefWidth="700" prefHeight="800">
             <ListView fx:id="rankingsList" prefHeight="600"  prefWidth="500" >
                 <padding>
-                    <Insets top="30"/>
+                    <Insets top="20" bottom="20"/>
                 </padding>
             </ListView>
             <Separator/>
@@ -46,22 +46,17 @@
     </center>
 
     <right>
-        <StackPane prefWidth="500" style="-fx-background-color: white;">
+        <AnchorPane prefWidth="500" prefHeight="400" style="-fx-background-color: white;">
             <children>
-                <VBox style="-fx-background-color: #F1F1F1;" prefHeight="600" alignment="CENTER" >
-                    <children>
-                        <GridView fx:id="rankingGrid" prefHeight="400" prefWidth="500" verticalCellSpacing="20" horizontalCellSpacing="20" style="-fx-background-color: white;">
-                            <padding>
-                                <Insets top="80" left="20"/>
-                            </padding>
-                        </GridView>
-                    </children>
-                    <StackPane.margin>
-                        <Insets topRightBottomLeft="20"/>
-                    </StackPane.margin>
-                </VBox>
+                <GridView fx:id="rankingGrid" prefHeight="500" prefWidth="500" cellHeight="500" horizontalCellSpacing="25" style="-fx-background-color: #F1F1F1; -fx-background-radius: 5;"
+                                               AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </GridView>
+
             </children>
-        </StackPane>
+        </AnchorPane>
     </right>
 
 </BorderPane>

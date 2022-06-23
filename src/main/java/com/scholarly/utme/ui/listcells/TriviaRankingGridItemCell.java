@@ -61,7 +61,7 @@ public class TriviaRankingGridItemCell extends GridCell<TriviaParticipantItem> {
             }
 
             participantName.setText(item.getName());
-            numOfPoints.setText(String.valueOf(item.getPoints()));
+            numOfPoints.setText(item.getPoints() + " pts");
 
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
