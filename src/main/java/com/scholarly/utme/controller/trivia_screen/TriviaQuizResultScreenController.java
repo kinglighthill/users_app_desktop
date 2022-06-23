@@ -121,17 +121,18 @@ public class TriviaQuizResultScreenController implements FxmlView<TriviaQuizResu
         });
 
 
-        TriviaParticipantItem participant1 = new TriviaParticipantItem("", "Uche Umeh", 300);
-        TriviaParticipantItem participant2 = new TriviaParticipantItem("", "John Uzo", 500);
-        TriviaParticipantItem participant3 = new TriviaParticipantItem("", "Kingsley Ugwu", 400);
-        TriviaParticipantItem participant4 = new TriviaParticipantItem("", "Uche Umeh", 300);
-        TriviaParticipantItem participant5 = new TriviaParticipantItem("", "Uche Umeh", 300);
+        TriviaParticipantItem participant1 = new TriviaParticipantItem(1, "", "Uche Umeh", 300);
+        TriviaParticipantItem participant2 = new TriviaParticipantItem(1, "", "John Uzo", 500);
+        TriviaParticipantItem participant3 = new TriviaParticipantItem(1, "", "Kingsley Ugwu", 400);
+        TriviaParticipantItem participant4 = new TriviaParticipantItem(1, "", "Uche Umeh", 300);
+        TriviaParticipantItem participant5 = new TriviaParticipantItem(1, "", "Uche Umeh", 300);
         ObservableList<TriviaParticipantItem> participants = FXCollections.observableArrayList(participant1, participant2, participant3, participant4, participant5);
         participantsList.setItems(participants);
         participantsList.setCellFactory(new TriviaParticipantListCellFactory());
 
 
         showExplanationButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.TRIVIA_QUIZ_EXPLANATION_SCREEN);
             /*ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);*/

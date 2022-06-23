@@ -74,11 +74,11 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
         challengeList.setItems(items);
 
 
-        TriviaParticipantItem participant1 = new TriviaParticipantItem("", "", 300);
-        TriviaParticipantItem participant2 = new TriviaParticipantItem("", "", 300);
-        TriviaParticipantItem participant3 = new TriviaParticipantItem("", "", 300);
-        TriviaParticipantItem participant4 = new TriviaParticipantItem("", "", 300);
-        TriviaParticipantItem participant5 = new TriviaParticipantItem("", "", 300);
+        TriviaParticipantItem participant1 = new TriviaParticipantItem(1, "", "", 300);
+        TriviaParticipantItem participant2 = new TriviaParticipantItem(1, "", "", 300);
+        TriviaParticipantItem participant3 = new TriviaParticipantItem(1, "", "", 300);
+        TriviaParticipantItem participant4 = new TriviaParticipantItem(1, "", "", 300);
+        TriviaParticipantItem participant5 = new TriviaParticipantItem(1, "", "", 300);
 
         ObservableList<TriviaParticipantItem> participants = FXCollections.observableArrayList(participant1, participant2, participant3, participant4, participant5);
         participantsList.setCellFactory(new TriviaParticipantListCellFactory());
