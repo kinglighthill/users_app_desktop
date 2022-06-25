@@ -81,7 +81,7 @@
 
         <right>
             <AnchorPane prefWidth="400" prefHeight="400" style="-fx-background-color: white;">
-                <HBox alignment="CENTER" style="-fx-background-color: #F4FFF5;"
+                <HBox alignment="CENTER" style="-fx-background-color: #F4FFF5; -fx-background-radius: 5;"
                       AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20">
                     <VBox spacing="30" alignment="TOP_CENTER">
                         <Label text="Buy activation pins" textFill="#053500">
@@ -102,8 +102,8 @@
                                 </font>
                             </Label>
                         </VBox>
-                        <Button text="Buy Pins Here" prefWidth="200" prefHeight="35" textFill="#053500" style="-fx-background-color: #FCB029; -fx-background-radius: 5;"/>
-                        <VBox spacing="10" AnchorPane.leftAnchor="30" AnchorPane.rightAnchor="30">
+                        <Button text="Buy Pins Here" prefWidth="250" prefHeight="35" textFill="#053500" style="-fx-background-color: #FCB029; -fx-background-radius: 5;"/>
+                        <VBox spacing="10" alignment="CENTER">
                             <HBox spacing="5">
                                 <Label text="Need help?" textFill="#053500">
                                     <font>
@@ -121,6 +121,9 @@
                                     <Font size="14"/>
                                 </font>
                             </Label>
+                            <VBox.margin>
+                                <Insets left="50"/>
+                            </VBox.margin>
                         </VBox>
                         <HBox.margin>
                             <Insets top="40"/>
