@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import org.controlsfx.dialog.FontSelectorDialog.FontPanel?>
+<?import javafx.scene.shape.Line?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.ActivatePaymentScreenController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <VBox>
+            <HBox spacing="10" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+                <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+                <Label text="Activate" textFill="#053500">
+                    <font>
+                        <Font name="Gill Sans MT Bold" size="24"/>
+                    </font>
+                </Label>
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </HBox>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <AnchorPane prefWidth="500" prefHeight="400" style="-fx-background-color: white;">
+            <Label fx:id="paymentMethodText" text="Choose a payment method" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30">
+                <font>
+                    <Font size="16"/>
+                </font>
+            </Label>
+            <ScrollPane fx:id="centerScrollPane" fitToWidth="true" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="60" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="20">
+                <VBox spacing="10">
+                    <VBox fx:id="bankTransferVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
+                        <children>
+                            <Panel prefHeight="60">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="bankImage" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="Bank deposit or transfer">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="15"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <HBox alignment="CENTER">
+                                        <ToggleButton fx:id="bankTransferDropdown"/>
+                                        <HBox.margin>
+                                            <Insets right="15"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </right>
+                            </Panel>
+                            <VBox fx:id="bankTransferDetailsPane" spacing="25">
+                                <Separator/>
+                                <Label text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper " wrapText="true">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+
+                                <HBox alignment="CENTER">
+                                    <VBox spacing="15">
+                                        <ImageView fx:id="zenithPaymentImage" preserveRatio="true" pickOnBounds="true"/>
+                                        <HBox spacing="5" alignment="CENTER">
+                                            <Line startX="-10" endX="10" strokeWidth="2.5" stroke="#12AF20"/>
+                                            <Line startX="-10" endX="10" strokeWidth="2.5" stroke="#DFDFDF"/>
+                                            <Line startX="-10" endX="10" strokeWidth="2.5" stroke="#DFDFDF"/>
+                                        </HBox>
+                                    </VBox>
+                                </HBox>
+
+                                <Label text="After payment, send a WhatsApp message containing payment details to +2348136941462 using the format below:">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+
+                                <VBox spacing="10">
+                                    <Label text="1. Account name (belonging to account owner or POS agent)">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                    <Label text="2. Amount paid">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                    <Label text="3. Your email address">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                    <Label text="4. Date of payment">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                    <Label text="5. Bank paid to">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                    <Label text="6. CBT exam paid for (JAMB, WAEC etc.)">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                </VBox>
+
+                                <Label text="Once payment has been confirmed, an activation pin will be instantly sent to your inbox">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+
+                                <VBox spacing="30" alignment="CENTER">
+                                    <Button text="I have paid. Send WhatsApp Message" textFill="white" prefHeight="45" prefWidth="280" style="-fx-background-color: #12AF20; -fx-background-radius: 7">
+                                        <font>
+                                            <Font size="15"/>
+                                        </font>
+                                    </Button>
+
+                                    <Label text="Receive activation pin after payment confirmation may take up to 20 minutes">
+                                        <font>
+                                            <Font size="13"/>
+                                        </font>
+                                    </Label>
+                                </VBox>
+                            </VBox>
+                        </children>
+                        <padding>
+                            <Insets topRightBottomLeft="15"/>
+                        </padding>
+                    </VBox>
+
+                    <VBox fx:id="paystackVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
+                        <children>
+                            <Panel prefHeight="60">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="paystackImage" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="Pay online (Paystack)">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="15"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <HBox alignment="CENTER">
+                                        <ToggleButton fx:id="paystackDropdown"/>
+
+                                        <HBox.margin>
+                                            <Insets left="15"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </right>
+                            </Panel>
+                            <VBox fx:id="paystackDetailsPane" spacing="25">
+                                <Separator/>
+                                <HBox alignment="CENTER">
+                                    <Button text="Pay with Paystack" textFill="white" prefHeight="40" prefWidth="200" style="-fx-background-color: #10AFD4;">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Button>
+                                </HBox>
+                            </VBox>
+                        </children>
+                        <padding>
+                            <Insets topRightBottomLeft="15"/>
+                        </padding>
+                    </VBox>
+
+                    <VBox fx:id="flutterwaveVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
+                        <children>
+                            <Panel prefHeight="60">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="flutterwaveImage" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="Pay online (Flutterwave)">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="15"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <HBox alignment="CENTER">
+                                        <ToggleButton fx:id="flutterwaveDropdown"/>
+                                        <HBox.margin>
+                                            <Insets left="15"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </right>
+                            </Panel>
+                            <VBox fx:id="flutterwaveDetailsPane" spacing="25">
+                                <Separator/>
+                                <HBox alignment="CENTER">
+                                    <Button text="Pay with Flutterwave" textFill="#053500" prefHeight="40" prefWidth="200" style="-fx-background-color: #FCB029;">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Button>
+                                </HBox>
+                            </VBox>
+                        </children>
+                        <padding>
+                            <Insets topRightBottomLeft="15"/>
+                        </padding>
+                    </VBox>
+
+                    <VBox fx:id="monnifyVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
+                        <children>
+                            <Panel prefHeight="60">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="monnifyImage" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="Bank Transfer (Monnify)">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="15"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <HBox alignment="CENTER">
+                                        <ToggleButton fx:id="monnifyDropdown"/>
+                                        <HBox.margin>
+                                            <Insets left="15"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </right>
+                            </Panel>
+                            <VBox fx:id="monnifyDetailsPane" spacing="25">
+                                <Separator/>
+                                <HBox alignment="CENTER">
+                                    <Button text="Pay with Monnify" textFill="white" prefHeight="40" prefWidth="200" style="-fx-background-color: #10AFD4;">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Button>
+                                </HBox>
+                            </VBox>
+                        </children>
+                        <padding>
+                            <Insets topRightBottomLeft="15"/>
+                        </padding>
+                    </VBox>
+
+                    <VBox fx:id="noAccountVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
+                        <children>
+                            <Panel prefHeight="60">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="noAccountImage" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="I don't have an account">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="15"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <HBox alignment="CENTER">
+                                        <ToggleButton fx:id="noAccountDropdown"/>
+                                        <HBox.margin>
+                                            <Insets left="15"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </right>
+                            </Panel>
+                            <VBox fx:id="noAccountDetailsPane" spacing="25">
+                                <Separator/>
+                                <HBox alignment="CENTER">
+                                    <Button text="I don't have an account" textFill="white" prefHeight="40" prefWidth="200" style="-fx-background-color: #12AF20;">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Button>
+                                </HBox>
+                            </VBox>
+                        </children>
+                        <padding>
+                            <Insets topRightBottomLeft="15"/>
+                        </padding>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+        </AnchorPane>
+    </center>
+
+    <right>
+        <AnchorPane prefWidth="400" prefHeight="400" style="-fx-background-color: white;">
+            <HBox alignment="CENTER" style="-fx-background-color: #F4FFF5; -fx-background-radius: 5;"
+                  AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20">
+                <VBox spacing="40" alignment="TOP_CENTER">
+                    <Label fx:id="customerSupportLabel" text="Customer support" textFill="#053500"/>
+                    <ImageView fx:id="customerSupportImage" preserveRatio="true" pickOnBounds="true"/>
+                    <VBox spacing="10">
+                        <HBox spacing="5" alignment="CENTER">
+                            <Label text="Need help?" textFill="#053500">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                            </Label>
+                            <Label text="Chat us" textFill="#12AF20">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                            </Label>
+                        </HBox>
+                        <Label text="For customer support or bulk purchase of activation pins call +2348136941462 or +2348136941462" textAlignment="CENTER" wrapText="true">
+                            <font>
+                                <Font size="14"/>
+                            </font>
+                            <padding>
+                                <Insets left="15" right="15"/>
+                            </padding>
+                        </Label>
+                    </VBox>
+                    <HBox.margin>
+                        <Insets top="40"/>
+                    </HBox.margin>
+                </VBox>
+            </HBox>
+        </AnchorPane>
+    </right>
+
+</BorderPane>

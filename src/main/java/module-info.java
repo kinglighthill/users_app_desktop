@@ -18,6 +18,7 @@ module com.scholarly.utme {
     requires com.google.gson;
     requires java.prefs;
     requires jdk.jsobject;
+    requires org.apache.commons.collections4;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;
@@ -32,6 +33,7 @@ module com.scholarly.utme {
     opens com.scholarly.utme.data.model.newDb.contentType.text to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.image to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.table to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentType.tablehh to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.audio to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.video to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.webview to com.google.gson;
@@ -42,12 +44,29 @@ module com.scholarly.utme {
     opens com.scholarly.utme to de.saxsys.mvvmfx, javafx.fxml;
     opens com.scholarly.utme.viewmodels to de.saxsys.mvvmfx, javafx.fxml;
     opens com.scholarly.utme.controller to de.saxsys.mvvmfx, javafx.fxml;
-    opens com.scholarly.utme.controller.landing_screen to de.saxsys.mvvmfx, javafx.fxml;
-    opens com.scholarly.utme.viewmodels.landing_screen to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.controller.landing_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.viewmodels.landing_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.controller.trivia_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.viewmodels.trivia_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.controller.novel_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.viewmodels.novel_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.controller.audio_video_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.viewmodels.audio_video_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts to de.saxsys.mvvmfx, javafx.fxml;
-    opens layouts.landing_screen to de.saxsys.mvvmfx, javafx.fxml;
+    opens layouts.landing_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens layouts.trivia_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens layouts.novel_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens layouts.audio_video_screens to de.saxsys.mvvmfx, javafx.fxml;
 
     exports com.scholarly.utme.data.model.newDb;
-    exports com.scholarly.utme.controller.landing_screen;
-    exports com.scholarly.utme.viewmodels.landing_screen;
+    exports com.scholarly.utme.data.model.novels;
+    exports com.scholarly.utme.controller.landing_screens;
+    exports com.scholarly.utme.viewmodels.landing_screens;
+    exports com.scholarly.utme.controller.trivia_screens;
+    exports com.scholarly.utme.viewmodels.trivia_screens;
+    exports com.scholarly.utme.controller.novel_screens;
+    exports com.scholarly.utme.viewmodels.novel_screens;
+    exports com.scholarly.utme.data.model.listItems;
+    exports com.scholarly.utme.controller.audio_video_screens;
+    exports com.scholarly.utme.viewmodels.audio_video_screens;
 }

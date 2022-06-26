@@ -43,8 +43,9 @@ public class SubjectListItemVM implements ViewModel {
     }
 
     private SimpleStringProperty subjectName = new SimpleStringProperty("");
+    private SimpleStringProperty subjectTableName = new SimpleStringProperty("");
+    private SimpleStringProperty subjectColorName = new SimpleStringProperty("");
     private ObservableList<Year> years;
-    private ObservableList<Year> availableYears;
 
     private ObservableList<Integer> questionNumbers = FXCollections.observableArrayList();
 
@@ -65,6 +66,8 @@ public class SubjectListItemVM implements ViewModel {
     public SubjectListItemVM(Subject subject) {
         this.subject = subject;
         subjectName.set(subject.getSubjectName());
+        subjectTableName.set(subject.getTableName());
+        subjectColorName.set(getColorName(subject.getTableName()));
 
        // years = YearsDao.getYears();
 
@@ -97,7 +100,7 @@ public class SubjectListItemVM implements ViewModel {
     }
 
     /**
-     * Invalidates all previous subject selection properties
+     * Clears all previous subject selection properties
      */
     public void invalidate() {
         subjectSelected.set(false);
@@ -109,16 +112,24 @@ public class SubjectListItemVM implements ViewModel {
         return subjectName.get();
     }
 
+    public String getSubjectTableName() {
+        return subjectTableName.get();
+    }
+
+    public String getSubjectColorName() {
+        return subjectColorName.get();
+    }
+
     public SimpleStringProperty subjectNameProperty() {
         return subjectName;
     }
 
-    public ObservableList<Year> getYears() {
-        return years;
+    public SimpleStringProperty subjectTableNameProperty() {
+        return subjectTableName;
     }
 
-    public ObservableList<Year> getAvailableYears() {
-        return availableYears;
+    public ObservableList<Year> getYears() {
+        return years;
     }
 
     public ObservableList<Integer> getQuestionNumbers() {
@@ -217,6 +228,24 @@ public class SubjectListItemVM implements ViewModel {
 
     public void setSelectedNumberOfQuestions(Integer selectedNumberOfQuestions) {
         this.selectedNumberOfQuestions.set(selectedNumberOfQuestions);
+    }
+
+    private String getColorName(String subjectTableName) {
+        return switch (subjectTableName) {
+            case "english", "english_theory" -> "#E90000";
+            case "mathematics", "mathematics_theory" -> "#E86D1C";
+            case "biology", "biology_theory" -> "#009D9A";
+            case "literature", "literature_theory" -> "#5A67D8";
+            case "commerce", "commerce_theory" -> "#56749E";
+            case "economics", "economics_theory" -> "#B76623";
+            case "physics", "physics_theory" -> "#D68E00";
+            case "chemistry", "chemistry_theory" -> "#00A14B";
+            case "government", "government_theory" -> "#0067C8";
+            case "accounts", "accounts_theory" -> "#D12C81";
+            case "crs", "crs_theory" -> "#005F7A";
+            case "irs", "irs_theory" -> "#630F0F";
+            default -> "#00A14B";
+        };
     }
 
 

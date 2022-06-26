@@ -1,7 +1,8 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.HelloApplication;
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
+import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.Result;
@@ -12,6 +13,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -19,13 +21,12 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.layout.Background;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/ResultScreen.fxml")
 public class ResultScreenController implements FxmlView<ResultScreenVM>, Initializable {
@@ -34,7 +35,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
     private ResultScreenVM viewModel;
 
     @FXML
-    private Label averageScoreLabel;
+    private Label averageScoreLabel, totalScoreLabel;
 
     @FXML
     private CategoryAxis xAxis;
@@ -49,7 +50,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
     private TableColumn<Result, String> subjectColumn, yearColumn, totalQuestionsColumn, attemptsColumn, correctAnswersColumn, percentageColumn;
 
     @FXML
-    private ListView<String> subjectListView;
+    private ListView<Subject> subjectListView;
 
     @FXML
     private BarChart<CategoryAxis, NumberAxis> barChart;
@@ -63,17 +64,25 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        averageScoreLabel.textProperty().bind(viewModel.averageScoreProperty());
-
         viewModel.processInitialData(getInitialData());
 
+        initializeViews();
 
-        List<String> items = new ArrayList<>();
+        initializeFont();
 
-        items.add("All");
-        items.addAll(viewModel.getSubjectList().stream().map(item -> item.getSubjectName()).collect(Collectors.toList()));
+        averageScoreLabel.textProperty().bind(viewModel.averageScoreProperty());
 
-        subjectListView.setItems(FXCollections.observableArrayList(items));
+        totalScoreLabel.textProperty().bind(viewModel.totalScoreProperty());
+
+        ObservableList<Subject> items = FXCollections.observableArrayList();
+
+        Subject subject = new Subject();
+        subject.setSubjectName("All");
+        items.add(subject);
+        items.addAll(viewModel.getSubjectList());
+
+        subjectListView.setCellFactory(new PracticeSubjectListCellFactory());
+        subjectListView.setItems(items);
 
         subjectListView.getSelectionModel().select(0);
 
@@ -162,9 +171,20 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
         });
 
         exitButton.setOnAction(event -> {
+            ViewSwitcher.passData("practicePanel");
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
+    }
+
+    private void initializeViews() {
+        subjectListView.setBackground(Background.EMPTY);
+        exitButton.setBackground(Background.EMPTY);
+        showExplanationButton.setBackground(Background.EMPTY);
+    }
+
+    private void initializeFont() {
+        showExplanationButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
     }
 
     public InitialData getInitialData() {

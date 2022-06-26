@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.audio_video_screens.AudioContentScreenController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+            <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
+            <Label fx:id="pageTitle" text="Central Nervous System" textFill="#034801">
+                <font>
+                    <Font name="System Bold" size="20"/>
+                </font>
+            </Label>
+            <padding>
+                <Insets top="20" left="20" bottom="20"/>
+            </padding>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox fx:id="centerPane" spacing="20" prefWidth="400" style="-fx-background-color: white;">
+            <VBox style="-fx-background-color: #034801; -fx-background-radius: 12 12 15 15;">
+                <StackPane fx:id="imagePane">
+                    <ImageView fx:id="equalizer" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER"/>
+                    <padding>
+                        <Insets top="30" bottom="30"/>
+                    </padding>
+                </StackPane>
+                <StackPane fx:id="controlsPane" style="-fx-background-color: #707070; -fx-background-radius: 0 0 12 12;">
+
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Button fx:id="playButton" StackPane.alignment="CENTER_LEFT"/>
+                        <Label fx:id="duration" text="17:34 / 59:32" textFill="white" StackPane.alignment="CENTER_LEFT"/>
+                        <StackPane.margin>
+                            <Insets left="30"/>
+                        </StackPane.margin>
+                        <padding>
+                            <Insets top="10" bottom="10"/>
+                        </padding>
+                    </HBox>
+
+
+                    <ImageView fx:id="speaker" StackPane.alignment="CENTER_RIGHT">
+                        <StackPane.margin>
+                            <Insets right="25"/>
+                        </StackPane.margin>
+                    </ImageView>
+                </StackPane>
+
+            </VBox>
+            <VBox spacing="30">
+                <HBox spacing="20">
+                    <HBox  spacing="7">
+                        <ImageView fx:id="bookmarkIcon" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true"/>
+                        <Label text="Bookmark" textFill="#12AF20"/>
+                    </HBox>
+                    <HBox spacing="7">
+                        <ImageView fx:id="shareIcon" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true"/>
+                        <Label text="Share" textFill="#12AF20"/>
+                    </HBox>
+                    <HBox spacing="7">
+                        <ImageView fx:id="rateIcon" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true"/>
+                        <Label text="Rate video" textFill="#12AF20"/>
+                    </HBox>
+
+                    <padding>
+                        <Insets left="10"/>
+                    </padding>
+                </HBox>
+
+                <Separator/>
+
+                <Label fx:id="videoDescription" wrapText="true" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae "/>
+
+            </VBox>
+
+            <padding>
+                <Insets top="30" left="30" right="30"/>
+            </padding>
+        </VBox>
+
+    </center>
+
+    <right>
+        <HBox style="-fx-background-color: white;">
+            <Separator orientation="VERTICAL" />
+            <ListView fx:id="audioList" prefWidth="500" style="-fx-background-color: white;">
+                <padding>
+                    <Insets left="10" right="20" top="10" bottom="10"/>
+                </padding>
+            </ListView>
+        </HBox>
+
+    </right>
+
+</BorderPane>

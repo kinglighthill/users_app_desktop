@@ -6,224 +6,314 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.ExplanationScreen">
     <center>
-        <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <top>
-                <VBox prefHeight="66.0" prefWidth="389.0">
-                    <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="389.0" BorderPane.alignment="CENTER">
-                            <children>
-                                <Label text="Question Answers">
-                                    <HBox.margin>
-                                        <Insets left="15.0" />
-                                    </HBox.margin>
-                                    <font>
-                                        <Font name="Gill Sans MT Bold" size="18.0" />
-                                    </font>
-                                </Label>
-                                <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-                                    <children>
-                                        <VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
-                                            <children>
-                                                <ImageView fx:id="speakerImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                                                    <VBox.margin>
-                                                        <Insets top="15.0" />
-                                                    </VBox.margin>
-                                                </ImageView>
-                                                <Label text="Audio">
-                                                    <padding>
-                                                        <Insets bottom="15.0" top="5.0" />
-                                                    </padding>
-                                                    <font>
-                                                        <Font name="Gill Sans MT Bold" size="12.0" />
-                                                    </font>
-                                                </Label>
-                                            </children>
-                                        </VBox>
-                                        <VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
-                                            <children>
-                                                <ImageView fx:id="flagImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                                                    <VBox.margin>
-                                                        <Insets top="15.0" />
-                                                    </VBox.margin>
-                                                </ImageView>
-                                                <Label text="Report">
-                                                    <padding>
-                                                        <Insets bottom="15.0" top="5.0" />
-                                                    </padding>
-                                                    <font>
-                                                        <Font name="Gill Sans MT Bold" size="12.0" />
-                                                    </font>
-                                                </Label>
-                                            </children>
-                                        </VBox>
-                                        <VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
-                                            <children>
-                                                <ImageView fx:id="bookmarkImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                                                    <VBox.margin>
-                                                        <Insets top="15.0" />
-                                                    </VBox.margin>
-                                                </ImageView>
-                                                <Label text="Bookmark">
-                                                    <padding>
-                                                        <Insets bottom="15.0" top="5.0" />
-                                                    </padding>
-                                                    <font>
-                                                        <Font name="Gill Sans MT Bold" size="12.0" />
-                                                    </font>
-                                                </Label>
-                                            </children>
-                                        </VBox>
-                                        <VBox fx:id="calculatorButton" alignment="TOP_CENTER" onMouseClicked="#onCalculatorClicked" prefHeight="78.0" prefWidth="85.0">
-                                            <children>
-                                                <ImageView fx:id="calculatorImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                                                    <VBox.margin>
-                                                        <Insets top="15.0" />
-                                                    </VBox.margin>
-                                                </ImageView>
-                                                <Label text="Calculator">
-                                                    <padding>
-                                                        <Insets bottom="15.0" top="5.0" />
-                                                    </padding>
-                                                    <font>
-                                                        <Font name="Gill Sans MT Bold" size="12.0" />
-                                                    </font>
-                                                </Label>
-                                            </children>
-                                        </VBox>
-                                    </children>
-                                </HBox>
-                            </children>
-                        </HBox>
-                        <Separator prefWidth="200.0" />
-                    </children>
-                </VBox>
-            </top>
-            <right>
-                <HBox prefHeight="513.0" prefWidth="295.0" BorderPane.alignment="CENTER">
-                    <children>
-                        <Separator orientation="VERTICAL" prefHeight="200.0" />
-                        <VBox alignment="TOP_CENTER" prefHeight="534.0" prefWidth="143.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <Label text="Explanation">
-                                    <VBox.margin>
-                                        <Insets top="20.0" />
-                                    </VBox.margin>
-                                    <font>
-                                        <Font name="Gill Sans MT Bold" size="18.0" />
-                                    </font>
-                                </Label>
-                                <Label fx:id="explanationLabel" alignment="TOP_LEFT" prefHeight="664.0" prefWidth="290.0" style="-fx-background-color: #ffffff;" wrapText="true">
-                                    <VBox.margin>
-                                        <Insets bottom="30.0" left="10.0" right="10.0" top="30.0" />
-                                    </VBox.margin>
-                                    <font>
-                                        <Font name="Gill Sans MT" size="15.0" />
-                                    </font>
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                                </Label>
-                                <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                            </children></VBox>
-                    </children></HBox>
-            </right>
-            <center>
-                <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
-                    <children>
-                        <Label fx:id="questionOverviewLabel" text="Question 3 of 40">
-                            <VBox.margin>
-                                <Insets top="20.0" />
-                            </VBox.margin>
-                            <font>
-                                <Font name="Gill Sans MT Bold" size="18.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="questionLabel" prefHeight="117.0" prefWidth="265.0" text="Label" wrapText="true">
-                            <VBox.margin>
-                                <Insets top="20.0" />
-                            </VBox.margin>
-                            <font>
-                                <Font size="15.0" />
-                            </font>
-                        </Label>
-                  <Label fx:id="optionA" text="Label">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets top="30.0" />
-                     </VBox.margin></Label>
-                  <Label fx:id="optionB" text="Label">
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="14.0" />
-                     </font></Label>
-                  <Label fx:id="optionC" text="Label">
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="14.0" />
-                     </font></Label>
-                  <Label fx:id="optionD" text="Label">
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="14.0" />
-                     </font></Label>
-                  <Label fx:id="noOptionSelected" text="No option was selected" textFill="RED">
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                        <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
-                            <VBox.margin>
-                                <Insets bottom="20.0" top="20.0" />
-                            </VBox.margin>
-                            <children>
-                                <HBox alignment="CENTER" prefHeight="55.0" prefWidth="449.0" spacing="15.0">
-                                    <children>
-                                        <Button fx:id="prevButton" mnemonicParsing="false" text="Prev" />
-                                        <Button fx:id="nextButton" mnemonicParsing="false" text="Next" />
-                                    </children>
-                                </HBox>
-                                <Separator prefWidth="200.0" />
-                                <TilePane fx:id="tilePane" prefHeight="200.0" prefWidth="200.0">
-                                    <VBox.margin>
-                                        <Insets top="20.0" />
-                                    </VBox.margin></TilePane>
-                            </children>
-                        </VBox>
-                    </children>
-                    <padding>
-                        <Insets left="20.0" right="20.0" />
-                    </padding></VBox>
-            </center>
-            <left>
-                <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                    <children>
-                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <ListView fx:id="subjectList" prefHeight="396.0" prefWidth="194.0" />
-                                <Region prefHeight="0.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                <Button fx:id="exitButton" mnemonicParsing="false" prefHeight="46.0" prefWidth="174.0" text="Exit">
-                                    <VBox.margin>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" />
-                                    </VBox.margin>
-                                </Button>
-                            </children></VBox>
-                        <Separator orientation="VERTICAL" prefHeight="200.0" />
-                    </children>
-                </HBox>
-            </left>
-        </BorderPane>
+        <StackPane>
+            <BorderPane prefHeight="400.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+                <top>
+                    <VBox prefHeight="66.0" prefWidth="389.0" style="-fx-background-color: white;">
+                        <children>
+                            <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="389.0" BorderPane.alignment="CENTER">
+                                <children>
+                                    <Label text="Question Answers">
+                                        <HBox.margin>
+                                            <Insets left="15.0" />
+                                        </HBox.margin>
+                                        <font>
+                                            <Font name="Gill Sans MT Bold" size="18.0" />
+                                        </font>
+                                    </Label>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                                        <children>
+                                            <VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
+                                                <children>
+                                                    <ImageView fx:id="speakerImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                                                        <VBox.margin>
+                                                            <Insets top="15.0" />
+                                                        </VBox.margin>
+                                                    </ImageView>
+                                                    <Label text="Audio">
+                                                        <padding>
+                                                            <Insets bottom="15.0" top="5.0" />
+                                                        </padding>
+                                                        <font>
+                                                            <Font name="Gill Sans MT Bold" size="12.0" />
+                                                        </font>
+                                                    </Label>
+                                                </children>
+                                            </VBox>
+                                            <VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
+                                                <children>
+                                                    <ImageView fx:id="flagImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                                                        <VBox.margin>
+                                                            <Insets top="15.0" />
+                                                        </VBox.margin>
+                                                    </ImageView>
+                                                    <Label text="Report">
+                                                        <padding>
+                                                            <Insets bottom="15.0" top="5.0" />
+                                                        </padding>
+                                                        <font>
+                                                            <Font name="Gill Sans MT Bold" size="12.0" />
+                                                        </font>
+                                                    </Label>
+                                                </children>
+                                            </VBox>
+                                            <VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
+                                                <children>
+                                                    <ImageView fx:id="bookmarkImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                                                        <VBox.margin>
+                                                            <Insets top="15.0" />
+                                                        </VBox.margin>
+                                                    </ImageView>
+                                                    <Label text="Bookmark">
+                                                        <padding>
+                                                            <Insets bottom="15.0" top="5.0" />
+                                                        </padding>
+                                                        <font>
+                                                            <Font name="Gill Sans MT Bold" size="12.0" />
+                                                        </font>
+                                                    </Label>
+                                                </children>
+                                            </VBox>
+                                            <VBox fx:id="calculatorButton" alignment="TOP_CENTER" onMouseClicked="#onCalculatorClicked" prefHeight="78.0" prefWidth="85.0">
+                                                <children>
+                                                    <ImageView fx:id="calculatorImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                                                        <VBox.margin>
+                                                            <Insets top="15.0" />
+                                                        </VBox.margin>
+                                                    </ImageView>
+                                                    <Label text="Calculator">
+                                                        <padding>
+                                                            <Insets bottom="15.0" top="5.0" />
+                                                        </padding>
+                                                        <font>
+                                                            <Font name="Gill Sans MT Bold" size="12.0" />
+                                                        </font>
+                                                    </Label>
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </HBox>
+                            <Separator prefWidth="200.0" />
+                        </children>
+                    </VBox>
+                </top>
+                <right>
+                    <HBox prefHeight="513.0" prefWidth="295.0" style="-fx-background-color: #F4FFF5;" BorderPane.alignment="CENTER">
+                        <children>
+                            <VBox alignment="TOP_CENTER" prefHeight="534.0" prefWidth="143.0" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <HBox prefWidth="300">
+                                        <ToggleButton fx:id="textExplanation" text="Text explanation" textFill="white" prefWidth="150" style="-fx-background-color: #12AF20; -fx-border-color: #12AF20;">
+                                            <padding>
+                                                <Insets topRightBottomLeft="5"/>
+                                            </padding>
+                                        </ToggleButton>
+                                        <ToggleButton fx:id="videoExplanation" text="Video explanation" textFill="#12AF20" prefWidth="150" style="-fx-border-color: #12AF20;">
+                                            <padding>
+                                                <Insets topRightBottomLeft="5"/>
+                                            </padding>
+                                        </ToggleButton>
+                                        <VBox.margin>
+                                            <Insets top="20.0" bottom="30.0"/>
+                                        </VBox.margin>
+                                    </HBox>
+                                    <StackPane fx:id="explanationPane">
+                                        <Label fx:id="explanationLabel" alignment="TOP_LEFT" prefHeight="664.0" prefWidth="290.0" style="-fx-background-color: #ffffff;" wrapText="true">
+                                            <VBox.margin>
+                                                <Insets bottom="30.0" left="10.0" right="10.0" top="30.0" />
+                                            </VBox.margin>
+                                            <font>
+                                                <Font name="Gill Sans MT" size="15.0" />
+                                            </font>
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </Label>
+                                        <StackPane fx:id="explanationVideo" visible="false" />
+                                    </StackPane>
+
+                                    <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                </children>
+                            </VBox>
+                        </children>
+                        <padding>
+                            <Insets topRightBottomLeft="5"/>
+                        </padding>
+                    </HBox>
+                </right>
+                <center>
+                    <VBox spacing="10" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
+                        <children>
+                            <Label fx:id="questionOverviewLabel" text="Question 3 of 40">
+                                <VBox.margin>
+                                    <Insets top="20.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font name="Gill Sans MT Bold" size="18.0" />
+                                </font>
+                            </Label>
+                            <Label fx:id="questionLabel" prefHeight="200.0" prefWidth="900.0" text="Label" wrapText="true" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                                <font>
+                                    <Font size="15.0" />
+                                </font>
+                                <padding>
+                                    <Insets left="10"/>
+                                </padding>
+                            </Label>
+                            <Panel fx:id="optionAPanel" prefWidth="900" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
+                                <left>
+                                    <Label fx:id="optionA" text="Label" textFill="#000000">
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="optionAIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <RadioButton fx:id="optionAButton"/>
+                                    </HBox>
+                                </right>
+
+                                <VBox.margin>
+                                    <Insets top="10.0" />
+                                </VBox.margin>
+                                <padding>
+                                    <Insets left="10" top="10" right="20" bottom="10"/>
+                                </padding>
+                            </Panel>
+                            <Panel fx:id="optionBPanel" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
+                                <left>
+                                    <Label fx:id="optionB" text="Label" >
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="optionBIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <RadioButton fx:id="optionBButton"/>
+                                    </HBox>
+                                </right>
+                                <padding>
+                                    <Insets left="10" top="10" right="20" bottom="10"/>
+                                </padding>
+                            </Panel>
+                            <Panel fx:id="optionCPanel" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
+                                <left>
+                                    <Label fx:id="optionC" text="Label" textFill="black">
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="optionCIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <RadioButton fx:id="optionCButton"/>
+                                    </HBox>
+                                </right>
+                                <padding>
+                                    <Insets left="10" top="10" right="20" bottom="10"/>
+                                </padding>
+                            </Panel>
+                            <Panel fx:id="optionDPanel" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
+                                <left>
+                                    <Label fx:id="optionD" text="Label" >
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="optionDIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <RadioButton fx:id="optionDButton"/>
+                                    </HBox>
+                                </right>
+                                <padding>
+                                    <Insets left="10" top="10" right="20" bottom="10"/>
+                                </padding>
+                            </Panel>
+
+                            <Label fx:id="noOptionSelected" text="No option was selected" textFill="RED">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                                <padding>
+                                    <Insets left="10" bottom="10"/>
+                                </padding>
+                            </Label>
+                            <VBox spacing="15" alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                <children>
+                                    <Panel prefHeight="55.0" prefWidth="449.0">
+                                        <left>
+                                            <Button fx:id="prevButton" mnemonicParsing="false" text="Previous" textFill="#12AF20" style=" -fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;" >
+                                                <padding>
+                                                    <Insets left="20" right="20" top="5" bottom="5"/>
+                                                </padding>
+                                            </Button>
+                                        </left>
+                                        <right>
+                                            <Button fx:id="nextButton" mnemonicParsing="false" text="Next" textFill="#FFFFFF" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+                                                <padding>
+                                                    <Insets left="25" right="25" top="5" bottom="5"/>
+                                                </padding>
+                                            </Button>
+                                        </right>
+                                        <VBox.margin>
+                                            <Insets left="10" right="10"/>
+                                        </VBox.margin>
+                                    </Panel>
+                                    <Separator prefWidth="200.0" />
+                                    <ScrollPane fx:id="tileScrollPane" prefWidth="600" prefHeight="300" fitToWidth="true">
+                                        <TilePane fx:id="tilePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;"/>
+                                        <VBox.margin>
+                                            <Insets bottom="20.0" />
+                                        </VBox.margin>
+                                    </ScrollPane>
+                                </children>
+
+                            </VBox>
+                        </children>
+                        <padding>
+                            <Insets left="20.0" right="20.0" />
+                        </padding>
+                    </VBox>
+                </center>
+                <left>
+                    <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                        <children>
+                            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #006B17;" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label text="Subjects" textFill="#FFFFFF">
+                                        <font>
+                                            <Font name="Gill Sans MT" size="16"/>
+                                        </font>
+                                        <padding>
+                                            <Insets left="20" bottom="10" top="20"/>
+                                        </padding>
+                                    </Label>
+                                    <ListView fx:id="subjectList" prefHeight="396.0" prefWidth="194.0" />
+                                    <Region prefHeight="0.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                    <Button fx:id="exitButton" mnemonicParsing="false" prefHeight="46.0" prefWidth="174.0" text="Exit" textFill="#FFFFFF" style="-fx-border-color: #ACCDAF; -fx-border-radius: 8;">
+                                        <VBox.margin>
+                                            <Insets bottom="20.0" left="10.0" right="10.0" />
+                                        </VBox.margin>
+                                    </Button>
+                                </children>
+                            </VBox>
+<!--                            <Separator orientation="VERTICAL" prefHeight="200.0" />-->
+                        </children>
+                    </HBox>
+                </left>
+            </BorderPane>
+        </StackPane>
     </center>
 </BorderPane>

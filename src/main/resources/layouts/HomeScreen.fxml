@@ -4,31 +4,86 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.HomeScreenController">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.skin.ProgressIndicatorSkin.IndeterminateSpinner.IndicatorPaths?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.scholarly.utme.controller.HomeScreenController" style="-fx-background-color: #FFFFFF">
    <left>
-      <VBox prefHeight="400.0" prefWidth="184.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="400.0" prefWidth="184.0" BorderPane.alignment="CENTER" style="-fx-background-color: #006B17;">
          <children>
-            <Label alignment="CENTER" prefHeight="46.0" prefWidth="182.0" text="Home" textAlignment="CENTER" onMouseClicked="#homeTextClicked">
-               <font>
-                  <Font name="Arial Black" size="14.0" />
-               </font></Label>
-            <Separator prefWidth="200.0" />
-            <ToggleButton fx:id="practiceButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" text="Practice" />
-             <ToggleButton fx:id="lessonNoteButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" text="Study Past Questions" />
-            <ToggleButton fx:id="cbtGameButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" text="CBT Game" />
-             <ToggleButton fx:id="videosButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" text="Videos" />
-             <ToggleButton fx:id="audiosButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" text="Audios" />
-             <ToggleButton fx:id="learningCenterButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" text="Learning Center" />
-            <ToggleButton fx:id="studyNotesButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" text="Study Notes" />
+            <HBox  spacing="5">
+               <ImageView fx:id="appImage" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+               <Label fx:id="scholarlyText" text="Scholarly" textFill="#FFFFFF"/>
+               <VBox.margin>
+                  <Insets left="20" top="30" bottom="80"/>
+               </VBox.margin>
+            </HBox>
+
+            <ToggleButton fx:id="practiceButton" text="CBT Practice" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;" >
+               <padding>
+                  <Insets left="15"/>
+               </padding>
+            </ToggleButton>
+             <ToggleButton fx:id="pastQuestionButton" text="Study Past Question" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0">
+                <padding>
+                   <Insets left="15"/>
+                </padding>
+             </ToggleButton>
+            <ToggleButton fx:id="cbtGameButton" text="CBT Game" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
+               <padding>
+                  <Insets left="15"/>
+               </padding>
+            </ToggleButton>
+            <ToggleButton fx:id="novelsButton" text="Novels" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
+               <padding>
+                  <Insets left="15"/>
+               </padding>
+            </ToggleButton>
+             <ToggleButton fx:id="videosButton" text="Videos" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
+                <padding>
+                   <Insets left="15"/>
+                </padding>
+             </ToggleButton>
+             <ToggleButton fx:id="audiosButton" text="Audios" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
+                <padding>
+                   <Insets left="15"/>
+                </padding>
+             </ToggleButton>
+             <ToggleButton fx:id="learningCenterButton" text="Learning Center" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0">
+                <padding>
+                   <Insets left="15"/>
+                </padding>
+             </ToggleButton>
+            <ToggleButton fx:id="studyNotesButton" text="Study Notes" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
+               <padding>
+                  <Insets left="15"/>
+               </padding>
+            </ToggleButton>
          </children>
       </VBox>
    </left>
    <center>
-      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Separator orientation="VERTICAL" prefHeight="500.0" />
-            <StackPane fx:id="contentPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="592.0" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
+      <Panel>
+         <top>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+               <Button fx:id="backButton" style="-fx-background-color: #E7F7E9" onMouseClicked="#homeTextClicked"/>
+               <Label fx:id="pageTitle" text="CBT Practice" textFill="#034801"/>
+               <padding>
+                  <Insets top="20" left="20" bottom="20"/>
+               </padding>
+            </HBox>
+         </top>
+
+         <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+               <Separator orientation="VERTICAL" prefHeight="500.0" />
+               <StackPane fx:id="contentPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="592.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #FFFFFF;" />
+            </children>
+         </HBox>
+
+      </Panel>
    </center>
+
 </BorderPane>

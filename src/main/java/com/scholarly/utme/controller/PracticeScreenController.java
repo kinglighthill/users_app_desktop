@@ -6,6 +6,9 @@ import com.scholarly.utme.data.model.Bookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.TheoryQuestion;
+import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
+import com.scholarly.utme.ui.utils.Animations;
+import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.TextToSpeech;
@@ -14,16 +17,9 @@ import com.scholarly.utme.viewmodels.PracticeScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
-import com.sun.speech.freetts.VoiceManager;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
-import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,12 +33,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
 import java.net.URL;
 import java.util.*;
@@ -61,6 +57,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private TilePane tilePane;
 
     @FXML
+    private ScrollPane tileScrollPane;
+
+    @FXML
     private ListView<Subject> subjectList;
 
     private ToggleGroup toggleGroup = new ToggleGroup();
@@ -69,7 +68,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
 
     @FXML
-    private Label questionOverviewLabel, questionLabel, timeLabel;
+    private Label questionOverviewLabel, questionLabel, timeLabel, scoreText;
 
     @FXML
     private TextField enterCorrectAnswerField;
@@ -78,18 +77,18 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
 
     @FXML
-    private VBox incorrectAnswerPane, reportDialog;
+    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog;
 
     @FXML
-    private Button prevButton, nextButton, exitButton, submitButton, submitReport;
+    private Button prevButton, nextButton, exitButton, submitButton, submitReport, homePageButton, resultAnalysisButton;
 
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon;
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon, timeImage, summaryBookImage, testSummaryCloseIcon;
 
     private Stage calculatorStage = new Stage();
 
     @FXML
-    private Pane dialogDimmer, exitDialogDimmer;
+    private Pane dialogDimmer, exitDialogDimmer, summaryDialogDimmer;
 
     @FXML
     private DialogPane exitDialog;
@@ -97,22 +96,17 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @FXML
     private WebView webView;
 
+    int totalScore = 0;
+    int totalQuestions = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         viewModel.processInitialData(getInitialData());
+        
+        initializeViews();
 
-
-        try {
-            bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-            calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
-            reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
-            speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
-            flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        initializeFont();
 
         viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -127,6 +121,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             });
         });
 
+        subjectList.setCellFactory(new PracticeSubjectListCellFactory());
         subjectList.setItems(viewModel.getSubjects());
         subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
             if (c.getList().size() == 1) {
@@ -412,8 +407,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             optionCButton.setVisible(false);
             optionDButton.setVisible(false);
 
-
-
         }
 
         viewModel.timeProperty().addListener((observable, oldValue, newValue) -> {
@@ -447,6 +440,29 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         submitButton.setOnAction(event -> {
             showSubmitDialog();
 
+            viewModel.getResults().forEach(result -> {
+                 totalScore += result.getCorrectAnswers();
+                 totalQuestions += result.getTotalQuestions();
+            });
+            scoreText.setText(totalScore + "/" + totalQuestions);
+        });
+
+        testSummaryCloseIcon.setOnMouseClicked(event -> {
+            Animations.hideDialog(testSummaryDialog, summaryDialogDimmer);
+
+        });
+
+        homePageButton.setOnAction(event -> {
+            Animations.hideDialog(testSummaryDialog, summaryDialogDimmer);
+
+        });
+
+        resultAnalysisButton.setOnAction(event -> {
+            ResultScreenController.InitialData initialData =
+                    new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+
+            ViewSwitcher.passData(initialData);
+            ViewSwitcher.showScreen(View.RESULT_SCREEN);
         });
 
         bookmarkImage.setOnMouseClicked(mouseEvent -> {
@@ -454,11 +470,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         });
 
         reportDialogCloseIcon.setOnMouseClicked(mouseEvent -> {
-            hideReportDialog();
+            Animations.hideDialog(reportDialog, dialogDimmer);
         });
 
         flagImage.setOnMouseClicked(mouseEvent -> {
-            showReportDialog();
+            Animations.showDialog(reportDialog, dialogDimmer);
         });
 
         speakerImage.setOnMouseClicked(event -> {
@@ -535,16 +551,36 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                         }
                     }
                 });
+    }
 
-//        nextButton.setFocusTraversable(false);
-//        prevButton.setFocusTraversable(false);
-//        submitButton.setFocusTraversable(false);
-//        exitButton.setFocusTraversable(false);
-//        subjectList.setFocusTraversable(false);
-//        optionAButton.setFocusTraversable(false);
-//        optionBButton.setFocusTraversable(false);
-//        optionCButton.setFocusTraversable(false);
-//        optionDButton.setFocusTraversable(false);
+    private void initializeViews() {
+        subjectList.setBackground(Background.EMPTY);
+        exitButton.setBackground(Background.EMPTY);
+        tileScrollPane.setBackground(Background.EMPTY);
+        homePageButton.setBackground(Background.EMPTY);
+
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+        calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
+        reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+        speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
+        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
+        timeImage.setImage(new Image(getClass().getResource("/drawable/practice_screen_images/time_image.jpg").toString()));
+
+        ImageView prevImage = new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/prev_btn_icon.png").toString()));
+        prevButton.setGraphicTextGap(15);
+        prevButton.setGraphic(prevImage);
+        ImageView nextImage = new ImageView(getClass().getResource("/drawable/practice_screen_images/next_btn_icon.png").toString());
+        nextButton.setContentDisplay(ContentDisplay.RIGHT);
+        nextButton.setGraphicTextGap(15);
+        nextButton.setGraphic(nextImage);
+
+        summaryBookImage.setImage(new Image(getClass().getResource("/drawable/practice_screen_images/summary_book_image.jpg").toString()));
+        testSummaryCloseIcon.setImage(new Image(getClass().getResource("/drawable/practice_screen_images/summary_close_icon.png").toString()));
+    }
+
+    private void initializeFont() {
+        exitButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        submitButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
     }
 
     private void updateBookmarkIcon() {
@@ -767,17 +803,21 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         tilePane.getChildren().clear();
 
         for (int i=1; i <= questions.size(); i++) {
-            Rectangle r = new Rectangle(30, 30);
-            r.setFill(Color.web("#ededed"));
-
-            if (questions.get(i-1).getSelectedOption() != null) {
-                r.setStroke(Color.ORANGE);
-                r.setStrokeWidth(2);
-            }
+            Rectangle r = new Rectangle(35, 35);
+            r.setFill(Color.web("#FFFFFF"));
+            r.setStroke(Paint.valueOf("#12AF20"));
+            r.setStrokeType(StrokeType.OUTSIDE);
 
             Label l = new Label(Integer.toString(i));
+
+            if (questions.get(i-1).getSelectedOption() != null) {
+                r.setFill(Paint.valueOf("#12AF20"));
+                l.setTextFill(Color.WHITE);
+            }
+
             if (subjectQuestionsState.getSelectedQuestion() == i) {
-                l.setTextFill(Color.RED);
+                r.setStroke(Color.ORANGE);
+                r.setStrokeWidth(2);
             }
             StackPane s = new StackPane(r, l);
             tilePane.getChildren().add(s);
@@ -795,13 +835,16 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestion - 1);
 
         Rectangle selectedQuestionRectangle = (Rectangle) selectedQuestionPane.getChildren().get(0);
+        Rectangle oldQuestionRectangle = (Rectangle) oldQuestionPane.getChildren().get(0);
         Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
         Label oldQuestionText = (Label) oldQuestionPane.getChildren().get(1);
 
 
+        selectedQuestionRectangle.setFill(Paint.valueOf("#12AF20"));
+        oldQuestionRectangle.setFill(Paint.valueOf("#FFFFFF"));
 
+        selectedQuestionText.setTextFill(Color.WHITE);
         oldQuestionText.setTextFill(Color.BLACK);
-        selectedQuestionText.setTextFill(Color.RED);
 
     }
 
@@ -833,11 +876,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
                 if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                     exitDialogDimmer.setVisible(false);
+                    Animations.showDialog(testSummaryDialog, summaryDialogDimmer);
 
-                    ResultScreenController.InitialData initialData =
-                            new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
-                    ViewSwitcher.passData(initialData);
-                    ViewSwitcher.showScreen(View.RESULT_SCREEN);
                 }else {
                     ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjects(), viewModel.getSubjectsQuestions());
                     ViewSwitcher.passData(data);
@@ -851,7 +891,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             return buttonType;
         });
 
-        dialog.showAndWait();
+        dialog.show();
     }
 
     private void showExitDialog() {
@@ -931,81 +971,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         });
 
         dialog.showAndWait();
-    }
-
-    private void showReportDialog() {
-        dialogDimmer.setVisible(true);
-        reportDialog.setVisible(true);
-
-
-        FadeTransition fadeTransition = new FadeTransition();
-
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(0.5);
-        fadeTransition.setDuration(Duration.millis(500));
-        fadeTransition.setNode(dialogDimmer);
-
-        ScaleTransition scaleTransition = new ScaleTransition();
-
-        scaleTransition.setFromX(0);
-        scaleTransition.setToX(1);
-        scaleTransition.setFromY(0);
-        scaleTransition.setToY(1);
-        scaleTransition.setNode(reportDialog);
-        scaleTransition.setDuration(Duration.millis(300));
-
-
-        scaleTransition.play();
-        fadeTransition.play();
-    }
-
-    private void hideReportDialog() {
-
-
-        FadeTransition fadeTransition = new FadeTransition();
-
-        fadeTransition.setFromValue(0.5);
-        fadeTransition.setToValue(0);
-        fadeTransition.setDuration(Duration.millis(500));
-        fadeTransition.setNode(dialogDimmer);
-
-        ScaleTransition scaleTransition = new ScaleTransition();
-
-        scaleTransition.setFromX(1);
-        scaleTransition.setToX(0);
-        scaleTransition.setFromY(1);
-        scaleTransition.setToY(0);
-        scaleTransition.setNode(reportDialog);
-        scaleTransition.setDuration(Duration.millis(300));
-
-
-        scaleTransition.play();
-        fadeTransition.play();
-
-        scaleTransition.setOnFinished(event -> {
-            reportDialog.setVisible(false);
-        });
-
-        fadeTransition.setOnFinished(event -> {
-            dialogDimmer.setVisible(false);
-        });
-    }
-
-    private void textToSpeech(String text) {
-
-//          Audio audio = Audio.getInstance();
-//        InputStream sound = null;
-//        try {
-//            sound = audio.getAudio(text, Language.ENGLISH);
-//        } catch (IOException ex) {
-//            System.out.println("error converting text to audio");
-//        }
-//        try {
-//            audio.play(sound);
-//        } catch (Exception ex) {
-//            System.out.println("error converting text to audio");
-//        }
-
     }
 
     private InitialData getInitialData() {

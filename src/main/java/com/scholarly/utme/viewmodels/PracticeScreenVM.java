@@ -43,8 +43,6 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     private Type questionType;
 
-
-
     public PracticeScreenVM() {
 
     }
@@ -144,8 +142,6 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
     public void setSelectedSubject(Subject selectedSubject) {
         this.selectedSubject.set(selectedSubject);
     }
-
-
 
     public long getTime() {
         return time.get();

@@ -9,6 +9,7 @@ public class FontUtil {
         LIGHT("/fonts/gilroy_light.otf"),
         REGULAR("/fonts/gilroy_regular.otf"),
         MEDIUM("/fonts/gilroy_medium.otf"),
+        MEDIUM_ITALIC("/fonts/gilroy_medium_italic.ttf"),
         SEMI_BOLD("/fonts/gilroy_semi_bold.otf"),
         BOLD("/fonts/gilroy_bold.ttf"),
         EXTRA_BOLD("/fonts/gilroy_extrabold.otf"),

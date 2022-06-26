@@ -1,6 +1,7 @@
 package com.scholarly.utme.data.dao.newDb;
 
 
+import com.scholarly.utme.data.model.MediaSubTopic;
 import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.util.SyllabusDatabase;
 import javafx.collections.FXCollections;
@@ -41,8 +42,8 @@ public class SubTopicDao {
                         rs.getInt(sectionColumn)));
             }
 
-
             return subTopics;
+
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
@@ -53,17 +54,17 @@ public class SubTopicDao {
         }
     }
 
-    public static ObservableList<SubTopic> getSubTopics(String tableName, int topicId) {
-        ObservableList<SubTopic> subTopics = FXCollections.observableArrayList();
+    public static ObservableList<MediaSubTopic> getSubTopicsWithTopicId(String tableName, int topicId) {
+        ObservableList<MediaSubTopic> subTopics = FXCollections.observableArrayList();
 
-        String query = "SELECT * FROM " + tableName + " WHERE topic_id = " + topicId;
+        String query = "SELECT * FROM note_" + tableName + "_sub_topics WHERE topic_id = " + topicId;
 
         try (Connection connection = SyllabusDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             subTopics.clear();
             while (rs.next()) {
-                subTopics.add(new SubTopic(
+                subTopics.add(new MediaSubTopic(
                         rs.getInt(idColumn),
                         rs.getString(titleColumn),
                         rs.getInt(orderColumn),

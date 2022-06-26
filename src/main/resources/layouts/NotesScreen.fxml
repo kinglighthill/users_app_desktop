@@ -7,31 +7,17 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<?import org.controlsfx.control.SearchableComboBox?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
-<?import javafx.scene.effect.DropShadow?>
-<?import com.dlsc.formsfx.view.renderer.SectionRenderer?>
-<?import net.synedra.validatorfx.GraphicDecorationStackPane?>
-<?import org.controlsfx.control.ListActionView?>
-<?import javafx.scene.control.skin.ColorPickerSkin.PickerColorBox?>
-<?import com.sun.javafx.webkit.theme.RenderThemeImpl.FormRadioButton?>
-<?import org.kordamp.ikonli.javafx.StackedFontIcon?>
-<?import com.dlsc.formsfx.view.controls.SimpleTextControl?>
-<?import com.sun.javafx.charts.Legend?>
-<?import org.controlsfx.dialog.FontSelectorDialog.FontPanel?>
+
 <BorderPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.NotesScreenController">
    <center>
       <StackPane fx:id="noteLayout" prefHeight="800" prefWidth="1000" >
 
          <BorderPane prefHeight="600.0" prefWidth="1000.0" StackPane.alignment="CENTER" >
 
-
             <center>
                <StackPane prefHeight="200.0" prefWidth="600.0" style="-fx-background-color: #E7F7E9;" >
                   <children>
-                     <!--<VBox prefHeight="200.0" prefWidth="100.0" >
 
-                     </VBox>-->
                      <HBox prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" >
                         <children>
                            <VBox prefHeight="200.0" prefWidth="253.0" VBox.vgrow="ALWAYS">
@@ -60,7 +46,7 @@
 
                                  <StackPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
 
-                                    <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" >
+                                    <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                        <content>
                                           <VBox fx:id="topicVBox" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" VBox.vgrow="ALWAYS"/>
                                        </content>
@@ -412,7 +398,7 @@
             </right>
 
             <top>
-               <ToolBar fx:id="noteTopBar"  prefHeight="75" prefWidth="800.0" style="-fx-effect: dropshadow(gaussian, gray, 10.0, 0.5, 0.0,  5.0); -fx-background-color: #E7F7E9; ">
+               <ToolBar fx:id="noteTopBar"  prefHeight="75" prefWidth="800.0" style="-fx-effect: dropshadow(gaussian, gray, 10.0, 0.5, 0.0,  5.0); -fx-background-color: #E7F7E9;">
                   <items>
                      <Button fx:id="notesBackButton" >
                         <HBox.margin>
@@ -426,9 +412,9 @@
                      </Label>
 
                      <Region prefWidth="80.0" HBox.hgrow="ALWAYS" />
-                     <StackPane prefHeight="30" prefWidth="650" StackPane.alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <StackPane prefHeight="30" prefWidth="650" StackPane.alignment="CENTER" HBox.hgrow="ALWAYS" >
                         <children>
-                           <TextField fx:id="searchTextField" prefHeight="35" promptText="Search Notes" prefWidth="650" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5;"/>
+                           <TextField fx:id="searchTextField" prefHeight="35" promptText="Search Notes" prefWidth="650" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5;" />
                            <ImageView fx:id="searchIcon" StackPane.alignment="CENTER_RIGHT" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                               <StackPane.margin>
                                  <Insets right="30.0" top="5.0" bottom="5.0"/>

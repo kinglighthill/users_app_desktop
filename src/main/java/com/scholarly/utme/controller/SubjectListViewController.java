@@ -1,9 +1,6 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.ui.utils.Alerts;
-import com.scholarly.utme.ui.utils.NoSelectionModel;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
@@ -21,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -72,6 +70,8 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
 
     private final String PREF_KEY_SELECTED_TAB = "SELECTED_TAB";
+    private final String SELECTED_TAB_STYLE = "-fx-background-color: #12AF20;";
+    private final String UNSELECTED_TAB_STYLE = "-fx-background-color: #FFFFFF;";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -80,22 +80,29 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
         if (lastSelectedTab.equalsIgnoreCase("Objective")){
             tabMenu.getSelectionModel().select(objectiveTab);
+            objectiveTab.setStyle(SELECTED_TAB_STYLE);
+            theoryTab.setStyle(UNSELECTED_TAB_STYLE);
         }else if (lastSelectedTab.equalsIgnoreCase("Theory")){
             tabMenu.getSelectionModel().select(theoryTab);
+            theoryTab.setStyle(SELECTED_TAB_STYLE);
+            objectiveTab.setStyle(UNSELECTED_TAB_STYLE);
         }
 
+        initializeViews();
+
+        initializeFonts();
 
         objectiveList.setItems(viewModel.getObjectiveSubjects());
         theoryList.setItems(viewModel.getTheorySubjects());
 
         ViewListCellFactory<SubjectListItemVM> objectiveCellFactory = CachedViewModelCellFactory.create(vm -> {
             vm.setType(SubjectListItemVM.Type.OBJECTIVE);
-            return FluentViewLoader.fxmlView(SubjectListItemView.class).viewModel(vm).load();
+            return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
         });
 
         ViewListCellFactory<SubjectListItemVM> theoryCellFactory = CachedViewModelCellFactory.create(vm -> {
             vm.setType(SubjectListItemVM.Type.THEORY);
-            return FluentViewLoader.fxmlView(SubjectListItemView.class).viewModel(vm).load();
+            return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
         });
 
         objectiveList.setCellFactory(objectiveCellFactory);
@@ -138,11 +145,15 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         tabMenu.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue.getText().equalsIgnoreCase("Objective")) {
                 tabMenu.getSelectionModel().select(objectiveTab);
+                objectiveTab.setStyle(SELECTED_TAB_STYLE);
+                theoryTab.setStyle(UNSELECTED_TAB_STYLE);
                 tabPreferences.put(PREF_KEY_SELECTED_TAB, "Objective");
                 animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedObjectiveSubjects);
             } else {
                 tabMenu.getSelectionModel().select(theoryTab);
+                theoryTab.setStyle(SELECTED_TAB_STYLE);
+                objectiveTab.setStyle(UNSELECTED_TAB_STYLE);
                 tabPreferences.put(PREF_KEY_SELECTED_TAB, "Theory");
                 animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedTheorySubjects);
@@ -218,19 +229,29 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
 
             }else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Select at least one subject for practice");
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
-                alert.showAndWait();
-
-               // System.out.println("Please select at least one subject");
+                Alerts.info(
+                        this.getClass(),
+                        "Message",
+                        null,
+                        "Select at least one subject for practice"
+                ).show();
             }
 
         });
 
+    }
+
+    private void initializeViews() {
+        tabMenu.widthProperty().addListener(((observable, oldValue, newValue) -> {
+            tabMenu.setTabMinWidth((Double) newValue/2.1);
+        }));
+        tabMenu.setBackground(Background.EMPTY);
+        hoursChoiceBox.setBackground(Background.EMPTY);
+        minutesChoiceBox.setBackground(Background.EMPTY);
+    }
+
+    private void initializeFonts() {
+//        startButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
     }
 
     /**

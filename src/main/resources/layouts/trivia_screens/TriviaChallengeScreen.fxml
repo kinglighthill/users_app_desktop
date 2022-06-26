@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.text.Font?>
+<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.scholarly.utme.controller.trivia_screens.TriviaChallengeScreenController"
+           prefHeight="800.0" prefWidth="1000.0">
+
+    <BorderPane>
+        <left>
+            <Panel style="-fx-background-color: #006B17;">
+                <center>
+                    <VBox spacing="20" prefWidth="400" alignment="TOP_CENTER" >
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Button fx:id="backButton" style="-fx-background-color: #0D8421;">
+                                <padding>
+                                    <Insets right="13" bottom="13" top="8" left="8"/>
+                                </padding>
+                            </Button>
+                            <Label text="Challenges" textFill="white">
+                                <font>
+                                    <Font name="Gill Sans MT" size="22"/>
+                                </font>
+                            </Label>
+                        </HBox>
+                        <StackPane>
+                            <TextField fx:id="searchChallenge" promptText="Search for a challenge" style="-fx-background-color: rgba(18, 175, 32, 0.2); -fx-background-radius: 10; -fx-border-color: #12AF20; -fx-border-radius: 10;">
+                                <padding>
+                                    <Insets topRightBottomLeft="10"/>
+                                </padding>
+                            </TextField>
+                            <ImageView />
+                        </StackPane>
+
+                        <HBox spacing="15">
+                            <Button text="Open" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8;"/>
+                            <Button text="Ended" textFill="white" style="-fx-background-color: rgba(44, 189, 57, 0.3); -fx-background-radius: 8;"/>
+                            <Button text="Upcoming" textFill="white" style="-fx-background-color: rgba(44, 189, 57, 0.3); -fx-background-radius: 8;"/>
+                            <VBox.margin>
+                                <Insets top="15"/>
+                            </VBox.margin>
+                        </HBox>
+
+                        <ListView fx:id="challengeList"/>
+
+                        <padding>
+                            <Insets left="25" right="25" top="40" bottom="30"/>
+                        </padding>
+                    </VBox>
+                </center>
+
+                <bottom>
+                    <HBox alignment="CENTER">
+                        <Button fx:id="exitButton" text="Exit" textFill="#ACCDAF" prefWidth="200" prefHeight="40" style="-fx-border-color: #ACCDAF; -fx-border-radius: 8;"/>
+
+                        <padding>
+                            <Insets bottom="20"/>
+                        </padding>
+                    </HBox>
+                </bottom>
+            </Panel>
+        </left>
+
+        <center>
+            <BorderPane style="-fx-background-color: white;">
+                <top>
+                    <Panel style="-fx-background-color: #F4FFF5; -fx-background-radius: 8;">
+                        <left>
+                            <HBox spacing="10" alignment="CENTER">
+                                <ImageView fx:id="playerImage" fitHeight="40" fitWidth="40" preserveRatio="true" pickOnBounds="true"/>
+                                <VBox>
+                                    <Label fx:id="playerName" text="Nellyboi"/>
+                                    <Label fx:id="playerPoints" text="500 pts" textFill="#12AF20"/>
+                                </VBox>
+                                <padding>
+                                    <Insets top="15" bottom="15" left="20" right="20"/>
+                                </padding>
+                            </HBox>
+                        </left>
+                        <right>
+                            <HBox alignment="CENTER">
+                                <Button fx:id="newChallengeButton" text="Start a new challenge" textFill="#053500" style="-fx-background-color: #FCB029; -fx-background-radius: 8;">
+                                    <padding>
+                                        <Insets left="15" right="15" top="10" bottom="10"/>
+                                    </padding>
+                                </Button>
+                            </HBox>
+                        </right>
+                        <padding>
+                            <Insets left="20" right="30"/>
+                        </padding>
+                    </Panel>
+                </top>
+                <center>
+                    <StackPane style="-fx-border-color: #F1F1F1; -fx-border-radius: 5;">
+                        <Button text="NEW" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 10;" StackPane.alignment="TOP_RIGHT">
+                            <font>
+                                <Font name="Gill Sans MT" size="12"/>
+                            </font>
+                            <padding>
+                                <Insets left="10" right="10" top="3" bottom="3"/>
+                            </padding>
+                        </Button>
+                        <VBox spacing="20" alignment="TOP_CENTER">
+                            <ImageView fx:id="challengeImage" fitWidth="100" fitHeight="100" preserveRatio="true" pickOnBounds="true">
+                                <VBox.margin>
+                                    <Insets top="30"/>
+                                </VBox.margin>
+                            </ImageView>
+                            <Label fx:id="challengeName" text="Mathematics Challenge" StackPane.alignment="CENTER"/>
+                            <HBox spacing="8" alignment="CENTER">
+                                <ImageView fx:id="timeIcon"/>
+                                <Label fx:id="timeLabel" text="45 mins" textFill="#12AF20"/>
+                            </HBox>
+                            <Label fx:id="challengeDescription" textAlignment="CENTER" text="non odio euismod lacinia at quis. Id velit ut tortor pretium viverra suspendisse potenti nullam ac. Suspendisse ultrices gravida dictum fusce ut placerat. Sit amet porttitor eget dolor morbi non arcu risus quis. Tortor dignissim convallis aenean et tortor at. " wrapText="true"/>
+                            <Button fx:id="joinChallengeBtn" text="Join Challenge" textFill="white" style="-fx-background-color: #12AF20;">
+                                <padding>
+                                    <Insets top="10" bottom="10" left="20" right="20"/>
+                                </padding>
+                                <VBox.margin>
+                                    <Insets top="50"/>
+                                </VBox.margin>
+                            </Button>
+                        </VBox>
+                        <padding>
+                            <Insets topRightBottomLeft="20"/>
+                        </padding>
+                        <BorderPane.margin>
+                            <Insets top="20" right="20"/>
+                        </BorderPane.margin>
+                    </StackPane>
+
+                </center>
+                <right>
+                    <VBox spacing="25" style="-fx-background-color: #F4FFF5;" prefWidth="300">
+                        <Label fx:id="participantsLabel" text="Online Participants" textFill="#053500"/>
+                        <ListView fx:id="participantsList"/>
+                        <padding>
+                            <Insets left="25" right="25" top="40"/>
+                        </padding>
+                        <BorderPane.margin>
+                            <Insets top="20"/>
+                        </BorderPane.margin>
+                    </VBox>
+                </right>
+                <padding>
+                    <Insets topRightBottomLeft="20"/>
+                </padding>
+            </BorderPane>
+        </center>
+    </BorderPane>
+
+    <Pane fx:id="dialogDimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
+
+    <VBox fx:id="newChallengeFirstPane" spacing="15" maxWidth="400" maxHeight="600" alignment="TOP_CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" visible="false" StackPane.alignment="CENTER">
+        <VBox spacing="5">
+            <Panel>
+                <left>
+                    <Label text="Start a new challenge" textFill="#053500">
+                        <font>
+                            <Font name="Gill Sans MT" size="18"/>
+                        </font>
+                    </Label>
+                </left>
+                <right>
+                    <ImageView fx:id="firstStepCloseIcon" fitWidth="30" fitHeight="30" preserveRatio="true" pickOnBounds="true"/>
+                </right>
+            </Panel>
+            <Label text="Step 1" textFill="#12AF20">
+                <font>
+                    <Font name="Gill Sans MT" size="16"/>
+                </font>
+            </Label>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Name of Challenge" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <TextField/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Select Subject" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <ChoiceBox prefWidth="400"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Select Topic" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <ChoiceBox prefWidth="400"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Select Subtopic" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <ChoiceBox prefWidth="400"/>
+        </VBox>
+
+        <Panel>
+            <left>
+                <VBox spacing="5">
+                    <Label text="TIme">
+                        <font>
+                            <Font name="Gill Sans MT" size="14"/>
+                        </font>
+                    </Label>
+                    <HBox spacing="5" alignment="CENTER">
+                        <Label text="Seconds">
+                            <font>
+                                <Font name="Gill Sans MT" size="12"/>
+                            </font>
+                        </Label>
+                        <ChoiceBox/>
+                    </HBox>
+                </VBox>
+            </left>
+            <right>
+                <VBox spacing="5">
+                    <Label text="Date">
+                        <font>
+                            <Font name="Gill Sans MT" size="14"/>
+                        </font>
+                    </Label>
+                    <DatePicker/>
+                </VBox>
+            </right>
+        </Panel>
+
+        <VBox spacing="5">
+            <Label text="Number of Questions">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <ChoiceBox prefWidth="400"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Description">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <TextArea prefHeight="60" prefWidth="400"/>
+        </VBox>
+
+        <Button fx:id="nextButton" text="Next" textFill="white" prefWidth="80" prefHeight="35" style="-fx-background-color: #12AF20;">
+            <VBox.margin>
+                <Insets top="10"/>
+            </VBox.margin>
+        </Button>
+
+        <padding>
+            <Insets top="20" bottom="25" left="30" right="30"/>
+        </padding>
+    </VBox>
+
+    <VBox fx:id="newChallengeSecondPane" spacing="15" maxWidth="400" maxHeight="350" alignment="TOP_CENTER" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false" StackPane.alignment="TOP_CENTER">
+        <VBox spacing="5">
+            <Panel>
+                <left>
+                    <Label text="Start a new challenge" textFill="#053500">
+                        <font>
+                            <Font name="Gill Sans MT" size="18"/>
+                        </font>
+                    </Label>
+                </left>
+                <right>
+                    <ImageView fx:id="secondStepCloseIcon" fitWidth="30" fitHeight="30" preserveRatio="true" pickOnBounds="true"/>
+                </right>
+            </Panel>
+            <Label text="Step 2" textFill="#12AF20">
+                <font>
+                    <Font name="Gill Sans MT" size="16"/>
+                </font>
+            </Label>
+        </VBox>
+        <VBox spacing="5">
+            <Label text="Add participants from your contact list">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <StackPane>
+                <TextField prefHeight="35" promptText="Select from contact list"/>
+                <ImageView fx:id="contactIcon" StackPane.alignment="CENTER_RIGHT">
+                    <StackPane.margin>
+                        <Insets right="20"/>
+                    </StackPane.margin>
+                </ImageView>
+            </StackPane>
+            <HBox spacing="5">
+                <HBox fx:id="contactPane"  spacing="5" alignment="CENTER_LEFT" style="-fx-background-color: #F1F1F1; -fx-background-radius: 15;">
+                    <ImageView fx:id="contactImage" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                    <Label fx:id="contactName" text="Kate Olaolu"/>
+                    <ImageView fx:id="contactRemoveIcon">
+                        <HBox.margin>
+                            <Insets left="10" right="10"/>
+                        </HBox.margin>
+                    </ImageView>
+                </HBox>
+                <HBox fx:id="contact2Pane" spacing="5" alignment="CENTER_LEFT" style="-fx-background-color: #F1F1F1; -fx-background-radius: 15;">
+                    <ImageView fx:id="contact2Image" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                    <Label text="Kate Olaolu"/>
+                    <ImageView fx:id="contact2RemoveIcon">
+                        <HBox.margin>
+                            <Insets left="10" right="10"/>
+                        </HBox.margin>
+                    </ImageView>
+                </HBox>
+            </HBox>
+
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Share invitation link (Optional)">
+                <font>
+                    <Font name="Gill Sans MT" size="14"/>
+                </font>
+            </Label>
+            <StackPane>
+                <TextField prefHeight="35" text="bit.ly/scholarly_trivia"/>
+                <ImageView fx:id="shareIcon" StackPane.alignment="CENTER_RIGHT">
+                    <StackPane.margin>
+                        <Insets right="20"/>
+                    </StackPane.margin>
+                </ImageView>
+            </StackPane>
+        </VBox>
+
+        <Button fx:id="createChallengeBtn" text="Create Challenge" textFill="white" prefWidth="150" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+            <VBox.margin>
+                <Insets top="10"/>
+            </VBox.margin>
+        </Button>
+
+        <padding>
+            <Insets top="20" bottom="25" left="30" right="30"/>
+        </padding>
+        <StackPane.margin>
+            <Insets top="80"/>
+        </StackPane.margin>
+    </VBox>
+
+    <VBox fx:id="challengeCreatedPane" spacing="15" maxWidth="400" maxHeight="350" alignment="TOP_CENTER" visible="false" style="-fx-background-color: white; -fx-background-radius: 10;" StackPane.alignment="TOP_CENTER">
+        <Panel>
+            <right>
+                <ImageView fx:id="challengeCreatedCloseIcon" fitWidth="30" fitHeight="30" preserveRatio="true" pickOnBounds="true"/>
+            </right>
+        </Panel>
+
+        <ImageView fx:id="challengeCreatedImage" preserveRatio="true" pickOnBounds="true"/>
+
+        <VBox spacing="5" alignment="CENTER">
+            <Label fx:id="challengeCreatedText" text="Challenge created" textFill="#053500"/>
+            <Label fx:id="successfulText" text="Successfully" textFill="#053500"/>
+        </VBox>
+
+        <padding>
+            <Insets top="20" bottom="25" left="30" right="30"/>
+        </padding>
+        <StackPane.margin>
+            <Insets top="80"/>
+        </StackPane.margin>
+    </VBox>
+
+</StackPane>

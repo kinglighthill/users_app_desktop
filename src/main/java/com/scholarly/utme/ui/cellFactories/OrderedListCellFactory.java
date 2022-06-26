@@ -1,6 +1,6 @@
 package com.scholarly.utme.ui.cellFactories;
 
-import com.scholarly.utme.data.model.OrderedListItem;
+import com.scholarly.utme.data.model.listItems.OrderedListItem;
 import com.scholarly.utme.ui.listcells.OrderedListItemCell;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;

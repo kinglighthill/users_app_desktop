@@ -1,12 +1,11 @@
 package com.scholarly.utme.ui.listcells;
 
-import com.scholarly.utme.data.model.UnorderedListItem;
+import com.scholarly.utme.data.model.listItems.UnorderedListItem;
 import com.scholarly.utme.ui.utils.FontUtil;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 
 import java.io.IOException;
@@ -20,7 +19,7 @@ public class UnorderedListItemCell extends ListCell<UnorderedListItem> {
 
     private void loadFXML() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/unordered_list_item.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/list_items/unordered_list_item.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             loader.load();

@@ -1,9 +1,9 @@
 package com.scholarly.utme.data.model.newDb.contentType.unorderedList;
 
-import com.scholarly.utme.data.model.newDb.contentType.ContentType;
+import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
 import com.scholarly.utme.data.model.newDb.contentType.Title;
 
-public class UnorderedListViewType extends ContentType {
+public class UnorderedListViewType extends ContentViewType {
     private Title title;
     private UnorderedListBody body;
 

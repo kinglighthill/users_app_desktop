@@ -1,9 +1,9 @@
 package com.scholarly.utme.data.model.newDb.contentType.video;
 
-import com.scholarly.utme.data.model.newDb.contentType.ContentType;
+import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
 import com.scholarly.utme.data.model.newDb.contentType.Title;
 
-public class VideoViewType extends ContentType {
+public class VideoViewType extends ContentViewType {
     private Title title;
     private VideoBody body;
 
