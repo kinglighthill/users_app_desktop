@@ -1,13 +1,15 @@
 package com.scholarly.utme.controller;
 
 
+import com.scholarly.utme.controller.audio_video_screens.AudioVideoSubjectListViewController;
+import com.scholarly.utme.controller.novel_screens.NovelScreenController;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.HomeScreenVM;
-import com.scholarly.utme.viewmodels.NovelScreenVM;
+import com.scholarly.utme.viewmodels.novel_screens.NovelScreenVM;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
-import com.scholarly.utme.viewmodels.VideoAudioSubjectListViewVM;
+import com.scholarly.utme.viewmodels.audio_video_screens.AudioVideoSubjectListViewVM;
 import de.saxsys.mvvmfx.*;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
@@ -55,8 +57,8 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         ViewTuple<NovelScreenController, NovelScreenVM> novelListViewTuple = FluentViewLoader.fxmlView(NovelScreenController.class).load();
 
-        ViewTuple<VideoAudioSubjectListViewController, VideoAudioSubjectListViewVM> videoAudioSubjectListViewTuple = FluentViewLoader.fxmlView(VideoAudioSubjectListViewController.class).load();
-        VideoAudioSubjectListViewController videoAudioSubjectListViewController = videoAudioSubjectListViewTuple.getCodeBehind();
+        ViewTuple<AudioVideoSubjectListViewController, AudioVideoSubjectListViewVM> videoAudioSubjectListViewTuple = FluentViewLoader.fxmlView(AudioVideoSubjectListViewController.class).load();
+        AudioVideoSubjectListViewController audioVideoSubjectListViewController = videoAudioSubjectListViewTuple.getCodeBehind();
 
         initializeViews();
 
@@ -137,7 +139,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 pageTitle.setText("Videos");
                 contentPane.getChildren().clear();
                 contentPane.getChildren().add(videoAudioSubjectListViewTuple.getView());
-                videoAudioSubjectListViewController.setType(VideoAudioSubjectListViewVM.Type.VIDEO);
+                audioVideoSubjectListViewController.setType(AudioVideoSubjectListViewVM.Type.VIDEO);
             }
         }));
 
@@ -149,7 +151,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 pageTitle.setText("Audios");
                 contentPane.getChildren().clear();
                 contentPane.getChildren().add(videoAudioSubjectListViewTuple.getView());
-                videoAudioSubjectListViewController.setType(VideoAudioSubjectListViewVM.Type.AUDIO);
+                audioVideoSubjectListViewController.setType(AudioVideoSubjectListViewVM.Type.AUDIO);
 
             }
         }));
