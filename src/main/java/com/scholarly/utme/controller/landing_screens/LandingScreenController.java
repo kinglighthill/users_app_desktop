@@ -2,6 +2,7 @@ package com.scholarly.utme.controller.landing_screens;
 
 import com.scholarly.utme.data.model.Course;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenVM;
 import com.scholarly.utme.viewmodels.landing_screens.*;
 import de.saxsys.mvvmfx.FluentViewLoader;
@@ -69,69 +70,85 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, triviaButton, performanceButton, updatesButton, settingsButton);
 
-        toggleGroup.selectToggle(homeButton);
+        if (ViewSwitcher.retrieveData() == null) {
+            selectButton(homeViewTuple, homeButton);
+        }else {
+            System.out.println("Retrieved data -> " + ViewSwitcher.retrieveData());
+            String retrievedId = (String) ViewSwitcher.retrieveData();
+
+            if (retrievedId.equalsIgnoreCase("homeButton")) {
+                selectButton(homeViewTuple, homeButton);
+
+            } else if (retrievedId.equalsIgnoreCase("accountButton")) {
+                selectButton(accountViewTuple, accountButton);
+
+            } else if (retrievedId.equalsIgnoreCase("activateButton")) {
+                selectButton(activateViewTuple, activateButton);
+
+            } else if (retrievedId.equalsIgnoreCase("appsButton")) {
+                selectButton(appsViewTuple, appsButton);
+
+            } else if (retrievedId.equalsIgnoreCase("triviaButton")) {
+                selectButton(triviaViewTuple, triviaButton);
+
+            } else if (retrievedId.equalsIgnoreCase("performanceButton")) {
+                System.out.println("Display Performance screen");
+
+            } else if (retrievedId.equalsIgnoreCase("updatesButton")) {
+                selectButton(updatesViewTuple, updatesButton);
+
+            } else if (retrievedId.equalsIgnoreCase("settingsButton")) {
+                System.out.println("Display Settings screen");
+
+            }
+        }
+
 
         homeButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(homeViewTuple.getView());
-                changeButtonStyle(homeButton);
+                selectButton(homeViewTuple, homeButton);
             }
          });
 
         accountButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
              if (newValue){
-                 homeContentPane.getChildren().clear();
-                 homeContentPane.getChildren().add(accountViewTuple.getView());
-                 changeButtonStyle(accountButton);
+                 selectButton(accountViewTuple, accountButton);
              }
          });
 
         activateButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(activateViewTuple.getView());
-                changeButtonStyle(activateButton);
+                selectButton(activateViewTuple, activateButton);
             }
         });
 
         appsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(appsViewTuple.getView());
-                changeButtonStyle(appsButton);
+                selectButton(appsViewTuple, appsButton);
             }
         });
 
         triviaButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(triviaViewTuple.getView());
-                changeButtonStyle(triviaButton);
+                selectButton(triviaViewTuple, triviaButton);
             }
         });
 
         performanceButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(appsViewTuple.getView());
-                changeButtonStyle(performanceButton);
+                selectButton(appsViewTuple, performanceButton);
             }
         });
 
         updatesButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(updatesViewTuple.getView());
-                changeButtonStyle(updatesButton);
+                selectButton(updatesViewTuple, updatesButton);
             }
         });
 
         settingsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(appsViewTuple.getView());
-                changeButtonStyle(settingsButton);
+                selectButton(updatesViewTuple, settingsButton);
             }
         });
 
@@ -203,4 +220,11 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         pressedButton.setStyle(PRESSED_BUTTON_STYLE);
     }
+
+    private void selectButton(ViewTuple<?, ?> viewTuple, ToggleButton toggleButton) {
+        homeContentPane.getChildren().clear();
+        homeContentPane.getChildren().add(viewTuple.getView());
+        changeButtonStyle(toggleButton);
+    }
+
 }

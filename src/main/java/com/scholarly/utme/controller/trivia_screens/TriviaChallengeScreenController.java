@@ -117,6 +117,12 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
             Animations.hideDialog(challengeCreatedPane, dialogDimmer);
         });
 
+
+        backButton.setOnAction(event -> {
+            ViewSwitcher.passData("triviaButton");
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+        });
+
     }
 
     private void initializeViews() {
