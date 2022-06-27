@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<fx:root type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+
+    <graphic>
+        <VBox spacing="20" alignment="CENTER" maxWidth="150" minWidth="150" minHeight="150" maxHeight="150" style="-fx-border-color: #F1F1F1; -fx-border-radius: 5;">
+            <ImageView fx:id="appImage" fitWidth="120" fitHeight="120" preserveRatio="true" pickOnBounds="true"/>
+            <Label fx:id="appName" wrapText="true"/>
+            <padding>
+                <Insets topRightBottomLeft="15"/>
+            </padding>
+        </VBox>
+    </graphic>
+</fx:root>
