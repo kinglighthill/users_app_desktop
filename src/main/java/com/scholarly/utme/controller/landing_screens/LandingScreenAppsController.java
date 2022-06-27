@@ -61,13 +61,13 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
 
 
         mobileAppsButton.setOnAction(event -> {
-            AppsGridScreenController.InitialData data = new AppsGridScreenController.InitialData(apps);
+            AppsGridScreenController.InitialData data = new AppsGridScreenController.InitialData(apps, "Mobile Apps");
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.APPS_GRID_SCREEN);
         });
 
         desktopAppsButton.setOnAction(event -> {
-            AppsGridScreenController.InitialData data = new AppsGridScreenController.InitialData(dApps);
+            AppsGridScreenController.InitialData data = new AppsGridScreenController.InitialData(dApps, "Desktop Apps");
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.APPS_GRID_SCREEN);
         });

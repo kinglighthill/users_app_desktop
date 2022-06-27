@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -31,6 +32,9 @@ public class AppsGridScreenController implements FxmlView<AppsGridScreenVM>, Ini
     @FXML
     private Button backButton;
 
+    @FXML
+    private Label appsTitle;
+
 
     @InjectViewModel
     private AppsGridScreenVM viewModel;
@@ -40,6 +44,8 @@ public class AppsGridScreenController implements FxmlView<AppsGridScreenVM>, Ini
 
         initializeViews();
         initializeFonts();
+
+        appsTitle.textProperty().bind(viewModel.typeProperty());
 
         viewModel.processInitialData(getInitialData());
 
@@ -70,10 +76,13 @@ public class AppsGridScreenController implements FxmlView<AppsGridScreenVM>, Ini
 
 
     public static class InitialData {
+        private String type;
+
         private ObservableList<AppItem> apps;
 
-        public InitialData(ObservableList<AppItem> apps) {
+        public InitialData(ObservableList<AppItem> apps, String type) {
             this.apps = apps;
+            this.type = type;
         }
 
         public ObservableList<AppItem> getApps() {
@@ -83,5 +92,14 @@ public class AppsGridScreenController implements FxmlView<AppsGridScreenVM>, Ini
         public void setApps(ObservableList<AppItem> apps) {
             this.apps = apps;
         }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
     }
+
 }
