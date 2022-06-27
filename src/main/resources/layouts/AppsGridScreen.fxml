@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.GridView?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.AppsGridScreenController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <VBox>
+            <HBox spacing="10" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+                <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+                <Label text="Mobile Apps" textFill="#053500">
+                    <font>
+                        <Font name="Gill Sans MT Bold" size="24"/>
+                    </font>
+                </Label>
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <AnchorPane style="-fx-background-color: white;">
+            <TextField prefHeight="40" minWidth="300" promptText="Enter a keyword" style="-fx-border-radius: 5;" AnchorPane.leftAnchor="35" AnchorPane.topAnchor="20"/>
+            <GridView fx:id="appsGrid" cellWidth="170" cellHeight="200" horizontalCellSpacing="15"
+                      AnchorPane.leftAnchor="30" AnchorPane.topAnchor="60" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="20"/>
+        </AnchorPane>
+    </center>
+
+</BorderPane>

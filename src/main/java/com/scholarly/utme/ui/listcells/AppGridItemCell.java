@@ -23,7 +23,7 @@ public class AppGridItemCell extends GridCell<AppItem> {
         loadFxml();
 
         setOnMouseClicked(event -> {
-            ViewSwitcher.showScreen(View.AUDIO_CONTENT_SCREEN);
+
         });
     }
 

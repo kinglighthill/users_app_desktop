@@ -1,8 +1,11 @@
 package com.scholarly.utme.controller.landing_screens;
 
+import com.scholarly.utme.controller.AppsGridScreenController;
 import com.scholarly.utme.data.model.listItems.AppItem;
 import com.scholarly.utme.ui.cellFactories.AppListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAppsVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -55,6 +58,19 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
         ObservableList<AppItem> dApps = FXCollections.observableArrayList(dApp1, dApp2, dApp3, dApp4, dApp5);
         desktopAppsList.setItems(dApps);
         desktopAppsList.setCellFactory(new AppListCellFactory());
+
+
+        mobileAppsButton.setOnAction(event -> {
+            AppsGridScreenController.InitialData data = new AppsGridScreenController.InitialData(apps);
+            ViewSwitcher.passData(data);
+            ViewSwitcher.showScreen(View.APPS_GRID_SCREEN);
+        });
+
+        desktopAppsButton.setOnAction(event -> {
+            AppsGridScreenController.InitialData data = new AppsGridScreenController.InitialData(dApps);
+            ViewSwitcher.passData(data);
+            ViewSwitcher.showScreen(View.APPS_GRID_SCREEN);
+        });
 
     }
 
