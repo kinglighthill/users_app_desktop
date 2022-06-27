@@ -135,7 +135,7 @@ public class TriviaChallengeScreenController implements FxmlView<TriviaChallenge
         shareIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/share_link_icon.png").toString()));
         contactRemoveIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/remove_contact_icon.png").toString()));
         contact2RemoveIcon.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/remove_contact_icon.png").toString()));
-        challengeCreatedImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/challenge_created_image.png").toString()));
+        challengeCreatedImage.setImage(new Image(getClass().getResource("/drawable/trivia_screen_images/successful_image.png").toString()));
 
         ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_icon.png").toString()));
         backButton.setGraphic(backIcon);
