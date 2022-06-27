@@ -40,7 +40,8 @@ public enum View {
     TRIVIA_QUIZ_RESULT_SCREEN("/layouts/trivia_screens/TriviaQuizResultScreen.fxml", TriviaQuizResultScreenController.class),
     TRIVIA_QUIZ_EXPLANATION_SCREEN("/layouts/trivia_screens/TriviaQuizExplanationScreen.fxml", TriviaQuizExplanationScreenController.class),
     TRIVIA_RANKING_SCREEN("/layouts/trivia_screens/TriviaRankingScreen.fxml", TriviaRankingScreenController.class),
-    ACTIVATE_PAYMENT_SCREEN("/layouts/ActivatePaymentScreen.fxml", ActivatePaymentScreenController.class);
+    ACTIVATE_PAYMENT_SCREEN("/layouts/ActivatePaymentScreen.fxml", ActivatePaymentScreenController.class),
+    APPS_GRID_SCREEN("/layouts/AppsGridScreen.fxml", AppsGridScreenController.class);
 
 
 
