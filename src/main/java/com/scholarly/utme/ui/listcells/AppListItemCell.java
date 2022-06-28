@@ -15,6 +15,7 @@ import javafx.scene.layout.Background;
 import java.io.IOException;
 
 public class AppListItemCell extends ListCell<AppItem> {
+    private AppItem app;
 
     public ImageView appImage;
     public Label appName;
@@ -23,7 +24,8 @@ public class AppListItemCell extends ListCell<AppItem> {
         loadFxml();
 
         setOnMouseClicked(event -> {
-            ViewSwitcher.showScreen(View.AUDIO_CONTENT_SCREEN);
+            ViewSwitcher.passData(app);
+            ViewSwitcher.showScreen(View.APP_DETAILS_SCREEN);
         });
     }
 
@@ -43,6 +45,7 @@ public class AppListItemCell extends ListCell<AppItem> {
     @Override
     protected void updateItem(AppItem item, boolean empty) {
         super.updateItem(item, empty);
+        app = item;
 
         if (empty || item == null) {
             setText(null);
