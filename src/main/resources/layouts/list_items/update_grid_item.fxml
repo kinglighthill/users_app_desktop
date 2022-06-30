@@ -13,7 +13,7 @@
     <graphic>
         <VBox spacing="15" alignment="CENTER_LEFT" prefHeight="300" prefWidth="200" style="-fx-border-color: #F4FFF5; -fx-border-radius: 5;">
             <ImageView fx:id="updateImage" fitWidth="200" fitHeight="120" preserveRatio="true" pickOnBounds="true"/>
-            <Label fx:id="updateTitle" text="JAMB Register resigns in office" textFill="#053500" wrapText="true"/>
+            <Label fx:id="updateTitle" text="JAMB Registrar resigns in office" textFill="#053500" wrapText="true"/>
             <Label fx:id="updateDate" text="6th Sept, 2021" textFill="#12AF20"/>
             <Label fx:id="updateDetails" prefHeight="50" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae " textFill="#053500" wrapText="true"/>
             <padding>
@@ -21,4 +21,5 @@
             </padding>
         </VBox>
     </graphic>
+
 </fx:root>

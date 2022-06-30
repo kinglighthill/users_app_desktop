@@ -28,8 +28,7 @@ public class UpdateGridItemCell extends GridCell<UpdateItem> {
         loadFxml();
 
         setOnMouseClicked(event -> {
-//            ViewSwitcher.passData(app);
-//            ViewSwitcher.showScreen(View.APP_DETAILS_SCREEN);
+            ViewSwitcher.showScreen(View.UPDATE_SCREEN);
         });
     }
 
