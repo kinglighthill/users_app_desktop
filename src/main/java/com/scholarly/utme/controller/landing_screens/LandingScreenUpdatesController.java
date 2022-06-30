@@ -10,6 +10,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.controlsfx.control.GridView;
 
 import java.net.URL;
@@ -20,6 +22,9 @@ public class LandingScreenUpdatesController implements FxmlView<LandingScreenUpd
 
     @FXML
     private GridView<UpdateItem> updatesGrid;
+
+    @FXML
+    private ImageView searchIcon;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -41,7 +46,7 @@ public class LandingScreenUpdatesController implements FxmlView<LandingScreenUpd
     }
 
     private void initializeViews() {
-
+        searchIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/search_icon.png").toString()));
     }
 
     private void initializeFonts() {

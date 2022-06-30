@@ -16,6 +16,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 
 import java.net.URL;
@@ -29,6 +31,9 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
 
     @FXML
     private Button mobileAppsButton, desktopAppsButton;
+
+    @FXML
+    private ImageView searchIcon;
 
     @FXML
     private Label mobileAppsLabel, desktopAppsLabel;
@@ -75,6 +80,8 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
     }
 
     private void initializeViews() {
+        searchIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/search_icon.png").toString()));
+
         mobileAppsButton.setBackground(Background.EMPTY);
         desktopAppsButton.setBackground(Background.EMPTY);
         mobileAppsList.setBackground(Background.EMPTY);
