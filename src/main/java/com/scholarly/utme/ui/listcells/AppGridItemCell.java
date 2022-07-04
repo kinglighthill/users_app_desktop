@@ -15,6 +15,7 @@ import org.controlsfx.control.GridCell;
 import java.io.IOException;
 
 public class AppGridItemCell extends GridCell<AppItem> {
+    public AppItem appItem;
 
     public ImageView appImage;
     public Label appName;
@@ -23,6 +24,7 @@ public class AppGridItemCell extends GridCell<AppItem> {
         loadFxml();
 
         setOnMouseClicked(event -> {
+            ViewSwitcher.passData(appItem);
             ViewSwitcher.showScreen(View.APP_DETAILS_SCREEN);
         });
     }
@@ -43,6 +45,7 @@ public class AppGridItemCell extends GridCell<AppItem> {
     @Override
     protected void updateItem(AppItem item, boolean empty) {
         super.updateItem(item, empty);
+        appItem = item;
 
         if (empty || item == null) {
             setText(null);

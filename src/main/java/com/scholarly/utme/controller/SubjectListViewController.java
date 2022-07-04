@@ -186,10 +186,11 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
             if (tabMenu.getSelectionModel().getSelectedItem() == objectiveTab) {
                 subjectStates = selectedObjectiveSubjects;
+                System.out.println("Selected Objective subjects -> " + selectedObjectiveSubjects);
                 //userPreferences.put(SELECTED_TAB_PREF_KEY, "Objective");
 
             } else {
-                subjectStates = selectedTheorySubjects;
+                subjectStates = selectedTheorySubjects;;
                 //userPreferences.put(SELECTED_TAB_PREF_KEY, "Theory");
 
             }
