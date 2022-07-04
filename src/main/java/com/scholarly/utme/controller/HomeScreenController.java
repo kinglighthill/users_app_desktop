@@ -50,10 +50,12 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
 
+    private SubjectListViewController subjectListController;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
-        SubjectListViewController subjectListController = subjectListViewTuple.getCodeBehind();
+        subjectListController = subjectListViewTuple.getCodeBehind();
 
         ViewTuple<NovelScreenController, NovelScreenVM> novelListViewTuple = FluentViewLoader.fxmlView(NovelScreenController.class).load();
 
@@ -284,6 +286,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
     }
 
     public void homeTextClicked() {
+        subjectListController.dispose();
         ViewSwitcher.showScreen(View.LANDING_SCREEN);
     }
 }

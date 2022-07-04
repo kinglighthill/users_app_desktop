@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import static com.scholarly.utme.ui.utils.Animations.animate;
+
 @FxmlPath("/layouts/SubjectListView.fxml")
 public class SubjectListViewController implements FxmlView<SubjectListViewVM>, Initializable {
 
@@ -148,14 +150,14 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 objectiveTab.setStyle(SELECTED_TAB_STYLE);
                 theoryTab.setStyle(UNSELECTED_TAB_STYLE);
                 tabPreferences.put(PREF_KEY_SELECTED_TAB, "Objective");
-                animate(newValue.getTabPane());
+                Animations.animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedObjectiveSubjects);
             } else {
                 tabMenu.getSelectionModel().select(theoryTab);
                 theoryTab.setStyle(SELECTED_TAB_STYLE);
                 objectiveTab.setStyle(UNSELECTED_TAB_STYLE);
                 tabPreferences.put(PREF_KEY_SELECTED_TAB, "Theory");
-                animate(newValue.getTabPane());
+                Animations.animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedTheorySubjects);
             }
         }));
@@ -186,7 +188,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
             if (tabMenu.getSelectionModel().getSelectedItem() == objectiveTab) {
                 subjectStates = selectedObjectiveSubjects;
-                System.out.println("Selected Objective subjects -> " + selectedObjectiveSubjects);
                 //userPreferences.put(SELECTED_TAB_PREF_KEY, "Objective");
 
             } else {
@@ -255,19 +256,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 //        startButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
     }
 
-    /**
-     * Plays a FadeTransition showing screen change when changing menu options
-     * @param node on which the transition is played
-     */
-    public void animate(Node node){
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), node);
-
-        fadeTransition.setFromValue(0.1);
-        fadeTransition.setToValue(1.0);
-
-        fadeTransition.play();
-    }
-
     public void setOption(SubjectListOption option) {
         if (option == SubjectListOption.PRACTICE) {
             selectedOption = SubjectListOption.PRACTICE;
@@ -294,5 +282,9 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         PRACTICE,
         STUDY,
         CBT_GAME
+    }
+
+    public void dispose() {
+        viewModel.dispose();
     }
 }
