@@ -101,8 +101,13 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
 
     @Override
     public void onViewRemoved() {
-        disposables.dispose();
+//        disposables.dispose();
         System.out.println("SubjectListViewModel removed");
+    }
+
+    public void dispose() {
+        System.out.println("SubjectListViewModel disposables disposed");
+        disposables.dispose();
     }
 
 

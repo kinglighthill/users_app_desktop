@@ -302,13 +302,56 @@
                             </Panel>
                             <VBox fx:id="noAccountDetailsPane" spacing="25">
                                 <Separator/>
-                                <HBox alignment="CENTER">
-                                    <Button text="I don't have an account" textFill="white" prefHeight="40" prefWidth="200" style="-fx-background-color: #12AF20;">
+                                <Label text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper " wrapText="true">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+
+                                <Label text="After payment, send a WhatsApp message containing payment details to +2348136941462 using the format below:">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+
+                                <VBox spacing="10">
+                                    <Label text="1. Account name (belonging to account owner or POS agent)">
                                         <font>
                                             <Font size="14"/>
                                         </font>
-                                    </Button>
-                                </HBox>
+                                    </Label>
+                                    <Label text="2. Amount paid">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                    <Label text="3. Your email address">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                    <Label text="4. Date of payment">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                    <Label text="5. Bank paid to">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                    <Label text="6. CBT exam paid for (JAMB, WAEC etc.)">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                </VBox>
+
+                                <Label text="Once payment has been confirmed, an activation pin will be instantly sent to your inbox">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
                             </VBox>
                         </children>
                         <padding>

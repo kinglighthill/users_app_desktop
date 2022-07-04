@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
 import com.scholarly.utme.ui.utils.View;
@@ -71,22 +72,30 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
   
     private Stage calculatorStage = new Stage();
 
+    String idleStyle =
+            "-fx-background-color: #FF8D19;" +
+                    "-fx-background-radius: 10";
+
+    String hoveredStyle =
+            "-fx-background-color: #FFA347;" +
+                    "-fx-background-radius: 10";
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         List<Button> options = new ArrayList<>();
+        options.add(optionAButton);
         options.add(optionBButton);
         options.add(optionCButton);
-        options.add(optionAButton);
         options.add(optionDButton);
 
         viewModel.processInitialData(getInitialData());
 
+        initializeViews();
+        initializeFonts();
+        initializeGestures();
         setupQuestionView();
+        setupReportSection();
 
-        ImageView view = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
-        view.setFitHeight(30);
-        view.setPreserveRatio(true);
-        backButton.setGraphic(view);
 
         viewModel.selectedQuestionProperty().addListener((observableValue, number, t1) -> {
             changeSelectedQuestion(t1.intValue());
@@ -186,23 +195,102 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             }
         });
 
-        String idleStyle =
-                "-fx-background-color: #FFA347;" +
-                "-fx-background-radius: 10";
 
-        String hoveredStyle =
-                "-fx-background-color: #FF8D19;" +
-                        "-fx-background-radius: 10";
+        options.forEach(button -> {
+            button.setStyle(idleStyle);
+            button.setOnMouseEntered(e -> button.setStyle(hoveredStyle));
+            button.setOnMouseExited(e -> button.setStyle(idleStyle));
+            button.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 24));
+            button.setTextFill(Color.WHITE);
+        });
 
 
+        reportImage.setOnMouseClicked(mouseEvent -> {
+            Animations.showDialog(reportDialog, reportDialogDimmer);
+        });
+
+        reportDialogCloseIcon.setOnMouseClicked(mouseEvent -> {
+            questionErrorCheckBox.setSelected(false);
+            incorrectAnswerCheckBox.setSelected(false);
+            okayCheckBox.setSelected(false);
+            Animations.hideDialog(reportDialog, reportDialogDimmer);
+        });
+
+        speakerImage.setOnMouseClicked(mouseEvent -> {
+            onSpeakerImageClicked();
+        });
+
+        calculatorImage.setOnMouseClicked(mouseEvent -> {
+            onCalculatorClicked();
+        });
+
+        playAgainButton.setOnAction(event -> {
+            hideResult();
+        });
+
+        showAnswersButton.setOnAction(event -> {
+            ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
+            ViewSwitcher.passData(data);
+            ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
+        });
+
+        backButton.setOnAction(e -> {
+            ViewSwitcher.passData("cbtGamePanel");
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+
+        exitButton.setOnAction(e -> {
+            ViewSwitcher.passData("cbtGamePanel");
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+
+
+    }
+
+    private void initializeViews() {
+        ImageView view = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
+        view.setFitHeight(30);
+        view.setPreserveRatio(true);
+        backButton.setGraphic(view);
+
+        reportImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_flag.png").toString()));
+        speakerImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_speaker.png").toString()));
+        calculatorImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_calculator.png").toString()));
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_bookmark.png").toString()));
+        reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+
+        backButton.setBackground(Background.EMPTY);
+    }
+
+    private void initializeFonts() {
+        questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 24));
+        questionLabel.setLineSpacing(5);
         fiftyFiftyButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        fiftyFiftyCount.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 16));
+        showAnswersButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        pageTitle.setFont(FontUtil.getFont(GilroyFontFamily.BOLD, 24));
+        questionNumberLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 20));
+        playAgainButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+
+        resultLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        correctAnswersLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        correctAnswers.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        incorrectAnswersLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        incorrectAnswers.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        questionAttempts.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+        questionAttemptsLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+
+        exitButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+    }
+
+    private void initializeGestures() {
         String idleFiftyFiftyStyle = fiftyFiftyButton.getStyle();
         String hoveredFiftyFiftyStyle =
                 "-fx-background-color: #73D25E;" +
-                "-fx-background-radius: 500;" +
-                "-fx-border-color: #1B9D01;" +
-                "-fx-border-width: 1;" +
-                "-fx-border-radius: 500";
+                        "-fx-background-radius: 500;" +
+                        "-fx-border-color: #1B9D01;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-border-radius: 500";
 
         fiftyFiftyButton.setOnMouseEntered(e -> {
             fiftyFiftyButton.setStyle(hoveredFiftyFiftyStyle);
@@ -213,7 +301,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             fiftyFiftyButton.setTextFill(Color.web("#1B9D01"));
         });
 
-        exitButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+
         String idleExitButtonStyle = exitButton.getStyle();
         String hoveredExitButtonStyle =
                 "-fx-background-color:#F1F9F0;" +
@@ -229,7 +317,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             exitButton.setStyle(idleExitButtonStyle);
         });
 
-        playAgainButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+
         String idlePlayAgainButtonStyle = playAgainButton.getStyle();
         String hoveredPlayAgainButtonStyle =
                 "-fx-background-color:#F1F9F0;" +
@@ -245,7 +333,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             playAgainButton.setStyle(idlePlayAgainButtonStyle);
         });
 
-        showAnswersButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
+
         String idleShowAnswerButtonStyle = showAnswersButton.getStyle();
         String hoveredShowAnswerButtonStyle =
                 "-fx-background-color: #157D01;" +
@@ -257,145 +345,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         showAnswersButton.setOnMouseExited(e -> {
             showAnswersButton.setStyle(idleShowAnswerButtonStyle);
         });
-
-
-
-        backButton.setBackground(Background.EMPTY);
-
-        options.forEach(button -> {
-            button.setStyle(idleStyle);
-            button.setOnMouseEntered(e -> button.setStyle(hoveredStyle));
-            button.setOnMouseExited(e -> button.setStyle(idleStyle));
-            button.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 24));
-            button.setTextFill(Color.WHITE);
-        });
-
-        questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 28));
-        fiftyFiftyCount.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
-        pageTitle.setFont(FontUtil.getFont(GilroyFontFamily.BOLD, 24));
-        questionNumberLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 20));
-
-        resultLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
-        correctAnswersLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
-        correctAnswers.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
-        incorrectAnswersLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
-        incorrectAnswers.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
-        questionAttempts.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
-        questionAttemptsLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
-
-        questionLabel.setLineSpacing(15);
-
-        Image bookmarkIcon = new Image(getClass().getResource("/drawable/bookmark_2.png").toString());
-        bookmarkImage.setFitWidth(20);
-        bookmarkImage.setPreserveRatio(true);
-        bookmarkImage.setImage(bookmarkIcon);
-
-        Image reportIcon = new Image(getClass().getResource("/drawable/flag2.png").toString());
-        reportImage.setPreserveRatio(true);
-        reportImage.setImage(reportIcon);
-
-        reportImage.setOnMouseClicked(mouseEvent -> {
-            onReportImageClicked();
-        });
-
-        Image speakerIcon = new Image(getClass().getResource("/drawable/speaker.png").toString());
-        speakerImage.setPreserveRatio(true);
-        speakerImage.setImage(speakerIcon);
-
-        speakerImage.setOnMouseClicked(mouseEvent -> {
-            onSpeakerImageClicked();
-        });
-
-        Image calculator = new Image(getClass().getResource("/drawable/calculator_2.png").toString());
-        calculatorImage.setFitWidth(35);
-        calculatorImage.setPreserveRatio(true);
-        calculatorImage.setImage(calculator);
-
-        calculatorImage.setOnMouseClicked(mouseEvent -> {
-            onCalculatorClicked();
-        });
-
-        backButton.setOnAction(e -> {
-            ViewSwitcher.passData("cbtGamePanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
-        });
-        exitButton.setOnAction(e -> {
-            ViewSwitcher.passData("cbtGamePanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
-        });
-        playAgainButton.setOnAction(event -> {
-            hideResult();
-
-        });
-        showAnswersButton.setOnAction(event -> {
-            ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
-            ViewSwitcher.passData(data);
-            ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
-        });
-
-        reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
-        reportDialogCloseIcon.setOnMouseClicked(mouseEvent -> {
-            hideReportDialog();
-        });
-
-
-
-        /******************** Report Question Section ************************/
-
-        incorrectAnswerPane.getChildren().remove(enterCorrectAnswerField);
-
-        questionErrorCheckBox.selectedProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    submitReport.setDisable(!newValue);
-
-                    // Ensure okayCheckBox is not selected
-                    if (okayCheckBox.isSelected()){
-                        okayCheckBox.setSelected(false);
-                        submitReport.setDisable(false);
-                    }
-                    if (incorrectAnswerCheckBox.isSelected()) {
-                        submitReport.setDisable(false);
-                    }
-
-                });
-
-        incorrectAnswerCheckBox.selectedProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    submitReport.setDisable(!newValue);
-
-                    // Ensure okayCheckBox is not selected
-                    if (okayCheckBox.isSelected()){
-                        okayCheckBox.setSelected(false);
-                        questionErrorCheckBox.setSelected(false);
-                        submitReport.setDisable(false);
-                    }
-                    if (questionErrorCheckBox.isSelected()){
-                        submitReport.setDisable(false);
-                    }
-
-                    if (newValue){
-                        incorrectAnswerPane.getChildren().add(enterCorrectAnswerField);
-
-                    }else {
-                        incorrectAnswerPane.getChildren().remove(enterCorrectAnswerField);
-                    }
-                });
-
-        okayCheckBox.selectedProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    submitReport.setDisable(!newValue);
-
-                    // Ensure only okayCheckBox can be selected at a time
-                    if (newValue) {
-                        if (questionErrorCheckBox.isSelected() || incorrectAnswerCheckBox.isSelected()){
-                            questionErrorCheckBox.setSelected(false);
-                            incorrectAnswerCheckBox.setSelected(false);
-                            okayCheckBox.setSelected(true);
-                            submitReport.setDisable(false);
-                        }
-                    }
-                });
-
     }
 
     private void updateFiftyFiftyButton(int intValue) {
@@ -407,10 +356,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         } else {
             fiftyFiftyButton.setDisable(false);
         }
-    }
-
-    public void onReportImageClicked() {
-        showReportDialog();
     }
 
     public void onSpeakerImageClicked() {
@@ -441,64 +386,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         } else {
             calculatorStage.toFront();
         }
-    }
-
-    private void showReportDialog() {
-        reportDialogDimmer.setVisible(true);
-        reportDialog.setVisible(true);
-
-
-        FadeTransition fadeTransition = new FadeTransition();
-
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(0.5);
-        fadeTransition.setDuration(Duration.millis(500));
-        fadeTransition.setNode(reportDialogDimmer);
-
-        ScaleTransition scaleTransition = new ScaleTransition();
-
-        scaleTransition.setFromX(0);
-        scaleTransition.setToX(1);
-        scaleTransition.setFromY(0);
-        scaleTransition.setToY(1);
-        scaleTransition.setNode(reportDialog);
-        scaleTransition.setDuration(Duration.millis(300));
-
-
-        scaleTransition.play();
-        fadeTransition.play();
-    }
-
-    private void hideReportDialog() {
-
-
-        FadeTransition fadeTransition = new FadeTransition();
-
-        fadeTransition.setFromValue(0.5);
-        fadeTransition.setToValue(0);
-        fadeTransition.setDuration(Duration.millis(500));
-        fadeTransition.setNode(reportDialogDimmer);
-
-        ScaleTransition scaleTransition = new ScaleTransition();
-
-        scaleTransition.setFromX(1);
-        scaleTransition.setToX(0);
-        scaleTransition.setFromY(1);
-        scaleTransition.setToY(0);
-        scaleTransition.setNode(reportDialog);
-        scaleTransition.setDuration(Duration.millis(300));
-
-
-        scaleTransition.play();
-        fadeTransition.play();
-
-        scaleTransition.setOnFinished(event -> {
-            reportDialog.setVisible(false);
-        });
-
-        fadeTransition.setOnFinished(event -> {
-            reportDialogDimmer.setVisible(false);
-        });
     }
 
     private void showResult() {
@@ -572,7 +459,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private void dispatchAnswerCorrect() {
         Media sound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        mediaPlayer.setStopTime(Duration.millis(700));
+        mediaPlayer.setStopTime(Duration.millis(500));
         mediaPlayer.play();
 
         FadeTransition fadeTransition = new FadeTransition();
@@ -653,6 +540,62 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         optionDButton.setDisable(false);
 
         updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
+    }
+
+    private void setupReportSection() {
+        incorrectAnswerPane.getChildren().remove(enterCorrectAnswerField);
+
+        questionErrorCheckBox.selectedProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    submitReport.setDisable(!newValue);
+
+                    // Ensure okayCheckBox is not selected
+                    if (okayCheckBox.isSelected()){
+                        okayCheckBox.setSelected(false);
+                        submitReport.setDisable(false);
+                    }
+                    if (incorrectAnswerCheckBox.isSelected()) {
+                        submitReport.setDisable(false);
+                    }
+
+                });
+
+        incorrectAnswerCheckBox.selectedProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    submitReport.setDisable(!newValue);
+
+                    // Ensure okayCheckBox is not selected
+                    if (okayCheckBox.isSelected()){
+                        okayCheckBox.setSelected(false);
+                        questionErrorCheckBox.setSelected(false);
+                        submitReport.setDisable(false);
+                    }
+                    if (questionErrorCheckBox.isSelected()){
+                        submitReport.setDisable(false);
+                    }
+
+                    if (newValue){
+                        incorrectAnswerPane.getChildren().add(enterCorrectAnswerField);
+
+                    }else {
+                        incorrectAnswerPane.getChildren().remove(enterCorrectAnswerField);
+                    }
+                });
+
+        okayCheckBox.selectedProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    submitReport.setDisable(!newValue);
+
+                    // Ensure only okayCheckBox can be selected at a time
+                    if (newValue) {
+                        if (questionErrorCheckBox.isSelected() || incorrectAnswerCheckBox.isSelected()){
+                            questionErrorCheckBox.setSelected(false);
+                            incorrectAnswerCheckBox.setSelected(false);
+                            okayCheckBox.setSelected(true);
+                            submitReport.setDisable(false);
+                        }
+                    }
+                });
     }
 
 
