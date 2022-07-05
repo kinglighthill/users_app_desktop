@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.image.ImageView?>
+<?import org.controlsfx.control.ToggleSwitch?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenSettingsController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <VBox>
+            <HBox prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+                <Label text="Settings" textFill="#053500">
+                    <font>
+                        <Font name="Gill Sans MT Bold" size="24"/>
+                    </font>
+                </Label>
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </HBox>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <AnchorPane>
+            <VBox spacing="25" AnchorPane.rightAnchor="60" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="20">
+                <VBox spacing="15">
+                    <Label text="Preference">
+                        <font>
+                            <Font name="Gill Sans MT Bold" size="18"/>
+                        </font>
+                    </Label>
+                    <Panel fx:id="notificationPanel" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <left>
+                            <HBox spacing="20" alignment="CENTER">
+                                <ImageView fx:id="notificationIcon" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="Enable message notifications">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <HBox.margin>
+                                    <Insets left="20"/>
+                                </HBox.margin>
+                            </HBox>
+                        </left>
+                        <right>
+                            <ToggleSwitch fx:id="notificationSwitch"/>
+                        </right>
+                        <padding>
+                            <Insets topRightBottomLeft="20"/>
+                        </padding>
+                    </Panel>
+                    <Panel fx:id="" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <left>
+                            <HBox spacing="20" alignment="CENTER">
+                                <ImageView fx:id="notificationIcon" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="Enable message notifications">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <HBox.margin>
+                                    <Insets left="20"/>
+                                </HBox.margin>
+                            </HBox>
+                        </left>
+                        <right>
+                            <ToggleSwitch fx:id="notificationSwitch"/>
+                        </right>
+                        <padding>
+                            <Insets topRightBottomLeft="20"/>
+                        </padding>
+                    </Panel>
+                    <Panel style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <left>
+                            <HBox spacing="20" alignment="CENTER">
+                                <ImageView fx:id="notificationIcon" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="Enable message notifications">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <HBox.margin>
+                                    <Insets left="20"/>
+                                </HBox.margin>
+                            </HBox>
+                        </left>
+                        <right>
+                            <ToggleSwitch fx:id="notificationSwitch"/>
+                        </right>
+                        <padding>
+                            <Insets topRightBottomLeft="20"/>
+                        </padding>
+                    </Panel>
+                </VBox>
+
+            </VBox>
+        </AnchorPane>
+    </center>
+
+</BorderPane>

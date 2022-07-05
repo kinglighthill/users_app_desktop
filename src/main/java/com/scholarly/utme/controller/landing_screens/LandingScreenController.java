@@ -61,6 +61,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         ViewTuple<LandingScreenTriviaController, LandingScreenTriviaVM> triviaViewTuple = FluentViewLoader.fxmlView(LandingScreenTriviaController.class).load();
 
+        ViewTuple<LandingScreenSettingsController, LandingScreenSettingsVM> settingsViewTuple = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load();
+
         homeContentPane.getChildren().add(homeViewTuple.getView());
 
         initializeViews();
@@ -73,7 +75,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         if (ViewSwitcher.retrieveData() == null) {
             selectButton(homeViewTuple, homeButton);
         }else {
-            System.out.println("Retrieved data -> " + ViewSwitcher.retrieveData());
+//            System.out.println("Retrieved data -> " + ViewSwitcher.retrieveData());
             String retrievedId = (String) ViewSwitcher.retrieveData();
 
             if (retrievedId.equalsIgnoreCase("homeButton")) {
@@ -148,7 +150,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         settingsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                selectButton(updatesViewTuple, settingsButton);
+                selectButton(settingsViewTuple, settingsButton);
             }
         });
 
