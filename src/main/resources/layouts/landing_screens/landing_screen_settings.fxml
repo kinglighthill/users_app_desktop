@@ -33,79 +33,200 @@
 
     <center>
         <AnchorPane>
-            <VBox spacing="25" AnchorPane.rightAnchor="60" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="20">
-                <VBox spacing="15">
-                    <Label text="Preference">
-                        <font>
-                            <Font name="Gill Sans MT Bold" size="18"/>
-                        </font>
-                    </Label>
-                    <Panel fx:id="notificationPanel" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
-                        <left>
-                            <HBox spacing="20" alignment="CENTER">
-                                <ImageView fx:id="notificationIcon" preserveRatio="true" pickOnBounds="true"/>
-                                <Label text="Enable message notifications">
-                                    <font>
-                                        <Font size="16"/>
-                                    </font>
-                                </Label>
-                                <HBox.margin>
-                                    <Insets left="20"/>
-                                </HBox.margin>
-                            </HBox>
-                        </left>
-                        <right>
-                            <ToggleSwitch fx:id="notificationSwitch"/>
-                        </right>
-                        <padding>
-                            <Insets topRightBottomLeft="20"/>
-                        </padding>
-                    </Panel>
-                    <Panel fx:id="" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
-                        <left>
-                            <HBox spacing="20" alignment="CENTER">
-                                <ImageView fx:id="notificationIcon" preserveRatio="true" pickOnBounds="true"/>
-                                <Label text="Enable message notifications">
-                                    <font>
-                                        <Font size="16"/>
-                                    </font>
-                                </Label>
-                                <HBox.margin>
-                                    <Insets left="20"/>
-                                </HBox.margin>
-                            </HBox>
-                        </left>
-                        <right>
-                            <ToggleSwitch fx:id="notificationSwitch"/>
-                        </right>
-                        <padding>
-                            <Insets topRightBottomLeft="20"/>
-                        </padding>
-                    </Panel>
-                    <Panel style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
-                        <left>
-                            <HBox spacing="20" alignment="CENTER">
-                                <ImageView fx:id="notificationIcon" preserveRatio="true" pickOnBounds="true"/>
-                                <Label text="Enable message notifications">
-                                    <font>
-                                        <Font size="16"/>
-                                    </font>
-                                </Label>
-                                <HBox.margin>
-                                    <Insets left="20"/>
-                                </HBox.margin>
-                            </HBox>
-                        </left>
-                        <right>
-                            <ToggleSwitch fx:id="notificationSwitch"/>
-                        </right>
-                        <padding>
-                            <Insets topRightBottomLeft="20"/>
-                        </padding>
-                    </Panel>
-                </VBox>
+            <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.rightAnchor="60" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="20">
+                <StackPane style="-fx-background-color: white;">
+                    <VBox spacing="25">
+                        <VBox spacing="15">
+                            <Label text="Preference">
+                                <font>
+                                    <Font name="Gill Sans MT Bold" size="18"/>
+                                </font>
+                            </Label>
+                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="notificationIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="Enable message notifications">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="20"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <ToggleSwitch fx:id="notificationSwitch"/>
+                                </right>
+                                <padding>
+                                    <Insets topRightBottomLeft="20"/>
+                                </padding>
+                            </Panel>
+                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                                <left>
+                                    <HBox spacing="20" alignment="CENTER">
+                                        <ImageView fx:id="vibrationIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="Enable Vibration">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="20"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <ToggleSwitch fx:id="vibrationSwitch"/>
+                                </right>
+                                <padding>
+                                    <Insets topRightBottomLeft="20"/>
+                                </padding>
+                            </Panel>
+                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="soundIcon" fitWidth="25" fitHeight="25" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="Enable in app sound">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="20"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <ToggleSwitch fx:id="soundSwitch" selected="true"/>
+                                </right>
+                                <padding>
+                                    <Insets topRightBottomLeft="20"/>
+                                </padding>
+                            </Panel>
+                        </VBox>
 
-            </VBox>
+                        <VBox spacing="15">
+                            <Label text="Communicate">
+                                <font>
+                                    <Font name="Gill Sans MT Bold" size="18"/>
+                                </font>
+                            </Label>
+                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="shareIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="Share App">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="20"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <ImageView fx:id="expandIcon"/>
+                                </right>
+                                <padding>
+                                    <Insets top="20" left="20" bottom="20" right="25"/>
+                                </padding>
+                            </Panel>
+                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="ratingIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="Rate us">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="20"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <ImageView fx:id="expandIcon2"/>
+                                </right>
+                                <padding>
+                                    <Insets top="20" left="20" bottom="20" right="25"/>
+                                </padding>
+                            </Panel>
+                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="aboutIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="About Us">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="20"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <ImageView fx:id="expandIcon3"/>
+                                </right>
+                                <padding>
+                                    <Insets top="20" left="20" bottom="20" right="25"/>
+                                </padding>
+                            </Panel>
+                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="helpIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="Help">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="20"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <ImageView fx:id="expandIcon4"/>
+                                </right>
+                                <padding>
+                                    <Insets top="20" left="20" bottom="20" right="25"/>
+                                </padding>
+                            </Panel>
+                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                                <left>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="appInfoIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <Label text="App Info">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <HBox.margin>
+                                            <Insets left="20"/>
+                                        </HBox.margin>
+                                    </HBox>
+                                </left>
+                                <right>
+                                    <ImageView fx:id="expandIcon5"/>
+                                </right>
+                                <padding>
+                                    <Insets top="20" left="20" bottom="20" right="25"/>
+                                </padding>
+                            </Panel>
+                        </VBox>
+                    </VBox>
+                    <padding>
+                        <Insets right="15"/>
+                    </padding>
+                </StackPane>
+
+            </ScrollPane>
+
         </AnchorPane>
     </center>
 
