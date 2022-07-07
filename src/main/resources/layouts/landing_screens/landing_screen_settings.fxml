@@ -128,7 +128,7 @@
                                     </HBox>
                                 </left>
                                 <right>
-                                    <ImageView fx:id="expandIcon"/>
+                                    <ImageView fx:id="shareExpandIcon"/>
                                 </right>
                                 <padding>
                                     <Insets top="20" left="20" bottom="20" right="25"/>
@@ -149,7 +149,7 @@
                                     </HBox>
                                 </left>
                                 <right>
-                                    <ImageView fx:id="expandIcon2"/>
+                                    <ImageView fx:id="ratingExpandIcon"/>
                                 </right>
                                 <padding>
                                     <Insets top="20" left="20" bottom="20" right="25"/>
@@ -170,7 +170,7 @@
                                     </HBox>
                                 </left>
                                 <right>
-                                    <ImageView fx:id="expandIconAbout"/>
+                                    <ImageView fx:id="aboutExpandIcon"/>
                                 </right>
                                 <padding>
                                     <Insets top="20" left="20" bottom="20" right="25"/>
@@ -191,7 +191,7 @@
                                     </HBox>
                                 </left>
                                 <right>
-                                    <ImageView fx:id="expandIcon4"/>
+                                    <ImageView fx:id="helpExpandIcon"/>
                                 </right>
                                 <padding>
                                     <Insets top="20" left="20" bottom="20" right="25"/>
@@ -212,7 +212,7 @@
                                     </HBox>
                                 </left>
                                 <right>
-                                    <ImageView fx:id="expandIcon5"/>
+                                    <ImageView fx:id="appInfoExpandIcon"/>
                                 </right>
                                 <padding>
                                     <Insets top="20" left="20" bottom="20" right="25"/>

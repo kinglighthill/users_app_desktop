@@ -52,10 +52,10 @@ public class SettingsAboutUsScreenController implements FxmlView<SettingsAboutUs
         appDetailsDropdown.selectedProperty().addListener(((observableValue, oldValue, newValue) -> {
             if (newValue) {
                 appDetailsVBox.getChildren().add(appDetails);
-                appDetailsDropdown.setGraphic(appDetailsOpenDropdownIcon);
+                appDetailsDropdown.setGraphic(appDetailsCloseDropdownIcon);
             } else {
                 appDetailsVBox.getChildren().remove(appDetails);
-                appDetailsDropdown.setGraphic(appDetailsCloseDropdownIcon);
+                appDetailsDropdown.setGraphic(appDetailsOpenDropdownIcon);
             }
         }));
 

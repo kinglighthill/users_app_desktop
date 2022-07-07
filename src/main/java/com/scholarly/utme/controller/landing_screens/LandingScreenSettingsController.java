@@ -20,7 +20,7 @@ public class LandingScreenSettingsController implements FxmlView<LandingScreenSe
     private ImageView notificationIcon, vibrationIcon, soundIcon, shareIcon, ratingIcon, aboutIcon, helpIcon, appInfoIcon;
 
     @FXML
-    private ImageView expandIcon, expandIcon2, expandIconAbout, expandIcon4, expandIcon5;
+    private ImageView shareExpandIcon, ratingExpandIcon, aboutExpandIcon, helpExpandIcon, appInfoExpandIcon;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -28,8 +28,12 @@ public class LandingScreenSettingsController implements FxmlView<LandingScreenSe
         initializeViews();
         initializeFonts();
 
-        expandIconAbout.setOnMouseClicked(event -> {
+        aboutExpandIcon.setOnMouseClicked(event -> {
             ViewSwitcher.showScreen(View.SETTINGS_ABOUT_US_SCREEN);
+        });
+
+        helpExpandIcon.setOnMouseClicked(event -> {
+            ViewSwitcher.showScreen(View.SETTINGS_HELP_SCREEN);
         });
     }
 
@@ -43,11 +47,11 @@ public class LandingScreenSettingsController implements FxmlView<LandingScreenSe
         helpIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/settings_icon.png").toString()));
         appInfoIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/app_icon.png").toString()));
 
-        expandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
-        expandIcon2.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
-        expandIconAbout.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
-        expandIcon4.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
-        expandIcon5.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
+        shareExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
+        ratingExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
+        aboutExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
+        helpExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
+        appInfoExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
     }
 
     private void initializeFonts() {
