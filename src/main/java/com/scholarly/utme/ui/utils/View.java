@@ -10,6 +10,7 @@ import com.scholarly.utme.controller.novel_screens.NovelChapterListController;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelGridScreenController;
 import com.scholarly.utme.controller.settings_screens.SettingsAboutUsScreenController;
+import com.scholarly.utme.controller.settings_screens.SettingsAppInfoScreenController;
 import com.scholarly.utme.controller.settings_screens.SettingsHelpScreenController;
 import com.scholarly.utme.controller.trivia_screens.*;
 import de.saxsys.mvvmfx.FxmlView;
@@ -47,7 +48,8 @@ public enum View {
     APP_DETAILS_SCREEN("/layouts/AppDetailsScreen.fxml", AppDetailsScreenController.class),
     UPDATE_SCREEN("/layouts/UpdateScreen.fxml", UpdateScreenController.class),
     SETTINGS_ABOUT_US_SCREEN("/layouts/settings_screens/SettingsAboutUsScreen.fxml", SettingsAboutUsScreenController.class),
-    SETTINGS_HELP_SCREEN("/layouts/settings_screens/SettingsHelpScreen.fxml", SettingsHelpScreenController.class);
+    SETTINGS_HELP_SCREEN("/layouts/settings_screens/SettingsHelpScreen.fxml", SettingsHelpScreenController.class),
+    SETTINGS_APP_INFO_SCREEN("/layouts/settings_screens/SettingsAppInfoScreen.fxml", SettingsAppInfoScreenController.class);
 
 
 
