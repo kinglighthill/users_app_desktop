@@ -35,6 +35,10 @@ public class LandingScreenSettingsController implements FxmlView<LandingScreenSe
         helpExpandIcon.setOnMouseClicked(event -> {
             ViewSwitcher.showScreen(View.SETTINGS_HELP_SCREEN);
         });
+
+        appInfoExpandIcon.setOnMouseClicked(event -> {
+            ViewSwitcher.showScreen(View.SETTINGS_APP_INFO_SCREEN);
+        });
     }
 
     private void initializeViews() {

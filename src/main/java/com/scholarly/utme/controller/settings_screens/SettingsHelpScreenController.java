@@ -34,7 +34,6 @@ public class SettingsHelpScreenController implements FxmlView<SettingsHelpScreen
 
 
     private ImageView faqOpenDropdownIcon, contactOpenDropdownIcon;
-
     private ImageView faqCloseDropdownIcon, contactCloseDropdownIcon;
 
     @Override
