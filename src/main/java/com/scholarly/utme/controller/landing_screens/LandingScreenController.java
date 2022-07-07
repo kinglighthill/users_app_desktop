@@ -100,8 +100,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
                 selectButton(updatesViewTuple, updatesButton);
 
             } else if (retrievedId.equalsIgnoreCase("settingsButton")) {
-                System.out.println("Display Settings screen");
-
+                selectButton(settingsViewTuple, settingsButton);
             }
         }
 
