@@ -1,14 +1,14 @@
 package com.scholarly.utme.controller.landing_screens;
 
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenSettingsVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,7 +20,7 @@ public class LandingScreenSettingsController implements FxmlView<LandingScreenSe
     private ImageView notificationIcon, vibrationIcon, soundIcon, shareIcon, ratingIcon, aboutIcon, helpIcon, appInfoIcon;
 
     @FXML
-    private ImageView expandIcon, expandIcon2, expandIcon3, expandIcon4, expandIcon5;
+    private ImageView expandIcon, expandIcon2, expandIconAbout, expandIcon4, expandIcon5;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -28,6 +28,9 @@ public class LandingScreenSettingsController implements FxmlView<LandingScreenSe
         initializeViews();
         initializeFonts();
 
+        expandIconAbout.setOnMouseClicked(event -> {
+            ViewSwitcher.showScreen(View.SETTINGS_ABOUT_US_SCREEN);
+        });
     }
 
     private void initializeViews() {
@@ -42,7 +45,7 @@ public class LandingScreenSettingsController implements FxmlView<LandingScreenSe
 
         expandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
         expandIcon2.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
-        expandIcon3.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
+        expandIconAbout.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
         expandIcon4.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
         expandIcon5.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
     }
