@@ -33,7 +33,7 @@
 
     <center>
         <AnchorPane>
-            <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.rightAnchor="60" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="20">
+            <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.rightAnchor="100" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="30">
                 <StackPane style="-fx-background-color: white;">
                     <VBox spacing="25">
                         <VBox spacing="15">
@@ -155,7 +155,7 @@
                                     <Insets top="20" left="20" bottom="20" right="25"/>
                                 </padding>
                             </Panel>
-                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            <Panel fx:id="about" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="aboutIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -176,7 +176,7 @@
                                     <Insets top="20" left="20" bottom="20" right="25"/>
                                 </padding>
                             </Panel>
-                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            <Panel fx:id="help" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="helpIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -197,7 +197,7 @@
                                     <Insets top="20" left="20" bottom="20" right="25"/>
                                 </padding>
                             </Panel>
-                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            <Panel fx:id="appInfo" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="appInfoIcon" preserveRatio="true" pickOnBounds="true"/>

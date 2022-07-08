@@ -1,5 +1,7 @@
 package com.scholarly.utme.controller.settings_screens;
 
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.settings_screens.SettingsAppInfoScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -54,7 +56,10 @@ public class SettingsAppInfoScreenController implements FxmlView<SettingsAppInfo
             }
         }));
 
-
+        backButton.setOnAction(event -> {
+            ViewSwitcher.passData("settingsButton");
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+        });
     }
 
     private void initializeViews() {

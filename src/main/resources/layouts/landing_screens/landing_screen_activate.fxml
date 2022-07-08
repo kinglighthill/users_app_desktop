@@ -31,7 +31,7 @@
 
         <center>
             <AnchorPane prefWidth="500" prefHeight="400" style="-fx-background-color: white;">
-                <VBox spacing="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20">
+                <VBox spacing="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="30">
                     <StackPane style="-fx-background-color: rgba(223, 56, 102, 0.2); -fx-background-radius: 5;">
                         <HBox spacing="5" prefHeight="80" alignment="CENTER">
                             <Label text="Your app has not been activated" textFill="#FF0046">
