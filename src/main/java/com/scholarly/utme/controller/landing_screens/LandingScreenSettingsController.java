@@ -9,12 +9,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/landing_screens/landing_screen_settings.fxml")
 public class LandingScreenSettingsController implements FxmlView<LandingScreenSettingsVM>, Initializable {
+
+    @FXML
+    private Panel about, help, appInfo;
 
     @FXML
     private ImageView notificationIcon, vibrationIcon, soundIcon, shareIcon, ratingIcon, aboutIcon, helpIcon, appInfoIcon;
@@ -28,15 +32,15 @@ public class LandingScreenSettingsController implements FxmlView<LandingScreenSe
         initializeViews();
         initializeFonts();
 
-        aboutExpandIcon.setOnMouseClicked(event -> {
+        about.setOnMouseClicked(event -> {
             ViewSwitcher.showScreen(View.SETTINGS_ABOUT_US_SCREEN);
         });
 
-        helpExpandIcon.setOnMouseClicked(event -> {
+        help.setOnMouseClicked(event -> {
             ViewSwitcher.showScreen(View.SETTINGS_HELP_SCREEN);
         });
 
-        appInfoExpandIcon.setOnMouseClicked(event -> {
+        appInfo.setOnMouseClicked(event -> {
             ViewSwitcher.showScreen(View.SETTINGS_APP_INFO_SCREEN);
         });
     }
