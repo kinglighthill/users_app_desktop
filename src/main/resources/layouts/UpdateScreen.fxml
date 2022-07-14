@@ -18,7 +18,7 @@
     <top>
         <HBox spacing="15" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
             <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
-            <Label fx:id="appTitle" text="Update" textFill="#053500">
+            <Label text="Update" textFill="#053500">
                 <font>
                     <Font name="Gill Sans MT Bold" size="24"/>
                 </font>
