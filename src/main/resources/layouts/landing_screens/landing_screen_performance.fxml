@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.WorldMapView?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenPerformanceController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <VBox>
+            <HBox prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+                <Label text="Performance" textFill="#053500">
+                    <font>
+                        <Font name="Gill Sans MT Bold" size="24"/>
+                    </font>
+                </Label>
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </HBox>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <AnchorPane prefWidth="500">
+            <VBox spacing="10" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="30">
+                <Label text="All time test graph" textFill="#053500">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+                <ScrollPane fitToWidth="true" style="-fx-background-color: white;">
+                    <StackPane prefHeight="300" style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 5;">
+                        <VBox StackPane.alignment="CENTER">
+                            <LineChart fx:id="lineChart" style="-fx-background-color: white;">
+                                <xAxis>
+                                    <CategoryAxis fx:id="xAxis" side="BOTTOM"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis  fx:id="yAxis" side="LEFT" autoRanging="false"/>
+                                </yAxis>
+                            </LineChart>
+                            <HBox spacing="5" alignment="CENTER_LEFT">
+                                <Label text="Average Performance:" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <Label text="57.87%" textFill="#12AF20">
+                                    <font>
+                                        <Font size="17"/>
+                                    </font>
+                                </Label>
+                            </HBox>
+                            <StackPane.margin>
+                                <Insets top="30"/>
+                            </StackPane.margin>
+                        </VBox>
+                        <ChoiceBox fx:id="practiceChoiceBox" StackPane.alignment="TOP_RIGHT"/>
+                        <padding>
+                            <Insets top="20" bottom="20" left="20" right="30"/>
+                        </padding>
+                    </StackPane>
+                </ScrollPane>
+            </VBox>
+        </AnchorPane>
+    </center>
+
+    <right>
+        <AnchorPane prefWidth="350">
+            <VBox style="-fx-background-color: #F4FFF5; -fx-background-radius: 5;" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="30">
+
+            </VBox>
+        </AnchorPane>
+    </right>
+
+</BorderPane>
