@@ -12,7 +12,7 @@
                 <VBox spacing="10" alignment="TOP_CENTER">
                     <Label fx:id="testTitle" text="CBT Practice" textFill="#12AF20"/>
                     <Label fx:id="testDate" text="28/11/2021" textFill="#034801"/>
-                    <Label fx:id="testResult" text="57.87%" textFill="#12AF20"/>
+                    <Label fx:id="testPercentage" text="57.87%" textFill="#12AF20"/>
                     <Separator>
                         <VBox.margin>
                             <Insets top="20"/>

@@ -459,7 +459,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         resultAnalysisButton.setOnAction(event -> {
             ResultScreenController.InitialData initialData =
-                    new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                    new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions(), View.HOME_SCREEN);
 
             ViewSwitcher.passData(initialData);
             ViewSwitcher.showScreen(View.RESULT_SCREEN);
@@ -879,7 +879,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     Animations.showDialog(testSummaryDialog, summaryDialogDimmer);
 
                 }else {
-                    ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                    ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjects(), viewModel.getSubjectsQuestions());
                     ViewSwitcher.passData(data);
                     ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
                     //TODO: Implement Theory result screen
@@ -957,7 +957,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             if (buttonType == ButtonType.YES){
                 exitDialogDimmer.setVisible(false);
                 ResultScreenController.InitialData initialData =
-                        new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                        new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions(), View.HOME_SCREEN);
                 ViewSwitcher.passData(initialData);
                 ViewSwitcher.showScreen(View.RESULT_SCREEN);
 

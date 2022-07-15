@@ -27,6 +27,7 @@ module com.scholarly.utme {
     exports com.scholarly.utme.data.dao;
     exports com.scholarly.utme.data.util;
     exports com.scholarly.utme.data.model;
+    exports com.scholarly.utme.ui.utils;
 
     opens com.scholarly.utme.ui.listcells to javafx.fxml;
     opens com.scholarly.utme.data.model.newDb.contentType to com.google.gson;

@@ -1,8 +1,13 @@
 package com.scholarly.utme.controller.landing_screens;
 
+import com.scholarly.utme.controller.ResultScreenController;
+import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.listItems.TestPerformanceItem;
 import com.scholarly.utme.ui.cellFactories.TestPerformanceListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.viewmodels.PracticeScreenVM;
+import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenPerformanceVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -20,6 +25,9 @@ import javafx.scene.control.ListView;
 import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/landing_screens/landing_screen_performance.fxml")
@@ -38,7 +46,7 @@ public class LandingScreenPerformanceController implements FxmlView<LandingScree
     private NumberAxis yAxis;
 
     @FXML
-    private ListView<TestPerformanceItem> testPerformancesList;
+    private ListView<ResultScreenController.InitialData> testPerformancesList;
 
     @FXML
     private Label pointsHeader, pointsText, totalTestHeader, totalTestText, topSubjectsHeader;
@@ -81,11 +89,24 @@ public class LandingScreenPerformanceController implements FxmlView<LandingScree
 
         lineChart.getData().add(dataSeries);
 
-        TestPerformanceItem performance1 = new TestPerformanceItem("", "", 45.7, "");
-        TestPerformanceItem performance2 = new TestPerformanceItem("", "", 58.9, "");
-        TestPerformanceItem performance3 = new TestPerformanceItem("", "", 73.3, "");
+        PracticeScreenVM.Result result = new PracticeScreenVM.Result("English", "2020", 24, 20, 16, 38.7);
+        List<PracticeScreenVM.Result> results = new ArrayList<>();
+        results.add(result);
 
-        ObservableList<TestPerformanceItem> performanceItems = FXCollections.observableArrayList(performance1, performance2, performance3);
+        Subject subject = new Subject(3, "english", "English Language", 50, null, null, null, null);
+        List<Subject> subjects = new ArrayList<>();
+        subjects.add(subject);
+
+        PracticeScreenVM.QuestionState questionState = new PracticeScreenVM.QuestionState(null, SubjectListItemVM.Type.OBJECTIVE, "3");
+        List<PracticeScreenVM.QuestionState> questionStates = new ArrayList<>();
+        questionStates.add(questionState);
+
+        HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectQuestions = new HashMap<>();
+        subjectQuestions.put("english", new PracticeScreenVM.SubjectQuestionsState(4, questionStates));
+
+        ResultScreenController.InitialData performance1 = new ResultScreenController.InitialData(results, subjects, subjectQuestions, View.LANDING_SCREEN);
+
+        ObservableList<ResultScreenController.InitialData> performanceItems = FXCollections.observableArrayList(performance1);
         testPerformancesList.setCellFactory(new TestPerformanceListCellFactory());
         testPerformancesList.setItems(performanceItems);
     }
