@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller.landing_screens;
 
 import com.scholarly.utme.data.model.newDb.contentType.image.ImageBody;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAccountVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -38,6 +40,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
         profile.setOnMouseClicked(event -> {
             System.out.println("Profile clicked");
+            ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN);
         });
 
     }

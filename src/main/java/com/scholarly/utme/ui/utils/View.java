@@ -49,7 +49,8 @@ public enum View {
     UPDATE_SCREEN("/layouts/UpdateScreen.fxml", UpdateScreenController.class),
     SETTINGS_ABOUT_US_SCREEN("/layouts/settings_screens/SettingsAboutUsScreen.fxml", SettingsAboutUsScreenController.class),
     SETTINGS_HELP_SCREEN("/layouts/settings_screens/SettingsHelpScreen.fxml", SettingsHelpScreenController.class),
-    SETTINGS_APP_INFO_SCREEN("/layouts/settings_screens/SettingsAppInfoScreen.fxml", SettingsAppInfoScreenController.class);
+    SETTINGS_APP_INFO_SCREEN("/layouts/settings_screens/SettingsAppInfoScreen.fxml", SettingsAppInfoScreenController.class),
+    ACCOUNT_PROFILE_SCREEN("/layouts/AccountProfileScreen.fxml", AccountProfileScreenController.class);
 
 
 
