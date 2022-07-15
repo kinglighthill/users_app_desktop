@@ -1,6 +1,7 @@
 package com.scholarly.utme.ui.utils;
 
 import com.scholarly.utme.controller.*;
+import com.scholarly.utme.controller.account_screens.AccountProfileScreenController;
 import com.scholarly.utme.controller.audio_video_screens.AudioContentScreenController;
 import com.scholarly.utme.controller.audio_video_screens.AudiosGridScreenController;
 import com.scholarly.utme.controller.audio_video_screens.VideoContentScreenController;
@@ -50,7 +51,7 @@ public enum View {
     SETTINGS_ABOUT_US_SCREEN("/layouts/settings_screens/SettingsAboutUsScreen.fxml", SettingsAboutUsScreenController.class),
     SETTINGS_HELP_SCREEN("/layouts/settings_screens/SettingsHelpScreen.fxml", SettingsHelpScreenController.class),
     SETTINGS_APP_INFO_SCREEN("/layouts/settings_screens/SettingsAppInfoScreen.fxml", SettingsAppInfoScreenController.class),
-    ACCOUNT_PROFILE_SCREEN("/layouts/AccountProfileScreen.fxml", AccountProfileScreenController.class);
+    ACCOUNT_PROFILE_SCREEN("/layouts/account_screens/AccountProfileScreen.fxml", AccountProfileScreenController.class);
 
 
 

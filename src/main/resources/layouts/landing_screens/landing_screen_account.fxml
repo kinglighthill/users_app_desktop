@@ -300,6 +300,14 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
+                        <Button fx:id="logoutButton" prefWidth="250" text="Logout" textFill="#053500" style="-fx-background-color: #F4FFF5; -fx-background-radius: 7;">
+                            <font>
+                                <Font size="16"/>
+                            </font>
+                            <padding>
+                                <Insets top="15" bottom="15" left="10" right="60"/>
+                            </padding>
+                        </Button>
                     </VBox>
                     <padding>
                         <Insets right="15"/>

@@ -1,14 +1,15 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.account_screens;
 
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.AccountProfileScreenVM;
+import com.scholarly.utme.viewmodels.account_screens.AccountProfileScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,7 +19,7 @@ import javafx.scene.shape.Circle;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-@FxmlPath("/layouts/AccountProfileScreen.fxml")
+@FxmlPath("/layouts/account_screens/AccountProfileScreen.fxml")
 public class AccountProfileScreenController implements FxmlView<AccountProfileScreenVM>, Initializable {
 
     @FXML
@@ -26,6 +27,9 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
 
     @FXML
     private Button backButton, saveButton;
+
+    @FXML
+    private RadioButton femaleRadioButton;
 
     @FXML
     private TextField profileNameTextField, phoneTextField;
