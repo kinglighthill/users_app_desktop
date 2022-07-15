@@ -9,6 +9,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
@@ -31,6 +32,10 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
     @FXML
     private ImageView accountExpandIcon, triviaExpandIcon, referralsExpandIcon, activityExpandIcon, walletExpandIcon, bookmarkExpandIcon, notificationExpandIcon, rewardsExpandIcon, downloadsExpandIcon;
+
+    @FXML
+    private Button logoutButton;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -59,7 +64,6 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
         downloadsImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/download_icon.png").toString()));
 
 
-
         accountExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
         triviaExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
         referralsExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
@@ -71,6 +75,9 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
         rewardsExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
         downloadsExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
 
+        ImageView logoutIcon = new ImageView(new Image(getClass().getResource("/drawable/account_screen_images/logout_icon.png").toString()));
+        logoutButton.setGraphic(logoutIcon);
+        logoutButton.setGraphicTextGap(40);
     }
 
     private void initializeFonts() {
