@@ -11,6 +11,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -50,18 +51,30 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     public void initialize(URL location, ResourceBundle resources) {
 
         ViewTuple<LandingScreenHomeController, LandingScreenHomeVM> homeViewTuple = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load();
+        Parent homeView = homeViewTuple.getView();
 
         ViewTuple<LandingScreenAccountController, LandingScreenAccountVM> accountViewTuple = FluentViewLoader.fxmlView(LandingScreenAccountController.class).load();
+        Parent accountView = accountViewTuple.getView();
 
         ViewTuple<LandingScreenActivateController, LandingScreenActivateVM> activateViewTuple = FluentViewLoader.fxmlView(LandingScreenActivateController.class).load();
+        Parent activateView = activateViewTuple.getView();
 
         ViewTuple<LandingScreenAppsController, LandingScreenAppsVM> appsViewTuple = FluentViewLoader.fxmlView(LandingScreenAppsController.class).load();
-
-        ViewTuple<LandingScreenUpdatesController, LandingScreenUpdatesVM> updatesViewTuple = FluentViewLoader.fxmlView(LandingScreenUpdatesController.class).load();
+        Parent appsView = appsViewTuple.getView();
 
         ViewTuple<LandingScreenTriviaController, LandingScreenTriviaVM> triviaViewTuple = FluentViewLoader.fxmlView(LandingScreenTriviaController.class).load();
+        Parent triviaView = triviaViewTuple.getView();
 
-        homeContentPane.getChildren().add(homeViewTuple.getView());
+        ViewTuple<LandingScreenPerformanceController, LandingScreenPerformanceVM> performanceViewTuple = FluentViewLoader.fxmlView(LandingScreenPerformanceController.class).load();
+        Parent performanceView = performanceViewTuple.getView();
+
+        ViewTuple<LandingScreenUpdatesController, LandingScreenUpdatesVM> updatesViewTuple = FluentViewLoader.fxmlView(LandingScreenUpdatesController.class).load();
+        Parent updatesView = updatesViewTuple.getView();
+
+        ViewTuple<LandingScreenSettingsController, LandingScreenSettingsVM> settingsViewTuple = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load();
+        Parent settingsView = settingsViewTuple.getView();
+
+        homeContentPane.getChildren().add(homeView);
 
         initializeViews();
 
@@ -71,84 +84,83 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, triviaButton, performanceButton, updatesButton, settingsButton);
 
         if (ViewSwitcher.retrieveData() == null) {
-            selectButton(homeViewTuple, homeButton);
+            selectButton(homeView, homeButton);
         }else {
-            System.out.println("Retrieved data -> " + ViewSwitcher.retrieveData());
+//            System.out.println("Retrieved data -> " + ViewSwitcher.retrieveData());
             String retrievedId = (String) ViewSwitcher.retrieveData();
 
             if (retrievedId.equalsIgnoreCase("homeButton")) {
-                selectButton(homeViewTuple, homeButton);
+                selectButton(homeView, homeButton);
 
             } else if (retrievedId.equalsIgnoreCase("accountButton")) {
-                selectButton(accountViewTuple, accountButton);
+                selectButton(accountView, accountButton);
 
             } else if (retrievedId.equalsIgnoreCase("activateButton")) {
-                selectButton(activateViewTuple, activateButton);
+                selectButton(activateView, activateButton);
 
             } else if (retrievedId.equalsIgnoreCase("appsButton")) {
-                selectButton(appsViewTuple, appsButton);
+                selectButton(appsView, appsButton);
 
             } else if (retrievedId.equalsIgnoreCase("triviaButton")) {
-                selectButton(triviaViewTuple, triviaButton);
+                selectButton(triviaView, triviaButton);
 
             } else if (retrievedId.equalsIgnoreCase("performanceButton")) {
-                System.out.println("Display Performance screen");
+                selectButton(performanceView, performanceButton);
 
             } else if (retrievedId.equalsIgnoreCase("updatesButton")) {
-                selectButton(updatesViewTuple, updatesButton);
+                selectButton(updatesView, updatesButton);
 
             } else if (retrievedId.equalsIgnoreCase("settingsButton")) {
-                System.out.println("Display Settings screen");
-
+                selectButton(settingsView, settingsButton);
             }
         }
 
 
         homeButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                selectButton(homeViewTuple, homeButton);
+                selectButton(homeView, homeButton);
             }
          });
 
         accountButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
              if (newValue){
-                 selectButton(accountViewTuple, accountButton);
+                 selectButton(accountView, accountButton);
              }
          });
 
         activateButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                selectButton(activateViewTuple, activateButton);
+                selectButton(activateView, activateButton);
             }
         });
 
         appsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                selectButton(appsViewTuple, appsButton);
+                selectButton(appsView, appsButton);
             }
         });
 
         triviaButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                selectButton(triviaViewTuple, triviaButton);
+                selectButton(triviaView, triviaButton);
             }
         });
 
         performanceButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                selectButton(appsViewTuple, performanceButton);
+                selectButton(performanceView, performanceButton);
             }
         });
 
         updatesButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                selectButton(updatesViewTuple, updatesButton);
+                selectButton(updatesView, updatesButton);
             }
         });
 
         settingsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                selectButton(updatesViewTuple, settingsButton);
+                selectButton(settingsView, settingsButton);
             }
         });
 
@@ -221,9 +233,9 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         pressedButton.setStyle(PRESSED_BUTTON_STYLE);
     }
 
-    private void selectButton(ViewTuple<?, ?> viewTuple, ToggleButton toggleButton) {
+    private void selectButton(Parent view, ToggleButton toggleButton) {
         homeContentPane.getChildren().clear();
-        homeContentPane.getChildren().add(viewTuple.getView());
+        homeContentPane.getChildren().add(view);
         changeButtonStyle(toggleButton);
     }
 

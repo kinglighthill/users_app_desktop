@@ -11,6 +11,15 @@ import javafx.util.Duration;
  */
 public class Animations {
 
+    public static void animate(Node node){
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), node);
+
+        fadeTransition.setFromValue(0.1);
+        fadeTransition.setToValue(1.0);
+
+        fadeTransition.play();
+    }
+
     public static void translateIn(Node node, double duration) {
         node.setVisible(true);
         FadeTransition fadeTransition = new FadeTransition();
@@ -260,8 +269,8 @@ public class Animations {
     }
 
     public static void showDialog(Node dialog, Node dimmer) {
-        dialog.setVisible(true);
         dimmer.setVisible(true);
+        dialog.setVisible(true);
 
         FadeTransition fadeTransition = new FadeTransition();
 

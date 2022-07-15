@@ -7,6 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenActivateController"
            prefHeight="400.0" prefWidth="600.0">
@@ -30,7 +31,7 @@
 
         <center>
             <AnchorPane prefWidth="500" prefHeight="400" style="-fx-background-color: white;">
-                <VBox spacing="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20">
+                <VBox spacing="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="30">
                     <StackPane style="-fx-background-color: rgba(223, 56, 102, 0.2); -fx-background-radius: 5;">
                         <HBox spacing="5" prefHeight="80" alignment="CENTER">
                             <Label text="Your app has not been activated" textFill="#FF0046">
@@ -59,7 +60,7 @@
                                     </font>
                                 </Label>
                                 <TextField prefHeight="40" promptText="Enter activation pin here"/>
-                                <Button text="Activate" textFill="white" prefWidth="700" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+                                <Button fx:id="activateButton" text="Activate" textFill="white" prefWidth="700" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
                                     <font>
                                         <Font size="15"/>
                                     </font>
@@ -133,5 +134,30 @@
             </AnchorPane>
         </right>
     </BorderPane>
+
+    <Pane fx:id="dialogDimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
+
+    <VBox fx:id="paymentSuccessfulPane" spacing="30" maxWidth="400" maxHeight="350" alignment="TOP_CENTER" visible="false" style="-fx-background-color: white; -fx-background-radius: 10;" StackPane.alignment="TOP_CENTER">
+        <Panel>
+            <right>
+                <ImageView fx:id="paymentSuccessfulCloseIcon" fitWidth="30" fitHeight="30" preserveRatio="true" pickOnBounds="true"/>
+            </right>
+        </Panel>
+
+        <ImageView fx:id="paymentSuccessfulImage" preserveRatio="true" pickOnBounds="true"/>
+
+        <Label text="Your account has been activated successfully" textFill="#053500">
+            <font>
+                <Font size="16"/>
+            </font>
+        </Label>
+
+        <padding>
+            <Insets top="20" bottom="25" left="30" right="30"/>
+        </padding>
+        <StackPane.margin>
+            <Insets top="100" right="50"/>
+        </StackPane.margin>
+    </VBox>
 
 </StackPane>

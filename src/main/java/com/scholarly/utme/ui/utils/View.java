@@ -1,6 +1,7 @@
 package com.scholarly.utme.ui.utils;
 
 import com.scholarly.utme.controller.*;
+import com.scholarly.utme.controller.account_screens.AccountProfileScreenController;
 import com.scholarly.utme.controller.audio_video_screens.AudioContentScreenController;
 import com.scholarly.utme.controller.audio_video_screens.AudiosGridScreenController;
 import com.scholarly.utme.controller.audio_video_screens.VideoContentScreenController;
@@ -9,6 +10,9 @@ import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelChapterListController;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelGridScreenController;
+import com.scholarly.utme.controller.settings_screens.SettingsAboutUsScreenController;
+import com.scholarly.utme.controller.settings_screens.SettingsAppInfoScreenController;
+import com.scholarly.utme.controller.settings_screens.SettingsHelpScreenController;
 import com.scholarly.utme.controller.trivia_screens.*;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.ViewModel;
@@ -40,7 +44,14 @@ public enum View {
     TRIVIA_QUIZ_RESULT_SCREEN("/layouts/trivia_screens/TriviaQuizResultScreen.fxml", TriviaQuizResultScreenController.class),
     TRIVIA_QUIZ_EXPLANATION_SCREEN("/layouts/trivia_screens/TriviaQuizExplanationScreen.fxml", TriviaQuizExplanationScreenController.class),
     TRIVIA_RANKING_SCREEN("/layouts/trivia_screens/TriviaRankingScreen.fxml", TriviaRankingScreenController.class),
-    ACTIVATE_PAYMENT_SCREEN("/layouts/ActivatePaymentScreen.fxml", ActivatePaymentScreenController.class);
+    ACTIVATE_PAYMENT_SCREEN("/layouts/ActivatePaymentScreen.fxml", ActivatePaymentScreenController.class),
+    APPS_GRID_SCREEN("/layouts/AppsGridScreen.fxml", AppsGridScreenController.class),
+    APP_DETAILS_SCREEN("/layouts/AppDetailsScreen.fxml", AppDetailsScreenController.class),
+    UPDATE_SCREEN("/layouts/UpdateScreen.fxml", UpdateScreenController.class),
+    SETTINGS_ABOUT_US_SCREEN("/layouts/settings_screens/SettingsAboutUsScreen.fxml", SettingsAboutUsScreenController.class),
+    SETTINGS_HELP_SCREEN("/layouts/settings_screens/SettingsHelpScreen.fxml", SettingsHelpScreenController.class),
+    SETTINGS_APP_INFO_SCREEN("/layouts/settings_screens/SettingsAppInfoScreen.fxml", SettingsAppInfoScreenController.class),
+    ACCOUNT_PROFILE_SCREEN("/layouts/account_screens/AccountProfileScreen.fxml", AccountProfileScreenController.class);
 
 
 

@@ -327,7 +327,6 @@
                                                 <Insets left="20"/>
                                             </padding>
                                         </VBox>
-
                                     </center>
 
                                     <padding>
@@ -357,7 +356,6 @@
                                                 <Insets left="30" top="10"/>
                                             </padding>
                                         </VBox>
-
                                     </center>
 
                                     <padding>
@@ -394,7 +392,6 @@
                                                 <Insets left="20"/>
                                             </padding>
                                         </VBox>
-
                                     </center>
 
                                     <padding>
@@ -424,7 +421,6 @@
                                                 <Insets left="30" top="10"/>
                                             </padding>
                                         </VBox>
-
                                     </center>
 
                                     <padding>
@@ -472,9 +468,7 @@
                             <Insets top="30" left="15" right="15" bottom="20"/>
                         </VBox.margin>
                     </Panel>
-
                 </VBox>
-
             </ScrollPane>
 
             <StackPane fx:id="actionsPane" prefWidth="200" prefHeight="100" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF;" visible="false">
@@ -485,7 +479,6 @@
                             <Insets  bottom="50"/>
                         </VBox.margin>
                     </Label>
-
 
                     <HBox prefHeight="200" prefWidth="400" alignment="CENTER" StackPane.alignment="CENTER" spacing="10" >
                         <VBox spacing="10">
@@ -515,7 +508,6 @@
                                     <Insets left="15" bottom="15" top="15"/>
                                 </padding>
                             </Panel>
-
                         </VBox>
                         <VBox spacing="10">
                             <Panel fx:id="actionNovelsPracticePanel" prefWidth="200.0" prefHeight="80" style="-fx-background-color: #10AFD4; -fx-background-radius: 10;" >
@@ -588,12 +580,11 @@
                                         <Label text="English, Mathematics, Chemistry, Physics" textFill="#034801" wrapText="true" textAlignment="CENTER"/>
                                     </VBox>
                                 </center>
-
                                 <padding>
                                     <Insets topRightBottomLeft="10"/>
                                 </padding>
-
                             </Panel>
+
                             <Panel prefHeight="150" prefWidth="150" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
                                 <center>
                                     <VBox spacing="10" alignment="TOP_CENTER">

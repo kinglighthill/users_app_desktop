@@ -52,11 +52,17 @@ module com.scholarly.utme {
     opens com.scholarly.utme.viewmodels.novel_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens com.scholarly.utme.controller.audio_video_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens com.scholarly.utme.viewmodels.audio_video_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.controller.settings_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.viewmodels.settings_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.controller.account_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.viewmodels.account_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts.landing_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts.trivia_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts.novel_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts.audio_video_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens layouts.settings_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens layouts.account_screens to de.saxsys.mvvmfx, javafx.fxml;
 
     exports com.scholarly.utme.data.model.newDb;
     exports com.scholarly.utme.data.model.novels;
@@ -69,4 +75,8 @@ module com.scholarly.utme {
     exports com.scholarly.utme.data.model.listItems;
     exports com.scholarly.utme.controller.audio_video_screens;
     exports com.scholarly.utme.viewmodels.audio_video_screens;
+    exports com.scholarly.utme.controller.settings_screens;
+    exports com.scholarly.utme.viewmodels.settings_screens;
+    exports com.scholarly.utme.controller.account_screens;
+    exports com.scholarly.utme.viewmodels.account_screens;
 }
