@@ -33,7 +33,7 @@
             <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.topAnchor="20" AnchorPane.rightAnchor="100" AnchorPane.bottomAnchor="30" AnchorPane.leftAnchor="30">
                 <StackPane style="-fx-background-color: white;">
                     <VBox spacing="15">
-                        <Panel fx:id="profile" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="profilePanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="15" alignment="CENTER">
                                     <ImageView fx:id="profileImage" preserveRatio="true" pickOnBounds="true"/>
@@ -60,7 +60,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="triviaPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="triviaImage" preserveRatio="true" pickOnBounds="true"/>
@@ -90,7 +90,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="referralPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="referralsImage" preserveRatio="true" pickOnBounds="true"/>
