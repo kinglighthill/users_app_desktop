@@ -92,7 +92,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             if (retrievedId.equalsIgnoreCase("homeButton")) {
                 selectButton(homeView, homeButton);
 
-            } else if (retrievedId.equalsIgnoreCase("accountButton")) {
+            } else if (retrievedId.equalsIgnoreCase("accountScreen")) {
                 selectButton(accountView, accountButton);
 
             } else if (retrievedId.equalsIgnoreCase("activateButton")) {

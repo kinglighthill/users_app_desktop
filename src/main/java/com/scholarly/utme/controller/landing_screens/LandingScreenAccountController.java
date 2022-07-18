@@ -1,6 +1,5 @@
 package com.scholarly.utme.controller.landing_screens;
 
-import com.scholarly.utme.data.model.newDb.contentType.image.ImageBody;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAccountVM;
@@ -25,7 +24,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
     private LandingScreenAccountVM viewModel;
 
     @FXML
-    private Panel profile;
+    private Panel profilePanel, referralPanel;
 
     @FXML
     private ImageView profileImage, triviaImage, referralsImage, activityImage, walletImage, bookmarkImage, notificationImage, rewardsImage, downloadsImage;
@@ -43,9 +42,12 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
         initializeViews();
         initializeFonts();
 
-        profile.setOnMouseClicked(event -> {
-            System.out.println("Profile clicked");
+        profilePanel.setOnMouseClicked(mouseEvent -> {
             ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN);
+        });
+
+        referralPanel.setOnMouseClicked(mouseEvent -> {
+            ViewSwitcher.showScreen(View.ACCOUNT_REFERRAL_SCREEN);
         });
 
     }

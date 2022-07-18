@@ -58,7 +58,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         });
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData("accountButton");
+            ViewSwitcher.passData("accountScreen");
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
