@@ -300,7 +300,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
 
 
-    public class Result {
+    public static class Result {
         private String subjectName;
         private String year;
         private int totalQuestions;

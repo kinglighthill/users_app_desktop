@@ -56,9 +56,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
     private BarChart<CategoryAxis, NumberAxis> barChart;
 
     @FXML
-    private Button showExplanationButton, exitButton;;
-
-    private InitialData data;
+    private Button showExplanationButton, exitButton;
 
 
     @Override
@@ -165,14 +163,22 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
 
         showExplanationButton.setOnAction(event -> {
-            ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
+            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });
 
         exitButton.setOnAction(event -> {
-            ViewSwitcher.passData("practicePanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            View previousScreen = viewModel.getPreviousScreen();
+
+            if (previousScreen == View.HOME_SCREEN) {
+                ViewSwitcher.passData("practicePanel");
+                ViewSwitcher.showScreen(View.HOME_SCREEN);
+            } else if (previousScreen == View.LANDING_SCREEN) {
+                ViewSwitcher.passData("performanceButton");
+                ViewSwitcher.showScreen(View.LANDING_SCREEN);
+            }
+
         });
 
     }
@@ -188,7 +194,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
     }
 
     public InitialData getInitialData() {
-        data = (InitialData) ViewSwitcher.retrieveData();
+        InitialData data = (InitialData) ViewSwitcher.retrieveData();
         System.out.println("Got data -> " + data);
         return data;
     }
@@ -197,11 +203,13 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
         private List<Result> results;
         private List<Subject> subjects;
         private HashMap<String, SubjectQuestionsState> subjectsQuestions;
+        private View view;
 
-        public InitialData(List<Result> results, List<Subject> subjects, HashMap<String, SubjectQuestionsState> subjectsQuestions) {
+        public InitialData(List<Result> results, List<Subject> subjects, HashMap<String, SubjectQuestionsState> subjectsQuestions, View view) {
             this.results = results;
             this.subjects = subjects;
             this.subjectsQuestions = subjectsQuestions;
+            this.view = view;
         }
 
         public List<Subject> getSubjects() {
@@ -214,6 +222,10 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
         public List<Result> getResults() {
             return results;
+        }
+
+        public View getView() {
+            return view;
         }
     }
 }

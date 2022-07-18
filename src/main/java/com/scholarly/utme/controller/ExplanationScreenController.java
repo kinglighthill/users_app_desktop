@@ -39,7 +39,7 @@ import java.util.ResourceBundle;
 
 
 @FxmlPath("/layouts/ExplanationScreen.fxml")
-public class ExplanationScreen implements FxmlView<ExplanationScreenVM>, Initializable {
+public class ExplanationScreenController implements FxmlView<ExplanationScreenVM>, Initializable {
 
     @InjectViewModel
     private ExplanationScreenVM viewModel;

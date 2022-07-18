@@ -229,7 +229,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         showAnswersButton.setOnAction(event -> {
-            ExplanationScreen.InitialData data = new ExplanationScreen.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
+            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });
