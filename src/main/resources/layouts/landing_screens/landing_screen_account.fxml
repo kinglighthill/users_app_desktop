@@ -180,7 +180,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="bookmarksPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="bookmarkImage" preserveRatio="true" pickOnBounds="true"/>

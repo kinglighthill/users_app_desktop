@@ -69,7 +69,7 @@ public class AudiosGridScreenController implements FxmlView<AudiosGridScreenVM>,
         ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/practice_back_button_icon.png").toString()));
         backButton.setGraphic(backIcon);
 
-        searchIcon.setImage(new Image(getClass().getResource("/drawable/search_icon2.png").toString()));
+        searchIcon.setImage(new Image(getClass().getResource("/drawable/search_icon_green.png").toString()));
     }
 
     private void initializeFonts() {
