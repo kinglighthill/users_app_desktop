@@ -44,7 +44,7 @@
                     <Insets left="30"/>
                 </padding>
             </ToggleButton>
-            <ToggleButton fx:id="notesButton" text="Study Notes" alignment="CENTER_LEFT" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+            <ToggleButton fx:id="notesButton" text="Notes" alignment="CENTER_LEFT" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
                 <padding>
                     <Insets left="30"/>
                 </padding>
@@ -82,7 +82,7 @@
                         </padding>
                     </StackPane>
 
-                    <GridView fx:id="bookmarksGrid" style="-fx-background-color: #F1F1F1;" AnchorPane.topAnchor="100" AnchorPane.leftAnchor="30" AnchorPane.rightAnchor="100" AnchorPane.bottomAnchor="30"/>
+                    <GridView fx:id="bookmarksGrid" cellWidth="300" cellHeight="100"  AnchorPane.topAnchor="100" AnchorPane.leftAnchor="30" AnchorPane.rightAnchor="100" AnchorPane.bottomAnchor="30"/>
                 </AnchorPane>
             </center>
         </BorderPane>

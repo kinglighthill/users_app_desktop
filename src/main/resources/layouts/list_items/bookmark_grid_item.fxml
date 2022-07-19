@@ -7,15 +7,19 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
 <fx:root type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <graphic>
-        <HBox spacing="15" prefWidth="300" prefHeight="150" style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
-            <ImageView fx:id="bookmarkImage" preserveRatio="true" pickOnBounds="true"/>
-            <VBox spacing="15">
+        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+            <ImageView fx:id="bookmarkImage" fitHeight="100" fitWidth="50" preserveRatio="true" pickOnBounds="true"/>
+            <VBox spacing="10">
                 <Label fx:id="bookmarkTitle" text="CBT Practice Test" textFill="#053500"/>
-                <Label fx:id="bookmarkedItem" text="Question 5" textFill="#053500"/>
+                <Label fx:id="bookmarkedItem" text="Question 5" textFill="#053500" wrapText="true"/>
                 <Label fx:id="bookmarkCategory" text="CBT Practice" textFill="#12AF20"/>
             </VBox>
+            <padding>
+                <Insets topRightBottomLeft="15"/>
+            </padding>
         </HBox>
     </graphic>
 </fx:root>

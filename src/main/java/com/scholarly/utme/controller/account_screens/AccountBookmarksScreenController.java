@@ -1,5 +1,7 @@
 package com.scholarly.utme.controller.account_screens;
 
+import com.scholarly.utme.data.model.listItems.BookmarkItem;
+import com.scholarly.utme.ui.cellFactories.BookmarkGridCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -12,18 +14,24 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import org.controlsfx.control.GridView;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/account_screens/AccountBookmarksScreen.fxml")
 public class AccountBookmarksScreenController implements FxmlView<AccountBookmarksScreenVM>, Initializable {
+
+    @FXML
+    private GridView<BookmarkItem> bookmarksGrid;
 
     @FXML
     private ImageView searchImage, appImage;
@@ -84,6 +92,16 @@ public class AccountBookmarksScreenController implements FxmlView<AccountBookmar
             }
         }));
 
+        BookmarkItem item1 = new BookmarkItem("bookmark_practice_image", "CBT Practice Test", "Question 5", "CBT Practice");
+        BookmarkItem item2 = new BookmarkItem("bookmark_novel_image", "Sweet Sixteen", "Chapter 7: Beauty", "Novel");
+        BookmarkItem item3 = new BookmarkItem("bookmark_video_image", "Biology", "The Central Nervous System", "Video");
+        BookmarkItem item4 = new BookmarkItem("bookmark_practice_image", "CBT Practice Test", "Question 5", "CBT Practice");
+        BookmarkItem item5 = new BookmarkItem("bookmark_novel_image", "Sweet Sixteen", "Chapter 7: Beauty", "Novel");
+        BookmarkItem item6 = new BookmarkItem("bookmark_video_image", "Biology", "The Central Nervous System", "Video");
+
+        ObservableList<BookmarkItem> bookmarks = FXCollections.observableArrayList(item1, item2, item3, item4, item5, item6);
+        bookmarksGrid.setCellFactory(new BookmarkGridCellFactory());
+        bookmarksGrid.setItems(bookmarks);
 
         searchTextField.setOnMouseClicked(mouseEvent -> {
             searchImage.setVisible(false);
