@@ -28,7 +28,6 @@
    </top>
    <center>
       <ScrollPane prefHeight="300.0" prefWidth="300.0" BorderPane.alignment="CENTER" fitToWidth="true" >
-
          <VBox style="-fx-background-color: white">
             <children>
                <HBox spacing="20">
@@ -68,7 +67,6 @@
                         </font>
                      </Label>
                   </VBox>
-
                </HBox>
 
                <Separator prefWidth="200.0">
@@ -85,7 +83,6 @@
                   </font>
                </Label>
                <BarChart fx:id="barChart">
-
                   <xAxis>
                      <CategoryAxis side="BOTTOM" fx:id="xAxis" />
                   </xAxis>
@@ -126,14 +123,11 @@
                      <Insets left="20.0" right="20.0" top="20.0" bottom="15" />
                   </VBox.margin>
                </TableView>
-
             </children>
-
          </VBox>
-
       </ScrollPane>
-
    </center>
+
    <right>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" >
          <children>

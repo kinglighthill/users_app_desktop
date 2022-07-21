@@ -67,7 +67,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
     private void initializeViews() {
         Circle clip = new Circle(60, 60, 60);
         profileImage.setClip(clip);
-        profileImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/profile_image.png").toString()));
+        profileImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/profile_image2.png").toString()));
         cameraImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/camera_icon.png").toString()));
         keyImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/key_icon.png").toString()));
         infoImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/info_icon.png").toString()));
