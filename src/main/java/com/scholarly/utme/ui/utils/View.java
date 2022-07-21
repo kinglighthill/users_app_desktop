@@ -55,7 +55,8 @@ public enum View {
     ACCOUNT_REFERRAL_SCREEN("/layouts/account_screens/AccountReferralScreen.fxml", AccountReferralScreenController.class),
     ACCOUNT_BOOKMARKS_SCREEN("/layouts/account_screens/AccountBookmarksScreen.fxml", AccountBookmarksScreenController.class),
     ACCOUNT_TRIVIA_SCREEN("/layouts/account_screens/AccountTriviaScreen.fxml", AccountTriviaScreenController.class),
-    ACCOUNT_NOTIFICATIONS_SCREEN("/layouts/account_screens/AccountNotificationsScreen.fxml", AccountNotificationsScreenController.class);
+    ACCOUNT_NOTIFICATIONS_SCREEN("/layouts/account_screens/AccountNotificationsScreen.fxml", AccountNotificationsScreenController.class),
+    NOTIFICATION_DETAILS_SCREEN("/layouts/account_screens/NotificationDetailsScreen.fxml", NotificationDetailsScreenController.class);
 
 
 

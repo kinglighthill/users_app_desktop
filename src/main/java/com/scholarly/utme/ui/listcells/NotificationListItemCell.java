@@ -3,6 +3,8 @@ package com.scholarly.utme.ui.listcells;
 import com.scholarly.utme.data.model.listItems.NotificationItem;
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -21,6 +23,10 @@ public class NotificationListItemCell extends ListCell<NotificationItem> {
 
     public NotificationListItemCell() {
         loadFxml();
+
+        setOnMouseClicked(event -> {
+            ViewSwitcher.showScreen(View.NOTIFICATION_DETAILS_SCREEN);
+        });
 
     }
 
