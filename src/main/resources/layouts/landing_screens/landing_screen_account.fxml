@@ -33,7 +33,7 @@
             <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.topAnchor="20" AnchorPane.rightAnchor="100" AnchorPane.bottomAnchor="30" AnchorPane.leftAnchor="30">
                 <StackPane style="-fx-background-color: white;">
                     <VBox spacing="15">
-                        <Panel fx:id="profilePanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="profilePanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="15" alignment="CENTER">
                                     <ImageView fx:id="profileImage" preserveRatio="true" pickOnBounds="true"/>
@@ -60,7 +60,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel fx:id="triviaPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="triviaPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="triviaImage" preserveRatio="true" pickOnBounds="true"/>
@@ -90,7 +90,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel fx:id="referralPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="referralPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="referralsImage" preserveRatio="true" pickOnBounds="true"/>
@@ -120,7 +120,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="activityPanel"  style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="activityImage" preserveRatio="true" pickOnBounds="true"/>
@@ -150,7 +150,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="walletPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="walletImage" preserveRatio="true" pickOnBounds="true"/>
@@ -180,7 +180,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel fx:id="bookmarksPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="bookmarksPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="bookmarkImage" preserveRatio="true" pickOnBounds="true"/>
@@ -210,7 +210,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="notificationsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="notificationImage" preserveRatio="true" pickOnBounds="true"/>
@@ -240,7 +240,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="rewardsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="rewardsImage" preserveRatio="true" pickOnBounds="true"/>
@@ -270,7 +270,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <Panel fx:id="downloadsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="downloadsImage" preserveRatio="true" pickOnBounds="true"/>

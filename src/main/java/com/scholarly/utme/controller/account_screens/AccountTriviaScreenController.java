@@ -79,7 +79,7 @@ public class AccountTriviaScreenController implements FxmlView<AccountTriviaScre
         Circle clip = new Circle(90, 90, 90);
         profileImage.setClip(clip);
         profileImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/profile_image2.png").toString()));
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
 
         backButton.setBackground(Background.EMPTY);
     }

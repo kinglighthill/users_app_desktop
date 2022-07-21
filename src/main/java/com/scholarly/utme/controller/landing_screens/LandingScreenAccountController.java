@@ -24,7 +24,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
     private LandingScreenAccountVM viewModel;
 
     @FXML
-    private Panel profilePanel, referralPanel, bookmarksPanel, triviaPanel;
+    private Panel profilePanel, referralPanel, bookmarksPanel, triviaPanel, notificationsPanel;
 
     @FXML
     private ImageView profileImage, triviaImage, referralsImage, activityImage, walletImage, bookmarkImage, notificationImage, rewardsImage, downloadsImage;
@@ -56,6 +56,10 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
         triviaPanel.setOnMouseClicked(mouseEvent -> {
             ViewSwitcher.showScreen(View.ACCOUNT_TRIVIA_SCREEN);
+        });
+
+        notificationsPanel.setOnMouseClicked(mouseEvent -> {
+            ViewSwitcher.showScreen(View.ACCOUNT_NOTIFICATIONS_SCREEN);
         });
     }
 

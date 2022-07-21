@@ -66,7 +66,7 @@ public class SettingsAboutUsScreenController implements FxmlView<SettingsAboutUs
     }
 
     private void initializeViews() {
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
         cbtCentreImage.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/cbt_center_image.png").toString()));
         scholarlyLogo.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/scholarly_logo.png").toString()));
 
