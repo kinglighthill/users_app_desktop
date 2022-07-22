@@ -1,7 +1,3 @@
-/*.note-settings-combo-box {
-    -fx-background-color: white;
-    -fx-text-fill: #51C46B;
-}*/
 
 .table-view .column-header,
 .table-view .column-header .filler,
@@ -18,7 +14,6 @@
 
 .table-view .table-cell {
     -fx-alignment: center;
-
 }
 
 .table-row-cell {
