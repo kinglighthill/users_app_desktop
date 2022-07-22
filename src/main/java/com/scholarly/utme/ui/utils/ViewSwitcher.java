@@ -24,6 +24,7 @@ public class ViewSwitcher {
             root.getStylesheets().add(cssResource);
 
             rootScene.setRoot(root);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
