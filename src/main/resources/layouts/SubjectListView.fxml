@@ -38,9 +38,9 @@
                         </Label>
                         <TableView fx:id="questionOverviewTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="200.0">
                           <columns>
-                            <TableColumn fx:id="subjectColumn" text="Subject" style="-fx-background-color: #FFFFFF;" />
-                            <TableColumn fx:id="yearColumn" text="Year" style="-fx-background-color: #FFFFFF;"/>
-                              <TableColumn fx:id="questionsColumn" text="Questions" style="-fx-background-color: #FFFFFF;"/>
+                            <TableColumn fx:id="subjectColumn" text="Subject"/>
+                            <TableColumn fx:id="yearColumn" text="Year"/>
+                              <TableColumn fx:id="questionsColumn" text="Questions"/>
                           </columns>
                            <VBox.margin>
                               <Insets left="15.0" right="15.0" top="10.0" bottom="20.0" />

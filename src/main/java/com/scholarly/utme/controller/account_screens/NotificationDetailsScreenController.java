@@ -1,29 +1,31 @@
 package com.scholarly.utme.controller.account_screens;
 
+import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.account_screens.AccountReferralScreenVM;
+import com.scholarly.utme.viewmodels.account_screens.NotificationDetailsScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 
 import java.net.URL;
+import java.nio.Buffer;
 import java.util.ResourceBundle;
 
-@FxmlPath("/layouts/account_screens/AccountReferralScreen.fxml")
-public class AccountReferralScreenController implements FxmlView<AccountReferralScreenVM>, Initializable {
+@FxmlPath("/layouts/account_screens/NotificationDetailsScreen.fxml")
+public class NotificationDetailsScreenController implements FxmlView<NotificationDetailsScreenVM>, Initializable {
 
     @FXML
-    private Button backButton, copyButton;
+    private Button backButton;
 
     @FXML
-    private ImageView accountImage, centerImage;
-
+    private Label notificationTitle, notificationText1, notificationText2;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -33,22 +35,19 @@ public class AccountReferralScreenController implements FxmlView<AccountReferral
 
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData("accountScreen");
-            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+            ViewSwitcher.showScreen(View.ACCOUNT_NOTIFICATIONS_SCREEN);
         });
-
     }
 
     private void initializeViews() {
-        centerImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/referral_screen_center_image.png").toString()));
-        accountImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/account_icon.png").toString()));
         backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
-        copyButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/account_screen_images/copy_icon.png").toString())));
 
         backButton.setBackground(Background.EMPTY);
     }
 
     private void initializeFonts() {
-
+        notificationTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+        notificationText1.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+        notificationText2.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
     }
 }

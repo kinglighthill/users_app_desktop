@@ -1,12 +1,31 @@
-.table-row-cell:empty {
-    -fx-background-color: transparent;
+
+
+.table-view .column-header,
+.table-view .column-header .filler,
+.table-view .column-header-background .filler {
+    -fx-background-color: #053500;
+
 }
 
-.table-row-cell:empty .table-cell {
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-padding: 10 0 10 0;
+}
+
+.table-view .table-cell {
+    -fx-alignment: center;
+}
+
+.table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: #F1F1F1;
+    -fx-border-width: 0.5px;
+}
+
+.table-row-cell:empty {
+    -fx-background-color: transparent;
+    -fx-border-color: white;
     -fx-border-width: 0px;
 }
 
-.note-settings-combo-box {
-    -fx-background-color: white;
-    -fx-text-fill: #51C46B;
-}

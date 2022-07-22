@@ -65,6 +65,7 @@ public class NovelChapterListItemCell extends ListCell<NovelChapter> {
             padlockIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/padlock_icon.png").toString()));
             chapterIndex.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
             chapterTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }

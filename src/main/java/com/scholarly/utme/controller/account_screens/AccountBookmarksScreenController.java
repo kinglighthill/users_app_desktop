@@ -8,12 +8,6 @@ import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.account_screens.AccountBookmarksScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -121,7 +115,7 @@ public class AccountBookmarksScreenController implements FxmlView<AccountBookmar
     private void initializeViews() {
         searchImage.setImage(new Image(getClass().getResource("/drawable/search_icon.png").toString()));
         appImage.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
 
         backButton.setBackground(Background.EMPTY);
         searchTextField.setBackground(Background.EMPTY);

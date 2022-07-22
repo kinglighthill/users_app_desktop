@@ -5,16 +5,12 @@ import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.settings_screens.SettingsAppInfoScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
-import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Paint;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -63,7 +59,7 @@ public class SettingsAppInfoScreenController implements FxmlView<SettingsAppInfo
     }
 
     private void initializeViews() {
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
 
         privacyImage.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/info_icon.png").toString()));
         termsImage.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/info_icon.png").toString()));
