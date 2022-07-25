@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import org.controlsfx.control.GridView?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.account_screens.AccountBookmarksScreenController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <left>
+        <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="180.0" style="-fx-background-color: #006B17;">
+            <HBox spacing="5">
+                <ImageView fx:id="appImage" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                <Label fx:id="scholarlyText" text="Scholarly" textFill="#FFFFFF"/>
+                <VBox.margin>
+                    <Insets left="20" top="30" bottom="80"/>
+                </VBox.margin>
+            </HBox>
+
+            <ToggleButton fx:id="practiceButton" text="Practice" alignment="CENTER_LEFT" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;">
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </ToggleButton>
+            <ToggleButton fx:id="novelsButton" text="Novels" alignment="CENTER_LEFT" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </ToggleButton>
+            <ToggleButton fx:id="audiosButton" text="Audios" alignment="CENTER_LEFT" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </ToggleButton>
+            <ToggleButton fx:id="videosButton" text="Videos" alignment="CENTER_LEFT" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </ToggleButton>
+            <ToggleButton fx:id="notesButton" text="Notes" alignment="CENTER_LEFT" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </ToggleButton>
+        </VBox>
+    </left>
+
+    <center>
+        <BorderPane>
+            <top>
+                <HBox spacing="15" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+                    <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+                    <Label text="Bookmarks" textFill="#053500">
+                        <font>
+                            <Font name="Gill Sans MT Bold" size="24"/>
+                        </font>
+                    </Label>
+                    <padding>
+                        <Insets left="20"/>
+                    </padding>
+                </HBox>
+            </top>
+
+            <center>
+                <AnchorPane style="-fx-background-color: white;">
+                    <StackPane prefHeight="40" prefWidth="350" style="-fx-border-color: #12AF20; -fx-border-radius: 10;" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="30">
+                        <TextField fx:id="searchTextField" prefHeight="40" prefWidth="150" promptText="Search Bookmarks">
+                            <font>
+                                <Font size="14"/>
+                            </font>
+                        </TextField>
+                        <ImageView fx:id="searchImage" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT"/>
+                        <padding>
+                            <Insets left="5" right="20"/>
+                        </padding>
+                    </StackPane>
+
+                    <GridView fx:id="bookmarksGrid" cellWidth="300" cellHeight="100"  AnchorPane.topAnchor="100" AnchorPane.leftAnchor="30" AnchorPane.rightAnchor="100" AnchorPane.bottomAnchor="30"/>
+                </AnchorPane>
+            </center>
+        </BorderPane>
+    </center>
+
+</BorderPane>

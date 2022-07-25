@@ -123,7 +123,7 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
         monnifyImage.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/monnify_logo.png").toString()));
         noAccountImage.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/no_account_logo.png").toString()));
 
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
 
         bankTransferOpenDropdownImage = new ImageView(new Image(getClass().getResource("/drawable/activate_screen_images/close_dropdown_icon.png").toString()));
         paystackOpenDropdownImage = new ImageView(new Image(getClass().getResource("/drawable/activate_screen_images/close_dropdown_icon.png").toString()));

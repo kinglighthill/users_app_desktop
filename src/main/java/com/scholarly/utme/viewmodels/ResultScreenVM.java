@@ -1,6 +1,7 @@
 package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.Result;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
@@ -22,6 +23,8 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
     private List<Subject> subjectList;
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions;
 
+    private View previousScreen;
+
 
     @Override
     public void onViewAdded() {
@@ -34,6 +37,7 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
     }
 
     public void processInitialData(InitialData initialData) {
+        previousScreen = initialData.getView();
         results.clear();
         results.addAll(initialData.getResults());
 
@@ -76,5 +80,9 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
 
     public HashMap<String, PracticeScreenVM.SubjectQuestionsState> getSubjectsQuestions() {
         return subjectsQuestions;
+    }
+
+    public View getPreviousScreen() {
+        return previousScreen;
     }
 }

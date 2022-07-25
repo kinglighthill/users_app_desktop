@@ -1,12 +1,10 @@
 package com.scholarly.utme.viewmodels;
 
-import com.scholarly.utme.controller.ExplanationScreen;
-import com.scholarly.utme.controller.ExplanationScreen.InitialData;
+import com.scholarly.utme.controller.ExplanationScreenController.InitialData;
 import com.scholarly.utme.data.model.Subject;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,15 +13,15 @@ import java.util.HashMap;
 
 public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
 
-
     private ObservableList<Subject> subjects = FXCollections.observableArrayList();
     private ObjectProperty<Subject> selectedSubject = new SimpleObjectProperty<>();
 
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
 
-    public ExplanationScreenVM() {}
+    public ExplanationScreenVM() {
 
+    }
 
     public void processInitialData(InitialData data) {
         subjects.addAll(data.getSubjects());

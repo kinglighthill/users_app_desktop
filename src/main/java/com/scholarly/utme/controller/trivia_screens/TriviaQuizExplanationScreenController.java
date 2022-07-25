@@ -43,7 +43,7 @@ public class TriviaQuizExplanationScreenController implements FxmlView<TriviaQui
         videoExplanation.setBackground(Background.EMPTY);
 
 
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
     }
 
     private void initializeFonts() {

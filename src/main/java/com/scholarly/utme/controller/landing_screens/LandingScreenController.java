@@ -42,10 +42,10 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     @FXML
     private Label scholarlyText, helloText, startLearningText;
 
-    private ToggleGroup toggleGroup = new ToggleGroup();
+    private final ToggleGroup toggleGroup = new ToggleGroup();
 
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
-    private static final String IDLE_STYLE = "-fx-background-color: #006B17;";
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -81,8 +81,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         initializeFonts();
 
 
-        toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, triviaButton, performanceButton, updatesButton, settingsButton);
-
         if (ViewSwitcher.retrieveData() == null) {
             selectButton(homeView, homeButton);
         }else {
@@ -92,7 +90,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             if (retrievedId.equalsIgnoreCase("homeButton")) {
                 selectButton(homeView, homeButton);
 
-            } else if (retrievedId.equalsIgnoreCase("accountButton")) {
+            } else if (retrievedId.equalsIgnoreCase("accountScreen")) {
                 selectButton(accountView, accountButton);
 
             } else if (retrievedId.equalsIgnoreCase("activateButton")) {
@@ -115,6 +113,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             }
         }
 
+
+        toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, triviaButton, performanceButton, updatesButton, settingsButton);
 
         homeButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -207,16 +207,16 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     }
 
     private void initializeFonts() {
-        homeButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        accountButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        activateButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        appsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        triviaButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        performanceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        updatesButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        settingsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        homeButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+        accountButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+        activateButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+        appsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+        triviaButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+        performanceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+        updatesButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+        settingsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
 
-        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY.size));
+        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 20));
 
     }
 

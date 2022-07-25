@@ -1,7 +1,7 @@
 package com.scholarly.utme.ui.utils;
 
 import com.scholarly.utme.controller.*;
-import com.scholarly.utme.controller.account_screens.AccountProfileScreenController;
+import com.scholarly.utme.controller.account_screens.*;
 import com.scholarly.utme.controller.audio_video_screens.AudioContentScreenController;
 import com.scholarly.utme.controller.audio_video_screens.AudiosGridScreenController;
 import com.scholarly.utme.controller.audio_video_screens.VideoContentScreenController;
@@ -29,7 +29,7 @@ public enum View {
     CBT_GAME_SCREEN("/layouts/CBTGameScreen.fxml", CBTGameScreenController.class),
     SELECT_NOTE_SCREEN("/layouts/SelectNoteScreen.fxml", SelectNoteController.class),
     NOTES_SCREEN("/layouts/NotesScreen.fxml", NotesScreenController.class),
-    EXPLANATION_SCREEN("/layouts/ExplanationScreen.fxml", ExplanationScreen.class),
+    EXPLANATION_SCREEN("/layouts/ExplanationScreen.fxml", ExplanationScreenController.class),
     SELECT_SYLLABUS_SCREEN("/layouts/SelectSyllabusScreen.fxml", SelectSyllabusController.class),
     SYLLABUS_SCREEN("/layouts/SyllabusScreen.fxml", SyllabusScreenController.class),
     NOVEL_GRID_SCREEN("/layouts/novel_screens/NovelGridScreen.fxml", NovelGridScreenController.class),
@@ -51,7 +51,12 @@ public enum View {
     SETTINGS_ABOUT_US_SCREEN("/layouts/settings_screens/SettingsAboutUsScreen.fxml", SettingsAboutUsScreenController.class),
     SETTINGS_HELP_SCREEN("/layouts/settings_screens/SettingsHelpScreen.fxml", SettingsHelpScreenController.class),
     SETTINGS_APP_INFO_SCREEN("/layouts/settings_screens/SettingsAppInfoScreen.fxml", SettingsAppInfoScreenController.class),
-    ACCOUNT_PROFILE_SCREEN("/layouts/account_screens/AccountProfileScreen.fxml", AccountProfileScreenController.class);
+    ACCOUNT_PROFILE_SCREEN("/layouts/account_screens/AccountProfileScreen.fxml", AccountProfileScreenController.class),
+    ACCOUNT_REFERRAL_SCREEN("/layouts/account_screens/AccountReferralScreen.fxml", AccountReferralScreenController.class),
+    ACCOUNT_BOOKMARKS_SCREEN("/layouts/account_screens/AccountBookmarksScreen.fxml", AccountBookmarksScreenController.class),
+    ACCOUNT_TRIVIA_SCREEN("/layouts/account_screens/AccountTriviaScreen.fxml", AccountTriviaScreenController.class),
+    ACCOUNT_NOTIFICATIONS_SCREEN("/layouts/account_screens/AccountNotificationsScreen.fxml", AccountNotificationsScreenController.class),
+    NOTIFICATION_DETAILS_SCREEN("/layouts/account_screens/NotificationDetailsScreen.fxml", NotificationDetailsScreenController.class);
 
 
 

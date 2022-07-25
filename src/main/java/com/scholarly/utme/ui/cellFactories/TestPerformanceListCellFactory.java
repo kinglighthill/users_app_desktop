@@ -1,5 +1,6 @@
 package com.scholarly.utme.ui.cellFactories;
 
+import com.scholarly.utme.controller.ResultScreenController;
 import com.scholarly.utme.data.model.listItems.TestPerformanceItem;
 import com.scholarly.utme.ui.listcells.TestPerformanceListItemCell;
 import javafx.scene.control.ListCell;
@@ -8,10 +9,10 @@ import javafx.util.Callback;
 
 import java.util.List;
 
-public class TestPerformanceListCellFactory implements Callback<ListView<TestPerformanceItem>, ListCell<TestPerformanceItem>> {
+public class TestPerformanceListCellFactory implements Callback<ListView<ResultScreenController.InitialData>, ListCell<ResultScreenController.InitialData>> {
 
     @Override
-    public ListCell<TestPerformanceItem> call(ListView<TestPerformanceItem> testPerformanceItemListView) {
+    public ListCell<ResultScreenController.InitialData> call(ListView<ResultScreenController.InitialData> testPerformanceItemListView) {
         return new TestPerformanceListItemCell();
     }
 }

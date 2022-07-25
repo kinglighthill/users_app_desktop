@@ -44,7 +44,7 @@ public class UpdateScreenController implements FxmlView<UpdateScreenVM>, Initial
 
     private void initializeViews() {
         updateImage.setImage(new Image(getClass().getResource("/drawable/update_item_image2.png").toString()));
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
 
         backButton.setBackground(Background.EMPTY);
     }
