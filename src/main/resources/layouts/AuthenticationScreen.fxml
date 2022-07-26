@@ -19,11 +19,11 @@
                 <ImageView fx:id="imageView" preserveRatio="true" pickOnBounds="true"/>
                 <Pane style="-fx-background-color: #000000" opacity="0.5" StackPane.alignment="BOTTOM_CENTER"/>
 
-                <HBox spacing="3" alignment="CENTER" StackPane.alignment="TOP_LEFT">
+                <HBox spacing="3" StackPane.alignment="TOP_LEFT">
                     <ImageView fx:id="appIcon" fitWidth="50" fitHeight="50" preserveRatio="true" pickOnBounds="true"/>
                     <Label fx:id="scholarlyText" text="Scholarly" textFill="#FFFFFF">
                         <HBox.margin>
-                            <Insets top="7"/>
+                            <Insets top="5"/>
                         </HBox.margin>
                     </Label>
                     <StackPane.margin>

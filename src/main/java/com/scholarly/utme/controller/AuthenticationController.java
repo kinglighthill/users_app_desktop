@@ -109,6 +109,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     Animations.fadeOut(recoverPasswordSection, 300);
                     Animations.fadeIn(loginSection, 300);
                 }
+                recoverEmailError.setVisible(true);
                 recoverEmailError.setText("A password reset link has been sent to the above registered email");
                 recoverEmailError.setTextFill(Paint.valueOf("#053500"));
                 recoverProceedButton.setText("Back to Login");
