@@ -27,7 +27,13 @@ import java.util.ResourceBundle;
 public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initializable {
 
     @FXML
-    private ImageView welcomeScreenCenterImageView, welcomeScreenCenterBackgroundImageView, screenOneRectangleImageView, screenOnePipeImageView, screenTwoRectangleImageView, screenTwoDoughnutImageView, screenThreeSemicolonImageView, screenThreeDoughnutImageView, screenThreeDoughnutImageView2, screenFourPipeImageView, screenFourRectangleImageView, screenFiveDoughnutImageView, screenFiveSemicolonImageView, screenFiveRectangleImageView;
+    private ImageView welcomeScreenCenterImageView, welcomeScreenCenterBackgroundImageView, screenOneRectangleImageView, screenOnePipeImageView, screenOneCubeImageView;
+
+    @FXML
+    private ImageView screenTwoCubeImageView, screenTwoRectangleImageView, screenTwoDoughnutImageView, screenThreeSemicolonImageView, screenThreeDoughnutImageView, screenThreeDoughnutImageView2;
+
+    @FXML
+    private ImageView screenFourPipeImageView, screenFourRectangleImageView, screenFourCubeImageView, screenFiveDoughnutImageView, screenFiveSemicolonImageView, screenFiveRectangleImageView;
 
     @FXML
     private VBox centerVBox;
@@ -84,18 +90,19 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
     }
 
     private void showScreenTwo() {
-        Image screenTwoCenterImageBackground = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_two_center_background.png").toString());
-        System.out.println("ScreenTwoImageBackground height -> " + screenTwoCenterImageBackground.getHeight());
-        Image screenTwoRocketImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_two_rocket_image.png").toString());
+        Image screenTwoCenterImageBackground = new Image(getClass().getResource("/drawable/welcome_screen_images/screen_two_center_background.png").toString());
+        Image screenTwoRocketImage = new Image(getClass().getResource("/drawable/welcome_screen_images/screen_two_rocket_image.png").toString());
 
         welcomeScreenCenterBackgroundImageView.setImage(screenTwoCenterImageBackground);
         welcomeScreenCenterImageView.setImage(screenTwoRocketImage);
 
         Animations.fadeOut(screenOneRectangleImageView, 300);
         Animations.fadeOut(screenOnePipeImageView, 300);
+        Animations.fadeOut(screenOneCubeImageView, 300);
 
         divider1.setOpacity(1.0);
 
+        Animations.fadeIn(screenTwoCubeImageView, 300);
         Animations.fadeIn(screenTwoRectangleImageView, 300);
         Animations.fadeIn(screenTwoDoughnutImageView, 300);
 
@@ -106,13 +113,13 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
     }
 
     private void showScreenThree() {
-        Image screenThreeCenterImageBackground = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_three_center_background.png").toString());
-        System.out.println("ScreenThreeImageBackground height -> " + screenThreeCenterImageBackground.getHeight());
-        Image screenThreeTrophyImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_three_trophy_image.png").toString());
+        Image screenThreeCenterImageBackground = new Image(getClass().getResource("/drawable/welcome_screen_images/screen_three_center_background.png").toString());
+        Image screenThreeTrophyImage = new Image(getClass().getResource("/drawable/welcome_screen_images/screen_three_trophy_image.png").toString());
 
         welcomeScreenCenterBackgroundImageView.setImage(screenThreeCenterImageBackground);
         welcomeScreenCenterImageView.setImage(screenThreeTrophyImage);
 
+        Animations.fadeOut(screenTwoCubeImageView, 300);
         Animations.fadeOut(screenTwoRectangleImageView, 300);
         Animations.fadeOut(screenTwoDoughnutImageView, 300);
 
@@ -129,9 +136,8 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
     }
 
     private void showScreenFour() {
-        Image screenFourCenterImageBackground = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_four_center_background.png").toString());
-        System.out.println("ScreenFourImageBackground height -> " + screenFourCenterImageBackground.getHeight());
-        Image screenFourMegaphoneImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_four_megaphone_image.png").toString());
+        Image screenFourCenterImageBackground = new Image(getClass().getResource("/drawable/welcome_screen_images/screen_four_center_background.png").toString());
+        Image screenFourMegaphoneImage = new Image(getClass().getResource("/drawable/welcome_screen_images/screen_four_megaphone_image.png").toString());
 
         welcomeScreenCenterBackgroundImageView.setImage(screenFourCenterImageBackground);
         welcomeScreenCenterImageView.setImage(screenFourMegaphoneImage);
@@ -144,6 +150,7 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
 
         Animations.fadeIn(screenFourPipeImageView, 300);
         Animations.fadeIn(screenFourRectangleImageView, 300);
+        Animations.fadeIn(screenFourCubeImageView, 300);
 
         divider4.setOpacity(0.5);
 
@@ -151,15 +158,15 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
     }
 
     private void showScreenFive() {
-        Image screenFiveCenterImageBackground = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_five_center_background.png").toString());
-        System.out.println("ScreenFiveCenterImageBackground height -> " + screenFiveCenterImageBackground.getHeight());
-        Image screenFourMegaphoneImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_four_megaphone_image.png").toString());
+        Image screenFiveCenterImageBackground = new Image(getClass().getResource("/drawable/welcome_screen_images/screen_five_center_background.png").toString());
+        Image screenFiveCenterImage = new Image(getClass().getResource("/drawable/welcome_screen_images/screen_five_connect_image.png").toString());
 
         welcomeScreenCenterBackgroundImageView.setImage(screenFiveCenterImageBackground);
-        welcomeScreenCenterImageView.setImage(screenFourMegaphoneImage);
+        welcomeScreenCenterImageView.setImage(screenFiveCenterImage);
 
         Animations.fadeOut(screenFourPipeImageView, 300);
         Animations.fadeOut(screenFourRectangleImageView, 300);
+        Animations.fadeOut(screenFourCubeImageView, 300);
 
         divider4.setOpacity(1.0);
 
@@ -173,56 +180,51 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
     }
 
     private void initializeViews() {
-        Image welcomeScreenCenterBackground = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_one_presentation_background.png").toString());
-        welcomeScreenCenterBackgroundImageView.setImage(welcomeScreenCenterBackground);
-        Image screenOnePresentation = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_one_presentation_image.png").toString());
-        welcomeScreenCenterImageView.setImage(screenOnePresentation);
-        Image screenOneRectangle = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_one_rectangle_image.png").toString());
-        screenOneRectangleImageView.setImage(screenOneRectangle);
-        Image screenOnePipe = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_one_pipe_image.png").toString());
-        screenOnePipeImageView.setImage(screenOnePipe);
+        Image screenOneCenterImageBackground = new Image(getClass().getResource("/drawable/welcome_screen_images/screen_one_center_background.png").toString());
+        Image screenOneCenterImage = new Image(getClass().getResource("/drawable/welcome_screen_images/screen_one_presentation_image.png").toString());
 
-        Image screenTwoRectangleImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_two_rectangle_image.png").toString());
-        screenTwoRectangleImageView.setImage(screenTwoRectangleImage);
-        Image screenTwoDoughnutImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_two_doughnut_image.png").toString());
-        screenTwoDoughnutImageView.setImage(screenTwoDoughnutImage);
+        welcomeScreenCenterBackgroundImageView.setImage(screenOneCenterImageBackground);
+        welcomeScreenCenterImageView.setImage(screenOneCenterImage);
 
-        Image screenThreeDoughnutImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_three_doughnut_image.png").toString());
-        screenThreeDoughnutImageView.setImage(screenThreeDoughnutImage);
-        Image screenThreeSemicolonImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_three_semicolon_image.png").toString());
-        screenThreeSemicolonImageView.setImage(screenThreeSemicolonImage);
-        Image screenThreeDoughnutImage2 = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_three_doughnut_image2.png").toString());
-        screenThreeDoughnutImageView2.setImage(screenThreeDoughnutImage2);
+        screenOneRectangleImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_one_rectangle.png").toString()));
+        screenOnePipeImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_one_pipe.png").toString()));
+        screenOneCubeImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_one_cube.png").toString()));
 
-        Image screenFourPipeImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_four_pipe_image.png").toString());
-        screenFourPipeImageView.setImage(screenFourPipeImage);
-        Image screenFourRectangleImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_four_rectangle_image.png").toString());
-        screenFourRectangleImageView.setImage(screenFourRectangleImage);
+        screenTwoCubeImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_two_cube.png").toString()));
+        screenTwoRectangleImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_two_rectangle.png").toString()));
+        screenTwoDoughnutImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_two_doughnut.png").toString()));
 
-        Image screenFiveDoughnutImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_five_doughnut_image.png").toString());
-        screenFiveDoughnutImageView.setImage(screenFiveDoughnutImage);
-        Image screenFiveSemicolonImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_five_semicolon_image.png").toString());
-        screenFiveSemicolonImageView.setImage(screenFiveSemicolonImage);
-        Image screenFiveRectangleImage = new Image(getClass().getResource("/drawable/welcome_screen_images/welcome_screen_five_rectangle_image.png").toString());
-        screenFiveRectangleImageView.setImage(screenFiveRectangleImage);
+        screenThreeDoughnutImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_three_doughnut.png").toString()));
+        screenThreeSemicolonImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_three_semicircle.png").toString()));
+        screenThreeDoughnutImageView2.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_three_doughnut2.png").toString()));
+
+        screenFourPipeImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_four_pipe.png").toString()));
+        screenFourRectangleImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_four_rectangle.png").toString()));
+        screenFourCubeImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_four_cube.png").toString()));
+
+        screenFiveDoughnutImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_five_doughnut.png").toString()));
+        screenFiveSemicolonImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_five_semicircle.png").toString()));
+        screenFiveRectangleImageView.setImage(new Image(getClass().getResource("/drawable/welcome_screen_images/screen_five_rectangle.png").toString()));
 
         VBox.setMargin(presentationImagePane, new Insets(30, 0, 0, 0));
-        StackPane.setMargin(welcomeScreenCenterImageView, new Insets(0, 0, 30, 0));
+        StackPane.setMargin(welcomeScreenCenterImageView, new Insets(30, 0, 0, 0));
         StackPane.setMargin(screenOnePipeImageView, new Insets(40, 0, 0, 0));
+        StackPane.setMargin(screenOneCubeImageView, new Insets(0, 0, 50, 0));
+        StackPane.setMargin(screenTwoCubeImageView, new Insets(50, 0, 0, 0));
         StackPane.setMargin(screenTwoRectangleImageView, new Insets(0, 0, 50, 0));
-        StackPane.setMargin(screenThreeDoughnutImageView, new Insets(50, 0, 0, 0));
-        StackPane.setMargin(screenThreeSemicolonImageView, new Insets(0, 0, 50, 0));
+        StackPane.setMargin(screenThreeDoughnutImageView, new Insets(80, 0, 0, 0));
+        StackPane.setMargin(screenThreeSemicolonImageView, new Insets(0, 0, 30, 0));
         StackPane.setMargin(screenFourRectangleImageView, new Insets(0, 0, 50, 0));
         StackPane.setMargin(screenFiveDoughnutImageView, new Insets(50, 0, 0, 0));
-        StackPane.setMargin(screenFiveSemicolonImageView, new Insets(0, 0, 50, 0));
+        StackPane.setMargin(screenFiveSemicolonImageView, new Insets(0, 0, 30, 0));
 
     }
 
     private void initializeFonts() {
-        advertHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.TWENTY.size));
-        advertExplanation.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        nextButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
-        skipButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        advertHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 22));
+        advertExplanation.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+        nextButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+        skipButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
 
     }
 }

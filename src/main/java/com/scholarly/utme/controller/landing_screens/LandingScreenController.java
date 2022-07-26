@@ -5,10 +5,7 @@ import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenVM;
 import com.scholarly.utme.viewmodels.landing_screens.*;
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.FxmlPath;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -23,6 +20,9 @@ import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/landing_screens/landing_screen.fxml")
 public class LandingScreenController implements FxmlView<LandingScreenVM>, Initializable {
+
+    @InjectViewModel
+    private LandingScreenVM viewModel;
 
     @FXML
     public ImageView profileImage, handImage, bell, appImage;
@@ -76,18 +76,37 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         homeContentPane.getChildren().add(homeView);
 
+        viewModel.processInitialData(getInitialData());
+
         initializeViews();
 
         initializeFonts();
 
-
-        if (ViewSwitcher.retrieveData() == null) {
+        if (viewModel.getSelectedScreen().equalsIgnoreCase("homeScreen")) {
             selectButton(homeView, homeButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("accountScreen")) {
+            selectButton(accountView, accountButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("activateScreen")) {
+            selectButton(activateView, activateButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("appsScreen")) {
+            selectButton(appsView, appsButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("triviaScreen")) {
+            selectButton(triviaView, triviaButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("performanceScreen")) {
+            selectButton(performanceView, performanceButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("updatesScreen")) {
+            selectButton(updatesView, updatesButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("settingsScreen")) {
+            selectButton(settingsView, settingsButton);
+        }
+
+        /*if (ViewSwitcher.retrieveData() == null) {
+//            selectButton(homeView, homeButton);
         }else {
 //            System.out.println("Retrieved data -> " + ViewSwitcher.retrieveData());
             String retrievedId = (String) ViewSwitcher.retrieveData();
 
-            if (retrievedId.equalsIgnoreCase("homeButton")) {
+            if (retrievedId.equalsIgnoreCase("homeScreen")) {
                 selectButton(homeView, homeButton);
 
             } else if (retrievedId.equalsIgnoreCase("accountScreen")) {
@@ -111,7 +130,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             } else if (retrievedId.equalsIgnoreCase("settingsButton")) {
                 selectButton(settingsView, settingsButton);
             }
-        }
+        }*/
 
 
         toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, triviaButton, performanceButton, updatesButton, settingsButton);
@@ -237,6 +256,22 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         homeContentPane.getChildren().clear();
         homeContentPane.getChildren().add(view);
         changeButtonStyle(toggleButton);
+    }
+
+    private InitialData getInitialData() {
+        return (InitialData) ViewSwitcher.retrieveData();
+    }
+
+     public static class InitialData {
+        private String screen;
+
+        public InitialData(String screen) {
+            this.screen = screen;
+        }
+
+        public String getScreen() {
+            return screen;
+        }
     }
 
 }
