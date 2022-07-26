@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -63,7 +65,13 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         proceedButton.setOnAction(event -> {
             if (showingSignupScreen) {
-                emailError.setVisible(!emailField.getText().contains("@"));
+                if (!emailField.getText().contains("@")) {
+                    emailError.setVisible(true);
+                }else {
+                    ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                    ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                }
+
             }
             if (showingPasswordResetScreen) {
                 resetTextInfo.setVisible(!emailField.getText().isBlank());
