@@ -50,16 +50,13 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private TextField signUpEmailField, signUpPasswordField, signUpPhoneField, loginEmailField, recoverEmailField;
 
 
-    private boolean showSignUpScreen = true;
-    private boolean showingPasswordResetScreen = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        showSignUpScreen = (boolean) ViewSwitcher.retrieveData();
+        boolean showSignUpScreen = (boolean) ViewSwitcher.retrieveData();
         if (showSignUpScreen) {
             Animations.fadeIn(signUpSection, 300);
-
         } else {
             Animations.fadeIn(loginSection, 300);
         }
@@ -78,6 +75,11 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         });
 
         resetText.setOnMouseClicked(event -> {
+            recoverEmailError.setVisible(false);
+            recoverEmailError.setText("Please enter a valid email address");
+            recoverEmailError.setTextFill(Paint.valueOf("#FF0000"));
+            recoverEmailField.setText("");
+            recoverProceedButton.setText("Proceed");
             Animations.fadeOut(loginSection, 300);
             Animations.fadeIn(recoverPasswordSection, 300);
 
@@ -93,7 +95,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         });
         loginProceedButton.setOnAction(event -> {
-            if (!loginEmailError.getText().contains("@")) {
+            if (!loginEmailField.getText().contains("@")) {
                 loginEmailError.setVisible(true);
             } else {
                 ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
@@ -104,6 +106,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         recoverProceedButton.setOnAction(event -> {
             if (!recoverEmailField.getText().contains("@")) {
                 recoverEmailError.setVisible(true);
+
             } else {
                 if (recoverProceedButton.getText().contains("Back")) {
                     Animations.fadeOut(recoverPasswordSection, 300);
