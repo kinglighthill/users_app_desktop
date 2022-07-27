@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -17,7 +18,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,70 +29,94 @@ import java.util.ResourceBundle;
 public class AuthenticationController implements FxmlView<AuthenticationScreenVM>, Initializable {
 
     @FXML
-    private VBox authenticationSection, signUpSection, googleAndFacebookSection;
+    private StackPane authenticationSection;
 
     @FXML
-    private HBox forgotPasswordBox;
+    private VBox signUpSection, loginSection, recoverPasswordSection;
 
     @FXML
     private ImageView imageView, appIcon;
 
     @FXML
-    private Label scholarlyText, beTheBestText, signupText, emailText, passwordText, phoneText, continueText, haveAccountText, loginText, forgotPasswordText, resetText;
+    private Label scholarlyText, beTheBestText, signUpHeaderText, signUpEmailText, signUpPasswordText, signUpPhoneText, signUpContinueText, signUpHaveAccountText, signUpLoginText, forgotPasswordText, resetText;
 
     @FXML
-    private Label emailError, phoneError;
+    private Label signUpEmailError, loginHeaderText, loginEmailText, loginEmailError, loginPasswordText, loginContinueText, loginHaveAcctText, loginSignUpText, recoverHeaderText, recoverEmailText, recoverEmailError;
 
     @FXML
-    private Button proceedButton, googleButton, facebookButton;
+    private Button signUpProceedButton, signUpGoogleButton, signUpFacebookButton, loginProceedButton, loginGoogleButton, loginFacebookButton, recoverProceedButton;
 
     @FXML
-    private TextField emailField, passwordField, phoneField;
+    private TextField signUpEmailField, signUpPasswordField, signUpPhoneField, loginEmailField, recoverEmailField;
 
-    private final Label resetTextInfo = new Label();
 
-    private boolean showingSignupScreen = true;
-    private boolean showingPasswordResetScreen = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        showingSignupScreen = (boolean) ViewSwitcher.retrieveData();
-        if (!showingSignupScreen) {
-            showLoginScreen();
+        boolean showSignUpScreen = (boolean) ViewSwitcher.retrieveData();
+        if (showSignUpScreen) {
+            Animations.fadeIn(signUpSection, 300);
+        } else {
+            Animations.fadeIn(loginSection, 300);
         }
 
         initializeViews();
-
         initializeFonts();
 
-        proceedButton.setOnAction(event -> {
-            if (showingSignupScreen) {
-                if (!emailField.getText().contains("@")) {
-                    emailError.setVisible(true);
-                }else {
-                    ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
-                    ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                }
-
-            }
-            if (showingPasswordResetScreen) {
-                resetTextInfo.setVisible(!emailField.getText().isBlank());
-                emailError.setVisible(!emailField.getText().contains("@"));
-            }
+        signUpLoginText.setOnMouseClicked(event -> {
+            Animations.fadeOut(signUpSection, 200);
+            Animations.fadeIn(loginSection, 300);
         });
 
-        loginText.setOnMouseClicked(event -> {
-            if (showingSignupScreen) {
-                showLoginScreen();
-            }else {
-                showSignupScreen();
-            }
+        loginSignUpText.setOnMouseClicked(event -> {
+            Animations.fadeOut(loginSection, 200);
+            Animations.fadeIn(signUpSection, 300);
         });
 
         resetText.setOnMouseClicked(event -> {
-            showPasswordResetScreen();
+            recoverEmailError.setVisible(false);
+            recoverEmailError.setText("Please enter a valid email address");
+            recoverEmailError.setTextFill(Paint.valueOf("#FF0000"));
+            recoverEmailField.setText("");
+            recoverProceedButton.setText("Proceed");
+            Animations.fadeOut(loginSection, 300);
+            Animations.fadeIn(recoverPasswordSection, 300);
 
+        });
+
+        signUpProceedButton.setOnAction(event -> {
+            if (!signUpEmailError.getText().contains("@")) {
+                signUpEmailError.setVisible(true);
+            } else {
+                ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                ViewSwitcher.showScreen(View.LANDING_SCREEN);
+            }
+
+        });
+        loginProceedButton.setOnAction(event -> {
+            if (!loginEmailField.getText().contains("@")) {
+                loginEmailError.setVisible(true);
+            } else {
+                ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                ViewSwitcher.showScreen(View.LANDING_SCREEN);
+            }
+        });
+
+        recoverProceedButton.setOnAction(event -> {
+            if (!recoverEmailField.getText().contains("@")) {
+                recoverEmailError.setVisible(true);
+
+            } else {
+                if (recoverProceedButton.getText().contains("Back")) {
+                    Animations.fadeOut(recoverPasswordSection, 300);
+                    Animations.fadeIn(loginSection, 300);
+                }
+                recoverEmailError.setVisible(true);
+                recoverEmailError.setText("A password reset link has been sent to the above registered email");
+                recoverEmailError.setTextFill(Paint.valueOf("#053500"));
+                recoverProceedButton.setText("Back to Login");
+            }
         });
 
     }
@@ -99,71 +126,64 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         appIcon.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
 
         ImageView googleImage = new ImageView(new Image(getClass().getResource("/drawable/google_icon.png").toString()));
-        googleButton.setGraphic(googleImage);
-        googleButton.setGraphicTextGap(20);
-        googleButton.setBackground(Background.EMPTY);
+        signUpGoogleButton.setGraphic(googleImage);
+        signUpGoogleButton.setGraphicTextGap(20);
+        signUpGoogleButton.setBackground(Background.EMPTY);
+        ImageView googleImage2 = new ImageView(new Image(getClass().getResource("/drawable/google_icon.png").toString()));
+        loginGoogleButton.setGraphic(googleImage2);
+        loginGoogleButton.setGraphicTextGap(20);
+        loginGoogleButton.setBackground(Background.EMPTY);
+
         ImageView facebookImage = new ImageView(new Image(getClass().getResource("/drawable/facebook_icon.png").toString()));
-        facebookButton.setGraphic(facebookImage);
-        facebookButton.setGraphicTextGap(20);
-        facebookButton.setBackground(Background.EMPTY);
+        signUpFacebookButton.setGraphic(facebookImage);
+        signUpFacebookButton.setGraphicTextGap(20);
+        signUpFacebookButton.setBackground(Background.EMPTY);
+        ImageView facebookImage2 = new ImageView(new Image(getClass().getResource("/drawable/facebook_icon.png").toString()));
+        loginFacebookButton.setGraphic(facebookImage2);
+        loginFacebookButton.setGraphicTextGap(20);
+        loginFacebookButton.setBackground(Background.EMPTY);
     }
 
     private void initializeFonts() {
-        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY_SIX.size));
-        beTheBestText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY_SIX.size));
-        signupText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.TWENTY.size));
-        emailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        emailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        emailError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
-        passwordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        //passwordField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        phoneText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        phoneField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//        phoneError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
-        proceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        continueText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
-        googleButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
-        facebookButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
-        haveAccountText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
-        loginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
-        forgotPasswordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
-        resetText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
+        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 30));
+        beTheBestText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 26));
+
+        signUpHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
+        signUpEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpEmailError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        signUpPasswordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpPhoneText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpPhoneField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpProceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpContinueText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        signUpGoogleButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        signUpFacebookButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        signUpHaveAccountText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        signUpLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+
+
+        loginHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
+        loginEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        loginEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        loginEmailError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        loginPasswordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        loginProceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        loginContinueText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        loginGoogleButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        loginFacebookButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        loginHaveAcctText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        loginSignUpText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        forgotPasswordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        resetText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+
+
+        recoverHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
+        recoverEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        recoverEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        recoverEmailError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        recoverProceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
     }
 
-    private void showLoginScreen() {
-        signupText.setText("Log In");
-        haveAccountText.setText("Don't have an account?");
-        loginText.setText("Sign Up");
-        forgotPasswordBox.setVisible(true);
 
-        signUpSection.getChildren().removeAll(phoneText, phoneField);
-
-        showingSignupScreen = false;
-    }
-
-    private void showSignupScreen() {
-        signupText.setText("Sign Up");
-        haveAccountText.setText("Already have an account?");
-        loginText.setText("Login");
-        forgotPasswordBox.setVisible(false);
-
-        signUpSection.getChildren().addAll(phoneText, phoneField);
-
-        showingSignupScreen = true;
-    }
-
-    private void showPasswordResetScreen() {
-        showingPasswordResetScreen = true;
-        signupText.setText("Reset Password");
-
-        signUpSection.getChildren().removeAll(passwordText, passwordField);
-        googleAndFacebookSection.getChildren().remove(0, googleAndFacebookSection.getChildren().size());
-
-        resetTextInfo.setText("A password reset link has been sent to the above email address");
-        resetTextInfo.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        resetTextInfo.setPadding(new Insets(10, 0, 0, 0));
-        resetTextInfo.setVisible(false);
-        authenticationSection.getChildren().add(resetTextInfo);
-
-    }
 }
