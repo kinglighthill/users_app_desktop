@@ -74,7 +74,7 @@
          <top>
             <HBox spacing="15" alignment="CENTER_LEFT">
                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9" onMouseClicked="#homeTextClicked"/>
-               <Label fx:id="pageTitle" text="CBT Practice" textFill="#034801"/>
+               <Label fx:id="pageTitle" textFill="#034801"/>
                <padding>
                   <Insets top="20" left="20" bottom="20"/>
                </padding>

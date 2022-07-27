@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 
 <BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.SelectNoteController">
-    <top>
+    <!--<top>
         <ToolBar prefHeight="75.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER">
             <items>
                 <Button fx:id="backButton" mnemonicParsing="false" onMouseClicked="#backButtonClicked"/>
@@ -24,7 +24,8 @@
                 <Insets left="10.0" />
             </padding>
         </ToolBar>
-    </top>
+    </top>-->
+
     <center>
         <StackPane prefHeight="200.0" prefWidth="100.0">
          <children>

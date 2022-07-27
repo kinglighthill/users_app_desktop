@@ -148,9 +148,6 @@
                             </Label>
 
                             <GridPane prefHeight="200" prefWidth="350" alignment="CENTER_LEFT" hgap="10.0" vgap="10.0">
-                                <padding>
-                                    <Insets left="10.0" right="10.0"/>
-                                </padding>
 
                                 <children>
                                     <Panel fx:id="cbtPracticePanel" GridPane.columnIndex="0" GridPane.rowIndex="0"
@@ -163,7 +160,7 @@
                                         </bottom>
 
                                         <padding>
-                                            <Insets left="20" bottom="20" top="20"/>
+                                            <Insets left="30" bottom="20" top="20"/>
                                         </padding>
                                     </Panel>
 
@@ -176,7 +173,7 @@
                                             <Label fx:id="novelsText" text="Novels" textFill="white"/>
                                         </bottom>
                                         <padding>
-                                            <Insets left="20" bottom="20" top="20"/>
+                                            <Insets left="30" bottom="20" top="20"/>
                                         </padding>
                                     </Panel>
 
@@ -189,7 +186,7 @@
                                             <Label fx:id="studyNotesText" text="Study Notes" textFill="white"/>
                                         </bottom>
                                         <padding>
-                                            <Insets left="20" bottom="20" top="20"/>
+                                            <Insets left="30" bottom="20" top="20"/>
                                         </padding>
                                     </Panel>
 
@@ -202,7 +199,7 @@
                                             <Label fx:id="syllabusText" text="Syllabus" textFill="white" />
                                         </bottom>
                                         <padding>
-                                            <Insets left="20" bottom="20" top="20"/>
+                                            <Insets left="30" bottom="20" top="20"/>
                                         </padding>
                                     </Panel>
 
@@ -220,7 +217,6 @@
                                     </Panel>-->
 
 
-
                                    <!-- <Panel fx:id="cbtGamePanel" GridPane.columnIndex="2" GridPane.rowIndex="0" minHeight="120.0"
                                            prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <Label fx:id="cbtGameLabel" text="CBT Game" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
@@ -229,7 +225,6 @@
                                             </padding>
                                         </Label>
                                     </Panel>-->
-
 
 
                                     <!--<Panel fx:id="cbtCentresPanel" GridPane.columnIndex="1" GridPane.rowIndex="1" minHeight="120.0"
@@ -268,6 +263,9 @@
                                     </Panel>-->
 
                                 </children>
+                                <padding>
+                                    <Insets left="10.0" right="10.0"/>
+                                </padding>
                             </GridPane>
                         </children>
                         <padding>

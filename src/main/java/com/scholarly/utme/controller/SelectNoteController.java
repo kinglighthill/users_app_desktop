@@ -234,10 +234,10 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         view.setFitHeight(25);
         view.setPreserveRatio(true);
 
-        backButton.setGraphic(view);
-        backButton.setBackground(Background.EMPTY);
+//        backButton.setGraphic(view);
+//        backButton.setBackground(Background.EMPTY);
 
-        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
+//        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
         subjectsTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
         topicsTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
         emptyTopicListLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));

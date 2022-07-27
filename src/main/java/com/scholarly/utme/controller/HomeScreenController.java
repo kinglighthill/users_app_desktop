@@ -9,6 +9,7 @@ import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.HomeScreenVM;
+import com.scholarly.utme.viewmodels.SelectNoteVM;
 import com.scholarly.utme.viewmodels.novel_screens.NovelScreenVM;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
 import com.scholarly.utme.viewmodels.audio_video_screens.AudioVideoSubjectListViewVM;
@@ -72,6 +73,9 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         AudioVideoSubjectListViewController audioVideoSubjectListViewController = audioVideoSubjectListViewTuple.getCodeBehind();
         Parent audioVideoView = audioVideoSubjectListViewTuple.getView();
 
+        ViewTuple<SelectNoteController, SelectNoteVM> selectNoteViewTuple = FluentViewLoader.fxmlView(SelectNoteController.class).load();
+        Parent studyNotesView = selectNoteViewTuple.getView();
+
         initializeViews();
 
         initializeFonts();
@@ -79,12 +83,16 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         viewModel.processInitialData(getInitialData());
 
         if (viewModel.getSelectedScreen().equalsIgnoreCase("practiceScreen")) {
+            pageTitle.setText("CBT Practice");
             selectButton(subjectListView, practiceButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("pastQuestionScreen")) {
+            pageTitle.setText("Study Past Questions");
             selectButton(subjectListView, pastQuestionButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("cbtGameScreen")) {
+            pageTitle.setText("CBT Game");
             selectButton(subjectListView, cbtGameButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("novelsScreen")) {
+            pageTitle.setText("Novels");
             selectButton(novelListView, novelsButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("videosScreen")) {
 //            selectButton(audioVideoView, videosButton);
@@ -93,7 +101,8 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("learningCenterScreen")) {
 //            selectButton(audioVideoView, learningCenterButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("studyNotesScreen")) {
-            selectButton(novelListView, studyNotesButton);
+            pageTitle.setText("Study Notes");
+            selectButton(studyNotesView, studyNotesButton);
         }
 
 
@@ -137,6 +146,13 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             }
         }));
 
+        studyNotesButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                pageTitle.setText("Study Notes");
+                selectButton(studyNotesView, studyNotesButton);
+            }
+        });
+
         /*videosButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue) {
                 pageTitle.setText("Videos");
@@ -156,24 +172,6 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         /*learningCenterButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             changeButtonStyle(learningCenterButton);
         }));*/
-
-        studyNotesButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            changeButtonStyle(studyNotesButton);
-            if (newValue) {
-                ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
-            }
-        });
-
-        /*if (ViewSwitcher.retrieveData() instanceof String){
-            String selectedMenuOption = (String) ViewSwitcher.retrieveData();
-            System.out.println("Selected menu option -> " + selectedMenuOption);
-            ToggleButton selectedToggle = getToggle(selectedMenuOption);
-
-            toggleGroup.selectToggle(selectedToggle);
-            // It is 'false' because the studyNotesButton selectedProperty's was initially toggled to 'true' when user navigated from the HOME_SCREEN to SELECT_NOTE_SCREEN
-            // This will make the button toggle when clicked thus switching selectedProperty to true
-            toggleGroup.getSelectedToggle().setSelected(false);
-        }*/
 
     }
 
@@ -250,6 +248,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         syllabusButton.setStyle(null);
 
         pressedButton.setStyle(PRESSED_BUTTON_STYLE);
+        pressedButton.setSelected(true);
     }
 
     private void selectButton(Parent view, ToggleButton toggleButton) {
