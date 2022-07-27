@@ -76,13 +76,13 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         homeContentPane.getChildren().add(homeView);
 
-        viewModel.processInitialData(getInitialData());
+//        viewModel.processInitialData(getInitialData());
 
         initializeViews();
 
         initializeFonts();
 
-        if (viewModel.getSelectedScreen().equalsIgnoreCase("homeScreen")) {
+        /*if (viewModel.getSelectedScreen().equalsIgnoreCase("homeScreen")) {
             selectButton(homeView, homeButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("accountScreen")) {
             selectButton(accountView, accountButton);
@@ -98,38 +98,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             selectButton(updatesView, updatesButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("settingsScreen")) {
             selectButton(settingsView, settingsButton);
-        }
-
-        /*if (ViewSwitcher.retrieveData() == null) {
-//            selectButton(homeView, homeButton);
-        }else {
-//            System.out.println("Retrieved data -> " + ViewSwitcher.retrieveData());
-            String retrievedId = (String) ViewSwitcher.retrieveData();
-
-            if (retrievedId.equalsIgnoreCase("homeScreen")) {
-                selectButton(homeView, homeButton);
-
-            } else if (retrievedId.equalsIgnoreCase("accountScreen")) {
-                selectButton(accountView, accountButton);
-
-            } else if (retrievedId.equalsIgnoreCase("activateButton")) {
-                selectButton(activateView, activateButton);
-
-            } else if (retrievedId.equalsIgnoreCase("appsButton")) {
-                selectButton(appsView, appsButton);
-
-            } else if (retrievedId.equalsIgnoreCase("triviaButton")) {
-                selectButton(triviaView, triviaButton);
-
-            } else if (retrievedId.equalsIgnoreCase("performanceButton")) {
-                selectButton(performanceView, performanceButton);
-
-            } else if (retrievedId.equalsIgnoreCase("updatesButton")) {
-                selectButton(updatesView, updatesButton);
-
-            } else if (retrievedId.equalsIgnoreCase("settingsButton")) {
-                selectButton(settingsView, settingsButton);
-            }
         }*/
 
 
