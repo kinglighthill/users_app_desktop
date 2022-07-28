@@ -101,7 +101,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         }*/
 
 
-        toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, triviaButton, performanceButton, updatesButton, settingsButton);
+        toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, performanceButton, updatesButton, settingsButton);
 
         homeButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -127,11 +127,11 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             }
         });
 
-        triviaButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+        /*triviaButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
                 selectButton(triviaView, triviaButton);
             }
-        });
+        });*/
 
         performanceButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
@@ -176,9 +176,9 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         appsButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/landing_screen_images/apps_icon.png").toString())));
         appsButton.setGraphicTextGap(20);
 
-        triviaButton.setBackground(Background.EMPTY);
+        /*triviaButton.setBackground(Background.EMPTY);
         triviaButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/landing_screen_images/trivia_icon.png").toString())));
-        triviaButton.setGraphicTextGap(20);
+        triviaButton.setGraphicTextGap(20);*/
 
         performanceButton.setBackground(Background.EMPTY);
         performanceButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/landing_screen_images/performance_icon.png").toString())));
@@ -198,7 +198,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         accountButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         activateButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         appsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-        triviaButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+//        triviaButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         performanceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         updatesButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         settingsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
@@ -212,7 +212,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         accountButton.setStyle(null);
         activateButton.setStyle(null);
         appsButton.setStyle(null);
-        triviaButton.setStyle(null);
+//        triviaButton.setStyle(null);
         performanceButton.setStyle(null);
         updatesButton.setStyle(null);
         settingsButton.setStyle(null);

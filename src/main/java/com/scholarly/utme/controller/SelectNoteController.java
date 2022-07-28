@@ -4,6 +4,7 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.newDb.Topic;
+import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -62,6 +63,9 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        initializeViews();
+        initializeFonts();
 
 //        subjectList.setItems(viewModel.getSubjects());
 //        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
@@ -138,10 +142,10 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                 viewModel.setSelectedSubTopic(selectedTopic.getValue());
 
                 if (!commenceButton.isVisible()) {
-                    showCommenceButton();
+                    Animations.translateIn(commenceButton, 300);
                 }
             } else {
-                hideCommenceButton();
+                Animations.translateOut(commenceButton, 300);
             }
         });
 
@@ -230,74 +234,21 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
             ViewSwitcher.showScreen(View.NOTES_SCREEN);
         });
 
-        ImageView view = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
-        view.setFitHeight(25);
-        view.setPreserveRatio(true);
 
-//        backButton.setGraphic(view);
-//        backButton.setBackground(Background.EMPTY);
+    }
 
-//        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
+    private void initializeViews() {
+
+    }
+
+    private void initializeFonts() {
+        //        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
         subjectsTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
         topicsTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
         emptyTopicListLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
         commenceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
     }
 
-    private void showCommenceButton() {
-        commenceButton.setVisible(true);
-        FadeTransition fadeTransition = new FadeTransition();
-
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(1);
-        fadeTransition.setDuration(Duration.millis(500));
-        fadeTransition.setNode(commenceButton);
-
-        TranslateTransition translateTransition = new TranslateTransition();
-
-        translateTransition.setFromX(1);
-
-        ScaleTransition scaleTransition = new ScaleTransition();
-
-        scaleTransition.setFromX(0);
-        scaleTransition.setFromY(0);
-        scaleTransition.setToX(1);
-        scaleTransition.setToY(1);
-        scaleTransition.setDuration(Duration.millis(200));
-        scaleTransition.setNode(commenceButton);
-
-        scaleTransition.play();
-//        fadeTransition.play();
-    }
-
-    private void hideCommenceButton() {
-        FadeTransition fadeTransition = new FadeTransition();
-
-        fadeTransition.setFromValue(1);
-        fadeTransition.setToValue(0);
-        fadeTransition.setDuration(Duration.millis(500));
-        fadeTransition.setNode(commenceButton);
-
-        fadeTransition.setOnFinished(event -> {
-            commenceButton.setVisible(false);
-        });
-
-        ScaleTransition scaleTransition = new ScaleTransition();
-
-        scaleTransition.setFromX(1);
-        scaleTransition.setFromY(1);
-        scaleTransition.setToX(0);
-        scaleTransition.setToY(0);
-        scaleTransition.setDuration(Duration.millis(300));
-        scaleTransition.setNode(commenceButton);
-
-        scaleTransition.setOnFinished(event -> {
-            commenceButton.setVisible(false);
-        });
-
-        scaleTransition.play();
-//        fadeTransition.play();
-    }
 
     public void backButtonClicked() {
         ViewSwitcher.passData("studyNotesPanel");

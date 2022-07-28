@@ -8,10 +8,8 @@ import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.HomeScreenVM;
-import com.scholarly.utme.viewmodels.SelectNoteVM;
+import com.scholarly.utme.viewmodels.*;
 import com.scholarly.utme.viewmodels.novel_screens.NovelScreenVM;
-import com.scholarly.utme.viewmodels.SubjectListViewVM;
 import com.scholarly.utme.viewmodels.audio_video_screens.AudioVideoSubjectListViewVM;
 import de.saxsys.mvvmfx.*;
 import javafx.animation.FadeTransition;
@@ -76,8 +74,10 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         ViewTuple<SelectNoteController, SelectNoteVM> selectNoteViewTuple = FluentViewLoader.fxmlView(SelectNoteController.class).load();
         Parent studyNotesView = selectNoteViewTuple.getView();
 
-        initializeViews();
+        ViewTuple<SelectSyllabusController, SelectSyllabusVM> syllabusViewTuple = FluentViewLoader.fxmlView(SelectSyllabusController.class).load();
+        Parent syllabusView = syllabusViewTuple.getView();
 
+        initializeViews();
         initializeFonts();
 
         viewModel.processInitialData(getInitialData());
@@ -101,8 +101,11 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("learningCenterScreen")) {
 //            selectButton(audioVideoView, learningCenterButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("studyNotesScreen")) {
-            pageTitle.setText("Study Notes");
+            pageTitle.setText("Select Note");
             selectButton(studyNotesView, studyNotesButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("syllabusScreen")) {
+            pageTitle.setText("Select Syllabus");
+            selectButton(syllabusView, syllabusButton);
         }
 
 
@@ -140,17 +143,18 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         });
 
         novelsButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue) {
-                pageTitle.setText("Novels");
-                selectButton(novelListView, novelsButton);
-            }
+            pageTitle.setText("Novels");
+            selectButton(novelListView, novelsButton);
         }));
 
         studyNotesButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                pageTitle.setText("Study Notes");
-                selectButton(studyNotesView, studyNotesButton);
-            }
+            pageTitle.setText("Select Note");
+            selectButton(studyNotesView, studyNotesButton);
+        });
+
+        syllabusButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            pageTitle.setText("Select Syllabus");
+            selectButton(syllabusView, syllabusButton);
         });
 
         /*videosButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
@@ -248,7 +252,6 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         syllabusButton.setStyle(null);
 
         pressedButton.setStyle(PRESSED_BUTTON_STYLE);
-        pressedButton.setSelected(true);
     }
 
     private void selectButton(Parent view, ToggleButton toggleButton) {

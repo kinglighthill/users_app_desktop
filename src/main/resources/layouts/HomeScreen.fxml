@@ -26,16 +26,19 @@
                   <Insets left="15"/>
                </padding>
             </ToggleButton>
+
              <ToggleButton fx:id="pastQuestionButton" text="Study Past Question" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0">
                 <padding>
                    <Insets left="15"/>
                 </padding>
              </ToggleButton>
+
             <ToggleButton fx:id="cbtGameButton" text="CBT Game" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
                <padding>
                   <Insets left="15"/>
                </padding>
             </ToggleButton>
+
             <ToggleButton fx:id="novelsButton" text="Novels" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
                <padding>
                   <Insets left="15"/>
@@ -56,11 +59,13 @@
                    <Insets left="15"/>
                 </padding>
              </ToggleButton>-->
+
             <ToggleButton fx:id="studyNotesButton" text="Study Notes" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
                <padding>
                   <Insets left="15"/>
                </padding>
             </ToggleButton>
+
             <ToggleButton fx:id="syllabusButton" text="Syllabus" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
                <padding>
                   <Insets left="15"/>
