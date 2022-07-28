@@ -72,8 +72,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
 
     private final String PREF_KEY_SELECTED_TAB = "SELECTED_TAB";
-    private final String SELECTED_TAB_STYLE = "-fx-background-color: #12AF20;";
-    private final String UNSELECTED_TAB_STYLE = "-fx-background-color: #FFFFFF;";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -82,12 +80,9 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
         if (lastSelectedTab.equalsIgnoreCase("Objective")){
             tabMenu.getSelectionModel().select(objectiveTab);
-            objectiveTab.setStyle(SELECTED_TAB_STYLE);
-            theoryTab.setStyle(UNSELECTED_TAB_STYLE);
+
         }else if (lastSelectedTab.equalsIgnoreCase("Theory")){
-            tabMenu.getSelectionModel().select(theoryTab);
-            theoryTab.setStyle(SELECTED_TAB_STYLE);
-            objectiveTab.setStyle(UNSELECTED_TAB_STYLE);
+            tabMenu.getSelectionModel().select(theoryTab);;
         }
 
         initializeViews();
@@ -147,15 +142,11 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         tabMenu.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue.getText().equalsIgnoreCase("Objective")) {
                 tabMenu.getSelectionModel().select(objectiveTab);
-                objectiveTab.setStyle(SELECTED_TAB_STYLE);
-                theoryTab.setStyle(UNSELECTED_TAB_STYLE);
                 tabPreferences.put(PREF_KEY_SELECTED_TAB, "Objective");
                 Animations.animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedObjectiveSubjects);
             } else {
                 tabMenu.getSelectionModel().select(theoryTab);
-                theoryTab.setStyle(SELECTED_TAB_STYLE);
-                objectiveTab.setStyle(UNSELECTED_TAB_STYLE);
                 tabPreferences.put(PREF_KEY_SELECTED_TAB, "Theory");
                 Animations.animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedTheorySubjects);
@@ -245,7 +236,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
     private void initializeViews() {
         tabMenu.widthProperty().addListener(((observable, oldValue, newValue) -> {
-            tabMenu.setTabMinWidth((Double) newValue/2.1);
+            tabMenu.setTabMinWidth((Double) newValue/2.05);
         }));
         tabMenu.setBackground(Background.EMPTY);
         hoursChoiceBox.setBackground(Background.EMPTY);

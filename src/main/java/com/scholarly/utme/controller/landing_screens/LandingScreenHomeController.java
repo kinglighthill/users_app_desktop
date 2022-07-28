@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller.landing_screens;
 
+import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.Course;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
@@ -55,7 +56,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     private ImageView handImage, notificationIcon, profileImage, biologyIcon, englishIcon, physicsIcon, chemistryIcon, mathematicsIcon, geographyIcon, boyWithLaptop;
 
     @FXML
-    private ImageView cbtPracticeIcon, videosIcon, novelsIcon, studyNotesIcon, cbtCentresIcon, audioIcon, firstSessionVideoImage, firstSessionPlayIcon, thirdSessionVideoImage, thirdSessionPlayIcon;
+    private ImageView cbtPracticeIcon, videosIcon, novelsIcon, studyNotesIcon, cbtCentresIcon, audioIcon, syllabusIcon, firstSessionVideoImage, firstSessionPlayIcon, thirdSessionVideoImage, thirdSessionPlayIcon;
 
     @FXML
     private ImageView firstSessionOneStar, firstSessionTwoStar, firstSessionThreeStar, firstSessionFourStar, firstSessionFiveStar, thirdSessionOneStar, thirdSessionTwoStar, thirdSessionThreeStar, thirdSessionFourStar, thirdSessionFiveStar;
@@ -67,7 +68,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     private Panel biologyPane, englishPane, physicsPane, chemistryPane, mathematicsPane, geographyPane;
 
     @FXML
-    private Panel cbtPracticePanel, pastQuestionsPanel, cbtGamePanel, videosPanel, audioPanel, studyNotesPanel, cbtCentresPanel, syllabusPanel;
+    private Panel cbtPracticePanel, pastQuestionsPanel, cbtGamePanel, videosPanel, audioPanel, novelsPanel,  studyNotesPanel, cbtCentresPanel, syllabusPanel;
 
     @FXML
     private Panel firstSession, secondSession, thirdSession, fourthSession, actionCbtPracticePanel;
@@ -76,7 +77,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     private Label helloText, startLearningText, topSubjectsText, biologyText, englishText, physicsText, chemistryText, mathematicsText, geographyText, activitiesText, continueSessionsText;
 
     @FXML
-    private Label cbtPracticeText, videosText, novelsText, pastQuestionsLabel, audioText, studyNotesText, cbtCentresText, syllabusLabel, firstSessionVideoTitle, firstSessionTimeText, firstSessionRatingNumber, firstSessionDescriptionText;
+    private Label cbtPracticeText, videosText, novelsText, pastQuestionsLabel, audioText, syllabusText, studyNotesText, cbtCentresText, syllabusLabel, firstSessionVideoTitle, firstSessionTimeText, firstSessionRatingNumber, firstSessionDescriptionText;
 
     @FXML
     private Label secondSessionBookTitle, secondSessionAuthorName, secondSessionChaptersText, thirdSessionVideoTitle, thirdSessionTimeText, thirdSessionRatingNumber, thirdSessionDescriptionText, fourthSessionBookTitle, fourthSessionAuthorName, fourthSessionChaptersText;
@@ -103,18 +104,28 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             actionsPane.setVisible(false);
         });
 
-//
-//        pastQuestionsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-//
-//        syllabusLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-
         cbtPracticePanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData("practicePanel");
+            ViewSwitcher.passData(new HomeScreenController.InitialData("practiceScreen"));
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+
+        novelsPanel.setOnMouseClicked(e -> {
+            ViewSwitcher.passData(new HomeScreenController.InitialData("novelsScreen"));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
         actionCbtPracticePanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData("practicePanel");
+            ViewSwitcher.passData(new HomeScreenController.InitialData("practiceScreen"));
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+
+        studyNotesPanel.setOnMouseClicked(e -> {
+            ViewSwitcher.passData(new HomeScreenController.InitialData("studyNotesScreen"));
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        });
+
+        syllabusPanel.setOnMouseClicked(e -> {
+            ViewSwitcher.passData(new HomeScreenController.InitialData("syllabusScreen"));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
@@ -129,30 +140,34 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });*/
 
-        videosPanel.setOnMouseClicked(e -> {
+        /*videosPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("videosPanel");
             ViewSwitcher.showScreen(View.HOME_SCREEN);
-        });
+        });*/
 
-        audioPanel.setOnMouseClicked(e -> {
+        /*audioPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("audiosPanel");
             ViewSwitcher.showScreen(View.HOME_SCREEN);
-        });
+        });*/
 
-        cbtCentresPanel.setOnMouseClicked(e -> {
+        /*cbtCentresPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("learningCenterPanel");
             ViewSwitcher.showScreen(View.HOME_SCREEN);
-        });
-
-        studyNotesPanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData("studyNotesPanel");
-            ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
-        });
+        });*/
 
         /*syllabusPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("syllabusPanel");
             ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
         });*/
+
+        notificationIcon.setOnMouseClicked(event -> {
+            ViewSwitcher.showScreen(View.ACCOUNT_NOTIFICATIONS_SCREEN);
+        });
+
+        profileImage.setOnMouseClicked(event -> {
+            ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN);
+        });
+
     }
 
     private void initializeViews() {
@@ -160,12 +175,11 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         notificationIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/bell_without_notification.png").toString()));
         handImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/hand_image2.png").toString()));
         actionCloseImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/action_close_icon.png").toString()));
-        boyWithLaptop.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/boy_with_laptop.jpg").toString()));
+        boyWithLaptop.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/boy_with_laptop.png").toString()));
 
-        profileImage.setImage(new Image(getClass().getResource("/drawable/profileImage.jpg").toString()));
         final Circle clip = new Circle(20, 30, 20);
-        clip.setStyle("-fx-border-color: #000000; -fx-border-width: 5");
         profileImage.setClip(clip);
+        profileImage.setImage(new Image(getClass().getResource("/drawable/profileImage.jpg").toString()));
 
         biologyIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/biology_icon.png").toString()));
         englishIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/english_icon.png").toString()));
@@ -175,11 +189,12 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         geographyIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/geography_icon.png").toString()));
 
         cbtPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_practice_icon.png").toString()));
-        videosIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/videos_icon.png").toString()));
+//        videosIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/videos_icon.png").toString()));
         novelsIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/novels_icon.png").toString()));
-        studyNotesIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/novels_icon.png").toString()));
-        cbtCentresIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_centres_icon.png").toString()));
-        audioIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/audio_icon.png").toString()));
+        studyNotesIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/notes_icon.png").toString()));
+//        cbtCentresIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_centres_icon.png").toString()));
+//        audioIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/audio_icon.png").toString()));
+        syllabusIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/syllabus_icon.png").toString()));
 
         firstSessionVideoImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/session_video_background.jpg").toString()));
         firstSessionPlayIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/session_play_icon.png").toString()));
@@ -237,11 +252,12 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         activitiesText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
 
         cbtPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-        videosText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+//        videosText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
         novelsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
         studyNotesText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-        audioText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-        cbtCentresText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        syllabusText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+//        audioText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+//        cbtCentresText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 
         continueSessionsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
         firstSessionVideoTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));

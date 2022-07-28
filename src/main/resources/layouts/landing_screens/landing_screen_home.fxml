@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.geometry.Insets?>
-<?import org.controlsfx.control.GridCell?>
-<?import org.controlsfx.control.GridView?>
-<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.image.ImageView?>
-
-<?import javafx.scene.shape.Circle?>
+<?import org.kordamp.bootstrapfx.scene.layout.*?>
 <BorderPane fx:id="rootPane" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenHomeController">
 
     <top>
@@ -21,7 +12,6 @@
 
             <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
                 <children>
-
                     <Label fx:id="helloText" text="Hello! Johnny" textFill="#034801">
                         <HBox.margin>
                             <Insets left="20.0" />
@@ -35,16 +25,15 @@
                     </ImageView>
 
                     <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" HBox.hgrow="ALWAYS">
-                        <children>
-                            <ImageView fx:id="notificationIcon" pickOnBounds="true" preserveRatio="true">
-                                <HBox.margin>
-                                    <Insets right="20.0" />
-                                </HBox.margin>
-                            </ImageView>
-                            <ImageView fx:id="profileImage" fitWidth="70" fitHeight="60" pickOnBounds="true" preserveRatio="true"/>
-                        </children>
+                        <ImageView fx:id="notificationIcon" pickOnBounds="true" preserveRatio="true">
+                            <HBox.margin>
+                                <Insets right="20.0"/>
+                            </HBox.margin>
+                        </ImageView>
+                        <ImageView fx:id="profileImage" fitWidth="70" fitHeight="60" pickOnBounds="true" preserveRatio="true"/>
+
                         <HBox.margin>
-                            <Insets left="20.0" />
+                            <Insets left="20.0"/>
                         </HBox.margin>
                     </HBox>
 
@@ -64,8 +53,7 @@
     </top>
 
     <center>
-        <StackPane fx:id="centerStackPane" >
-
+        <StackPane fx:id="centerStackPane">
             <ScrollPane fx:id="mainScrollPane" fitToWidth="true" style="-fx-background-color: #FFFFFF;" >
                 <VBox prefWidth="1000" prefHeight="600" style="-fx-background-color: #FFFFFF;">
                     <Label fx:id="topSubjectsText" text="Top subjects to get started" textFill="#034801">
@@ -160,31 +148,62 @@
                             </Label>
 
                             <GridPane prefHeight="200" prefWidth="350" alignment="CENTER_LEFT" hgap="10.0" vgap="10.0">
-                                <padding>
-                                    <Insets left="10.0" right="10.0"/>
-                                </padding>
 
                                 <children>
                                     <Panel fx:id="cbtPracticePanel" GridPane.columnIndex="0" GridPane.rowIndex="0"
                                            prefWidth="200.0" style="-fx-background-color: #E18400; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
-                                            <ImageView fx:id="cbtPracticeIcon" preserveRatio="true" pickOnBounds="true"/>
+                                            <ImageView fx:id="cbtPracticeIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true"/>
                                         </top>
                                         <bottom>
-                                            <Label fx:id="cbtPracticeText" text="CBT Practice" textFill="white" >
-
-                                            </Label>
+                                            <Label fx:id="cbtPracticeText" text="CBT Practice" textFill="white"/>
                                         </bottom>
-                                        <right>
-                                            <VBox prefHeight="100" style="-fx-background-color: #FFB752;" opacity="0.3"/>
-                                        </right>
 
                                         <padding>
-                                            <Insets left="20" bottom="20" top="20"/>
+                                            <Insets left="30" bottom="20" top="20"/>
                                         </padding>
                                     </Panel>
 
-                                    <Panel fx:id="videosPanel" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                    <Panel fx:id="novelsPanel" GridPane.columnIndex="1" GridPane.rowIndex="0" minHeight="120.0"
+                                           prefWidth="250.0" style="-fx-background-color: #1B68AF; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                        <top>
+                                            <ImageView fx:id="novelsIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                                        </top>
+                                        <bottom>
+                                            <Label fx:id="novelsText" text="Novels" textFill="white"/>
+                                        </bottom>
+                                        <padding>
+                                            <Insets left="30" bottom="20" top="20"/>
+                                        </padding>
+                                    </Panel>
+
+                                    <Panel fx:id="studyNotesPanel" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                           prefWidth="250.0" style="-fx-background-color: #0EA362; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                        <top>
+                                            <ImageView fx:id="studyNotesIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                                        </top>
+                                        <bottom>
+                                            <Label fx:id="studyNotesText" text="Study Notes" textFill="white"/>
+                                        </bottom>
+                                        <padding>
+                                            <Insets left="30" bottom="20" top="20"/>
+                                        </padding>
+                                    </Panel>
+
+                                    <Panel fx:id="syllabusPanel" GridPane.columnIndex="1" GridPane.rowIndex="1" minHeight="120.0"
+                                           prefWidth="250.0" style="-fx-background-color: #D4107A; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                        <top>
+                                            <ImageView fx:id="syllabusIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                                        </top>
+                                        <bottom>
+                                            <Label fx:id="syllabusText" text="Syllabus" textFill="white" />
+                                        </bottom>
+                                        <padding>
+                                            <Insets left="30" bottom="20" top="20"/>
+                                        </padding>
+                                    </Panel>
+
+                                    <!--<Panel fx:id="videosPanel" GridPane.columnIndex="1" GridPane.rowIndex="0"
                                            prefWidth="250.0" style="-fx-background-color: #AD4518; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
                                             <ImageView fx:id="videosIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -195,44 +214,20 @@
                                         <padding>
                                             <Insets left="20" bottom="20" top="20"/>
                                         </padding>
-                                    </Panel>
+                                    </Panel>-->
 
-                                    <Panel fx:id="novelsPanel" GridPane.columnIndex="2" GridPane.rowIndex="0" minHeight="120.0"
-                                           prefWidth="250.0" style="-fx-background-color: #10AFD4; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                                        <top>
-                                            <ImageView fx:id="novelsIcon" preserveRatio="true" pickOnBounds="true"/>
-                                        </top>
-                                        <bottom>
-                                            <Label fx:id="novelsText" text="Novels" textFill="white"/>
-                                        </bottom>
-                                        <padding>
-                                            <Insets left="20" bottom="20" top="20"/>
-                                        </padding>
-                                    </Panel>
 
-                                    <!--                                <Panel fx:id="cbtGamePanel" GridPane.columnIndex="2" GridPane.rowIndex="0" minHeight="120.0"-->
-                                    <!--                                       prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">-->
-                                    <!--                                    <Label fx:id="cbtGameLabel" text="CBT Game" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >-->
-                                    <!--                                        <padding>-->
-                                    <!--                                            <Insets left="65"/>-->
-                                    <!--                                        </padding>-->
-                                    <!--                                    </Label>-->
-                                    <!--                                </Panel>-->
+                                   <!-- <Panel fx:id="cbtGamePanel" GridPane.columnIndex="2" GridPane.rowIndex="0" minHeight="120.0"
+                                           prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                        <Label fx:id="cbtGameLabel" text="CBT Game" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
+                                            <padding>
+                                                <Insets left="65"/>
+                                            </padding>
+                                        </Label>
+                                    </Panel>-->
 
-                                    <Panel fx:id="studyNotesPanel" GridPane.columnIndex="0" GridPane.rowIndex="1"
-                                           prefWidth="250.0" style="-fx-background-color: #0EA362; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                                        <top>
-                                            <ImageView fx:id="studyNotesIcon" preserveRatio="true" pickOnBounds="true"/>
-                                        </top>
-                                        <bottom>
-                                            <Label fx:id="studyNotesText" text="Study Notes" textFill="white"/>
-                                        </bottom>
-                                        <padding>
-                                            <Insets left="20" bottom="20" top="20"/>
-                                        </padding>
-                                    </Panel>
 
-                                    <Panel fx:id="cbtCentresPanel" GridPane.columnIndex="1" GridPane.rowIndex="1" minHeight="120.0"
+                                    <!--<Panel fx:id="cbtCentresPanel" GridPane.columnIndex="1" GridPane.rowIndex="1" minHeight="120.0"
                                            prefWidth="250.0" style="-fx-background-color: #D4107A; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
                                             <ImageView fx:id="cbtCentresIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -243,9 +238,9 @@
                                         <padding>
                                             <Insets left="20" bottom="20" top="20"/>
                                         </padding>
-                                    </Panel>
+                                    </Panel>-->
 
-                                    <Panel fx:id="audioPanel" GridPane.columnIndex="2" GridPane.rowIndex="1" minHeight="120.0"
+                                    <!--<Panel fx:id="audioPanel" GridPane.columnIndex="2" GridPane.rowIndex="1" minHeight="120.0"
                                            prefWidth="250.0" style="-fx-background-color: #1B68AF; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
                                             <ImageView fx:id="audioIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -256,18 +251,9 @@
                                         <padding>
                                             <Insets left="20" bottom="20" top="20"/>
                                         </padding>
-                                    </Panel>
+                                    </Panel>-->
 
-                                    <!--<Panel fx:id="syllabusPanel" GridPane.columnIndex="1" GridPane.rowIndex="2" minHeight="120.0"
-                                           prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                                        <Label fx:id="syllabusLabel" text="Syllabus" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
-                                            <padding>
-                                                <Insets left="65"/>
-                                            </padding>
-                                        </Label>
-                                    </Panel>
-
-                                    <Panel fx:id="pastQuestionsPanel" GridPane.columnIndex="0" GridPane.rowIndex="2" minHeight="120.0"
+                                    <!--<Panel fx:id="pastQuestionsPanel" GridPane.columnIndex="0" GridPane.rowIndex="2" minHeight="120.0"
                                            prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <Label fx:id="pastQuestionsLabel" text="Past Questions" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
                                             <padding>
@@ -277,11 +263,11 @@
                                     </Panel>-->
 
                                 </children>
-
+                                <padding>
+                                    <Insets left="10.0" right="10.0"/>
+                                </padding>
                             </GridPane>
-
                         </children>
-
                         <padding>
                             <Insets left="10"/>
                         </padding>
@@ -292,9 +278,7 @@
                     </padding>
 
                     <VBox spacing="10">
-                        <Label fx:id="continueSessionsText" text="Continue previous sessions" textFill="#034801" >
-
-                        </Label>
+                        <Label fx:id="continueSessionsText" text="Continue previous sessions" textFill="#034801"/>
 
                         <GridPane fx:id="previousSessionGridPane" alignment="CENTER_LEFT" hgap="10.0" vgap="10.0" style="-fx-background-color: #FFFFFF;">
                             <children>
@@ -320,15 +304,12 @@
 
                                                 <Label fx:id="firstSessionRatingNumber" text="4.5" textFill="#034801" textAlignment="RIGHT"/>
                                             </HBox>
-
                                             <Label fx:id="firstSessionDescriptionText" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae " textFill="#034801" wrapText="true"/>
-
                                             <padding>
                                                 <Insets left="20"/>
                                             </padding>
                                         </VBox>
                                     </center>
-
                                     <padding>
                                         <Insets left="20" bottom="20" top="20"/>
                                     </padding>
@@ -382,7 +363,6 @@
                                                     <ImageView fx:id="thirdSessionFourStar" preserveRatio="true" pickOnBounds="true"/>
                                                     <ImageView fx:id="thirdSessionFiveStar" preserveRatio="true" pickOnBounds="true"/>
                                                 </HBox>
-
                                                 <Label fx:id="thirdSessionRatingNumber" text="4.5" textFill="#034801" textAlignment="RIGHT"/>
                                             </HBox>
 
@@ -548,13 +528,10 @@
                     <Insets topRightBottomLeft="80"/>
                 </StackPane.margin>
             </StackPane>
-
         </StackPane>
-
     </center>
 
     <right>
-
         <HBox>
             <Panel fx:id="rightPane" prefWidth="300" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
                 <VBox spacing="20">
@@ -604,7 +581,6 @@
                                     <Insets topRightBottomLeft="10"/>
                                 </padding>
                             </Panel>
-
                         </HBox>
                     </ScrollPane>
 
@@ -614,10 +590,8 @@
                 <padding>
                     <Insets top="25" left="15" right="15"/>
                 </padding>
-
             </Panel>
         </HBox>
-
     </right>
 
 </BorderPane>

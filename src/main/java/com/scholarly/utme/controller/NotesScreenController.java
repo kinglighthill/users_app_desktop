@@ -186,7 +186,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
         });
         exitDialogExitButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
+            ViewSwitcher.passData(new HomeScreenController.InitialData("studyNotesScreen"));
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
         exitDialogCancelButton.setOnAction(event -> {
             Animations.translateOut(exitNotesDialog, 300);
