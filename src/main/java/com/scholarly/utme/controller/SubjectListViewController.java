@@ -34,6 +34,7 @@ import static com.scholarly.utme.util.Constants.*;
 @FxmlPath("/layouts/SubjectListView.fxml")
 public class SubjectListViewController implements FxmlView<SubjectListViewVM>, Initializable {
 
+    private static final String TAG = "SubjectListViewController::  ";
 
     @InjectViewModel
     private SubjectListViewVM viewModel;
@@ -71,8 +72,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     private ObservableList<SubjectState> selectedObjectiveSubjects = FXCollections.observableArrayList();
     private ObservableList<SubjectState> selectedTheorySubjects = FXCollections.observableArrayList();
 
-
-    private static final String TAG = "SubjectListViewController:  ";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

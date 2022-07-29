@@ -43,7 +43,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private Button signUpProceedButton, signUpGoogleButton, signUpFacebookButton, loginProceedButton, loginGoogleButton, loginFacebookButton, recoverProceedButton;
 
     @FXML
-    private TextField signUpEmailField, signUpPasswordField, loginEmailField, recoverEmailField;
+    private TextField signUpEmailField, signUpPasswordField, loginEmailField, loginPasswordField, recoverEmailField;
 
     @FXML
     private CustomNumberField signUpPhoneField;
@@ -121,17 +121,28 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         });
 
         Label loginEmailError = getEmailError();
+        Label loginPasswordError = getPasswordError();
 
         loginProceedButton.setOnAction(event -> {
             loginEmailSection.getChildren().remove(loginEmailError);
             if (!loginEmailField.getText().contains("@")) {
                 loginEmailSection.getChildren().add(loginEmailError);
-
-            } else {
-                loginEmailSection.getChildren().remove(loginEmailError);
-                ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
-                ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                return;
             }
+
+            loginPasswordSection.getChildren().remove(loginPasswordError);
+            if (loginPasswordField.getCharacters().length() < 6) {
+                if (!loginPasswordSection.getChildren().contains(loginPasswordError)) {
+                    loginPasswordSection.getChildren().add(loginPasswordError);
+                }
+                return;
+            }
+
+            loginEmailSection.getChildren().remove(loginEmailError);
+            loginPasswordSection.getChildren().remove(loginPasswordError);
+
+            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
 
         });
 
