@@ -9,6 +9,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.shape.Line?>
+<?import jidefx.scene.control.field.NumberField?>
+<?import com.scholarly.utme.ui.utils.CustomNumberField?>
 <AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefHeight="800.0" prefWidth="1000.0"
             fx:controller="com.scholarly.utme.controller.AuthenticationController" style="-fx-background-color: #FFFFFF">
 
@@ -47,7 +49,7 @@
         <right>
             <StackPane fx:id="authenticationSection" prefWidth="500" prefHeight="200">
                 <VBox fx:id="signUpSection" prefWidth="500" prefHeight="200" alignment="TOP_CENTER" visible="false">
-                    <VBox spacing="10">
+                    <VBox fx:id="signUpEmailSection" spacing="10">
                         <Label fx:id="signUpHeaderText" text="Sign up" textFill="#034801"/>
                         <Label fx:id="signUpEmailText" text="Email">
                             <VBox.margin>
@@ -60,8 +62,11 @@
                                 <Insets left="7" top="10" bottom="10"/>
                             </padding>
                         </TextField>
-                        <Label fx:id="signUpEmailError" text="Please enter a valid email address" textFill="#FF0000" visible="false" />
+<!--                        <Label fx:id="signUpEmailError" text="Please enter a valid email address" textFill="#FF0000" visible="false" />-->
 
+                    </VBox>
+
+                    <VBox fx:id="signUpPasswordSection" spacing="10">
                         <Label fx:id="signUpPasswordText" text="Password">
                             <VBox.margin>
                                 <Insets top="10"/>
@@ -73,20 +78,20 @@
                                 <Insets left="7" top="10" bottom="10"/>
                             </padding>
                         </PasswordField>
+                    </VBox>
 
+                    <VBox fx:id="signUpPhoneSection" spacing="10">
                         <Label fx:id="signUpPhoneText" text="Phone">
                             <VBox.margin>
                                 <Insets top="10"/>
                             </VBox.margin>
                         </Label>
 
-                        <TextField fx:id="signUpPhoneField" promptText="Type your phone number" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                        <CustomNumberField fx:id="signUpPhoneField"  promptText="Enter your phone number" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
                             <padding>
                                 <Insets left="7" top="10" bottom="10"/>
                             </padding>
-                        </TextField>
-                        <!--                <Label fx:id="phoneError" text="Please enter a valid phone number" textFill="#FF0000" visible="false" />-->
-
+                        </CustomNumberField>
                     </VBox>
 
                     <Button fx:id="signUpProceedButton" text="Proceed" textFill="#FFFFFF" prefWidth="400" style="-fx-background-color: #12AF20; -fx-border-radius: 10;">
@@ -105,13 +110,13 @@
                             </VBox.margin>
                         </Label>
 
-                        <Button fx:id="signUpGoogleButton" prefWidth="300" text="Sign up with Google" textFill="#034801" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
+                        <Button fx:id="signUpGoogleButton" prefWidth="300" text="Sign in with Google" textFill="#034801" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
                             <padding>
                                 <Insets  top="15" bottom="15"/>
                             </padding>
                         </Button>
 
-                        <Button fx:id="signUpFacebookButton" prefWidth="300" text="Sign up with Facebook" textFill="#034801" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
+                        <Button fx:id="signUpFacebookButton" prefWidth="300" text="Sign in with Facebook" textFill="#034801" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
                             <padding>
                                 <Insets top="15" bottom="15"/>
                             </padding>
@@ -125,7 +130,6 @@
                                 <Insets top="10"/>
                             </VBox.margin>
                         </HBox>
-
                     </VBox>
 
                     <padding>
@@ -135,31 +139,34 @@
 
                 <VBox fx:id="loginSection" prefWidth="500" prefHeight="200" alignment="TOP_CENTER" visible="false">
                     <VBox spacing="10">
-                        <Label fx:id="loginHeaderText" text="Login" textFill="#034801"/>
-                        <Label fx:id="loginEmailText" text="Email">
-                            <VBox.margin>
-                                <Insets top="30"/>
-                            </VBox.margin>
-                        </Label>
+                        <VBox fx:id="loginEmailSection" spacing="10">
+                            <Label fx:id="loginHeaderText" text="Login" textFill="#034801"/>
+                            <Label fx:id="loginEmailText" text="Email">
+                                <VBox.margin>
+                                    <Insets top="30"/>
+                                </VBox.margin>
+                            </Label>
 
-                        <TextField fx:id="loginEmailField" promptText="Enter your email address" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
-                            <padding>
-                                <Insets left="7" top="10" bottom="10"/>
-                            </padding>
-                        </TextField>
-                        <Label fx:id="loginEmailError" text="Please enter a valid email address" textFill="#FF0000" visible="false" />
+                            <TextField fx:id="loginEmailField" promptText="Enter your email address" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                                <padding>
+                                    <Insets left="7" top="10" bottom="10"/>
+                                </padding>
+                            </TextField>
+                        </VBox>
 
-                        <Label fx:id="loginPasswordText" text="Password">
-                            <VBox.margin>
-                                <Insets top="10"/>
-                            </VBox.margin>
-                        </Label>
+                        <VBox fx:id="loginPasswordSection" spacing="10">
+                            <Label fx:id="loginPasswordText" text="Password">
+                                <VBox.margin>
+                                    <Insets top="10"/>
+                                </VBox.margin>
+                            </Label>
 
-                        <PasswordField fx:id="loginPasswordField" promptText="Enter your desired password" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
-                            <padding>
-                                <Insets left="7" top="10" bottom="10"/>
-                            </padding>
-                        </PasswordField>
+                            <PasswordField fx:id="loginPasswordField" promptText="Enter your desired password" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                                <padding>
+                                    <Insets left="7" top="10" bottom="10"/>
+                                </padding>
+                            </PasswordField>
+                        </VBox>
                     </VBox>
 
                     <Button fx:id="loginProceedButton" text="Proceed" textFill="#FFFFFF" prefWidth="400" style="-fx-background-color: #12AF20; -fx-border-radius: 10;">
@@ -178,17 +185,26 @@
                             </VBox.margin>
                         </Label>
 
-                        <Button fx:id="loginGoogleButton" prefWidth="300" alignment="CENTER" text="Login with Google" textFill="#034801" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
+                        <Button fx:id="loginGoogleButton" prefWidth="300" alignment="CENTER" text="Sign in with Google" textFill="#034801" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
                             <padding>
                                 <Insets  top="15" bottom="15"/>
                             </padding>
                         </Button>
 
-                        <Button fx:id="loginFacebookButton" prefWidth="300" text="Login with Facebook" textFill="#034801" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
+                        <Button fx:id="loginFacebookButton" prefWidth="300" text="Sign in with Facebook" textFill="#034801" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
                             <padding>
                                 <Insets top="15" bottom="15"/>
                             </padding>
                         </Button>
+
+                        <HBox alignment="CENTER" spacing="5">
+                            <Label fx:id="forgotPasswordText" text="Forgot Password?"/>
+                            <Label fx:id="resetText" text="Reset Password" textFill="#12AF20"/>
+
+                            <HBox.margin>
+                                <Insets top="5"/>
+                            </HBox.margin>
+                        </HBox>
 
                         <HBox alignment="CENTER" spacing="5">
                             <Label fx:id="loginHaveAcctText" text="Don't have an account?"/>
@@ -198,14 +214,6 @@
                                 <Insets top="20"/>
                             </VBox.margin>
                         </HBox>
-                        <HBox fx:id="forgotPasswordBox" alignment="CENTER" spacing="5">
-                            <Label fx:id="forgotPasswordText" text="Forgot Password?"/>
-                            <Label fx:id="resetText" text="Reset Password" textFill="#12AF20"/>
-
-                            <HBox.margin>
-                                <Insets top="5"/>
-                            </HBox.margin>
-                        </HBox>
                     </VBox>
 
                     <padding>
@@ -213,7 +221,7 @@
                     </padding>
                 </VBox>
 
-                <VBox fx:id="recoverPasswordSection" spacing="15" visible="false">
+                <VBox fx:id="recoverPasswordSection" spacing="10" visible="false">
                     <Label fx:id="recoverHeaderText" text="Reset Password" textFill="#034801"/>
                     <Label fx:id="recoverEmailText" text="Email">
                         <VBox.margin>
@@ -235,7 +243,7 @@
                             </padding>
                         </Button>
                         <VBox.margin>
-                            <Insets top="20"/>
+                            <Insets top="10"/>
                         </VBox.margin>
                     </HBox>
 

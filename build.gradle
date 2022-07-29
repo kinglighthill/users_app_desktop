@@ -69,6 +69,9 @@ dependencies {
     implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0') {
         exclude group: 'org.openjfx'
     }
+    implementation ('com.jidesoft:jidefx-fields:0.9.1-b128') {
+        exclude group: 'org.openjfx'
+    }
     /*implementation('eu.hansolo:tilesfx:16.0.3') {
         exclude group: 'org.openjfx'
     }*/
@@ -76,6 +79,7 @@ dependencies {
     /*implementation('org.xerial:sqlite-jdbc:3.36.0.2') {
         exclude group: 'org.sqlite'
     }*/
+
     // SQL connector
     implementation 'io.github.willena:sqlite-jdbc:3.35.5.3'
 

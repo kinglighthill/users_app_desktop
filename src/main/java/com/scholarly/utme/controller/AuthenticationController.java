@@ -1,26 +1,22 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
+import jidefx.scene.control.field.NumberField;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,7 +28,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private StackPane authenticationSection;
 
     @FXML
-    private VBox signUpSection, loginSection, recoverPasswordSection;
+    private VBox signUpSection, loginSection, recoverPasswordSection, signUpEmailSection, signUpPasswordSection, signUpPhoneSection, loginEmailSection, loginPasswordSection;
 
     @FXML
     private ImageView imageView, appIcon;
@@ -41,14 +37,16 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private Label scholarlyText, beTheBestText, signUpHeaderText, signUpEmailText, signUpPasswordText, signUpPhoneText, signUpContinueText, signUpHaveAccountText, signUpLoginText, forgotPasswordText, resetText;
 
     @FXML
-    private Label signUpEmailError, loginHeaderText, loginEmailText, loginEmailError, loginPasswordText, loginContinueText, loginHaveAcctText, loginSignUpText, recoverHeaderText, recoverEmailText, recoverEmailError;
+    private Label signUpEmailError, loginHeaderText, loginEmailText, loginPasswordText, loginContinueText, loginHaveAcctText, loginSignUpText, recoverHeaderText, recoverEmailText, recoverEmailError;
 
     @FXML
     private Button signUpProceedButton, signUpGoogleButton, signUpFacebookButton, loginProceedButton, loginGoogleButton, loginFacebookButton, recoverProceedButton;
 
     @FXML
-    private TextField signUpEmailField, signUpPasswordField, signUpPhoneField, loginEmailField, recoverEmailField;
+    private TextField signUpEmailField, signUpPasswordField, loginEmailField, recoverEmailField;
 
+    @FXML
+    private CustomNumberField signUpPhoneField;
 
 
     @Override
@@ -85,28 +83,61 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         });
 
+
+        Label signUpEmailError = getEmailError();
+        Label signUpPasswordError = getPasswordError();
+        Label signUpPhoneError = getPhoneError();
+
         signUpProceedButton.setOnAction(event -> {
-            if (!signUpEmailError.getText().contains("@")) {
-                signUpEmailError.setVisible(true);
+            signUpEmailSection.getChildren().remove(signUpEmailError);
+            if (!signUpEmailField.getText().contains("@")) {
+                signUpEmailSection.getChildren().add(signUpEmailError);
+                return;
+            }
+
+            signUpPasswordSection.getChildren().remove(signUpPasswordError);
+            if (signUpPasswordField.getCharacters().length() < 6) {
+                if (!signUpPasswordSection.getChildren().contains(signUpPasswordError)) {
+                    signUpPasswordSection.getChildren().add(signUpPasswordError);
+                }
+                return;
+            }
+
+            signUpPhoneSection.getChildren().remove(signUpPhoneError);
+            if (signUpPhoneField.getCharacters().length() < 11) {
+                if (!signUpPhoneSection.getChildren().contains(signUpPhoneError)) {
+                    signUpPhoneSection.getChildren().add(signUpPhoneError);
+                }
+                return;
+            }
+
+            signUpEmailSection.getChildren().remove(signUpEmailError);
+            signUpPasswordSection.getChildren().remove(signUpPasswordError);
+            signUpPhoneSection.getChildren().remove(signUpPhoneError);
+
+            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+
+        });
+
+        Label loginEmailError = getEmailError();
+
+        loginProceedButton.setOnAction(event -> {
+            loginEmailSection.getChildren().remove(loginEmailError);
+            if (!loginEmailField.getText().contains("@")) {
+                loginEmailSection.getChildren().add(loginEmailError);
+
             } else {
+                loginEmailSection.getChildren().remove(loginEmailError);
                 ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
                 ViewSwitcher.showScreen(View.LANDING_SCREEN);
             }
 
-        });
-        loginProceedButton.setOnAction(event -> {
-            if (!loginEmailField.getText().contains("@")) {
-                loginEmailError.setVisible(true);
-            } else {
-                ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
-                ViewSwitcher.showScreen(View.LANDING_SCREEN);
-            }
         });
 
         recoverProceedButton.setOnAction(event -> {
             if (!recoverEmailField.getText().contains("@")) {
                 recoverEmailError.setVisible(true);
-
             } else {
                 if (recoverProceedButton.getText().contains("Back")) {
                     Animations.fadeOut(recoverPasswordSection, 300);
@@ -119,6 +150,27 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             }
         });
 
+    }
+
+    private Label getEmailError() {
+        Label error = new Label("Please enter a valid email address");
+        error.setTextFill(Paint.valueOf("#FF0000"));
+        error.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        return error;
+    }
+
+    private Label getPasswordError() {
+        Label error = new Label("Your password must be more than 6 characters");
+        error.setTextFill(Paint.valueOf("#FF0000"));
+        error.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        return error;
+    }
+
+    private Label getPhoneError() {
+        Label error = new Label("Your phone number must be more than 11 characters");
+        error.setTextFill(Paint.valueOf("#FF0000"));
+        error.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        return error;
     }
 
     private void initializeViews() {
@@ -151,7 +203,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         signUpHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
         signUpEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         signUpEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
-        signUpEmailError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         signUpPasswordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         signUpPhoneText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         signUpPhoneField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
@@ -166,7 +217,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         loginHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
         loginEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         loginEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
-        loginEmailError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         loginPasswordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         loginProceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         loginContinueText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
