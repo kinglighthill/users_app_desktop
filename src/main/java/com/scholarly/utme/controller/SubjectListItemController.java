@@ -56,6 +56,8 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     @InjectViewModel
     private SubjectListItemVM viewModel;
 
+    private static final String TAG = "SubjectListItemController:  ";
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -78,7 +80,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
 
         questionNoChoiceBox.setItems(viewModel.getQuestionNumbers());
         questionNoChoiceBox.getItems().addListener((ListChangeListener<Integer>) c -> {
-            System.out.println("List was changed");
+            System.out.println(TAG + "List was changed");
             if (c.getList().size() != 0) {
                 questionNoChoiceBox.setValue(c.getList().get(c.getList().size() - 1));
             }
@@ -98,7 +100,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
 
         subRoot.getChildren().removeAll(divider, optionPanel);
         viewModel.subjectSelectedProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("subject selected property changed to -> " + newValue + " from -> " + oldValue);
+            System.out.println(TAG + "subject selected property changed to -> " + newValue + " from -> " + oldValue);
             if (newValue) {
                 subRoot.getChildren().addAll(divider, optionPanel);
             } else {

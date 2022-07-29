@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.ui.utils.Animations.animate;
+import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/SubjectListView.fxml")
 public class SubjectListViewController implements FxmlView<SubjectListViewVM>, Initializable {
@@ -71,17 +72,17 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     private ObservableList<SubjectState> selectedTheorySubjects = FXCollections.observableArrayList();
 
 
-    private final String PREF_KEY_SELECTED_TAB = "SELECTED_TAB";
+    private static final String TAG = "SubjectListViewController:  ";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Preferences tabPreferences = AppPreferences.getPreferences();
-        String lastSelectedTab = tabPreferences.get(PREF_KEY_SELECTED_TAB, "Objective");
+        Preferences userPreferences = AppPreferences.getPreferences();
+        String lastSelectedTab = userPreferences.get(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
 
-        if (lastSelectedTab.equalsIgnoreCase("Objective")){
+        if (lastSelectedTab.equalsIgnoreCase(PREF_VALUE_OBJECTIVE_TAB)){
             tabMenu.getSelectionModel().select(objectiveTab);
 
-        }else if (lastSelectedTab.equalsIgnoreCase("Theory")){
+        }else if (lastSelectedTab.equalsIgnoreCase(PREF_VALUE_THEORY_TAB)){
             tabMenu.getSelectionModel().select(theoryTab);;
         }
 
@@ -140,14 +141,14 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         });
 
         tabMenu.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue.getText().equalsIgnoreCase("Objective")) {
+            if (newValue.getText().equalsIgnoreCase(PREF_VALUE_OBJECTIVE_TAB)) {
                 tabMenu.getSelectionModel().select(objectiveTab);
-                tabPreferences.put(PREF_KEY_SELECTED_TAB, "Objective");
+                userPreferences.put(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
                 Animations.animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedObjectiveSubjects);
             } else {
                 tabMenu.getSelectionModel().select(theoryTab);
-                tabPreferences.put(PREF_KEY_SELECTED_TAB, "Theory");
+                userPreferences.put(PREF_KEY_SELECTED_TAB, PREF_VALUE_THEORY_TAB);
                 Animations.animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedTheorySubjects);
             }
@@ -173,18 +174,14 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         });
 
 
-
         startButton.setOnAction(event -> {
+
             List<SubjectState> subjectStates;
 
             if (tabMenu.getSelectionModel().getSelectedItem() == objectiveTab) {
                 subjectStates = selectedObjectiveSubjects;
-                //userPreferences.put(SELECTED_TAB_PREF_KEY, "Objective");
-
             } else {
                 subjectStates = selectedTheorySubjects;;
-                //userPreferences.put(SELECTED_TAB_PREF_KEY, "Theory");
-
             }
 
             // Ensure at least a subject is selected before the start of practice, study or cbt game
@@ -211,7 +208,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                         ViewSwitcher.showScreen(View.PRACTICE_SCREEN);
                     }
 
-                }else {
+                } else {
                     Alerts.info(
                             this.getClass(),
                                     "Message",

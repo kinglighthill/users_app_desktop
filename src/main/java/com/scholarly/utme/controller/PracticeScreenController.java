@@ -7,10 +7,7 @@ import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.TheoryQuestion;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.QuestionState;
@@ -434,7 +431,21 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         });
 
         exitButton.setOnAction(event -> {
-            showExitDialog();
+//            showExitDialog();
+            Dialog<ButtonType>dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to quit?");
+
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    exitDialogDimmer.setVisible(false);
+                    ViewSwitcher.passData(new HomeScreenController.InitialData("practiceScreen"));
+                    ViewSwitcher.showScreen(View.HOME_SCREEN);
+                } else if (buttonType == ButtonType.NO) {
+                    exitDialogDimmer.setVisible(false);
+                }
+                return buttonType;
+            });
+
+            dialog.show();
         });
 
         submitButton.setOnAction(event -> {
@@ -920,7 +931,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
-                ViewSwitcher.passData("practicePanel");
+                ViewSwitcher.passData(new HomeScreenController.InitialData("practiceScreen"));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
