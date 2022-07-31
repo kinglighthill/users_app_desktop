@@ -58,6 +58,8 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     private final ToggleGroup toggleGroup = new ToggleGroup();
 
+    private static final String TAG = "HomeScreenController:  ";
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
@@ -84,6 +86,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         if (viewModel.getSelectedScreen().equalsIgnoreCase("practiceScreen")) {
             pageTitle.setText("CBT Practice");
+            subjectListController.setOption(SubjectListOption.PRACTICE);
             selectButton(subjectListView, practiceButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("pastQuestionScreen")) {
             pageTitle.setText("Study Past Questions");
@@ -113,6 +116,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         practiceButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
+                System.out.println("CBT Practice selected");
                 pageTitle.setText("CBT Practice");
                 subjectListController.setOption(SubjectListOption.PRACTICE);
                 if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){

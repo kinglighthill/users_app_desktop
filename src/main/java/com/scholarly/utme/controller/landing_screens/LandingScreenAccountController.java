@@ -1,5 +1,7 @@
 package com.scholarly.utme.controller.landing_screens;
 
+import com.scholarly.utme.controller.HomeScreenController;
+import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAccountVM;
@@ -9,6 +11,8 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
@@ -61,6 +65,22 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
         notificationsPanel.setOnMouseClicked(mouseEvent -> {
             ViewSwitcher.showScreen(View.ACCOUNT_NOTIFICATIONS_SCREEN);
         });
+
+        logoutButton.setOnAction(event -> {
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Logout", null, "Are you sure you want to logout?");
+
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    ViewSwitcher.passData(false);
+                    ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+                }
+                return buttonType;
+            });
+
+            dialog.show();
+
+        });
+
     }
 
     private void initializeViews() {

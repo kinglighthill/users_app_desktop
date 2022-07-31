@@ -19,6 +19,10 @@ module com.scholarly.utme {
     requires java.prefs;
     requires jdk.jsobject;
     requires org.apache.commons.collections4;
+    requires jidefx.fields;
+    requires jidefx.converters;
+    requires jidefx.common;
+    requires jidefx.decoration;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;

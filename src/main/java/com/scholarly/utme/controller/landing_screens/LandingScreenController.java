@@ -76,13 +76,13 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         homeContentPane.getChildren().add(homeView);
 
-//        viewModel.processInitialData(getInitialData());
+        viewModel.processInitialData(getInitialData());
 
         initializeViews();
 
         initializeFonts();
 
-        /*if (viewModel.getSelectedScreen().equalsIgnoreCase("homeScreen")) {
+        if (viewModel.getSelectedScreen().equalsIgnoreCase("homeScreen")) {
             selectButton(homeView, homeButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("accountScreen")) {
             selectButton(accountView, accountButton);
@@ -98,7 +98,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             selectButton(updatesView, updatesButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase("settingsScreen")) {
             selectButton(settingsView, settingsButton);
-        }*/
+        }
 
 
         toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, performanceButton, updatesButton, settingsButton);
