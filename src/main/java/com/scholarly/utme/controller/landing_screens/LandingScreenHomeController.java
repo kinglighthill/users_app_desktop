@@ -25,6 +25,8 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static com.scholarly.utme.util.Constants.*;
+
 @FxmlPath("/layouts/landing_screens/landing_screen_home.fxml")
 public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM>, Initializable {
 
@@ -105,27 +107,27 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         });
 
         cbtPracticePanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData("practiceScreen"));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
         novelsPanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData("novelsScreen"));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(NOVELS_SCREEN));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
         actionCbtPracticePanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData("practiceScreen"));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
         studyNotesPanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData("studyNotesScreen"));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(NOTES_SCREEN));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
         syllabusPanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData("syllabusScreen"));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(SYLLABUS_SCREEN));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 

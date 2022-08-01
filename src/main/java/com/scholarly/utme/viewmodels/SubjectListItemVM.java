@@ -172,7 +172,7 @@ public class SubjectListItemVM implements ViewModel {
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();
-                        for ( int i = 1; i <= it.size(); i++) {
+                        for ( int i = 10; i <= it.size(); i+=10) {
                             numberList.add(i);
                         }
                         return numberList;
@@ -196,7 +196,7 @@ public class SubjectListItemVM implements ViewModel {
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();
-                        for ( int i = 1; i <= it.size(); i++) {
+                        for ( int i = 10; i <= it.size(); i+=10) {
                             numberList.add(i);
                         }
                         return numberList;

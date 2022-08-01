@@ -2,6 +2,7 @@ package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
+import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -22,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.media.Media;
@@ -31,11 +33,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static com.scholarly.utme.util.Constants.PRACTICE_SCREEN;
 
 
 @FxmlPath("/layouts/ExplanationScreen.fxml")
@@ -52,6 +57,9 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
     @FXML
     private StackPane explanationPane, explanationVideo;
+
+    @FXML
+    private Pane dialogDimmer;
 
     @FXML
     private ListView<Subject> subjectList;
@@ -144,8 +152,6 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                     .setSelectedQuestion(selectedQuestion + 1);
         });
 
-        tilePane.setVgap(10);
-        tilePane.setHgap(10);
 
         ToggleGroup explanationGroup = new ToggleGroup();
         explanationGroup.getToggles().addAll(textExplanation, videoExplanation);
@@ -177,8 +183,19 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         }));
 
         exitButton.setOnAction(event -> {
-            ViewSwitcher.passData("practicePanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            dialogDimmer.setVisible(true);
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Exit", null, "Are you sure you want to exit?");
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    dialogDimmer.setVisible(false);
+                    ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
+                    ViewSwitcher.showScreen(View.HOME_SCREEN);
+                } else {
+                    dialogDimmer.setVisible(false);
+                }
+                return buttonType;
+            });
+            dialog.show();
         });
 
     }
@@ -518,7 +535,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         tilePane.getChildren().clear();
 
         for (int i=1; i <= questions.size(); i++) {
-            Rectangle r = new Rectangle(35, 35);
+            Rectangle r = new Rectangle(34, 34);
             r.setFill(Color.web("#FFFFFF"));
             r.setStroke(Paint.valueOf("#12AF20"));
             r.setStrokeType(StrokeType.OUTSIDE);
@@ -526,21 +543,18 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             Label l = new Label(Integer.toString(i));
 
             if (questions.get(i - 1).getObjectiveQuestion().getOptionAnswer().equalsIgnoreCase(questions.get(i-1).getSelectedOption())) {
-                r.setFill(Color.GREEN);
-                r.setStrokeWidth(1);
+                r.setFill(Paint.valueOf("#12AF20"));
                 l.setTextFill(Paint.valueOf("#FFFFFF"));
+
             } else if (questions.get(i-1).getSelectedOption() != null) {
-                r.setStroke(null);
-                r.setFill(Color.web("#FA0000", 0.7));
-            } else {
-                r.setStroke(Paint.valueOf("#12AF20"));
-                r.setStrokeWidth(1.5);
+                r.setFill(Color.web("#FA0000", 0.5));
+                l.setTextFill(Color.WHITE);
             }
 
 
             if (subjectQuestionsState.getSelectedQuestion() == i) {
                 r.setStroke(Paint.valueOf("#FCB029"));
-                r.setStrokeWidth(2);
+                r.setStrokeWidth(2.0);
             }
 
             StackPane s = new StackPane(r, l);
@@ -563,19 +577,13 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestion - 1);
         StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestion - 1);
 
-
         Rectangle selectedQuestionRect = (Rectangle) selectedQuestionPane.getChildren().get(0);
         Rectangle oldQuestionRect = (Rectangle) oldQuestionPane.getChildren().get(0);
 
-        Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
-        Label oldQuestionText = (Label) oldQuestionPane.getChildren().get(1);
-
-
-//        oldQuestionText.setTextFill(Color.BLACK);
-        oldQuestionRect.setStrokeWidth(1);
+        oldQuestionRect.setStroke(Paint.valueOf("#12AF20"));
+        oldQuestionRect.setStrokeWidth(1.0);
         selectedQuestionRect.setStroke(Paint.valueOf("#FCB029"));
         selectedQuestionRect.setStrokeWidth(2);
-//        selectedQuestionText.setTextFill(Color.WHITE);
 
     }
 

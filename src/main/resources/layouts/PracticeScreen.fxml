@@ -157,26 +157,25 @@
                               <Font name="Gill Sans MT Bold" size="18.0" />
                            </font>
                         </Label>
-                        <StackPane prefHeight="400.0" prefWidth="200.0" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
-                           <children>
-                              <WebView fx:id="webView" prefHeight="400.0" prefWidth="200.0" >
-                                 <StackPane.margin>
-                                    <Insets />
-                                 </StackPane.margin>
-                              </WebView>
-                              <Label fx:id="questionLabel" prefHeight="64.0" prefWidth="1024.0" text="Label" visible="false" wrapText="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Label>
-                           </children>
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: white;">
+                           <StackPane prefHeight="400.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                              <children>
+                                 <WebView fx:id="webView" prefHeight="400.0" prefWidth="200.0"/>
+
+                                 <Label fx:id="questionLabel" prefHeight="64.0" prefWidth="1024.0" text="Label" visible="false" wrapText="true">
+                                    <font>
+                                       <Font size="14.0" />
+                                    </font>
+                                 </Label>
+                              </children>
+                              <padding>
+                                 <Insets topRightBottomLeft="10"/>
+                              </padding>
+                           </StackPane>
                            <VBox.margin>
                               <Insets top="20.0" />
                            </VBox.margin>
-                           <padding>
-                              <Insets topRightBottomLeft="10"/>
-                           </padding>
-                        </StackPane>
+                        </ScrollPane>
                         <RadioButton fx:id="optionAButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
                            <VBox.margin>
                               <Insets top="15.0" />

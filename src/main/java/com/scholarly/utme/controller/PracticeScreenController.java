@@ -47,8 +47,11 @@ import static com.scholarly.utme.util.Constants.PRACTICE_SCREEN;
 @FxmlPath("/layouts/PracticeScreen.fxml")
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable, SceneLifecycle {
 
-    private final static double rectangleBorderWidth = 2;
+    private static final String TAG = "PracticeScreenController: ";
+
+    private final static double rectangleSelectedBorderWidth = 2.0;
     private final static Color rectangleBorderSelectedColor = Color.ORANGE;
+    private final static Paint rectangleSelectedColor = Paint.valueOf("#12AF20");
 
     @InjectViewModel
     private PracticeScreenVM viewModel;
@@ -120,10 +123,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         subjectList.setCellFactory(new PracticeSubjectListCellFactory());
         subjectList.setItems(viewModel.getSubjects());
-        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
-            if (c.getList().size() == 1) {
-                Subject subject = c.getList().get(0);
-                System.out.println("Content of C -> " + c);
+        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) change -> {
+            if (change.getList().size() == 1) {
+                Subject subject = change.getList().get(0);
+                System.out.println(TAG + "Content of changeList -> " + change);
                 viewModel.setSelectedSubject(subject);
             } else {
                 viewModel.setSelectedSubject(null);
@@ -213,9 +216,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
                 subjectList.getSelectionModel().select(subjectListSelectionIndex.incrementAndGet());
 
-                System.out.println("Selected question index -> " + selectedQuestion);
-                System.out.println("SubjectList selected item index -> " + subjectList.getSelectionModel().getSelectedIndex());
-                System.out.println("Subject List Selection Index -> " + subjectListSelectionIndex);
+                System.out.println(TAG + "Selected question index -> " + selectedQuestion);
+                System.out.println(TAG + "SubjectList selected item index -> " + subjectList.getSelectionModel().getSelectedIndex());
+                System.out.println(TAG + "Subject List Selection Index -> " + subjectListSelectionIndex);
 
                 if (subjectList.getItems().size() == subjectListSelectionIndex.get()){
 
@@ -599,13 +602,15 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         });
     }
 
-    private void onOptionSelected(int selectedQuestion) {
-        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(selectedQuestion - 1);
+    private void onOptionSelected(int selectedQuestionIndex) {
+        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(selectedQuestionIndex - 1);
 
         Rectangle selectedQuestionRectangle = (Rectangle) selectedQuestionPane.getChildren().get(0);
+        Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
 
-        selectedQuestionRectangle.setStrokeWidth(rectangleBorderWidth);
-        selectedQuestionRectangle.setStroke(rectangleBorderSelectedColor);
+        selectedQuestionRectangle.setFill(rectangleSelectedColor);
+        selectedQuestionText.setTextFill(Color.WHITE);
+
     }
 
     private void changeSelectedQuestion(int newValue) {
@@ -825,22 +830,19 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         }
     }
 
-    private void changeSelectedTile(int oldSelectedQuestion, int newSelectedQuestion) {
+    private void changeSelectedTile(int oldSelectedQuestionIndex, int newSelectedQuestionIndex) {
 
-        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestion - 1);
-        StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestion - 1);
+        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestionIndex - 1);
+        StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestionIndex - 1);
 
         Rectangle selectedQuestionRectangle = (Rectangle) selectedQuestionPane.getChildren().get(0);
         Rectangle oldQuestionRectangle = (Rectangle) oldQuestionPane.getChildren().get(0);
-        Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
-        Label oldQuestionText = (Label) oldQuestionPane.getChildren().get(1);
 
+        selectedQuestionRectangle.setStroke(rectangleBorderSelectedColor);
+        selectedQuestionRectangle.setStrokeWidth(rectangleSelectedBorderWidth);
 
-        selectedQuestionRectangle.setFill(Paint.valueOf("#12AF20"));
-        oldQuestionRectangle.setFill(Paint.valueOf("#FFFFFF"));
-
-        selectedQuestionText.setTextFill(Color.WHITE);
-        oldQuestionText.setTextFill(Color.BLACK);
+        oldQuestionRectangle.setStroke(rectangleSelectedColor);
+        oldQuestionRectangle.setStrokeWidth(1.0);
 
     }
 
@@ -919,7 +921,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
-        System.out.println("Got data -> " + data);
+        System.out.println(TAG + "Got data -> " + data);
         return data;
     }
 
@@ -946,7 +948,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     public void handleKeyPressed(KeyEvent keyEvent) {
-        System.out.println("Key pressed -> " + keyEvent.getCode());
+        System.out.println(TAG + "Key pressed -> " + keyEvent.getCode());
 
         if (keyEvent.getCode().toString().equalsIgnoreCase("A")) {
             toggleGroup.selectToggle(optionAButton);
