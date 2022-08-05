@@ -30,6 +30,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static com.scholarly.utme.controller.SubjectListViewController.*;
+import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/HomeScreen.fxml")
 public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializable {
@@ -58,7 +59,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     private final ToggleGroup toggleGroup = new ToggleGroup();
 
-    private static final String TAG = "HomeScreenController:  ";
+    private static final String TAG = "HomeScreenController::  ";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -84,29 +85,29 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         viewModel.processInitialData(getInitialData());
 
-        if (viewModel.getSelectedScreen().equalsIgnoreCase("practiceScreen")) {
+        if (viewModel.getSelectedScreen().equalsIgnoreCase(PRACTICE_SCREEN)) {
             pageTitle.setText("CBT Practice");
             subjectListController.setOption(SubjectListOption.PRACTICE);
             selectButton(subjectListView, practiceButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("pastQuestionScreen")) {
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(PAST_QUESTION_SCREEN)) {
             pageTitle.setText("Study Past Questions");
             selectButton(subjectListView, pastQuestionButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("cbtGameScreen")) {
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(CBT_GAME_SCREEN)) {
             pageTitle.setText("CBT Game");
             selectButton(subjectListView, cbtGameButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("novelsScreen")) {
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(NOVELS_SCREEN)) {
             pageTitle.setText("Novels");
             selectButton(novelListView, novelsButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("videosScreen")) {
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(VIDEOS_SCREEN)) {
 //            selectButton(audioVideoView, videosButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("audiosScreen")) {
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(AUDIOS_SCREEN)) {
 //            selectButton(audioVideoView, audiosButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("learningCenterScreen")) {
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(LEARNING_CENTER_SCREEN)) {
 //            selectButton(audioVideoView, learningCenterButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("studyNotesScreen")) {
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(NOTES_SCREEN)) {
             pageTitle.setText("Select Note");
             selectButton(studyNotesView, studyNotesButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("syllabusScreen")) {
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(SYLLABUS_SCREEN)) {
             pageTitle.setText("Select Syllabus");
             selectButton(syllabusView, syllabusButton);
         }
@@ -116,11 +117,11 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         practiceButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                System.out.println("CBT Practice selected");
                 pageTitle.setText("CBT Practice");
                 subjectListController.setOption(SubjectListOption.PRACTICE);
                 if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
                     subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
                 }
                 selectButton(subjectListView, practiceButton);
             }
@@ -132,6 +133,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 subjectListController.setOption(SubjectListOption.STUDY);
                 if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
                     subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
                 }
                 selectButton(subjectListView, pastQuestionButton);
             }
@@ -142,6 +144,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 pageTitle.setText("CBT Game");
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
                 subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
+                subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() * 2);
                 selectButton(subjectListView, cbtGameButton);
             }
         });

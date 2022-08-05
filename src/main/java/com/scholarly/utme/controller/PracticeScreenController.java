@@ -17,6 +17,7 @@ import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,11 +42,16 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@FxmlPath("/layouts/PracticeScreen.fxml")
-public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable {
+import static com.scholarly.utme.util.Constants.PRACTICE_SCREEN;
 
-    private final static double rectangleBorderWidth = 2;
+@FxmlPath("/layouts/PracticeScreen.fxml")
+public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable, SceneLifecycle {
+
+    private static final String TAG = "PracticeScreenController: ";
+
+    private final static double rectangleSelectedBorderWidth = 2.0;
     private final static Color rectangleBorderSelectedColor = Color.ORANGE;
+    private final static Paint rectangleSelectedColor = Paint.valueOf("#12AF20");
 
     @InjectViewModel
     private PracticeScreenVM viewModel;
@@ -88,9 +94,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private Pane dialogDimmer, exitDialogDimmer, summaryDialogDimmer;
 
     @FXML
-    private DialogPane exitDialog;
-
-    @FXML
     private WebView webView;
 
     int totalScore = 0;
@@ -120,10 +123,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         subjectList.setCellFactory(new PracticeSubjectListCellFactory());
         subjectList.setItems(viewModel.getSubjects());
-        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
-            if (c.getList().size() == 1) {
-                Subject subject = c.getList().get(0);
-                System.out.println("Content of C -> " + c);
+        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) change -> {
+            if (change.getList().size() == 1) {
+                Subject subject = change.getList().get(0);
+                System.out.println(TAG + "Content of changeList -> " + change);
                 viewModel.setSelectedSubject(subject);
             } else {
                 viewModel.setSelectedSubject(null);
@@ -149,6 +152,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 }
             });
         });
+
         viewModel.getSubjectBookmarks().forEach((s, bookmarks) -> {
             bookmarks.addListener((ListChangeListener<? super Bookmark>) observable -> {
                 if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
@@ -212,9 +216,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
                 subjectList.getSelectionModel().select(subjectListSelectionIndex.incrementAndGet());
 
-                System.out.println("Selected question index -> " + selectedQuestion);
-                System.out.println("SubjectList selected item index -> " + subjectList.getSelectionModel().getSelectedIndex());
-                System.out.println("Subject List Selection Index -> " + subjectListSelectionIndex);
+                System.out.println(TAG + "Selected question index -> " + selectedQuestion);
+                System.out.println(TAG + "SubjectList selected item index -> " + subjectList.getSelectionModel().getSelectedIndex());
+                System.out.println(TAG + "Subject List Selection Index -> " + subjectListSelectionIndex);
 
                 if (subjectList.getItems().size() == subjectListSelectionIndex.get()){
 
@@ -222,7 +226,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
                 }
 
-            }else {
+            } else {
                 viewModel.getSubjectsQuestions()
                         .get(viewModel.getSelectedSubject().getTableName())
                         .setSelectedQuestion(selectedQuestion + 1);
@@ -422,30 +426,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             timeLabel.setText(timeText);
 
             if (newValue.intValue() == 0) {
-
                 showTimeUpDialog();
             }
-
 
             // TODO: Implement time elapsed here
         });
 
         exitButton.setOnAction(event -> {
-//            showExitDialog();
-            Dialog<ButtonType>dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to quit?");
-
-            dialog.setResultConverter(buttonType -> {
-                if (buttonType == ButtonType.YES) {
-                    exitDialogDimmer.setVisible(false);
-                    ViewSwitcher.passData(new HomeScreenController.InitialData("practiceScreen"));
-                    ViewSwitcher.showScreen(View.HOME_SCREEN);
-                } else if (buttonType == ButtonType.NO) {
-                    exitDialogDimmer.setVisible(false);
-                }
-                return buttonType;
-            });
-
-            dialog.show();
+            showExitDialog();
         });
 
         submitButton.setOnAction(event -> {
@@ -614,13 +602,15 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         });
     }
 
-    private void onOptionSelected(int selectedQuestion) {
-        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(selectedQuestion - 1);
+    private void onOptionSelected(int selectedQuestionIndex) {
+        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(selectedQuestionIndex - 1);
 
         Rectangle selectedQuestionRectangle = (Rectangle) selectedQuestionPane.getChildren().get(0);
+        Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
 
-        selectedQuestionRectangle.setStrokeWidth(rectangleBorderWidth);
-        selectedQuestionRectangle.setStroke(rectangleBorderSelectedColor);
+        selectedQuestionRectangle.setFill(rectangleSelectedColor);
+        selectedQuestionText.setTextFill(Color.WHITE);
+
     }
 
     private void changeSelectedQuestion(int newValue) {
@@ -840,46 +830,26 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         }
     }
 
-    private void changeSelectedTile(int oldSelectedQuestion, int newSelectedQuestion) {
+    private void changeSelectedTile(int oldSelectedQuestionIndex, int newSelectedQuestionIndex) {
 
-        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestion - 1);
-        StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestion - 1);
+        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestionIndex - 1);
+        StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestionIndex - 1);
 
         Rectangle selectedQuestionRectangle = (Rectangle) selectedQuestionPane.getChildren().get(0);
         Rectangle oldQuestionRectangle = (Rectangle) oldQuestionPane.getChildren().get(0);
-        Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
-        Label oldQuestionText = (Label) oldQuestionPane.getChildren().get(1);
 
+        selectedQuestionRectangle.setStroke(rectangleBorderSelectedColor);
+        selectedQuestionRectangle.setStrokeWidth(rectangleSelectedBorderWidth);
 
-        selectedQuestionRectangle.setFill(Paint.valueOf("#12AF20"));
-        oldQuestionRectangle.setFill(Paint.valueOf("#FFFFFF"));
-
-        selectedQuestionText.setTextFill(Color.WHITE);
-        oldQuestionText.setTextFill(Color.BLACK);
+        oldQuestionRectangle.setStroke(rectangleSelectedColor);
+        oldQuestionRectangle.setStrokeWidth(1.0);
 
     }
 
     private void showSubmitDialog() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        // Change dialog icon
-        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
-        dialog.setTitle("Confirm Submit");
+        Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Submit", null, "Are you sure you want to submit?");
 
         exitDialogDimmer.setVisible(true);
-        exitDialog.setVisible(true);
-        exitDialog.setContentText("Are you sure you want to submit?");
-
-        dialog.getDialogPane().setContent(exitDialog);
-
-        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-background-radius: 10;");
-
-        dialog.getDialogPane().setMinSize(350, 80);
-
-        //Adding buttons to the dialog pane
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
 
@@ -889,7 +859,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     exitDialogDimmer.setVisible(false);
                     Animations.showDialog(testSummaryDialog, summaryDialogDimmer);
 
-                }else {
+                } else {
                     ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjects(), viewModel.getSubjectsQuestions());
                     ViewSwitcher.passData(data);
                     ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
@@ -906,32 +876,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void showExitDialog() {
-
-        Dialog<ButtonType> dialog = new Dialog<>();
-
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        // Change dialog icon
-        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
-        dialog.setTitle("Confirm Exit");
+        Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to quit?");
 
         exitDialogDimmer.setVisible(true);
-        exitDialog.setVisible(true);
-        exitDialog.setContentText("Are you sure you want to quit?");
-
-        dialog.getDialogPane().setContent(exitDialog);
-
-        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-background-radius: 10;");
-
-        dialog.getDialogPane().setMinSize(350, 80);
-
-        //Adding buttons to the dialog pane
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new HomeScreenController.InitialData("practiceScreen"));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
@@ -943,39 +895,22 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
  
     private void showTimeUpDialog() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        // Change dialog icon
-        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
-        dialog.setTitle("Time Up");
+        Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Time Up", null, "Time Up! Do you want to submit?");
 
         exitDialogDimmer.setVisible(true);
-        exitDialog.setVisible(true);
-        exitDialog.setContentText("Time Up! Do you want to submit?");
-
-        dialog.getDialogPane().setContent(exitDialog);
-
-        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-background-radius: 10;");
-
-        dialog.getDialogPane().setMinSize(350, 80);
-
-        //Adding buttons to the dialog pane
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.YES){
+            if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
                 ResultScreenController.InitialData initialData =
                         new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions(), View.HOME_SCREEN);
                 ViewSwitcher.passData(initialData);
                 ViewSwitcher.showScreen(View.RESULT_SCREEN);
 
-            }else if (buttonType == ButtonType.NO){
+            } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
 
-                ViewSwitcher.passData("practicePanel");
+                ViewSwitcher.passData(PRACTICE_SCREEN);
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             }
             return buttonType;
@@ -986,7 +921,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
-        System.out.println("Got data -> " + data);
+        System.out.println(TAG + "Got data -> " + data);
         return data;
     }
 
@@ -1013,7 +948,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     public void handleKeyPressed(KeyEvent keyEvent) {
-        System.out.println("Key pressed -> " + keyEvent.getCode());
+        System.out.println(TAG + "Key pressed -> " + keyEvent.getCode());
 
         if (keyEvent.getCode().toString().equalsIgnoreCase("A")) {
             toggleGroup.selectToggle(optionAButton);
@@ -1024,6 +959,16 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         } else if (keyEvent.getCode().toString().equalsIgnoreCase("D")) {
             toggleGroup.selectToggle(optionDButton);
         }
+    }
+
+    @Override
+    public void onViewAdded() {
+
+    }
+
+    @Override
+    public void onViewRemoved() {
+        TextToSpeech.dispose();
     }
 
     public static class InitialData {

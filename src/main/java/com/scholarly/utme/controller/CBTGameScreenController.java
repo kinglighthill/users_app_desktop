@@ -12,6 +12,7 @@ import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.fxml.FXMLLoader;
@@ -40,8 +41,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static com.scholarly.utme.util.Constants.CBT_GAME_SCREEN;
+
 @FxmlPath("/layouts/CBTGameScreen.fxml")
-public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initializable {
+public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initializable, SceneLifecycle {
 
     @InjectViewModel
     private CBTGameScreenVM viewModel;
@@ -235,12 +238,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         backButton.setOnAction(e -> {
-            ViewSwitcher.passData("cbtGamePanel");
+            ViewSwitcher.passData(new HomeScreenController.InitialData(CBT_GAME_SCREEN));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
         exitButton.setOnAction(e -> {
-            ViewSwitcher.passData("cbtGamePanel");
+            ViewSwitcher.passData(CBT_GAME_SCREEN);
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
@@ -348,7 +351,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     }
 
     private void updateFiftyFiftyButton(int intValue) {
-
         fiftyFiftyCount.setText(Integer.toString(intValue));
 
         if (intValue < 1) {
@@ -602,6 +604,16 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
         return data;
+    }
+
+    @Override
+    public void onViewAdded() {
+
+    }
+
+    @Override
+    public void onViewRemoved() {
+        TextToSpeech.dispose();
     }
 
 

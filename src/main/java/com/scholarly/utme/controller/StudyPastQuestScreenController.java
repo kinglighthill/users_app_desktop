@@ -13,6 +13,7 @@ import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -32,8 +33,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static com.scholarly.utme.util.Constants.PAST_QUESTION_SCREEN;
+
 @FxmlPath("/layouts/StudyPastQuestionsScreen.fxml")
-public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenVM>, Initializable {
+public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenVM>, Initializable, SceneLifecycle {
 
     @InjectViewModel
     private StudyPastScreenVM viewModel;
@@ -386,7 +389,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES){
                 dialogDimmer.setVisible(false);
-                ViewSwitcher.passData("pastQuestionsPanel");
+                ViewSwitcher.passData(PAST_QUESTION_SCREEN);
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             }else if (buttonType == ButtonType.NO){;
                 dialogDimmer.setVisible(false);
@@ -401,6 +404,16 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
         return data;
+    }
+
+    @Override
+    public void onViewAdded() {
+
+    }
+
+    @Override
+    public void onViewRemoved() {
+        TextToSpeech.dispose();
     }
 
     public static class InitialData {
