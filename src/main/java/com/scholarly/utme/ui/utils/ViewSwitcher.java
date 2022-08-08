@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.io.IOException;
 
@@ -22,6 +23,7 @@ public class ViewSwitcher {
 
             String cssResource = HelloApplication.class.getResource("/styles/main.css").toExternalForm();
             root.getStylesheets().add(cssResource);
+//            root.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 
             rootScene.setRoot(root);
 

@@ -14,8 +14,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/landing_screens/landing_screen.fxml")
@@ -81,6 +83,17 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         initializeViews();
 
         initializeFonts();
+
+        /*List<String> fontFamilies = Font.getFamilies();
+        List<String> fontNames    = Font.getFontNames();
+
+        fontFamilies.forEach(family -> {
+            System.out.println("Font family -> " + family);
+        });
+
+        fontNames.forEach(name -> {
+            System.out.println("Font name -> " + name);
+        });*/
 
         /*if (viewModel.getSelectedScreen().equalsIgnoreCase("homeScreen")) {
             selectButton(homeView, homeButton);
@@ -203,7 +216,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         updatesButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         settingsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
 
-        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 20));
+        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 22));
 
     }
 

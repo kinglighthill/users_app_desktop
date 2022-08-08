@@ -58,88 +58,86 @@
                 </StackPane>
 
                 <ScrollPane fitToWidth="true" prefHeight="300" style="-fx-background-color: white;">
-                    <StackPane style="-fx-background-color: white;">
-                        <VBox spacing="15">
-                            <VBox fx:id="appDetailsVBox" spacing="20">
-                                <children>
-                                    <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                        <left>
-                                            <Label text="See app details" textFill="#053500">
-                                                <font>
-                                                    <Font size="16"/>
-                                                </font>
-                                            </Label>
-                                        </left>
-                                        <right>
-                                            <ToggleButton fx:id="appDetailsDropdown"/>
-                                        </right>
-                                        <padding>
-                                            <Insets top="20" bottom="20" left="30" right="25"/>
-                                        </padding>
-                                    </Panel>
-                                    <Label fx:id="appDetails" wrapText="true" lineSpacing="5" style="-fx-background-color: white;" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac ">
-                                        <font>
-                                            <Font size="14"/>
-                                        </font>
-                                        <padding>
-                                            <Insets left="30" right="30"/>
-                                        </padding>
-                                    </Label>
-                                </children>
-                            </VBox>
-                            <VBox fx:id="teamVBox" spacing="20">
+                    <VBox spacing="15">
+                        <VBox fx:id="appDetailsVBox" spacing="20">
+                            <children>
                                 <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
                                     <left>
-                                        <Label text="Our Team" textFill="#053500">
+                                        <Label text="See app details" textFill="#053500">
                                             <font>
                                                 <Font size="16"/>
                                             </font>
                                         </Label>
                                     </left>
                                     <right>
-                                        <ToggleButton fx:id="teamDropdown"/>
+                                        <ToggleButton fx:id="appDetailsDropdown"/>
                                     </right>
                                     <padding>
                                         <Insets top="20" bottom="20" left="30" right="25"/>
                                     </padding>
                                 </Panel>
-                            </VBox>
-                            <VBox fx:id="missionVBox" spacing="20">
-                                <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                    <left>
-                                        <Label text="Mission" textFill="#053500">
-                                            <font>
-                                                <Font size="16"/>
-                                            </font>
-                                        </Label>
-                                    </left>
-                                    <right>
-                                        <ToggleButton fx:id="missionDropdown"/>
-                                    </right>
+                                <Label fx:id="appDetails" wrapText="true" lineSpacing="5" style="-fx-background-color: white;" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac ">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
                                     <padding>
-                                        <Insets top="20" bottom="20" left="30" right="25"/>
+                                        <Insets left="30" right="30"/>
                                     </padding>
-                                </Panel>
-                            </VBox>
-                            <VBox fx:id="visionVBox" spacing="20">
-                                <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                    <left>
-                                        <Label text="Vision" textFill="#053500">
-                                            <font>
-                                                <Font size="16"/>
-                                            </font>
-                                        </Label>
-                                    </left>
-                                    <right>
-                                        <ToggleButton fx:id="visionDropdown"/>
-                                    </right>
-                                    <padding>
-                                        <Insets top="20" bottom="20" left="30" right="25"/>
-                                    </padding>
-                                </Panel>
-                            </VBox>
+                                </Label>
+                            </children>
                         </VBox>
-                    </StackPane>
+                        <VBox fx:id="teamVBox" spacing="20">
+                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <left>
+                                    <Label text="Our Team" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <ToggleButton fx:id="teamDropdown"/>
+                                </right>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="25"/>
+                                </padding>
+                            </Panel>
+                        </VBox>
+                        <VBox fx:id="missionVBox" spacing="20">
+                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <left>
+                                    <Label text="Mission" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <ToggleButton fx:id="missionDropdown"/>
+                                </right>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="25"/>
+                                </padding>
+                            </Panel>
+                        </VBox>
+                        <VBox fx:id="visionVBox" spacing="20">
+                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <left>
+                                    <Label text="Vision" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <ToggleButton fx:id="visionDropdown"/>
+                                </right>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="25"/>
+                                </padding>
+                            </Panel>
+                        </VBox>
+                    </VBox>
                     <padding>
                         <Insets right="15"/>
                     </padding>

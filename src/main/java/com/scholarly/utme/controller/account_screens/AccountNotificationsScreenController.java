@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller.account_screens;
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.listItems.NotificationItem;
 import com.scholarly.utme.ui.cellFactories.NotificationListCellFactory;
 import com.scholarly.utme.ui.utils.View;
@@ -46,7 +47,7 @@ public class AccountNotificationsScreenController implements FxmlView<AccountNot
         notificationsList.setCellFactory(new NotificationListCellFactory());
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData("accountScreen");
+            ViewSwitcher.passData(new LandingScreenController.InitialData("accountScreen"));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 

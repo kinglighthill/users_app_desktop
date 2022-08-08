@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller.novel_screens;
 
+import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
@@ -70,7 +71,7 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
         });
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData("novelsButton");
+            ViewSwitcher.passData(new HomeScreenController.InitialData("novelScreen"));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
     }
