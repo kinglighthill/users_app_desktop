@@ -1,12 +1,8 @@
 package com.scholarly.utme.viewmodels;
 
-import com.scholarly.utme.controller.PracticeScreenController;
 import com.scholarly.utme.controller.PracticeScreenController.InitialData;
 import com.scholarly.utme.data.dao.*;
-import com.scholarly.utme.data.model.Bookmark;
-import com.scholarly.utme.data.model.ObjectiveQuestion;
-import com.scholarly.utme.data.model.Question;
-import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.Type;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -17,17 +13,15 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.image.Image;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class PracticeScreenVM implements ViewModel, SceneLifecycle {
+
+    private static final String TAG = "PracticeScreenViewModel: ";
 
     private ObservableList<Subject> subjects = FXCollections.observableArrayList();
 
@@ -37,7 +31,9 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     private HashMap<String, SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
-    private HashMap<String, ObservableList<Bookmark>> subjectBookmarks = new HashMap<>();
+    private HashMap<String, ObservableList<ObjectiveBookmark>> subjectBookmarks = new HashMap<>();
+
+    private ObservableList<ObjectiveBookmark> objectiveBookmarks = FXCollections.observableArrayList();
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
@@ -68,12 +64,11 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .map(question -> new QuestionState(question, Type.OBJECTIVE, null))
                         .collect(Collectors.toList());
 
-                ObservableList<Bookmark> bookmarks = BookmarkDao
-                        .getBookmarks(
-                                subjectState.getSubject().getId()
-                        );
+                System.out.println("selected subject ID -> " + subjectState.getSubject().getId());
+                objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
 
-                subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
+//                subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
+
 
                 subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
 
@@ -89,7 +84,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .map(question -> new QuestionState(question, Type.THEORY, null))
                         .collect(Collectors.toList());
 
-                ObservableList<Bookmark> bookmarks = BookmarkDao
+                ObservableList<ObjectiveBookmark> bookmarks = ObjectiveBookmarkDao
                         .getBookmarks(
                                 subjectState.getSubject().getId()
                         );
@@ -135,8 +130,12 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         return subjectsQuestions;
     }
 
-    public HashMap<String, ObservableList<Bookmark>> getSubjectBookmarks() {
+    public HashMap<String, ObservableList<ObjectiveBookmark>> getSubjectBookmarks() {
         return subjectBookmarks;
+    }
+
+    public ObservableList<ObjectiveBookmark> getObjectiveBookmarks() {
+        return objectiveBookmarks;
     }
 
     public void setSelectedSubject(Subject selectedSubject) {
@@ -202,40 +201,88 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     @Override
     public void onViewRemoved() {
+
         disposables.dispose();
     }
+
+    /*public void handleBookmarkClicked() {
+        SubjectQuestionsState subjectQuestionsState = subjectsQuestions.get(selectedSubject.get().getTableName());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
+//        System.out.println(TAG + "handleBookmarkClicked selectedQuestion -> " + selectedQuestion);
+
+        ObservableList<ObjectiveBookmark> bookmarks = subjectBookmarks.get(selectedSubject.get().getTableName());
+        ObjectiveQuestion question = (ObjectiveQuestion)  questions.get(selectedQuestion - 1).getQuestion();
+
+        boolean currentQuestionBookmarked = false;
+        ObjectiveBookmark bookmarkToDelete = null;
+
+        System.out.println(TAG + "Old Bookmarks -> " + bookmarks);
+        for (ObjectiveBookmark bookmark : bookmarks) {
+            System.out.println(TAG + "Bookmark question id -> " + bookmark.getQuestionId());
+            if (bookmark.getQuestionId() == question.getId()) {
+                currentQuestionBookmarked = true;
+                bookmarkToDelete = bookmark;
+                System.out.println("Bookmark to delete -> " + bookmark.getId() + bookmark.getCreatedAt());
+            }
+        }
+
+        if (currentQuestionBookmarked) {
+            int deletedId = ObjectiveBookmarkDao.deleteBookmark(bookmarkToDelete.getQuestionId());
+            System.out.println(TAG + "Deleted bookmark with id -> " + deletedId);
+        } else {
+            int createdId = ObjectiveBookmarkDao.createBookmark(question.getSubjectId(), question.getYearId(), question.getId());
+            System.out.println(TAG + "Created bookmark with id -> " + createdId);
+        }
+
+        ObservableList<ObjectiveBookmark> newBookmarks = ObjectiveBookmarkDao
+                .getBookmarks(
+                        question.getSubjectId()
+                );
+        System.out.println(TAG + "New Bookmarks -> " + new ArrayList<>(newBookmarks));
+
+        subjectBookmarks.get(selectedSubject.get().getTableName()).clear();
+        subjectBookmarks.put(selectedSubject.get().getTableName(), newBookmarks);
+    }*/
 
     public void handleBookmarkClicked() {
         SubjectQuestionsState subjectQuestionsState = subjectsQuestions.get(selectedSubject.get().getTableName());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
 
-        ObservableList<Bookmark> bookmarks = subjectBookmarks.get(selectedSubject.get().getTableName());
         ObjectiveQuestion question = (ObjectiveQuestion)  questions.get(selectedQuestion - 1).getQuestion();
 
-        boolean currentQuestionBookmarked = false;
-        Bookmark bookmarkToDelete = null;
+        int selectedSubjectId = selectedSubject.get().getId();
 
-        for (int i = 0; i < bookmarks.size(); i++) {
-            if (bookmarks.get(i).getQuestionId() == question.getId()) {
+        ObservableList<ObjectiveBookmark> oldBookmarks = ObjectiveBookmarkDao.getBookmarks(selectedSubjectId);
+        System.out.println(TAG + "oldBookmarks -> " + oldBookmarks);
+
+        boolean currentQuestionBookmarked = false;
+        ObjectiveBookmark bookmarkToDelete = null;
+
+        assert oldBookmarks != null;
+        for (ObjectiveBookmark bookmark : oldBookmarks) {
+//            System.out.println(TAG + "Bookmark question id -> " + bookmark.getQuestionId());
+            if (bookmark.getQuestionId() == question.getId()) {
                 currentQuestionBookmarked = true;
-                bookmarkToDelete = bookmarks.get(i);
+                bookmarkToDelete = bookmark;
+                System.out.println("Bookmark to delete with id -> " + bookmark.getId() +  " subject id -> " + bookmark.getSubjectId() + " question id -> " + bookmark.getQuestionId());
             }
         }
 
         if (currentQuestionBookmarked) {
-            int deletedId = BookmarkDao.deleteBookmark(bookmarkToDelete.getId());
+            int deletedId = ObjectiveBookmarkDao.deleteBookmark(bookmarkToDelete.getSubjectId(), bookmarkToDelete.getQuestionId());
+            System.out.println(TAG + "Deleted bookmark with id -> " + deletedId);
         } else {
-            int createdId = BookmarkDao.createBookmark(question.getId(), question.getSubjectId(), question.getYearId());
+            int createdId = ObjectiveBookmarkDao.createBookmark(question.getSubjectId(), question.getYearId(), question.getId());
+            System.out.println(TAG + "Created bookmark with id -> " + createdId + " subject_id -> " + question.getSubjectId() + " and question_id -> " + question.getId());
         }
 
-        ObservableList<Bookmark> newBookmarks = BookmarkDao
-                .getBookmarks(
-                        question.getSubjectId()
-                );
+        objectiveBookmarks.clear();
+        objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks(selectedSubjectId));
 
-        subjectBookmarks.get(selectedSubject.get().getTableName()).clear();
-        subjectBookmarks.get(selectedSubject.get().getTableName()).addAll(newBookmarks);
+        System.out.println(TAG + "newBookmarks -> " + objectiveBookmarks);
+
     }
 
 

@@ -59,7 +59,7 @@ public class SubjectTheoryDao {
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Subjects from database ");
+                    LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
             subjectsTheory.clear();
         }
     }
