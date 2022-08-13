@@ -33,7 +33,7 @@ public class ObjectiveBookmarkDao {
     static {
         System.out.println(TAG + "static initializer called");
         bookmarks = FXCollections.observableArrayList();
-//        updateBookmarksFromDB();
+        updateBookmarksFromDB();
 //        insertBookmark();
     }
 
@@ -42,7 +42,35 @@ public class ObjectiveBookmarkDao {
 
         String query = "SELECT * FROM " + BOOKMARKS_OBJECTIVE_QUESTION + " WHERE " + subjectIdColumn + " = " + subjectId;
 
-//        CRUDHelper.read(BOOKMARKS_OBJECTIVE_QUESTION, "*", Types.INTEGER, subjectIdColumn, Types.INTEGER, subjectId);
+        try (Connection connection = Database.connect()) {
+            System.out.println(TAG + "Connection object -> " + connection);
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            bookmarks.clear();
+            while (rs.next()) {
+                bookmarks.add(new ObjectiveBookmark(
+                        rs.getInt(idColumn),
+                        rs.getInt(subjectIdColumn),
+                        rs.getInt(yearIdColumn),
+                        rs.getInt(questionIdColumn),
+                        rs.getString(createdAtColumn)));
+            }
+
+            System.out.println(TAG + "Got bookmarks of length -> " + bookmarks.size());
+
+            return bookmarks;
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load bookmarks from database because of " + e.getMessage());
+            bookmarks.clear();
+
+            return null;
+        }
+    }
+
+    public static ObservableList<ObjectiveBookmark> getBookmarks() {
+        String query = "SELECT * FROM " + BOOKMARKS_OBJECTIVE_QUESTION;
 
         try (Connection connection = Database.connect()) {
             System.out.println(TAG + "Connection object -> " + connection);
@@ -118,11 +146,6 @@ public class ObjectiveBookmarkDao {
 
         System.out.println(TAG + "Bookmark created with details [Id -> " + id + ", subject_id -> " + subjectId + ", year_id -> " + yearId + ", question_id -> " + questionId);
         return id;
-    }
-
-
-    public static ObservableList<ObjectiveBookmark> getBookmarks() {
-        return FXCollections.unmodifiableObservableList(bookmarks);
     }
 
     public static Optional<ObjectiveBookmark> getBookmark(int id) {

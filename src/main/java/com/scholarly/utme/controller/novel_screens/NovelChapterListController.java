@@ -22,6 +22,8 @@ import javafx.scene.layout.Background;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static com.scholarly.utme.util.Constants.NOVELS_SCREEN;
+
 @FxmlPath("/layouts/novel_screens/NovelChapterListScreen.fxml")
 public class NovelChapterListController implements FxmlView<NovelChapterListVM>, Initializable {
 
@@ -71,7 +73,7 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
         });
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData("novelScreen"));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(NOVELS_SCREEN));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
     }

@@ -8,6 +8,7 @@ import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.*;
 import com.scholarly.utme.viewmodels.novel_screens.NovelScreenVM;
 import com.scholarly.utme.viewmodels.audio_video_screens.AudioVideoSubjectListViewVM;
@@ -28,12 +29,13 @@ import javafx.scene.layout.StackPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.controller.SubjectListViewController.*;
 import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/HomeScreen.fxml")
-public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializable {
+public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializable{
 
     @InjectViewModel
     private HomeScreenVM viewModel;
@@ -59,7 +61,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     private final ToggleGroup toggleGroup = new ToggleGroup();
 
-    private static final String TAG = "HomeScreenController::  ";
+    private static final String TAG = "HomeScreenController:  ";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -92,9 +94,12 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(PAST_QUESTION_SCREEN)) {
             pageTitle.setText("Study Past Questions");
             selectButton(subjectListView, pastQuestionButton);
+//            subjectListController.setOption(SubjectListOption.STUDY);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(CBT_GAME_SCREEN)) {
             pageTitle.setText("CBT Game");
             selectButton(subjectListView, cbtGameButton);
+            System.out.println(TAG + "Selected CBTGameButton");
+//            subjectListController.setOption(SubjectListOption.CBT_GAME);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(NOVELS_SCREEN)) {
             pageTitle.setText("Novels");
             selectButton(novelListView, novelsButton);
@@ -140,6 +145,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         });
 
         cbtGameButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(TAG + "CBTGameButton selected value -> " + newValue);
             if (newValue) {
                 pageTitle.setText("CBT Game");
                 subjectListController.setOption(SubjectListOption.CBT_GAME);

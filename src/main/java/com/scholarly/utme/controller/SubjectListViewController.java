@@ -217,7 +217,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 }
 
 
-            }else {
+            } else {
                 Alerts.info(
                         this.getClass(),
                         "Message",
