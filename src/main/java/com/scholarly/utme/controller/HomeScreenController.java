@@ -87,36 +87,6 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         viewModel.processInitialData(getInitialData());
 
-        if (viewModel.getSelectedScreen().equalsIgnoreCase(PRACTICE_SCREEN)) {
-            pageTitle.setText("CBT Practice");
-            subjectListController.setOption(SubjectListOption.PRACTICE);
-            selectButton(subjectListView, practiceButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(PAST_QUESTION_SCREEN)) {
-            pageTitle.setText("Study Past Questions");
-//            subjectListController.setOption(SubjectListOption.STUDY);
-            selectButton(subjectListView, pastQuestionButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(CBT_GAME_SCREEN)) {
-            System.out.println(TAG + "Selected CBTGameButton");
-            pageTitle.setText("CBT Game");
-//            subjectListController.setOption(SubjectListOption.CBT_GAME);
-            selectButton(subjectListView, cbtGameButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(NOVELS_SCREEN)) {
-            pageTitle.setText("Novels");
-            selectButton(novelListView, novelsButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(VIDEOS_SCREEN)) {
-//            selectButton(audioVideoView, videosButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(AUDIOS_SCREEN)) {
-//            selectButton(audioVideoView, audiosButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(LEARNING_CENTER_SCREEN)) {
-//            selectButton(audioVideoView, learningCenterButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(NOTES_SCREEN)) {
-            pageTitle.setText("Select Note");
-            selectButton(studyNotesView, studyNotesButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(SYLLABUS_SCREEN)) {
-            pageTitle.setText("Select Syllabus");
-            selectButton(syllabusView, syllabusButton);
-        }
-
 
         toggleGroup.getToggles().addAll(practiceButton, pastQuestionButton, cbtGameButton, novelsButton, studyNotesButton);
 
@@ -151,7 +121,9 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
                 boolean removed = subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
                 if (removed) {
+                    System.out.println(TAG + "Old tabMinWidth -> " + subjectListController.tabMenu.getTabMinWidth());
                     subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() * 2);
+                    System.out.println(TAG + "New tabMinWidth -> " + subjectListController.tabMenu.getTabMinWidth());
                 }
                 selectButton(subjectListView, cbtGameButton);
             }
@@ -171,6 +143,49 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             pageTitle.setText("Select Syllabus");
             selectButton(syllabusView, syllabusButton);
         });
+
+        if (viewModel.getSelectedScreen().equalsIgnoreCase(PRACTICE_SCREEN)) {
+            pageTitle.setText("CBT Practice");
+            subjectListController.setOption(SubjectListOption.PRACTICE);
+            selectButton(subjectListView, practiceButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(PAST_QUESTION_SCREEN)) {
+            pageTitle.setText("Study Past Questions");
+//            subjectListController.setOption(SubjectListOption.STUDY);
+            selectButton(subjectListView, pastQuestionButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(CBT_GAME_SCREEN)) {
+            System.out.println(TAG + "Selected CBTGameButton");
+            pageTitle.setText("CBT Game");
+            toggleGroup.selectToggle(cbtGameButton);
+//            subjectListController.setOption(SubjectListOption.CBT_GAME);
+            selectButton(subjectListView, cbtGameButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(NOVELS_SCREEN)) {
+            pageTitle.setText("Novels");
+            selectButton(novelListView, novelsButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(VIDEOS_SCREEN)) {
+//            selectButton(audioVideoView, videosButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(AUDIOS_SCREEN)) {
+//            selectButton(audioVideoView, audiosButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(LEARNING_CENTER_SCREEN)) {
+//            selectButton(audioVideoView, learningCenterButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(NOTES_SCREEN)) {
+            pageTitle.setText("Select Note");
+            selectButton(studyNotesView, studyNotesButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(SYLLABUS_SCREEN)) {
+            pageTitle.setText("Select Syllabus");
+            selectButton(syllabusView, syllabusButton);
+        }
+
+
+        /*if (ViewSwitcher.retrieveData() instanceof String){
+            String selectedMenuOption = (String) ViewSwitcher.retrieveData();
+            System.out.println("Selected menu option -> " + selectedMenuOption);
+            ToggleButton selectedToggle = getToggle(selectedMenuOption);
+
+            toggleGroup.selectToggle(selectedToggle);
+            // It is 'false' because the studyNotesButton selectedProperty's was initially toggled to 'true' when user navigated from the HOME_SCREEN to SELECT_NOTE_SCREEN
+            // This will make the button toggle when clicked thus switching selectedProperty to true
+            toggleGroup.getSelectedToggle().setSelected(false);
+        }*/
 
         /*videosButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue) {
