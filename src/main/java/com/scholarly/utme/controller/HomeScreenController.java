@@ -93,13 +93,13 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             selectButton(subjectListView, practiceButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(PAST_QUESTION_SCREEN)) {
             pageTitle.setText("Study Past Questions");
-            selectButton(subjectListView, pastQuestionButton);
 //            subjectListController.setOption(SubjectListOption.STUDY);
+            selectButton(subjectListView, pastQuestionButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(CBT_GAME_SCREEN)) {
-            pageTitle.setText("CBT Game");
-            selectButton(subjectListView, cbtGameButton);
             System.out.println(TAG + "Selected CBTGameButton");
+            pageTitle.setText("CBT Game");
 //            subjectListController.setOption(SubjectListOption.CBT_GAME);
+            selectButton(subjectListView, cbtGameButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(NOVELS_SCREEN)) {
             pageTitle.setText("Novels");
             selectButton(novelListView, novelsButton);
@@ -149,8 +149,10 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             if (newValue) {
                 pageTitle.setText("CBT Game");
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
-                subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
-                subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() * 2);
+                boolean removed = subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
+                if (removed) {
+                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() * 2);
+                }
                 selectButton(subjectListView, cbtGameButton);
             }
         });
