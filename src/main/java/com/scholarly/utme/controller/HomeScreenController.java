@@ -115,7 +115,6 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         });
 
         cbtGameButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(TAG + "CBTGameButton selected value -> " + newValue);
             if (newValue) {
                 pageTitle.setText("CBT Game");
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
