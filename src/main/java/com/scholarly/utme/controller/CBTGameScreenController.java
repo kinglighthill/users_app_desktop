@@ -373,7 +373,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         bookmarks.forEach(bookmark -> {
             if (bookmark.getQuestionId() == (questions.get(selectedQuestionNumber - 1).getQuestion()).getId()) {
-                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_green_filled.png").toString()));
                 System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
             }
         });

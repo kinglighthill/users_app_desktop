@@ -149,13 +149,12 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             selectButton(subjectListView, practiceButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(PAST_QUESTION_SCREEN)) {
             pageTitle.setText("Study Past Questions");
-//            subjectListController.setOption(SubjectListOption.STUDY);
+            subjectListController.setOption(SubjectListOption.STUDY);
             selectButton(subjectListView, pastQuestionButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(CBT_GAME_SCREEN)) {
-            System.out.println(TAG + "Selected CBTGameButton");
             pageTitle.setText("CBT Game");
             toggleGroup.selectToggle(cbtGameButton);
-//            subjectListController.setOption(SubjectListOption.CBT_GAME);
+            subjectListController.setOption(SubjectListOption.CBT_GAME);
             selectButton(subjectListView, cbtGameButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(NOVELS_SCREEN)) {
             pageTitle.setText("Novels");
