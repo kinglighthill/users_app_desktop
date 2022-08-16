@@ -2,12 +2,15 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.controller.CBTGameScreenController;
 import com.scholarly.utme.controller.CBTGameScreenController.InitialData;
+import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
+import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CBTGameScreenVM implements ViewModel {
+    public static final String TAG = "CBTGameScreenVM: ";
 
     private SimpleIntegerProperty selectedQuestion = new SimpleIntegerProperty();
     private List<QuestionState> questions = new ArrayList<>();
@@ -23,6 +27,8 @@ public class CBTGameScreenVM implements ViewModel {
 
     private List<Subject> subjectList = FXCollections.observableArrayList();
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions = new HashMap<>();
+
+    private ObservableList<ObjectiveBookmark> objectiveBookmarks = FXCollections.observableArrayList();
 
     private int correctAnswers, incorrectAnswers, questionAttempts;
 
@@ -54,6 +60,8 @@ public class CBTGameScreenVM implements ViewModel {
             questions.addAll(questionStates);
 
             subjectsQuestions.put(subjectState.getSubject().getTableName(), new PracticeScreenVM.SubjectQuestionsState(1, practiceQuestionState));
+
+            objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
 
         });
 
@@ -124,6 +132,43 @@ public class CBTGameScreenVM implements ViewModel {
 
     public HashMap<String, PracticeScreenVM.SubjectQuestionsState> getSubjectsQuestions() {
         return subjectsQuestions;
+    }
+
+    public ObservableList<ObjectiveBookmark> getObjectiveBookmarks() {
+        return objectiveBookmarks;
+    }
+
+    public void handleBookmarkClicked() {
+
+        ObjectiveQuestion question = questions.get(selectedQuestion.get() - 1).getQuestion();
+
+        ObservableList<ObjectiveBookmark> oldBookmarks = ObjectiveBookmarkDao.getBookmarks();
+        System.out.println(TAG + "oldBookmarks -> " + oldBookmarks);
+
+        boolean currentQuestionBookmarked = false;
+        ObjectiveBookmark bookmarkToDelete = null;
+
+        for (ObjectiveBookmark bookmark : oldBookmarks) {
+            if (bookmark.getQuestionId() == question.getId()) {
+                currentQuestionBookmarked = true;
+                bookmarkToDelete = bookmark;
+                System.out.println("Bookmark to delete with id -> " + bookmark.getId() +  " subject id -> " + bookmark.getSubjectId() + " question id -> " + bookmark.getQuestionId());
+            }
+        }
+
+        if (currentQuestionBookmarked) {
+            int deletedId = ObjectiveBookmarkDao.deleteBookmark(bookmarkToDelete.getSubjectId(), bookmarkToDelete.getQuestionId());
+            System.out.println(TAG + "Deleted bookmark with id -> " + deletedId);
+        } else {
+            int createdId = ObjectiveBookmarkDao.createBookmark(question.getSubjectId(), question.getYearId(), question.getId());
+            System.out.println(TAG + "Created bookmark with id -> " + createdId + " subject_id -> " + question.getSubjectId() + " and question_id -> " + question.getId());
+        }
+
+        objectiveBookmarks.clear();
+        objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks());
+
+        System.out.println(TAG + "newBookmarks -> " + objectiveBookmarks);
+
     }
 
     public class QuestionState {

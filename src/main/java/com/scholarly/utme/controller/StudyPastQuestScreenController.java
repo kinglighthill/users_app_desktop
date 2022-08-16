@@ -1,5 +1,7 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.data.model.ObjectiveBookmark;
+import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
@@ -37,6 +39,7 @@ import static com.scholarly.utme.util.Constants.PAST_QUESTION_SCREEN;
 
 @FxmlPath("/layouts/StudyPastQuestionsScreen.fxml")
 public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenVM>, Initializable, SceneLifecycle {
+    public static final String TAG = "StudyPastQuestScreenController: ";
 
     @InjectViewModel
     private StudyPastScreenVM viewModel;
@@ -82,6 +85,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             if (newValue != null) {
                 setupQuestionView();
                 setupTilePane();
+                updateBookmarkIcon();
             }
         });
 
@@ -103,6 +107,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
                 if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
                     changeSelectedTile(oldValue.intValue(), newValue.intValue());
                     changeSelectedQuestion(newValue.intValue());
+                    updateBookmarkIcon();
                 }
             });
         });
@@ -187,6 +192,11 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             TextToSpeech.play(currentQuestion);
         });
 
+        bookmarkImage.setOnMouseClicked(event -> {
+            viewModel.handleBookmarkClicked();
+            updateBookmarkIcon();
+        });
+
 
         exitButton.setOnAction(event -> {
             showExitDialog();
@@ -223,6 +233,23 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
     public void onCalculatorClicked(MouseEvent mouseEvent) {
 
+    }
+
+    private void updateBookmarkIcon() {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
+
+        List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
+
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+
+        bookmarks.forEach(bookmark -> {
+            if (bookmark.getQuestionId() == (questions.get(selectedQuestion - 1).getQuestion()).getId()) {
+                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+                System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
+            }
+        });
     }
 
     private void setupQuestionView() {
@@ -389,7 +416,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES){
                 dialogDimmer.setVisible(false);
-                ViewSwitcher.passData(PAST_QUESTION_SCREEN);
+                ViewSwitcher.passData(new HomeScreenController.InitialData(PAST_QUESTION_SCREEN));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             }else if (buttonType == ButtonType.NO){;
                 dialogDimmer.setVisible(false);

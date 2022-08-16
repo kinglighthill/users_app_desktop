@@ -1,10 +1,8 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.data.model.ObjectiveBookmark;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.CBTGameScreenVM;
 import com.scholarly.utme.viewmodels.CBTGameScreenVM.QuestionState;
@@ -18,22 +16,20 @@ import javafx.animation.ScaleTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -45,6 +41,8 @@ import static com.scholarly.utme.util.Constants.CBT_GAME_SCREEN;
 
 @FxmlPath("/layouts/CBTGameScreen.fxml")
 public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initializable, SceneLifecycle {
+
+    public static final String TAG = "CBTGameScreenController: ";
 
     @InjectViewModel
     private CBTGameScreenVM viewModel;
@@ -97,11 +95,13 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         initializeFonts();
         initializeGestures();
         setupQuestionView();
+        updateBookmarkIcon();
         setupReportSection();
 
 
         viewModel.selectedQuestionProperty().addListener((observableValue, number, t1) -> {
             changeSelectedQuestion(t1.intValue());
+            updateBookmarkIcon();
         });
 
         viewModel.fiftyFiftyCountProperty().addListener((observableValue, number, t1) -> {
@@ -208,6 +208,11 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
 
+        bookmarkImage.setOnMouseClicked(event -> {
+            viewModel.handleBookmarkClicked();
+            updateBookmarkIcon();
+        });
+
         reportImage.setOnMouseClicked(mouseEvent -> {
             Animations.showDialog(reportDialog, reportDialogDimmer);
         });
@@ -238,12 +243,19 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         backButton.setOnAction(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(CBT_GAME_SCREEN));
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Exit", null, "Are you sure you want to Exit?");
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    ViewSwitcher.passData(new HomeScreenController.InitialData(CBT_GAME_SCREEN));
+                    ViewSwitcher.showScreen(View.HOME_SCREEN);
+                }
+                return buttonType;
+            });
+            dialog.show();
         });
 
         exitButton.setOnAction(e -> {
-            ViewSwitcher.passData(CBT_GAME_SCREEN);
+            ViewSwitcher.passData(new HomeScreenController.InitialData(CBT_GAME_SCREEN));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
@@ -259,7 +271,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         reportImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_flag.png").toString()));
         speakerImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_speaker.png").toString()));
         calculatorImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_calculator.png").toString()));
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_bookmark.png").toString()));
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_green.png").toString()));
         reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
 
         backButton.setBackground(Background.EMPTY);
@@ -347,6 +359,23 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
         showAnswersButton.setOnMouseExited(e -> {
             showAnswersButton.setStyle(idleShowAnswerButtonStyle);
+        });
+    }
+
+    private void updateBookmarkIcon() {
+        List<QuestionState> questions = viewModel.getQuestions();
+        QuestionState selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1);
+        int selectedQuestionNumber = selectedQuestion.getQuestion().getQuestionNumber();
+
+        List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
+
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_green.png").toString()));
+
+        bookmarks.forEach(bookmark -> {
+            if (bookmark.getQuestionId() == (questions.get(selectedQuestionNumber - 1).getQuestion()).getId()) {
+                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_green_filled.png").toString()));
+                System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
+            }
         });
     }
 

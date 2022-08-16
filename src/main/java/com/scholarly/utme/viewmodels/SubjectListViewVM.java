@@ -38,7 +38,7 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
     private CompositeDisposable disposables = new CompositeDisposable();
 
 
-    private static final String TAG = "SubjectListViewVM::  ";
+    private static final String TAG = "SubjectListViewVM:  ";
 
     public SubjectListViewVM() {
         objectiveSubjects.addAll(SubjectDao.getSubjects().stream().map(SubjectListItemVM::new).collect(Collectors.toList()));

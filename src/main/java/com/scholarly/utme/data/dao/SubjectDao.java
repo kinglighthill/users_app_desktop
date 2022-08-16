@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SubjectDao {
+    public static final String TAG = "SubjectDao: ";
 
     private static final String tableName = "subjects";
 
@@ -28,6 +29,7 @@ public class SubjectDao {
     private static final ObservableList<Subject> subjects;
 
     static {
+        System.out.println(TAG + "static initializer called");
         subjects = FXCollections.observableArrayList();
         updateSubjectsFromDB();
     }
@@ -74,7 +76,7 @@ public class SubjectDao {
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Subjects from database ");
+                    LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
             subjects.clear();
         }
     }
