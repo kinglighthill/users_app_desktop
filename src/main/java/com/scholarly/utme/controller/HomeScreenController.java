@@ -119,11 +119,8 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
                 pageTitle.setText("CBT Game");
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
                 boolean removed = subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
-                if (removed) {
-                    System.out.println(TAG + "Old tabMinWidth -> " + subjectListController.tabMenu.getTabMinWidth());
+                if (removed)
                     subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() * 2);
-                    System.out.println(TAG + "New tabMinWidth -> " + subjectListController.tabMenu.getTabMinWidth());
-                }
                 selectButton(subjectListView, cbtGameButton);
             }
         });

@@ -1,6 +1,7 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.ObjectiveBookmark;
+import com.scholarly.utme.data.model.TheoryBookmark;
 import com.scholarly.utme.data.util.CRUDHelper;
 import com.scholarly.utme.data.util.Database;
 import javafx.collections.FXCollections;
@@ -12,9 +13,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ObjectiveBookmarkDao {
-
-    private static final String TAG = "ObjectiveBookmarkDao: ";
+public class TheoryBookmarkDao {
+    private static final String TAG = "TheoryBookmarkDao: ";
 
     private static final String tableName = "question_bookmarks";
 
@@ -24,23 +24,22 @@ public class ObjectiveBookmarkDao {
     private static final String questionIdColumn = "question_id";
     private static final String createdAtColumn = "created_at";
 
-    private static final String BOOKMARKS_OBJECTIVE_QUESTION = "bookmarks_objective_question";
+    private static final String BOOKMARKS_THEORY_QUESTION = "bookmarks_theory_question";
     private static final String ID_COLUMN = "_id";
 
 
-    private static final ObservableList<ObjectiveBookmark> bookmarks;
+    private static final ObservableList<TheoryBookmark> bookmarks;
 
     static {
         System.out.println(TAG + "static initializer called");
         bookmarks = FXCollections.observableArrayList();
-        updateBookmarksFromDB();
-//        insertBookmark();
+//        updateBookmarksFromDB();
     }
 
 
-    public static ObservableList<ObjectiveBookmark> getBookmarks(int subjectId) {
+    public static ObservableList<TheoryBookmark> getBookmarks(int subjectId) {
 
-        String query = "SELECT * FROM " + BOOKMARKS_OBJECTIVE_QUESTION + " WHERE " + subjectIdColumn + " = " + subjectId;
+        String query = "SELECT * FROM " + BOOKMARKS_THEORY_QUESTION + " WHERE " + subjectIdColumn + " = " + subjectId;
 
         try (Connection connection = Database.connect()) {
             System.out.println(TAG + "Connection object -> " + connection);
@@ -48,7 +47,7 @@ public class ObjectiveBookmarkDao {
             ResultSet rs = statement.executeQuery();
             bookmarks.clear();
             while (rs.next()) {
-                bookmarks.add(new ObjectiveBookmark(
+                bookmarks.add(new TheoryBookmark(
                         rs.getInt(idColumn),
                         rs.getInt(subjectIdColumn),
                         rs.getInt(yearIdColumn),
@@ -69,8 +68,8 @@ public class ObjectiveBookmarkDao {
         }
     }
 
-    public static ObservableList<ObjectiveBookmark> getBookmarks() {
-        String query = "SELECT * FROM " + BOOKMARKS_OBJECTIVE_QUESTION;
+    public static ObservableList<TheoryBookmark> getBookmarks() {
+        String query = "SELECT * FROM " + BOOKMARKS_THEORY_QUESTION;
 
         try (Connection connection = Database.connect()) {
             System.out.println(TAG + "Connection object -> " + connection);
@@ -78,7 +77,7 @@ public class ObjectiveBookmarkDao {
             ResultSet rs = statement.executeQuery();
             bookmarks.clear();
             while (rs.next()) {
-                bookmarks.add(new ObjectiveBookmark(
+                bookmarks.add(new TheoryBookmark(
                         rs.getInt(idColumn),
                         rs.getInt(subjectIdColumn),
                         rs.getInt(yearIdColumn),
@@ -101,7 +100,7 @@ public class ObjectiveBookmarkDao {
 
     private static void updateBookmarksFromDB() {
 
-        String query = "SELECT * FROM " + BOOKMARKS_OBJECTIVE_QUESTION;
+        String query = "SELECT * FROM " + BOOKMARKS_THEORY_QUESTION;
 
         try (Connection connection = Database.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -109,7 +108,7 @@ public class ObjectiveBookmarkDao {
 
             bookmarks.clear();
             while (rs.next()) {
-                bookmarks.add(new ObjectiveBookmark(
+                bookmarks.add(new TheoryBookmark(
                         rs.getInt(idColumn),
                         rs.getInt(subjectIdColumn),
                         rs.getInt(yearIdColumn),
@@ -120,14 +119,14 @@ public class ObjectiveBookmarkDao {
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load ObjectiveBookmarks from database ");
+                    LocalDateTime.now() + ": Could not load TheoryBookmarks from database because " + e.getMessage());
             bookmarks.clear();
         }
     }
 
 
     public static int deleteBookmark(int subjectId, int questionId) {
-        int sqlResponse = CRUDHelper.delete(BOOKMARKS_OBJECTIVE_QUESTION, subjectId, questionId);
+        int sqlResponse = CRUDHelper.delete(BOOKMARKS_THEORY_QUESTION, subjectId, questionId);
         if (sqlResponse == 1) {
             System.out.println(TAG + "Bookmark with subjectId -> " + subjectId + " and " + " questionId -> " + questionId + " deleted successfully");
         } else {
@@ -139,31 +138,31 @@ public class ObjectiveBookmarkDao {
 
     public static int createBookmark(int subjectId, int yearId, int questionId) {
         int id = (int) CRUDHelper.create(
-                BOOKMARKS_OBJECTIVE_QUESTION,
+                BOOKMARKS_THEORY_QUESTION,
                 new String[]{"subject_id", "year_id","question_id"},
                 new Object[]{subjectId, yearId, questionId},
                 new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER});
 
-        System.out.println(TAG + "Bookmark created with details [Id -> " + id + ", subject_id -> " + subjectId + ", year_id -> " + yearId + ", question_id -> " + questionId);
+        System.out.println(TAG + "Bookmark created with details [ id -> " + id + ", subject_id -> " + subjectId + ", year_id -> " + yearId + ", question_id -> " + questionId + " ]");
         return id;
     }
 
-    public static Optional<ObjectiveBookmark> getBookmark(int id) {
-        for (ObjectiveBookmark bookmark : bookmarks) {
+    public static Optional<TheoryBookmark> getBookmark(int id) {
+        for (TheoryBookmark bookmark : bookmarks) {
             if (bookmark.getId() == id) return Optional.of(bookmark);
         }
         return Optional.empty();
     }
 
     public static boolean checkTable() {
-        String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='bookmarks_objective_question'";
+        String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='bookmarks_theory_question'";
 
         try (Connection conn = Database.connect()) {
             // create a new table
             if (conn != null) {
                 Statement statement = conn.createStatement();
                 boolean result = statement.execute(sql);
-                System.out.println("Bookmark Table Query result -> " + result);
+                System.out.println("Theory Bookmark Table Query available -> " + result);
                 return result;
             }
 
@@ -177,8 +176,8 @@ public class ObjectiveBookmarkDao {
 
     public static boolean createTable() {
 
-        String sql = "CREATE TABLE IF NOT EXISTS " + BOOKMARKS_OBJECTIVE_QUESTION +
-                " ( _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+        String sql = "CREATE TABLE IF NOT EXISTS " + BOOKMARKS_THEORY_QUESTION +
+                " (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "subject_id INTEGER NOT NULL, " +
                 "year_id INTEGER NOT NULL, " +
                 "question_id INTEGER NOT NULL, " +
@@ -194,7 +193,7 @@ public class ObjectiveBookmarkDao {
                 Statement statement = conn.createStatement();
                 statement.execute(sql);
             }
-            System.out.println(TAG + "Bookmark Table created successfully");
+            System.out.println(TAG + "Theory Bookmark Table created successfully");
             return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());

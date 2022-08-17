@@ -1,8 +1,6 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.data.model.ObjectiveBookmark;
-import com.scholarly.utme.data.model.ObjectiveQuestion;
-import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
@@ -187,9 +185,9 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
                     .get(viewModel.getSelectedSubject().getTableName());
 
-            String currentQuestion = questionsState.getQuestions().get(selectedQuestion - 1).getQuestion().getQuestion();
+//            String currentQuestion = questionsState.getQuestions().get(selectedQuestion - 1).getQuestion().getQuestion();
 
-            TextToSpeech.play(currentQuestion);
+//            TextToSpeech.play(currentQuestion);
         });
 
         bookmarkImage.setOnMouseClicked(event -> {
@@ -240,38 +238,76 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
 
-        List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
-
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
 
-        bookmarks.forEach(bookmark -> {
-            if (bookmark.getQuestionId() == (questions.get(selectedQuestion - 1).getQuestion()).getId()) {
-                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
-            }
-        });
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+
+            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
+
+            bookmarks.forEach(bookmark -> {
+                if (bookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion()).getId()) {
+                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
+                }
+            });
+
+        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+
+            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks();
+
+            bookmarks.forEach(bookmark -> {
+                if (bookmark.getQuestionId() == ((TheoryQuestion) questions.get(selectedQuestion - 1).getQuestion()).getId()) {
+                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
+                }
+            });
+        }
+
     }
 
     private void setupQuestionView() {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
-        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
+        int selectedQuestionNumber = subjectQuestionsState.getSelectedQuestion();
 
         prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
         nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
 
-        questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
+        questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
-        questionLabel.setText(questions.get(selectedQuestion - 1).getQuestion().getQuestion());
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
 
-        optionA.setText(" (A) " + questions.get(selectedQuestion - 1).getQuestion().getOptionA());
-        optionB.setText(" (B) " + questions.get(selectedQuestion - 1).getQuestion().getOptionB());
-        optionC.setText(" (C) " + questions.get(selectedQuestion - 1).getQuestion().getOptionC());
-        optionD.setText(" (D) " + questions.get(selectedQuestion - 1).getQuestion().getOptionD());
+            questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
+
+            questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
+
+            questionLabel.setText(currentQuestion.getQuestion());
+
+            optionA.setText(" (A) " + currentQuestion.getOptionA());
+            optionB.setText(" (B) " + currentQuestion.getOptionB());
+            optionC.setText(" (C) " + currentQuestion.getOptionC());
+            optionD.setText(" (D) " + currentQuestion.getOptionD());
 
 
-        explanationLabel.setText(questions.get(selectedQuestion - 1).getQuestion().getAnswerExplanation());
-        correctAnswerLabel.setText(questions.get(selectedQuestion - 1).getQuestion().getOptionAnswer());
+            explanationLabel.setText(currentQuestion.getAnswerExplanation());
+            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
+
+        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+            TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
+
+            questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
+
+            questionLabel.setText(currentQuestion.getQuestion());
+
+            optionA.setVisible(false);
+            optionB.setVisible(false);
+            optionC.setVisible(false);
+            optionD.setVisible(false);
+
+            explanationLabel.setText(currentQuestion.getAnswerExplanation());
+            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
+        }
 
         updateExplanationView();
     }
@@ -283,7 +319,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         QuestionState questionState = questionsState.getQuestions().get(questionsState.getSelectedQuestion() - 1);
 
         if (!questionState.isShowExplanation() && !questionState.isShowAnswer()) {
-            System.out.println("showing default explanation view");
+            System.out.println(TAG + "showing default explanation view");
             showAnswerButton.setDisable(false);
             showExplanationButton.setDisable(false);
             explanationTitle.setVisible(false);
@@ -295,7 +331,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         } else if (questionState.isShowExplanation()) {
 
-            System.out.println("showing explanation and answer view");
+            System.out.println(TAG + "showing explanation and answer view");
             explanationTitle.setVisible(true);
             explanationLabel.setVisible(true);
             showExplanationButton.setDisable(true);
@@ -310,7 +346,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         } else if (questionState.isShowAnswer()) {
 
-            System.out.println("showing show answer view alone");
+            System.out.println(TAG + "showing show answer view alone");
             correctAnswerLabel.setVisible(true);
             correctAnswerTitle.setVisible(true);
             showAnswerButton.setDisable(true);
@@ -359,8 +395,6 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
         Label oldQuestionText = (Label) oldQuestionPane.getChildren().get(1);
 
-
-
         oldQuestionText.setTextFill(Color.BLACK);
         oldQuestionRectangle.setFill(Paint.valueOf("#ededed"));
         selectedQuestionText.setTextFill(Color.WHITE);
@@ -371,22 +405,33 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     private void changeSelectedQuestion(int newValue) {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
-        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
 
-        questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
 
-        questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
-        questionLabel.setText(questions.get(newValue - 1).getQuestion().getQuestion());
+            questionLabel.setText(currentQuestion.getQuestion());
 
-        optionA.setText(" (A) " + questions.get(newValue - 1).getQuestion().getOptionA());
-        optionB.setText(" (B) " + questions.get(newValue - 1).getQuestion().getOptionB());
-        optionC.setText(" (C) " + questions.get(newValue - 1).getQuestion().getOptionC());
-        optionD.setText(" (D) " + questions.get(newValue - 1).getQuestion().getOptionD());
+            optionA.setText(" (A) " + currentQuestion.getOptionA());
+            optionB.setText(" (B) " + currentQuestion.getOptionB());
+            optionC.setText(" (C) " + currentQuestion.getOptionC());
+            optionD.setText(" (D) " + currentQuestion.getOptionD());
 
 
-        explanationLabel.setText(questions.get(newValue - 1).getQuestion().getAnswerExplanation());
-        correctAnswerLabel.setText(questions.get(selectedQuestion - 1).getQuestion().getOptionAnswer());
+            explanationLabel.setText(currentQuestion.getAnswerExplanation());
+            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
+
+        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+            TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
+
+            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            questionLabel.setText(currentQuestion.getQuestion());
+
+            explanationLabel.setText(currentQuestion.getAnswerExplanation());
+            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
+        }
 
         updateExplanationView();
     }
