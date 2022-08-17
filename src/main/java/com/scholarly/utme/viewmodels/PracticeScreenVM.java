@@ -252,9 +252,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
 
-        if (questions.get(selectedQuestion - 1).getQuestion() instanceof ObjectiveQuestion) {
-            System.out.println(TAG + "instanceOf ObjectiveBookmark");
-
+        if (questionType == Type.OBJECTIVE) {
             ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion();
 
             int selectedSubjectId = selectedSubject.get().getId();
@@ -288,10 +286,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
             System.out.println(TAG + "newBookmarks -> " + objectiveBookmarks);
 
-        }
-
-        if (questions.get(selectedQuestion - 1).getQuestion() instanceof TheoryQuestion) {
-
+        } else {
             TheoryQuestion question = (TheoryQuestion) questions.get(selectedQuestion - 1).getQuestion();
 
             int selectedSubjectId = selectedSubject.get().getId();
