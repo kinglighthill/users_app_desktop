@@ -77,7 +77,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
 
     @FXML
-    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog;
+    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog, centerVBox;
 
     @FXML
     private Button prevButton, nextButton, exitButton, submitButton, submitReport, homePageButton, resultAnalysisButton;
@@ -395,12 +395,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 }
             });
 
-        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+        }
+        else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
 
-            optionAButton.setVisible(false);
+            centerVBox.getChildren().removeAll(optionAButton, optionBButton, optionCButton, optionDButton);
+            /*optionAButton.setVisible(false);
             optionBButton.setVisible(false);
             optionCButton.setVisible(false);
-            optionDButton.setVisible(false);
+            optionDButton.setVisible(false);*/
 
         }
 
@@ -909,7 +911,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     Animations.showDialog(testSummaryDialog, summaryDialogDimmer);
 
                 } else {
-                    ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                    ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjects(), viewModel.getSubjectsQuestions(), viewModel.getQuestionType());
                     ViewSwitcher.passData(data);
                     ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
                     //TODO: Implement Theory result screen
@@ -977,7 +979,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @FXML
     public void onCalculatorClicked(MouseEvent mouseEvent) {
         if (!calculatorStage.isShowing()) {
-            calculatorStage.initModality(Modality.WINDOW_MODAL);
+//            calculatorStage.initModality(Modality.WINDOW_MODAL);
             calculatorStage.setTitle("Calculator");
             calculatorStage.setResizable(false);
 

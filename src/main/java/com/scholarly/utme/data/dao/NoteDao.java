@@ -71,7 +71,7 @@ public class NoteDao {
     public static int deleteNote(int id) {
         int deletedId = UserDatabaseCRUDHelper.delete(tableName, id);
 
-        System.out.println("Highlight of id -> " + deletedId + " has been deleted");
+        System.out.println("Note of id -> " + deletedId + " has been deleted");
 
         return deletedId;
     }
@@ -123,7 +123,7 @@ public class NoteDao {
             System.out.println(e.getMessage());
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Highlights from database ");
+                    LocalDateTime.now() + ": Could not load Notes from database because " + e.getMessage());
             allNotes.clear();
         }
     }

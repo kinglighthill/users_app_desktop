@@ -73,7 +73,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
                 subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
 
-            } else if (subjectState.getType() == Type.THEORY) {
+            }
+            else if (subjectState.getType() == Type.THEORY) {
 
                 List<QuestionState> questionStates = TheoryQuestionDao
                         .getQuestions(
@@ -163,29 +164,33 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
             double correctAnswers = 0;
 
 
-            result.setSubjectName(SubjectDao.getSubjectName(s));
-            result.setTotalQuestions(subjectQuestionsState.getQuestions().size());
-            result.setYear(YearsDao.getYear(((ObjectiveQuestion)subjectQuestionsState.getQuestions().get(0).getQuestion()).getYearId()).get().getYear());
+            if (questionType == Type.OBJECTIVE) {
+                result.setSubjectName(SubjectDao.getSubjectName(s));
+                result.setTotalQuestions(subjectQuestionsState.getQuestions().size());
+                result.setYear(YearsDao.getYear(((ObjectiveQuestion)subjectQuestionsState.getQuestions().get(0).getQuestion()).getYearId()).get().getYear());
 
 
-            for (int i = 0; i < subjectQuestionsState.getQuestions().size(); i++) {
-                QuestionState questionState = subjectQuestionsState.getQuestions().get(i);
-                if (questionState.selectedOption != null) {
-                    attempts++;
+                for (int i = 0; i < subjectQuestionsState.getQuestions().size(); i++) {
+                    QuestionState questionState = subjectQuestionsState.getQuestions().get(i);
+                    if (questionState.selectedOption != null) {
+                        attempts++;
+                    }
+                    if (Objects.equals(questionState.selectedOption, ((ObjectiveQuestion) questionState.getQuestion()).getOptionAnswer())) {
+                        correctAnswers += 1;
+                    }
                 }
-                if (Objects.equals(questionState.selectedOption, ((ObjectiveQuestion) questionState.getQuestion()).getOptionAnswer())) {
-                    correctAnswers += 1;
-                }
+
+                result.setAttempts(attempts);
+                result.setCorrectAnswers((int) correctAnswers);
+                result.setPercentage((correctAnswers/result.getTotalQuestions()) * 100);
+
+                results.add(result);
+
+            } else {
+                System.out.println(TAG + "No result for Theory Question type");
             }
 
-            result.setAttempts(attempts);
-            result.setCorrectAnswers((int) correctAnswers);
 
-
-            result.setPercentage((correctAnswers/result.getTotalQuestions()) * 100);
-
-
-            results.add(result);
         });
 
         return results;
@@ -368,6 +373,10 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
         public ObjectiveQuestion getObjectiveQuestion() {
             return (ObjectiveQuestion) question;
+        }
+
+        public TheoryQuestion getTheoryQuestion() {
+            return (TheoryQuestion) question;
         }
 
         public String getSelectedOption() {

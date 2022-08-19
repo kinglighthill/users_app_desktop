@@ -149,7 +149,7 @@
                 </right>
 
                 <center>
-                    <VBox spacing="10" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
+                    <VBox fx:id="centerVBox" spacing="10" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
                         <children>
                             <Label fx:id="questionOverviewLabel" text="Question 3 of 40">
                                 <VBox.margin>

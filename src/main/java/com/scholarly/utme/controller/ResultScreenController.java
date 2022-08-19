@@ -8,6 +8,7 @@ import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.Result;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.ResultScreenVM;
+import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -163,7 +164,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
 
         showExplanationButton.setOnAction(event -> {
-            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
+            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions(), SubjectListItemVM.Type.OBJECTIVE);
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });

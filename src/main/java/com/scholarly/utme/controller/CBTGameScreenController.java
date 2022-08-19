@@ -6,6 +6,7 @@ import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.CBTGameScreenVM;
 import com.scholarly.utme.viewmodels.CBTGameScreenVM.QuestionState;
+import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -237,7 +238,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         showAnswersButton.setOnAction(event -> {
-            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
+            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions(), SubjectListItemVM.Type.OBJECTIVE);
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });

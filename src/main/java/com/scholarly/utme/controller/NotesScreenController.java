@@ -65,6 +65,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.scholarly.utme.util.Constants.NOTES_SCREEN;
+
 
 @FxmlPath("/layouts/NotesScreen.fxml")
 public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializable {
@@ -118,7 +120,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private VBox quizExplanationSection, quizBackNextAndQuitButtonsSection;
 
     @FXML
-    private HBox highlightColors, addNoteButton, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton, quizScoreCloseButton;
+    private HBox highlightColors, highlightColorsBox, addNoteButton, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton, quizScoreCloseButton;
 
     @FXML
     private Label pageTitle, subjectLabel, topicLabel, subtopicsText, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, refreshNotesCancelText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
@@ -186,7 +188,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
         });
         exitDialogExitButton.setOnAction(event -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData("studyNotesScreen"));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(NOTES_SCREEN));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
         exitDialogCancelButton.setOnAction(event -> {
@@ -360,12 +362,12 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         contentLayout.setOnMouseClicked(event -> {
-            if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
+            /*if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
                 onWordClickedOverlay.setVisible(true);
-            }
-            /*if (!noteOptionsLayout.isVisible()) {
-                Animations.translateIn(noteOptionsLayout, 300);
             }*/
+            if (!noteOptionsLayout.isVisible()) {
+                Animations.translateIn(noteOptionsLayout, 300);
+            }
         });
 
 
@@ -527,6 +529,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         })
                         .collect(Collectors.toList())
         );
+
 
         viewModel.getSubjectHighlights().addListener((ListChangeListener<? super Highlights>) c -> {
             System.out.println("Highlight list changed");
@@ -1599,11 +1602,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                     }
                 });
 
-
         contentLayout.setSpacing(20);
         contentLayout.getChildren().clear();
         contentLayout.getChildren().addAll(contentElements);
-        contentLayout.setAlignment(Pos.CENTER);
+//        contentLayout.setAlignment(Pos.CENTER);
     }
 
     /**

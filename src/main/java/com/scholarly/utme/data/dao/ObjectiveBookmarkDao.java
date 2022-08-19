@@ -16,8 +16,6 @@ public class ObjectiveBookmarkDao {
 
     private static final String TAG = "ObjectiveBookmarkDao: ";
 
-    private static final String tableName = "question_bookmarks";
-
     private static final String idColumn = "_id";
     private static final String subjectIdColumn = "subject_id";
     private static final String yearIdColumn = "year_id";
