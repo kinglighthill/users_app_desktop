@@ -32,6 +32,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
@@ -47,6 +48,8 @@ import static com.scholarly.utme.viewmodels.SubjectListItemVM.*;
 @FxmlPath("/layouts/ExplanationScreen.fxml")
 public class ExplanationScreenController implements FxmlView<ExplanationScreenVM>, Initializable {
 
+    private static final String TAG = "ExplanationScreenController: ";
+
     @InjectViewModel
     private ExplanationScreenVM viewModel;
 
@@ -60,10 +63,16 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     private StackPane explanationPane, explanationVideo;
 
     @FXML
+    private AnchorPane explanationAnchor;
+
+    @FXML
     private Pane dialogDimmer;
 
     @FXML
     private VBox centerVBox;
+
+    @FXML
+    private HBox toggleBox;
 
     @FXML
     private ListView<Subject> subjectList;
@@ -157,6 +166,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         });
 
 
+        toggleBox.getChildren().remove(videoExplanation);
         ToggleGroup explanationGroup = new ToggleGroup();
         explanationGroup.getToggles().addAll(textExplanation, videoExplanation);
         explanationGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
@@ -298,7 +308,12 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         if (viewModel.getQuestionType() == Type.OBJECTIVE) {
 
-            questionLabel.setText(question.getObjectiveQuestion().getQuestion());
+            String questionText = question.getObjectiveQuestion().getQuestion();
+            questionLabel.setText(questionText);
+            if (questionText.contains("<br>")) {
+                String newText = questionText.replaceAll("<br>", System.lineSeparator());
+                questionLabel.setText(newText);
+            }
 
             optionA.setText(" (A) " + question.getObjectiveQuestion().getOptionA());
             optionB.setText(" (B) " + question.getObjectiveQuestion().getOptionB());
@@ -403,9 +418,20 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             explanationLabel.setText(question.getObjectiveQuestion().getAnswerExplanation());
 
         } else {
-            questionLabel.setText(question.getTheoryQuestion().getQuestion());
 
-            explanationLabel.setText(question.getTheoryQuestion().getAnswerExplanation());
+            String questionText = question.getTheoryQuestion().getQuestion();
+            questionLabel.setText(questionText);
+            if (questionText.contains("<br>")) {
+                String newText = questionText.replaceAll("<br>", System.lineSeparator());
+                questionLabel.setText(newText);
+            }
+
+            String explanationText = question.getTheoryQuestion().getAnswerExplanation();
+            explanationLabel.setText(explanationText);
+            if (explanationText.contains("<br>")) {
+                String newText = explanationText.replaceAll("<br>", System.lineSeparator());
+                explanationLabel.setText(newText);
+            }
 
             centerVBox.getChildren().removeAll(optionAPanel, optionBPanel, optionCPanel, optionDPanel, noOptionSelected);
         }
@@ -426,7 +452,12 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         if (viewModel.getQuestionType() == Type.OBJECTIVE) {
 
-            questionLabel.setText(questions.get(questionNumber - 1).getObjectiveQuestion().getQuestion());
+            String questionText = questions.get(questionNumber - 1).getObjectiveQuestion().getQuestion();
+            questionLabel.setText(questionText);
+            if (questionText.contains("<br>")) {
+                String newText = questionText.replaceAll("<br>", System.lineSeparator());
+                questionLabel.setText(newText);
+            }
 
             optionA.setText(" (A) " + questions.get(questionNumber - 1).getObjectiveQuestion().getOptionA());
             optionB.setText(" (B) " + questions.get(questionNumber - 1).getObjectiveQuestion().getOptionB());
@@ -542,9 +573,20 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             explanationLabel.setText(questions.get(questionNumber - 1).getObjectiveQuestion().getAnswerExplanation());
 
         } else {
-            questionLabel.setText(questions.get(questionNumber - 1).getTheoryQuestion().getQuestion());
 
-            explanationLabel.setText(questions.get(questionNumber - 1).getTheoryQuestion().getAnswerExplanation());
+            String questionText = questions.get(questionNumber - 1).getTheoryQuestion().getQuestion();
+            questionLabel.setText(questionText);
+            if (questionText.contains("<br>")) {
+                String newText = questionText.replaceAll("<br>", System.lineSeparator());
+                questionLabel.setText(newText);
+            }
+
+            String explanationText = questions.get(questionNumber - 1).getTheoryQuestion().getAnswerExplanation();
+            explanationLabel.setText(explanationText);
+            if (explanationText.contains("<br>")) {
+                String newText = explanationText.replaceAll("<br>", System.lineSeparator());
+                explanationLabel.setText(newText);
+            }
         }
 
     }
