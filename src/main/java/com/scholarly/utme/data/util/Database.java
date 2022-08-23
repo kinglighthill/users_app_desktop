@@ -3,6 +3,7 @@ package com.scholarly.utme.data.util;
 import com.scholarly.utme.HelloApplication;
 import com.scholarly.utme.data.dao.BookmarkDao;
 import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
+import com.scholarly.utme.data.dao.TheoryBookmarkDao;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -30,11 +31,7 @@ public class Database {
 
     public static boolean isOK() {
 
-        /*if (!ObjectiveBookmarkDao.checkTable()) {
-            ObjectiveBookmarkDao.createTable();
-        }*/
-
-        return checkDrivers() && checkConnection();
+        return TheoryBookmarkDao.createTable() && checkDrivers() && checkConnection();
 
         /*if (!checkDrivers()) return false; //driver errors
 

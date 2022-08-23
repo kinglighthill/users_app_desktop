@@ -18,6 +18,7 @@ public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
 
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
+    private SubjectListItemVM.Type questionType;
 
     public ExplanationScreenVM() {
 
@@ -31,6 +32,8 @@ public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
         });
 
         subjectsQuestions = data.getSubjectsQuestions();
+
+        questionType = data.getQuestionType();
     }
 
     @Override
@@ -70,5 +73,9 @@ public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
 
     public void setSubjectsQuestions(HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions) {
         this.subjectsQuestions = subjectsQuestions;
+    }
+
+    public SubjectListItemVM.Type getQuestionType() {
+        return questionType;
     }
 }

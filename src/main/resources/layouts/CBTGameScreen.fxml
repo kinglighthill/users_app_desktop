@@ -26,6 +26,7 @@
          </padding>
       </ToolBar>
    </top>
+
    <center>
       <StackPane prefHeight="200.0" prefWidth="100.0">
 
@@ -69,12 +70,10 @@
                               <Insets right="3"/>
                            </StackPane.margin>
                         </Label>
-
                         <HBox.margin>
                               <Insets right="40.0" />
                            </HBox.margin>
                      </StackPane>
-
 
                      <ImageView fx:id="calculatorImage" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#onCalculatorClicked" pickOnBounds="true" preserveRatio="true">
                         <HBox.margin>
@@ -264,7 +263,6 @@
                <Insets bottom="20.0" />
             </padding>
          </VBox>
-
 
          <Pane fx:id="reportDialogDimmer" opacity="0.34" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" visible="false" />
          <VBox fx:id="reportDialog" maxHeight="350.0" maxWidth="500.0" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">

@@ -146,115 +146,113 @@
             </right>
 
             <center>
-               <ScrollPane prefHeight="800.0" prefWidth="1000.0" fitToWidth="true" fitToHeight="true">
-                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #FFFFFF;" BorderPane.alignment="CENTER" >
-                     <children>
-                        <Label fx:id="questionOverviewLabel" text="Question 3 of 40">
-                           <VBox.margin>
-                              <Insets top="20.0" />
-                           </VBox.margin>
-                           <font>
-                              <Font name="Gill Sans MT Bold" size="18.0" />
-                           </font>
-                        </Label>
-                        <ScrollPane fitToWidth="true" style="-fx-background-color: white;">
-                           <StackPane prefHeight="400.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
-                              <children>
-                                 <WebView fx:id="webView" prefHeight="400.0" prefWidth="200.0"/>
-
-                                 <Label fx:id="questionLabel" prefHeight="64.0" prefWidth="1024.0" text="Label" visible="false" wrapText="true">
-                                    <font>
-                                       <Font size="14.0" />
-                                    </font>
-                                 </Label>
-                              </children>
-                              <padding>
-                                 <Insets topRightBottomLeft="10"/>
-                              </padding>
-                           </StackPane>
-                           <VBox.margin>
-                              <Insets top="20.0" />
-                           </VBox.margin>
-                        </ScrollPane>
-                        <RadioButton fx:id="optionAButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
-                           <VBox.margin>
-                              <Insets top="15.0" />
-                           </VBox.margin>
-                           <padding>
-                              <Insets topRightBottomLeft="10"/>
-                           </padding>
-                           <font>
-                              <Font size="14.0" />
-                           </font></RadioButton>
-                        <RadioButton fx:id="optionBButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                           <padding>
-                              <Insets topRightBottomLeft="10"/>
-                           </padding>
-                           <font>
-                              <Font size="14.0" />
-                           </font></RadioButton>
-                        <RadioButton fx:id="optionCButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                           <padding>
-                              <Insets topRightBottomLeft="10"/>
-                           </padding>
-                           <font>
-                              <Font size="14.0" />
-                           </font></RadioButton>
-                        <RadioButton fx:id="optionDButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                           <padding>
-                              <Insets topRightBottomLeft="10"/>
-                           </padding>
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </RadioButton>
-                        <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" spacing="15">
+               <VBox fx:id="centerVBox" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #FFFFFF;" BorderPane.alignment="CENTER" >
+                  <children>
+                     <Label fx:id="questionOverviewLabel" text="Question 3 of 40">
+                        <VBox.margin>
+                           <Insets top="20.0" />
+                        </VBox.margin>
+                        <font>
+                           <Font name="Gill Sans MT Bold" size="18.0" />
+                        </font>
+                     </Label>
+                     <ScrollPane fitToWidth="true" style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <StackPane prefHeight="400.0" prefWidth="200.0" style="-fx-background-color: white;">
                            <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="449.0">
-                                 <Button fx:id="prevButton" mnemonicParsing="false" text="Previous" textFill="#12AF20"
-                                         style=" -fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
+                              <WebView fx:id="webView" prefHeight="400.0" prefWidth="200.0"/>
+
+                              <Label fx:id="questionLabel" prefHeight="64.0" prefWidth="1024.0" text="Label" visible="false" wrapText="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets topRightBottomLeft="10"/>
+                           </padding>
+                        </StackPane>
+                        <VBox.margin>
+                           <Insets top="20.0" />
+                        </VBox.margin>
+                     </ScrollPane>
+                     <RadioButton fx:id="optionAButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
+                        <VBox.margin>
+                           <Insets top="15.0" />
+                        </VBox.margin>
+                        <padding>
+                           <Insets topRightBottomLeft="10"/>
+                        </padding>
+                        <font>
+                           <Font size="14.0" />
+                        </font></RadioButton>
+                     <RadioButton fx:id="optionBButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
+                        <VBox.margin>
+                           <Insets top="10.0" />
+                        </VBox.margin>
+                        <padding>
+                           <Insets topRightBottomLeft="10"/>
+                        </padding>
+                        <font>
+                           <Font size="14.0" />
+                        </font></RadioButton>
+                     <RadioButton fx:id="optionCButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
+                        <VBox.margin>
+                           <Insets top="10.0" />
+                        </VBox.margin>
+                        <padding>
+                           <Insets topRightBottomLeft="10"/>
+                        </padding>
+                        <font>
+                           <Font size="14.0" />
+                        </font></RadioButton>
+                     <RadioButton fx:id="optionDButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
+                        <VBox.margin>
+                           <Insets top="10.0" />
+                        </VBox.margin>
+                        <padding>
+                           <Insets topRightBottomLeft="10"/>
+                        </padding>
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </RadioButton>
+
+                     <VBox spacing="15" alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                        <children>
+                           <Panel prefHeight="55.0" prefWidth="449.0">
+                              <left>
+                                 <Button fx:id="prevButton" mnemonicParsing="false" text="Previous" textFill="#12AF20" style=" -fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;" >
                                     <padding>
                                        <Insets left="20" right="20" top="5" bottom="5"/>
                                     </padding>
                                  </Button>
-                                 <Region prefWidth="700"/>
-                                 <Button fx:id="nextButton" mnemonicParsing="false" text="Next" textFill="#FFFFFF"
-                                         style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+                              </left>
+                              <right>
+                                 <Button fx:id="nextButton" mnemonicParsing="false" text="Next" textFill="#FFFFFF" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
                                     <padding>
                                        <Insets left="25" right="25" top="5" bottom="5"/>
                                     </padding>
                                  </Button>
-                                 <VBox.margin>
-                                    <Insets left="10" right="10"/>
-                                 </VBox.margin>
-                              </HBox>
-                              <Separator prefWidth="200.0" />
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="20.0" top="20.0" />
-                           </VBox.margin>
-                        </VBox>
-                        <ScrollPane fx:id="tileScrollPane" prefWidth="600" prefHeight="300" fitToWidth="true" >
-                           <TilePane fx:id="tilePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;"/>
-                           <VBox.margin>
-                              <Insets bottom="20"/>
-                           </VBox.margin>
-                        </ScrollPane>
-                     </children>
-                     <padding>
-                        <Insets left="20.0" right="20.0" />
-                     </padding>
-                  </VBox>
-               </ScrollPane>
+                              </right>
+                              <VBox.margin>
+                                 <Insets left="10" right="10"/>
+                              </VBox.margin>
+                           </Panel>
+                           <Separator prefWidth="200.0" />
+                           <ScrollPane fx:id="tileScrollPane" prefWidth="600" prefHeight="200" fitToWidth="true">
+                              <TilePane fx:id="tilePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;"/>
+                           </ScrollPane>
+                        </children>
+                        <VBox.margin>
+                           <Insets bottom="20.0" top="20.0" />
+                        </VBox.margin>
+                     </VBox>
+
+                  </children>
+                  <padding>
+                     <Insets left="20.0" right="20.0" />
+                  </padding>
+               </VBox>
             </center>
 
             <left>

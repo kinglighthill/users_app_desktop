@@ -6,6 +6,7 @@ import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.CBTGameScreenVM;
 import com.scholarly.utme.viewmodels.CBTGameScreenVM.QuestionState;
+import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -237,18 +238,21 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         showAnswersButton.setOnAction(event -> {
-            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
+            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions(), SubjectListItemVM.Type.OBJECTIVE);
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });
 
         backButton.setOnAction(e -> {
+            resultDialogDimmer.setVisible(true);
             Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Exit", null, "Are you sure you want to Exit?");
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
                     ViewSwitcher.passData(new HomeScreenController.InitialData(CBT_GAME_SCREEN));
                     ViewSwitcher.showScreen(View.HOME_SCREEN);
+                    resultDialogDimmer.setVisible(false);
                 }
+                resultDialogDimmer.setVisible(false);
                 return buttonType;
             });
             dialog.show();
@@ -539,7 +543,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         questionNumberLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
-        questionLabel.setText(selectedQuestion.getQuestion().getQuestion());
+        String questionText = selectedQuestion.getQuestion().getQuestion();
+        questionLabel.setText(questionText);
+        if (questionText.contains("<br>")) {
+            String newText = questionText.replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(newText);
+        }
 
         optionAButton.setText(selectedQuestion.getQuestion().getOptionA());
         optionBButton.setText(selectedQuestion.getQuestion().getOptionB());
@@ -558,7 +567,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         questionNumberLabel.setText("Question " + newValue + " of " + questions.size());
 
-        questionLabel.setText(selectedQuestion.getQuestion().getQuestion());
+        String questionText = selectedQuestion.getQuestion().getQuestion();
+        questionLabel.setText(questionText);
+        if (questionText.contains("<br>")) {
+            String newText = questionText.replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(newText);
+        }
 
         optionAButton.setText(selectedQuestion.getQuestion().getOptionA());
         optionBButton.setText(selectedQuestion.getQuestion().getOptionB());

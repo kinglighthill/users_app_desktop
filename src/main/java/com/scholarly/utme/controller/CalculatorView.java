@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 /**
- * Calculator view controller to handle calcultor logic and operations
+ * Calculator view controller to handle calculator logic and operations
  */
 public class CalculatorView {
 
