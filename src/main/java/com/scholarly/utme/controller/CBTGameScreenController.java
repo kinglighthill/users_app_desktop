@@ -244,12 +244,15 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         backButton.setOnAction(e -> {
+            resultDialogDimmer.setVisible(true);
             Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Exit", null, "Are you sure you want to Exit?");
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
                     ViewSwitcher.passData(new HomeScreenController.InitialData(CBT_GAME_SCREEN));
                     ViewSwitcher.showScreen(View.HOME_SCREEN);
+                    resultDialogDimmer.setVisible(false);
                 }
+                resultDialogDimmer.setVisible(false);
                 return buttonType;
             });
             dialog.show();
@@ -540,7 +543,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         questionNumberLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
-        questionLabel.setText(selectedQuestion.getQuestion().getQuestion());
+        String questionText = selectedQuestion.getQuestion().getQuestion();
+        questionLabel.setText(questionText);
+        if (questionText.contains("<br>")) {
+            String newText = questionText.replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(newText);
+        }
 
         optionAButton.setText(selectedQuestion.getQuestion().getOptionA());
         optionBButton.setText(selectedQuestion.getQuestion().getOptionB());
@@ -559,7 +567,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         questionNumberLabel.setText("Question " + newValue + " of " + questions.size());
 
-        questionLabel.setText(selectedQuestion.getQuestion().getQuestion());
+        String questionText = selectedQuestion.getQuestion().getQuestion();
+        questionLabel.setText(questionText);
+        if (questionText.contains("<br>")) {
+            String newText = questionText.replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(newText);
+        }
 
         optionAButton.setText(selectedQuestion.getQuestion().getOptionA());
         optionBButton.setText(selectedQuestion.getQuestion().getOptionB());

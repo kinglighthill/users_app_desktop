@@ -677,7 +677,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         }
 
 
-
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
             ObjectiveQuestion question = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
