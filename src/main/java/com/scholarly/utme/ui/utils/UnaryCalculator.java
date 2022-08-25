@@ -1,6 +1,10 @@
 package com.scholarly.utme.ui.utils;
 
-public class Calculate {
+public class UnaryCalculator {
+
+    /*public float calculate(float number, String operator) {
+
+    }*/
 
     public float calculateUnaryNumber(float number1,String operator){
         switch (operator) {
@@ -32,6 +36,7 @@ public class Calculate {
         }
         return 0;
     }
+
     public float calculateBinaryNumber(float number1,float number2,String operator){
         switch (operator) {
             case "+":

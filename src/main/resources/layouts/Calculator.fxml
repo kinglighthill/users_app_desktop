@@ -5,132 +5,138 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="319.0" prefWidth="304.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.CalculatorView">
+<AnchorPane prefHeight="300.0" prefWidth="280.0" onKeyPressed="#handleKeyPressed" style="-fx-background-color: silver;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.CalculatorView">
     <children>
-      <VBox prefHeight="100.0" prefWidth="304.0">
-         <children>
-              <Label fx:id="expression" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="304.0" style="-fx-background-color: white;">
-                  <font>
-                      <Font size="25.0" />
-                  </font>
-                  <opaqueInsets>
-                      <Insets />
-                  </opaqueInsets>
-               <padding>
-                  <Insets right="10.0" top="5.0" />
-               </padding>
-              </Label>
-             <Label fx:id="result" alignment="CENTER_RIGHT" prefHeight="48.0" prefWidth="304.0" style="-fx-background-color: white;">
-                 <font>
-                     <Font name="System Italic" size="20.0" />
-                 </font>
-                 <opaqueInsets>
-                     <Insets />
-                 </opaqueInsets>
-               <padding>
-                  <Insets right="10.0" top="5.0" />
-               </padding>
-             </Label>
-         </children>
+      <VBox prefHeight="150.0" prefWidth="280.0">
+          <Label fx:id="expression" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="304.0" style="-fx-background-color: white;">
+              <font>
+                  <Font name="System Italic" size="20.0" />
+              </font>
+           <padding>
+              <Insets right="10.0" top="5.0" />
+           </padding>
+          </Label>
+         <Label fx:id="result" alignment="CENTER_RIGHT" prefHeight="48.0" prefWidth="304.0" style="-fx-background-color: white;">
+             <font>
+                 <Font name="System Bold" size="30.0" />
+             </font>
+           <padding>
+              <Insets right="10.0" top="5.0" />
+           </padding>
+         </Label>
+
+
+          <Separator/>
+
+          <GridPane prefHeight="200.0" prefWidth="280.0" vgap="3" hgap="3">
+              <children>
+                  <Button text="7" onAction="#processNumber" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="8" onAction="#processNumber" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="9" onAction="#processNumber" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="0" GridPane.columnIndex="2">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="c" onAction="#clearFunction" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="0" GridPane.columnIndex="3">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="DEL" onAction="#delete" prefHeight="52.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="0" GridPane.columnIndex="4">
+                      <font>
+                          <Font size="14.0" />
+                      </font>
+                  </Button>
+                  <Button text="4" onAction="#processNumber" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="5" onAction="#processNumber" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="6" onAction="#processNumber" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="1" GridPane.columnIndex="2">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="/" onAction="#processOperator" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="1" GridPane.columnIndex="3">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="√" onAction="#processUnaryOperator" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="1" GridPane.columnIndex="4">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="1" onAction="#processNumber" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="2" GridPane.columnIndex="0">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="2" onAction="#processNumber" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="3" onAction="#processNumber" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="2" GridPane.columnIndex="2">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="*" onAction="#processOperator" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="2" GridPane.columnIndex="3">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="x^2" onAction="#processUnaryOperator" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="2" GridPane.columnIndex="4">
+                      <font>
+                          <Font size="16.0" />
+                      </font>
+                  </Button>
+                  <Button text="0" onAction="#processNumber" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="3" GridPane.columnIndex="0">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="." onAction="#processNumber" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="3" GridPane.columnIndex="1">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="+" onAction="#processOperator" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="3" GridPane.columnIndex="2">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="-" onAction="#processOperator" prefHeight="54.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="3" GridPane.columnIndex="3">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+                  <Button text="=" onAction="#processEquals" prefHeight="54.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="3" GridPane.columnIndex="4">
+                      <font>
+                          <Font size="25.0" />
+                      </font>
+                  </Button>
+              </children>
+              <padding>
+                  <Insets topRightBottomLeft="3"/>
+              </padding>
+          </GridPane>
+
       </VBox>
-        <AnchorPane layoutX="-4.0" layoutY="88.0" prefHeight="258.0" prefWidth="307.0" style="-fx-background-color: silver;">
-            <children>
-                <Button layoutX="130.0" layoutY="132.0" mnemonicParsing="false" onAction="#processNumber" prefHeight="49.0" prefWidth="52.0" text="3">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="72.0" layoutY="71.0" mnemonicParsing="false" onAction="#processNumber" prefHeight="49.0" prefWidth="52.0" text="5">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="130.0" layoutY="71.0" mnemonicParsing="false" onAction="#processNumber" prefHeight="49.0" prefWidth="52.0" text="6">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="14.0" layoutY="132.0" mnemonicParsing="false" onAction="#processNumber" prefHeight="49.0" prefWidth="52.0" text="1">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="72.0" layoutY="132.0" mnemonicParsing="false" onAction="#processNumber" prefHeight="49.0" prefWidth="52.0" text="2">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="14.0" layoutY="71.0" mnemonicParsing="false" onAction="#processNumber" prefHeight="49.0" prefWidth="52.0" text="4">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="14.0" layoutY="194.0" mnemonicParsing="false" onAction="#processNumber" prefHeight="49.0" prefWidth="52.0" text="0">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="72.0" layoutY="194.0" mnemonicParsing="false" onAction="#processNumber" prefHeight="49.0" prefWidth="52.0" text=".">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="130.0" layoutY="194.0" mnemonicParsing="false" onAction="#processBinaryOperator" prefHeight="49.0" prefWidth="52.0" text="+">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="188.0" layoutY="71.0" mnemonicParsing="false" onAction="#processBinaryOperator" prefHeight="49.0" prefWidth="52.0" text="*">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="188.0" layoutY="132.0" mnemonicParsing="false" onAction="#processBinaryOperator" prefHeight="49.0" prefWidth="52.0" text="-">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="188.0" layoutY="194.0" mnemonicParsing="false" onAction="#processBinaryOperator" prefHeight="54.0" prefWidth="110.0" text="=">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="246.0" layoutY="71.0" mnemonicParsing="false" onAction="#processUnaryOperator" prefHeight="49.0" prefWidth="52.0" text="√">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="246.0" layoutY="135.0" mnemonicParsing="false" onAction="#processUnaryOperator" prefHeight="49.0" prefWidth="52.0" text="x^2">
-                    <font>
-                        <Font size="16.0" />
-                    </font>
-                </Button>
-                <Button layoutX="14.0" layoutY="10.0" mnemonicParsing="false" onAction="#processNumber" prefHeight="49.0" prefWidth="52.0" text="7">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="72.0" layoutY="10.0" mnemonicParsing="false" onAction="#processNumber" prefHeight="49.0" prefWidth="52.0" text="8">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="130.0" layoutY="10.0" mnemonicParsing="false" onAction="#processNumber" prefHeight="49.0" prefWidth="52.0" text="9">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="188.0" layoutY="10.0" mnemonicParsing="false" onAction="#processBinaryOperator" prefHeight="49.0" prefWidth="52.0" text="/">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-                <Button layoutX="246.0" layoutY="10.0" mnemonicParsing="false" onAction="#clearFunction" prefHeight="49.0" prefWidth="52.0" text="c">
-                    <font>
-                        <Font size="25.0" />
-                    </font>
-                </Button>
-            </children>
-        </AnchorPane>
+
     </children>
 </AnchorPane>
