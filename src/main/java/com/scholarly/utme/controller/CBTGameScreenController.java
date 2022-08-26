@@ -30,7 +30,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -409,7 +408,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             calculatorStage.setResizable(false);
 
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("/layouts/Calculator.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/layouts/CalculatorView.fxml"));
                 Scene scene = new Scene(root);
 
                 calculatorStage.setScene(scene);
