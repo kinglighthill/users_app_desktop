@@ -977,8 +977,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     public void onCalculatorClicked(MouseEvent mouseEvent) {
         Stage calculatorStage = new Stage();
 
-//        System.out.println(TAG + "Calculator on top -> " + calculatorStage.isAlwaysOnTop());
-
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/layouts/CalculatorView.fxml"));
             Scene scene = new Scene(root);
@@ -991,8 +989,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             calculatorStage.setScene(scene);
             calculatorStage.initOwner(ViewSwitcher.getRootScene().getWindow());
 
-            System.out.println(TAG + "Root scene width -> " + ViewSwitcher.getRootScene().getWidth());
-            System.out.println(TAG + "Root scene height -> " + ViewSwitcher.getRootScene().getHeight());
             calculatorStage.setX(ViewSwitcher.getRootScene().getWidth() / 1.3);
             calculatorStage.setY(ViewSwitcher.getRootScene().getHeight() / 2.7);
 
