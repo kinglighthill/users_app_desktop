@@ -85,8 +85,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @FXML
     private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon, timeImage, summaryBookImage, testSummaryCloseIcon;
 
-    private Stage calculatorStage = new Stage();
-
     @FXML
     private Pane dialogDimmer, exitDialogDimmer, summaryDialogDimmer;
 
@@ -977,24 +975,33 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     @FXML
     public void onCalculatorClicked(MouseEvent mouseEvent) {
-        if (!calculatorStage.isShowing()) {
-//            calculatorStage.initModality(Modality.WINDOW_MODAL);
+        Stage calculatorStage = new Stage();
+
+//        System.out.println(TAG + "Calculator on top -> " + calculatorStage.isAlwaysOnTop());
+
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/layouts/CalculatorView.fxml"));
+            Scene scene = new Scene(root);
+
+            Image appIcon = new Image(getClass().getResource("/drawable/app_logo.png").toString());
+            calculatorStage.getIcons().add(appIcon);
+
             calculatorStage.setTitle("Calculator");
             calculatorStage.setResizable(false);
+            calculatorStage.setScene(scene);
+            calculatorStage.initOwner(ViewSwitcher.getRootScene().getWindow());
 
-            try {
-                Parent root = FXMLLoader.load(getClass().getResource("/layouts/Calculator.fxml"));
-                Scene scene = new Scene(root);
+            System.out.println(TAG + "Root scene width -> " + ViewSwitcher.getRootScene().getWidth());
+            System.out.println(TAG + "Root scene height -> " + ViewSwitcher.getRootScene().getHeight());
+            calculatorStage.setX(ViewSwitcher.getRootScene().getWidth() / 1.3);
+            calculatorStage.setY(ViewSwitcher.getRootScene().getHeight() / 2.7);
 
-                calculatorStage.setScene(scene);
-                calculatorStage.showAndWait();
+            calculatorStage.showAndWait();
 
-            } catch (Exception e) {
-
-            }
-        } else {
-            calculatorStage.toFront();
+        } catch (Exception e) {
+            System.out.println(TAG + "Cannot create scene because " + e.getMessage());
         }
+
     }
 
     public void handleKeyPressed(KeyEvent keyEvent) {

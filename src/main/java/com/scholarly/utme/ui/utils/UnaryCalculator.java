@@ -2,10 +2,6 @@ package com.scholarly.utme.ui.utils;
 
 public class UnaryCalculator {
 
-    /*public float calculate(float number, String operator) {
-
-    }*/
-
     public float calculateUnaryNumber(float number1,String operator){
         switch (operator) {
             case "√":

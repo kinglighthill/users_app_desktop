@@ -75,7 +75,7 @@
                           <Font size="25.0" />
                       </font>
                   </Button>
-                  <Button text="√" onAction="#processUnaryOperator" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="1" GridPane.columnIndex="4">
+                  <Button text="√" userData="sqrt" onAction="#processUnaryOperator" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="1" GridPane.columnIndex="4">
                       <font>
                           <Font size="25.0" />
                       </font>
@@ -100,7 +100,7 @@
                           <Font size="25.0" />
                       </font>
                   </Button>
-                  <Button text="x^2" onAction="#processUnaryOperator" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="2" GridPane.columnIndex="4">
+                  <Button text="x^2" userData="x^2" onAction="#processUnaryOperator" prefHeight="49.0" prefWidth="60.0" style="-fx-background-color: white;" GridPane.rowIndex="2" GridPane.columnIndex="4">
                       <font>
                           <Font size="16.0" />
                       </font>
