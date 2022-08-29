@@ -2,6 +2,7 @@ package com.scholarly.utme.controller.novel_screens;
 
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
+import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -21,6 +22,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,7 +35,13 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private ScrollPane contentPane;
 
     @FXML
-    private Button backButton, prevButton, nextButton;
+    private ListView<NovelChapter> chaptersList;
+
+    @FXML
+    private Panel questionFooter;
+
+    @FXML
+    private Button backButton, prevButton, nextButton, takeQuizButton, quitQuizButton;
 
     @FXML
     private Label pageTitle, chapterIndex, chapterTitle, chapterContent, chapterCount;
@@ -41,7 +50,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private HBox chapterHeader;
 
     @FXML
-    private ListView<NovelChapter> chaptersList;
+    private VBox chaptersListPane, chapterQuizPane;
+
+    @FXML
+    private ImageView bookmarkImage, reportImage, speakerImage;
 
     @InjectViewModel
     private NovelContentScreenVM viewModel;
@@ -63,7 +75,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         }));
 
         viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
-            chapterContent.setText(newValue.getDetails());
+            chapterContent.setText(newValue.getDetails().replaceAll("<br>", System.lineSeparator()));
             chapterTitle.setText(newValue.getTitle());
             if (!chapterHeader.getChildren().contains(chapterIndex)) {
                 chapterHeader.getChildren().add(0, chapterIndex);
@@ -87,7 +99,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         }
         chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ":");
         chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
-        chapterContent.setText(viewModel.getSelectedChapter().getDetails());
+        chapterContent.setText(viewModel.getSelectedChapter().getDetails().replaceAll("<br>", System.lineSeparator()));
 
 
         prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()));
@@ -103,6 +115,17 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             int selectedIndex = chaptersList.getSelectionModel().getSelectedIndex();
             chaptersList.getSelectionModel().select(selectedIndex - 1);
             viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
+        });;
+
+        takeQuizButton.setOnAction(event -> {
+            Animations.slideIn(chapterQuizPane, 500f, 0f, 500);
+            Animations.translateOut(chaptersListPane, 300);
+        });
+
+        quitQuizButton.setOnAction(event -> {
+            Animations.slideOut(chapterQuizPane, 0f, 500f, 500);
+            Animations.translateIn(chaptersListPane, 400);
+
         });
 
         backButton.setOnAction(event -> {
@@ -113,15 +136,14 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     }
 
     private void initializeViews() {
-        ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/practice_back_button_icon.png").toString()));
-        backButton.setGraphic(backIcon);
-        ImageView prevIcon = new ImageView(new Image(getClass().getResource("/drawable/novel_images/prev_icon.png").toString()));
-        prevButton.setGraphic(prevIcon);
-        ImageView nextIcon = new ImageView(new Image(getClass().getResource("/drawable/novel_images/next_icon.png").toString()));
-        nextButton.setGraphic(nextIcon);
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_back_button_icon.png").toString())));
+        prevButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/novel_images/prev_icon.png").toString())));
+        nextButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/novel_images/next_icon.png").toString())));
 
-        contentPane.setBackground(Background.EMPTY);
-        chapterContent.setBackground(Background.EMPTY);
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_bookmark.png").toString()));
+        reportImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_report.png").toString()));
+        speakerImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_speaker.png").toString()));
+
         chaptersList.setBackground(Background.EMPTY);
     }
 
