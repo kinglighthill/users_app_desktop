@@ -10,6 +10,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.paint.Paint;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.io.IOException;
@@ -27,8 +28,12 @@ public class NovelChapterListItemCell extends ListCell<NovelChapter> {
         selectedProperty().addListener(((observableValue, oldValue, newValue) -> {
             if (newValue) {
                 panel.setStyle("-fx-background-color: #12AF20; -fx-background-radius: 5;");
-            }else {
+                chapterIndex.setTextFill(Paint.valueOf("#FFFFFF"));
+                chapterTitle.setTextFill(Paint.valueOf("#FFFFFF"));
+            } else {
                 panel.setStyle("-fx-background-color: #F1F1F1; -fx-background-radius: 5;");
+                chapterIndex.setTextFill(Paint.valueOf("#000000"));
+                chapterTitle.setTextFill(Paint.valueOf("#000000"));
             }
         }));
     }
@@ -53,10 +58,10 @@ public class NovelChapterListItemCell extends ListCell<NovelChapter> {
             setText(null);
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-        }else {
+        } else {
             if (item.getPosition() >= 1) {
                 chapterIndex.setText("Chapter " + item.getPosition() + ":  ");
-            }else {
+            } else {
                 chapterIndex.setText(null);
             }
 

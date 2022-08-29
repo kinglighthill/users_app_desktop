@@ -42,33 +42,36 @@
     </top>
 
     <center>
-        <VBox spacing="20" prefWidth="600" prefHeight="400" style="-fx-background-color: white;">
-            <HBox fx:id="chapterHeader" spacing="10">
-                <Label fx:id="chapterIndex" text="Chapter 1:"/>
-                <Label fx:id="chapterTitle" text="The Letter"/>
-            </HBox>
+        <StackPane>
+            <VBox spacing="20" prefWidth="600" prefHeight="400" style="-fx-background-color: white;">
+                <HBox fx:id="chapterHeader" spacing="10">
+                    <Label fx:id="chapterIndex" text="Chapter 1:"/>
+                    <Label fx:id="chapterTitle" text="The Letter"/>
+                </HBox>
 
-            <ScrollPane fx:id="contentPane" fitToWidth="true" style="-fx-background-color: #FFFFFF;" prefHeight="400"  VBox.vgrow="ALWAYS">
-                <Label fx:id="chapterContent" wrapText="true" lineSpacing="5" style="-fx-background-color: #FFFFFF;"/>
+                <ScrollPane fx:id="contentPane" fitToWidth="true" style="-fx-background-color: #FFFFFF;" prefHeight="400"  VBox.vgrow="ALWAYS">
+                    <Label fx:id="chapterContent" wrapText="true" lineSpacing="5" style="-fx-background-color: #FFFFFF;"/>
+                    <padding>
+                        <Insets topRightBottomLeft="5"/>
+                    </padding>
+                </ScrollPane>
+
+                <HBox spacing="15" alignment="CENTER">
+                    <Button fx:id="prevButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
+                    <Label fx:id="chapterCount" text="1 of 10"/>
+                    <Button fx:id="nextButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
+                    <Button fx:id="takeQuizButton" prefHeight="30" prefWidth="100" text="Take Quiz" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 5;"/>
+                    <padding>
+                        <Insets bottom="15" top="15"/>
+                    </padding>
+                </HBox>
+
                 <padding>
-                    <Insets topRightBottomLeft="5"/>
+                    <Insets topRightBottomLeft="30"/>
                 </padding>
-            </ScrollPane>
-
-            <HBox spacing="15" alignment="CENTER">
-                <Button fx:id="prevButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
-                <Label fx:id="chapterCount" text="1 of 10"/>
-                <Button fx:id="nextButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
-                <Button fx:id="takeQuizButton" prefHeight="30" prefWidth="100" text="Take Quiz" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 5;"/>
-                <padding>
-                    <Insets bottom="15" top="15"/>
-                </padding>
-            </HBox>
-
-            <padding>
-                <Insets topRightBottomLeft="30"/>
-            </padding>
-        </VBox>
+            </VBox>
+            <VBox fx:id="dimmer" style="-fx-background-color: rgba(0, 0, 0, 0.6);" visible="false"/>
+        </StackPane>
     </center>
 
     <right>
@@ -84,7 +87,7 @@
                             <Insets left="5"/>
                         </padding>
                     </Label>
-                    <ListView fx:id="chaptersList" prefHeight="600"/>
+                    <ListView id="novelChapterList" fx:id="chaptersList" prefHeight="600"/>
                     <padding>
                         <Insets top="20" bottom="10"/>
                     </padding>
@@ -169,7 +172,7 @@
 
                     </BorderPane>
 
-                    <VBox spacing="5">
+                    <VBox spacing="5" alignment="CENTER">
                         <Button fx:id="optionA" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #F7B71D">
                             <font>
                                 <Font size="16"/>

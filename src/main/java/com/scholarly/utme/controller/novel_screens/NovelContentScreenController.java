@@ -22,6 +22,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
@@ -39,6 +40,9 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
     @FXML
     private Panel questionFooter;
+
+    @FXML
+    private VBox dimmer;
 
     @FXML
     private Button backButton, prevButton, nextButton, takeQuizButton, quitQuizButton;
@@ -119,12 +123,14 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         takeQuizButton.setOnAction(event -> {
             Animations.slideIn(chapterQuizPane, 500f, 0f, 500);
-            Animations.translateOut(chaptersListPane, 300);
+            Animations.translateOut(chaptersListPane, 400);
+            Animations.fadeIn(dimmer, 500);
         });
 
         quitQuizButton.setOnAction(event -> {
             Animations.slideOut(chapterQuizPane, 0f, 500f, 500);
             Animations.translateIn(chaptersListPane, 400);
+            Animations.fadeOut(dimmer, 500);
 
         });
 
