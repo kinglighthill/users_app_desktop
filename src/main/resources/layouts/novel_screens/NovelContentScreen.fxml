@@ -145,7 +145,7 @@
                         </right>
                     </Panel>
 
-                    <BorderPane prefHeight="300" style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                    <BorderPane prefHeight="300" style="-fx-background-color: white; -fx-border-color: #949494; -fx-border-radius: 8;">
                         <center>
                             <Label fx:id="questionLabel" text="Who is the narrator?" wrapText="true">
                                 <font>
@@ -173,22 +173,22 @@
                     </BorderPane>
 
                     <VBox spacing="5" alignment="CENTER">
-                        <Button fx:id="optionA" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #F7B71D">
+                        <Button fx:id="optionAButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
                             <font>
                                 <Font size="16"/>
                             </font>
                         </Button>
-                        <Button fx:id="optionB" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #F7B71D">
+                        <Button fx:id="optionBButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
                             <font>
                                 <Font size="16"/>
                             </font>
                         </Button>
-                        <Button fx:id="optionC" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #F7B71D">
+                        <Button fx:id="optionCButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
                             <font>
                                 <Font size="16"/>
                             </font>
                         </Button>
-                        <Button fx:id="optionD" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #F7B71D">
+                        <Button fx:id="optionDButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
                             <font>
                                 <Font size="16"/>
                             </font>

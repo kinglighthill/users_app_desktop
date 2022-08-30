@@ -24,9 +24,12 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/novel_screens/NovelContentScreen.fxml")
@@ -45,10 +48,13 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private VBox dimmer;
 
     @FXML
-    private Button backButton, prevButton, nextButton, takeQuizButton, quitQuizButton;
+    private Button backButton, prevButton, nextButton, takeQuizButton, quitQuizButton, fiftyFiftyButton;
 
     @FXML
-    private Label pageTitle, chapterIndex, chapterTitle, chapterContent, chapterCount;
+    private Button optionAButton, optionBButton, optionCButton, optionDButton;
+
+    @FXML
+    private Label pageTitle, chapterIndex, chapterTitle, chapterContent, chapterCount, fiftyFiftyCount, questionLabel;
 
     @FXML
     private HBox chapterHeader;
@@ -62,11 +68,28 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     @InjectViewModel
     private NovelContentScreenVM viewModel;
 
+    List<Button> options;
+
+    String idleButtonStyle =
+            "-fx-background-color: #FF8D19;" +
+                    "-fx-background-radius: 5";
+
+    String hoveredButtonStyle =
+            "-fx-background-color: #FFA347;" +
+                    "-fx-background-radius: 5";
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        options = new ArrayList<>();
+        options.add(optionAButton);
+        options.add(optionBButton);
+        options.add(optionCButton);
+        options.add(optionDButton);
 
         initializeViews();
         initializeFont();
+        initializeGestures();
+        initializeQuiz();
 
         viewModel.processInitialData(getInitialData());
 
@@ -158,6 +181,35 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         chapterTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.EIGHTEEN.size));
         chapterContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
         chapterCount.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+    }
+
+    private void initializeGestures() {
+        String idleFiftyFiftyStyle = fiftyFiftyButton.getStyle();
+        String hoveredFiftyFiftyStyle =
+                "-fx-background-color: #73D25E;" +
+                        "-fx-background-radius: 300;" +
+                        "-fx-border-color: #1B9D01;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-border-radius: 300";
+
+        fiftyFiftyButton.setOnMouseEntered(e -> {
+            fiftyFiftyButton.setStyle(hoveredFiftyFiftyStyle);
+            fiftyFiftyButton.setTextFill(Color.WHITE);
+        });
+        fiftyFiftyButton.setOnMouseExited(e -> {
+            fiftyFiftyButton.setStyle(idleFiftyFiftyStyle);
+            fiftyFiftyButton.setTextFill(Color.web("#1B9D01"));
+        });
+
+        options.forEach(button -> {
+            button.setOnMouseEntered(e -> button.setStyle(hoveredButtonStyle));
+            button.setOnMouseExited(e -> button.setStyle(idleButtonStyle));
+        });
+
+    }
+
+    private void initializeQuiz() {
+
     }
 
     private NovelState getInitialData() {
