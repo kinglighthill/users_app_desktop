@@ -81,8 +81,6 @@ public class CalculatorView {
 
         try {
             calculator.parse(expression.getText());
-            System.out.println(TAG + "Expression parsed -> " + expression.getText());
-            System.out.println(TAG + "Output gotten -> " + calculator.evaluate());
             result.setText(calculator.evaluate());
 
         } catch (Exception e) {
@@ -160,10 +158,6 @@ public class CalculatorView {
 
     private boolean expressionContainsOperator(String expression) {
         String[] operators = {"+", "-", "/", "*", "^"};
-
-        System.out.println(TAG + "Expression -> " + expression);
-
-        System.out.println(TAG + "Expression contains operator -> " + Arrays.stream(operators).anyMatch(it -> expression.contains(it)));
 
         return Arrays.stream(operators).anyMatch(it -> expression.contains(it));
 

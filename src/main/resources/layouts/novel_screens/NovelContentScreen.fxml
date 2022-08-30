@@ -10,6 +10,8 @@
 <?import javafx.geometry.Insets?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import org.controlsfx.dialog.FontSelectorDialog.FontPanel?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.image.ImageView?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.scholarly.utme.controller.novel_screens.NovelContentScreenController"
             style="-fx-background-color: white;">
@@ -34,60 +36,170 @@
                         </padding>
                     </HBox>
                 </left>
-                <right>
-
-                </right>
             </Panel>
             <Separator />
         </VBox>
     </top>
 
     <center>
-        <VBox spacing="20" prefWidth="600" prefHeight="400" style="-fx-background-color: white;">
-            <HBox fx:id="chapterHeader" spacing="10">
-                <Label fx:id="chapterIndex" text="Chapter 1:"/>
-                <Label fx:id="chapterTitle" text="The Letter"/>
-            </HBox>
+        <StackPane>
+            <VBox spacing="20" prefWidth="600" prefHeight="400" style="-fx-background-color: white;">
+                <HBox fx:id="chapterHeader" spacing="10">
+                    <Label fx:id="chapterIndex" text="Chapter 1:"/>
+                    <Label fx:id="chapterTitle" text="The Letter"/>
+                </HBox>
 
-            <ScrollPane fx:id="contentPane" fitToWidth="true" style="-fx-background-color: #FFFFFF;" prefHeight="400"  VBox.vgrow="ALWAYS">
-                <Label fx:id="chapterContent" wrapText="true" lineSpacing="5" style="-fx-background-color: #FFFFFF;"/>
+                <ScrollPane fx:id="contentPane" fitToWidth="true" style="-fx-background-color: #FFFFFF;" prefHeight="400"  VBox.vgrow="ALWAYS">
+                    <Label fx:id="chapterContent" wrapText="true" lineSpacing="5" style="-fx-background-color: #FFFFFF;"/>
+                    <padding>
+                        <Insets topRightBottomLeft="5"/>
+                    </padding>
+                </ScrollPane>
+
+                <HBox spacing="15" alignment="CENTER">
+                    <Button fx:id="prevButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
+                    <Label fx:id="chapterCount" text="1 of 10"/>
+                    <Button fx:id="nextButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
+                    <Button fx:id="takeQuizButton" prefHeight="30" prefWidth="100" text="Take Quiz" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 5;"/>
+                    <padding>
+                        <Insets bottom="15" top="15"/>
+                    </padding>
+                </HBox>
+
                 <padding>
-                    <Insets topRightBottomLeft="5"/>
+                    <Insets topRightBottomLeft="30"/>
                 </padding>
-            </ScrollPane>
-
-            <HBox spacing="15" alignment="CENTER">
-                <Button fx:id="prevButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
-                <Label fx:id="chapterCount" text="1 of 10"/>
-                <Button fx:id="nextButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
-                <padding>
-                    <Insets bottom="15" top="15"/>
-                </padding>
-            </HBox>
-
-            <padding>
-                <Insets topRightBottomLeft="30"/>
-            </padding>
-        </VBox>
+            </VBox>
+            <VBox fx:id="dimmer" style="-fx-background-color: rgba(0, 0, 0, 0.6);" visible="false"/>
+        </StackPane>
     </center>
 
     <right>
         <HBox spacing="20" prefHeight="400" prefWidth="400">
             <Separator orientation="VERTICAL"/>
-            <VBox spacing="15" prefHeight="300" prefWidth="400">
-                <Label text="Chapters">
-                    <font>
-                        <Font name="System Bold" size="16"/>
-                    </font>
+            <StackPane>
+                <VBox fx:id="chaptersListPane" spacing="15" prefHeight="300" prefWidth="400">
+                    <Label text="Chapters">
+                        <font>
+                            <Font name="System Bold" size="16"/>
+                        </font>
+                        <padding>
+                            <Insets left="5"/>
+                        </padding>
+                    </Label>
+                    <ListView id="novelChapterList" fx:id="chaptersList" prefHeight="600"/>
                     <padding>
-                        <Insets left="5"/>
+                        <Insets top="20" bottom="10"/>
                     </padding>
-                </Label>
-                <ListView fx:id="chaptersList" prefHeight="600"/>
-                <padding>
-                    <Insets top="20" bottom="10"/>
-                </padding>
-            </VBox>
+                </VBox>
+
+                <VBox fx:id="chapterQuizPane" spacing="15" prefHeight="300" prefWidth="400" visible="false">
+                    <Panel>
+                        <left>
+                            <Label text="Quiz">
+                                <font>
+                                    <Font name="System Bold" size="20"/>
+                                </font>
+                                <padding>
+                                    <Insets left="5"/>
+                                </padding>
+                            </Label>
+                        </left>
+                        <right>
+                            <Button fx:id="quitQuizButton" prefWidth="50" prefHeight="20" text="Quit" textFill="white" style="-fx-background-color: #F36D6D;"/>
+                        </right>
+                    </Panel>
+
+                    <Panel>
+                        <left>
+                            <Label text="Question 1">
+                                <font>
+                                    <Font name="System Bold" size="14"/>
+                                </font>
+                                <padding>
+                                    <Insets left="5" top="10"/>
+                                </padding>
+                            </Label>
+                        </left>
+                        <right>
+                            <StackPane>
+                                <Button fx:id="fiftyFiftyButton" mnemonicParsing="false" text="50:50" textFill="#1B9D01" style="-fx-background-color: #E6F4E3; -fx-background-radius: 300; -fx-border-color: #1B9D01; -fx-border-radius: 300; -fx-border-width: 1;">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                    <StackPane.margin>
+                                        <Insets top="3" right="3"/>
+                                    </StackPane.margin>
+                                </Button>
+                                <Circle stroke="#1B9D01" fill="white" radius="8" StackPane.alignment="TOP_RIGHT">
+                                    <StackPane.margin>
+                                        <Insets bottom="15" left="15"/>
+                                    </StackPane.margin>
+                                </Circle>
+                                <Label fx:id="fiftyFiftyCount" text="3" StackPane.alignment="TOP_RIGHT">
+                                    <StackPane.margin>
+                                        <Insets right="4"/>
+                                    </StackPane.margin>
+                                </Label>
+                            </StackPane>
+                        </right>
+                    </Panel>
+
+                    <BorderPane prefHeight="300" style="-fx-background-color: white; -fx-border-color: #949494; -fx-border-radius: 8;">
+                        <center>
+                            <Label fx:id="questionLabel" text="Who is the narrator?" wrapText="true">
+                                <font>
+                                    <Font size="15.0" />
+                                </font>
+                            </Label>
+                        </center>
+                        <bottom>
+                            <Panel StackPane.alignment="BOTTOM_CENTER" fx:id="questionFooter" style="-fx-background-color: #E2F2E4;">
+                                <left>
+                                    <ImageView fx:id="bookmarkImage"/>
+                                </left>
+                                <center>
+                                    <ImageView fx:id="reportImage"/>
+                                </center>
+                                <right>
+                                    <ImageView fx:id="speakerImage"/>
+                                </right>
+                                <padding>
+                                    <Insets left="15" right="15" top="10" bottom="10"/>
+                                </padding>
+                            </Panel>
+                        </bottom>
+
+                    </BorderPane>
+
+                    <VBox spacing="5" alignment="CENTER">
+                        <Button fx:id="optionAButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                            <font>
+                                <Font size="16"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="optionBButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                            <font>
+                                <Font size="16"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="optionCButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                            <font>
+                                <Font size="16"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="optionDButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                            <font>
+                                <Font size="16"/>
+                            </font>
+                        </Button>
+                    </VBox>
+
+                    <padding>
+                        <Insets top="20" bottom="10"/>
+                    </padding>
+                </VBox>
+            </StackPane>
             <padding>
                 <Insets right="20"/>
             </padding>

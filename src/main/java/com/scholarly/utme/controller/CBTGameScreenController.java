@@ -73,11 +73,11 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
   
     private Stage calculatorStage = new Stage();
 
-    String idleStyle =
+    String idleButtonStyle =
             "-fx-background-color: #FF8D19;" +
                     "-fx-background-radius: 10";
 
-    String hoveredStyle =
+    String hoveredButtonStyle =
             "-fx-background-color: #FFA347;" +
                     "-fx-background-radius: 10";
 
@@ -200,9 +200,9 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
 
         options.forEach(button -> {
-            button.setStyle(idleStyle);
-            button.setOnMouseEntered(e -> button.setStyle(hoveredStyle));
-            button.setOnMouseExited(e -> button.setStyle(idleStyle));
+            button.setStyle(idleButtonStyle);
+            button.setOnMouseEntered(e -> button.setStyle(hoveredButtonStyle));
+            button.setOnMouseExited(e -> button.setStyle(idleButtonStyle));
             button.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 24));
             button.setTextFill(Color.WHITE);
         });
