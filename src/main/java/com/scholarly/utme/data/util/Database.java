@@ -31,7 +31,7 @@ public class Database {
 
     public static boolean isOK() {
 
-        return TheoryBookmarkDao.createTable() && checkDrivers() && checkConnection();
+        return checkDrivers() && checkConnection();
 
         /*if (!checkDrivers()) return false; //driver errors
 

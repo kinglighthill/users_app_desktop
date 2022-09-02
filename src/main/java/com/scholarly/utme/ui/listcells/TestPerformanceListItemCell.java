@@ -2,6 +2,7 @@ package com.scholarly.utme.ui.listcells;
 
 import com.scholarly.utme.controller.ResultScreenController;
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -19,7 +20,7 @@ import java.util.List;
 public class TestPerformanceListItemCell extends ListCell<ResultScreenController.InitialData> {
 
     private List<PracticeScreenVM.Result> results;
-    private List<Subject> subjects;
+    private List<PQSubject> subjects;
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions;
     private View view;
 

@@ -2,6 +2,7 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.controller.ExplanationScreenController.InitialData;
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.ObjectProperty;
@@ -13,8 +14,8 @@ import java.util.HashMap;
 
 public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
 
-    private ObservableList<Subject> subjects = FXCollections.observableArrayList();
-    private ObjectProperty<Subject> selectedSubject = new SimpleObjectProperty<>();
+    private ObservableList<PQSubject> subjects = FXCollections.observableArrayList();
+    private ObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty<>();
 
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
@@ -47,23 +48,23 @@ public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
     }
 
 
-    public ObservableList<Subject> getSubjects() {
+    public ObservableList<PQSubject> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(ObservableList<Subject> subjects) {
+    public void setSubjects(ObservableList<PQSubject> subjects) {
         this.subjects = subjects;
     }
 
-    public Subject getSelectedSubject() {
+    public PQSubject getSelectedSubject() {
         return selectedSubject.get();
     }
 
-    public ObjectProperty<Subject> selectedSubjectProperty() {
+    public ObjectProperty<PQSubject> selectedSubjectProperty() {
         return selectedSubject;
     }
 
-    public void setSelectedSubject(Subject selectedSubject) {
+    public void setSelectedSubject(PQSubject selectedSubject) {
         this.selectedSubject.set(selectedSubject);
     }
 

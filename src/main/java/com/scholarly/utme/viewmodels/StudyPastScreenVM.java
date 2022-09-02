@@ -7,6 +7,7 @@ import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.TheoryBookmarkDao;
 import com.scholarly.utme.data.dao.TheoryQuestionDao;
 import com.scholarly.utme.data.model.*;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -29,8 +30,8 @@ import static com.scholarly.utme.viewmodels.SubjectListItemVM.*;
 public class StudyPastScreenVM implements ViewModel {
     public static final String TAG = "StudyPastQuestViewModel: ";
 
-    private ObservableList<Subject> subjects = FXCollections.observableArrayList();
-    private ObjectProperty<Subject> selectedSubject = new SimpleObjectProperty<>();
+    private ObservableList<PQSubject> subjects = FXCollections.observableArrayList();
+    private ObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty<>();
 
     private HashMap<String, SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
@@ -51,7 +52,7 @@ public class StudyPastScreenVM implements ViewModel {
             if (subjectState.getType() == Type.OBJECTIVE) {
                 List<QuestionState> questionStates = ObjectiveQuestionDao
                         .getQuestions(
-                                subjectState.getSubject().getTableName(),
+                                subjectState.getSubject().getSubjectId(),
                                 subjectState.getSelectedYear().getId(),
                                 false
                         ).stream()
@@ -59,14 +60,14 @@ public class StudyPastScreenVM implements ViewModel {
                         .map(objectiveQuestion -> new QuestionState(objectiveQuestion, false, false))
                         .collect(Collectors.toList());
 
-                subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
+                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
 
                 objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
 
             } else if (subjectState.getType() == Type.THEORY) {
                 List<QuestionState> questionStates = TheoryQuestionDao
                         .getQuestions(
-                                subjectState.getSubject().getTableName(),
+                                subjectState.getSubject().getSubjectId(),
                                 subjectState.getSelectedYear().getId(),
                                 false
                         ).stream()
@@ -74,7 +75,7 @@ public class StudyPastScreenVM implements ViewModel {
                         .map(theoryQuestion -> new QuestionState(theoryQuestion, false, false))
                         .collect(Collectors.toList());
 
-                subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
+                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
 
                 theoryBookmarks.addAll(TheoryBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
             }
@@ -86,15 +87,15 @@ public class StudyPastScreenVM implements ViewModel {
         return questionType;
     }
 
-    public ObservableList<Subject> getSubjects() {
+    public ObservableList<PQSubject> getSubjects() {
         return subjects;
     }
 
-    public Subject getSelectedSubject() {
+    public PQSubject getSelectedSubject() {
         return selectedSubject.get();
     }
 
-    public ObjectProperty<Subject> selectedSubjectProperty() {
+    public ObjectProperty<PQSubject> selectedSubjectProperty() {
         return selectedSubject;
     }
 
@@ -110,12 +111,12 @@ public class StudyPastScreenVM implements ViewModel {
         return theoryBookmarks;
     }
 
-    public void setSelectedSubject(Subject selectedSubject) {
+    public void setSelectedSubject(PQSubject selectedSubject) {
         this.selectedSubject.set(selectedSubject);
     }
 
     public void handleBookmarkClicked() {
-        StudyPastScreenVM.SubjectQuestionsState subjectQuestionsState = subjectsQuestions.get(selectedSubject.get().getTableName());
+        StudyPastScreenVM.SubjectQuestionsState subjectQuestionsState = subjectsQuestions.get(selectedSubject.get().getShortTitle());
         List<StudyPastScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
 

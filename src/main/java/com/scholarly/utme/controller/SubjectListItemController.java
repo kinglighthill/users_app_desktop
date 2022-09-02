@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.Year;
+import com.scholarly.utme.data.model.newDb.PQTopic;
+import com.scholarly.utme.data.model.newDb.Topic;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -35,6 +37,9 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     private ChoiceBox<Year> yearChoiceBox;
 
     @FXML
+    private ChoiceBox<PQTopic> topicsChoiceBox;
+
+    @FXML
     private VBox subRoot;
 
     @FXML
@@ -66,13 +71,12 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
 //        System.out.println("Subject " + viewModel.getSubjectTableName() + " color name -> " + viewModel.getSubjectColorName());
         subjectImageBackground.setStyle("-fx-background-radius: 8 0 0 8; -fx-background-color: " + viewModel.getSubjectColorName());
         try {
-            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/" + viewModel.getSubjectTableName() + "_image.png").toString()));
-        }catch (Exception e){
-            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/irs_image.png").toString()));
+            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/" + viewModel.getShortTitle() + "_image.png").toString()));
+        } catch (Exception e){
+            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/IRS_image.png").toString()));
             System.out.println(TAG + e.toString());
         }
         subjectText.textProperty().bind(viewModel.subjectNameProperty());
-       // subjectCheckBox.textProperty().bind(viewModel.subjectNameProperty());
         subjectCheckBox.selectedProperty().bindBidirectional(viewModel.subjectSelectedProperty());
 
         shuffleQuestionsCheckBox.selectedProperty().bindBidirectional(viewModel.shuffleQuestionsProperty());
@@ -80,7 +84,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
 
         questionNoChoiceBox.setItems(viewModel.getQuestionNumbers());
         questionNoChoiceBox.getItems().addListener((ListChangeListener<Integer>) c -> {
-            System.out.println(TAG + "List was changed");
+//            System.out.println(TAG + "List was changed");
             if (c.getList().size() != 0) {
                 questionNoChoiceBox.setValue(c.getList().get(c.getList().size() - 1));
             }
@@ -90,11 +94,13 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         });
 
         yearChoiceBox.getItems().addAll(viewModel.getYears());
-        yearChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
+        yearChoiceBox.getSelectionModel().selectedItemProperty().addListener( (observable, oldValue, newValue) -> {
             viewModel.loadQuestionNumbersList(newValue);
             viewModel.setSelectedYearProperty(newValue);
         });
         yearChoiceBox.setValue(viewModel.getYears().get(0));
+
+        topicsChoiceBox.getItems().addAll(viewModel.getTopics());
 
 
 

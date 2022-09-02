@@ -65,7 +65,7 @@ public class AudioVideoSubjectListItemController implements FxmlView<AudioVideoS
         try {
             subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/" + viewModel.getSubjectTableName() + "_image.png").toString()));
         }catch (Exception e){
-            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/irs_image.png").toString()));
+            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/IRS_image.png").toString()));
             System.out.println(e.toString());
         }
 

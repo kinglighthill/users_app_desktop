@@ -7,6 +7,7 @@ import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -25,7 +26,7 @@ public class CBTGameScreenVM implements ViewModel {
 
     private SimpleIntegerProperty fiftyFiftyCount = new SimpleIntegerProperty();
 
-    private List<Subject> subjectList = FXCollections.observableArrayList();
+    private List<PQSubject> subjectList = FXCollections.observableArrayList();
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
     private ObservableList<ObjectiveBookmark> objectiveBookmarks = FXCollections.observableArrayList();
@@ -43,7 +44,7 @@ public class CBTGameScreenVM implements ViewModel {
 
             List<QuestionState> questionStates = ObjectiveQuestionDao
                     .getQuestions(
-                            subjectState.getSubject().getTableName(),
+                            subjectState.getSubject().getSubjectId(),
                             subjectState.getSelectedYear().getId(),
                             false
                     )
@@ -59,7 +60,7 @@ public class CBTGameScreenVM implements ViewModel {
 
             questions.addAll(questionStates);
 
-            subjectsQuestions.put(subjectState.getSubject().getTableName(), new PracticeScreenVM.SubjectQuestionsState(1, practiceQuestionState));
+            subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new PracticeScreenVM.SubjectQuestionsState(1, practiceQuestionState));
 
             objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
 
@@ -126,7 +127,7 @@ public class CBTGameScreenVM implements ViewModel {
         this.questionAttempts = questionAttempts;
     }
 
-    public List<Subject> getSubjectList() {
+    public List<PQSubject> getSubjectList() {
         return subjectList;
     }
 

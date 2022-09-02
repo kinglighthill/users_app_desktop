@@ -7,7 +7,6 @@ public class ObjectiveQuestion implements Question {
     private int yearId;
     private int topicId;
     private int questionNumber;
-    private int questionDescriptionId;
     private String question;
     private String optionA;
     private String optionB;
@@ -17,6 +16,7 @@ public class ObjectiveQuestion implements Question {
     private String optionAnswer;
     private String answerExplanation;
     private int optionAnswerId;
+    private int questionDescriptionId;
     private int isExplanationWebView;
     private int isQuestionWebView;
     private int gammable;

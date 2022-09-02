@@ -157,7 +157,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
 
         subjectColumn.setCellValueFactory( param -> {
-            return new SimpleStringProperty(param.getValue().getSubject().getSubjectName());
+            return new SimpleStringProperty(param.getValue().getSubject().getTitle());
         });
 
         yearColumn.setCellValueFactory( param -> {
