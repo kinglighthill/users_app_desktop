@@ -54,6 +54,7 @@ public class StudyPastScreenVM implements ViewModel {
                         .getQuestions(
                                 subjectState.getSubject().getSubjectId(),
                                 subjectState.getSelectedYear().getId(),
+                                null,
                                 false
                         ).stream()
                         .limit(subjectState.getNumberOfQuestions())
@@ -69,6 +70,7 @@ public class StudyPastScreenVM implements ViewModel {
                         .getQuestions(
                                 subjectState.getSubject().getSubjectId(),
                                 subjectState.getSelectedYear().getId(),
+                                null,
                                 false
                         ).stream()
                         .limit(subjectState.getNumberOfQuestions())

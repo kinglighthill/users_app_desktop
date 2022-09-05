@@ -4,7 +4,6 @@ import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.TheoryQuestionDao;
 import com.scholarly.utme.data.dao.YearsDao;
 import com.scholarly.utme.data.dao.newDb.TopicDao;
-import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.newDb.PQTopic;
@@ -21,6 +20,8 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class SubjectListItemVM implements ViewModel {
     public static final String TAG = "SubjectListItemVM: ";
@@ -61,8 +62,8 @@ public class SubjectListItemVM implements ViewModel {
     private SimpleBooleanProperty shuffleQuestions = new SimpleBooleanProperty(false);
     private SimpleBooleanProperty shuffleOptions = new SimpleBooleanProperty(false);
 
+//    private ObjectProperty<List<PQTopic>> selectedTopicsProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Year> selectedYearProperty = new SimpleObjectProperty<>();
-
     private ObjectProperty<Integer> selectedNumberOfQuestions = new SimpleObjectProperty<>();
 
     private PQSubject subject;
@@ -176,10 +177,10 @@ public class SubjectListItemVM implements ViewModel {
     }
 
     public void loadQuestionNumbersList(Year year) {
-
         questionNumbers.clear();
+
         if (type == Type.OBJECTIVE) {
-            Observable.just(ObjectiveQuestionDao.getQuestions(subject.getId(), year.getId(), false))
+            Observable.just(Objects.requireNonNull(ObjectiveQuestionDao.getQuestions(subject.getId(), year.getId(), FXCollections.emptyObservableList(), false)))
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();
@@ -194,16 +195,49 @@ public class SubjectListItemVM implements ViewModel {
                             },
                             error -> {}
                     );
-//            ObservableList<ObjectiveQuestion> questionList = ObjectiveQuestionDao.getQuestions(subject.getTableName(), year.getId(), false);
-//            for ( int i = 1; i <= questionList.size(); i++) {
-//                questionNumbers.add(i);
-//            }
+
         } else {
-//            ObservableList<TheoryQuestion> questionList = TheoryQuestionDao.getQuestions(subject.getTableName(), year.getId(), false);
-//            for ( int i = 1; i <= questionList.size(); i++) {
-//                questionNumbers.add(i);
-//            }
-            Observable.just(TheoryQuestionDao.getQuestions(subject.getId(), year.getId(), false))
+
+            Observable.just(TheoryQuestionDao.getQuestions(subject.getId(), year.getId(), FXCollections.emptyObservableList(),  false))
+                    .subscribeOn(Schedulers.io())
+                    .map(it -> {
+                        List<Integer> numberList = new ArrayList<>();
+                        for ( int i = 10; i <= it.size(); i+=10) {
+                            numberList.add(i);
+                        }
+                        return numberList;
+                    })
+                    .blockingSubscribe(
+                            numberList -> {
+                                questionNumbers.addAll(numberList);
+                            },
+                            error -> {}
+                    );
+        }
+    }
+
+    public void loadQuestionNumbersList(List<Integer> topicIdsList) {
+        questionNumbers.clear();
+
+        if (type == Type.OBJECTIVE) {
+            Observable.just(Objects.requireNonNull(ObjectiveQuestionDao.getQuestions(subject.getId(), selectedYearProperty.get().getId(), FXCollections.observableArrayList(topicIdsList), false)))
+                    .subscribeOn(Schedulers.io())
+                    .map(it -> {
+                        List<Integer> numberList = new ArrayList<>();
+                        for ( int i = 10; i <= it.size(); i+=10) {
+                            numberList.add(i);
+                        }
+                        return numberList;
+                    })
+                    .blockingSubscribe(
+                            numberList -> {
+                                questionNumbers.addAll(numberList);
+                            },
+                            error -> {}
+                    );
+
+        } else {
+            Observable.just(TheoryQuestionDao.getQuestions(subject.getId(), selectedYearProperty.get().getId(), FXCollections.observableArrayList(topicIdsList), false))
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();

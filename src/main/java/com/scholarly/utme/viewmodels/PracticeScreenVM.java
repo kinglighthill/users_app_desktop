@@ -60,6 +60,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .getQuestions(
                                 subjectState.getSubject().getId(),
                                 subjectState.getSelectedYear().getId(),
+                                null,
                                 subjectState.getShuffleQuestions()
                         )
                         .stream()
@@ -81,6 +82,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .getQuestions(
                                 subjectState.getSubject().getSubjectId(),
                                 subjectState.getSelectedYear().getId(),
+                                null,
                                 subjectState.getShuffleQuestions()
                         )
                         .stream()

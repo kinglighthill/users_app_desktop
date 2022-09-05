@@ -2,27 +2,30 @@ package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.PQTopic;
-import com.scholarly.utme.data.model.newDb.Topic;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.CheckComboBox;
+import org.controlsfx.control.IndexedCheckModel;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/SubjectListItemView.fxml")
 public class SubjectListItemController implements FxmlView<SubjectListItemVM>, Initializable {
@@ -37,7 +40,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     private ChoiceBox<Year> yearChoiceBox;
 
     @FXML
-    private ChoiceBox<PQTopic> topicsChoiceBox;
+    private CheckComboBox<PQTopic> topicsComboBox;
 
     @FXML
     private VBox subRoot;
@@ -83,10 +86,10 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         shuffleOptionsCheckBox.selectedProperty().bindBidirectional(viewModel.shuffleOptionsProperty());
 
         questionNoChoiceBox.setItems(viewModel.getQuestionNumbers());
-        questionNoChoiceBox.getItems().addListener((ListChangeListener<Integer>) c -> {
+        questionNoChoiceBox.getItems().addListener((ListChangeListener<Integer>) changeList -> {
 //            System.out.println(TAG + "List was changed");
-            if (c.getList().size() != 0) {
-                questionNoChoiceBox.setValue(c.getList().get(c.getList().size() - 1));
+            if (changeList.getList().size() != 0) {
+                questionNoChoiceBox.setValue(changeList.getList().get(changeList.getList().size() - 1));
             }
         });
         questionNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -100,13 +103,21 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         });
         yearChoiceBox.setValue(viewModel.getYears().get(0));
 
-        topicsChoiceBox.getItems().addAll(viewModel.getTopics());
 
+        topicsComboBox.getItems().addAll(viewModel.getTopics());
+        topicsComboBox.getCheckModel().checkAll();
+        topicsComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<PQTopic>) changeList -> {
+            if (topicsComboBox.getCheckModel().getCheckedItems().size() == 0) {
+                topicsComboBox.getCheckModel().check(0);
+            }
+            List<Integer> topicIdList = changeList.getList().stream().map(PQTopic::getId).collect(Collectors.toList());
+            viewModel.loadQuestionNumbersList(topicIdList);
+        });
 
 
         subRoot.getChildren().removeAll(divider, optionPanel);
         viewModel.subjectSelectedProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(TAG + "subject selected property changed to -> " + newValue + " from -> " + oldValue);
+//            System.out.println(TAG + "subject selected property changed to -> " + newValue + " from -> " + oldValue);
             if (newValue) {
                 subRoot.getChildren().addAll(divider, optionPanel);
             } else {
@@ -120,5 +131,6 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     private void initializeViews() {
         questionNoChoiceBox.setBackground(Background.EMPTY);
         yearChoiceBox.setBackground(Background.EMPTY);
+        topicsComboBox.setBackground(Background.EMPTY);
     }
 }

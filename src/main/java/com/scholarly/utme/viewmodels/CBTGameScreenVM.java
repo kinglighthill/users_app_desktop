@@ -46,6 +46,7 @@ public class CBTGameScreenVM implements ViewModel {
                     .getQuestions(
                             subjectState.getSubject().getSubjectId(),
                             subjectState.getSelectedYear().getId(),
+                            null,
                             false
                     )
                     .stream()
