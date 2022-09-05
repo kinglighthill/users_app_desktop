@@ -2,7 +2,9 @@ package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.TheoryQuestion;
 import com.scholarly.utme.data.util.Database;
+import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.Table;
+import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -13,6 +15,8 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.scholarly.utme.data.dao.ObjectiveQuestionDao.removeBracketsFromArray;
 
 public class TheoryQuestionDao {
 
@@ -30,18 +34,24 @@ public class TheoryQuestionDao {
 
 
 
-    public static ObservableList<TheoryQuestion> getQuestions(String tableName, int yearId, boolean shuffled) {
+    public static ObservableList<TheoryQuestion> getQuestions(int subjectId, int yearId, ObservableList<Integer> topicIdList,  boolean shuffled) {
         ObservableList<TheoryQuestion> questions = FXCollections.observableArrayList();
+
+        String topicIdClause = "";
+
+        if (!topicIdList.isEmpty()) {
+            topicIdClause = " AND topic_id IN (" + removeBracketsFromArray(topicIdList) + ")";
+        }
 
         String query;
 
         if (!shuffled) {
-            query = "SELECT * FROM " + tableName + " WHERE year_id = " + yearId;
+            query = "SELECT * FROM " + Tables.PQ_THEORY_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause;
         } else {
-            query = "SELECT * FROM " + tableName + " WHERE year_id = " + yearId + " ORDER BY RANDOM()";
+            query = "SELECT * FROM " + Tables.PQ_THEORY_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause + " ORDER BY RANDOM()";
         }
 
-        try (Connection connection = Database.connect()) {
+        try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             questions.clear();
@@ -60,8 +70,8 @@ public class TheoryQuestionDao {
                         rs.getInt(isQuestionWebViewColumn)));
             }
 
-
             return questions;
+
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,

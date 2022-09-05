@@ -1,6 +1,7 @@
 package com.scholarly.utme.ui.listcells;
 
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.FontUtil;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
@@ -13,7 +14,7 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.io.IOException;
 
-public class PracticeSubjectListItemCell extends ListCell<Subject> {
+public class PracticeSubjectListItemCell extends ListCell<PQSubject> {
 
     public Label subjectName;
     public Panel subjectBox;
@@ -49,7 +50,7 @@ public class PracticeSubjectListItemCell extends ListCell<Subject> {
     }
 
     @Override
-    protected void updateItem(Subject item, boolean empty) {
+    protected void updateItem(PQSubject item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty || item == null) {
@@ -57,7 +58,7 @@ public class PracticeSubjectListItemCell extends ListCell<Subject> {
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }else {
-            subjectName.setText(item.getSubjectName());
+            subjectName.setText(item.getTitle());
             subjectName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
 
             radioButton.setBackground(Background.EMPTY);

@@ -3,6 +3,7 @@ package com.scholarly.utme.viewmodels;
 import com.scholarly.utme.controller.PracticeScreenController.InitialData;
 import com.scholarly.utme.data.dao.*;
 import com.scholarly.utme.data.model.*;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.Type;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -23,9 +24,9 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     private static final String TAG = "PracticeScreenViewModel: ";
 
-    private ObservableList<Subject> subjects = FXCollections.observableArrayList();
+    private ObservableList<PQSubject> subjects = FXCollections.observableArrayList();
 
-    private ObjectProperty<Subject> selectedSubject = new SimpleObjectProperty<>();
+    private ObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty<>();
 
     private SimpleLongProperty time = new SimpleLongProperty();
 
@@ -57,8 +58,9 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
                 List<QuestionState> questionStates = ObjectiveQuestionDao
                         .getQuestions(
-                                subjectState.getSubject().getTableName(),
+                                subjectState.getSubject().getId(),
                                 subjectState.getSelectedYear().getId(),
+                                null,
                                 subjectState.getShuffleQuestions()
                         )
                         .stream()
@@ -71,15 +73,16 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
 //                subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
 
-                subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
+                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
 
             }
             else if (subjectState.getType() == Type.THEORY) {
 
                 List<QuestionState> questionStates = TheoryQuestionDao
                         .getQuestions(
-                                subjectState.getSubject().getTableName(),
+                                subjectState.getSubject().getSubjectId(),
                                 subjectState.getSelectedYear().getId(),
+                                null,
                                 subjectState.getShuffleQuestions()
                         )
                         .stream()
@@ -90,7 +93,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
 //                subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
 
-                subjectsQuestions.put(subjectState.getSubject().getTableName(), new SubjectQuestionsState(1, questionStates));
+                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
 
             }
 
@@ -113,15 +116,15 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
     }
 
 
-    public ObservableList<Subject> getSubjects() {
+    public ObservableList<PQSubject> getSubjects() {
         return subjects;
     }
 
-    public Subject getSelectedSubject() {
+    public PQSubject getSelectedSubject() {
         return selectedSubject.get();
     }
 
-    public ObjectProperty<Subject> selectedSubjectProperty() {
+    public ObjectProperty<PQSubject> selectedSubjectProperty() {
         return selectedSubject;
     }
 
@@ -141,7 +144,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         return theoryBookmarks;
     }
 
-    public void setSelectedSubject(Subject selectedSubject) {
+    public void setSelectedSubject(PQSubject selectedSubject) {
         this.selectedSubject.set(selectedSubject);
     }
 
@@ -253,7 +256,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
     }*/
 
     public void handleBookmarkClicked() {
-        SubjectQuestionsState subjectQuestionsState = subjectsQuestions.get(selectedSubject.get().getTableName());
+        SubjectQuestionsState subjectQuestionsState = subjectsQuestions.get(selectedSubject.get().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
 

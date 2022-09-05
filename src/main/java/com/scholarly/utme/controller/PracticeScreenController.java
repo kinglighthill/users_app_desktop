@@ -3,6 +3,7 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.*;
 //import com.gtranslate.Audio;
 //import com.gtranslate.Language;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.TextToSpeech;
@@ -60,7 +61,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private ScrollPane tileScrollPane;
 
     @FXML
-    private ListView<Subject> subjectList;
+    private ListView<PQSubject> subjectList;
 
     private ToggleGroup toggleGroup = new ToggleGroup();
 
@@ -113,7 +114,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         /*viewModel.getSubjectBookmarks().forEach((s, bookmarks) -> {
             bookmarks.addListener((ListChangeListener<? super ObjectiveBookmark>) change -> {
                 System.out.println(TAG + "Bookmark List changed ");
-                if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
+                if (viewModel.getSelectedSubject().getShortTitle()().equalsIgnoreCase(s)) {
                     updateBookmarkIcon();
                 }
             });
@@ -121,9 +122,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         subjectList.setCellFactory(new PracticeSubjectListCellFactory());
         subjectList.setItems(viewModel.getSubjects());
-        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) change -> {
+        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) change -> {
             if (change.getList().size() == 1) {
-                Subject subject = change.getList().get(0);
+                PQSubject subject = change.getList().get(0);
                 System.out.println(TAG + "Content of change -> " + change);
                 viewModel.setSelectedSubject(subject);
             } else {
@@ -139,7 +140,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
             subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
 
-                if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
+                if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
 
                     if (newValue.intValue() <= subjectQuestionsState.getQuestions().size()){
                         changeSelectedTile(oldValue.intValue(), newValue.intValue());
@@ -155,11 +156,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         prevButton.setOnAction(event -> {
             nextButton.setDisable(false);
-            SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+            SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
             List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
 //            System.out.println("Selected question index -> " + selectedQuestion);
@@ -170,7 +171,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             if (subjectList.getSelectionModel().getSelectedIndex() == 0) {
 
                 viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .setSelectedQuestion(selectedQuestion - 1);
 
                 if (selectedQuestion == 2) {
@@ -186,7 +187,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
                 }else {
                     viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .setSelectedQuestion(selectedQuestion - 1);
                 }
 
@@ -196,11 +197,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         nextButton.setOnAction(event -> {
             prevButton.setDisable(false);
-            SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+            SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
             List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
 
@@ -220,7 +221,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             } else {
                 viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .setSelectedQuestion(selectedQuestion + 1);
             }
 
@@ -235,13 +236,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             optionAButton.setOnAction(event -> {
                 int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getSelectedQuestion();
 
 
 
                 QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getQuestions()
                         .get(selectedQuestion - 1);
 
@@ -257,11 +258,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             optionAButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getSelectedQuestion();
 
                     QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getQuestions()
                             .get(selectedQuestion - 1);
 
@@ -278,11 +279,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             optionBButton.setOnAction(event -> {
                 int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getSelectedQuestion();
 
                 QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getQuestions()
                         .get(selectedQuestion - 1);
 
@@ -297,11 +298,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             optionBButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getSelectedQuestion();
 
                     QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getQuestions()
                             .get(selectedQuestion - 1);
 
@@ -317,11 +318,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             optionCButton.setOnAction(event -> {
                 int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getSelectedQuestion();
 
                 QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getQuestions()
                         .get(selectedQuestion - 1);
 
@@ -336,11 +337,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             optionCButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getSelectedQuestion();
 
                     QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getQuestions()
                             .get(selectedQuestion - 1);
 
@@ -356,11 +357,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             optionDButton.setOnAction(event -> {
                 int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getSelectedQuestion();
 
                 QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getQuestions()
                         .get(selectedQuestion - 1);
 
@@ -375,11 +376,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             optionDButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getSelectedQuestion();
 
                     QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getQuestions()
                             .get(selectedQuestion - 1);
 
@@ -474,11 +475,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         speakerImage.setOnMouseClicked(event -> {
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             QuestionState questionState = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getQuestions()
                     .get(selectedQuestion - 1);
 
@@ -590,11 +591,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void updateBookmarkIcon() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestionNumber = subjectQuestionsState.getSelectedQuestion();
 //        System.out.println(TAG + "updateBookmarkIcon selectedQuestionNumber -> " + selectedQuestionNumber);
-//        List<ObjectiveBookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getTableName());
+//        List<ObjectiveBookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getShortTitle()());
 
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
 
@@ -641,7 +642,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void changeSelectedQuestion(int newValue) {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
@@ -737,7 +738,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void setupQuestionView() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
 
@@ -846,7 +847,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void setupTilePane() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
         tilePane.getChildren().clear();

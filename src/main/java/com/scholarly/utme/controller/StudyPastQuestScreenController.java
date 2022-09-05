@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.*;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
@@ -58,7 +59,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     private StackPane answerPane, explanationPane;
 
     @FXML
-    private ListView<Subject> subjectList;
+    private ListView<PQSubject> subjectList;
 
     @FXML
     private Label questionOverviewLabel, questionLabel, optionA, optionB, optionC, optionD, explanationLabel, explanationTitle, correctAnswerTitle, correctAnswerLabel;
@@ -95,9 +96,9 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         subjectList.setCellFactory(new PracticeSubjectListCellFactory());
         subjectList.setItems(viewModel.getSubjects());
-        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
+        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) c -> {
             if (c.getList().size() == 1) {
-                Subject subject = c.getList().get(0);
+                PQSubject subject = c.getList().get(0);
                 viewModel.setSelectedSubject(subject);
             } else {
                 viewModel.setSelectedSubject(null);
@@ -108,7 +109,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
             subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
-                if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
+                if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
                     changeSelectedTile(oldValue.intValue(), newValue.intValue());
                     changeSelectedQuestion(newValue.intValue());
                     updateBookmarkIcon();
@@ -118,43 +119,43 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         prevButton.setOnAction(event -> {
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .setSelectedQuestion(selectedQuestion - 1);
         });
 
         nextButton.setOnAction(event -> {
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .setSelectedQuestion(selectedQuestion + 1);
         });
 
         showAnswerButton.setOnAction(event -> {
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                 int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getSelectedQuestion();
 
                 SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName());
+                        .get(viewModel.getSelectedSubject().getShortTitle());
 
                 questionsState.getQuestions().get(selectedQuestion - 1).setShowAnswer(true);
                 updateExplanationView();
 
             } else {
                 int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getSelectedQuestion();
 
                 SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName());
+                        .get(viewModel.getSelectedSubject().getShortTitle());
 
                 questionsState.getQuestions().get(selectedQuestion - 1).setShowExplanation(true);
                 updateExplanationView();
@@ -165,11 +166,11 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         showExplanationButton.setOnAction(event -> {
 
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName());
+                    .get(viewModel.getSelectedSubject().getShortTitle());
 
             questionsState.getQuestions().get(selectedQuestion - 1).setShowExplanation(true);
 
@@ -179,11 +180,11 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         hideAnswerButton.setOnAction(event -> {
 
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName());
+                    .get(viewModel.getSelectedSubject().getShortTitle());
 
             questionsState.getQuestions().get(selectedQuestion - 1).setShowExplanation(false);
 
@@ -200,11 +201,11 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         speakerImage.setOnMouseClicked(event -> {
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName());
+                    .get(viewModel.getSelectedSubject().getShortTitle());
 
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                 ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questionsState.getQuestions().get(selectedQuestion - 1).getQuestion();
@@ -263,7 +264,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     }
 
     private void updateBookmarkIcon() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
 
@@ -295,7 +296,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     }
 
     private void setupQuestionView() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestionNumber = subjectQuestionsState.getSelectedQuestion();
 
@@ -366,7 +367,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
     private void  updateExplanationView() {
         SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
-                .get(viewModel.getSelectedSubject().getTableName());
+                .get(viewModel.getSelectedSubject().getShortTitle());
 
         QuestionState questionState = questionsState.getQuestions().get(questionsState.getSelectedQuestion() - 1);
 
@@ -412,7 +413,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     }
 
     private void setupTilePane() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
         tilePane.setVgap(10);
@@ -457,7 +458,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     }
 
     private void changeSelectedQuestion(int newValue) {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {

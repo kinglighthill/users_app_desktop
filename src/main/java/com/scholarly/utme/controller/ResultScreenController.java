@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
@@ -51,7 +52,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
     private TableColumn<Result, String> subjectColumn, yearColumn, totalQuestionsColumn, attemptsColumn, correctAnswersColumn, percentageColumn;
 
     @FXML
-    private ListView<Subject> subjectListView;
+    private ListView<PQSubject> subjectListView;
 
     @FXML
     private BarChart<CategoryAxis, NumberAxis> barChart;
@@ -73,10 +74,10 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
         totalScoreLabel.textProperty().bind(viewModel.totalScoreProperty());
 
-        ObservableList<Subject> items = FXCollections.observableArrayList();
+        ObservableList<PQSubject> items = FXCollections.observableArrayList();
 
-        Subject subject = new Subject();
-        subject.setSubjectName("All");
+        PQSubject subject = new PQSubject();
+        subject.setShortTitle("All");
         items.add(subject);
         items.addAll(viewModel.getSubjectList());
 
@@ -202,18 +203,18 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
     public static class InitialData {
         private List<Result> results;
-        private List<Subject> subjects;
+        private List<PQSubject> subjects;
         private HashMap<String, SubjectQuestionsState> subjectsQuestions;
         private View view;
 
-        public InitialData(List<Result> results, List<Subject> subjects, HashMap<String, SubjectQuestionsState> subjectsQuestions, View view) {
+        public InitialData(List<Result> results, List<PQSubject> subjects, HashMap<String, SubjectQuestionsState> subjectsQuestions, View view) {
             this.results = results;
             this.subjects = subjects;
             this.subjectsQuestions = subjectsQuestions;
             this.view = view;
         }
 
-        public List<Subject> getSubjects() {
+        public List<PQSubject> getSubjects() {
             return subjects;
         }
 

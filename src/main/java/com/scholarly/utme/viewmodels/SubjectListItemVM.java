@@ -3,8 +3,10 @@ package com.scholarly.utme.viewmodels;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.TheoryQuestionDao;
 import com.scholarly.utme.data.dao.YearsDao;
-import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.dao.newDb.TopicDao;
 import com.scholarly.utme.data.model.Year;
+import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.data.model.newDb.PQTopic;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -18,8 +20,11 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class SubjectListItemVM implements ViewModel {
+    public static final String TAG = "SubjectListItemVM: ";
 
     public Year getSelectedYearProperty() {
         return selectedYearProperty.get();
@@ -44,8 +49,10 @@ public class SubjectListItemVM implements ViewModel {
 
     private SimpleStringProperty subjectName = new SimpleStringProperty("");
     private SimpleStringProperty subjectTableName = new SimpleStringProperty("");
+    private SimpleStringProperty subjectShortTitle = new SimpleStringProperty("");
     private SimpleStringProperty subjectColorName = new SimpleStringProperty("");
     private ObservableList<Year> years;
+    private ObservableList<PQTopic> topics;
 
     private ObservableList<Integer> questionNumbers = FXCollections.observableArrayList();
 
@@ -55,27 +62,28 @@ public class SubjectListItemVM implements ViewModel {
     private SimpleBooleanProperty shuffleQuestions = new SimpleBooleanProperty(false);
     private SimpleBooleanProperty shuffleOptions = new SimpleBooleanProperty(false);
 
+//    private ObjectProperty<List<PQTopic>> selectedTopicsProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Year> selectedYearProperty = new SimpleObjectProperty<>();
-
     private ObjectProperty<Integer> selectedNumberOfQuestions = new SimpleObjectProperty<>();
 
-    private Subject subject;
+    private PQSubject subject;
 
     private BehaviorSubject<SubjectState> subjectState = BehaviorSubject.create();
 
-    public SubjectListItemVM(Subject subject) {
+    public SubjectListItemVM(PQSubject subject) {
         this.subject = subject;
-        subjectName.set(subject.getSubjectName());
-        subjectTableName.set(subject.getTableName());
-        subjectColorName.set(getColorName(subject.getTableName()));
+        subjectName.set(subject.getTitle());
+        subjectShortTitle.set(subject.getShortTitle());
+        subjectColorName.set(getColorName(subject.getShortTitle()));
 
-       // years = YearsDao.getYears();
+        years = YearsDao.getYears();
+        topics = TopicDao.getTopicsForSubject(subject.getSubjectId());
 
         subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
 
         mapPropertiesToState();
 
-        years = YearsDao.getAvailableYearsForSubject(subject.getTableName());
+//        years = YearsDao.getAvailableYearsForSubject("english");
     }
 
     /**
@@ -116,6 +124,10 @@ public class SubjectListItemVM implements ViewModel {
         return subjectTableName.get();
     }
 
+    public String getShortTitle() {
+        return subjectShortTitle.get();
+    }
+
     public String getSubjectColorName() {
         return subjectColorName.get();
     }
@@ -124,12 +136,12 @@ public class SubjectListItemVM implements ViewModel {
         return subjectName;
     }
 
-    public SimpleStringProperty subjectTableNameProperty() {
-        return subjectTableName;
-    }
-
     public ObservableList<Year> getYears() {
         return years;
+    }
+
+    public ObservableList<PQTopic> getTopics() {
+        return topics;
     }
 
     public ObservableList<Integer> getQuestionNumbers() {
@@ -160,15 +172,15 @@ public class SubjectListItemVM implements ViewModel {
         return shuffleOptions;
     }
 
-    public Subject getSubject() {
+    public PQSubject getSubject() {
         return subject;
     }
 
     public void loadQuestionNumbersList(Year year) {
-
         questionNumbers.clear();
+
         if (type == Type.OBJECTIVE) {
-            Observable.just(ObjectiveQuestionDao.getQuestions(subject.getTableName(), year.getId(), false))
+            Observable.just(Objects.requireNonNull(ObjectiveQuestionDao.getQuestions(subject.getId(), year.getId(), FXCollections.emptyObservableList(), false)))
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();
@@ -183,16 +195,49 @@ public class SubjectListItemVM implements ViewModel {
                             },
                             error -> {}
                     );
-//            ObservableList<ObjectiveQuestion> questionList = ObjectiveQuestionDao.getQuestions(subject.getTableName(), year.getId(), false);
-//            for ( int i = 1; i <= questionList.size(); i++) {
-//                questionNumbers.add(i);
-//            }
+
         } else {
-//            ObservableList<TheoryQuestion> questionList = TheoryQuestionDao.getQuestions(subject.getTableName(), year.getId(), false);
-//            for ( int i = 1; i <= questionList.size(); i++) {
-//                questionNumbers.add(i);
-//            }
-            Observable.just(TheoryQuestionDao.getQuestions(subject.getTableName(), year.getId(), false))
+
+            Observable.just(TheoryQuestionDao.getQuestions(subject.getId(), year.getId(), FXCollections.emptyObservableList(),  false))
+                    .subscribeOn(Schedulers.io())
+                    .map(it -> {
+                        List<Integer> numberList = new ArrayList<>();
+                        for ( int i = 10; i <= it.size(); i+=10) {
+                            numberList.add(i);
+                        }
+                        return numberList;
+                    })
+                    .blockingSubscribe(
+                            numberList -> {
+                                questionNumbers.addAll(numberList);
+                            },
+                            error -> {}
+                    );
+        }
+    }
+
+    public void loadQuestionNumbersList(List<Integer> topicIdsList) {
+        questionNumbers.clear();
+
+        if (type == Type.OBJECTIVE) {
+            Observable.just(Objects.requireNonNull(ObjectiveQuestionDao.getQuestions(subject.getId(), selectedYearProperty.get().getId(), FXCollections.observableArrayList(topicIdsList), false)))
+                    .subscribeOn(Schedulers.io())
+                    .map(it -> {
+                        List<Integer> numberList = new ArrayList<>();
+                        for ( int i = 10; i <= it.size(); i+=10) {
+                            numberList.add(i);
+                        }
+                        return numberList;
+                    })
+                    .blockingSubscribe(
+                            numberList -> {
+                                questionNumbers.addAll(numberList);
+                            },
+                            error -> {}
+                    );
+
+        } else {
+            Observable.just(TheoryQuestionDao.getQuestions(subject.getId(), selectedYearProperty.get().getId(), FXCollections.observableArrayList(topicIdsList), false))
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();
@@ -232,25 +277,25 @@ public class SubjectListItemVM implements ViewModel {
 
     private String getColorName(String subjectTableName) {
         return switch (subjectTableName) {
-            case "english", "english_theory" -> "#E90000";
-            case "mathematics", "mathematics_theory" -> "#E86D1C";
-            case "biology", "biology_theory" -> "#009D9A";
-            case "literature", "literature_theory" -> "#5A67D8";
-            case "commerce", "commerce_theory" -> "#56749E";
-            case "economics", "economics_theory" -> "#B76623";
-            case "physics", "physics_theory" -> "#D68E00";
-            case "chemistry", "chemistry_theory" -> "#00A14B";
-            case "government", "government_theory" -> "#0067C8";
-            case "accounts", "accounts_theory" -> "#D12C81";
-            case "crs", "crs_theory" -> "#005F7A";
-            case "irs", "irs_theory" -> "#630F0F";
+            case "Eng" -> "#E90000";
+            case "Maths" -> "#E86D1C";
+            case "Bio" -> "#009D9A";
+            case "Lit-In-Eng" -> "#5A67D8";
+            case "Comm" -> "#56749E";
+            case "Econs" -> "#B76623";
+            case "Phy" -> "#D68E00";
+            case "Chm" -> "#00A14B";
+            case "Govt" -> "#0067C8";
+            case "Acct" -> "#D12C81";
+            case "CRS" -> "#005F7A";
+            case "IRS" -> "#630F0F";
             default -> "#00A14B";
         };
     }
 
 
     public static class SubjectState {
-        private Subject subject;
+        private PQSubject subject;
         private Type type;
 
         private Boolean isSelected;
@@ -260,7 +305,7 @@ public class SubjectListItemVM implements ViewModel {
         private Year selectedYear;
         private Integer numberOfQuestions;
 
-        public SubjectState(Subject subject, Type type, Boolean isSelected, Boolean shuffleQuestions, Boolean shuffleOptions, Year selectedYear, Integer numberOfQuestions) {
+        public SubjectState(PQSubject subject, Type type, Boolean isSelected, Boolean shuffleQuestions, Boolean shuffleOptions, Year selectedYear, Integer numberOfQuestions) {
             this.subject = subject;
             this.type = type;
             this.isSelected = isSelected;
@@ -270,7 +315,7 @@ public class SubjectListItemVM implements ViewModel {
             this.numberOfQuestions = numberOfQuestions;
         }
 
-        public Subject getSubject() {
+        public PQSubject getSubject() {
             return subject;
         }
 

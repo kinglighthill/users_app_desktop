@@ -2,6 +2,7 @@ package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.util.Database;
+import com.scholarly.utme.data.util.NewDatabase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -16,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class YearsDao {
+    private static final String TAG = "YearsDao: ";
 
     private static final String tableName = "years";
 
@@ -42,8 +44,9 @@ public class YearsDao {
         ObservableList<Year> subjectAvailableYears = FXCollections.observableArrayList();
 
         String query = "SELECT DISTINCT " + tableNamePlusIdColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + tableName + " JOIN " + subjectTableName + " ON " + subjectTableName + ".year_id = " + tableNamePlusIdColumn;
+        System.out.println(TAG + "Available Years For Subject Query -> " + query);
 
-        try (Connection connection = Database.connect()) {
+        try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
@@ -74,7 +77,7 @@ public class YearsDao {
 
         String query = "SELECT * FROM " + tableName;
 
-        try (Connection connection = Database.connect()) {
+        try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             years.clear();

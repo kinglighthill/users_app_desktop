@@ -2,6 +2,7 @@ package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.FontUtil;
@@ -75,7 +76,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     private HBox toggleBox;
 
     @FXML
-    private ListView<Subject> subjectList;
+    private ListView<PQSubject> subjectList;
 
     @FXML
     private Panel optionAPanel, optionBPanel, optionCPanel, optionDPanel;
@@ -116,18 +117,18 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             }
         });
 
-        ObservableList<Subject> items = FXCollections.observableArrayList();
+        ObservableList<PQSubject> items = FXCollections.observableArrayList();
 
-        Subject all = new Subject();
-        all.setSubjectName("All");
+        PQSubject all = new PQSubject();
+        all.setShortTitle("All");
         items.add(all);
         items.addAll(viewModel.getSubjects());
 
         subjectList.setCellFactory(new PracticeSubjectListCellFactory());
         subjectList.setItems(items);
-        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
+        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) c -> {
             if (c.getList().size() == 1) {
-                Subject subject = c.getList().get(0);
+                PQSubject subject = c.getList().get(0);
                 viewModel.setSelectedSubject(subject);
             } else {
                 viewModel.setSelectedSubject(null);
@@ -138,7 +139,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
             subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
-                if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
+                if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
                     changeSelectedTile(oldValue.intValue(), newValue.intValue());
                     changeSelectedQuestion(newValue.intValue());
                 }
@@ -147,21 +148,21 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         prevButton.setOnAction(event -> {
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .setSelectedQuestion(selectedQuestion - 1);
         });
 
         nextButton.setOnAction(event -> {
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .setSelectedQuestion(selectedQuestion + 1);
         });
 
@@ -297,7 +298,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
      * Initializes question layout
      */
     private void setupQuestionView() {
-        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
         PracticeScreenVM.QuestionState question = questions.get(subjectQuestionsState.getSelectedQuestion() - 1);
 
@@ -443,7 +444,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
      * @param questionNumber number of the selected question
      */
     private void changeSelectedQuestion(int questionNumber) {
-        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
 
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
@@ -595,7 +596,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
      * Initializes question tiles at bottom of the screen
      */
     private void setupTilePane() {
-        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
 
         tilePane.getChildren().clear();
@@ -672,17 +673,17 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     }
 
     public static class InitialData {
-        private List<Subject> subjects;
+        private List<PQSubject> subjects;
         private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions;
         private Type questionType;
 
-        public InitialData(List<Subject> subjects, HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions, Type questionType) {
+        public InitialData(List<PQSubject> subjects, HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions, Type questionType) {
             this.subjects = subjects;
             this.subjectsQuestions = subjectsQuestions;
             this.questionType = questionType;
         }
 
-        public List<Subject> getSubjects() {
+        public List<PQSubject> getSubjects() {
             return subjects;
         }
 

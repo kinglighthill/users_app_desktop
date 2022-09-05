@@ -1,6 +1,7 @@
 package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.Result;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -20,7 +21,7 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
     private SimpleStringProperty total = new SimpleStringProperty("0");
     private ObservableList<Result> results = FXCollections.observableArrayList();
 
-    private List<Subject> subjectList;
+    private List<PQSubject> subjectList;
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions;
 
     private View previousScreen;
@@ -74,7 +75,7 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
         return averageScore;
     }
 
-    public List<Subject> getSubjectList() {
+    public List<PQSubject> getSubjectList() {
         return subjectList;
     }
 
