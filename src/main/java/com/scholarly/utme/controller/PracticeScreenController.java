@@ -17,6 +17,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -777,7 +778,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
        // prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
        // nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
 
-        System.out.println("Index of the selected subject in subjectList: " + subjectList.getSelectionModel().getSelectedIndex());
+        System.out.println(TAG + "Index of the selected subject in subjectList: " + subjectList.getSelectionModel().getSelectedIndex());
         if (subjectList.getSelectionModel().getSelectedIndex() + 1 == selectedQuestion - 1){
             prevButton.setDisable(true);
         }
@@ -791,7 +792,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             questionLabel.setText(question.getQuestion());
 
             String questionText = question.getQuestion();
-
 
 
             if (questionText.contains("<img")) {

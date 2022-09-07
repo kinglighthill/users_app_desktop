@@ -48,22 +48,22 @@ public class SubjectDao {
         updatePQSubjectsFromDB();
     }
 
-    public static String getSubjectName(String subjectTableName) {
-        String query = "SELECT " + subjectNameColumn + " FROM " + tableName + " WHERE " + tableNameColumn + " = '" + subjectTableName + "'";
-//        System.out.println(query);
+    public static String getSubjectName(String subjectShortTitle) {
+        String query = "SELECT " + pqTitleColumn + " FROM " + tableName + " WHERE " + pqShortTitleColumn + " LIKE '" + subjectShortTitle + "'";
+        System.out.println(query);
 
-        try (Connection connection = Database.connect()) {
+        try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             String subjectName = "";
             while (rs.next()) {
-                subjectName = rs.getString(subjectNameColumn);
+                subjectName = rs.getString(pqTitleColumn);
             }
             return subjectName;
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Subjects from database ");
+                    LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
             return null;
         }
     }
@@ -98,7 +98,6 @@ public class SubjectDao {
     private static void updatePQSubjectsFromDB() {
 
         String query = "SELECT * FROM " + Tables.PQ_SUBJECTS + " JOIN " + Tables.SUBJECTS + " ON " + Tables.PQ_SUBJECTS + ".subject_id = " + Tables.SUBJECTS + "._id ORDER BY 'order'";
-        System.out.println(TAG + "Query -> " + query);
 
         try (Connection connection = NewDatabase.connect()) {
             assert connection != null;
@@ -115,7 +114,7 @@ public class SubjectDao {
                         rs.getString(pqShortTitleColumn),
                         rs.getString(pqColorCodeColumn)));
             }
-            System.out.println(TAG + "PQSubjects updated successfully with size -> " + new ArrayList<>(pqSubjects).size());
+
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,

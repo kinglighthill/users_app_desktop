@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import static com.scholarly.utme.data.dao.ObjectiveQuestionDao.removeBracketsFromArray;
 
 public class TheoryQuestionDao {
+    private static final String TAG = "TheoryQuestionDao: ";
 
     private static final String idColumn = "_id";
     private static final String subjectIdColumn = "subject_id";
@@ -51,6 +52,8 @@ public class TheoryQuestionDao {
             query = "SELECT * FROM " + Tables.PQ_THEORY_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause + " ORDER BY RANDOM()";
         }
 
+        System.out.println(TAG + "Query = " + query);
+
         try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
@@ -69,6 +72,8 @@ public class TheoryQuestionDao {
                         rs.getInt(isExplanationWebViewColumn),
                         rs.getInt(isQuestionWebViewColumn)));
             }
+
+            System.out.println(TAG + "Got questions with size -> " + questions.size());
 
             return questions;
 

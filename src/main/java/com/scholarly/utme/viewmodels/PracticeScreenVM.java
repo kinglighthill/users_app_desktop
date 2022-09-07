@@ -60,7 +60,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .getQuestions(
                                 subjectState.getSubject().getId(),
                                 subjectState.getSelectedYear().getId(),
-                                null,
+                                FXCollections.observableArrayList(subjectState.getSelectedTopics()),
                                 subjectState.getShuffleQuestions()
                         )
                         .stream()
@@ -80,16 +80,16 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
                 List<QuestionState> questionStates = TheoryQuestionDao
                         .getQuestions(
-                                subjectState.getSubject().getSubjectId(),
+                                subjectState.getSubject().getId(),
                                 subjectState.getSelectedYear().getId(),
-                                null,
+                                FXCollections.observableArrayList(subjectState.getSelectedTopics()),
                                 subjectState.getShuffleQuestions()
                         )
                         .stream()
                         .map(question -> new QuestionState(question, Type.THEORY, null))
                         .collect(Collectors.toList());
 
-                theoryBookmarks.addAll(TheoryBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
+//                theoryBookmarks.addAll(TheoryBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
 
 //                subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
 

@@ -7,6 +7,7 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -106,18 +107,22 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
 
         topicsComboBox.getItems().addAll(viewModel.getTopics());
         topicsComboBox.getCheckModel().checkAll();
+        List<Integer> topicsIdList = topicsComboBox.getCheckModel().getCheckedItems().stream().map(PQTopic::getId).collect(Collectors.toList());
+        viewModel.setSelectedTopics(topicsIdList);
+
         topicsComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<PQTopic>) changeList -> {
             if (topicsComboBox.getCheckModel().getCheckedItems().size() == 0) {
                 topicsComboBox.getCheckModel().check(0);
             }
-            List<Integer> topicIdList = changeList.getList().stream().map(PQTopic::getId).collect(Collectors.toList());
-            viewModel.loadQuestionNumbersList(topicIdList);
+            List<Integer> changedTopicsList = changeList.getList().stream().map(PQTopic::getId).collect(Collectors.toList());
+            viewModel.loadQuestionNumbersList(changedTopicsList);
+            viewModel.setSelectedTopics(changedTopicsList);
         });
 
 
         subRoot.getChildren().removeAll(divider, optionPanel);
         viewModel.subjectSelectedProperty().addListener((observable, oldValue, newValue) -> {
-//            System.out.println(TAG + "subject selected property changed to -> " + newValue + " from -> " + oldValue);
+            System.out.println(TAG + viewModel.getSubject() + " selected property changed to -> " + newValue + " from -> " + oldValue);
             if (newValue) {
                 subRoot.getChildren().addAll(divider, optionPanel);
             } else {

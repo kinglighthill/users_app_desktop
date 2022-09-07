@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ObjectiveQuestionDao {
-    public static final String TAG = "ObjectiveQuestionDao: ";
+    private static final String TAG = "ObjectiveQuestionDao: ";
 
     private static final String idColumn = "_id";
     private static final String subjectIdColumn = "subject_id";
@@ -50,12 +50,13 @@ public class ObjectiveQuestionDao {
 
         if (!shuffled) {
             query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause;
-            System.out.println(TAG + "Query = " + query);
 //            query = "SELECT * FROM " + tableName + " WHERE year_id = " + yearId;
         } else {
             query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause + " ORDER BY RANDOM()";
 //            query = "SELECT * FROM " + tableName + " WHERE year_id = " + yearId + " ORDER BY RANDOM()";
         }
+
+        System.out.println(TAG + "Query = " + query);
 
         try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);

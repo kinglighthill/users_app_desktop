@@ -120,7 +120,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         ObservableList<PQSubject> items = FXCollections.observableArrayList();
 
         PQSubject all = new PQSubject();
-        all.setShortTitle("All");
+        all.setTitle("All");
         items.add(all);
         items.addAll(viewModel.getSubjects());
 
