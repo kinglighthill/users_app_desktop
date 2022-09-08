@@ -4,6 +4,7 @@ import com.scholarly.utme.data.model.*;
 //import com.gtranslate.Audio;
 //import com.gtranslate.Language;
 import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.data.model.newDb.QuestionDescription;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.TextToSpeech;
@@ -40,6 +41,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.PRACTICE_SCREEN;
 
@@ -70,7 +72,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
 
     @FXML
-    private Label questionOverviewLabel, questionLabel, timeLabel, scoreText;
+    private Label questionOverviewLabel, questionLabel, timeLabel, scoreText, questionDescriptionLabel;
 
     @FXML
     private TextField enterCorrectAnswerField;
@@ -681,10 +683,12 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             ObjectiveQuestion question = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
+            QuestionDescription quesDescription = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList()).get(0);
+            System.out.println(TAG + "Got question description -> " + quesDescription);
+            questionDescriptionLabel.setText(quesDescription.getDescription());
 
-            questionLabel.setText(question.getQuestion());
+//            questionLabel.setText(question.getQuestion());
             String questionText = question.getQuestion();
-
 
             if (questionText.contains("<img")) {
                 int startIndexOfImg = questionText.indexOf("<img");
@@ -733,6 +737,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             TheoryQuestion question = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
+            QuestionDescription quesDescription = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList()).get(0);
+            System.out.println(TAG + "Got question description -> " + quesDescription);
+            questionDescriptionLabel.setText(quesDescription.getDescription());
+
             questionLabel.setText(question.getQuestion());
             webView.getEngine().loadContent(question.getQuestion());
         }
@@ -742,6 +750,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
+
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
             List<ObjectiveBookmark> objectiveBookmarks = viewModel.getObjectiveBookmarks();
@@ -789,10 +798,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion();
             questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
 
+            QuestionDescription quesDescription = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList()).get(0);
+            System.out.println(TAG + "Got question description -> " + quesDescription);
+            questionDescriptionLabel.setText(quesDescription.getDescription());
+
             questionLabel.setText(question.getQuestion());
 
             String questionText = question.getQuestion();
-
 
             if (questionText.contains("<img")) {
                 int startIndexOfImg = questionText.indexOf("<img");
@@ -840,6 +852,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         } else {
             TheoryQuestion question = (TheoryQuestion) questions.get(selectedQuestion - 1).getQuestion();
             questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
+
+            QuestionDescription quesDescription = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList()).get(0);
+            System.out.println(TAG + "Got question description -> " + quesDescription);
+            questionDescriptionLabel.setText(quesDescription.getDescription());
 
             questionLabel.setText(question.getQuestion());
             webView.getEngine().loadContent(question.getQuestion());
@@ -959,13 +975,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
 
-                ViewSwitcher.passData(PRACTICE_SCREEN);
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             }
             return buttonType;
         });
 
-        dialog.showAndWait();
+        dialog.show();
     }
 
     private InitialData getInitialData() {
