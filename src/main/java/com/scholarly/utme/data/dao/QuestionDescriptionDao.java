@@ -1,12 +1,11 @@
 package com.scholarly.utme.data.dao;
 
-import com.scholarly.utme.data.model.newDb.QuestionDescription;
+import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

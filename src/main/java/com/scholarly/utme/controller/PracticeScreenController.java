@@ -4,7 +4,7 @@ import com.scholarly.utme.data.model.*;
 //import com.gtranslate.Audio;
 //import com.gtranslate.Language;
 import com.scholarly.utme.data.model.newDb.PQSubject;
-import com.scholarly.utme.data.model.newDb.QuestionDescription;
+import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.TextToSpeech;
@@ -18,7 +18,6 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,7 +34,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.web.WebView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -72,7 +70,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
 
     @FXML
-    private Label questionOverviewLabel, questionLabel, timeLabel, scoreText, questionDescriptionLabel;
+    private Label questionOverviewLabel, questionLabel, timeLabel, scoreText, questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
 
     @FXML
     private TextField enterCorrectAnswerField;
@@ -81,13 +79,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
 
     @FXML
-    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog, centerVBox;
+    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog, centerVBox, questionDescriptionDialog;
 
     @FXML
     private Button prevButton, nextButton, exitButton, submitButton, submitReport, homePageButton, resultAnalysisButton;
 
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon, timeImage, summaryBookImage, testSummaryCloseIcon;
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon, quesDescriptionCloseIcon, timeImage, summaryBookImage, testSummaryCloseIcon;
 
     @FXML
     private Pane dialogDimmer, exitDialogDimmer, summaryDialogDimmer;
@@ -494,6 +492,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             }
         });
 
+        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
+            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
+        });
+
+        quesDescriptionCloseIcon.setOnMouseClicked(mouseEvent -> {
+            Animations.hideDialog(questionDescriptionDialog, dialogDimmer);
+        });
+
 
         /******************** Report Question Section ************************/
 
@@ -561,6 +567,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
         calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
         reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+        quesDescriptionCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
         speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
         flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
         timeImage.setImage(new Image(getClass().getResource("/drawable/practice_screen_images/time_image.jpg").toString()));
@@ -683,9 +690,15 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             ObjectiveQuestion question = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
-            QuestionDescription quesDescription = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList()).get(0);
-            System.out.println(TAG + "Got question description -> " + quesDescription);
-            questionDescriptionLabel.setText(quesDescription.getDescription());
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+            if (quesDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
+            } else {
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", "  "));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
 
 //            questionLabel.setText(question.getQuestion());
             String questionText = question.getQuestion();
@@ -737,9 +750,15 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             TheoryQuestion question = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
-            QuestionDescription quesDescription = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList()).get(0);
-            System.out.println(TAG + "Got question description -> " + quesDescription);
-            questionDescriptionLabel.setText(quesDescription.getDescription());
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+            if (quesDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
+            } else {
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", "  "));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
 
             questionLabel.setText(question.getQuestion());
             webView.getEngine().loadContent(question.getQuestion());
@@ -798,9 +817,15 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion();
             questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
 
-            QuestionDescription quesDescription = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList()).get(0);
-            System.out.println(TAG + "Got question description -> " + quesDescription);
-            questionDescriptionLabel.setText(quesDescription.getDescription());
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+            if (quesDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
+            } else {
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", "  "));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
 
             questionLabel.setText(question.getQuestion());
 
@@ -853,9 +878,16 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             TheoryQuestion question = (TheoryQuestion) questions.get(selectedQuestion - 1).getQuestion();
             questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
 
-            QuestionDescription quesDescription = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList()).get(0);
-            System.out.println(TAG + "Got question description -> " + quesDescription);
-            questionDescriptionLabel.setText(quesDescription.getDescription());
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+
+            if (quesDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
+            } else {
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", "  "));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
 
             questionLabel.setText(question.getQuestion());
             webView.getEngine().loadContent(question.getQuestion());

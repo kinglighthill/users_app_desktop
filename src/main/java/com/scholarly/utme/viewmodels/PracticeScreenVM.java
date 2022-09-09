@@ -4,7 +4,7 @@ import com.scholarly.utme.controller.PracticeScreenController.InitialData;
 import com.scholarly.utme.data.dao.*;
 import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.PQSubject;
-import com.scholarly.utme.data.model.newDb.QuestionDescription;
+import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.Type;
 import de.saxsys.mvvmfx.SceneLifecycle;

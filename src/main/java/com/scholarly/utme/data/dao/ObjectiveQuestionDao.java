@@ -1,7 +1,6 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.ObjectiveQuestion;
-import com.scholarly.utme.data.model.newDb.QuestionDescription;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
