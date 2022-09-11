@@ -71,21 +71,11 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .map(question -> new QuestionState(question, Type.OBJECTIVE, null))
                         .collect(Collectors.toList());
 
-                List<QuestionDescription> questionDescriptionsList = QuestionDescriptionDao
-                        .getQuestionDescriptions(
-                                subjectState.getSubject().getId(),
-                                subjectState.getSelectedYear().getId()
-                        );
-                assert questionDescriptionsList != null;
-                questionDescriptions.addAll(questionDescriptionsList);
-                System.out.println(TAG + "Question descriptions content -> " + questionDescriptions);
-
+                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
 
                 objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
 
 //                subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
-
-                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
 
             }
             else if (subjectState.getType() == Type.THEORY) {
@@ -101,22 +91,22 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .map(question -> new QuestionState(question, Type.THEORY, null))
                         .collect(Collectors.toList());
 
-                List<QuestionDescription> questionDescriptionsList = QuestionDescriptionDao
-                        .getQuestionDescriptions(
-                                subjectState.getSubject().getId(),
-                                subjectState.getSelectedYear().getId()
-                        );
-                assert questionDescriptionsList != null;
-                questionDescriptions.addAll(questionDescriptionsList);
-                System.out.println(TAG + "Question descriptions content -> " + questionDescriptions);
+                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
 
 //                theoryBookmarks.addAll(TheoryBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
 
 //                subjectBookmarks.put(subjectState.getSubject().getTableName(), bookmarks);
 
-                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
-
             }
+
+            List<QuestionDescription> questionDescriptionsList = QuestionDescriptionDao
+                    .getQuestionDescriptions(
+                            subjectState.getSubject().getId(),
+                            subjectState.getSelectedYear().getId()
+                    );
+            assert questionDescriptionsList != null;
+            questionDescriptions.addAll(questionDescriptionsList);
+
 
         });
 

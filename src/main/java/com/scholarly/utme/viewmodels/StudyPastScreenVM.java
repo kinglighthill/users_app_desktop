@@ -2,10 +2,7 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.controller.PracticeScreenController;
 import com.scholarly.utme.controller.StudyPastQuestScreenController;
-import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
-import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
-import com.scholarly.utme.data.dao.TheoryBookmarkDao;
-import com.scholarly.utme.data.dao.TheoryQuestionDao;
+import com.scholarly.utme.data.dao.*;
 import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import de.saxsys.mvvmfx.ViewModel;
@@ -34,6 +31,8 @@ public class StudyPastScreenVM implements ViewModel {
     private ObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty<>();
 
     private HashMap<String, SubjectQuestionsState> subjectsQuestions = new HashMap<>();
+
+    private ObservableList<QuestionDescription> questionDescriptions = FXCollections.observableArrayList();
 
     private ObservableList<ObjectiveBookmark> objectiveBookmarks = FXCollections.observableArrayList();
 
@@ -68,7 +67,7 @@ public class StudyPastScreenVM implements ViewModel {
             } else if (subjectState.getType() == Type.THEORY) {
                 List<QuestionState> questionStates = TheoryQuestionDao
                         .getQuestions(
-                                subjectState.getSubject().getSubjectId(),
+                                subjectState.getSubject().getId(),
                                 subjectState.getSelectedYear().getId(),
                                 FXCollections.emptyObservableList(),
                                 false
@@ -81,6 +80,15 @@ public class StudyPastScreenVM implements ViewModel {
 
                 theoryBookmarks.addAll(TheoryBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
             }
+
+            List<QuestionDescription> questionDescriptionsList = QuestionDescriptionDao
+                    .getQuestionDescriptions(
+                            subjectState.getSubject().getId(),
+                            subjectState.getSelectedYear().getId()
+                    );
+            assert questionDescriptionsList != null;
+            questionDescriptions.addAll(questionDescriptionsList);
+
 
         });
     }
@@ -103,6 +111,10 @@ public class StudyPastScreenVM implements ViewModel {
 
     public HashMap<String, SubjectQuestionsState> getSubjectsQuestions() {
         return subjectsQuestions;
+    }
+
+    public ObservableList<QuestionDescription> getQuestionDescriptions() {
+        return questionDescriptions;
     }
 
     public ObservableList<ObjectiveBookmark> getObjectiveBookmarks() {
@@ -234,38 +246,6 @@ public class StudyPastScreenVM implements ViewModel {
         }
 
         public Question getQuestion() {
-            return question;
-        }
-
-        public boolean isShowAnswer() {
-            return showAnswer;
-        }
-
-        public boolean isShowExplanation() {
-            return showExplanation;
-        }
-
-        public void setShowAnswer(boolean showAnswer) {
-            this.showAnswer = showAnswer;
-        }
-
-        public void setShowExplanation(boolean showExplanation) {
-            this.showExplanation = showExplanation;
-        }
-    }
-
-    public static class TheoryQuestionState extends QuestionState {
-        private TheoryQuestion question;
-        private boolean showAnswer;
-        private boolean showExplanation;
-
-        public TheoryQuestionState(TheoryQuestion question, boolean showAnswer, boolean showExplanation) {
-            this.question = question;
-            this.showAnswer = showAnswer;
-            this.showExplanation = showExplanation;
-        }
-
-        public TheoryQuestion getTheoryQuestion() {
             return question;
         }
 

@@ -3,6 +3,7 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
+import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -33,6 +34,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.PAST_QUESTION_SCREEN;
 
@@ -47,7 +49,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     private HBox answerHeaderHBox, rightPane;
 
     @FXML
-    private VBox centerVBox, rightVBox;
+    private VBox centerVBox, rightVBox, questionDescriptionDialog;
 
     @FXML
     private TilePane tilePane;
@@ -62,7 +64,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     private ListView<PQSubject> subjectList;
 
     @FXML
-    private Label questionOverviewLabel, questionLabel, optionA, optionB, optionC, optionD, explanationLabel, explanationTitle, correctAnswerTitle, correctAnswerLabel;
+    private Label questionOverviewLabel, questionLabel, optionA, optionB, optionC, optionD, explanationLabel, explanationTitle, correctAnswerTitle, correctAnswerLabel, questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
 
     @FXML
     private Button prevButton, nextButton, exitButton, hideAnswerButton;
@@ -71,7 +73,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     private ToggleButton showAnswerButton, showExplanationButton;
 
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage;
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, quesDescriptionCloseIcon;
 
     @FXML
     private Pane dialogDimmer;
@@ -138,28 +140,21 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         });
 
         showAnswerButton.setOnAction(event -> {
-            if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-                int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle())
-                        .getSelectedQuestion();
+            int selectedQuestion = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getShortTitle())
+                    .getSelectedQuestion();
+            SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getShortTitle());
 
-                SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle());
+            if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
 
                 questionsState.getQuestions().get(selectedQuestion - 1).setShowAnswer(true);
-                updateExplanationView();
 
             } else {
-                int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle())
-                        .getSelectedQuestion();
-
-                SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle());
 
                 questionsState.getQuestions().get(selectedQuestion - 1).setShowExplanation(true);
-                updateExplanationView();
             }
+            updateExplanationView();
 
         });
 
@@ -230,6 +225,14 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             showExitDialog();
         });
 
+        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
+            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
+        });
+
+        quesDescriptionCloseIcon.setOnMouseClicked(mouseEvent -> {
+            Animations.hideDialog(questionDescriptionDialog, dialogDimmer);
+        });
+
     }
 
     private void initializeViews() {
@@ -243,6 +246,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
         speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
         flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
+        quesDescriptionCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
 
         ImageView prevImage = new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/prev_btn_icon.png").toString()));
         prevButton.setGraphic(prevImage);
@@ -310,26 +314,31 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
             questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
-            String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText);
-            if (questionText.contains("<br>")) {
-                String newText = questionText.replaceAll("<br>", System.lineSeparator());
-                questionLabel.setText(newText);
+            List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).collect(Collectors.toList());
+
+            if (questionDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
+            } else {
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
+
+
+            String questionText = currentQuestion.getQuestion();
+            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
             optionA.setText(" (A) " + currentQuestion.getOptionA());
             optionB.setText(" (B) " + currentQuestion.getOptionB());
             optionC.setText(" (C) " + currentQuestion.getOptionC());
             optionD.setText(" (D) " + currentQuestion.getOptionD());
 
-
             correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
             String explanationText = currentQuestion.getAnswerExplanation();
-            explanationLabel.setText(explanationText);
-            if (explanationText.contains("<br>")) {
-                String newText = explanationText.replaceAll("<br>", System.lineSeparator());
-                explanationLabel.setText(newText);
-            }
+            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+
 
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
             TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
@@ -337,11 +346,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
             String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText);
-            if (questionText.contains("<br>")) {
-                String newText = questionText.replaceAll("<br>", System.lineSeparator());
-                questionLabel.setText(newText);
-            }
+            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
 
             centerVBox.getChildren().removeAll(optionA, optionB, optionC, optionD);
 //            optionA.setVisible(false);
@@ -354,11 +360,60 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 //            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
             answerHeaderHBox.getChildren().remove(showExplanationButton);
             String explanationText = currentQuestion.getAnswerExplanation();
-            explanationLabel.setText(explanationText);
-            if (explanationText.contains("<br>")) {
-                String newText = explanationText.replaceAll("<br>", System.lineSeparator());
-                explanationLabel.setText(newText);
+            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+
+
+        }
+
+        updateExplanationView();
+    }
+
+    private void changeSelectedQuestion(int newValue) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
+
+            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).collect(Collectors.toList());
+
+            if (questionDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
+            } else {
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
+
+            String questionText = currentQuestion.getQuestion();
+            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+            optionA.setText(" (A) " + currentQuestion.getOptionA());
+            optionB.setText(" (B) " + currentQuestion.getOptionB());
+            optionC.setText(" (C) " + currentQuestion.getOptionC());
+            optionD.setText(" (D) " + currentQuestion.getOptionD());
+
+
+            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
+
+            String explanationText = currentQuestion.getAnswerExplanation();
+            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+
+        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+            TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
+
+            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            String questionText = currentQuestion.getQuestion();
+            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
+            String explanationText = currentQuestion.getAnswerExplanation();
+            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
 
         }
 
@@ -455,62 +510,6 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         selectedQuestionText.setTextFill(Color.WHITE);
         selectedQuestionRectangle.setFill(Paint.valueOf("#12AF20"));
 
-    }
-
-    private void changeSelectedQuestion(int newValue) {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
-        List<QuestionState> questions = subjectQuestionsState.getQuestions();
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
-
-            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
-
-            String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText);
-            if (questionText.contains("<br>")) {
-                String newText = questionText.replaceAll("<br>", System.lineSeparator());
-                questionLabel.setText(newText);
-            }
-
-            optionA.setText(" (A) " + currentQuestion.getOptionA());
-            optionB.setText(" (B) " + currentQuestion.getOptionB());
-            optionC.setText(" (C) " + currentQuestion.getOptionC());
-            optionD.setText(" (D) " + currentQuestion.getOptionD());
-
-
-            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
-
-            String explanationText = currentQuestion.getAnswerExplanation();
-            explanationLabel.setText(explanationText);
-            if (explanationText.contains("<br>")) {
-                String newText = explanationText.replaceAll("<br>", System.lineSeparator());
-                explanationLabel.setText(newText);
-            }
-
-        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
-            TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
-
-            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
-
-            String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText);
-            if (questionText.contains("<br>")) {
-                String newText = questionText.replaceAll("<br>", System.lineSeparator());
-                questionLabel.setText(newText);
-            }
-
-            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
-            String explanationText = currentQuestion.getAnswerExplanation();
-            explanationLabel.setText(explanationText);
-            if (explanationText.contains("<br>")) {
-                String newText = explanationText.replaceAll("<br>", System.lineSeparator());
-                explanationLabel.setText(newText);
-            }
-
-        }
-
-        updateExplanationView();
     }
 
     private void showExitDialog() {
