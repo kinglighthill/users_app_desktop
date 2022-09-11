@@ -44,9 +44,9 @@ public class CBTGameScreenVM implements ViewModel {
 
             List<QuestionState> questionStates = ObjectiveQuestionDao
                     .getQuestions(
-                            subjectState.getSubject().getSubjectId(),
+                            subjectState.getSubject().getId(),
                             subjectState.getSelectedYear().getId(),
-                            null,
+                            FXCollections.emptyObservableList(),
                             false
                     )
                     .stream()

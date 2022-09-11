@@ -651,120 +651,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         });*/
     }
 
-    private void changeSelectedQuestion(int newValue) {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
-        List<QuestionState> questions = subjectQuestionsState.getQuestions();
-
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
-//        System.out.println(TAG + "changeSelectedQuestion bookmarks -> " + bookmarks);
-
-            bookmarks.forEach(bookmark -> {
-//            System.out.println(TAG + "currentQuestionIndex -> " + ((ObjectiveQuestion) questions.get(newValue - 1).getQuestion()).getId());
-//            System.out.println(TAG + "Bookmark question id -> " + bookmark.getQuestionId());
-                if (bookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(newValue - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
-                }
-            });
-
-        } else {
-            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks();
-//        System.out.println(TAG + "changeSelectedQuestion bookmarks -> " + bookmarks);
-
-            bookmarks.forEach(bookmark -> {
-//            System.out.println(TAG + "currentQuestionIndex -> " + ((ObjectiveQuestion) questions.get(newValue - 1).getQuestion()).getId());
-//            System.out.println(TAG + "Bookmark question id -> " + bookmark.getQuestionId());
-                if (bookmark.getQuestionId() == ((TheoryQuestion) questions.get(newValue - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
-                }
-            });
-
-        }
-
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
-
-            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
-            if (quesDescriptionInList.isEmpty()) {
-                readQuestionDesc.setVisible(false);
-                questionDescriptionHeader.setText("");
-            } else {
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", "  "));
-                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-            }
-
-//            questionLabel.setText(question.getQuestion());
-            String questionText = question.getQuestion();
-
-            if (questionText.contains("<img")) {
-                int startIndexOfImg = questionText.indexOf("<img");
-                int endIndexOfImg = questionText.indexOf("'100%'>", startIndexOfImg);
-
-                int startIndexOfImgPath = questionText.indexOf("/android_asset", startIndexOfImg);
-                int endIndexOfImgPath = questionText.indexOf("' width", startIndexOfImg);
-
-                String imagePath = questionText.substring(startIndexOfImgPath, endIndexOfImgPath);
-
-                StringBuilder builder = new StringBuilder(questionText);
-
-                System.out.println(imagePath);
-
-                URL url = getClass().getResource(imagePath);
-                String img = "<img src='"+url+"' width='100%'>";
-
-                builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
-
-                questionText = builder.toString();
-                System.out.println(questionText);
-            }
-
-            webView.getEngine().loadContent(questionText);
-
-            optionAButton.setText(" (A) " + question.getOptionA());
-            optionBButton.setText(" (B) " + question.getOptionB());
-            optionCButton.setText(" (C) " + question.getOptionC());
-            optionDButton.setText(" (D) " + question.getOptionD());
-
-            String selectedOption = questions.get(newValue - 1).getSelectedOption();
-            if (selectedOption != null) {
-                if (selectedOption.equalsIgnoreCase(question.getOptionA())) {
-                    toggleGroup.selectToggle(optionAButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionB())) {
-                    toggleGroup.selectToggle(optionBButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionC())) {
-                    toggleGroup.selectToggle(optionCButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionD())) {
-                    toggleGroup.selectToggle(optionDButton);
-                }
-            } else {
-                toggleGroup.selectToggle(null);
-            }
-        } else {
-            TheoryQuestion question = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
-
-            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
-            if (quesDescriptionInList.isEmpty()) {
-                readQuestionDesc.setVisible(false);
-                questionDescriptionHeader.setText("");
-            } else {
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", "  "));
-                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-            }
-
-            questionLabel.setText(question.getQuestion());
-            webView.getEngine().loadContent(question.getQuestion());
-        }
-    }
-
     private void setupQuestionView() {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
@@ -803,8 +689,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             }
         });*/
 
-       // prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
-       // nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
+        // prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
+        // nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
 
         System.out.println(TAG + "Index of the selected subject in subjectList: " + subjectList.getSelectionModel().getSelectedIndex());
         if (subjectList.getSelectionModel().getSelectedIndex() + 1 == selectedQuestion - 1){
@@ -817,13 +703,15 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion();
             questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
 
-            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+
             if (quesDescriptionInList.isEmpty()) {
                 readQuestionDesc.setVisible(false);
                 questionDescriptionHeader.setText("");
             } else {
                 readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", "  "));
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
 
@@ -878,14 +766,132 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             TheoryQuestion question = (TheoryQuestion) questions.get(selectedQuestion - 1).getQuestion();
             questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
 
-            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
 
             if (quesDescriptionInList.isEmpty()) {
                 readQuestionDesc.setVisible(false);
                 questionDescriptionHeader.setText("");
             } else {
                 readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", "  "));
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
+
+            questionLabel.setText(question.getQuestion());
+            webView.getEngine().loadContent(question.getQuestion());
+        }
+    }
+
+    private void changeSelectedQuestion(int newValue) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
+//        System.out.println(TAG + "changeSelectedQuestion bookmarks -> " + bookmarks);
+
+            bookmarks.forEach(bookmark -> {
+//            System.out.println(TAG + "currentQuestionIndex -> " + ((ObjectiveQuestion) questions.get(newValue - 1).getQuestion()).getId());
+//            System.out.println(TAG + "Bookmark question id -> " + bookmark.getQuestionId());
+                if (bookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(newValue - 1).getQuestion()).getId()) {
+                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
+                }
+            });
+
+        } else {
+            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks();
+//        System.out.println(TAG + "changeSelectedQuestion bookmarks -> " + bookmarks);
+
+            bookmarks.forEach(bookmark -> {
+//            System.out.println(TAG + "currentQuestionIndex -> " + ((ObjectiveQuestion) questions.get(newValue - 1).getQuestion()).getId());
+//            System.out.println(TAG + "Bookmark question id -> " + bookmark.getQuestionId());
+                if (bookmark.getQuestionId() == ((TheoryQuestion) questions.get(newValue - 1).getQuestion()).getId()) {
+                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
+                }
+            });
+
+        }
+
+
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
+            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+
+            if (quesDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
+            } else {
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
+
+            questionLabel.setText(question.getQuestion());
+            String questionText = question.getQuestion();
+
+            if (questionText.contains("<img")) {
+                int startIndexOfImg = questionText.indexOf("<img");
+                int endIndexOfImg = questionText.indexOf("'100%'>", startIndexOfImg);
+
+                int startIndexOfImgPath = questionText.indexOf("/android_asset", startIndexOfImg);
+                int endIndexOfImgPath = questionText.indexOf("' width", startIndexOfImg);
+
+                String imagePath = questionText.substring(startIndexOfImgPath, endIndexOfImgPath);
+
+                StringBuilder builder = new StringBuilder(questionText);
+
+                System.out.println(imagePath);
+
+                URL url = getClass().getResource(imagePath);
+                String img = "<img src='"+url+"' width='100%'>";
+
+                builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
+
+                questionText = builder.toString();
+                System.out.println(questionText);
+            }
+
+            webView.getEngine().loadContent(questionText);
+
+            optionAButton.setText(" (A) " + question.getOptionA());
+            optionBButton.setText(" (B) " + question.getOptionB());
+            optionCButton.setText(" (C) " + question.getOptionC());
+            optionDButton.setText(" (D) " + question.getOptionD());
+
+            String selectedOption = questions.get(newValue - 1).getSelectedOption();
+            if (selectedOption != null) {
+                if (selectedOption.equalsIgnoreCase(question.getOptionA())) {
+                    toggleGroup.selectToggle(optionAButton);
+                } else if (selectedOption.equalsIgnoreCase(question.getOptionB())) {
+                    toggleGroup.selectToggle(optionBButton);
+                } else if (selectedOption.equalsIgnoreCase(question.getOptionC())) {
+                    toggleGroup.selectToggle(optionCButton);
+                } else if (selectedOption.equalsIgnoreCase(question.getOptionD())) {
+                    toggleGroup.selectToggle(optionDButton);
+                }
+            } else {
+                toggleGroup.selectToggle(null);
+            }
+        } else {
+            TheoryQuestion question = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
+            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+            if (quesDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
+            } else {
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
 

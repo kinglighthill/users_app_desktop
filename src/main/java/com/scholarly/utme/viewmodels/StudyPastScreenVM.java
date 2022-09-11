@@ -52,9 +52,9 @@ public class StudyPastScreenVM implements ViewModel {
             if (subjectState.getType() == Type.OBJECTIVE) {
                 List<QuestionState> questionStates = ObjectiveQuestionDao
                         .getQuestions(
-                                subjectState.getSubject().getSubjectId(),
+                                subjectState.getSubject().getId(),
                                 subjectState.getSelectedYear().getId(),
-                                null,
+                                FXCollections.emptyObservableList(),
                                 false
                         ).stream()
                         .limit(subjectState.getNumberOfQuestions())
@@ -70,7 +70,7 @@ public class StudyPastScreenVM implements ViewModel {
                         .getQuestions(
                                 subjectState.getSubject().getSubjectId(),
                                 subjectState.getSelectedYear().getId(),
-                                null,
+                                FXCollections.emptyObservableList(),
                                 false
                         ).stream()
                         .limit(subjectState.getNumberOfQuestions())

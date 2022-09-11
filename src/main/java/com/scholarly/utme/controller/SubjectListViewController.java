@@ -107,6 +107,21 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         theoryList.setSelectionModel(new NoSelectionModel<>());
         theoryList.setFocusTraversable(false);
 
+        ObservableList<Integer> hours = FXCollections.observableArrayList();
+        ObservableList<Integer> minutes = FXCollections.observableArrayList();
+
+        for (int i = 0; i <= 12; i++) {
+            hours.add(i);
+        }
+
+        for (int i = 0; i <= 60; i+=10) {
+            minutes.add(i);
+        }
+
+        hoursChoiceBox.setItems(hours);
+        hoursChoiceBox.setValue(0);
+        minutesChoiceBox.setItems(minutes);
+        minutesChoiceBox.setValue(0);
 
         viewModel.getSelectedObjectiveSubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
             selectedObjectiveSubjects.clear();
