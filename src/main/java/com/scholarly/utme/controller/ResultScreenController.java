@@ -34,6 +34,7 @@ import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/ResultScreen.fxml")
 public class ResultScreenController implements FxmlView<ResultScreenVM>, Initializable {
+    private static final String TAG = "ResultScreenController: ";
 
     @InjectViewModel
     private ResultScreenVM viewModel;
@@ -199,7 +200,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
     public InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
-        System.out.println("Got data -> " + data);
+        System.out.println(TAG + "Got data -> " + data);
         return data;
     }
 

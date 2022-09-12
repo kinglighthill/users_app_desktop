@@ -1,5 +1,8 @@
 package com.scholarly.utme.data.model;
 
+import com.scholarly.utme.data.util.QuestionAnswer;
+import com.scholarly.utme.data.util.QuestionOption;
+
 public class ObjectiveQuestion implements Question {
 
     private int id;
@@ -20,6 +23,15 @@ public class ObjectiveQuestion implements Question {
     private int isExplanationWebView;
     private int isQuestionWebView;
     private int gammable;
+
+
+    private QuestionOption questionOptionA;
+    private QuestionOption questionOptionB;
+    private QuestionOption questionOptionC;
+    private QuestionOption questionOptionD;
+    private QuestionOption questionOptionE;
+
+    private QuestionAnswer questionAnswer;
 
     public ObjectiveQuestion(int id, int subjectId, int yearId, int topicId, int questionNumber, int questionDescriptionId, String question, String optionA, String optionB, String optionC, String optionD, String optionE, String optionAnswer, String answerExplanation, int optionAnswerId, int isExplanationWebView, int isQuestionWebView, int gammable) {
         this.id = id;
@@ -42,147 +54,119 @@ public class ObjectiveQuestion implements Question {
         this.gammable = gammable;
     }
 
-    public int getId() {
-        return id;
+    public ObjectiveQuestion(int id, int subjectId, int yearId, int topicId, int questionNumber, int questionDescriptionId, String question, QuestionOption optionA, QuestionOption optionB, QuestionOption optionC, QuestionOption optionD, QuestionOption optionE, QuestionAnswer optionAnswer, int isExplanationWebView, int isQuestionWebView, int gammable) {
+        this.id = id;
+        this.subjectId = subjectId;
+        this.yearId = yearId;
+        this.topicId = topicId;
+        this.questionNumber = questionNumber;
+        this.questionDescriptionId = questionDescriptionId;
+        this.question = question;
+        this.questionOptionA = optionA;
+        this.questionOptionB = optionB;
+        this.questionOptionC = optionC;
+        this.questionOptionD = optionD;
+        this.questionOptionE = optionE;
+        this.questionAnswer = optionAnswer;
+        this.isExplanationWebView = isExplanationWebView;
+        this.isQuestionWebView = isQuestionWebView;
+        this.gammable = gammable;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getId() {
+        return id;
     }
 
     public int getSubjectId() {
         return subjectId;
     }
 
-    public void setSubjectId(int subjectId) {
-        this.subjectId = subjectId;
-    }
-
     public int getYearId() {
         return yearId;
-    }
-
-    public void setYearId(int yearId) {
-        this.yearId = yearId;
     }
 
     public int getTopicId() {
         return topicId;
     }
 
-    public void setTopicId(int topicId) {
-        this.topicId = topicId;
-    }
-
     public int getQuestionNumber() {
         return questionNumber;
-    }
-
-    public void setQuestionNumber(int questionNumber) {
-        this.questionNumber = questionNumber;
     }
 
     public int getQuestionDescriptionId() {
         return questionDescriptionId;
     }
 
-    public void setQuestionDescriptionId(int questionDescriptionId) {
-        this.questionDescriptionId = questionDescriptionId;
-    }
-
     public String getQuestion() {
         return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
     }
 
     public String getOptionA() {
         return optionA;
     }
 
-    public void setOptionA(String optionA) {
-        this.optionA = optionA;
+    public QuestionOption getQuestionOptionA () {
+        return questionOptionA;
     }
 
     public String getOptionB() {
         return optionB;
     }
 
-    public void setOptionB(String optionB) {
-        this.optionB = optionB;
+    public QuestionOption getQuestionOptionB() {
+        return questionOptionB;
     }
 
     public String getOptionC() {
         return optionC;
     }
 
-    public void setOptionC(String optionC) {
-        this.optionC = optionC;
+    public QuestionOption getQuestionOptionC() {
+        return questionOptionC;
     }
 
     public String getOptionD() {
         return optionD;
     }
 
-    public void setOptionD(String optionD) {
-        this.optionD = optionD;
+    public QuestionOption getQuestionOptionD() {
+        return questionOptionD;
     }
 
     public String getOptionE() {
         return optionE;
     }
 
-    public void setOptionE(String optionE) {
-        this.optionE = optionE;
+    public QuestionOption getQuestionOptionE() {
+        return questionOptionE;
     }
 
     public String getOptionAnswer() {
         return optionAnswer;
     }
 
-    public void setOptionAnswer(String optionAnswer) {
-        this.optionAnswer = optionAnswer;
+    public QuestionAnswer getQuestionAnswer() {
+        return questionAnswer;
     }
 
     public String getAnswerExplanation() {
         return answerExplanation;
     }
 
-    public void setAnswerExplanation(String answerExplanation) {
-        this.answerExplanation = answerExplanation;
-    }
-
-    public int getOptionAnswerId() {
+    /*public int getOptionAnswerId() {
         return optionAnswerId;
-    }
-
-    public void setOptionAnswerId(int optionAnswerId) {
-        this.optionAnswerId = optionAnswerId;
-    }
+    }*/
 
     public int getIsExplanationWebView() {
         return isExplanationWebView;
-    }
-
-    public void setIsExplanationWebView(int isExplanationWebView) {
-        this.isExplanationWebView = isExplanationWebView;
     }
 
     public int getIsQuestionWebView() {
         return isQuestionWebView;
     }
 
-    public void setIsQuestionWebView(int isQuestionWebView) {
-        this.isQuestionWebView = isQuestionWebView;
-    }
-
     public int getGammable() {
         return gammable;
     }
 
-    public void setGammable(int gammable) {
-        this.gammable = gammable;
-    }
 }

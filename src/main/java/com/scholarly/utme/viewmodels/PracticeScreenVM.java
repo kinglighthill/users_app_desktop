@@ -5,6 +5,7 @@ import com.scholarly.utme.data.dao.*;
 import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.data.util.QuestionOption;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.Type;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -60,7 +61,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
             if (subjectState.getType() == Type.OBJECTIVE) {
 
                 List<QuestionState> questionStates = ObjectiveQuestionDao
-                        .getQuestions(
+                        .getQuestionss(
                                 subjectState.getSubject().getId(),
                                 subjectState.getSelectedYear().getId(),
                                 FXCollections.observableArrayList(subjectState.getSelectedTopics()),
@@ -68,7 +69,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         )
                         .stream()
                         .limit(subjectState.getNumberOfQuestions())
-                        .map(question -> new QuestionState(question, Type.OBJECTIVE, null))
+                        .map(question -> new QuestionState(question, Type.OBJECTIVE, null, -1))
                         .collect(Collectors.toList());
 
                 subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
@@ -88,7 +89,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                                 subjectState.getShuffleQuestions()
                         )
                         .stream()
-                        .map(question -> new QuestionState(question, Type.THEORY, null))
+                        .map(question -> new QuestionState(question, Type.THEORY, null, -1))
                         .collect(Collectors.toList());
 
                 subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
@@ -189,14 +190,23 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
 
                 for (int i = 0; i < subjectQuestionsState.getQuestions().size(); i++) {
+
                     QuestionState questionState = subjectQuestionsState.getQuestions().get(i);
-                    if (questionState.selectedOption != null) {
+                    if (questionState.getSelectedOptionId() != -1) {
                         attempts++;
                     }
-                    if (Objects.equals(questionState.selectedOption, ((ObjectiveQuestion) questionState.getQuestion()).getOptionAnswer())) {
+                    /*if (Objects.equals(questionState.selectedOption, ((ObjectiveQuestion) questionState.getQuestion()).getOptionAnswer())) {
+                        correctAnswers += 1;
+                    }*/
+                    if (questionState.getSelectedOptionId() == ((ObjectiveQuestion) questionState.getQuestion()).getQuestionAnswer().getId()) {
+//                        System.out.println(TAG + "Selected option ID -> " + questionState.getSelectedOptionId());
+//                        System.out.println(TAG + "Selected option answer ID -> " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestionAnswer().getId());
                         correctAnswers += 1;
                     }
                 }
+
+                System.out.println(TAG + "Number of attempts -> " + attempts);
+                System.out.println(TAG + "Number of correct answers -> " + correctAnswers);
 
                 result.setAttempts(attempts);
                 result.setCorrectAnswers((int) correctAnswers);
@@ -378,11 +388,19 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         private Question question;
         private Type questionType;
         private String selectedOption;
+        private int selectedOptionId;
 
         public QuestionState(Question question, Type questionType, String selectedOption) {
             this.question = question;
             this.questionType = questionType;
             this.selectedOption = selectedOption;
+        }
+
+        public QuestionState(Question question, Type questionType, String selectedOption, int selectedOptionId) {
+            this.question = question;
+            this.questionType = questionType;
+            this.selectedOption = selectedOption;
+            this.selectedOptionId = selectedOptionId;
         }
 
         public Question getQuestion() {
@@ -407,6 +425,14 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
         public void setSelectedOption(String selectedOption) {
             this.selectedOption = selectedOption;
+        }
+
+        public void setSelectedOptionId(int selectedOptionId) {
+            this.selectedOptionId = selectedOptionId;
+        }
+
+        public int getSelectedOptionId() {
+            return selectedOptionId;
         }
     }
 
