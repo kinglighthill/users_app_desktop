@@ -362,7 +362,6 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             String explanationText = currentQuestion.getAnswerExplanation();
             explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
 
-
         }
 
         updateExplanationView();

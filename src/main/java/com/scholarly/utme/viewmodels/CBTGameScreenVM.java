@@ -4,8 +4,10 @@ import com.scholarly.utme.controller.CBTGameScreenController;
 import com.scholarly.utme.controller.CBTGameScreenController.InitialData;
 import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
+import com.scholarly.utme.data.dao.QuestionDescriptionDao;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
+import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import de.saxsys.mvvmfx.ViewModel;
@@ -28,6 +30,8 @@ public class CBTGameScreenVM implements ViewModel {
 
     private List<PQSubject> subjectList = FXCollections.observableArrayList();
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions = new HashMap<>();
+
+    private ObservableList<QuestionDescription> questionDescriptions = FXCollections.observableArrayList();
 
     private ObservableList<ObjectiveBookmark> objectiveBookmarks = FXCollections.observableArrayList();
 
@@ -63,6 +67,14 @@ public class CBTGameScreenVM implements ViewModel {
 
             subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new PracticeScreenVM.SubjectQuestionsState(1, practiceQuestionState));
 
+            List<QuestionDescription> questionDescriptionsList = QuestionDescriptionDao
+                    .getQuestionDescriptions(
+                            subjectState.getSubject().getId(),
+                            subjectState.getSelectedYear().getId()
+                    );
+            assert questionDescriptionsList != null;
+            questionDescriptions.addAll(questionDescriptionsList);
+
             objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
 
         });
@@ -90,6 +102,10 @@ public class CBTGameScreenVM implements ViewModel {
 
     public void setQuestions(List<QuestionState> questions) {
         this.questions = questions;
+    }
+
+    public ObservableList<QuestionDescription> getQuestionDescriptions() {
+        return questionDescriptions;
     }
 
     public int getFiftyFiftyCount() {

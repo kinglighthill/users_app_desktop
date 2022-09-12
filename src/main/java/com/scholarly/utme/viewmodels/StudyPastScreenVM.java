@@ -89,7 +89,6 @@ public class StudyPastScreenVM implements ViewModel {
             assert questionDescriptionsList != null;
             questionDescriptions.addAll(questionDescriptionsList);
 
-
         });
     }
 

@@ -29,7 +29,7 @@ public class QuestionDescriptionDao {
 
         String query = "SELECT * FROM " + Tables.PQ_QUES_DESCRIPTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId;
 
-        System.out.println(TAG + "Query = " + query);
+//        System.out.println(TAG + "Query = " + query);
 
         try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -45,7 +45,7 @@ public class QuestionDescriptionDao {
                         rs.getString(createdAtColumn)));
             }
 
-            System.out.println(TAG + "Got questions descriptions with size -> " + questionDescriptions.size());
+//            System.out.println(TAG + "Got questions descriptions with size -> " + questionDescriptions.size());
 
             return questionDescriptions;
 

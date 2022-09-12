@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.ObjectiveBookmark;
+import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
 import com.scholarly.utme.util.TextToSpeech;
@@ -36,6 +37,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.CBT_GAME_SCREEN;
 
@@ -48,13 +50,16 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private CBTGameScreenVM viewModel;
 
     @FXML
-    private ImageView bookmarkImage, calculatorImage, speakerImage, reportImage, reportDialogCloseIcon;
+    private ImageView bookmarkImage, calculatorImage, speakerImage, reportImage, reportDialogCloseIcon, quesDescriptionCloseIcon;
 
     @FXML
     private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton, exitButton, showAnswersButton, playAgainButton, submitReport;
 
     @FXML
     private Label questionNumberLabel, questionLabel, pageTitle, fiftyFiftyCount, correctAnswers, incorrectAnswers, questionAttempts, correctAnswersLabel, incorrectAnswersLabel, resultLabel, questionAttemptsLabel;
+
+    @FXML
+    private Label questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
 
     @FXML
     private TextField enterCorrectAnswerField;
@@ -69,7 +74,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private Pane resultDialogDimmer, reportDialogDimmer;
 
     @FXML
-    private VBox resultDialog, reportDialog, incorrectAnswerPane;
+    private VBox resultDialog, reportDialog, incorrectAnswerPane, questionDescriptionDialog;
   
     private Stage calculatorStage = new Stage();
 
@@ -203,7 +208,8 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             button.setStyle(idleButtonStyle);
             button.setOnMouseEntered(e -> button.setStyle(hoveredButtonStyle));
             button.setOnMouseExited(e -> button.setStyle(idleButtonStyle));
-            button.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 24));
+            button.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 16));
+            button.setWrapText(true);
             button.setTextFill(Color.WHITE);
         });
 
@@ -234,6 +240,14 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         playAgainButton.setOnAction(event -> {
             hideResult();
+        });
+        
+        readQuestionDesc.setOnMouseClicked(event -> {
+            Animations.showDialog(questionDescriptionDialog, reportDialogDimmer);
+        });
+
+        quesDescriptionCloseIcon.setOnMouseClicked(event -> {
+            Animations.hideDialog(questionDescriptionDialog, reportDialogDimmer);
         });
 
         showAnswersButton.setOnAction(event -> {
@@ -276,13 +290,16 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         calculatorImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_calculator.png").toString()));
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_green.png").toString()));
         reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+        quesDescriptionCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
 
         backButton.setBackground(Background.EMPTY);
     }
 
     private void initializeFonts() {
-        questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 24));
-        questionLabel.setLineSpacing(5);
+        questionDescriptionHeader.setFont(FontUtil.getFont(GilroyFontFamily.MEDIUM_ITALIC, 16));
+        readQuestionDesc.setFont(FontUtil.getFont(GilroyFontFamily.MEDIUM_ITALIC, 16));
+        questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 22));
+//        questionLabel.setLineSpacing(5);
         fiftyFiftyButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
         fiftyFiftyCount.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 16));
         showAnswersButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
@@ -491,6 +508,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     }
 
     private void dispatchAnswerCorrect() {
+        System.out.println(TAG + "Correct answer");
         Media sound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setStopTime(Duration.millis(500));
@@ -525,6 +543,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     }
 
     private void dispatchAnswerIncorrect() {
+        System.out.println(TAG + "Incorrect answer");
         Media sound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setStopTime(Duration.millis(500));
@@ -541,13 +560,20 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         int selectedQuestionNumber = selectedQuestion.getQuestion().getQuestionNumber();
 
         questionNumberLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
+        
+        List<QuestionDescription> questionDescriptionList = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> 
+                questionDescription.getId() == selectedQuestion.getQuestion().getQuestionDescriptionId()).collect(Collectors.toList());
+        
+        if (questionDescriptionList.isEmpty()) {
+            readQuestionDesc.setVisible(false);
+            questionDescriptionHeader.setText("");
+        } else {
+            questionDescriptionHeader.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", " "));
+            questionDescriptionText.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+        }
 
         String questionText = selectedQuestion.getQuestion().getQuestion();
-        questionLabel.setText(questionText);
-        if (questionText.contains("<br>")) {
-            String newText = questionText.replaceAll("<br>", System.lineSeparator());
-            questionLabel.setText(newText);
-        }
+        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
         optionAButton.setText(selectedQuestion.getQuestion().getOptionA());
         optionBButton.setText(selectedQuestion.getQuestion().getOptionB());
@@ -566,12 +592,19 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         questionNumberLabel.setText("Question " + newValue + " of " + questions.size());
 
-        String questionText = selectedQuestion.getQuestion().getQuestion();
-        questionLabel.setText(questionText);
-        if (questionText.contains("<br>")) {
-            String newText = questionText.replaceAll("<br>", System.lineSeparator());
-            questionLabel.setText(newText);
+        List<QuestionDescription> questionDescriptionList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                questionDescription.getId() == selectedQuestion.getQuestion().getQuestionDescriptionId()).collect(Collectors.toList());
+
+        if (questionDescriptionList.isEmpty()) {
+            readQuestionDesc.setVisible(false);
+            questionDescriptionHeader.setText("");
+        } else {
+            questionDescriptionHeader.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", " "));
+            questionDescriptionText.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
         }
+
+        String questionText = selectedQuestion.getQuestion().getQuestion();
+        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
         optionAButton.setText(selectedQuestion.getQuestion().getOptionA());
         optionBButton.setText(selectedQuestion.getQuestion().getOptionB());
