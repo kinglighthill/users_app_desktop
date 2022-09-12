@@ -74,7 +74,7 @@ public class TopicDao {
                         rs.getString(createdAtColumn)));
             }
 
-            System.out.println(TAG + "Got topics of size -> " + topics.size());
+//            System.out.println(TAG + "Got topics of size -> " + topics.size());
             return topics;
 
         } catch (SQLException e) {

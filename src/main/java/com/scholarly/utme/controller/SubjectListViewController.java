@@ -8,33 +8,27 @@ import com.scholarly.utme.viewmodels.SubjectListViewVM;
 import de.saxsys.mvvmfx.*;
 import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
 import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
-import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import static com.scholarly.utme.ui.utils.Animations.animate;
 import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/SubjectListView.fxml")
 public class SubjectListViewController implements FxmlView<SubjectListViewVM>, Initializable {
 
-    private static final String TAG = "SubjectListViewController::  ";
+    private static final String TAG = "SubjectListViewController:  ";
 
     @InjectViewModel
     private SubjectListViewVM viewModel;
@@ -81,7 +75,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         if (lastSelectedTab.equalsIgnoreCase(PREF_VALUE_OBJECTIVE_TAB)){
             tabMenu.getSelectionModel().select(objectiveTab);
 
-        }else if (lastSelectedTab.equalsIgnoreCase(PREF_VALUE_THEORY_TAB)){
+        } else if (lastSelectedTab.equalsIgnoreCase(PREF_VALUE_THEORY_TAB)){
             tabMenu.getSelectionModel().select(theoryTab);;
         }
 
@@ -94,11 +88,13 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
         ViewListCellFactory<SubjectListItemVM> objectiveCellFactory = CachedViewModelCellFactory.create(vm -> {
             vm.setType(SubjectListItemVM.Type.OBJECTIVE);
+            vm.populateYearsList();
             return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
         });
 
         ViewListCellFactory<SubjectListItemVM> theoryCellFactory = CachedViewModelCellFactory.create(vm -> {
             vm.setType(SubjectListItemVM.Type.THEORY);
+            vm.populateYearsList();
             return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
         });
 
@@ -118,26 +114,37 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             hours.add(i);
         }
 
-        for (int i = 0; i <= 60; i++) {
+        for (int i = 0; i <= 60; i+=10) {
             minutes.add(i);
         }
 
         hoursChoiceBox.setItems(hours);
-        hoursChoiceBox.setValue(2);
-
+        hoursChoiceBox.setValue(0);
         minutesChoiceBox.setItems(minutes);
-        minutesChoiceBox.setValue(40);
+        minutesChoiceBox.setValue(0);
 
         viewModel.getSelectedObjectiveSubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
             selectedObjectiveSubjects.clear();
             selectedObjectiveSubjects.addAll(viewModel.getSelectedObjectiveSubjects().values());
-           // System.out.println("selectedObjectiveSubjects -> " + viewModel.getSelectedObjectiveSubjects().values().toString());
         });
 
         viewModel.getSelectedTheorySubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
             selectedTheorySubjects.clear();
             selectedTheorySubjects.addAll(viewModel.getSelectedTheorySubjects().values());
+
         });
+
+        viewModel.getSelectedSubjectAllottedTime().addListener((MapChangeListener<? super String, ? super Integer>) change -> {
+            int totalTime = viewModel.getSelectedSubjectAllottedTime().values().stream().reduce(0, Integer::sum);
+            hoursChoiceBox.setValue(0);
+            minutesChoiceBox.setValue(totalTime);
+            if (totalTime >= 60) {
+                hoursChoiceBox.setValue(totalTime / 60);
+                minutesChoiceBox.setValue(totalTime % 60);
+            }
+
+        });
+
 
         tabMenu.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue.getText().equalsIgnoreCase(PREF_VALUE_OBJECTIVE_TAB)) {
@@ -199,7 +206,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 }
 
                 // Ensure time(hours and minutes) selected is greater than for CBT Practice
-                if (!hoursChoiceBox.getSelectionModel().isSelected(0) || !minutesChoiceBox.getSelectionModel().isSelected(0)){
+                if (hoursChoiceBox.getValue() != 0 || minutesChoiceBox.getValue() != 0){
 
                     if (selectedOption == SubjectListOption.PRACTICE) {
                         initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());

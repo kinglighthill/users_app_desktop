@@ -3,6 +3,8 @@ package com.scholarly.utme.data.dao;
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.util.Database;
 import com.scholarly.utme.data.util.NewDatabase;
+import com.scholarly.utme.data.util.Tables;
+import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -40,11 +42,20 @@ public class YearsDao {
 
     }
 
-    public static ObservableList<Year> getAvailableYearsForSubject(String subjectTableName) {
+    public static ObservableList<Year> getAvailableYearsForSubject(SubjectListItemVM.Type type, int subjectId) {
         ObservableList<Year> subjectAvailableYears = FXCollections.observableArrayList();
 
-        String query = "SELECT DISTINCT " + tableNamePlusIdColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + tableName + " JOIN " + subjectTableName + " ON " + subjectTableName + ".year_id = " + tableNamePlusIdColumn;
-        System.out.println(TAG + "Available Years For Subject Query -> " + query);
+        String query = "";
+
+        if (type == SubjectListItemVM.Type.OBJECTIVE) {
+            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_OBJECTIVE_QUESTIONS + " ON " + Tables.PQ_OBJECTIVE_QUESTIONS + ".year_id = " + Tables.YEARS + "." + idColumn + " WHERE subject_id = " + subjectId;
+
+        } else if (type == SubjectListItemVM.Type.THEORY){
+            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_THEORY_QUESTIONS + " ON " + Tables.PQ_THEORY_QUESTIONS + ".year_id = " + Tables.YEARS + "." + idColumn + " WHERE subject_id = " + subjectId;
+
+        }
+
+//        System.out.println(TAG + "Available Years For Subject with id -> " + subjectId + " Query -> " + query + " AND Type -> " + type);
 
         try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -60,13 +71,13 @@ public class YearsDao {
                 );
 
             }
-           // System.out.println(subjectTableName + " available years -> " + subjectAvailableYears);
+           // System.out.println(subjectId + " available years -> " + subjectAvailableYears);
             return subjectAvailableYears;
 
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load availableYears from database ");
+                    LocalDateTime.now() + ": Could not load availableYears from database because " + e.getMessage());
             subjectAvailableYears.clear();
             return null;
         }

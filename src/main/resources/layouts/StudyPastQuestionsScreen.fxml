@@ -211,15 +211,37 @@
                                     <Font name="Gill Sans MT Bold" size="18.0"/>
                                 </font>
                             </Label>
+
                             <ScrollPane fitToWidth="true" prefHeight="500" style="-fx-background-color: #ffffff; -fx-border-color: #F1F1F1; -fx-border-radius: 5;">
-                                <Label fx:id="questionLabel" text="Label" alignment="TOP_LEFT" wrapText="true">
-                                    <font>
-                                        <Font size="15.0"/>
-                                    </font>
+                                <VBox>
+                                    <HBox fx:id="quesDescriptionHBox">
+                                        <Label fx:id="questionDescriptionHeader" text="COMPREHENSION: Read the passage..." prefHeight="20" prefWidth="500" wrapText="true">
+                                            <font>
+                                                <Font size="14.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="readQuestionDesc" text="[READ]" textFill="#12AF20" underline="true">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <padding>
+                                            <Insets bottom="10"/>
+                                        </padding>
+                                    </HBox>
+                                    <Label fx:id="questionLabel" text="Label" alignment="TOP_LEFT" wrapText="true">
+                                        <font>
+                                            <Font size="15.0"/>
+                                        </font>
+                                        <padding>
+                                            <Insets top="10"/>
+                                        </padding>
+                                    </Label>
                                     <padding>
                                         <Insets topRightBottomLeft="10"/>
                                     </padding>
-                                </Label>
+                                </VBox>
+
                             </ScrollPane>
 
                             <Label fx:id="optionA" text="Label">
@@ -319,6 +341,23 @@
             </BorderPane>
 
             <Pane fx:id="dialogDimmer" opacity="0.5" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" visible="false" />
+
+            <VBox fx:id="questionDescriptionDialog" spacing="15" maxHeight="450.0" maxWidth="400.0" prefHeight="400.0" prefWidth="250.0" StackPane.alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
+                <ImageView fx:id="quesDescriptionCloseIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
+                <ScrollPane fitToWidth="true" prefWidth="200" prefHeight="400" style="-fx-background-color: white;">
+                    <Label fx:id="questionDescriptionText"  wrapText="true" alignment="TOP_CENTER">
+                        <font>
+                            <Font size="14"/>
+                        </font>
+                    </Label>
+                    <padding>
+                        <Insets right="10"/>
+                    </padding>
+                </ScrollPane>
+                <padding>
+                    <Insets topRightBottomLeft="15"/>
+                </padding>
+            </VBox>
 
             <DialogPane fx:id="exitDialogPane"  style="-fx-background-color: white; -fx-background-radius: 10;" visible="false" >
                 <content>

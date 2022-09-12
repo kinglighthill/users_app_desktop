@@ -21,7 +21,6 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class SubjectListItemVM implements ViewModel {
     public static final String TAG = "SubjectListItemVM: ";
@@ -36,6 +35,18 @@ public class SubjectListItemVM implements ViewModel {
 
     public void setSelectedYearProperty(Year selectedYearProperty) {
         this.selectedYearProperty.set(selectedYearProperty);
+    }
+
+    public ObjectProperty<List<Integer>> selectedTopicsProperty() {
+        return selectedTopicsProperty;
+    }
+
+    public List<Integer> getSelectedTopicsProperty() {
+        return selectedTopicsProperty.get();
+    }
+
+    public void setSelectedTopics(List<Integer> topicIds) {
+        this.selectedTopicsProperty.set(topicIds);
     }
 
     public void setShuffleQuestions(Boolean shuffleQuestions) {
@@ -62,7 +73,7 @@ public class SubjectListItemVM implements ViewModel {
     private SimpleBooleanProperty shuffleQuestions = new SimpleBooleanProperty(false);
     private SimpleBooleanProperty shuffleOptions = new SimpleBooleanProperty(false);
 
-//    private ObjectProperty<List<PQTopic>> selectedTopicsProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<List<Integer>> selectedTopicsProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Year> selectedYearProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Integer> selectedNumberOfQuestions = new SimpleObjectProperty<>();
 
@@ -76,14 +87,14 @@ public class SubjectListItemVM implements ViewModel {
         subjectShortTitle.set(subject.getShortTitle());
         subjectColorName.set(getColorName(subject.getShortTitle()));
 
-        years = YearsDao.getYears();
+//        years = YearsDao.getYears();
         topics = TopicDao.getTopicsForSubject(subject.getSubjectId());
 
-        subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
+        subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedTopicsProperty.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
 
         mapPropertiesToState();
 
-//        years = YearsDao.getAvailableYearsForSubject("english");
+
     }
 
     /**
@@ -91,19 +102,22 @@ public class SubjectListItemVM implements ViewModel {
      */
     public void mapPropertiesToState() {
         subjectSelected.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new SubjectState(subject, type, newValue, shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
+            subjectState.onNext(new SubjectState(subject, type, newValue, shuffleQuestions.get(), shuffleOptions.get(), selectedTopicsProperty.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
         }));
         shuffleQuestions.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), newValue, shuffleOptions.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
+            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), newValue, shuffleOptions.get(), selectedTopicsProperty.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
         }));
         shuffleOptions.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), newValue, selectedYearProperty.get(), selectedNumberOfQuestions.get()));
+            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), newValue, selectedTopicsProperty.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
+        }));
+        selectedTopicsProperty.addListener(((observable, oldValue, newValue) -> {
+            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), newValue, selectedYearProperty.get(), selectedNumberOfQuestions.get()));
         }));
         selectedYearProperty.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), newValue, selectedNumberOfQuestions.get()));
+            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedTopicsProperty.get(), newValue, selectedNumberOfQuestions.get()));
         }));
         selectedNumberOfQuestions.addListener(((observable, oldValue, newValue) -> {
-            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedYearProperty.get(), newValue));
+            subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedTopicsProperty.get(), selectedYearProperty.get(), newValue));
         }));
     }
 
@@ -255,6 +269,10 @@ public class SubjectListItemVM implements ViewModel {
         }
     }
 
+    public void populateYearsList() {
+        years = YearsDao.getAvailableYearsForSubject(type, subject.getId());
+    }
+
     public void setType(Type type) {
         this.type = type;
     }
@@ -302,15 +320,17 @@ public class SubjectListItemVM implements ViewModel {
         private Boolean shuffleQuestions;
         private Boolean shuffleOptions;
 
+        private List<Integer> selectedTopics;
         private Year selectedYear;
         private Integer numberOfQuestions;
 
-        public SubjectState(PQSubject subject, Type type, Boolean isSelected, Boolean shuffleQuestions, Boolean shuffleOptions, Year selectedYear, Integer numberOfQuestions) {
+        public SubjectState(PQSubject subject, Type type, Boolean isSelected, Boolean shuffleQuestions, Boolean shuffleOptions, List<Integer> selectedTopics, Year selectedYear, Integer numberOfQuestions) {
             this.subject = subject;
             this.type = type;
             this.isSelected = isSelected;
             this.shuffleQuestions = shuffleQuestions;
             this.shuffleOptions = shuffleOptions;
+            this.selectedTopics = selectedTopics;
             this.selectedYear = selectedYear;
             this.numberOfQuestions = numberOfQuestions;
         }
@@ -333,6 +353,10 @@ public class SubjectListItemVM implements ViewModel {
 
         public Boolean getShuffleOptions() {
             return shuffleOptions;
+        }
+
+        public List<Integer> getSelectedTopics() {
+            return selectedTopics;
         }
 
         public Year getSelectedYear() {

@@ -4,8 +4,10 @@ import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.Result;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.ResultScreenVM;
@@ -77,7 +79,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
         ObservableList<PQSubject> items = FXCollections.observableArrayList();
 
         PQSubject subject = new PQSubject();
-        subject.setShortTitle("All");
+        subject.setTitle("All");
         items.add(subject);
         items.addAll(viewModel.getSubjectList());
 
@@ -174,7 +176,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
             View previousScreen = viewModel.getPreviousScreen();
 
             if (previousScreen == View.HOME_SCREEN) {
-                ViewSwitcher.passData("practicePanel");
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             } else if (previousScreen == View.LANDING_SCREEN) {
                 ViewSwitcher.passData("performanceButton");
