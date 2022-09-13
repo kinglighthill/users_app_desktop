@@ -47,7 +47,7 @@ public class CBTGameScreenVM implements ViewModel {
         data.questionData.forEach(subjectState -> {
 
             List<QuestionState> questionStates = ObjectiveQuestionDao
-                    .getQuestionss(
+                    .getQuestions(
                             subjectState.getSubject().getId(),
                             subjectState.getSelectedYear().getId(),
                             FXCollections.emptyObservableList(),
@@ -60,7 +60,7 @@ public class CBTGameScreenVM implements ViewModel {
 
             List<PracticeScreenVM.QuestionState> practiceQuestionState = questionStates
                     .stream()
-                    .map(questionState -> new PracticeScreenVM.QuestionState(questionState.question, SubjectListItemVM.Type.OBJECTIVE, null, -1))
+                    .map(questionState -> new PracticeScreenVM.QuestionState(questionState.question, SubjectListItemVM.Type.OBJECTIVE, -1))
                     .collect(Collectors.toList());
 
             questions.addAll(questionStates);

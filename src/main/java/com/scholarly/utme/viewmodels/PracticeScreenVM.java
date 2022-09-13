@@ -61,7 +61,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
             if (subjectState.getType() == Type.OBJECTIVE) {
 
                 List<QuestionState> questionStates = ObjectiveQuestionDao
-                        .getQuestionss(
+                        .getQuestions(
                                 subjectState.getSubject().getId(),
                                 subjectState.getSelectedYear().getId(),
                                 FXCollections.observableArrayList(subjectState.getSelectedTopics()),
@@ -69,7 +69,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         )
                         .stream()
                         .limit(subjectState.getNumberOfQuestions())
-                        .map(question -> new QuestionState(question, Type.OBJECTIVE, null, -1))
+                        .map(question -> new QuestionState(question, Type.OBJECTIVE, -1))
                         .collect(Collectors.toList());
 
                 subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
@@ -89,7 +89,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                                 subjectState.getShuffleQuestions()
                         )
                         .stream()
-                        .map(question -> new QuestionState(question, Type.THEORY, null, -1))
+                        .map(question -> new QuestionState(question, Type.THEORY, -1))
                         .collect(Collectors.toList());
 
                 subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
@@ -390,16 +390,15 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         private String selectedOption;
         private int selectedOptionId;
 
-        public QuestionState(Question question, Type questionType, String selectedOption) {
+       /* public QuestionState(Question question, Type questionType, String selectedOption) {
             this.question = question;
             this.questionType = questionType;
             this.selectedOption = selectedOption;
-        }
+        }*/
 
-        public QuestionState(Question question, Type questionType, String selectedOption, int selectedOptionId) {
+        public QuestionState(Question question, Type questionType, int selectedOptionId) {
             this.question = question;
             this.questionType = questionType;
-            this.selectedOption = selectedOption;
             this.selectedOptionId = selectedOptionId;
         }
 

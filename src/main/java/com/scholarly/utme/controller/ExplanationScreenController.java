@@ -308,26 +308,26 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             String questionText = question.getObjectiveQuestion().getQuestion();
             questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-            optionA.setText(" (A) " + question.getObjectiveQuestion().getQuestionOptionA().getText());
-            optionB.setText(" (B) " + question.getObjectiveQuestion().getQuestionOptionB().getText());
-            optionC.setText(" (C) " + question.getObjectiveQuestion().getQuestionOptionC().getText());
-            optionD.setText(" (D) " + question.getObjectiveQuestion().getQuestionOptionD().getText());
+            optionA.setText(" (A) " + question.getObjectiveQuestion().getOptionA().getText());
+            optionB.setText(" (B) " + question.getObjectiveQuestion().getOptionB().getText());
+            optionC.setText(" (C) " + question.getObjectiveQuestion().getOptionC().getText());
+            optionD.setText(" (D) " + question.getObjectiveQuestion().getOptionD().getText());
 
             optionA.setTextFill(Color.BLACK);
             optionB.setTextFill(Color.BLACK);
             optionC.setTextFill(Color.BLACK);
             optionD.setTextFill(Color.BLACK);
 
-            String selectedOption = question.getSelectedOption();
-            String questionAnswer = question.getObjectiveQuestion().getOptionAnswer();
+//            String selectedOption = question.getSelectedOption();
+//            String questionAnswer = question.getObjectiveQuestion().getQuestionAnswer().getAnswer();
 
             int selectedOptionId = question.getSelectedOptionId();
             int questionAnswerId = question.getObjectiveQuestion().getQuestionAnswer().getId();
 
-            int optionAId = question.getObjectiveQuestion().getQuestionOptionA().getId();
-            int optionBId = question.getObjectiveQuestion().getQuestionOptionB().getId();
-            int optionCId = question.getObjectiveQuestion().getQuestionOptionC().getId();
-            int optionDId = question.getObjectiveQuestion().getQuestionOptionD().getId();
+            int optionAId = question.getObjectiveQuestion().getOptionA().getId();
+            int optionBId = question.getObjectiveQuestion().getOptionB().getId();
+            int optionCId = question.getObjectiveQuestion().getOptionC().getId();
+            int optionDId = question.getObjectiveQuestion().getOptionD().getId();
 
             if (selectedOptionId != -1) { // an option was selected
 
@@ -381,62 +381,6 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
                 }
 
-
-                /*if (selectedOption.equalsIgnoreCase(questionAnswer)) {
-                    if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
-                        optionA.setTextFill(Color.GREEN);
-                        optionAIcon.setImage(correctImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
-                        optionB.setTextFill(Color.GREEN);
-                        optionBIcon.setImage(correctImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
-                        optionC.setTextFill(Color.GREEN);
-                        optionCIcon.setImage(correctImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
-                        optionD.setTextFill(Color.GREEN);
-                        optionDIcon.setImage(correctImage);
-                    }
-                } else {
-
-                    if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
-                        optionA.setTextFill(Color.RED);
-                        optionAIcon.setImage(incorrectImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
-                        optionB.setTextFill(Color.RED);
-                        optionBIcon.setImage(incorrectImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
-                        optionC.setTextFill(Color.RED);
-                        optionCIcon.setImage(incorrectImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
-                        optionD.setTextFill(Color.RED);
-                        optionDIcon.setImage(incorrectImage);
-                    }
-
-
-                    if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
-                        optionA.setTextFill(Color.GREEN);
-                        optionAIcon.setImage(correctImage);
-                    }
-                    else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
-                        optionB.setTextFill(Color.GREEN);
-                        optionBIcon.setImage(correctImage);
-                    }
-                    else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
-                        optionC.setTextFill(Color.GREEN);
-                        optionCIcon.setImage(correctImage);
-                    }
-                    else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
-                        optionD.setTextFill(Color.GREEN);
-                        optionDIcon.setImage(correctImage);
-                    }
-                }*/
-
                 noOptionSelected.setVisible(false);
 
             } else { // no option was selected
@@ -459,23 +403,6 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
                 }
 
-                /*if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
-                    optionA.setTextFill(Color.GREEN);
-                    optionAIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
-                    optionB.setTextFill(Color.GREEN);
-                    optionBIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
-                    optionC.setTextFill(Color.GREEN);
-                    optionCIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
-                    optionD.setTextFill(Color.GREEN);
-                    optionDIcon.setImage(correctImage);
-                }*/
-
                 noOptionSelected.setVisible(true);
             }
 
@@ -486,7 +413,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             String questionText = question.getTheoryQuestion().getQuestion();
             questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-            String explanationText = question.getTheoryQuestion().getAnswerExplanation();
+            String explanationText = question.getTheoryQuestion().getQuestionAnswer().getExplanation();
             explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
 
             centerVBox.getChildren().removeAll(optionAPanel, optionBPanel, optionCPanel, optionDPanel, noOptionSelected);
@@ -512,10 +439,10 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
             questionLabel.setText(objectiveQuestion.getQuestion().replaceAll("<br>", System.lineSeparator()));
 
-            optionA.setText(" (A) " + objectiveQuestion.getQuestionOptionA().getText());
-            optionB.setText(" (B) " + objectiveQuestion.getQuestionOptionB().getText());
-            optionC.setText(" (C) " + objectiveQuestion.getQuestionOptionC().getText());
-            optionD.setText(" (D) " + objectiveQuestion.getQuestionOptionD().getText());
+            optionA.setText(" (A) " + objectiveQuestion.getOptionA().getText());
+            optionB.setText(" (B) " + objectiveQuestion.getOptionB().getText());
+            optionC.setText(" (C) " + objectiveQuestion.getOptionC().getText());
+            optionD.setText(" (D) " + objectiveQuestion.getOptionD().getText());
 
             optionA.setTextFill(Color.BLACK);
             optionB.setTextFill(Color.BLACK);
@@ -532,16 +459,16 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             optionCButton.setSelected(false);
             optionDButton.setSelected(false);
 
-            String selectedOption = questions.get(questionNumber - 1).getSelectedOption();
-            String questionAnswer = questions.get(questionNumber - 1).getObjectiveQuestion().getOptionAnswer();
+//            String selectedOption = questions.get(questionNumber - 1).getSelectedOption();
+//            String questionAnswer = questions.get(questionNumber - 1).getObjectiveQuestion().getQuestionAnswer().getAnswer();
 
             int selectedOptionId = questions.get(questionNumber - 1).getSelectedOptionId();
             int questionAnswerId = questions.get(questionNumber - 1).getObjectiveQuestion().getQuestionAnswer().getId();
 
-            int optionAId = objectiveQuestion.getQuestionOptionA().getId();
-            int optionBId = objectiveQuestion.getQuestionOptionB().getId();
-            int optionCId = objectiveQuestion.getQuestionOptionC().getId();
-            int optionDId = objectiveQuestion.getQuestionOptionD().getId();
+            int optionAId = objectiveQuestion.getOptionA().getId();
+            int optionBId = objectiveQuestion.getOptionB().getId();
+            int optionCId = objectiveQuestion.getOptionC().getId();
+            int optionDId = objectiveQuestion.getOptionD().getId();
 
             if (selectedOptionId != -1) { // an option was selected
 
@@ -594,62 +521,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
                     }
 
-
                 }
-
-                /*if (selectedOption.equalsIgnoreCase(questionAnswer)) {
-                    if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
-                        optionA.setTextFill(Color.GREEN);
-                        optionAIcon.setImage(correctImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
-                        optionB.setTextFill(Color.GREEN);
-                        optionBIcon.setImage(correctImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
-                        optionC.setTextFill(Color.GREEN);
-                        optionCIcon.setImage(correctImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
-                        optionD.setTextFill(Color.GREEN);
-                        optionDIcon.setImage(correctImage);
-                    }
-                } else {
-                    if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
-                        optionA.setTextFill(Color.RED);
-                        optionAIcon.setImage(incorrectImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
-                        optionB.setTextFill(Color.RED);
-                        optionBIcon.setImage(incorrectImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
-                        optionC.setTextFill(Color.RED);
-                        optionCIcon.setImage(incorrectImage);
-                    }
-                    else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
-                        optionD.setTextFill(Color.RED);
-                        optionDIcon.setImage(incorrectImage);
-                    }
-
-
-                    if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
-                        optionA.setTextFill(Color.GREEN);
-                        optionAIcon.setImage(correctImage);
-                    }
-                    else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
-                        optionB.setTextFill(Color.GREEN);
-                        optionBIcon.setImage(correctImage);
-                    }
-                    else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
-                        optionC.setTextFill(Color.GREEN);
-                        optionCIcon.setImage(correctImage);
-                    }
-                    else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
-                        optionD.setTextFill(Color.GREEN);
-                        optionDIcon.setImage(correctImage);
-                    }
-                }*/
 
                 noOptionSelected.setVisible(false);
 
@@ -673,23 +545,6 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
                 }
 
-                /*if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
-                    optionA.setTextFill(Color.GREEN);
-                    optionAIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
-                    optionB.setTextFill(Color.GREEN);
-                    optionBIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
-                    optionC.setTextFill(Color.GREEN);
-                    optionCIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
-                    optionD.setTextFill(Color.GREEN);
-                    optionDIcon.setImage(correctImage);
-                }*/
-
                 noOptionSelected.setVisible(true);
             }
 
@@ -700,7 +555,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             String questionText = questions.get(questionNumber - 1).getTheoryQuestion().getQuestion();
             questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-            String explanationText = questions.get(questionNumber - 1).getTheoryQuestion().getAnswerExplanation();
+            String explanationText = questions.get(questionNumber - 1).getTheoryQuestion().getQuestionAnswer().getExplanation();
             explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
 
         }
@@ -729,7 +584,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                     r.setFill(Paint.valueOf("#12AF20"));
                     l.setTextFill(Paint.valueOf("#FFFFFF"));
 
-                } else if (questions.get(i-1).getSelectedOption() != null) {
+                } else if (questions.get(i-1).getSelectedOptionId() != -1) {
                     r.setFill(Color.web("#FA0000", 0.5));
                     l.setTextFill(Color.WHITE);
                 }
