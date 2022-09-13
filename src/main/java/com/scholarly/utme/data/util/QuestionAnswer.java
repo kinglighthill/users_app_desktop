@@ -3,12 +3,12 @@ package com.scholarly.utme.data.util;
 public class QuestionAnswer {
 
     private int id;
-    private String answerText;
+    private String answer;
     private String explanation;
 
-    public QuestionAnswer(int id, String answerText, String explanation) {
+    public QuestionAnswer(int id, String answer, String explanation) {
         this.id = id;
-        this.answerText = answerText;
+        this.answer = answer;
         this.explanation = explanation;
     }
 
@@ -16,8 +16,8 @@ public class QuestionAnswer {
         return id;
     }
 
-    public String getAnswerText() {
-        return answerText;
+    public String getAnswer() {
+        return answer;
     }
 
     public String getExplanation() {
