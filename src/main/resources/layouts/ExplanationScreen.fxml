@@ -183,7 +183,7 @@
                         <right>
                             <HBox spacing="30" alignment="CENTER">
                                 <ImageView fx:id="optionAIcon" preserveRatio="true" pickOnBounds="true"/>
-                                <RadioButton fx:id="optionAButton"/>
+                                <RadioButton fx:id="optionAButton" disable="true"/>
                             </HBox>
                         </right>
 
@@ -205,7 +205,7 @@
                         <right>
                             <HBox spacing="30" alignment="CENTER">
                                 <ImageView fx:id="optionBIcon" preserveRatio="true" pickOnBounds="true"/>
-                                <RadioButton fx:id="optionBButton"/>
+                                <RadioButton fx:id="optionBButton" disable="true"/>
                             </HBox>
                         </right>
                         <padding>
@@ -223,7 +223,7 @@
                         <right>
                             <HBox spacing="30" alignment="CENTER">
                                 <ImageView fx:id="optionCIcon" preserveRatio="true" pickOnBounds="true"/>
-                                <RadioButton fx:id="optionCButton"/>
+                                <RadioButton fx:id="optionCButton" disable="true"/>
                             </HBox>
                         </right>
                         <padding>
@@ -241,7 +241,7 @@
                         <right>
                             <HBox spacing="30" alignment="CENTER">
                                 <ImageView fx:id="optionDIcon" preserveRatio="true" pickOnBounds="true"/>
-                                <RadioButton fx:id="optionDButton"/>
+                                <RadioButton fx:id="optionDButton" disable="true"/>
                             </HBox>
                         </right>
                         <padding>

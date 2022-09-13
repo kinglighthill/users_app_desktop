@@ -189,19 +189,19 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         List<ButtonBase> buttons = FXCollections.observableArrayList(dontShowButton, dismissButton, jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton);
 
         for (ButtonBase button : buttons) {
-            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
+            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
         }
 
-        infoText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        jambProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        africanProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        nonAfricanProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        africanDramaLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        nonAfricanDramaLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        shakespeareanLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        africanPoetryLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        nonAfricanPoetryLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
+        infoText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+        jambProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+        africanProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+        nonAfricanProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+        africanDramaLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+        nonAfricanDramaLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+        shakespeareanLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+        africanPoetryLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+        nonAfricanPoetryLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
 
-        novelDescription.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        novelDescription.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
     }
 }

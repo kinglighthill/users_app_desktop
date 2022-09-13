@@ -254,6 +254,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 }
 
                 questionState.setSelectedOption(question.getOptionA());
+                questionState.setSelectedOptionId(question.getQuestionOptionA().getId());
 
             });
             optionAButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -273,8 +274,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                         onOptionSelected(selectedQuestion);
                     }
 
-
                     questionState.setSelectedOption(question.getOptionA());
+                    questionState.setSelectedOptionId(question.getQuestionOptionA().getId());
                 }
             });
 
@@ -295,6 +296,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 }
 
                 questionState.setSelectedOption(question.getOptionB());
+                questionState.setSelectedOptionId(question.getQuestionOptionB().getId());
             });
             optionBButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
@@ -314,6 +316,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     }
 
                     questionState.setSelectedOption(question.getOptionB());
+                    questionState.setSelectedOptionId(question.getQuestionOptionB().getId());
                 }
             });
 
@@ -334,6 +337,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 }
 
                 questionState.setSelectedOption(question.getOptionC());
+                questionState.setSelectedOptionId(question.getQuestionOptionC().getId());
             });
             optionCButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
@@ -353,6 +357,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     }
 
                     questionState.setSelectedOption(question.getOptionC());
+                    questionState.setSelectedOptionId(question.getQuestionOptionC().getId());
                 }
             });
 
@@ -373,6 +378,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 }
 
                 questionState.setSelectedOption(question.getOptionD());
+                questionState.setSelectedOptionId(question.getQuestionOptionD().getId());
             });
             optionDButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
@@ -392,6 +398,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     }
 
                     questionState.setSelectedOption(question.getOptionD());
+                    questionState.setSelectedOptionId(question.getQuestionOptionD().getId());
                 }
             });
 
@@ -743,20 +750,20 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             webView.getEngine().loadContent(questionText);
 
-            optionAButton.setText(" (A) " + question.getOptionA());
-            optionBButton.setText(" (B) " + question.getOptionB());
-            optionCButton.setText(" (C) " + question.getOptionC());
-            optionDButton.setText(" (D) " + question.getOptionD());
+            optionAButton.setText(" (A) " + question.getQuestionOptionA().getText());
+            optionBButton.setText(" (B) " + question.getQuestionOptionB().getText());
+            optionCButton.setText(" (C) " + question.getQuestionOptionC().getText());
+            optionDButton.setText(" (D) " + question.getQuestionOptionD().getText());
 
-            String selectedOption = questions.get(selectedQuestion - 1).getSelectedOption();
-            if (selectedOption != null) {
-                if (selectedOption.equalsIgnoreCase(question.getOptionA())) {
+            int selectedOptionId = questions.get(selectedQuestion - 1).getSelectedOptionId();
+            if (selectedOptionId != -1) {
+                if (selectedOptionId == question.getQuestionOptionA().getId()) {
                     toggleGroup.selectToggle(optionAButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionB())) {
+                } else if (selectedOptionId == question.getQuestionOptionB().getId()) {
                     toggleGroup.selectToggle(optionBButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionC())) {
+                } else if (selectedOptionId == question.getQuestionOptionC().getId()) {
                     toggleGroup.selectToggle(optionCButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionD())) {
+                } else if (selectedOptionId == question.getQuestionOptionD().getId()) {
                     toggleGroup.selectToggle(optionDButton);
                 }
             } else {
@@ -861,20 +868,20 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             webView.getEngine().loadContent(questionText);
 
-            optionAButton.setText(" (A) " + question.getOptionA());
-            optionBButton.setText(" (B) " + question.getOptionB());
-            optionCButton.setText(" (C) " + question.getOptionC());
-            optionDButton.setText(" (D) " + question.getOptionD());
+            optionAButton.setText(" (A) " + question.getQuestionOptionA().getText());
+            optionBButton.setText(" (B) " + question.getQuestionOptionB().getText());
+            optionCButton.setText(" (C) " + question.getQuestionOptionC().getText());
+            optionDButton.setText(" (D) " + question.getQuestionOptionD().getText());
 
-            String selectedOption = questions.get(newValue - 1).getSelectedOption();
-            if (selectedOption != null) {
-                if (selectedOption.equalsIgnoreCase(question.getOptionA())) {
+            int selectedOptionId = questions.get(newValue - 1).getSelectedOptionId();
+            if (selectedOptionId != -1) {
+                if (selectedOptionId == question.getQuestionOptionA().getId()) {
                     toggleGroup.selectToggle(optionAButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionB())) {
+                } else if (selectedOptionId == question.getQuestionOptionB().getId()) {
                     toggleGroup.selectToggle(optionBButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionC())) {
+                } else if (selectedOptionId == question.getQuestionOptionC().getId()) {
                     toggleGroup.selectToggle(optionCButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionD())) {
+                } else if (selectedOptionId == question.getQuestionOptionD().getId()) {
                     toggleGroup.selectToggle(optionDButton);
                 }
             } else {
