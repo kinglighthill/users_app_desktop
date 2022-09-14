@@ -1,8 +1,6 @@
 package com.scholarly.utme.controller.novel_screens;
 
 import com.scholarly.utme.data.model.novels.Novel;
-import com.scholarly.utme.data.model.novels.Novel.Genre;
-import com.scholarly.utme.data.model.novels.Novel.Type;
 import com.scholarly.utme.data.model.novels.NovelCategory;
 import com.scholarly.utme.ui.cellFactories.NovelListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;

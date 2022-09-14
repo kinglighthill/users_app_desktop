@@ -2,10 +2,7 @@ package com.scholarly.utme.viewmodels.novel_screens;
 
 import com.scholarly.utme.data.dao.NovelAuthorDao;
 import com.scholarly.utme.data.dao.NovelsDao;
-import com.scholarly.utme.data.model.newDb.contentType.html.Link;
 import com.scholarly.utme.data.model.novels.Novel;
-import com.scholarly.utme.data.model.novels.Novel.Genre;
-import com.scholarly.utme.data.model.novels.Novel.Type;
 import com.scholarly.utme.data.model.novels.NovelAuthor;
 import com.scholarly.utme.data.model.novels.NovelCategory;
 import com.scholarly.utme.data.model.novels.NovelGenre;
@@ -13,12 +10,9 @@ import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.image.Image;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class NovelScreenVM implements ViewModel {
     private static final String TAG = "NovelScreenVM: ";
