@@ -8,6 +8,7 @@ import com.scholarly.utme.viewmodels.novel_screens.NovelGridScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -72,7 +73,25 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
     }
 
 
-    private Object getInitialData() {
-        return ViewSwitcher.retrieveData();
+    private InitialData getInitialData() {
+        return (InitialData) ViewSwitcher.retrieveData();
+    }
+
+    public static class InitialData {
+        private String categoryGenreTitle;
+        private ObservableList<Novel> novels;
+
+        public InitialData(String categoryGenreTitle, ObservableList<Novel> novels) {
+            this.categoryGenreTitle = categoryGenreTitle;
+            this.novels = novels;
+        }
+
+        public String getCategoryGenreTitle() {
+            return categoryGenreTitle;
+        }
+
+        public ObservableList<Novel> getNovels() {
+            return novels;
+        }
     }
 }

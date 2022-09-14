@@ -17,7 +17,7 @@
     <center>
         <ScrollPane fx:id="centerScrollPane" prefWidth="600" fitToWidth="true">
             <StackPane fx:id="centerStackPane" prefWidth="600" style="-fx-background-color: white;">
-                <VBox fx:id="centerBox" spacing="30" prefWidth="500">
+                <VBox fx:id="centerVBox" spacing="30" prefWidth="500">
                     <VBox spacing="15" prefWidth="500" style="-fx-background-color: #F4FFF5; -fx-background-radius: 5;">
                         <Label fx:id="infoText" text="NOTE: These books listed below represent both the new and old recommended literary texts. You are expected to study texts relevant to JAMB 2021 according to the JAMB syllabus" textFill="#053500" wrapText="true"/>
                         <HBox spacing="15" alignment="CENTER_LEFT">
@@ -28,167 +28,8 @@
                             <Insets topRightBottomLeft="15"/>
                         </padding>
                     </VBox>
-                    <VBox spacing="30">
-                        <Panel prefHeight="300" prefWidth="500">
-                            <left>
-                                <Label fx:id="jambProseLabel" text="JAMB Prose"/>
-                            </left>
-                            <right>
-                                <Button fx:id="jambProseButton" text="View all" textFill="#12AF20" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                    <padding>
-                                        <Insets left="10" right="10" top="5" bottom="5"/>
-                                    </padding>
-                                </Button>
-                            </right>
-                            <bottom>
-                                <ListView fx:id="jambProseList" orientation="HORIZONTAL" prefHeight="270" prefWidth="600">
-                                    <padding>
-                                        <Insets top="10"/>
-                                    </padding>
-                                </ListView>
-                            </bottom>
-                        </Panel>
 
-                        <Panel prefHeight="300" prefWidth="500">
-                            <left>
-                                <Label fx:id="africanProseLabel" text="African Prose"/>
-                            </left>
-                            <right>
-                                <Button fx:id="africanProseButton" text="View all" textFill="#12AF20" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                    <padding>
-                                        <Insets left="10" right="10" top="5" bottom="5"/>
-                                    </padding>
-                                </Button>
-                            </right>
-                            <bottom>
-                                <ListView fx:id="africanProseList" orientation="HORIZONTAL" prefHeight="270">
-                                    <padding>
-                                        <Insets top="10"/>
-                                    </padding>
-                                </ListView>
-                            </bottom>
-                        </Panel>
-
-                        <Panel prefHeight="300" prefWidth="500">
-                            <left>
-                                <Label fx:id="nonAfricanProseLabel" text="Non African Prose"/>
-                            </left>
-                            <right>
-                                <Button fx:id="nonAfricanProseButton" text="View all" textFill="#12AF20" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                    <padding>
-                                        <Insets left="10" right="10" top="5" bottom="5"/>
-                                    </padding>
-                                </Button>
-                            </right>
-                            <bottom>
-                                <ListView fx:id="nonAfricanProseList" orientation="HORIZONTAL" prefHeight="270">
-                                    <padding>
-                                        <Insets top="10"/>
-                                    </padding>
-                                </ListView>
-                            </bottom>
-                        </Panel>
-
-                        <Panel prefHeight="300" prefWidth="500">
-                            <left>
-                                <Label fx:id="africanDramaLabel" text="African Drama"/>
-                            </left>
-                            <right>
-                                <Button fx:id="africanDramaButton" text="View all" textFill="#12AF20" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                    <padding>
-                                        <Insets left="10" right="10" top="5" bottom="5"/>
-                                    </padding>
-                                </Button>
-                            </right>
-                            <bottom>
-                                <ListView fx:id="africanDramaList" orientation="HORIZONTAL" prefHeight="270">
-                                    <padding>
-                                        <Insets top="10"/>
-                                    </padding>
-                                </ListView>
-                            </bottom>
-                        </Panel>
-
-                        <Panel prefHeight="300" prefWidth="500">
-                            <left>
-                                <Label fx:id="nonAfricanDramaLabel" text="Non African Drama"/>
-                            </left>
-                            <right>
-                                <Button fx:id="nonAfricanDramaButton" text="View all" textFill="#12AF20" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                    <padding>
-                                        <Insets left="10" right="10" top="5" bottom="5"/>
-                                    </padding>
-                                </Button>
-                            </right>
-                            <bottom>
-                                <ListView fx:id="nonAfricanDramaList" orientation="HORIZONTAL" prefHeight="270">
-                                    <padding>
-                                        <Insets top="10"/>
-                                    </padding>
-                                </ListView>
-                            </bottom>
-                        </Panel>
-
-                        <Panel prefHeight="300" prefWidth="500">
-                            <left>
-                                <Label fx:id="shakespeareanLabel" text="Shakespearean Text"/>
-                            </left>
-                            <right>
-                                <Button fx:id="shakespeareanTextButton" text="View all" textFill="#12AF20" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                    <padding>
-                                        <Insets left="10" right="10" top="5" bottom="5"/>
-                                    </padding>
-                                </Button>
-                            </right>
-                            <bottom>
-                                <ListView fx:id="shakespeareanTextList" orientation="HORIZONTAL" prefHeight="270">
-                                    <padding>
-                                        <Insets top="10"/>
-                                    </padding>
-                                </ListView>
-                            </bottom>
-                        </Panel>
-
-                        <Panel prefHeight="300" prefWidth="500">
-                            <left>
-                                <Label fx:id="africanPoetryLabel" text="African Poetry"/>
-                            </left>
-                            <right>
-                                <Button fx:id="africanPoetryButton" text="View all" textFill="#12AF20" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                    <padding>
-                                        <Insets left="10" right="10" top="5" bottom="5"/>
-                                    </padding>
-                                </Button>
-                            </right>
-                            <bottom>
-                                <ListView fx:id="africanPoetryList" orientation="HORIZONTAL" prefHeight="270">
-                                    <padding>
-                                        <Insets top="10"/>
-                                    </padding>
-                                </ListView>
-                            </bottom>
-                        </Panel>
-
-                        <Panel prefHeight="300" prefWidth="500">
-                            <left>
-                                <Label fx:id="nonAfricanPoetryLabel" text="Non African Poetry"/>
-                            </left>
-                            <right>
-                                <Button fx:id="nonAfricanPoetryButton" text="View all" textFill="#12AF20" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                    <padding>
-                                        <Insets left="10" right="10" top="5" bottom="5"/>
-                                    </padding>
-                                </Button>
-                            </right>
-                            <bottom>
-                                <ListView fx:id="nonAfricanPoetryList" orientation="HORIZONTAL" prefHeight="270">
-                                    <padding>
-                                        <Insets top="10"/>
-                                    </padding>
-                                </ListView>
-                            </bottom>
-                        </Panel>
-                    </VBox>
+                    <VBox fx:id="novelsVBox" spacing="30"/>
                     <padding>
                         <Insets top="20" left="18" bottom="20" right="20"/>
                     </padding>
@@ -196,6 +37,7 @@
             </StackPane>
         </ScrollPane>
     </center>
+
     <right>
         <HBox spacing="20">
             <Separator orientation="VERTICAL" />
@@ -203,20 +45,20 @@
                 <ImageView fx:id="novelImage" fitWidth="180" fitHeight="230" preserveRatio="true" pickOnBounds="true"/>
                 <Label fx:id="novelDescription" prefHeight="180" wrapText="true"/>
                 <Separator/>
-                <HBox spacing="10">
-                    <ImageView fx:id="authorIcon" preserveRatio="true" pickOnBounds="true"/>
-                    <Label fx:id="authorLabel" text="John Uzodinma"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fx:id="authorIcon" preserveRatio="true" pickOnBounds="true" visible="false"/>
+                    <Label fx:id="authorLabel"/>
                 </HBox>
-                <HBox spacing="10">
-                    <ImageView fx:id="chaptersIcon" preserveRatio="true" pickOnBounds="true"/>
-                    <Label fx:id="chaptersLabel" text="7 chapters"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fx:id="chaptersIcon" preserveRatio="true" pickOnBounds="true" visible="false"/>
+                    <Label fx:id="chaptersLabel"/>
                 </HBox>
-                <HBox spacing="10">
-                    <ImageView fx:id="timeIcon" preserveRatio="true" pickOnBounds="true"/>
-                    <Label fx:id="timeText" text="20 mins"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fx:id="timeIcon" preserveRatio="true" pickOnBounds="true" visible="false"/>
+                    <Label fx:id="timeText" text="20 mins" visible="false"/>
                 </HBox>
 
-                <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5;"/>
+                <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5;" visible="false"/>
             </VBox>
 
             <padding>

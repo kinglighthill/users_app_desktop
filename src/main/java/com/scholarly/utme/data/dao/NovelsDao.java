@@ -1,7 +1,11 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.novels.Novel;
+import com.scholarly.utme.data.model.novels.NovelCategory;
+import com.scholarly.utme.data.model.novels.NovelGenre;
+import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.NovelsDatabase;
+import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -14,8 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NovelsDao {
-
-    private static final String tableName = "novels";
+    private static final String TAG = "NovelsDao: ";
 
     private static final String idColumn = "_id";
     private static final String imagePathColumn = "image_path";
@@ -25,24 +28,35 @@ public class NovelsDao {
     private static final String chaptersCountColumn = "chapters_count";
     private static final String genreIdColumn = "genre_id";
     private static final String typeIdColumn = "type_id";
+    private static final String categoryIdColumn = "category_id";
     private static final String divisionIdColumn = "division_id";
     private static final String positionColumn = "position";
     private static final String isNewColumn = "is_new";
     private static final String availableColumn = "available";
     private static final String creditIdColumn = "credit_id";
 
+    private static final String genreColumn = "genre";
+    private static final String categoryColumn = "category";
+    private static final String createdAtColumn = "created_at";
+
     private static final ObservableList<Novel> novels;
+    private static final ObservableList<NovelGenre> genres;
+    private static final ObservableList<NovelCategory> categories;
 
     static {
         novels = FXCollections.observableArrayList();
+        genres = FXCollections.observableArrayList();
+        categories = FXCollections.observableArrayList();
         updateNovelsFromDb();
+        updateGenresFromDb();
+        updateCategoriesFromDb();
     }
 
     private static void updateNovelsFromDb() {
 
-        String query = "SELECT * FROM " + tableName;
+        String query = "SELECT * FROM " + Tables.NOVELS;
 
-        try (Connection connection = NovelsDatabase.connect()) {
+        try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             novels.clear();
@@ -55,23 +69,82 @@ public class NovelsDao {
                         rs.getString(aboutColumn),
                         rs.getInt(chaptersCountColumn),
                         rs.getInt(genreIdColumn),
-                        rs.getInt(typeIdColumn),
+                        rs.getInt(categoryIdColumn),
                         rs.getInt(divisionIdColumn),
                         rs.getInt(positionColumn),
                         rs.getInt(isNewColumn),
                         rs.getInt(availableColumn),
                         rs.getInt(creditIdColumn)));
             }
+
+            System.out.println(TAG + "Got novels of size -> " + novels.size());
+
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Novels from database ");
+                    LocalDateTime.now() + ": Could not load Novels from database because " + e.getMessage());
             novels.clear();
         }
     }
 
     public static ObservableList<Novel> getNovels() {
         return FXCollections.unmodifiableObservableList(novels);
+    }
+
+    private static void updateGenresFromDb() {
+        String query = "SELECT * FROM " + Tables.NOVEL_GENRES;
+
+        try (Connection connection = NewDatabase.connect()) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            genres.clear();
+            while (rs.next()) {
+                genres.add(new NovelGenre(
+                        rs.getInt(idColumn),
+                        rs.getString(genreColumn),
+                        rs.getString(createdAtColumn)));
+            }
+
+            System.out.println(TAG + "Got genres of size -> " + genres.size());
+
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Genres from database because " + e.getMessage());
+            genres.clear();
+        }
+    }
+
+    public static ObservableList<NovelGenre> getGenres() {
+        return FXCollections.unmodifiableObservableList(genres);
+    }
+
+    private static void updateCategoriesFromDb() {
+        String query = "SELECT * FROM " + Tables.NOVEL_CATEGORIES;
+
+        try (Connection connection = NewDatabase.connect()) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            categories.clear();
+            while (rs.next()) {
+                categories.add(new NovelCategory(
+                        rs.getInt(idColumn),
+                        rs.getString(categoryColumn),
+                        rs.getString(createdAtColumn)));
+            }
+
+            System.out.println(TAG + "Got categories of size -> " + categories.size());
+
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Categories from database because " + e.getMessage());
+            categories.clear();
+        }
+    }
+
+    public static ObservableList<NovelCategory> getCategories() {
+        return FXCollections.unmodifiableObservableList(categories);
     }
 
 }

@@ -102,7 +102,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         }));
 
         viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
-            chapterContent.setText(newValue.getDetails().replaceAll("<br>", System.lineSeparator()));
+//            chapterContent.setText(newValue.getDetails().replaceAll("<br>", System.lineSeparator()));
             chapterTitle.setText(newValue.getTitle());
             if (!chapterHeader.getChildren().contains(chapterIndex)) {
                 chapterHeader.getChildren().add(0, chapterIndex);
@@ -110,7 +110,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             if (newValue.getPosition() != -1) {
                 chapterCount.setText(newValue.getPosition() + " of " + chaptersList.getItems().size());
                 chapterIndex.setText("Chapter " + newValue.getPosition() + ":");
-            }else {
+            } else {
                 chapterCount.setText(chaptersList.getSelectionModel().getSelectedIndex() + 1 + " of " + chaptersList.getItems().size());
                 chapterHeader.getChildren().remove(chapterIndex);
             }
@@ -126,7 +126,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         }
         chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ":");
         chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
-        chapterContent.setText(viewModel.getSelectedChapter().getDetails().replaceAll("<br>", System.lineSeparator()));
+//        chapterContent.setText(viewModel.getSelectedChapter().getDetails().replaceAll("<br>", System.lineSeparator()));
 
 
         prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()));

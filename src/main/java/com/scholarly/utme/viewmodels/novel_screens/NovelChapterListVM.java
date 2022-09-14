@@ -25,7 +25,8 @@ public class NovelChapterListVM implements ViewModel {
         this.novel.set(novel);
         authors.addAll(NovelAuthorDao.getAuthors());
 
-        NovelChapterDao.getNovelChapters().stream().filter(novelChapter -> novelChapter.getNovelId() == novel.getId()).forEach(novelChapter -> chapters.add(novelChapter));
+        NovelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+                novelChapter.getNovelId() == novel.getId()).forEach(novelChapter -> chapters.add(novelChapter));
 
     }
 
@@ -39,7 +40,7 @@ public class NovelChapterListVM implements ViewModel {
 
     public String getAuthor(Novel novel) {
         for (NovelAuthor author : authors) {
-            if (author.getId() == novel.getId()) {
+            if (author.getNovelId() == novel.getId()) {
                 return author.getName();
             }
         }

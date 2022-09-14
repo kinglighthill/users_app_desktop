@@ -10,4 +10,11 @@ public class Tables {
     public static final String PQ_THEORY_QUESTIONS = "pq_theory_questions";
     public static final String PQ_QUES_DESCRIPTIONS = "pq_ques_descriptions";
 
+
+    public static final String NOVELS = "novels";
+    public static final String NOVEL_AUTHORS = "novel_authors";
+    public static final String NOVEL_CHAPTERS = "novel_chapters";
+    public static final String NOVEL_GENRES = "novel_genres";
+    public static final String NOVEL_CATEGORIES = "novel_categories";
+
 }

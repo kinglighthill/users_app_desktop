@@ -3,6 +3,7 @@ package com.scholarly.utme.controller.novel_screens;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.Novel.Genre;
 import com.scholarly.utme.data.model.novels.Novel.Type;
+import com.scholarly.utme.data.model.novels.NovelCategory;
 import com.scholarly.utme.ui.cellFactories.NovelListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
@@ -15,20 +16,26 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.util.Pair;
+import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/novel_screens/NovelScreen.fxml")
 public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializable {
+    private static final String TAG = "NovelScreenController: ";
 
     @FXML
     private ScrollPane centerScrollPane;
@@ -37,19 +44,16 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
     private StackPane centerStackPane;
 
     @FXML
-    private Label infoText, jambProseLabel, africanProseLabel, nonAfricanProseLabel, africanDramaLabel, nonAfricanDramaLabel, shakespeareanLabel, africanPoetryLabel, nonAfricanPoetryLabel,  novelDescription, authorLabel, chaptersLabel;
+    private Label infoText, novelDescription, authorLabel, chaptersLabel, timeText;
 
     @FXML
     private RadioButton dontShowButton;
 
     @FXML
-    private Button dismissButton, jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton, readButton;
+    private Button dismissButton, readButton;
 
     @FXML
-    private VBox centerBox;
-
-    @FXML
-    private ListView<Novel> jambProseList, africanProseList, nonAfricanProseList, africanDramaList, nonAfricanDramaList, shakespeareanTextList, africanPoetryList, nonAfricanPoetryList;
+    private VBox centerVBox, novelsVBox;
 
     @FXML
     private ImageView novelImage, authorIcon, chaptersIcon, timeIcon;
@@ -64,91 +68,74 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         initializeViews();
         initializeFont();
 
-        novelImage.imageProperty().bind(viewModel.novelImageProperty());
-        novelDescription.textProperty().bind(viewModel.novelDescriptionProperty());
-        chaptersLabel.textProperty().bind(viewModel.novelChaptersProperty());
-        authorLabel.textProperty().bind(viewModel.novelAuthorProperty());
+        viewModel.getGenres().forEach(genre -> {
+            List<NovelCategory> categories = viewModel.getGenreCategoryMap().get(genre);
 
-        Pair<String, ObservableList<Novel>> jambProse = new Pair<>(jambProseButton.getId(), viewModel.getNovels(Type.JAMB, Genre.PROSE));
-        jambProseButton.setUserData(jambProse);
-        jambProseList.setItems(viewModel.getFirstFourNovels(Type.JAMB, Genre.PROSE));
-        jambProseList.getSelectionModel().select(0);
+            categories.forEach(novelCategory -> {
 
-        viewModel.setSelectedNovel(jambProseList.getItems().get(0));
+                String categoryGenreTitle = novelCategory.getCategory() + " " + genre.getGenre();
+//                System.out.println(TAG + categoryGenreTitle);
 
-        jambProseList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            viewModel.setSelectedNovel(newValue);
+                ObservableList<Novel> novels = viewModel.getNovels(novelCategory, genre);
+
+                if (!novels.isEmpty()) {
+                    Panel panel = new Panel();
+
+                    Label header = new Label(categoryGenreTitle);
+                    header.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+
+                    Button viewAllButton = new Button("View all");
+                    viewAllButton.setTextFill(Paint.valueOf("#12AF20"));
+                    viewAllButton.setStyle("-fx-border-color: #12AF20; -fx-border-radius: 5;");
+                    viewAllButton.setPadding(new Insets(5, 10, 5, 10));
+                    viewAllButton.setBackground(Background.EMPTY);
+                    viewAllButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
+                    viewAllButton.setOnAction(event -> {
+                        ViewSwitcher.passData(new NovelGridScreenController.InitialData(categoryGenreTitle, novels));
+                        ViewSwitcher.showScreen(View.NOVEL_GRID_SCREEN);
+                    });
+
+                    ListView<Novel> listView = new ListView<>(FXCollections.observableArrayList(novels.stream().limit(4).collect(Collectors.toList())));
+                    listView.setOrientation(Orientation.HORIZONTAL);
+                    listView.setPrefSize(600, 270);
+                    listView.setBackground(Background.EMPTY);
+                    listView.setCellFactory(new NovelListCellFactory());
+                    listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                        viewModel.setSelectedNovel(newValue);
+                    });
+
+                    panel.setLeft(header);
+                    panel.setRight(viewAllButton);
+                    panel.setBottom(listView);
+
+                    novelsVBox.getChildren().add(panel);
+
+                }
+//                System.out.println(TAG + "Novels with category: " + novelCategory.getCategory() + " AND genre: " + genre.getGenre() + " ARE -> " + novels);
+            });
         });
 
 
-        Pair<String, ObservableList<Novel>> africanProse = new Pair<>(africanProseButton.getId(), viewModel.getNovels(Type.AFRICAN, Genre.PROSE));
-        africanProseButton.setUserData(africanProse);
-        africanProseList.setItems(viewModel.getFirstFourNovels(Type.AFRICAN, Genre.PROSE));
+        viewModel.selectedNovelProperty().addListener(((observable, oldValue, newValue) -> {
+            authorIcon.setVisible(true);
+            chaptersIcon.setVisible(true);
+            timeIcon.setVisible(true);
+            readButton.setVisible(true);
+            timeText.setVisible(true);
 
-        africanProseList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.setSelectedNovel(newValue);
-        }));
+            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
+            novelDescription.setText(newValue.getAbout());
+            authorLabel.setText(viewModel.getAuthor(newValue));
+            chaptersLabel.setText(newValue.getChapters());
 
-
-        Pair<String, ObservableList<Novel>> nonAfricanProse = new Pair<>(nonAfricanProseButton.getId(), viewModel.getNovels(Type.NON_AFRICAN, Genre.PROSE));
-        nonAfricanProseButton.setUserData(nonAfricanProse);
-        nonAfricanProseList.setItems(viewModel.getFirstFourNovels(Type.NON_AFRICAN, Genre.PROSE));
-
-        nonAfricanProseList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.setSelectedNovel(newValue);
-        }));
-
-
-        Pair<String, ObservableList<Novel>> africanDrama = new Pair<>(africanDramaButton.getId(), viewModel.getNovels(Type.AFRICAN, Genre.DRAMA));
-        africanDramaButton.setUserData(africanDrama);
-        africanDramaList.setItems(viewModel.getFirstFourNovels(Type.AFRICAN, Genre.DRAMA));
-
-        africanDramaList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.setSelectedNovel(newValue);
-        }));
-
-
-        Pair<String, ObservableList<Novel>> nonAfricanDrama = new Pair<>(nonAfricanDramaButton.getId(), viewModel.getNovels(Type.NON_AFRICAN, Genre.DRAMA));
-        nonAfricanDramaButton.setUserData(nonAfricanDrama);
-        nonAfricanDramaList.setItems(viewModel.getFirstFourNovels(Type.NON_AFRICAN, Genre.DRAMA));
-
-        nonAfricanDramaList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.setSelectedNovel(newValue);
-        }));
-
-
-        Pair<String, ObservableList<Novel>> shakespearean = new Pair<>(shakespeareanTextButton.getId(), viewModel.getNovels(Type.SHAKESPEAREAN, Genre.TEXT));
-        shakespeareanTextButton.setUserData(shakespearean);
-        shakespeareanTextList.setItems(viewModel.getFirstFourNovels(Type.SHAKESPEAREAN, Genre.TEXT));
-
-        shakespeareanTextList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.setSelectedNovel(newValue);
-        }));
-
-
-        Pair<String, ObservableList<Novel>> africanPoetry = new Pair<>(africanPoetryButton.getId(), viewModel.getNovels(Type.AFRICAN, Genre.POETRY));
-        africanPoetryButton.setUserData(africanPoetry);
-        africanPoetryList.setItems(viewModel.getFirstFourNovels(Type.AFRICAN, Genre.POETRY));
-
-        africanPoetryList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.setSelectedNovel(newValue);
-        }));
-
-
-        Pair<String, ObservableList<Novel>> nonAfricanPoetry = new Pair<>(nonAfricanPoetryButton.getId(), viewModel.getNovels(Type.NON_AFRICAN, Genre.POETRY));
-        nonAfricanPoetryButton.setUserData(nonAfricanPoetry);
-        nonAfricanPoetryList.setItems(viewModel.getFirstFourNovels(Type.NON_AFRICAN, Genre.POETRY));
-
-        nonAfricanPoetryList.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.setSelectedNovel(newValue);
         }));
 
 
         dismissButton.setOnAction(event -> {
             if (dontShowButton.isSelected()) {
-                centerBox.getChildren().remove(0);
-            }else {
-                centerBox.getChildren().get(0).setVisible(false);
+                centerVBox.getChildren().remove(0);
+            } else {
+                centerVBox.getChildren().get(0).setVisible(false);
             }
         });
 
@@ -159,24 +146,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
     }
 
-    @SuppressWarnings("unchecked")
     private void initializeViews() {
-        List<ButtonBase> buttons = FXCollections.observableArrayList(jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton);
-        for (ButtonBase button : buttons) {
-            button.setBackground(Background.EMPTY);
-
-            button.setOnAction(event -> {
-                ViewSwitcher.passData(button.getUserData());
-                ViewSwitcher.showScreen(View.NOVEL_GRID_SCREEN);
-            });
-        }
-
-        List<ListView<Novel>> listViews = FXCollections.observableArrayList(jambProseList, africanProseList, nonAfricanProseList, africanDramaList, nonAfricanDramaList, shakespeareanTextList, africanPoetryList, nonAfricanPoetryList);
-        for (ListView<Novel> listView : listViews) {
-            listView.setBackground(Background.EMPTY);
-            listView.setCellFactory(new NovelListCellFactory());
-        }
-
         dismissButton.setBackground(Background.EMPTY);
         centerScrollPane.setBackground(Background.EMPTY);
 
@@ -186,22 +156,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
     }
 
     private void initializeFont() {
-        List<ButtonBase> buttons = FXCollections.observableArrayList(dontShowButton, dismissButton, jambProseButton, africanProseButton, nonAfricanProseButton, africanDramaButton, nonAfricanDramaButton, shakespeareanTextButton, africanPoetryButton, nonAfricanPoetryButton);
-
-        for (ButtonBase button : buttons) {
-            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
-        }
-
         infoText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-        jambProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        africanProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        nonAfricanProseLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        africanDramaLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        nonAfricanDramaLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        shakespeareanLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        africanPoetryLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        nonAfricanPoetryLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-
         novelDescription.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
     }
 }

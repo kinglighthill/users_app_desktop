@@ -3,6 +3,7 @@ package com.scholarly.utme.data.dao;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.data.util.NovelsDatabase;
+import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -36,7 +37,7 @@ public class NovelChapterDao {
 
     private static void updateNovelsFromDb() {
 
-        String query = "SELECT * FROM " + tableName;
+        String query = "SELECT * FROM " + Tables.NOVEL_CHAPTERS;
 
         try (Connection connection = NovelsDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -48,9 +49,7 @@ public class NovelChapterDao {
                         rs.getInt(positionColumn),
                         rs.getString(titleColumn),
                         rs.getString(descriptionColumn),
-                        rs.getString(detailsColumn),
                         rs.getInt(categoryColumn),
-                        rs.getInt(isReadColumn),
                         rs.getInt(novelIdColumn)));
 
             }
