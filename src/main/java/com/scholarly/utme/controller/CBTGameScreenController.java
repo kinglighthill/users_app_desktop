@@ -568,7 +568,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     }
 
     private void dispatchAnswerCorrect() {
-//        System.out.println(TAG + "Correct answer");
         Media sound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setStopTime(Duration.millis(500));
@@ -603,7 +602,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     }
 
     private void dispatchAnswerIncorrect() {
-//        System.out.println(TAG + "Incorrect answer");
         Media sound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setStopTime(Duration.millis(500));

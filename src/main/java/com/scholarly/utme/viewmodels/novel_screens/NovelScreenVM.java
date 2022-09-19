@@ -68,10 +68,10 @@ public class NovelScreenVM implements ViewModel {
         this.selectedNovel.set(selectedNovel);
     }
 
-    public String getAuthor(Novel selectedNovel) {
+    public NovelAuthor getAuthor(Novel selectedNovel) {
         for (NovelAuthor author : authors) {
             if (author.getNovelId() == selectedNovel.getId()) {
-                return author.getName();
+                return author;
             }
         }
         return null;

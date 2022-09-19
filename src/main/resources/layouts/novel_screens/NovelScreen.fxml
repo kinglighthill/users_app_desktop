@@ -9,10 +9,15 @@
 <?import javafx.geometry.Insets?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.image.ImageView?>
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.scholarly.utme.controller.novel_screens.NovelScreenController"
             prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <HBox>
+
+        </HBox>
+    </top>
 
     <center>
         <ScrollPane fx:id="centerScrollPane" prefWidth="600" fitToWidth="true">
@@ -66,4 +71,5 @@
             </padding>
         </HBox>
     </right>
+
 </BorderPane>

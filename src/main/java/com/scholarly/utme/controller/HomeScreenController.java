@@ -61,7 +61,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     private final ToggleGroup toggleGroup = new ToggleGroup();
 
-    private static final String TAG = "HomeScreenController:  ";
+    private static final String TAG = "HomeScreenController: ";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

@@ -127,8 +127,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         });
 
         novelsPanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(NOVELS_SCREEN));
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.showScreen(View.NOVEL_SCREEN);
         });
 
         actionCbtPracticePanel.setOnMouseClicked(e -> {

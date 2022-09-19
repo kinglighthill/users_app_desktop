@@ -1,6 +1,7 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.ObjectiveQuestion;
+import com.scholarly.utme.data.model.novels.NovelObjectiveQuestion;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.QuestionAnswer;
 import com.scholarly.utme.data.util.QuestionOption;
@@ -37,6 +38,9 @@ public class ObjectiveQuestionDao {
     private static final String isExplanationWebViewColumn = "is_exp_webview";
     private static final String isQuestionWebViewColumn = "is_ques_webview";
     private static final String isGammableColumn = "is_gammable";
+
+    private static final String novelIdColumn = "novel_id";
+    private static final String chapterIdColumn = "chapter_id";
 
 
     public static ObservableList<ObjectiveQuestion> getQuestions(int subjectId, int yearId, ObservableList<Integer> topicIdList, boolean shuffled) {
@@ -96,6 +100,49 @@ public class ObjectiveQuestionDao {
             return null;
         }
     }
+
+    public static ObservableList<NovelObjectiveQuestion> getNovelQuestions(int chapterId) {
+        ObservableList<NovelObjectiveQuestion> questions = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM " + Tables.NOVEL_OBJECTIVE_QUESTIONS + " WHERE chapter_id = " + chapterId;
+
+        System.out.println(TAG + "Query = " + query);
+
+        try (Connection connection = NewDatabase.connect()) {
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            ResultSet rs = statement.executeQuery();
+            questions.clear();
+            while (rs.next()) {
+                questions.add(new NovelObjectiveQuestion(
+                        rs.getInt(idColumn),
+                        rs.getInt(novelIdColumn),
+                        rs.getInt(chapterIdColumn),
+                        rs.getInt(questionNumberColumn),
+                        rs.getString(questionColumn),
+                        new QuestionOption(0, rs.getString(optionAColumn)),
+                        new QuestionOption(1, rs.getString(optionBColumn)),
+                        new QuestionOption(2, rs.getString(optionCColumn)),
+                        new QuestionOption(3, rs.getString(optionDColumn)),
+                        new QuestionOption(4, rs.getString(optionEColumn)),
+                        new QuestionAnswer(rs.getInt(optionAnswerIdColumn), rs.getString(optionAnswerColumn), rs.getString(answerExplanationColumn)),
+                        rs.getInt(questionDescriptionIdColumn)));
+            }
+
+            System.out.println(TAG + "Got Novel Objective questions with size -> " + questions.size());
+
+            return questions;
+
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Novel Objective Questions from database because " + e.getMessage());
+            questions.clear();
+
+            return null;
+        }
+    }
+
 
     public static String removeBracketsFromArray(ObservableList<Integer> topicIds) {
         String query;

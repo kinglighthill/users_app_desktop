@@ -112,7 +112,7 @@
 
                     <Panel>
                         <left>
-                            <Label text="Question 1">
+                            <Label fx:id="questionNumberLabel" text="Question 1">
                                 <font>
                                     <Font name="System Bold" size="14"/>
                                 </font>
@@ -145,9 +145,9 @@
                         </right>
                     </Panel>
 
-                    <BorderPane prefHeight="300" style="-fx-background-color: white; -fx-border-color: #949494; -fx-border-radius: 8;">
+                    <BorderPane prefHeight="250" style="-fx-background-color: white; -fx-border-color: #949494; -fx-border-radius: 8;">
                         <center>
-                            <Label fx:id="questionLabel" text="Who is the narrator?" wrapText="true">
+                            <Label fx:id="questionLabel" text="Who is the narrator?" textAlignment="CENTER" wrapText="true">
                                 <font>
                                     <Font size="15.0" />
                                 </font>
@@ -173,24 +173,29 @@
                     </BorderPane>
 
                     <VBox spacing="5" alignment="CENTER">
-                        <Button fx:id="optionAButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                        <Button fx:id="optionAButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
                             <font>
-                                <Font size="16"/>
+                                <Font size="13"/>
                             </font>
                         </Button>
-                        <Button fx:id="optionBButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                        <Button fx:id="optionBButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
                             <font>
-                                <Font size="16"/>
+                                <Font size="13"/>
                             </font>
                         </Button>
-                        <Button fx:id="optionCButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                        <Button fx:id="optionCButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
                             <font>
-                                <Font size="16"/>
+                                <Font size="13"/>
                             </font>
                         </Button>
-                        <Button fx:id="optionDButton" prefWidth="350" prefHeight="40" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                        <Button fx:id="optionDButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
                             <font>
-                                <Font size="16"/>
+                                <Font size="13"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="optionEButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                            <font>
+                                <Font size="13"/>
                             </font>
                         </Button>
                     </VBox>

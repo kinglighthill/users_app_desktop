@@ -23,7 +23,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
-import javafx.util.Pair;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
@@ -123,7 +122,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
-            authorLabel.setText(viewModel.getAuthor(newValue));
+            authorLabel.setText(viewModel.getAuthor(newValue).getName());
             chaptersLabel.setText(newValue.getChapters());
 
         }));
@@ -138,7 +137,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         });
 
         readButton.setOnAction(event -> {
-            ViewSwitcher.passData(viewModel.getSelectedNovel());
+            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getSelectedNovel(), viewModel.getAuthor(viewModel.getSelectedNovel())));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
 

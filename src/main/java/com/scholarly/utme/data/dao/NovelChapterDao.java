@@ -1,8 +1,7 @@
 package com.scholarly.utme.data.dao;
 
-import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelChapter;
-import com.scholarly.utme.data.util.NovelsDatabase;
+import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,15 +15,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NovelChapterDao {
-
-    private static final String tableName = "novel_chapters";
+    private static final String TAG = "NovelChapterDao: ";
 
     private static final String idColumn = "_id";
     private static final String positionColumn = "position";
     private static final String titleColumn = "title";
     private static final String descriptionColumn = "description";
     private static final String detailsColumn = "details";
-    private static final String categoryColumn = "category";
+    private static final String chapterCategoryIdColumn = "chapter_category_id";
     private static final String isReadColumn = "is_read";
     private static final String novelIdColumn = "novel_id";
 
@@ -39,7 +37,7 @@ public class NovelChapterDao {
 
         String query = "SELECT * FROM " + Tables.NOVEL_CHAPTERS;
 
-        try (Connection connection = NovelsDatabase.connect()) {
+        try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             novelChapters.clear();
@@ -49,14 +47,14 @@ public class NovelChapterDao {
                         rs.getInt(positionColumn),
                         rs.getString(titleColumn),
                         rs.getString(descriptionColumn),
-                        rs.getInt(categoryColumn),
+                        rs.getInt(chapterCategoryIdColumn),
                         rs.getInt(novelIdColumn)));
 
             }
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Novels from database ");
+                    LocalDateTime.now() + ": Could not load Novel chapters from database because " + e.getMessage());
             novelChapters.clear();
         }
     }
