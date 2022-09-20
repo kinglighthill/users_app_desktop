@@ -101,7 +101,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         initializeViews();
         initializeFont();
         initializeGestures();
-        setupQuizView();
+//        setupQuizView();
 
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
         chaptersList.setItems(viewModel.getChapters());
@@ -125,10 +125,13 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             if (newValue.getPosition() != -1) {
                 chapterCount.setText(newValue.getPosition() + " of " + chaptersList.getItems().size());
                 chapterIndex.setText("Chapter " + newValue.getPosition() + ":");
+                takeQuizButton.setDisable(false);
             } else {
                 chapterCount.setText(chaptersList.getSelectionModel().getSelectedIndex() + 1 + " of " + chaptersList.getItems().size());
                 chapterHeader.getChildren().remove(chapterIndex);
+                takeQuizButton.setDisable(true);
             }
+
         }));
 
 
@@ -529,7 +532,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         viewModel.setFiftyFiftyCount(5);
         Animations.slideOut(chapterQuizPane, 0f, 500f, 500);
         Animations.fadeOut(dimmer, 500);
-//        Animations.fadeOut(answerPane, 300);
         Animations.translateIn(chaptersListPane, 400);
     }
 
