@@ -89,12 +89,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        /*List<QuestionState> questionStates = viewModel.getQuestions();
-        for (int i = 0; i < questionStates.size(); i++) {
-
-        }*/
-
-
         List<Button> options = new ArrayList<>();
         options.add(optionAButton);
         options.add(optionBButton);
@@ -124,7 +118,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         fiftyFiftyButton.setOnAction(event -> {
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
 
-            String optionAnswer = questionState.getQuestion().getQuestionAnswer().getAnswer();
             int optionAnswerId = questionState.getQuestion().getQuestionAnswer().getId();
 
             int enabledButtons = 0;
@@ -459,10 +452,10 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
     }
 
-    private void updateFiftyFiftyButton(int intValue) {
-        fiftyFiftyCount.setText(Integer.toString(intValue));
+    private void updateFiftyFiftyButton(int count) {
+        fiftyFiftyCount.setText(Integer.toString(count));
 
-        if (intValue < 1) {
+        if (count < 1) {
             fiftyFiftyButton.setDisable(true);
         } else {
             fiftyFiftyButton.setDisable(false);

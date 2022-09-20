@@ -1,5 +1,7 @@
 package com.scholarly.utme.controller.novel_screens;
 
+import com.scholarly.utme.data.model.novels.Novel;
+import com.scholarly.utme.data.model.novels.NovelAuthor;
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.data.model.novels.NovelObjectiveQuestion;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
@@ -7,12 +9,10 @@ import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.novel_screens.NovelChapterListVM.NovelState;
 import com.scholarly.utme.viewmodels.novel_screens.NovelContentScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -49,19 +49,22 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private ListView<NovelChapter> chaptersList;
 
     @FXML
-    private Panel questionFooter;
+    private Panel questionFooter, resultPane;
 
     @FXML
-    private VBox dimmer;
+    private VBox dimmer, answerPane, questionPane;
 
     @FXML
     private Button backButton, prevButton, nextButton, takeQuizButton, quitQuizButton, fiftyFiftyButton;
 
     @FXML
-    private Button optionAButton, optionBButton, optionCButton, optionDButton, optionEButton;
+    private Button optionAButton, optionBButton, optionCButton, optionDButton, optionEButton, answerContinueButton, tryAgainButton, resultContinueButton;
 
     @FXML
-    private Label pageTitle, chapterIndex, chapterTitle, chapterContent, chapterCount, questionNumberLabel, fiftyFiftyCount, questionLabel;
+    private Label pageTitle, chapterIndex, chapterTitle, chapterContent, chapterCount, questionNumberLabel, fiftyFiftyCount, questionLabel, answerLabel, explanationLabel;
+
+    @FXML
+    private Label numOfCorrectAnsLabel, numOfGuessesLabel, scorePercentageLabel, resultHeader;
 
     @FXML
     private HBox chapterHeader;
@@ -156,21 +159,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
         });;
 
-        takeQuizButton.setOnAction(event -> {
-            Animations.slideIn(chapterQuizPane, 500f, 0f, 500);
-            Animations.translateOut(chaptersListPane, 400);
-            Animations.fadeIn(dimmer, 500);
-        });
-
-        quitQuizButton.setOnAction(event -> {
-            Animations.slideOut(chapterQuizPane, 0f, 500f, 500);
-            Animations.translateIn(chaptersListPane, 400);
-            Animations.fadeOut(dimmer, 500);
-
-        });
-
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData(viewModel.getNovel());
+            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovel(), viewModel.getAuthor()));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
 
@@ -181,18 +171,44 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             changeSelectedQuestion(newValue.intValue());
         }));
 
+
+        viewModel.fiftyFiftyCountProperty().addListener(((observableValue, oldValue, newValue) -> {
+            updateFiftyFiftyButton(newValue.intValue());
+        }));
+
+        fiftyFiftyButton.setOnAction(event -> {
+            List<NovelObjectiveQuestion> chapterQuestions = viewModel.getChapterQuestions().get(viewModel.getSelectedChapter().getId());
+            NovelObjectiveQuestion selectedQuestion = chapterQuestions.get(viewModel.getSelectedQuestionIndex() - 1);
+
+            int enabledButtons = 0;
+
+            for (Button option : options) {
+                if (!option.isDisabled()) {
+                    enabledButtons++;
+                }
+            }
+
+            if (enabledButtons > 2) {
+                options.stream()
+                        .unordered()
+                        .filter(button -> !((int) button.getUserData() == selectedQuestion.getQuestionAnswer().getId()) && !button.isDisabled())
+                        .limit(enabledButtons - 2)
+                        .forEach(button -> button.setDisable(true));
+
+                viewModel.setFiftyFiftyCount(viewModel.getFiftyFiftyCount() - 1);
+                fiftyFiftyButton.setDisable(true);
+            }
+
+        });
+
         optionAButton.setOnAction(event -> {
             fiftyFiftyButton.setDisable(false);
 
             List<NovelObjectiveQuestion> chapterQuestions = viewModel.getChapterQuestions().get(viewModel.getSelectedChapter().getId());
             NovelObjectiveQuestion selectedQuestion = chapterQuestions.get(viewModel.getSelectedQuestionIndex() - 1);
 
-            if (selectedQuestion.getQuestionAnswer().getId() == 0) {
-                if (viewModel.getSelectedQuestionIndex() == chapterQuestions.size()) {
-                    showResult();
-                } else {
-                    dispatchAnswerCorrect();
-                }
+            if (selectedQuestion.getQuestionAnswer().getId() == (int) optionAButton.getUserData()) {
+                dispatchAnswerCorrect();
             } else {
                 dispatchAnswerIncorrect();
                 optionAButton.setDisable(true);
@@ -216,12 +232,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             List<NovelObjectiveQuestion> chapterQuestions = viewModel.getChapterQuestions().get(viewModel.getSelectedChapter().getId());
             NovelObjectiveQuestion selectedQuestion = chapterQuestions.get(viewModel.getSelectedQuestionIndex() - 1);
 
-            if (selectedQuestion.getQuestionAnswer().getId() == 1) {
-                if (viewModel.getSelectedQuestionIndex() == chapterQuestions.size()) {
-                    showResult();
-                } else {
-                    dispatchAnswerCorrect();
-                }
+            if (selectedQuestion.getQuestionAnswer().getId() == (int) optionBButton.getUserData()) {
+                dispatchAnswerCorrect();
             } else {
                 dispatchAnswerIncorrect();
                 optionBButton.setDisable(true);
@@ -245,14 +257,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             List<NovelObjectiveQuestion> chapterQuestions = viewModel.getChapterQuestions().get(viewModel.getSelectedChapter().getId());
             NovelObjectiveQuestion selectedQuestion = chapterQuestions.get(viewModel.getSelectedQuestionIndex() - 1);
 
-            System.out.println(TAG + "Selected question Answer -> " + selectedQuestion.getQuestionAnswer().getAnswer() + " with id -> " + selectedQuestion.getQuestionAnswer().getId());
-
-            if (selectedQuestion.getQuestionAnswer().getId() == 2) {
-                if (viewModel.getSelectedQuestionIndex() == chapterQuestions.size()) {
-                    showResult();
-                } else {
-                    dispatchAnswerCorrect();
-                }
+            if (selectedQuestion.getQuestionAnswer().getId() == (int) optionCButton.getUserData()) {
+                dispatchAnswerCorrect();
             } else {
                 dispatchAnswerIncorrect();
                 optionCButton.setDisable(true);
@@ -276,12 +282,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             List<NovelObjectiveQuestion> chapterQuestions = viewModel.getChapterQuestions().get(viewModel.getSelectedChapter().getId());
             NovelObjectiveQuestion selectedQuestion = chapterQuestions.get(viewModel.getSelectedQuestionIndex() - 1);
 
-            if (selectedQuestion.getQuestionAnswer().getId() == 3) {
-                if (viewModel.getSelectedQuestionIndex() == chapterQuestions.size()) {
-                    showResult();
-                } else {
-                    dispatchAnswerCorrect();
-                }
+            if (selectedQuestion.getQuestionAnswer().getId() == (int) optionDButton.getUserData()) {
+                dispatchAnswerCorrect();
             } else {
                 dispatchAnswerIncorrect();
                 optionDButton.setDisable(true);
@@ -305,12 +307,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             List<NovelObjectiveQuestion> chapterQuestions = viewModel.getChapterQuestions().get(viewModel.getSelectedChapter().getId());
             NovelObjectiveQuestion selectedQuestion = chapterQuestions.get(viewModel.getSelectedQuestionIndex() - 1);
 
-            if (selectedQuestion.getQuestionAnswer().getId() == 4) {
-                if (viewModel.getSelectedQuestionIndex() == chapterQuestions.size()) {
-                    showResult();
-                } else {
-                    dispatchAnswerCorrect();
-                }
+            if (selectedQuestion.getQuestionAnswer().getId() == (int) optionEButton.getUserData()) {
+                dispatchAnswerCorrect();
             } else {
                 dispatchAnswerIncorrect();
                 optionEButton.setDisable(true);
@@ -328,6 +326,43 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         });
 
+        answerContinueButton.setOnAction(event -> {
+            Animations.translateOut(answerPane, 300);
+            List<NovelObjectiveQuestion> chapterQuestions = viewModel.getChapterQuestions().get(viewModel.getSelectedChapter().getId());
+
+            if (viewModel.getSelectedQuestionIndex() == chapterQuestions.size()) {
+                showResult();
+            } else {
+                Animations.fadeIn(questionPane, 300);
+                viewModel.setSelectedQuestionIndex(viewModel.getSelectedQuestionIndex() + 1);
+                fiftyFiftyButton.setDisable(false);
+            }
+
+        });
+
+        takeQuizButton.setOnAction(event -> {
+            setupQuizView();
+            Animations.translateOut(chaptersListPane, 400);
+            Animations.fadeIn(dimmer, 500);
+            Animations.fadeIn(questionPane, 300);
+            Animations.slideIn(chapterQuizPane, 500f, 0f, 500);
+
+        });
+
+        quitQuizButton.setOnAction(event -> {
+            quitQuiz();
+        });
+
+        tryAgainButton.setOnAction(event -> {
+            refreshQuiz();
+
+        });
+
+        resultContinueButton.setOnAction(event -> {
+            Animations.translateOut(resultPane, 300);
+            quitQuiz();
+        });
+
     }
 
     private void initializeViews() {
@@ -340,6 +375,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         speakerImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_speaker.png").toString()));
 
         chaptersList.setBackground(Background.EMPTY);
+        tryAgainButton.setBackground(Background.EMPTY);
     }
 
     private void initializeFont() {
@@ -379,7 +415,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         ObservableList<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
 
-        System.out.println(TAG + "Got questions for selectedChapter with ID -> " + selectedChapter.getId() + ": " + questions.stream().collect(Collectors.toList()));
+//        System.out.println(TAG + "Got questions for selectedChapter with ID -> " + selectedChapter.getId() + ": " + questions.stream().collect(Collectors.toList()));
 
         NovelObjectiveQuestion selectedQuestion = questions.get(viewModel.getSelectedQuestionIndex() - 1);
         int selectedQuestionNumber = selectedQuestion.getQuestionNumber();
@@ -387,6 +423,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         questionNumberLabel.setText("Question " + selectedQuestionNumber);
         String questionText = selectedQuestion.getQuestion();
         questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+        answerLabel.setText(selectedQuestion.getQuestionAnswer().getAnswer());
+        explanationLabel.setText(selectedQuestion.getQuestionAnswer().getExplanation());
 
         optionAButton.setText(selectedQuestion.getOptionA().getText());
         optionAButton.setUserData(0);
@@ -405,6 +443,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         optionDButton.setDisable(false);
         optionEButton.setDisable(false);
 
+        updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
     }
 
     private void changeSelectedQuestion(int questionIndex) {
@@ -421,6 +460,9 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         String questionText = selectedQuestion.getQuestion();
         questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
+        answerLabel.setText(selectedQuestion.getQuestionAnswer().getAnswer());
+        explanationLabel.setText(selectedQuestion.getQuestionAnswer().getExplanation());
+
         optionAButton.setText(selectedQuestion.getOptionA().getText());
         optionAButton.setUserData(0);
         optionBButton.setText(selectedQuestion.getOptionB().getText());
@@ -437,56 +479,100 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         optionCButton.setDisable(false);
         optionDButton.setDisable(false);
         optionEButton.setDisable(false);
+
+        updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
+        quitQuizButton.setDisable(false);
     }
 
     private void dispatchAnswerCorrect() {
         System.out.println(TAG + "Answer correct!");
         Media sound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        mediaPlayer.setStopTime(Duration.millis(500));
+        mediaPlayer.setStopTime(Duration.millis(400));
         mediaPlayer.play();
 
-        FadeTransition fadeTransition = new FadeTransition();
+        Animations.translateIn(answerPane, 500);
+        Animations.fadeOut(questionPane, 300);
+        fiftyFiftyButton.setDisable(true);
+        quitQuizButton.setDisable(true);
 
-        fadeTransition.setFromValue(1);
-        fadeTransition.setToValue(0);
-        fadeTransition.setDuration(Duration.millis(500));
-//        fadeTransition.setNode(questionLayout);
-
-        fadeTransition.setOnFinished(event -> {
-            viewModel.setSelectedQuestionIndex(viewModel.getSelectedQuestionIndex() + 1);
-
-            FadeTransition reverseTransition = new FadeTransition();
-
-            reverseTransition.setFromValue(0);
-            reverseTransition.setToValue(1);
-
-            reverseTransition.setDuration(Duration.millis(500));
-
-//            reverseTransition.setNode(questionLayout);
-
-            reverseTransition.play();
-        });
-
-        fadeTransition.play();
+        viewModel.setCorrectAnswers(viewModel.getCorrectAnswers() + 1);
+        viewModel.setTotalGuesses(viewModel.getTotalGuesses() + 1);
     }
 
     private void dispatchAnswerIncorrect() {
         System.out.println(TAG + "Answer Incorrect!");
         Media sound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        mediaPlayer.setStopTime(Duration.millis(500));
+        mediaPlayer.setStopTime(Duration.millis(400));
         mediaPlayer.play();
+
+        viewModel.setTotalGuesses(viewModel.getTotalGuesses() + 1);
+    }
+
+    private void updateFiftyFiftyButton(int count) {
+        fiftyFiftyCount.setText(Integer.toString(count));
+
+        fiftyFiftyButton.setDisable(count < 1);
     }
 
     private void showResult() {
-
+        resultHeader.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + " Quiz Result");
+        numOfCorrectAnsLabel.setText(String.valueOf((int) viewModel.getCorrectAnswers()));
+        numOfGuessesLabel.setText(String.valueOf((int) viewModel.getTotalGuesses()));
+        scorePercentageLabel.setText((int) viewModel.getScorePercentage() + "%");
+        Animations.translateIn(resultPane, 300);
     }
 
-    private NovelState getInitialData() {
-        NovelState novelState = (NovelState) ViewSwitcher.retrieveData();
-        return novelState;
+    private void quitQuiz() {
+        viewModel.setSelectedQuestionIndex(1);
+        viewModel.setFiftyFiftyCount(5);
+        Animations.slideOut(chapterQuizPane, 0f, 500f, 500);
+        Animations.fadeOut(dimmer, 500);
+//        Animations.fadeOut(answerPane, 300);
+        Animations.translateIn(chaptersListPane, 400);
     }
 
+    private void refreshQuiz() {
+        Animations.fadeIn(questionPane, 300);
+        Animations.translateOut(resultPane, 300);
+        viewModel.setSelectedQuestionIndex(1);
+        viewModel.setFiftyFiftyCount(5);
+    }
+
+    private InitialData getInitialData() {
+        return  (InitialData) ViewSwitcher.retrieveData();
+    }
+
+    public static class InitialData {
+        private Novel novel;
+        private NovelAuthor author;
+        private ObservableList<NovelChapter> chapters;
+        private NovelChapter selectedChapter;
+
+        public InitialData(Novel novel, NovelAuthor author, ObservableList<NovelChapter> novelChapters, NovelChapter chapter) {
+            this.novel = novel;
+            this.author = author;
+            this.chapters = novelChapters;
+            selectedChapter = chapter;
+        }
+
+        public Novel getNovel() {
+            return novel;
+        }
+
+        public NovelAuthor getAuthor() {
+            return author;
+        }
+
+        public ObservableList<NovelChapter> getChapters() {
+            return chapters;
+        }
+
+        public NovelChapter getSelectedChapter() {
+            return selectedChapter;
+        }
+
+    }
 
 }

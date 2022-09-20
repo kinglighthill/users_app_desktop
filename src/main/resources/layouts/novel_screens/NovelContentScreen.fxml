@@ -145,65 +145,167 @@
                         </right>
                     </Panel>
 
-                    <BorderPane prefHeight="250" style="-fx-background-color: white; -fx-border-color: #949494; -fx-border-radius: 8;">
-                        <center>
-                            <Label fx:id="questionLabel" text="Who is the narrator?" textAlignment="CENTER" wrapText="true">
+                    <VBox fx:id="questionPane" spacing="15">
+                        <BorderPane prefHeight="250" style="-fx-background-color: white; -fx-border-color: #949494; -fx-border-radius: 8;">
+                            <center>
+                                <Label fx:id="questionLabel" text="Who is the narrator?" textAlignment="CENTER" wrapText="true">
+                                    <font>
+                                        <Font size="15.0" />
+                                    </font>
+                                    <padding>
+                                        <Insets left="10" right="10"/>
+                                    </padding>
+                                </Label>
+                            </center>
+                            <bottom>
+                                <Panel StackPane.alignment="BOTTOM_CENTER" fx:id="questionFooter" style="-fx-background-color: #E2F2E4;">
+                                    <left>
+                                        <ImageView fx:id="bookmarkImage"/>
+                                    </left>
+                                    <center>
+                                        <ImageView fx:id="reportImage"/>
+                                    </center>
+                                    <right>
+                                        <ImageView fx:id="speakerImage"/>
+                                    </right>
+                                    <padding>
+                                        <Insets left="15" right="15" top="10" bottom="10"/>
+                                    </padding>
+                                </Panel>
+                            </bottom>
+
+                        </BorderPane>
+
+                        <VBox spacing="5" alignment="CENTER">
+                            <Button fx:id="optionAButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
                                 <font>
-                                    <Font size="15.0" />
+                                    <Font size="13"/>
                                 </font>
-                            </Label>
-                        </center>
-                        <bottom>
-                            <Panel StackPane.alignment="BOTTOM_CENTER" fx:id="questionFooter" style="-fx-background-color: #E2F2E4;">
-                                <left>
-                                    <ImageView fx:id="bookmarkImage"/>
-                                </left>
-                                <center>
-                                    <ImageView fx:id="reportImage"/>
-                                </center>
-                                <right>
-                                    <ImageView fx:id="speakerImage"/>
-                                </right>
-                                <padding>
-                                    <Insets left="15" right="15" top="10" bottom="10"/>
-                                </padding>
-                            </Panel>
-                        </bottom>
+                            </Button>
+                            <Button fx:id="optionBButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                                <font>
+                                    <Font size="13"/>
+                                </font>
+                            </Button>
+                            <Button fx:id="optionCButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                                <font>
+                                    <Font size="13"/>
+                                </font>
+                            </Button>
+                            <Button fx:id="optionDButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                                <font>
+                                    <Font size="13"/>
+                                </font>
+                            </Button>
+                            <Button fx:id="optionEButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
+                                <font>
+                                    <Font size="13"/>
+                                </font>
+                            </Button>
+                        </VBox>
 
-                    </BorderPane>
-
-                    <VBox spacing="5" alignment="CENTER">
-                        <Button fx:id="optionAButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
-                            <font>
-                                <Font size="13"/>
-                            </font>
-                        </Button>
-                        <Button fx:id="optionBButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
-                            <font>
-                                <Font size="13"/>
-                            </font>
-                        </Button>
-                        <Button fx:id="optionCButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
-                            <font>
-                                <Font size="13"/>
-                            </font>
-                        </Button>
-                        <Button fx:id="optionDButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
-                            <font>
-                                <Font size="13"/>
-                            </font>
-                        </Button>
-                        <Button fx:id="optionEButton" prefWidth="350" prefHeight="45" text="2y+z" textFill="white" style="-fx-background-color: #FF8D19; -fx-background-radius: 5;">
-                            <font>
-                                <Font size="13"/>
-                            </font>
-                        </Button>
                     </VBox>
 
                     <padding>
                         <Insets top="20" bottom="10"/>
                     </padding>
                 </VBox>
+
+                <VBox fx:id="answerPane"  spacing="15" alignment="TOP_CENTER" maxHeight="400" maxWidth="300" style="-fx-background-color: #F1F1F1; -fx-border-color: #949494; -fx-border-radius: 8;" visible="false" StackPane.alignment="CENTER">
+                    <Label text="Solution" textFill="#12AF20">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </Label>
+                    <Label text="Answer: "/>
+                    <Label fx:id="answerLabel" prefHeight="80" text="Lawyer Nweze" textAlignment="CENTER" wrapText="true">
+                        <font>
+                            <Font size="15"/>
+                        </font>
+                    </Label>
+                    <Separator/>
+                    <Label text="Explanation" />
+                    <Label fx:id="explanationLabel" prefHeight="100" text="Explanation Text" textAlignment="CENTER" alignment="TOP_CENTER" wrapText="true">
+                        <font>
+                            <Font size="15"/>
+                        </font>
+                    </Label>
+                    <Button fx:id="answerContinueButton" text="Continue" textFill="white" prefWidth="100" prefHeight="35" StackPane.alignment="BOTTOM_CENTER" style="-fx-background-color: #12AF20; -fx-background-radius: 12;">
+                        <VBox.margin>
+                            <Insets top="10" bottom="10"/>
+                        </VBox.margin>
+                    </Button>
+
+                    <padding>
+                        <Insets topRightBottomLeft="10"/>
+                    </padding>
+                </VBox>
+
+                <Panel fx:id="resultPane" maxHeight="300" maxWidth="300" style="-fx-background-color: #F1F1F1; -fx-border-color: #949494; -fx-border-radius: 8;" visible="false" StackPane.alignment="CENTER">
+                    <top>
+                        <Label fx:id="resultHeader">
+                            <font>
+                                <Font name="System Bold" size="18"/>
+                            </font>
+                            <padding>
+                                <Insets bottom="30"/>
+                            </padding>
+                        </Label>
+                    </top>
+
+                    <center>
+                        <VBox spacing="5">
+                            <HBox spacing="5">
+                                <Label text="Number of correct answers is">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="numOfCorrectAnsLabel">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+                            </HBox>
+                            <HBox spacing="5">
+                                <Label text="Total number of guesses is">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="numOfGuessesLabel">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+                            </HBox>
+                            <HBox spacing="5">
+                                <Label text="Your Score is">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="scorePercentageLabel">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+                            </HBox>
+                        </VBox>
+                    </center>
+
+                    <bottom>
+                        <HBox spacing="15" alignment="BOTTOM_CENTER" StackPane.alignment="BOTTOM_CENTER">
+                            <Button fx:id="tryAgainButton" text="Try Again" prefHeight="30" prefWidth="100" style="-fx-border-color: #949494; -fx-border-radius: 12;"/>
+                            <Button fx:id="resultContinueButton" text="Continue" textFill="white" prefHeight="30" prefWidth="100" style="-fx-background-color: #12AF20; -fx-background-radius: 12;"/>
+                        </HBox>
+                    </bottom>
+
+                    <padding>
+                        <Insets topRightBottomLeft="15"/>
+                    </padding>
+                </Panel>
+
             </StackPane>
             <padding>
                 <Insets right="20"/>

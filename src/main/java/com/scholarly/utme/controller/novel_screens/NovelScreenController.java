@@ -19,6 +19,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -41,13 +42,13 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
     private StackPane centerStackPane;
 
     @FXML
-    private Label infoText, novelDescription, authorLabel, chaptersLabel, timeText;
+    private Label infoText, novelDescription, authorLabel, chaptersLabel, timeText, pageTitle;
 
     @FXML
     private RadioButton dontShowButton;
 
     @FXML
-    private Button dismissButton, readButton;
+    private Button dismissButton, readButton, backButton;
 
     @FXML
     private VBox centerVBox, novelsVBox;
@@ -147,13 +148,20 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         dismissButton.setBackground(Background.EMPTY);
         centerScrollPane.setBackground(Background.EMPTY);
 
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_back_button_icon.png").toString())));
+
         authorIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/author_icon.png").toString()));
         chaptersIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/chapter_icon.png").toString()));
         timeIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/time_icon.png").toString()));
     }
 
     private void initializeFont() {
+        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
         infoText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         novelDescription.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+    }
+
+    public void backButtonClicked(MouseEvent mouseEvent) {
+        ViewSwitcher.showScreen(View.LANDING_SCREEN);
     }
 }

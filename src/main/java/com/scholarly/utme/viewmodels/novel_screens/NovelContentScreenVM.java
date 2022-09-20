@@ -1,11 +1,9 @@
 package com.scholarly.utme.viewmodels.novel_screens;
 
+import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
 import com.scholarly.utme.data.dao.NovelSectionDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
-import com.scholarly.utme.data.model.novels.ChapterSection;
-import com.scholarly.utme.data.model.novels.Novel;
-import com.scholarly.utme.data.model.novels.NovelChapter;
-import com.scholarly.utme.data.model.novels.NovelObjectiveQuestion;
+import com.scholarly.utme.data.model.novels.*;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -13,7 +11,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,24 +21,28 @@ public class NovelContentScreenVM implements ViewModel {
 
     private Novel novel;
 
+    private NovelAuthor author;
+
     private ObservableList<NovelChapter> chapters = FXCollections.observableArrayList();
 
-    private ObjectProperty<NovelChapter> novelChapter = new SimpleObjectProperty<>();
+    private ObjectProperty<NovelChapter> selectedChapter = new SimpleObjectProperty<>();
 
     private HashMap<Integer, ObservableList<ChapterSection>> chapterSections =  new HashMap<>();
 
     private HashMap<Integer, ObservableList<NovelObjectiveQuestion>> chapterQuestions = new HashMap<>();
 
-
-    private List<QuestionState> questions = new ArrayList<>();
-
     private SimpleIntegerProperty selectedQuestionIndex = new SimpleIntegerProperty();
 
+    private SimpleIntegerProperty fiftyFiftyCount = new SimpleIntegerProperty();
 
-    public void processInitialData(NovelState data) {
+    private double correctAnswers, totalGuesses;
+
+
+    public void processInitialData(NovelContentScreenController.InitialData data) {
         chapters.addAll(data.getChapters());
         novel = data.getNovel();
-        novelChapter.set(data.getSelectedChapter());
+        author = data.getAuthor();
+        selectedChapter.set(data.getSelectedChapter());
 
         selectedQuestionIndex.set(1);
 
@@ -51,12 +52,17 @@ public class NovelContentScreenVM implements ViewModel {
             chapterQuestions.put(novelChapter.getId(), ObjectiveQuestionDao.getNovelQuestions(novelChapter.getId()));
         });
 
-//        List<QuestionState> questionStates = chapterQuestions.get(getSelectedChapter())
+        int fiftyFifty = Math.round(chapterQuestions.get(selectedChapter.get().getId()).size()/10f);
 
+        fiftyFiftyCount.set(5);
     }
 
     public Novel getNovel() {
         return novel;
+    }
+
+    public NovelAuthor getAuthor() {
+        return author;
     }
 
     public ObservableList<NovelChapter> getChapters() {
@@ -64,15 +70,15 @@ public class NovelContentScreenVM implements ViewModel {
     }
 
     public void setSelectedChapter(NovelChapter chapter) {
-        this.novelChapter.set(chapter);
+        this.selectedChapter.set(chapter);
     }
 
     public NovelChapter getSelectedChapter() {
-        return novelChapter.get();
+        return selectedChapter.get();
     }
 
     public ObjectProperty<NovelChapter> selectedChapterProperty() {
-        return novelChapter;
+        return selectedChapter;
     }
 
     public HashMap<Integer, ObservableList<ChapterSection>> getChapterSections() {
@@ -93,6 +99,38 @@ public class NovelContentScreenVM implements ViewModel {
 
     public SimpleIntegerProperty selectedQuestionIndexProperty() {
         return selectedQuestionIndex;
+    }
+
+    public int getFiftyFiftyCount() {
+        return fiftyFiftyCount.get();
+    }
+
+    public SimpleIntegerProperty fiftyFiftyCountProperty() {
+        return fiftyFiftyCount;
+    }
+
+    public void setFiftyFiftyCount(int fiftyFiftyCount) {
+        this.fiftyFiftyCount.set(fiftyFiftyCount);
+    }
+
+    public void setTotalGuesses(double totalGuesses) {
+        this.totalGuesses = totalGuesses;
+    }
+
+    public double getTotalGuesses() {
+        return totalGuesses;
+    }
+
+    public void setCorrectAnswers(double correctAnswers) {
+        this.correctAnswers = correctAnswers;
+    }
+
+    public double getCorrectAnswers() {
+        return correctAnswers;
+    }
+
+    public double getScorePercentage() {
+        return (correctAnswers/totalGuesses) * 100;
     }
 
 
