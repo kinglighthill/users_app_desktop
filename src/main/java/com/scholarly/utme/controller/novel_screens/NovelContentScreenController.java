@@ -17,6 +17,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -103,6 +104,11 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         initializeGestures();
 //        setupQuizView();
 
+        chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ":");
+        chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
+        renderNovel(viewModel.getSelectedChapter());
+
+
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
         chaptersList.setItems(viewModel.getChapters());
         chaptersList.getSelectionModel().select(viewModel.getSelectedChapter());
@@ -112,10 +118,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         }));
 
         viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
-//            chapterContent.setText(newValue.getDetails().replaceAll("<br>", System.lineSeparator()));
+            renderNovel(newValue);
 
-            System.out.println(TAG + "Selected Chapter Position -> " + newValue.getPosition());
-            System.out.println(TAG + "Selected Chapter Sections -> " + viewModel.getChapterSections().get(newValue.getId()).stream().collect(Collectors.toList()));
+//            System.out.println(TAG + "Selected Chapter Position -> " + newValue.getPosition());
+//            System.out.println(TAG + "Selected Chapter Sections -> " + viewModel.getChapterSections().get(newValue.getId()).stream().collect(Collectors.toList()));
 
 
             chapterTitle.setText(newValue.getTitle());
@@ -142,9 +148,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         } else {
             chapterCount.setText(viewModel.getSelectedChapter().getPosition() + " of " + chaptersList.getItems().size());
         }
-        chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ":");
-        chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
-//        chapterContent.setText(viewModel.getSelectedChapter().getDetails().replaceAll("<br>", System.lineSeparator()));
 
 
         prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()));
@@ -540,6 +543,16 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         Animations.translateOut(resultPane, 300);
         viewModel.setSelectedQuestionIndex(1);
         viewModel.setFiftyFiftyCount(5);
+    }
+
+    private void renderNovel(NovelChapter chapter) {
+
+        viewModel.getChapterSections()
+                .get(chapter.getId())
+                .forEach(section -> {
+                    chapterContent.setText(section.getContent());
+                });
+
     }
 
     private InitialData getInitialData() {

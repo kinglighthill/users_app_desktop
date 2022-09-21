@@ -41,7 +41,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
     private HomeScreenVM viewModel;
 
     @FXML
-    private ToggleButton practiceButton, pastQuestionButton, cbtGameButton, novelsButton, videosButton, audiosButton, learningCenterButton, studyNotesButton, syllabusButton;
+    private ToggleButton practiceButton, pastQuestionButton, cbtGameButton, videosButton, audiosButton, learningCenterButton;
 
     @FXML
     private ImageView appImage;
@@ -69,18 +69,6 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         subjectListController = subjectListViewTuple.getCodeBehind();
         Parent subjectListView = subjectListViewTuple.getView();
 
-        ViewTuple<NovelScreenController, NovelScreenVM> novelListViewTuple = FluentViewLoader.fxmlView(NovelScreenController.class).load();
-        Parent novelListView = novelListViewTuple.getView();
-
-        ViewTuple<AudioVideoSubjectListViewController, AudioVideoSubjectListViewVM> audioVideoSubjectListViewTuple = FluentViewLoader.fxmlView(AudioVideoSubjectListViewController.class).load();
-        AudioVideoSubjectListViewController audioVideoSubjectListViewController = audioVideoSubjectListViewTuple.getCodeBehind();
-        Parent audioVideoView = audioVideoSubjectListViewTuple.getView();
-
-        ViewTuple<SelectNoteController, SelectNoteVM> selectNoteViewTuple = FluentViewLoader.fxmlView(SelectNoteController.class).load();
-        Parent studyNotesView = selectNoteViewTuple.getView();
-
-        ViewTuple<SelectSyllabusController, SelectSyllabusVM> syllabusViewTuple = FluentViewLoader.fxmlView(SelectSyllabusController.class).load();
-        Parent syllabusView = syllabusViewTuple.getView();
 
         initializeViews();
         initializeFonts();
@@ -125,21 +113,6 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             }
         });
 
-        /*novelsButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
-            pageTitle.setText("Novels");
-            selectButton(novelListView, novelsButton);
-        }));*/
-
-        /*studyNotesButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            pageTitle.setText("Select Note");
-            selectButton(studyNotesView, studyNotesButton);
-        });*/
-
-        /*syllabusButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            pageTitle.setText("Select Syllabus");
-            selectButton(syllabusView, syllabusButton);
-        });*/
-
         if (viewModel.getSelectedScreen().equalsIgnoreCase(PRACTICE_SCREEN)) {
             pageTitle.setText("CBT Practice");
             subjectListController.setOption(SubjectListOption.PRACTICE);
@@ -153,34 +126,14 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             toggleGroup.selectToggle(cbtGameButton);
             subjectListController.setOption(SubjectListOption.CBT_GAME);
             selectButton(subjectListView, cbtGameButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(NOVELS_SCREEN)) {
-//            pageTitle.setText("Novels");
-//            selectButton(novelListView, novelsButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(VIDEOS_SCREEN)) {
 //            selectButton(audioVideoView, videosButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(AUDIOS_SCREEN)) {
 //            selectButton(audioVideoView, audiosButton);
         } else if (viewModel.getSelectedScreen().equalsIgnoreCase(LEARNING_CENTER_SCREEN)) {
 //            selectButton(audioVideoView, learningCenterButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(NOTES_SCREEN)) {
-//            pageTitle.setText("Select Note");
-//            selectButton(studyNotesView, studyNotesButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(SYLLABUS_SCREEN)) {
-//            pageTitle.setText("Select Syllabus");
-//            selectButton(syllabusView, syllabusButton);
         }
 
-
-        /*if (ViewSwitcher.retrieveData() instanceof String){
-            String selectedMenuOption = (String) ViewSwitcher.retrieveData();
-            System.out.println("Selected menu option -> " + selectedMenuOption);
-            ToggleButton selectedToggle = getToggle(selectedMenuOption);
-
-            toggleGroup.selectToggle(selectedToggle);
-            // It is 'false' because the studyNotesButton selectedProperty's was initially toggled to 'true' when user navigated from the HOME_SCREEN to SELECT_NOTE_SCREEN
-            // This will make the button toggle when clicked thus switching selectedProperty to true
-            toggleGroup.getSelectedToggle().setSelected(false);
-        }*/
 
         /*videosButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -222,10 +175,6 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         cbtGameButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/cbt_game_icon.png").toString())));
         cbtGameButton.setGraphicTextGap(20);
 
-        /*novelsButton.setBackground(Background.EMPTY);
-        novelsButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/novels_icon.png").toString())));
-        novelsButton.setGraphicTextGap(20);*/
-
         /*videosButton.setBackground(Background.EMPTY);
         videosButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/videos_icon.png").toString())));
         videosButton.setGraphicTextGap(20);*/
@@ -238,14 +187,6 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         learningCenterButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/syllabus_icon.png").toString())));
         learningCenterButton.setGraphicTextGap(20);*/
 
-        /*studyNotesButton.setBackground(Background.EMPTY);
-        studyNotesButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/notes_icon.png").toString())));
-        studyNotesButton.setGraphicTextGap(20);*/
-
-        /*syllabusButton.setBackground(Background.EMPTY);
-        syllabusButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/syllabus_icon.png").toString())));
-        syllabusButton.setGraphicTextGap(20);*/
-
     }
 
     private void initializeFonts() {
@@ -255,12 +196,9 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         practiceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         pastQuestionButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         cbtGameButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-//        novelsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 //        videosButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 //        audiosButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 //        learningCenterButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-//        studyNotesButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-//        syllabusButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 
     }
 
@@ -269,12 +207,9 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         practiceButton.setStyle(null);
         pastQuestionButton.setStyle(null);
         cbtGameButton.setStyle(null);
-//        novelsButton.setStyle(null);
 //        videosButton.setStyle(null);
 //        audiosButton.setStyle(null);
 //        learningCenterButton.setStyle(null);
-//        studyNotesButton.setStyle(null);
-//        syllabusButton.setStyle(null);
 
         pressedButton.setStyle(PRESSED_BUTTON_STYLE);
     }

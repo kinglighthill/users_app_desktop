@@ -38,39 +38,6 @@
                   <Insets left="15"/>
                </padding>
             </ToggleButton>
-
-            <!--<ToggleButton fx:id="novelsButton" text="Novels" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-               <padding>
-                  <Insets left="15"/>
-               </padding>
-            </ToggleButton>-->
-             <!--<ToggleButton fx:id="videosButton" text="Videos" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-                <padding>
-                   <Insets left="15"/>
-                </padding>
-             </ToggleButton>-->
-             <!--<ToggleButton fx:id="audiosButton" text="Audios" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-                <padding>
-                   <Insets left="15"/>
-                </padding>
-             </ToggleButton>-->
-             <!--<ToggleButton fx:id="learningCenterButton" text="Learning Center" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0">
-                <padding>
-                   <Insets left="15"/>
-                </padding>
-             </ToggleButton>-->
-
-            <!--<ToggleButton fx:id="studyNotesButton" text="Study Notes" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-               <padding>
-                  <Insets left="15"/>
-               </padding>
-            </ToggleButton>-->
-
-            <!--<ToggleButton fx:id="syllabusButton" text="Syllabus" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-               <padding>
-                  <Insets left="15"/>
-               </padding>
-            </ToggleButton>-->
          </children>
       </VBox>
    </left>
