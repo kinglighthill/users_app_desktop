@@ -1,10 +1,7 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.TheoryQuestion;
-import com.scholarly.utme.data.util.Database;
-import com.scholarly.utme.data.util.NewDatabase;
-import com.scholarly.utme.data.util.Table;
-import com.scholarly.utme.data.util.Tables;
+import com.scholarly.utme.data.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -52,7 +49,7 @@ public class TheoryQuestionDao {
             query = "SELECT * FROM " + Tables.PQ_THEORY_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause + " ORDER BY RANDOM()";
         }
 
-        System.out.println(TAG + "Query = " + query);
+//        System.out.println(TAG + "Query = " + query);
 
         try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -67,13 +64,12 @@ public class TheoryQuestionDao {
                         rs.getInt(questionNumberColumn),
                         rs.getInt(questionDescriptionIdColumn),
                         rs.getString(questionColumn),
-                        rs.getString(optionAnswerColumn),
-                        rs.getString(answerExplanationColumn),
+                        new QuestionAnswer(-1, rs.getString(optionAnswerColumn), rs.getString(answerExplanationColumn)),
                         rs.getInt(isExplanationWebViewColumn),
                         rs.getInt(isQuestionWebViewColumn)));
             }
 
-            System.out.println(TAG + "Got questions with size -> " + questions.size());
+//            System.out.println(TAG + "Got Theory questions with size -> " + questions.size());
 
             return questions;
 

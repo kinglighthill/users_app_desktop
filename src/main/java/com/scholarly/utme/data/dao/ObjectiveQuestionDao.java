@@ -1,6 +1,7 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.ObjectiveQuestion;
+import com.scholarly.utme.data.model.novels.NovelObjectiveQuestion;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.QuestionAnswer;
 import com.scholarly.utme.data.util.QuestionOption;
@@ -38,6 +39,9 @@ public class ObjectiveQuestionDao {
     private static final String isQuestionWebViewColumn = "is_ques_webview";
     private static final String isGammableColumn = "is_gammable";
 
+    private static final String novelIdColumn = "novel_id";
+    private static final String chapterIdColumn = "chapter_id";
+
 
     public static ObservableList<ObjectiveQuestion> getQuestions(int subjectId, int yearId, ObservableList<Integer> topicIdList, boolean shuffled) {
         ObservableList<ObjectiveQuestion> questions = FXCollections.observableArrayList();
@@ -52,75 +56,11 @@ public class ObjectiveQuestionDao {
 
         if (!shuffled) {
             query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause;
-//            query = "SELECT * FROM " + tableName + " WHERE year_id = " + yearId;
         } else {
             query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause + " ORDER BY RANDOM()";
-//            query = "SELECT * FROM " + tableName + " WHERE year_id = " + yearId + " ORDER BY RANDOM()";
         }
 
-        System.out.println(TAG + "Query = " + query);
-
-        try (Connection connection = NewDatabase.connect()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-
-            ResultSet rs = statement.executeQuery();
-            questions.clear();
-            while (rs.next()) {
-                questions.add(new ObjectiveQuestion(
-                        rs.getInt(idColumn),
-                        rs.getInt(subjectIdColumn),
-                        rs.getInt(yearIdColumn),
-                        rs.getInt(topicIdColumn),
-                        rs.getInt(questionNumberColumn),
-                        rs.getInt(questionDescriptionIdColumn),
-                        rs.getString(questionColumn),
-                        rs.getString(optionAColumn),
-                        rs.getString(optionBColumn),
-                        rs.getString(optionCColumn),
-                        rs.getString(optionDColumn),
-                        rs.getString(optionEColumn),
-                        rs.getString(optionAnswerColumn),
-                        rs.getString(answerExplanationColumn),
-                        rs.getInt(optionAnswerIdColumn),
-                        rs.getInt(isExplanationWebViewColumn),
-                        rs.getInt(isQuestionWebViewColumn),
-                        rs.getInt(isGammableColumn)));
-            }
-
-            System.out.println(TAG + "Got questions with size -> " + questions.size());
-
-            return questions;
-
-        } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(
-                    Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
-            questions.clear();
-
-            return null;
-        }
-    }
-
-    public static ObservableList<ObjectiveQuestion> getQuestionss(int subjectId, int yearId, ObservableList<Integer> topicIdList, boolean shuffled) {
-        ObservableList<ObjectiveQuestion> questions = FXCollections.observableArrayList();
-
-        String topicIdClause = "";
-
-        if (!topicIdList.isEmpty()) {
-            topicIdClause = " AND topic_id IN (" + removeBracketsFromArray(topicIdList) + ")";
-        }
-
-        String query;
-
-        if (!shuffled) {
-            query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause;
-//            query = "SELECT * FROM " + tableName + " WHERE year_id = " + yearId;
-        } else {
-            query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause + " ORDER BY RANDOM()";
-//            query = "SELECT * FROM " + tableName + " WHERE year_id = " + yearId + " ORDER BY RANDOM()";
-        }
-
-        System.out.println(TAG + "Query = " + query);
+//        System.out.println(TAG + "Query = " + query);
 
         try (Connection connection = NewDatabase.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -147,7 +87,7 @@ public class ObjectiveQuestionDao {
                         rs.getInt(isGammableColumn)));
             }
 
-            System.out.println(TAG + "Got questions with size -> " + questions.size());
+//            System.out.println(TAG + "Got Objective questions with size -> " + questions.size());
 
             return questions;
 
@@ -160,6 +100,49 @@ public class ObjectiveQuestionDao {
             return null;
         }
     }
+
+    public static ObservableList<NovelObjectiveQuestion> getNovelQuestions(int chapterId) {
+        ObservableList<NovelObjectiveQuestion> questions = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM " + Tables.NOVEL_OBJECTIVE_QUESTIONS + " WHERE chapter_id = " + chapterId;
+
+        System.out.println(TAG + "Query = " + query);
+
+        try (Connection connection = NewDatabase.connect()) {
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            ResultSet rs = statement.executeQuery();
+            questions.clear();
+            while (rs.next()) {
+                questions.add(new NovelObjectiveQuestion(
+                        rs.getInt(idColumn),
+                        rs.getInt(novelIdColumn),
+                        rs.getInt(chapterIdColumn),
+                        rs.getInt(questionNumberColumn),
+                        rs.getString(questionColumn),
+                        new QuestionOption(0, rs.getString(optionAColumn)),
+                        new QuestionOption(1, rs.getString(optionBColumn)),
+                        new QuestionOption(2, rs.getString(optionCColumn)),
+                        new QuestionOption(3, rs.getString(optionDColumn)),
+                        new QuestionOption(4, rs.getString(optionEColumn)),
+                        new QuestionAnswer(rs.getInt(optionAnswerIdColumn), rs.getString(optionAnswerColumn), rs.getString(answerExplanationColumn)),
+                        rs.getInt(questionDescriptionIdColumn)));
+            }
+
+            System.out.println(TAG + "Got Novel Objective questions with size -> " + questions.size());
+
+            return questions;
+
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Novel Objective Questions from database because " + e.getMessage());
+            questions.clear();
+
+            return null;
+        }
+    }
+
 
     public static String removeBracketsFromArray(ObservableList<Integer> topicIds) {
         String query;

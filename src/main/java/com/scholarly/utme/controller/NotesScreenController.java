@@ -174,6 +174,57 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         //topicLabel.setText(viewModel.getTopic().getTitle());
 
+        ToggleGroup topicListToggleGroup = new ToggleGroup();
+        viewModel.getSubTopics().forEach(subTopic -> {
+            ToggleButton button = new ToggleButton();
+            button.setUserData(subTopic);
+            topicListToggleGroup.getToggles().add(button);
+
+
+            button.setMinHeight(48);
+            button.setMaxHeight(48);
+            button.setPadding(new Insets(0, 0, 0, 20));
+            button.setAlignment(Pos.BASELINE_LEFT);
+            button.setMaxWidth(Double.MAX_VALUE);
+            button.setText(subTopic.getTitle());
+
+            button.setStyle(IDLE_BUTTON_STYLE);
+            button.setOnMouseEntered(e -> {
+                if (!button.isSelected()) {
+                    button.setStyle(HOVERED_BUTTON_STYLE);
+                }
+            });
+            button.setOnMouseExited(e -> {
+                if (!button.isSelected()) {
+                    button.setStyle(IDLE_BUTTON_STYLE);
+                }
+            });
+
+            button.selectedProperty().addListener((observe, old, newVal) -> {
+                if (newVal) {
+                    button.setStyle(PRESSED_STYLE);
+                    button.setTextFill(Color.WHITE);
+
+                    viewModel.setSelectedSubTopic(subTopic);
+                    renderNote(subTopic);
+//                    topicLabel.setText(subTopic.getTitle());
+                } else {
+                    button.setStyle(IDLE_BUTTON_STYLE);
+                    button.setTextFill(Color.BLACK);
+
+//                    viewModel.setSelectedTopic(null);
+                }
+            });
+
+            if (subTopic == viewModel.getSelectedSubTopic()) {
+                topicListToggleGroup.selectToggle(button);
+            }
+
+            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
+
+            topicVBox.getChildren().add(button);
+        });
+
         ImageView noteBackIcon = new ImageView(new Image(getClass().getResource("/drawable/notes_back_icon_2x.png").toString()));
         noteBackIcon.setFitWidth(20);
         noteBackIcon.setFitHeight(20);
@@ -457,56 +508,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         setupQuizTilePane();
         setupQuizQuestion();
 
-        ToggleGroup topicListToggleGroup = new ToggleGroup();
-        viewModel.getSubTopics().forEach(subTopic -> {
-            ToggleButton button = new ToggleButton();
-            button.setUserData(subTopic);
-            topicListToggleGroup.getToggles().add(button);
 
-
-            button.setMinHeight(48);
-            button.setMaxHeight(48);
-            button.setPadding(new Insets(0, 0, 0, 20));
-            button.setAlignment(Pos.BASELINE_LEFT);
-            button.setMaxWidth(Double.MAX_VALUE);
-            button.setText(subTopic.getTitle());
-
-            button.setStyle(IDLE_BUTTON_STYLE);
-            button.setOnMouseEntered(e -> {
-                if (!button.isSelected()) {
-                    button.setStyle(HOVERED_BUTTON_STYLE);
-                }
-            });
-            button.setOnMouseExited(e -> {
-                if (!button.isSelected()) {
-                    button.setStyle(IDLE_BUTTON_STYLE);
-                }
-            });
-
-            button.selectedProperty().addListener((observe, old, newVal) -> {
-                if (newVal) {
-                    button.setStyle(PRESSED_STYLE);
-                    button.setTextFill(Color.WHITE);
-
-                    viewModel.setSelectedSubTopic(subTopic);
-                    renderNote(subTopic);
-//                    topicLabel.setText(subTopic.getTitle());
-                } else {
-                    button.setStyle(IDLE_BUTTON_STYLE);
-                    button.setTextFill(Color.BLACK);
-
-//                    viewModel.setSelectedTopic(null);
-                }
-            });
-
-            if (subTopic == viewModel.getSelectedSubTopic()) {
-                topicListToggleGroup.selectToggle(button);
-            }
-
-            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
-
-            topicVBox.getChildren().add(button);
-        });
 
 
         highlightColors.getChildren().clear();

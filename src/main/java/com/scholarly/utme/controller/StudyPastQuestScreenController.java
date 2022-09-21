@@ -326,17 +326,16 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
                 questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
 
-
             String questionText = currentQuestion.getQuestion();
             questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-            optionA.setText(" (A) " + currentQuestion.getOptionA());
-            optionB.setText(" (B) " + currentQuestion.getOptionB());
-            optionC.setText(" (C) " + currentQuestion.getOptionC());
-            optionD.setText(" (D) " + currentQuestion.getOptionD());
+            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
+            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
+            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
+            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
 
-            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
-            String explanationText = currentQuestion.getAnswerExplanation();
+            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
+            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
             explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
 
 
@@ -350,16 +349,12 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
 
             centerVBox.getChildren().removeAll(optionA, optionB, optionC, optionD);
-//            optionA.setVisible(false);
-//            optionB.setVisible(false);
-//            optionC.setVisible(false);
-//            optionD.setVisible(false);
 
             rightVBox.getChildren().remove(answerPane);
 
-//            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
+//            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
             answerHeaderHBox.getChildren().remove(showExplanationButton);
-            String explanationText = currentQuestion.getAnswerExplanation();
+            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
             explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
 
         }
@@ -391,15 +386,15 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             String questionText = currentQuestion.getQuestion();
             questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-            optionA.setText(" (A) " + currentQuestion.getOptionA());
-            optionB.setText(" (B) " + currentQuestion.getOptionB());
-            optionC.setText(" (C) " + currentQuestion.getOptionC());
-            optionD.setText(" (D) " + currentQuestion.getOptionD());
+            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
+            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
+            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
+            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
 
 
-            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
+            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
 
-            String explanationText = currentQuestion.getAnswerExplanation();
+            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
             explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
 
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
@@ -410,8 +405,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             String questionText = currentQuestion.getQuestion();
             questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-            correctAnswerLabel.setText(currentQuestion.getOptionAnswer());
-            String explanationText = currentQuestion.getAnswerExplanation();
+            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
+            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
             explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
 
         }
