@@ -150,8 +150,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         }
 
 
-        prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()));
-        nextButton.disableProperty().bind(Bindings.equal(chaptersList.getSelectionModel().selectedIndexProperty(), chaptersList.getItems().size()-1));
+        prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()).or(chapterQuizPane.visibleProperty()));
+        nextButton.disableProperty().bind(Bindings.equal(chaptersList.getSelectionModel().selectedIndexProperty(), chaptersList.getItems().size()-1).or(chapterQuizPane.visibleProperty()));
 
         nextButton.setOnAction(event -> {
             int selectedIndex = chaptersList.getSelectionModel().getSelectedIndex();
@@ -349,7 +349,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         takeQuizButton.setOnAction(event -> {
             setupQuizView();
             Animations.translateOut(chaptersListPane, 400);
-            Animations.fadeIn(dimmer, 500);
+            takeQuizButton.setDisable(true);
+//            Animations.fadeIn(dimmer, 500);
             Animations.fadeIn(questionPane, 300);
             Animations.slideIn(chapterQuizPane, 500f, 0f, 500);
 
@@ -419,7 +420,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private void setupQuizView() {
         NovelChapter selectedChapter = viewModel.getSelectedChapter();
 
-        ObservableList<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
+        List<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
 
 //        System.out.println(TAG + "Got questions for selectedChapter with ID -> " + selectedChapter.getId() + ": " + questions.stream().collect(Collectors.toList()));
 
@@ -455,9 +456,9 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private void changeSelectedQuestion(int questionIndex) {
         NovelChapter selectedChapter = viewModel.getSelectedChapter();
 
-        ObservableList<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
+        List<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
 
-        System.out.println(TAG + "Got questions for selectedChapter with ID -> " + selectedChapter.getId() + ": " + questions.stream().collect(Collectors.toList()));
+//        System.out.println(TAG + "Got questions for selectedChapter with ID -> " + selectedChapter.getId() + ": " + questions.stream().collect(Collectors.toList()));
 
         NovelObjectiveQuestion selectedQuestion = questions.get(questionIndex - 1);
         int selectedQuestionNumber = selectedQuestion.getQuestionNumber();
@@ -534,7 +535,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         viewModel.setSelectedQuestionIndex(1);
         viewModel.setFiftyFiftyCount(5);
         Animations.slideOut(chapterQuizPane, 0f, 500f, 500);
-        Animations.fadeOut(dimmer, 500);
+        takeQuizButton.setDisable(false);
+//        Animations.fadeOut(dimmer, 500);
         Animations.translateIn(chaptersListPane, 400);
     }
 

@@ -70,7 +70,7 @@
                     <Insets topRightBottomLeft="30"/>
                 </padding>
             </VBox>
-            <VBox fx:id="dimmer" style="-fx-background-color: rgba(0, 0, 0, 0.6);" visible="false"/>
+            <VBox fx:id="dimmer" visible="false"/>
         </StackPane>
     </center>
 

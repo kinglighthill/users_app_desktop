@@ -14,8 +14,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class ObjectiveQuestionDao {
     private static final String TAG = "ObjectiveQuestionDao: ";
@@ -41,6 +43,13 @@ public class ObjectiveQuestionDao {
 
     private static final String novelIdColumn = "novel_id";
     private static final String chapterIdColumn = "chapter_id";
+
+    private static final ObservableList<NovelObjectiveQuestion> novelQuestions;
+
+    static {
+        novelQuestions = FXCollections.observableArrayList();
+        updateNovelQuestions();
+    }
 
 
     public static ObservableList<ObjectiveQuestion> getQuestions(int subjectId, int yearId, ObservableList<Integer> topicIdList, boolean shuffled) {
@@ -101,10 +110,8 @@ public class ObjectiveQuestionDao {
         }
     }
 
-    public static ObservableList<NovelObjectiveQuestion> getNovelQuestions(int chapterId) {
-        ObservableList<NovelObjectiveQuestion> questions = FXCollections.observableArrayList();
-
-        String query = "SELECT * FROM " + Tables.NOVEL_OBJECTIVE_QUESTIONS + " WHERE chapter_id = " + chapterId;
+    private static void updateNovelQuestions() {
+        String query = "SELECT * FROM " + Tables.NOVEL_OBJECTIVE_QUESTIONS;
 
         System.out.println(TAG + "Query = " + query);
 
@@ -112,9 +119,9 @@ public class ObjectiveQuestionDao {
             PreparedStatement statement = connection.prepareStatement(query);
 
             ResultSet rs = statement.executeQuery();
-            questions.clear();
+            novelQuestions.clear();
             while (rs.next()) {
-                questions.add(new NovelObjectiveQuestion(
+                novelQuestions.add(new NovelObjectiveQuestion(
                         rs.getInt(idColumn),
                         rs.getInt(novelIdColumn),
                         rs.getInt(chapterIdColumn),
@@ -129,20 +136,21 @@ public class ObjectiveQuestionDao {
                         rs.getInt(questionDescriptionIdColumn)));
             }
 
-            System.out.println(TAG + "Got Novel Objective questions with size -> " + questions.size());
-
-            return questions;
+            System.out.println(TAG + "Got Novel Objective questions with size -> " + novelQuestions.size());
 
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Novel Objective Questions from database because " + e.getMessage());
-            questions.clear();
+            novelQuestions.clear();
 
-            return null;
         }
     }
 
+    public static List<NovelObjectiveQuestion> getNovelQuestions(int chapterId) {
+        return novelQuestions.stream().filter(novelObjectiveQuestion ->
+                novelObjectiveQuestion.getChapterId() == chapterId).collect(Collectors.toList());
+    }
 
     public static String removeBracketsFromArray(ObservableList<Integer> topicIds) {
         String query;
