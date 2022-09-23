@@ -3,10 +3,7 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.Screens;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.Result;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.SubjectQuestionsState;
@@ -26,11 +23,15 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static com.scholarly.utme.util.Constants.PRACTICE_SCREEN;
 
 @FxmlPath("/layouts/ResultScreen.fxml")
 public class ResultScreenController implements FxmlView<ResultScreenVM>, Initializable {
@@ -62,6 +63,9 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
     @FXML
     private Button showExplanationButton, exitButton;
+
+    @FXML
+    private Pane exitDialogDimmer;
 
 
     @Override
@@ -177,8 +181,8 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
             View previousScreen = viewModel.getPreviousScreen();
 
             if (previousScreen == View.HOME_SCREEN) {
-                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN));
-                ViewSwitcher.showScreen(View.HOME_SCREEN);
+                showExitDialog();
+
             } else if (previousScreen == View.LANDING_SCREEN) {
                 ViewSwitcher.passData("performanceButton");
                 ViewSwitcher.showScreen(View.LANDING_SCREEN);
@@ -196,6 +200,25 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
     private void initializeFont() {
         showExplanationButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+    }
+
+    private void showExitDialog() {
+        Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to quit?");
+
+        exitDialogDimmer.setVisible(true);
+
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == ButtonType.YES) {
+                exitDialogDimmer.setVisible(false);
+                ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
+                ViewSwitcher.showScreen(View.HOME_SCREEN);
+            } else if (buttonType == ButtonType.NO) {
+                exitDialogDimmer.setVisible(false);
+            }
+            return buttonType;
+        });
+
+        dialog.show();
     }
 
     public InitialData getInitialData() {

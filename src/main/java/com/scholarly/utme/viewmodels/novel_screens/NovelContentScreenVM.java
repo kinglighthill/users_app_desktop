@@ -29,7 +29,7 @@ public class NovelContentScreenVM implements ViewModel {
 
     private HashMap<Integer, ObservableList<ChapterSection>> chapterSections =  new HashMap<>();
 
-    private HashMap<Integer, ObservableList<NovelObjectiveQuestion>> chapterQuestions = new HashMap<>();
+    private HashMap<Integer, List<NovelObjectiveQuestion>> chapterQuestions = new HashMap<>();
 
     private SimpleIntegerProperty selectedQuestionIndex = new SimpleIntegerProperty();
 
@@ -85,7 +85,7 @@ public class NovelContentScreenVM implements ViewModel {
         return chapterSections;
     }
 
-    public HashMap<Integer, ObservableList<NovelObjectiveQuestion>> getChapterQuestions() {
+    public HashMap<Integer, List<NovelObjectiveQuestion>> getChapterQuestions() {
         return chapterQuestions;
     }
 

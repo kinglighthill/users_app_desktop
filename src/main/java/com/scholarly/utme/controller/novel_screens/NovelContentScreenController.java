@@ -17,6 +17,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -103,6 +104,11 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         initializeGestures();
 //        setupQuizView();
 
+        chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ":");
+        chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
+        renderNovel(viewModel.getSelectedChapter());
+
+
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
         chaptersList.setItems(viewModel.getChapters());
         chaptersList.getSelectionModel().select(viewModel.getSelectedChapter());
@@ -112,10 +118,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         }));
 
         viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
-//            chapterContent.setText(newValue.getDetails().replaceAll("<br>", System.lineSeparator()));
+            renderNovel(newValue);
 
-            System.out.println(TAG + "Selected Chapter Position -> " + newValue.getPosition());
-            System.out.println(TAG + "Selected Chapter Sections -> " + viewModel.getChapterSections().get(newValue.getId()).stream().collect(Collectors.toList()));
+//            System.out.println(TAG + "Selected Chapter Position -> " + newValue.getPosition());
+//            System.out.println(TAG + "Selected Chapter Sections -> " + viewModel.getChapterSections().get(newValue.getId()).stream().collect(Collectors.toList()));
 
 
             chapterTitle.setText(newValue.getTitle());
@@ -142,13 +148,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         } else {
             chapterCount.setText(viewModel.getSelectedChapter().getPosition() + " of " + chaptersList.getItems().size());
         }
-        chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ":");
-        chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
-//        chapterContent.setText(viewModel.getSelectedChapter().getDetails().replaceAll("<br>", System.lineSeparator()));
 
 
-        prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()));
-        nextButton.disableProperty().bind(Bindings.equal(chaptersList.getSelectionModel().selectedIndexProperty(), chaptersList.getItems().size()-1));
+        prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()).or(chapterQuizPane.visibleProperty()));
+        nextButton.disableProperty().bind(Bindings.equal(chaptersList.getSelectionModel().selectedIndexProperty(), chaptersList.getItems().size()-1).or(chapterQuizPane.visibleProperty()));
 
         nextButton.setOnAction(event -> {
             int selectedIndex = chaptersList.getSelectionModel().getSelectedIndex();
@@ -346,7 +349,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         takeQuizButton.setOnAction(event -> {
             setupQuizView();
             Animations.translateOut(chaptersListPane, 400);
-            Animations.fadeIn(dimmer, 500);
+            takeQuizButton.setDisable(true);
+//            Animations.fadeIn(dimmer, 500);
             Animations.fadeIn(questionPane, 300);
             Animations.slideIn(chapterQuizPane, 500f, 0f, 500);
 
@@ -416,7 +420,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private void setupQuizView() {
         NovelChapter selectedChapter = viewModel.getSelectedChapter();
 
-        ObservableList<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
+        List<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
 
 //        System.out.println(TAG + "Got questions for selectedChapter with ID -> " + selectedChapter.getId() + ": " + questions.stream().collect(Collectors.toList()));
 
@@ -452,9 +456,9 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private void changeSelectedQuestion(int questionIndex) {
         NovelChapter selectedChapter = viewModel.getSelectedChapter();
 
-        ObservableList<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
+        List<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
 
-        System.out.println(TAG + "Got questions for selectedChapter with ID -> " + selectedChapter.getId() + ": " + questions.stream().collect(Collectors.toList()));
+//        System.out.println(TAG + "Got questions for selectedChapter with ID -> " + selectedChapter.getId() + ": " + questions.stream().collect(Collectors.toList()));
 
         NovelObjectiveQuestion selectedQuestion = questions.get(questionIndex - 1);
         int selectedQuestionNumber = selectedQuestion.getQuestionNumber();
@@ -531,7 +535,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         viewModel.setSelectedQuestionIndex(1);
         viewModel.setFiftyFiftyCount(5);
         Animations.slideOut(chapterQuizPane, 0f, 500f, 500);
-        Animations.fadeOut(dimmer, 500);
+        takeQuizButton.setDisable(false);
+//        Animations.fadeOut(dimmer, 500);
         Animations.translateIn(chaptersListPane, 400);
     }
 
@@ -540,6 +545,16 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         Animations.translateOut(resultPane, 300);
         viewModel.setSelectedQuestionIndex(1);
         viewModel.setFiftyFiftyCount(5);
+    }
+
+    private void renderNovel(NovelChapter chapter) {
+
+        viewModel.getChapterSections()
+                .get(chapter.getId())
+                .forEach(section -> {
+                    chapterContent.setText(section.getContent());
+                });
+
     }
 
     private InitialData getInitialData() {
