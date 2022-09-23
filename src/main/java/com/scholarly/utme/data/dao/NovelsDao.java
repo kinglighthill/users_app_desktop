@@ -3,6 +3,7 @@ package com.scholarly.utme.data.dao;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelCategory;
 import com.scholarly.utme.data.model.novels.NovelGenre;
+import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.NovelsDatabase;
 import com.scholarly.utme.data.util.Tables;
@@ -56,7 +57,8 @@ public class NovelsDao {
 
         String query = "SELECT * FROM " + Tables.NOVELS;
 
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             novels.clear();
@@ -94,7 +96,8 @@ public class NovelsDao {
     private static void updateGenresFromDb() {
         String query = "SELECT * FROM " + Tables.NOVEL_GENRES;
 
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             genres.clear();
@@ -122,7 +125,8 @@ public class NovelsDao {
     private static void updateCategoriesFromDb() {
         String query = "SELECT * FROM " + Tables.NOVEL_CATEGORIES;
 
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             categories.clear();

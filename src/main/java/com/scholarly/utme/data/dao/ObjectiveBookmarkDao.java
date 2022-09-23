@@ -3,6 +3,7 @@ package com.scholarly.utme.data.dao;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.util.CRUDHelper;
 import com.scholarly.utme.data.util.Database;
+import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -22,9 +23,8 @@ public class ObjectiveBookmarkDao {
     private static final String questionIdColumn = "question_id";
     private static final String createdAtColumn = "created_at";
 
-    private static final String BOOKMARKS_OBJECTIVE_QUESTION = "bookmarks_objective_question";
-    private static final String ID_COLUMN = "_id";
 
+    private static final String ID_COLUMN = "_id";
 
     private static final ObservableList<ObjectiveBookmark> bookmarks;
 
@@ -38,7 +38,7 @@ public class ObjectiveBookmarkDao {
 
     public static ObservableList<ObjectiveBookmark> getBookmarks(int subjectId) {
 
-        String query = "SELECT * FROM " + BOOKMARKS_OBJECTIVE_QUESTION + " WHERE " + subjectIdColumn + " = " + subjectId;
+        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTION + " WHERE " + subjectIdColumn + " = " + subjectId;
 
         try (Connection connection = Database.connect()) {
             System.out.println(TAG + "Connection object -> " + connection);
@@ -68,10 +68,9 @@ public class ObjectiveBookmarkDao {
     }
 
     public static ObservableList<ObjectiveBookmark> getBookmarks() {
-        String query = "SELECT * FROM " + BOOKMARKS_OBJECTIVE_QUESTION;
+        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTION;
 
         try (Connection connection = Database.connect()) {
-            System.out.println(TAG + "Connection object -> " + connection);
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             bookmarks.clear();
@@ -99,7 +98,7 @@ public class ObjectiveBookmarkDao {
 
     private static void updateBookmarksFromDB() {
 
-        String query = "SELECT * FROM " + BOOKMARKS_OBJECTIVE_QUESTION;
+        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTION;
 
         try (Connection connection = Database.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -118,14 +117,14 @@ public class ObjectiveBookmarkDao {
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load ObjectiveBookmarks from database ");
+                    LocalDateTime.now() + ": Could not load ObjectiveBookmarks from database because " + e.getMessage());
             bookmarks.clear();
         }
     }
 
 
     public static int deleteBookmark(int subjectId, int questionId) {
-        int sqlResponse = CRUDHelper.delete(BOOKMARKS_OBJECTIVE_QUESTION, subjectId, questionId);
+        int sqlResponse = CRUDHelper.delete(Tables.BOOKMARKS_OBJECTIVE_QUESTION, subjectId, questionId);
         if (sqlResponse == 1) {
             System.out.println(TAG + "Bookmark with subjectId -> " + subjectId + " and " + " questionId -> " + questionId + " deleted successfully");
         } else {
@@ -137,7 +136,7 @@ public class ObjectiveBookmarkDao {
 
     public static int createBookmark(int subjectId, int yearId, int questionId) {
         int id = (int) CRUDHelper.create(
-                BOOKMARKS_OBJECTIVE_QUESTION,
+                Tables.BOOKMARKS_OBJECTIVE_QUESTION,
                 new String[]{"subject_id", "year_id","question_id"},
                 new Object[]{subjectId, yearId, questionId},
                 new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER});
@@ -175,7 +174,7 @@ public class ObjectiveBookmarkDao {
 
     public static boolean createTable() {
 
-        String sql = "CREATE TABLE IF NOT EXISTS " + BOOKMARKS_OBJECTIVE_QUESTION +
+        String sql = "CREATE TABLE IF NOT EXISTS " + Tables.BOOKMARKS_OBJECTIVE_QUESTION +
                 " ( _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "subject_id INTEGER NOT NULL, " +
                 "year_id INTEGER NOT NULL, " +

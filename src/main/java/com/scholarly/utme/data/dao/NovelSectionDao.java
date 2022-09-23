@@ -1,9 +1,7 @@
 package com.scholarly.utme.data.dao;
 
-import com.scholarly.utme.data.model.newDb.Section;
 import com.scholarly.utme.data.model.novels.ChapterSection;
-import com.scholarly.utme.data.util.NewDatabase;
-import com.scholarly.utme.data.util.SyllabusDatabase;
+import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class NovelSectionDao {
     private static final String TAG = "NovelSectionDao: ";
@@ -26,47 +25,52 @@ public class NovelSectionDao {
     private static final String parentSectionIdColumn = "parent_section_id";
     private static final String mainSectionOrderColumn = "main_section_order";
     private static final String childSectionOrderColumn = "child_section_order";
-    private static final String contentViewTypeColumn = "content_view_type_id";
+    private static final String contentViewTypeIdColumn = "content_view_type_id";
     private static final String chapterIdColumn = "chapter_id";
 
+    private static final List<ChapterSection> novelChapterSections;
+
+    static {
+        novelChapterSections = FXCollections.observableArrayList();
+        updateNovelChapterSectionsFromDb();
+    }
 
 
-    public static ObservableList<ChapterSection> getSections(int chapterId) {
-        List<ChapterSection> chapterSections = new ArrayList<>();
+    private static void updateNovelChapterSectionsFromDb() {
+        String query = "SELECT * FROM " + Tables.NOVEL_SECTIONS;
 
-        String query1 = "SELECT * FROM " + Tables.NOVEL_SECTIONS + " WHERE chapter_id = " + chapterId;
-//        System.out.println(TAG + "Query -> " + query1);
-
-        try (Connection connection = NewDatabase.connect()) {
-            PreparedStatement statement = connection.prepareStatement(query1);
+        try {
+            Connection connection = DbConnection.getDbConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
-
+            novelChapterSections.clear();
             while (rs.next()) {
-                ChapterSection section = new ChapterSection(
+                novelChapterSections.add(new ChapterSection(
                         rs.getInt(idColumn),
                         rs.getString(contentColumn),
                         rs.getInt(parentSectionIdColumn),
                         rs.getInt(mainSectionOrderColumn),
                         rs.getInt(childSectionOrderColumn),
-                        rs.getInt(contentViewTypeColumn),
-                        rs.getInt(chapterIdColumn)
-                );
-
-                chapterSections.add(section);
+                        rs.getInt(contentViewTypeIdColumn),
+                        rs.getInt(chapterIdColumn)));
 
             }
 //            System.out.println(TAG + "Got chapter sections of size -> " + chapterSections.size());
 
-            return FXCollections.observableArrayList(chapterSections);
-
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load chapter sections from database because " + e.getMessage());
-            chapterSections.clear();
-
-            return null;
+                    LocalDateTime.now() + ": Could not load novel chapter sections from database because " + e.getMessage());
+            novelChapterSections.clear();
         }
+    }
+
+    public static ObservableList<ChapterSection> getSections(int chapterId) {
+
+        return FXCollections.observableArrayList(
+                novelChapterSections.stream().filter(chapterSection ->
+                chapterSection.getChapterId() == chapterId).collect(Collectors.toList())
+        );
 
     }
 

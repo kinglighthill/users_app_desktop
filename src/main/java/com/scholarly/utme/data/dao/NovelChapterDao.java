@@ -1,10 +1,12 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.novels.NovelChapter;
+import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.sqlite.core.DB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,14 +32,15 @@ public class NovelChapterDao {
 
     static {
         novelChapters = FXCollections.observableArrayList();
-        updateNovelsFromDb();
+        updateNovelChaptersFromDb();
     }
 
-    private static void updateNovelsFromDb() {
+    private static void updateNovelChaptersFromDb() {
 
         String query = "SELECT * FROM " + Tables.NOVEL_CHAPTERS;
 
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             novelChapters.clear();

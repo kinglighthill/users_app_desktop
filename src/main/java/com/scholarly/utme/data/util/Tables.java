@@ -19,4 +19,8 @@ public class Tables {
     public static final String NOVEL_SECTIONS = "novel_sections";
     public static final String NOVEL_OBJECTIVE_QUESTIONS = "novel_objective_questions";
 
+
+    public static final String BOOKMARKS_OBJECTIVE_QUESTION = "bookmarks_objective_question";
+    public static final String BOOKMARKS_NOVEL_OBJECTIVE_QUESTION = "novel_bookmarks_objective_question";
+
 }

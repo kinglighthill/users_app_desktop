@@ -1,6 +1,7 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class QuestionDescriptionDao {
     private static final String TAG = "QuestionDescriptionDao: ";
@@ -23,15 +25,18 @@ public class QuestionDescriptionDao {
     private static final String yearIdColumn = "year_id";
     private static final String createdAtColumn = "created_at";
 
+    private static final ObservableList<QuestionDescription> questionDescriptions;
 
-    public static ObservableList<QuestionDescription> getQuestionDescriptions(int subjectId, int yearId) {
-        ObservableList<QuestionDescription> questionDescriptions = FXCollections.observableArrayList();
+    static {
+        questionDescriptions = FXCollections.observableArrayList();
+        updateQuestionDescriptionsFromDb();
+    }
 
-        String query = "SELECT * FROM " + Tables.PQ_QUES_DESCRIPTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId;
+    private static void updateQuestionDescriptionsFromDb() {
+        String query = "SELECT * FROM " + Tables.PQ_QUES_DESCRIPTIONS;
 
-//        System.out.println(TAG + "Query = " + query);
-
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             ResultSet rs = statement.executeQuery();
@@ -47,15 +52,22 @@ public class QuestionDescriptionDao {
 
 //            System.out.println(TAG + "Got questions descriptions with size -> " + questionDescriptions.size());
 
-            return questionDescriptions;
-
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Question descriptions from database because " + e.getMessage());
             questionDescriptions.clear();
 
-            return null;
         }
+    }
+
+
+    public static ObservableList<QuestionDescription> getQuestionDescriptions(int subjectId, int yearId) {
+
+        return FXCollections.observableArrayList(
+                questionDescriptions.stream().filter(questionDescription ->
+                        questionDescription.getSubjectId() == subjectId && questionDescription.getYearId() == yearId).collect(Collectors.toList())
+        );
+
     }
 }
