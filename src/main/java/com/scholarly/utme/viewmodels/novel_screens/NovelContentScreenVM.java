@@ -1,6 +1,7 @@
 package com.scholarly.utme.viewmodels.novel_screens;
 
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
+import com.scholarly.utme.data.dao.NovelObjectiveBookmarkDao;
 import com.scholarly.utme.data.dao.NovelSectionDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.model.novels.*;
@@ -11,6 +12,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +33,8 @@ public class NovelContentScreenVM implements ViewModel {
 
     private HashMap<Integer, ObservableList<NovelObjectiveQuestion>> chapterQuestions = new HashMap<>();
 
+    private HashMap<Integer, ObservableList<NovelObjectiveBookmark>> chapterBookmarks = new HashMap<>();
+
     private SimpleIntegerProperty selectedQuestionIndex = new SimpleIntegerProperty();
 
     private SimpleIntegerProperty fiftyFiftyCount = new SimpleIntegerProperty();
@@ -50,11 +54,49 @@ public class NovelContentScreenVM implements ViewModel {
             chapterSections.put(novelChapter.getId(), NovelSectionDao.getSections(novelChapter.getId()));
 
             chapterQuestions.put(novelChapter.getId(), ObjectiveQuestionDao.getNovelQuestions(novelChapter.getId()));
+
+            chapterBookmarks.put(novelChapter.getId(), NovelObjectiveBookmarkDao.getNovelBookmarkWithChapterId(novelChapter.getId()));
         });
 
         int fiftyFifty = Math.round(chapterQuestions.get(selectedChapter.get().getId()).size()/10f);
 
         fiftyFiftyCount.set(5);
+    }
+
+
+    public void handleBookmarkClicked() {
+        ObservableList<NovelObjectiveBookmark> novelObjectiveBookmarks = chapterBookmarks.get(selectedChapter.get().getId());
+
+        ObservableList<NovelObjectiveQuestion> novelObjectiveQuestions = chapterQuestions.get(selectedChapter.get().getId());
+
+        NovelObjectiveQuestion currentQuestion = novelObjectiveQuestions.get(selectedQuestionIndex.get()-1);
+
+        boolean currentQuestionBookmarked = false;
+        NovelObjectiveBookmark bookmarkToDelete = null;
+
+        for (NovelObjectiveBookmark bookmark : novelObjectiveBookmarks) {
+            if (bookmark.getQuestionId() == currentQuestion.getId()) {
+                currentQuestionBookmarked = true;
+                bookmarkToDelete = bookmark;
+//                System.out.println(TAG + "Delete bookmark with ID -> " + bookmarkToDelete.getId() + " and question ID -> " + bookmarkToDelete.getQuestionId());
+            }
+        }
+
+        if (currentQuestionBookmarked) {
+            int response = NovelObjectiveBookmarkDao.deleteBookmark(bookmarkToDelete.getQuestionId());
+            System.out.println(TAG + "Bookmark with question ID -> " + bookmarkToDelete.getQuestionId() + " deleted with SQL response " + response);
+        } else {
+            NovelObjectiveBookmarkDao.createBookmark(novel.getId(), selectedChapter.get().getId(), currentQuestion.getId());
+        }
+
+        ObservableList<NovelObjectiveBookmark> newBookmarks = NovelObjectiveBookmarkDao.getNovelBookmarks(
+                selectedChapter.get().getId()
+        );
+
+//        System.out.println(TAG + "New Novel Bookmarks for Chapter with ID -> " + selectedChapter.get().getId() + " ARE " + new ArrayList<>(newBookmarks));
+
+        chapterBookmarks.get(selectedChapter.get().getId()).clear();
+        chapterBookmarks.put(selectedChapter.get().getId(), newBookmarks);
     }
 
     public Novel getNovel() {
@@ -87,6 +129,10 @@ public class NovelContentScreenVM implements ViewModel {
 
     public HashMap<Integer, ObservableList<NovelObjectiveQuestion>> getChapterQuestions() {
         return chapterQuestions;
+    }
+
+    public HashMap<Integer, ObservableList<NovelObjectiveBookmark>> getChapterBookmarks() {
+        return chapterBookmarks;
     }
 
     public void setSelectedQuestionIndex(int selectedQuestionIndex) {

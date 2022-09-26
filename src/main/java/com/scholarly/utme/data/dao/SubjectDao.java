@@ -42,7 +42,7 @@ public class SubjectDao {
     static {
         subjects = FXCollections.observableArrayList();
         pqSubjects = FXCollections.observableArrayList();
-        updateSubjectsFromDB();
+//        updateSubjectsFromDB();
         updatePQSubjectsFromDB();
     }
 

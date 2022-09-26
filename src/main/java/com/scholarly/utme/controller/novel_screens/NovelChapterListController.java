@@ -56,7 +56,7 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
         pageTitle.setText(viewModel.getNovel().getName());
         novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + viewModel.getNovel().getImagePath()).toString()));
         authorLabel.setText(viewModel.getAuthor().getName());
-        chaptersLabel.setText(viewModel.getNovel().getChapters());
+        chaptersLabel.setText(viewModel.getNovel().getChaptersCount() + " chapters");
 
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
         chaptersList.setItems(viewModel.getChapters());

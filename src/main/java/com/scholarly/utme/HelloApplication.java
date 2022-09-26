@@ -1,5 +1,7 @@
 package com.scholarly.utme;
 
+import com.scholarly.utme.data.dao.NovelObjectiveBookmarkDao;
+import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
 import com.scholarly.utme.data.util.Database;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.NovelsDatabase;
@@ -22,6 +24,8 @@ public class HelloApplication extends Application {
 ////        stage.setScene(scene);
 
         System.out.println("Databases are ok..." + (NewDatabase.isOK() && Database.isOK() && UserDataDatabase.isOK() && NovelsDatabase.isOK()));
+
+        System.out.println("Create tables are ok..." + (ObjectiveBookmarkDao.createTable() && NovelObjectiveBookmarkDao.createTable()));
 
         try {
             InputStream iconStream = HelloApplication.class.getResourceAsStream("/drawable/app_logo.png");

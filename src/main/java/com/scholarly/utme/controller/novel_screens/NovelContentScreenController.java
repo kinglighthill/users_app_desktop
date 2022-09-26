@@ -1,9 +1,6 @@
 package com.scholarly.utme.controller.novel_screens;
 
-import com.scholarly.utme.data.model.novels.Novel;
-import com.scholarly.utme.data.model.novels.NovelAuthor;
-import com.scholarly.utme.data.model.novels.NovelChapter;
-import com.scholarly.utme.data.model.novels.NovelObjectiveQuestion;
+import com.scholarly.utme.data.model.novels.*;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
 import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
@@ -14,6 +11,7 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -370,6 +368,19 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             quitQuiz();
         });
 
+        bookmarkImage.setOnMouseClicked(event -> {
+            viewModel.handleBookmarkClicked();
+            updateBookmarkIcon();
+        });
+
+        reportImage.setOnMouseClicked(event -> {
+            System.out.println(TAG + "Novel Question Report Image clicked!");
+        });
+
+        speakerImage.setOnMouseClicked(event -> {
+            System.out.println(TAG + "Novel Question Speaker Image clicked!");
+        });
+
     }
 
     private void initializeViews() {
@@ -422,8 +433,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         List<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
 
-//        System.out.println(TAG + "Got questions for selectedChapter with ID -> " + selectedChapter.getId() + ": " + questions.stream().collect(Collectors.toList()));
-
         NovelObjectiveQuestion selectedQuestion = questions.get(viewModel.getSelectedQuestionIndex() - 1);
         int selectedQuestionNumber = selectedQuestion.getQuestionNumber();
 
@@ -450,15 +459,15 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         optionDButton.setDisable(false);
         optionEButton.setDisable(false);
 
+        updateBookmarkIcon();
         updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
+
     }
 
     private void changeSelectedQuestion(int questionIndex) {
         NovelChapter selectedChapter = viewModel.getSelectedChapter();
 
         List<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
-
-//        System.out.println(TAG + "Got questions for selectedChapter with ID -> " + selectedChapter.getId() + ": " + questions.stream().collect(Collectors.toList()));
 
         NovelObjectiveQuestion selectedQuestion = questions.get(questionIndex - 1);
         int selectedQuestionNumber = selectedQuestion.getQuestionNumber();
@@ -487,8 +496,11 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         optionDButton.setDisable(false);
         optionEButton.setDisable(false);
 
-        updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
         quitQuizButton.setDisable(false);
+
+        updateBookmarkIcon();
+        updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
+
     }
 
     private void dispatchAnswerCorrect() {
@@ -521,6 +533,24 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         fiftyFiftyCount.setText(Integer.toString(count));
 
         fiftyFiftyButton.setDisable(count < 1);
+    }
+
+    private void updateBookmarkIcon() {
+        NovelChapter selectedChapter = viewModel.getSelectedChapter();
+
+        List<NovelObjectiveQuestion> questions = viewModel.getChapterQuestions().get(selectedChapter.getId());
+
+        NovelObjectiveQuestion selectedQuestion = questions.get(viewModel.getSelectedQuestionIndex() - 1);
+
+        ObservableList<NovelObjectiveBookmark> bookmarks = viewModel.getChapterBookmarks().get(selectedChapter.getId());
+
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_bookmark.png").toString()));
+
+        bookmarks.forEach(novelObjectiveBookmark -> {
+            if (novelObjectiveBookmark.getQuestionId() == selectedQuestion.getId()) {
+                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_bookmark_filled.png").toString()));
+            }
+        });
     }
 
     private void showResult() {
