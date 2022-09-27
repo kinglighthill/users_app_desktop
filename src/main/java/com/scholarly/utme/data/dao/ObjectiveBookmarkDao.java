@@ -22,51 +22,11 @@ public class ObjectiveBookmarkDao {
     private static final String questionIdColumn = "question_id";
     private static final String createdAtColumn = "created_at";
 
-    private static final ObservableList<ObjectiveBookmark> bookmarks;
-
-    static {
-        System.out.println(TAG + "static initializer called");
-        bookmarks = FXCollections.observableArrayList();
-        updateBookmarksFromDB();
-
-    }
-
-
-    private static void updateBookmarksFromDB() {
-        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTIONS;
-
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-
-            bookmarks.clear();
-            while (rs.next()) {
-                bookmarks.add(new ObjectiveBookmark(
-                        rs.getInt(idColumn),
-                        rs.getInt(subjectIdColumn),
-                        rs.getInt(yearIdColumn),
-                        rs.getInt(questionIdColumn),
-                        rs.getString(createdAtColumn)));
-            }
-
-            System.out.println(TAG + "Got objective bookmarks of length -> " + bookmarks.size());
-
-        } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(
-                    Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load ObjectiveBookmarks from database because " + e.getMessage());
-            bookmarks.clear();
-        }
-    }
-
 
     public static ObservableList<ObjectiveBookmark> getBookmarks(int subjectId) {
         ObservableList<ObjectiveBookmark> bookmarks = FXCollections.observableArrayList();
 
         String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTIONS + " WHERE " + subjectIdColumn + " = " + subjectId;
-
-//        System.out.println(TAG + "Query -> " + query);
 
         try {
             Connection connection = DbConnection.getDbConnection();
@@ -97,7 +57,36 @@ public class ObjectiveBookmarkDao {
     }
 
     public static ObservableList<ObjectiveBookmark> getBookmarks() {
-        return FXCollections.unmodifiableObservableList(bookmarks);
+        ObservableList<ObjectiveBookmark> bookmarks = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTIONS;
+
+        try {
+            Connection connection = DbConnection.getDbConnection();
+            System.out.println(TAG + "Connection object -> " + connection);
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            bookmarks.clear();
+            while (rs.next()) {
+                bookmarks.add(new ObjectiveBookmark(
+                        rs.getInt(idColumn),
+                        rs.getInt(subjectIdColumn),
+                        rs.getInt(yearIdColumn),
+                        rs.getInt(questionIdColumn),
+                        rs.getString(createdAtColumn)));
+            }
+
+            System.out.println(TAG + "Got bookmarks of length -> " + bookmarks.size());
+
+            return bookmarks;
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load bookmarks from database because of " + e.getMessage());
+            bookmarks.clear();
+
+            return null;
+        }
     }
 
 
@@ -123,12 +112,6 @@ public class ObjectiveBookmarkDao {
         return id;
     }
 
-    public static Optional<ObjectiveBookmark> getBookmark(int id) {
-        for (ObjectiveBookmark bookmark : bookmarks) {
-            if (bookmark.getId() == id) return Optional.of(bookmark);
-        }
-        return Optional.empty();
-    }
 
     public static boolean createTable() {
 

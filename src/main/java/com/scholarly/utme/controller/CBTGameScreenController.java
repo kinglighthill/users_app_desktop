@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller;
 
 import com.scholarly.utme.data.model.ObjectiveBookmark;
+import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
@@ -437,17 +438,16 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
     private void updateBookmarkIcon() {
         List<QuestionState> questions = viewModel.getQuestions();
-        QuestionState selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1);
-        int selectedQuestionNumber = selectedQuestion.getQuestion().getQuestionNumber();
+        ObjectiveQuestion selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1).getQuestion();
 
         List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
 
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_green.png").toString()));
 
         bookmarks.forEach(bookmark -> {
-            if (bookmark.getQuestionId() == (questions.get(selectedQuestionNumber - 1).getQuestion()).getId()) {
+            if (bookmark.getQuestionId() == selectedQuestion.getId()) {
                 bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_green_filled.png").toString()));
-//                System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
+
             }
         });
     }

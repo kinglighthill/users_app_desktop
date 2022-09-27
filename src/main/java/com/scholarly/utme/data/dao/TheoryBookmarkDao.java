@@ -24,41 +24,6 @@ public class TheoryBookmarkDao {
     private static final String questionIdColumn = "question_id";
     private static final String createdAtColumn = "created_at";
 
-
-    private static final ObservableList<TheoryBookmark> bookmarks;
-
-    static {
-        System.out.println(TAG + "static initializer called");
-        bookmarks = FXCollections.observableArrayList();
-        updateBookmarksFromDB();
-    }
-
-    private static void updateBookmarksFromDB() {
-        String query = "SELECT * FROM " + Tables.BOOKMARKS_THEORY_QUESTIONS;
-
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-
-            bookmarks.clear();
-            while (rs.next()) {
-                bookmarks.add(new TheoryBookmark(
-                        rs.getInt(idColumn),
-                        rs.getInt(subjectIdColumn),
-                        rs.getInt(yearIdColumn),
-                        rs.getInt(questionIdColumn),
-                        rs.getString(createdAtColumn)));
-            }
-            System.out.println(TAG + "Got Theory Bookmarks of size -> " + bookmarks.size());
-        } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(
-                    Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load TheoryBookmarks from database because " + e.getMessage());
-            bookmarks.clear();
-        }
-    }
-
     public static ObservableList<TheoryBookmark> getBookmarks(int subjectId) {
         ObservableList<TheoryBookmark> bookmarks = FXCollections.observableArrayList();
 
@@ -112,12 +77,6 @@ public class TheoryBookmarkDao {
         return id;
     }
 
-    public static Optional<TheoryBookmark> getBookmark(int id) {
-        for (TheoryBookmark bookmark : bookmarks) {
-            if (bookmark.getId() == id) return Optional.of(bookmark);
-        }
-        return Optional.empty();
-    }
 
     public static boolean createTable() {
 

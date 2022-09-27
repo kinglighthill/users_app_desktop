@@ -72,10 +72,10 @@ public class CBTGameScreenVM implements ViewModel {
                             subjectState.getSubject().getId(),
                             subjectState.getSelectedYear().getId()
                     );
-            assert questionDescriptionsList != null;
+
             questionDescriptions.addAll(questionDescriptionsList);
 
-            objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks(subjectState.getSubject().getId()));
+            objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks());
 
         });
 
@@ -161,35 +161,34 @@ public class CBTGameScreenVM implements ViewModel {
         ObjectiveQuestion question = questions.get(selectedQuestion.get() - 1).getQuestion();
 
         ObservableList<ObjectiveBookmark> oldBookmarks = ObjectiveBookmarkDao.getBookmarks();
-//        System.out.println(TAG + "oldBookmarks -> " + oldBookmarks);
+        System.out.println(TAG + "oldBookmarks -> " + oldBookmarks);
 
         boolean currentQuestionBookmarked = false;
         ObjectiveBookmark bookmarkToDelete = null;
 
+        assert oldBookmarks != null;
         for (ObjectiveBookmark bookmark : oldBookmarks) {
             if (bookmark.getQuestionId() == question.getId()) {
                 currentQuestionBookmarked = true;
                 bookmarkToDelete = bookmark;
-//                System.out.println("Bookmark to delete with id -> " + bookmark.getId() +  " subject id -> " + bookmark.getSubjectId() + " question id -> " + bookmark.getQuestionId());
+
             }
         }
 
         if (currentQuestionBookmarked) {
-            int deletedId = ObjectiveBookmarkDao.deleteBookmark(bookmarkToDelete.getQuestionId());
-//            System.out.println(TAG + "Deleted bookmark with id -> " + deletedId);
+            ObjectiveBookmarkDao.deleteBookmark(bookmarkToDelete.getQuestionId());
         } else {
-            int createdId = ObjectiveBookmarkDao.createBookmark(question.getSubjectId(), question.getYearId(), question.getId());
-//            System.out.println(TAG + "Created bookmark with id -> " + createdId + " subject_id -> " + question.getSubjectId() + " and question_id -> " + question.getId());
+            ObjectiveBookmarkDao.createBookmark(question.getSubjectId(), question.getYearId(), question.getId());
         }
 
         objectiveBookmarks.clear();
         objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks());
 
-//        System.out.println(TAG + "newBookmarks -> " + objectiveBookmarks);
+        System.out.println(TAG + "newBookmarks -> " + objectiveBookmarks);
 
     }
 
-    public class QuestionState {
+    public static class QuestionState {
         private ObjectiveQuestion question;
         private List<String> selectedOptions;
 
