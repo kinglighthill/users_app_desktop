@@ -2,7 +2,6 @@ package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.util.CRUDHelper;
-import com.scholarly.utme.data.util.Database;
 import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
@@ -34,7 +33,7 @@ public class ObjectiveBookmarkDao {
 
 
     private static void updateBookmarksFromDB() {
-        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTION;
+        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTIONS;
 
         try {
             Connection connection = DbConnection.getDbConnection();
@@ -65,7 +64,7 @@ public class ObjectiveBookmarkDao {
     public static ObservableList<ObjectiveBookmark> getBookmarks(int subjectId) {
         ObservableList<ObjectiveBookmark> bookmarks = FXCollections.observableArrayList();
 
-        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTION + " WHERE " + subjectIdColumn + " = " + subjectId;
+        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTIONS + " WHERE " + subjectIdColumn + " = " + subjectId;
 
 //        System.out.println(TAG + "Query -> " + query);
 
@@ -103,7 +102,7 @@ public class ObjectiveBookmarkDao {
 
 
     public static int deleteBookmark(int questionId) {
-        int sqlResponse = CRUDHelper.delete(Tables.BOOKMARKS_OBJECTIVE_QUESTION, questionId);
+        int sqlResponse = CRUDHelper.delete(Tables.BOOKMARKS_OBJECTIVE_QUESTIONS, questionId);
         if (sqlResponse == 1) {
             System.out.println(TAG + "Bookmark with questionId -> " + questionId + " deleted successfully");
         } else {
@@ -115,7 +114,7 @@ public class ObjectiveBookmarkDao {
 
     public static int createBookmark(int subjectId, int yearId, int questionId) {
         int id = (int) CRUDHelper.create(
-                Tables.BOOKMARKS_OBJECTIVE_QUESTION,
+                Tables.BOOKMARKS_OBJECTIVE_QUESTIONS,
                 new String[]{"subject_id", "year_id","question_id"},
                 new Object[]{subjectId, yearId, questionId},
                 new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER});
@@ -133,7 +132,7 @@ public class ObjectiveBookmarkDao {
 
     public static boolean createTable() {
 
-        String query = "CREATE TABLE IF NOT EXISTS " + Tables.BOOKMARKS_OBJECTIVE_QUESTION +
+        String query = "CREATE TABLE IF NOT EXISTS " + Tables.BOOKMARKS_OBJECTIVE_QUESTIONS +
                 " (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "subject_id INTEGER NOT NULL, " +
                 "year_id INTEGER NOT NULL, " +

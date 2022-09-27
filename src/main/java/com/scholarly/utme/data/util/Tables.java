@@ -26,7 +26,7 @@ public class Tables {
 
 
     // User generated Tables
-    public static final String BOOKMARKS_OBJECTIVE_QUESTION = "bookmarks_objective_questions";
+    public static final String BOOKMARKS_OBJECTIVE_QUESTIONS = "bookmarks_objective_questions";
     public static final String BOOKMARKS_THEORY_QUESTIONS = "bookmarks_theory_questions";
     public static final String BOOKMARKS_NOVEL_OBJECTIVE_QUESTION = "novel_bookmarks_objective_question";
 

@@ -105,7 +105,6 @@ public class CRUDHelper {
             System.out.println(TAG + "INSERT SQL Query -> " + queryBuilder);
 
             int affectedRows = pstmt.executeUpdate();
-//            conn.commit();
 
             if (affectedRows > 0) {
 
@@ -139,7 +138,7 @@ public class CRUDHelper {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not delete from " + tableName + " by question_id " + questionId +
-                            " because " + e.getCause());
+                            " because " + e.getMessage());
             return -1;
         }
     }
@@ -158,7 +157,7 @@ public class CRUDHelper {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not delete from " + tableName + " by question_id " + question_id +
-                            " because " + e.getCause());
+                            " because " + e.getMessage());
             return -1;
         }
     }

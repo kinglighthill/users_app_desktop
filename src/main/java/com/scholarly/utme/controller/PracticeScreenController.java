@@ -109,6 +109,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             if (newValue != null) {
                 setupQuestionView();
                 setupTilePane();
+                updateBookmarkIcon();
             }
         });
 
@@ -146,7 +147,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     if (newValue.intValue() <= subjectQuestionsState.getQuestions().size()){
                         changeSelectedTile(oldValue.intValue(), newValue.intValue());
                         changeSelectedQuestion(newValue.intValue());
-
+                        updateBookmarkIcon();
                     }
 
                 }
@@ -632,14 +633,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
                 }
             });
-
         }
     }
 
     private void setupQuestionView() {
-
-        updateBookmarkIcon();
-
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestionIndex = subjectQuestionsState.getSelectedQuestion();
@@ -740,9 +737,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void changeSelectedQuestion(int newValue) {
-
-        updateBookmarkIcon();
-
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 

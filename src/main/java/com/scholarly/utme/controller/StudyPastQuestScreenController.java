@@ -270,27 +270,28 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     private void updateBookmarkIcon() {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
-        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
 
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion selectedQuestion = (ObjectiveQuestion) questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion();
 
-            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
+            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks().get(viewModel.getSelectedSubject().getId());
 
             bookmarks.forEach(bookmark -> {
-                if (bookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion()).getId()) {
+                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
                     bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
                     System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
                 }
             });
 
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+            TheoryQuestion selectedQuestion = (TheoryQuestion) questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion();
 
-            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks();
+            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks().get(viewModel.getSelectedSubject().getId());
 
             bookmarks.forEach(bookmark -> {
-                if (bookmark.getQuestionId() == ((TheoryQuestion) questions.get(selectedQuestion - 1).getQuestion()).getId()) {
+                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
                     bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
                     System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
                 }
@@ -346,7 +347,6 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
             String questionText = currentQuestion.getQuestion();
             questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-
 
             centerVBox.getChildren().removeAll(optionA, optionB, optionC, optionD);
 

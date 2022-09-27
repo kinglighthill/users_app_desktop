@@ -39,7 +39,6 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
     private HashMap<String, ObservableList<ObjectiveBookmark>> subjectBookmarks = new HashMap<>();
 
     private HashMap<Integer, ObservableList<ObjectiveBookmark>> objectiveBookmarks = new HashMap<>();
-//    private ObservableList<ObjectiveBookmark> objectiveBookmarks = FXCollections.observableArrayList();
 
     private HashMap<Integer, ObservableList<TheoryBookmark>> theoryBookmarks = new HashMap<>();
 
@@ -294,10 +293,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
             if (currentQuestionBookmarked) {
                 TheoryBookmarkDao.deleteBookmark(bookmarkToDelete.getQuestionId());
-
             } else {
                 TheoryBookmarkDao.createBookmark(currentQuestion.getSubjectId(), currentQuestion.getYearId(), currentQuestion.getId());
-
             }
 
             ObservableList<TheoryBookmark> newBookmarks = TheoryBookmarkDao.getBookmarks(

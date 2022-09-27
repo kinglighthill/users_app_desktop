@@ -98,7 +98,6 @@ public class TheoryBookmarkDao {
         } else {
             System.out.println(TAG + "Bookmark delete operation unsuccessful");
         }
-
         return sqlResponse;
     }
 
