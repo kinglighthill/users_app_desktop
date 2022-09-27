@@ -132,11 +132,10 @@ public class NovelObjectiveBookmarkDao {
             Connection connection = DbConnection.getDbConnection();
 
             Statement statement = connection.createStatement();
-            boolean result = statement.execute(query);
-
+            statement.execute(query);
             return true;
         } catch (SQLException e) {
-            System.out.println(TAG + "Could not create Objective Bookmark Table because " + e.getMessage());
+            System.out.println(TAG + "Could not create Novel Objective Bookmark Table because " + e.getMessage());
             return false;
         }
     }

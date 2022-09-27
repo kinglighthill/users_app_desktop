@@ -59,9 +59,9 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
                             .subscribe(
                                     subjectState -> {
                                         if (subjectState.getSelected()) {
-                                            System.out.println(TAG + "subject obj: " + subjectState.getSubject() + " selected.. adding to selected list in map with allotted time -> " + subjectState.getSubject().getMinutesAlloted());
+                                            System.out.println(TAG + "subject obj: " + subjectState.getSubject() + " selected.. adding to selected list in map with allotted time -> " + subjectState.getSubject().getMinutesAllotted());
                                             selectedObjectiveSubjects.put(subjectState.getSubject().getShortTitle(), subjectState);
-                                            selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAlloted());
+                                            selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAllotted());
 
                                             System.out.println(TAG + "Selected Objective Subjects: (Key Set) -> " + selectedObjectiveSubjects.keySet());
                                             System.out.println(TAG + "Selected Objective Subjects Time Map: (Key Set) -> " + selectedSubjectAllottedTime.keySet() + " with values -> " + selectedSubjectAllottedTime.values());
@@ -89,7 +89,7 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
                                             System.out.println(TAG + "subject theory: " + subjectState.getSubject() + " selected.. adding to selected list in map");
                                             selectedTheorySubjects.put(subjectState.getSubject().getShortTitle(), subjectState);
 
-                                            selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAlloted());
+                                            selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAllotted());
 
                                             System.out.println(TAG + "Selected Theory Subjects: (Key Set) -> " + selectedTheorySubjects.keySet());
                                         } else {

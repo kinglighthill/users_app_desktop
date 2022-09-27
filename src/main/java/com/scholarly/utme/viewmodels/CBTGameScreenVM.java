@@ -175,7 +175,7 @@ public class CBTGameScreenVM implements ViewModel {
         }
 
         if (currentQuestionBookmarked) {
-            int deletedId = ObjectiveBookmarkDao.deleteBookmark(bookmarkToDelete.getSubjectId(), bookmarkToDelete.getQuestionId());
+            int deletedId = ObjectiveBookmarkDao.deleteBookmark(bookmarkToDelete.getQuestionId());
 //            System.out.println(TAG + "Deleted bookmark with id -> " + deletedId);
         } else {
             int createdId = ObjectiveBookmarkDao.createBookmark(question.getSubjectId(), question.getYearId(), question.getId());

@@ -4,6 +4,8 @@ import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.TheoryBookmark;
 import com.scholarly.utme.data.util.CRUDHelper;
 import com.scholarly.utme.data.util.Database;
+import com.scholarly.utme.data.util.DbConnection;
+import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -16,16 +18,11 @@ import java.util.logging.Logger;
 public class TheoryBookmarkDao {
     private static final String TAG = "TheoryBookmarkDao: ";
 
-    private static final String tableName = "question_bookmarks";
-
     private static final String idColumn = "_id";
     private static final String subjectIdColumn = "subject_id";
     private static final String yearIdColumn = "year_id";
     private static final String questionIdColumn = "question_id";
     private static final String createdAtColumn = "created_at";
-
-    private static final String BOOKMARKS_THEORY_QUESTION = "bookmarks_theory_question";
-    private static final String ID_COLUMN = "_id";
 
 
     private static final ObservableList<TheoryBookmark> bookmarks;
@@ -33,76 +30,14 @@ public class TheoryBookmarkDao {
     static {
         System.out.println(TAG + "static initializer called");
         bookmarks = FXCollections.observableArrayList();
-//        updateBookmarksFromDB();
-    }
-
-
-    public static ObservableList<TheoryBookmark> getBookmarks(int subjectId) {
-
-        String query = "SELECT * FROM " + BOOKMARKS_THEORY_QUESTION + " WHERE " + subjectIdColumn + " = " + subjectId;
-
-        try (Connection connection = Database.connect()) {
-            System.out.println(TAG + "Connection object -> " + connection);
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-            bookmarks.clear();
-            while (rs.next()) {
-                bookmarks.add(new TheoryBookmark(
-                        rs.getInt(idColumn),
-                        rs.getInt(subjectIdColumn),
-                        rs.getInt(yearIdColumn),
-                        rs.getInt(questionIdColumn),
-                        rs.getString(createdAtColumn)));
-            }
-
-            System.out.println(TAG + "Got bookmarks of length -> " + bookmarks.size());
-
-            return bookmarks;
-        } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(
-                    Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load bookmarks from database because of " + e.getMessage());
-            bookmarks.clear();
-
-            return null;
-        }
-    }
-
-    public static ObservableList<TheoryBookmark> getBookmarks() {
-        String query = "SELECT * FROM " + BOOKMARKS_THEORY_QUESTION;
-
-        try (Connection connection = Database.connect()) {
-            System.out.println(TAG + "Connection object -> " + connection);
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-            bookmarks.clear();
-            while (rs.next()) {
-                bookmarks.add(new TheoryBookmark(
-                        rs.getInt(idColumn),
-                        rs.getInt(subjectIdColumn),
-                        rs.getInt(yearIdColumn),
-                        rs.getInt(questionIdColumn),
-                        rs.getString(createdAtColumn)));
-            }
-
-            System.out.println(TAG + "Got bookmarks of length -> " + bookmarks.size());
-
-            return bookmarks;
-        } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(
-                    Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load bookmarks from database because of " + e.getMessage());
-            bookmarks.clear();
-
-            return null;
-        }
+        updateBookmarksFromDB();
     }
 
     private static void updateBookmarksFromDB() {
+        String query = "SELECT * FROM " + Tables.BOOKMARKS_THEORY_QUESTIONS;
 
-        String query = "SELECT * FROM " + BOOKMARKS_THEORY_QUESTION;
-
-        try (Connection connection = Database.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
 
@@ -115,7 +50,7 @@ public class TheoryBookmarkDao {
                         rs.getInt(questionIdColumn),
                         rs.getString(createdAtColumn)));
             }
-            System.out.println(TAG + "Bookmarks -> " + bookmarks);
+            System.out.println(TAG + "Got Theory Bookmarks of size -> " + bookmarks.size());
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
@@ -124,11 +59,42 @@ public class TheoryBookmarkDao {
         }
     }
 
+    public static ObservableList<TheoryBookmark> getBookmarks(int subjectId) {
+        ObservableList<TheoryBookmark> bookmarks = FXCollections.observableArrayList();
 
-    public static int deleteBookmark(int subjectId, int questionId) {
-        int sqlResponse = CRUDHelper.delete(BOOKMARKS_THEORY_QUESTION, subjectId, questionId);
+        String query = "SELECT * FROM " + Tables.BOOKMARKS_THEORY_QUESTIONS + " WHERE " + subjectIdColumn + " = " + subjectId;
+
+        try {
+            Connection connection = DbConnection.getDbConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            bookmarks.clear();
+            while (rs.next()) {
+                bookmarks.add(new TheoryBookmark(
+                        rs.getInt(idColumn),
+                        rs.getInt(subjectIdColumn),
+                        rs.getInt(yearIdColumn),
+                        rs.getInt(questionIdColumn),
+                        rs.getString(createdAtColumn)));
+            }
+
+            System.out.println(TAG + "Got Theory bookmarks of length -> " + bookmarks.size() + " for subject with ID -> " + subjectId);
+
+            return bookmarks;
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load bookmarks from database because of " + e.getMessage());
+            bookmarks.clear();
+
+            return null;
+        }
+    }
+
+    public static int deleteBookmark(int questionId) {
+        int sqlResponse = CRUDHelper.delete(Tables.BOOKMARKS_THEORY_QUESTIONS, questionId);
         if (sqlResponse == 1) {
-            System.out.println(TAG + "Bookmark with subjectId -> " + subjectId + " and " + " questionId -> " + questionId + " deleted successfully");
+            System.out.println(TAG + "Bookmark with questionId -> " + questionId + " deleted successfully");
         } else {
             System.out.println(TAG + "Bookmark delete operation unsuccessful");
         }
@@ -138,7 +104,7 @@ public class TheoryBookmarkDao {
 
     public static int createBookmark(int subjectId, int yearId, int questionId) {
         int id = (int) CRUDHelper.create(
-                BOOKMARKS_THEORY_QUESTION,
+                Tables.BOOKMARKS_THEORY_QUESTIONS,
                 new String[]{"subject_id", "year_id","question_id"},
                 new Object[]{subjectId, yearId, questionId},
                 new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER});
@@ -154,49 +120,30 @@ public class TheoryBookmarkDao {
         return Optional.empty();
     }
 
-    public static boolean checkTable() {
-        String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='bookmarks_theory_question'";
-
-        try (Connection conn = Database.connect()) {
-            // create a new table
-            if (conn != null) {
-                Statement statement = conn.createStatement();
-                boolean result = statement.execute(sql);
-                System.out.println("Theory Bookmark Table Query available -> " + result);
-                return result;
-            }
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-        return false;
-    }
-
-
     public static boolean createTable() {
 
-        String sql = "CREATE TABLE IF NOT EXISTS " + BOOKMARKS_THEORY_QUESTION +
-                " (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+        String query = "CREATE TABLE IF NOT EXISTS " + Tables.BOOKMARKS_THEORY_QUESTIONS +
+                "(_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "subject_id INTEGER NOT NULL, " +
                 "year_id INTEGER NOT NULL, " +
                 "question_id INTEGER NOT NULL, " +
                 "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "FOREIGN KEY(subject_id) REFERENCES subjects(_id), " +
+                "FOREIGN KEY(subject_id) REFERENCES pq_subjects(_id), " +
                 "FOREIGN KEY(year_id) REFERENCES years(_id), " +
-                "UNIQUE(subject_id, year_id, question_id) " +
+                "FOREIGN KEY(question_id) REFERENCES pq_theory_questions(_id), " +
+                "UNIQUE(subject_id, year_id, question_id)" +
                 ");";
 
-        try (Connection conn = Database.connect()) {
-            // create a new table
-            if (conn != null) {
-                Statement statement = conn.createStatement();
-                statement.execute(sql);
-            }
-            System.out.println(TAG + "Theory Bookmark Table created successfully");
+//        System.out.println(TAG + "TheoryBookmarks Create Table Query -> " + query);
+
+        try {
+            Connection connection = DbConnection.getDbConnection();
+
+            Statement statement = connection.createStatement();
+            statement.execute(query);
             return true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println(TAG + "Could not create Theory Bookmark Table because " + e.getMessage());
             return false;
         }
     }

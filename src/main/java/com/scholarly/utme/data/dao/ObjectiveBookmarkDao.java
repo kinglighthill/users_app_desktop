@@ -29,74 +29,9 @@ public class ObjectiveBookmarkDao {
         System.out.println(TAG + "static initializer called");
         bookmarks = FXCollections.observableArrayList();
         updateBookmarksFromDB();
-//        insertBookmark();
+
     }
 
-
-    public static ObservableList<ObjectiveBookmark> getBookmarks(int subjectId) {
-        ObservableList<ObjectiveBookmark> bookmarks = FXCollections.observableArrayList();
-
-        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTION + " WHERE " + subjectIdColumn + " = " + subjectId;
-
-        System.out.println(TAG + "Query -> " + query);
-
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            System.out.println(TAG + "Connection object -> " + connection);
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-            bookmarks.clear();
-            while (rs.next()) {
-                bookmarks.add(new ObjectiveBookmark(
-                        rs.getInt(idColumn),
-                        rs.getInt(subjectIdColumn),
-                        rs.getInt(yearIdColumn),
-                        rs.getInt(questionIdColumn),
-                        rs.getString(createdAtColumn)));
-            }
-
-            System.out.println(TAG + "Got bookmarks of length -> " + bookmarks.size());
-
-            return bookmarks;
-        } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(
-                    Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load bookmarks from database because of " + e.getMessage());
-            bookmarks.clear();
-
-            return null;
-        }
-    }
-
-    public static ObservableList<ObjectiveBookmark> getBookmarks() {
-        ObservableList<ObjectiveBookmark> bookmarks = FXCollections.observableArrayList();
-        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTION;
-
-        try (Connection connection = Database.connect()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-            bookmarks.clear();
-            while (rs.next()) {
-                bookmarks.add(new ObjectiveBookmark(
-                        rs.getInt(idColumn),
-                        rs.getInt(subjectIdColumn),
-                        rs.getInt(yearIdColumn),
-                        rs.getInt(questionIdColumn),
-                        rs.getString(createdAtColumn)));
-            }
-
-            System.out.println(TAG + "Got bookmarks of length -> " + bookmarks.size());
-
-            return bookmarks;
-        } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(
-                    Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load bookmarks from database because of " + e.getMessage());
-            bookmarks.clear();
-
-            return null;
-        }
-    }
 
     private static void updateBookmarksFromDB() {
         String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTION;
@@ -115,7 +50,9 @@ public class ObjectiveBookmarkDao {
                         rs.getInt(questionIdColumn),
                         rs.getString(createdAtColumn)));
             }
-            System.out.println(TAG + "Bookmarks -> " + bookmarks);
+
+            System.out.println(TAG + "Got objective bookmarks of length -> " + bookmarks.size());
+
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
@@ -125,10 +62,50 @@ public class ObjectiveBookmarkDao {
     }
 
 
-    public static int deleteBookmark(int subjectId, int questionId) {
-        int sqlResponse = CRUDHelper.delete(Tables.BOOKMARKS_OBJECTIVE_QUESTION, subjectId, questionId);
+    public static ObservableList<ObjectiveBookmark> getBookmarks(int subjectId) {
+        ObservableList<ObjectiveBookmark> bookmarks = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM " + Tables.BOOKMARKS_OBJECTIVE_QUESTION + " WHERE " + subjectIdColumn + " = " + subjectId;
+
+//        System.out.println(TAG + "Query -> " + query);
+
+        try {
+            Connection connection = DbConnection.getDbConnection();
+            System.out.println(TAG + "Connection object -> " + connection);
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            bookmarks.clear();
+            while (rs.next()) {
+                bookmarks.add(new ObjectiveBookmark(
+                        rs.getInt(idColumn),
+                        rs.getInt(subjectIdColumn),
+                        rs.getInt(yearIdColumn),
+                        rs.getInt(questionIdColumn),
+                        rs.getString(createdAtColumn)));
+            }
+
+            System.out.println(TAG + "Got bookmarks of length -> " + bookmarks.size() + " for subject with ID -> " + subjectId);
+
+            return bookmarks;
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load bookmarks from database because of " + e.getMessage());
+            bookmarks.clear();
+
+            return null;
+        }
+    }
+
+    public static ObservableList<ObjectiveBookmark> getBookmarks() {
+        return FXCollections.unmodifiableObservableList(bookmarks);
+    }
+
+
+    public static int deleteBookmark(int questionId) {
+        int sqlResponse = CRUDHelper.delete(Tables.BOOKMARKS_OBJECTIVE_QUESTION, questionId);
         if (sqlResponse == 1) {
-            System.out.println(TAG + "Bookmark with subjectId -> " + subjectId + " and " + " questionId -> " + questionId + " deleted successfully");
+            System.out.println(TAG + "Bookmark with questionId -> " + questionId + " deleted successfully");
         } else {
             System.out.println(TAG + "Bookmark delete operation unsuccessful");
         }
@@ -154,26 +131,6 @@ public class ObjectiveBookmarkDao {
         return Optional.empty();
     }
 
-  /*  public static boolean checkTable() {
-        String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='bookmarks_objective_question'";
-
-        try (Connection conn = Database.connect()) {
-            // create a new table
-            if (conn != null) {
-                Statement statement = conn.createStatement();
-                boolean result = statement.execute(sql);
-                System.out.println("Bookmark Table Query result -> " + result);
-                return result;
-            }
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-        return false;
-    }*/
-
-
     public static boolean createTable() {
 
         String query = "CREATE TABLE IF NOT EXISTS " + Tables.BOOKMARKS_OBJECTIVE_QUESTION +
@@ -194,9 +151,8 @@ public class ObjectiveBookmarkDao {
             Connection connection = DbConnection.getDbConnection();
 
             Statement statement = connection.createStatement();
-            boolean result = statement.execute(query);
+            statement.execute(query);
 
-            System.out.println(TAG + "Bookmark Table created successfully with result -> " + result);
             return true;
         } catch (SQLException e) {
             System.out.println(TAG + "Could not create Objective Bookmark Table because " + e.getMessage());

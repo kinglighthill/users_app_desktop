@@ -4,17 +4,17 @@ public class PQSubject {
 
     private int id;
     private int subjectId;
-    private int minutesAlloted;
+    private int minutesAllotted;
     private int order;
     private String title;
     private String shortTitle;
     private String colorCode;
 
 
-    public PQSubject(int id, int subjectId, int minutesAlloted, int order, String title, String shortTitle, String colorCode) {
+    public PQSubject(int id, int subjectId, int minutesAllotted, int order, String title, String shortTitle, String colorCode) {
         this.id = id;
         this.subjectId = subjectId;
-        this.minutesAlloted = minutesAlloted;
+        this.minutesAllotted = minutesAllotted;
         this.order = order;
         this.title = title;
         this.shortTitle = shortTitle;
@@ -33,8 +33,8 @@ public class PQSubject {
         return subjectId;
     }
 
-    public int getMinutesAlloted() {
-        return minutesAlloted;
+    public int getMinutesAllotted() {
+        return minutesAllotted;
     }
 
     public int getOrder() {
@@ -65,8 +65,8 @@ public class PQSubject {
         this.subjectId = subjectId;
     }
 
-    public void setMinutesAlloted(int minutesAlloted) {
-        this.minutesAlloted = minutesAlloted;
+    public void setMinutesAllotted(int minutesAllotted) {
+        this.minutesAllotted = minutesAllotted;
     }
 
     public void setOrder(int order) {
