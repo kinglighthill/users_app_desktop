@@ -93,8 +93,6 @@ public class NovelContentScreenVM implements ViewModel {
                 selectedChapter.get().getId()
         );
 
-//        System.out.println(TAG + "New Novel Bookmarks for Chapter with ID -> " + selectedChapter.get().getId() + " ARE " + new ArrayList<>(newBookmarks));
-
         chapterBookmarks.get(selectedChapter.get().getId()).clear();
         chapterBookmarks.put(selectedChapter.get().getId(), newBookmarks);
     }

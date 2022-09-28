@@ -544,49 +544,6 @@
 
                 <ListView fx:id="newsList" prefWidth="390" prefHeight="600" style="-fx-background-color: white;"/>
 
-                <!--<ScrollPane fx:id="performanceScrollPane" prefHeight="200" fitToHeight="true" >
-                    <HBox fx:id="scrollHBox" spacing="15">
-                        <Panel prefHeight="150" prefWidth="150" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
-                            <center>
-                                <VBox spacing="10" alignment="TOP_CENTER">
-                                    <Label fx:id="firstPerformanceCBTText" text="CBT Practice" textFill="#12AF20"/>
-                                    <Label fx:id="firstPerformanceCBTDate" text="28/11/2021" textFill="#034801"/>
-                                    <Label fx:id="firstPerformancePercentText" text="57.87%" textFill="#12AF20"/>
-                                    <Separator>
-                                        <VBox.margin>
-                                            <Insets top="20"/>
-                                        </VBox.margin>
-                                    </Separator>
-                                    <Label text="English, Mathematics, Chemistry, Physics" textFill="#034801" wrapText="true" textAlignment="CENTER"/>
-                                </VBox>
-                            </center>
-                            <padding>
-                                <Insets topRightBottomLeft="10"/>
-                            </padding>
-                        </Panel>
-
-                        <Panel prefHeight="150" prefWidth="150" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
-                            <center>
-                                <VBox spacing="10" alignment="TOP_CENTER">
-                                    <Label fx:id="secondPerformanceCBTText" text="CBT Practice" textFill="#12AF20"/>
-                                    <Label fx:id="secondPerformanceCBTDate" text="28/11/2021" textFill="#034801"/>
-                                    <Label fx:id="secondPerformancePercentText" text="57.87%" textFill="#12AF20"/>
-                                    <Separator>
-                                        <VBox.margin>
-                                            <Insets top="20"/>
-                                        </VBox.margin>
-                                    </Separator>
-                                    <Label text="English, Mathematics, Chemistry, Physics" textFill="#034801" wrapText="true" textAlignment="CENTER" />
-                                </VBox>
-                            </center>
-
-                            <padding>
-                                <Insets topRightBottomLeft="10"/>
-                            </padding>
-                        </Panel>
-                    </HBox>
-                </ScrollPane>-->
-
             </VBox>
 
             <padding>

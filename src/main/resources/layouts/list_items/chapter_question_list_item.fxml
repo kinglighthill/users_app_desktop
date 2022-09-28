@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.image.ImageView?>
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+
+    <graphic>
+        <HBox alignment="CENTER_LEFT" style="-fx-border-color: #F1F1F1; -fx-border-radius: 5;">
+            <VBox prefWidth="300" spacing="15">
+                <Label fx:id="questionLabel" text="JAMB Registrar resigns in office" textFill="#053500" prefHeight="50" wrapText="true"/>
+
+                <VBox spacing="10" prefWidth="200" prefHeight="150" style="-fx-background-color: #FAFAFA; -fx-background-radius: 5;">
+                    <Label fx:id="optionA" text="6th Sept, 2021" prefHeight="30" textFill="#053500" wrapText="true">
+                        <padding>
+                            <Insets left="10"/>
+                        </padding>
+                    </Label>
+                    <Separator/>
+                    <Label fx:id="optionB" text="6th Sept, 2021" prefHeight="30" textFill="#053500" wrapText="true">
+                        <padding>
+                            <Insets left="10"/>
+                        </padding>
+                    </Label>
+                    <Separator/>
+                    <Label fx:id="optionC" text="6th Sept, 2021" prefHeight="30" textFill="#053500" wrapText="true">
+                        <padding>
+                            <Insets left="10"/>
+                        </padding>
+                    </Label>
+                    <Separator/>
+                    <Label fx:id="optionD" text="6th Sept, 2021" prefHeight="30" textFill="#053500" wrapText="true">
+                        <padding>
+                            <Insets left="10"/>
+                        </padding>
+                    </Label>
+                    <Separator/>
+                    <Label fx:id="optionE" text="6th Sept, 2021" prefHeight="30" textFill="#053500" wrapText="true">
+                        <padding>
+                            <Insets left="10"/>
+                        </padding>
+                    </Label>
+
+                    <padding>
+                        <Insets topRightBottomLeft="10"/>
+                    </padding>
+                </VBox>
+
+                <VBox fx:id="footerVBox">
+                    <Panel>
+                        <left>
+                            <HBox spacing="15">
+                                <ImageView fx:id="shareIcon" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true"/>
+                                <ImageView fx:id="micIcon" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true"/>
+                                <ImageView fx:id="bookmarkIcon" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true"/>
+                                <ImageView fx:id="reportIcon" fitWidth="15" fitHeight="15" preserveRatio="true" pickOnBounds="true"/>
+                            </HBox>
+                        </left>
+                        <right>
+                            <Label fx:id="explanationLabel" text="Explanation" textFill="#053500"/>
+                        </right>
+                    </Panel>
+
+                    <Label fx:id="explanationText" prefHeight="50" textFill="#053500" wrapText="true">
+                        <padding>
+                            <Insets topRightBottomLeft="10"/>
+                        </padding>
+                    </Label>
+                </VBox>
+
+
+                <padding>
+                    <Insets left="10" top="10" bottom="10"/>
+                </padding>
+            </VBox>
+
+            <padding>
+                <Insets left="10" top="10" bottom="10"/>
+            </padding>
+        </HBox>
+
+    </graphic>
+
+</fx:root>

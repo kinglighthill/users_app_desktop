@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller.novel_screens;
 
 import com.scholarly.utme.data.model.novels.*;
+import com.scholarly.utme.ui.cellFactories.ChapterQuestionListCellFactory;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
 import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
@@ -46,6 +47,9 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
     @FXML
     private ListView<NovelChapter> chaptersList;
+
+    @FXML
+    private ListView<NovelObjectiveQuestion> chapterQuestionsList;
 
     @FXML
     private Panel questionFooter, resultPane;
@@ -171,8 +175,12 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         /***************** Novel Quiz Section ***************/
 
+        chapterQuestionsList.setItems(viewModel.getChapterQuestions().get(viewModel.getSelectedChapter().getId()));
+        chapterQuestionsList.setCellFactory(new ChapterQuestionListCellFactory());
+
         viewModel.selectedQuestionIndexProperty().addListener(((observableValue, oldValue, newValue) -> {
             changeSelectedQuestion(newValue.intValue());
+            updateBookmarkIcon();
         }));
 
 
@@ -346,6 +354,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         takeQuizButton.setOnAction(event -> {
             setupQuizView();
+            updateBookmarkIcon();
             Animations.translateOut(chaptersListPane, 400);
             takeQuizButton.setDisable(true);
 //            Animations.fadeIn(dimmer, 500);
@@ -459,7 +468,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         optionDButton.setDisable(false);
         optionEButton.setDisable(false);
 
-        updateBookmarkIcon();
         updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
 
     }
@@ -498,7 +506,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         quitQuizButton.setDisable(false);
 
-        updateBookmarkIcon();
         updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
 
     }
