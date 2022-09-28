@@ -2,10 +2,7 @@ package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.novels.NovelObjectiveQuestion;
-import com.scholarly.utme.data.util.NewDatabase;
-import com.scholarly.utme.data.util.QuestionAnswer;
-import com.scholarly.utme.data.util.QuestionOption;
-import com.scholarly.utme.data.util.Tables;
+import com.scholarly.utme.data.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -71,7 +68,8 @@ public class ObjectiveQuestionDao {
 
 //        System.out.println(TAG + "Query = " + query);
 
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             ResultSet rs = statement.executeQuery();
@@ -103,7 +101,7 @@ public class ObjectiveQuestionDao {
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
+                    LocalDateTime.now() + ": Could not load Objective questions from database because " + e.getMessage());
             questions.clear();
 
             return null;
@@ -113,9 +111,8 @@ public class ObjectiveQuestionDao {
     private static void updateNovelQuestions() {
         String query = "SELECT * FROM " + Tables.NOVEL_OBJECTIVE_QUESTIONS;
 
-        System.out.println(TAG + "Query = " + query);
-
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             ResultSet rs = statement.executeQuery();
@@ -147,9 +144,11 @@ public class ObjectiveQuestionDao {
         }
     }
 
-    public static List<NovelObjectiveQuestion> getNovelQuestions(int chapterId) {
-        return novelQuestions.stream().filter(novelObjectiveQuestion ->
-                novelObjectiveQuestion.getChapterId() == chapterId).collect(Collectors.toList());
+    public static ObservableList<NovelObjectiveQuestion> getNovelQuestions(int chapterId) {
+        return FXCollections.observableArrayList(
+                novelQuestions.stream().filter(novelObjectiveQuestion ->
+                novelObjectiveQuestion.getChapterId() == chapterId).collect(Collectors.toList())
+        );
     }
 
     public static String removeBracketsFromArray(ObservableList<Integer> topicIds) {

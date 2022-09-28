@@ -3,6 +3,7 @@ package com.scholarly.utme.data.dao;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.util.Database;
+import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
@@ -17,8 +18,6 @@ import java.util.logging.Logger;
 
 public class SubjectDao {
     public static final String TAG = "SubjectDao: ";
-
-    private static final String tableName = Tables.SUBJECTS;
 
     private static final String idColumn = "_id";
     private static final String tableNameColumn = "table_name";
@@ -41,18 +40,18 @@ public class SubjectDao {
     private static final ObservableList<PQSubject> pqSubjects;
 
     static {
-        System.out.println(TAG + "static initializer called");
         subjects = FXCollections.observableArrayList();
         pqSubjects = FXCollections.observableArrayList();
-        updateSubjectsFromDB();
+//        updateSubjectsFromDB();
         updatePQSubjectsFromDB();
     }
 
     public static String getSubjectName(String subjectShortTitle) {
-        String query = "SELECT " + pqTitleColumn + " FROM " + tableName + " WHERE " + pqShortTitleColumn + " LIKE '" + subjectShortTitle + "'";
-        System.out.println(query);
+        String query = "SELECT " + pqTitleColumn + " FROM " + Tables.SUBJECTS + " WHERE " + pqShortTitleColumn + " LIKE '" + subjectShortTitle + "'";
 
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
+            System.out.println(TAG + "Connection object -> " + connection);
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             String subjectName = "";
@@ -63,44 +62,17 @@ public class SubjectDao {
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
+                    LocalDateTime.now() + ": Could not load Subject name from database because " + e.getMessage());
             return null;
         }
     }
 
-    private static void updateSubjectsFromDB() {
-
-        String query = "SELECT * FROM " + Tables.SUBJECTS;
-
-        try (Connection connection = Database.connect()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-            subjects.clear();
-            while (rs.next()) {
-                subjects.add(new Subject(
-                        rs.getInt(idColumn),
-                        rs.getString(tableNameColumn),
-                        rs.getString(subjectNameColumn),
-                        rs.getInt(timeAllottedColumn),
-                        rs.getString(subjectDescriptionColumn),
-                        rs.getString(shortDescriptionColumn),
-                        rs.getString(subjectColorColumn),
-                        rs.getString(colorNameColumn)));
-            }
-        } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(
-                    Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
-            subjects.clear();
-        }
-    }
-
     private static void updatePQSubjectsFromDB() {
-
         String query = "SELECT * FROM " + Tables.PQ_SUBJECTS + " JOIN " + Tables.SUBJECTS + " ON " + Tables.PQ_SUBJECTS + ".subject_id = " + Tables.SUBJECTS + "._id ORDER BY 'order'";
 
-        try (Connection connection = NewDatabase.connect()) {
-            assert connection != null;
+        try {
+            Connection connection = DbConnection.getDbConnection();
+            System.out.println(TAG + "Connection object -> " + connection);
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             pqSubjects.clear();
@@ -120,6 +92,33 @@ public class SubjectDao {
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
             pqSubjects.clear();
+        }
+    }
+
+    private static void updateSubjectsFromDB() {
+        String query = "SELECT * FROM " + Tables.SUBJECTS;
+
+        try {
+            Connection connection = NewDatabase.connect();
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            subjects.clear();
+            while (rs.next()) {
+                subjects.add(new Subject(
+                        rs.getInt(idColumn),
+                        rs.getString(tableNameColumn),
+                        rs.getString(subjectNameColumn),
+                        rs.getInt(timeAllottedColumn),
+                        rs.getString(subjectDescriptionColumn),
+                        rs.getString(shortDescriptionColumn),
+                        rs.getString(subjectColorColumn),
+                        rs.getString(colorNameColumn)));
+            }
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
+            subjects.clear();
         }
     }
 

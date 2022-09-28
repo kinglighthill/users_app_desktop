@@ -60,10 +60,6 @@ public class Novel {
         return chaptersCount;
     }
 
-    public String getChapters() {
-        return chaptersCount + " chapters";
-    }
-
     public int getGenreId() {
         return genreId;
     }

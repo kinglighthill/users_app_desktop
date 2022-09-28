@@ -51,7 +51,8 @@ public class TheoryQuestionDao {
 
 //        System.out.println(TAG + "Query = " + query);
 
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             questions.clear();
@@ -76,7 +77,7 @@ public class TheoryQuestionDao {
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Subjects from database ");
+                    LocalDateTime.now() + ": Could not load Theory Questions from database because " + e.getMessage());
             questions.clear();
 
             return null;

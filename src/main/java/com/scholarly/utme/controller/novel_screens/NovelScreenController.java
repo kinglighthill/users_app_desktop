@@ -124,7 +124,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
             novelDescription.setText(newValue.getAbout());
             authorLabel.setText(viewModel.getAuthor(newValue).getName());
-            chaptersLabel.setText(newValue.getChapters());
+            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
 
         }));
 

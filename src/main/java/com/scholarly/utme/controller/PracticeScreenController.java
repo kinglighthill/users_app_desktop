@@ -109,6 +109,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             if (newValue != null) {
                 setupQuestionView();
                 setupTilePane();
+                updateBookmarkIcon();
             }
         });
 
@@ -146,7 +147,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     if (newValue.intValue() <= subjectQuestionsState.getQuestions().size()){
                         changeSelectedTile(oldValue.intValue(), newValue.intValue());
                         changeSelectedQuestion(newValue.intValue());
-
+                        updateBookmarkIcon();
                     }
 
                 }
@@ -606,105 +607,54 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private void updateBookmarkIcon() {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
-        int selectedQuestionNumber = subjectQuestionsState.getSelectedQuestion();
-//        System.out.println(TAG + "updateBookmarkIcon selectedQuestionNumber -> " + selectedQuestionNumber);
-//        List<ObjectiveBookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getShortTitle()());
 
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
-//        System.out.println(TAG + "updateBookmarkIcon bookmarks -> " + bookmarks);
+            ObjectiveQuestion selectedQuestion = questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getObjectiveQuestion();
+
+            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks().get(viewModel.getSelectedSubject().getId());
 
             bookmarks.forEach(bookmark -> {
-//            System.out.println(TAG + "currentQuestionIndex -> " + ((ObjectiveQuestion) questions.get(selectedQuestionNumber - 1).getQuestion()).getId());
-//            System.out.println(TAG + "Bookmark question id -> " + bookmark.getQuestionId());
-                if (bookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(selectedQuestionNumber - 1).getQuestion()).getId()) {
+                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
                     bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
+
                 }
             });
 
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
-            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks();
-//        System.out.println(TAG + "updateBookmarkIcon bookmarks -> " + bookmarks);
+            TheoryQuestion selectedQuestion = questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getTheoryQuestion();
+
+            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks().get(viewModel.getSelectedSubject().getId());
 
             bookmarks.forEach(bookmark -> {
-//            System.out.println(TAG + "currentQuestionIndex -> " + ((ObjectiveQuestion) questions.get(selectedQuestionNumber - 1).getQuestion()).getId());
-//            System.out.println(TAG + "Bookmark question id -> " + bookmark.getQuestionId());
-                if (bookmark.getQuestionId() == ((TheoryQuestion) questions.get(selectedQuestionNumber - 1).getQuestion()).getId()) {
+                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
                     bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
+
                 }
             });
-
         }
-
-
-        /*bookmarks.forEach(bookmark -> {
-            if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-                if (bookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
-            } else {
-                if (bookmark.getQuestionId() == ((TheoryQuestion) questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
-            }
-        });*/
     }
 
     private void setupQuestionView() {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
-        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
+        int selectedQuestionIndex = subjectQuestionsState.getSelectedQuestion();
 
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            List<ObjectiveBookmark> objectiveBookmarks = viewModel.getObjectiveBookmarks();
-
-            objectiveBookmarks.forEach(objectiveBookmark -> {
-                if (objectiveBookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
-            });
-
-        } else {
-            List<TheoryBookmark> theoryBookmarks = viewModel.getTheoryBookmarks();
-
-            theoryBookmarks.forEach(theoryBookmark -> {
-                if (theoryBookmark.getQuestionId() == ((TheoryQuestion) questions.get(selectedQuestion - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
-            });
-        }
-
-
-        /*bookmarks.forEach(bookmark -> {
-            if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-                if (bookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
-            } else {
-                if (bookmark.getQuestionId() == ((TheoryQuestion) questions.get(selectedQuestion - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
-            }
-        });*/
 
         // prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
         // nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
 
         System.out.println(TAG + "Index of the selected subject in subjectList: " + subjectList.getSelectionModel().getSelectedIndex());
-        if (subjectList.getSelectionModel().getSelectedIndex() + 1 == selectedQuestion - 1){
+        if (subjectList.getSelectionModel().getSelectedIndex() + 1 == selectedQuestionIndex - 1){
             prevButton.setDisable(true);
         }
 
-        questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
+        questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
+            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestionIndex - 1).getQuestion();
+            questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
 
             List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
@@ -751,7 +701,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             optionCButton.setText(" (C) " + question.getOptionC().getText());
             optionDButton.setText(" (D) " + question.getOptionD().getText());
 
-            int selectedOptionId = questions.get(selectedQuestion - 1).getSelectedOptionId();
+            int selectedOptionId = questions.get(selectedQuestionIndex - 1).getSelectedOptionId();
             if (selectedOptionId != -1) {
                 if (selectedOptionId == question.getOptionA().getId()) {
                     toggleGroup.selectToggle(optionAButton);
@@ -766,8 +716,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 toggleGroup.selectToggle(null);
             }
         } else {
-            TheoryQuestion question = (TheoryQuestion) questions.get(selectedQuestion - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
+            TheoryQuestion question = (TheoryQuestion) questions.get(selectedQuestionIndex - 1).getQuestion();
+            questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
 
             List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
@@ -789,36 +739,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private void changeSelectedQuestion(int newValue) {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
-
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
-//        System.out.println(TAG + "changeSelectedQuestion bookmarks -> " + bookmarks);
-
-            bookmarks.forEach(bookmark -> {
-//            System.out.println(TAG + "currentQuestionIndex -> " + ((ObjectiveQuestion) questions.get(newValue - 1).getQuestion()).getId());
-//            System.out.println(TAG + "Bookmark question id -> " + bookmark.getQuestionId());
-                if (bookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(newValue - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
-                }
-            });
-
-        } else {
-            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks();
-//        System.out.println(TAG + "changeSelectedQuestion bookmarks -> " + bookmarks);
-
-            bookmarks.forEach(bookmark -> {
-//            System.out.println(TAG + "currentQuestionIndex -> " + ((ObjectiveQuestion) questions.get(newValue - 1).getQuestion()).getId());
-//            System.out.println(TAG + "Bookmark question id -> " + bookmark.getQuestionId());
-                if (bookmark.getQuestionId() == ((TheoryQuestion) questions.get(newValue - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
-                }
-            });
-
-        }
 
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {

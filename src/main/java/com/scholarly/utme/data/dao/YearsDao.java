@@ -2,6 +2,7 @@ package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.util.Database;
+import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.Tables;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
@@ -21,15 +22,11 @@ import java.util.logging.Logger;
 public class YearsDao {
     private static final String TAG = "YearsDao: ";
 
-    private static final String tableName = "years";
-
     private static final String idColumn = "_id";
     private static final String yearColumn = "year";
     private static final String shortDescriptionColumn = "short_desc";
     private static final String isNewColumn = "is_new";
     private static final String availableColumn = "available";
-
-    private static final String tableNamePlusIdColumn = tableName + "." + idColumn;
 
     private static final ObservableList<Year> years;
 
@@ -55,9 +52,12 @@ public class YearsDao {
 
         }
 
+//        System.out.println(TAG + "Query -> " + query);
+
 //        System.out.println(TAG + "Available Years For Subject with id -> " + subjectId + " Query -> " + query + " AND Type -> " + type);
 
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
@@ -86,9 +86,10 @@ public class YearsDao {
 
     private static void updateYearsFromDB() {
 
-        String query = "SELECT * FROM " + tableName;
+        String query = "SELECT * FROM " + Tables.YEARS;
 
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             years.clear();

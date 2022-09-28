@@ -98,14 +98,13 @@ public class CRUDHelper {
         }
         queryBuilder.append(");");
 
-        try (Connection conn = Database.connect()) {
+        try {
+            Connection conn = DbConnection.getDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(queryBuilder.toString());
-            System.out.println(TAG + " Connection object -> " + conn);
 
             System.out.println(TAG + "INSERT SQL Query -> " + queryBuilder);
 
             int affectedRows = pstmt.executeUpdate();
-//            conn.commit();
 
             if (affectedRows > 0) {
 
@@ -124,23 +123,41 @@ public class CRUDHelper {
         return -1;
     }
 
-    public static int delete(String tableName, int subject_id, int question_id) {
+    public static int delete(String tableName, int subjectId, int questionId) {
         String sql = "DELETE FROM " + tableName + " WHERE subject_id = ? AND question_id = ?";
 
-        try (Connection conn = Database.connect()) {
-            System.out.println(TAG + " Connection object -> " + conn);
+        try {
+            Connection conn = DbConnection.getDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, subject_id);
-            pstmt.setInt(2, question_id);
+            pstmt.setInt(1, subjectId);
+            pstmt.setInt(2, questionId);
             int deletedRowIndex = pstmt.executeUpdate();
-//            conn.commit();
+            return deletedRowIndex;
+
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not delete from " + tableName + " by question_id " + questionId +
+                            " because " + e.getMessage());
+            return -1;
+        }
+    }
+
+    public static int delete(String tableName, int question_id) {
+        String sql = "DELETE FROM " + tableName + " WHERE question_id = ?";
+
+        try {
+            Connection conn = DbConnection.getDbConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, question_id);
+            int deletedRowIndex = pstmt.executeUpdate();
             return deletedRowIndex;
 
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not delete from " + tableName + " by question_id " + question_id +
-                            " because " + e.getCause());
+                            " because " + e.getMessage());
             return -1;
         }
     }

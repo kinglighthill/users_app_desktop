@@ -10,15 +10,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NewDatabase {
-
     public static final String TAG = "NewDatabase: ";
 
     private static final String location = HelloApplication.class.getResource("/assets/note_syllabus_main.db").toExternalForm();
 
+    private static Connection connection;
+
 
     public static boolean isOK() {
 
-        return checkDrivers() && checkConnection();
+        return checkDrivers();
 
     }
 
@@ -33,20 +34,22 @@ public class NewDatabase {
         }
     }
 
-    private static boolean checkConnection() {
-        try (Connection connection = connect()) {
-            return connection != null;
-        } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, LocalDateTime.now() + ": Could not connect to database because " + e.getMessage());
-            return false;
-        }
-    }
+    /*private static boolean checkConnection() {
+        Connection connection = connect();
+        System.out.println(TAG + "Connection -> " + connection);
+        return connection != null;
+    }*/
 
     public static Connection connect() {
         String dbPrefix = "jdbc:sqlite:";
-        Connection connection;
+
         try {
-            connection = DriverManager.getConnection(dbPrefix + location);
+            if (connection == null) {
+                connection = DriverManager.getConnection(dbPrefix + location);
+                System.out.println(TAG + "Connection created successfully: " + connection.toString());
+            } else {
+                System.out.println(TAG + "Retrieved existing connection -> " + connection);
+            }
 
         } catch (SQLException exception) {
             Logger.getAnonymousLogger().log(Level.SEVERE,

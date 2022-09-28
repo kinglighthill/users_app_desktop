@@ -158,20 +158,29 @@
                                 </Label>
                             </center>
                             <bottom>
-                                <Panel StackPane.alignment="BOTTOM_CENTER" fx:id="questionFooter" style="-fx-background-color: #E2F2E4;">
+                                <StackPane style="-fx-background-color: #E2F2E4; -fx-background-radius: 0 0 12 12;">
+                                    <ImageView fx:id="bookmarkImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_LEFT"/>
+                                    <ImageView fx:id="reportImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER"/>
+                                    <ImageView fx:id="speakerImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT"/>
+                                    <padding>
+                                        <Insets left="15" right="15" top="10" bottom="10"/>
+                                    </padding>
+                                </StackPane>
+
+                                <!--<Panel fx:id="questionFooter" style="-fx-background-color: #E2F2E4;">
                                     <left>
-                                        <ImageView fx:id="bookmarkImage"/>
+
                                     </left>
                                     <center>
-                                        <ImageView fx:id="reportImage"/>
+
                                     </center>
                                     <right>
-                                        <ImageView fx:id="speakerImage"/>
+
                                     </right>
                                     <padding>
                                         <Insets left="15" right="15" top="10" bottom="10"/>
                                     </padding>
-                                </Panel>
+                                </Panel>-->
                             </bottom>
 
                         </BorderPane>

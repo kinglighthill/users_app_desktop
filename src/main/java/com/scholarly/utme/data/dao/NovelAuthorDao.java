@@ -2,6 +2,7 @@ package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelAuthor;
+import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.NovelsDatabase;
 import com.scholarly.utme.data.util.Tables;
@@ -31,10 +32,10 @@ public class NovelAuthorDao {
     }
 
     private static void updateNovelAuthorsFromDb() {
-
         String query = "SELECT * FROM " + Tables.NOVEL_AUTHORS;
 
-        try (Connection connection = NewDatabase.connect()) {
+        try {
+            Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             novelAuthors.clear();
