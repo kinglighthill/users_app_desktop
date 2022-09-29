@@ -10,24 +10,27 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChapterQuestionListItemCell extends ListCell<NovelObjectiveQuestion> {
+public class NovelChapterQuestionListItemCell extends ListCell<NovelObjectiveQuestion> {
 
     public VBox footerVBox;
 
     public Label questionLabel, optionA, optionB, optionC, optionD, optionE, explanationLabel, explanationText;
 
-    public ImageView shareIcon, micIcon, bookmarkIcon, reportIcon;
+    public ImageView shareIcon, micIcon, bookmarkIcon, reportIcon, explanationIcon;
 
     private List<QuestionOption> options;
 
+    private List<Label> optionLabels;
+
     boolean isExplanationShowing = false;
 
-    public ChapterQuestionListItemCell() {
+    public NovelChapterQuestionListItemCell() {
         loadFxml();
 
         options = new ArrayList<>();
@@ -37,12 +40,20 @@ public class ChapterQuestionListItemCell extends ListCell<NovelObjectiveQuestion
         options.add(new QuestionOption(3, optionD.getText()));
         options.add(new QuestionOption(4, optionE.getText()));
 
+        optionLabels = new ArrayList<>();
+        optionLabels.add(optionA);
+        optionLabels.add(optionB);
+        optionLabels.add(optionC);
+        optionLabels.add(optionD);
+        optionLabels.add(optionE);
+
         footerVBox.getChildren().remove(explanationText);
+
     }
 
     private void loadFxml() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/list_items/chapter_question_list_item.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/list_items/novel_chapter_question_list_item.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             loader.load();
@@ -71,15 +82,20 @@ public class ChapterQuestionListItemCell extends ListCell<NovelObjectiveQuestion
             optionE.setText("(E)  " + item.getOptionE().getText());
 
             explanationText.setText(item.getQuestionAnswer().getExplanation());
-            /*options.forEach(option -> {
-                if (option.getId() == item.getQuestionAnswer().getId()) {
 
+            // Set green text color on the Option Answer
+            for (int i = 0; i < options.size(); i++) {
+                optionLabels.get(i).setTextFill(Paint.valueOf("#053500"));
+                if (item.getQuestionAnswer().getId() == options.get(i).getId()) {
+                    optionLabels.get(i).setTextFill(Paint.valueOf("#12AF20"));
                 }
-            });*/
+            }
+
             shareIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_question_share.png").toString()));
             micIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_question_mic.png").toString()));
             bookmarkIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_question_bookmark.png").toString()));
             reportIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_question_report.png").toString()));
+            explanationIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_explanation_icon.png").toString()));
 
 
             explanationLabel.setOnMouseClicked(event -> {
@@ -91,7 +107,9 @@ public class ChapterQuestionListItemCell extends ListCell<NovelObjectiveQuestion
                     isExplanationShowing = true;
                 }
             });
+
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+
         }
     }
 }
