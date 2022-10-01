@@ -97,7 +97,6 @@ public class NovelChapterQuestionListItemCell extends ListCell<NovelObjectiveQue
             reportIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_question_report.png").toString()));
             explanationIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_explanation_icon.png").toString()));
 
-
             explanationLabel.setOnMouseClicked(event -> {
                 if (isExplanationShowing) {
                     footerVBox.getChildren().remove(explanationText);

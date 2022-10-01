@@ -9,7 +9,7 @@ public class DbConnection {
     private static final String TAG = "DbConnection: ";
 
     private static final String dbPrefix = "jdbc:sqlite:";
-    private static final String location = HelloApplication.class.getResource("/assets/note_syllabus_main.db").getPath();
+    private static final String location = HelloApplication.class.getResource("/assets/note_syllabus_main.db").toExternalForm();
     private static final String path = HelloApplication.class.getResource("/assets/note_syllabus_main.db").getPath();
 
 
@@ -20,7 +20,7 @@ public class DbConnection {
     private static Connection connection;
 
     public static Connection getDbConnection() {
-        try{
+        try {
             if (connection == null){
                 connection = DriverManager.getConnection(DATABASE_URL2);
                 System.out.println(TAG + "Connection created successfully: " + connection.toString());

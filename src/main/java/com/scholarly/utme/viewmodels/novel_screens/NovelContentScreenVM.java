@@ -55,7 +55,7 @@ public class NovelContentScreenVM implements ViewModel {
 
             chapterQuestions.put(novelChapter.getId(), ObjectiveQuestionDao.getNovelQuestions(novelChapter.getId()));
 
-            chapterBookmarks.put(novelChapter.getId(), NovelObjectiveBookmarkDao.getNovelBookmarkWithChapterId(novelChapter.getId()));
+            chapterBookmarks.put(novelChapter.getId(), NovelObjectiveBookmarkDao.getNovelBookmarks(novelChapter.getId()));
         });
 
         int fiftyFifty = Math.round(chapterQuestions.get(selectedChapter.get().getId()).size()/10f);

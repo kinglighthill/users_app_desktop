@@ -52,10 +52,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private Panel questionFooter, resultPane;
 
     @FXML
-    private VBox dimmer, answerPane, questionPane, chapterQuizQuestionPane;
+    private VBox dimmer, exitNovelDialog, exitDialogDimmer, quitDialogDimmer, quitQuizDialog;
 
     @FXML
-    private Button backButton, prevButton, nextButton, takeQuizButton, quitQuizButton, fiftyFiftyButton;
+    private Button backButton, prevButton, nextButton, takeQuizButton, quitQuizButton, fiftyFiftyButton, exitDialogCancelButton, exitDialogExitButton, quitDialogCancelButton, quitDialogQuitButton;
 
     @FXML
     private Button optionAButton, optionBButton, optionCButton, optionDButton, optionEButton, answerContinueButton, tryAgainButton, resultContinueButton;
@@ -70,10 +70,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private HBox chapterHeader;
 
     @FXML
-    private VBox chaptersListPane, chapterQuizPane;
+    private VBox chaptersListPane, chapterQuizPane, answerPane, questionPane, chapterQuizQuestionPane;
 
     @FXML
-    private ImageView bookmarkImage, reportImage, speakerImage;
+    private ImageView bookmarkImage, reportImage, speakerImage, exitQuestionMarkIcon, quitQuestionMarkIcon;
 
     @InjectViewModel
     private NovelContentScreenVM viewModel;
@@ -95,6 +95,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         options.add(optionBButton);
         options.add(optionCButton);
         options.add(optionDButton);
+        options.add(optionEButton);
 
         viewModel.processInitialData(getInitialData());
 
@@ -166,8 +167,19 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         });;
 
         backButton.setOnAction(event -> {
+            exitDialogDimmer.setVisible(true);
+            Animations.translateIn(exitNovelDialog, 300);
+
+        });
+
+        exitDialogExitButton.setOnAction(event -> {
             ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovel(), viewModel.getAuthor()));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
+        });
+
+        exitDialogCancelButton.setOnAction(event -> {
+            exitDialogDimmer.setVisible(false);
+            Animations.translateOut(exitNovelDialog, 300);
         });
 
 
@@ -362,11 +374,24 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         });
 
         quitQuizButton.setOnAction(event -> {
+            quitDialogDimmer.setVisible(true);
+            Animations.translateIn(quitQuizDialog, 300);
+
+        });
+
+        quitDialogQuitButton.setOnAction(event -> {
+            quitDialogDimmer.setVisible(false);
+            Animations.translateOut(quitQuizDialog, 300);
             Animations.translateIn(chaptersListPane, 400);
             Animations.slideOut(chapterQuizPane, 0f, 500f, 500);
             chapterQuestionsList.setVisible(false);
             chapterQuizQuestionPane.setVisible(true);
             quitQuiz();
+        });
+
+        quitDialogCancelButton.setOnAction(event -> {
+            quitDialogDimmer.setVisible(false);
+            Animations.translateOut(quitQuizDialog, 300);
         });
 
         tryAgainButton.setOnAction(event -> {
@@ -414,6 +439,9 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_bookmark.png").toString()));
         reportImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_report.png").toString()));
         speakerImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_speaker.png").toString()));
+        exitQuestionMarkIcon.setImage(new Image(getClass().getResource("/drawable/dialog_question_mark.png").toString()));
+        quitQuestionMarkIcon.setImage(new Image(getClass().getResource("/drawable/dialog_question_mark.png").toString()));
+
 
         chaptersList.setBackground(Background.EMPTY);
         tryAgainButton.setBackground(Background.EMPTY);
