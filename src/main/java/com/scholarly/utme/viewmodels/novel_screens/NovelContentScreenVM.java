@@ -55,7 +55,7 @@ public class NovelContentScreenVM implements ViewModel {
 
             chapterQuestions.put(novelChapter.getId(), ObjectiveQuestionDao.getNovelQuestions(novelChapter.getId()));
 
-            chapterBookmarks.put(novelChapter.getId(), NovelObjectiveBookmarkDao.getNovelBookmarkWithChapterId(novelChapter.getId()));
+            chapterBookmarks.put(novelChapter.getId(), NovelObjectiveBookmarkDao.getNovelBookmarks(novelChapter.getId()));
         });
 
         int fiftyFifty = Math.round(chapterQuestions.get(selectedChapter.get().getId()).size()/10f);
@@ -92,8 +92,6 @@ public class NovelContentScreenVM implements ViewModel {
         ObservableList<NovelObjectiveBookmark> newBookmarks = NovelObjectiveBookmarkDao.getNovelBookmarks(
                 selectedChapter.get().getId()
         );
-
-//        System.out.println(TAG + "New Novel Bookmarks for Chapter with ID -> " + selectedChapter.get().getId() + " ARE " + new ArrayList<>(newBookmarks));
 
         chapterBookmarks.get(selectedChapter.get().getId()).clear();
         chapterBookmarks.put(selectedChapter.get().getId(), newBookmarks);

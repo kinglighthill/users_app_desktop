@@ -74,7 +74,6 @@ public class Animations {
         fadeIn.setNode(node);
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
-        fadeIn.setCycleCount(1);
         fadeIn.setAutoReverse(false);
 
         node.setVisible(true);

@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller.novel_screens;
 
 import com.scholarly.utme.data.model.novels.*;
+import com.scholarly.utme.ui.cellFactories.NovelChapterQuestionListCellFactory;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
 import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
@@ -11,11 +12,9 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -35,7 +34,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/novel_screens/NovelContentScreen.fxml")
 public class NovelContentScreenController implements FxmlView<NovelContentScreenVM>, Initializable {
@@ -48,13 +46,16 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private ListView<NovelChapter> chaptersList;
 
     @FXML
+    private ListView<NovelObjectiveQuestion> chapterQuestionsList;
+
+    @FXML
     private Panel questionFooter, resultPane;
 
     @FXML
-    private VBox dimmer, answerPane, questionPane;
+    private VBox dimmer, exitNovelDialog, exitDialogDimmer, quitDialogDimmer, quitQuizDialog;
 
     @FXML
-    private Button backButton, prevButton, nextButton, takeQuizButton, quitQuizButton, fiftyFiftyButton;
+    private Button backButton, prevButton, nextButton, takeQuizButton, quitQuizButton, fiftyFiftyButton, exitDialogCancelButton, exitDialogExitButton, quitDialogCancelButton, quitDialogQuitButton;
 
     @FXML
     private Button optionAButton, optionBButton, optionCButton, optionDButton, optionEButton, answerContinueButton, tryAgainButton, resultContinueButton;
@@ -63,16 +64,16 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private Label pageTitle, chapterIndex, chapterTitle, chapterContent, chapterCount, questionNumberLabel, fiftyFiftyCount, questionLabel, answerLabel, explanationLabel;
 
     @FXML
-    private Label numOfCorrectAnsLabel, numOfGuessesLabel, scorePercentageLabel, resultHeader;
+    private Label numOfCorrectAnsLabel, numOfGuessesLabel, scorePercentageLabel, resultHeader, chapterQuizHeader, showAllAnswersLabel;
 
     @FXML
     private HBox chapterHeader;
 
     @FXML
-    private VBox chaptersListPane, chapterQuizPane;
+    private VBox chaptersListPane, chapterQuizPane, answerPane, questionPane, chapterQuizQuestionPane;
 
     @FXML
-    private ImageView bookmarkImage, reportImage, speakerImage;
+    private ImageView bookmarkImage, reportImage, speakerImage, exitQuestionMarkIcon, quitQuestionMarkIcon;
 
     @InjectViewModel
     private NovelContentScreenVM viewModel;
@@ -94,6 +95,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         options.add(optionBButton);
         options.add(optionCButton);
         options.add(optionDButton);
+        options.add(optionEButton);
 
         viewModel.processInitialData(getInitialData());
 
@@ -121,6 +123,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 //            System.out.println(TAG + "Selected Chapter Position -> " + newValue.getPosition());
 //            System.out.println(TAG + "Selected Chapter Sections -> " + viewModel.getChapterSections().get(newValue.getId()).stream().collect(Collectors.toList()));
 
+            chapterQuizHeader.setText("Chapter " + newValue.getPosition() + " Quiz");
 
             chapterTitle.setText(newValue.getTitle());
             if (!chapterHeader.getChildren().contains(chapterIndex)) {
@@ -164,15 +167,31 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         });;
 
         backButton.setOnAction(event -> {
+            exitDialogDimmer.setVisible(true);
+            Animations.translateIn(exitNovelDialog, 300);
+
+        });
+
+        exitDialogExitButton.setOnAction(event -> {
             ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovel(), viewModel.getAuthor()));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
+        });
+
+        exitDialogCancelButton.setOnAction(event -> {
+            exitDialogDimmer.setVisible(false);
+            Animations.translateOut(exitNovelDialog, 300);
         });
 
 
         /***************** Novel Quiz Section ***************/
 
+        chapterQuizHeader.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + " Quiz");
+        chapterQuestionsList.setItems(viewModel.getChapterQuestions().get(viewModel.getSelectedChapter().getId()));
+        chapterQuestionsList.setCellFactory(new NovelChapterQuestionListCellFactory());
+
         viewModel.selectedQuestionIndexProperty().addListener(((observableValue, oldValue, newValue) -> {
             changeSelectedQuestion(newValue.intValue());
+            updateBookmarkIcon();
         }));
 
 
@@ -346,26 +365,55 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         takeQuizButton.setOnAction(event -> {
             setupQuizView();
+            updateBookmarkIcon();
             Animations.translateOut(chaptersListPane, 400);
             takeQuizButton.setDisable(true);
-//            Animations.fadeIn(dimmer, 500);
             Animations.fadeIn(questionPane, 300);
             Animations.slideIn(chapterQuizPane, 500f, 0f, 500);
 
         });
 
         quitQuizButton.setOnAction(event -> {
+            quitDialogDimmer.setVisible(true);
+            Animations.translateIn(quitQuizDialog, 300);
+
+        });
+
+        quitDialogQuitButton.setOnAction(event -> {
+            quitDialogDimmer.setVisible(false);
+            Animations.translateOut(quitQuizDialog, 300);
+            Animations.translateIn(chaptersListPane, 400);
+            Animations.slideOut(chapterQuizPane, 0f, 500f, 500);
+            chapterQuestionsList.setVisible(false);
+            chapterQuizQuestionPane.setVisible(true);
             quitQuiz();
         });
 
+        quitDialogCancelButton.setOnAction(event -> {
+            quitDialogDimmer.setVisible(false);
+            Animations.translateOut(quitQuizDialog, 300);
+        });
+
         tryAgainButton.setOnAction(event -> {
+            Animations.fadeIn(questionPane, 300);
+            Animations.translateOut(resultPane, 300);
             refreshQuiz();
 
         });
 
         resultContinueButton.setOnAction(event -> {
             Animations.translateOut(resultPane, 300);
+            Animations.translateIn(chaptersListPane, 400);
+            Animations.slideOut(chapterQuizPane, 0f, 500f, 500);
             quitQuiz();
+        });
+
+        showAllAnswersLabel.setOnMouseClicked(event -> {
+            Animations.translateOut(resultPane, 300);
+            Animations.translateIn(chapterQuestionsList, 400);
+            chapterQuizQuestionPane.setVisible(false);
+//            Animations.slideOut(chapterQuizQuestionPane, 0f, 500f, 500);
+            refreshQuiz();
         });
 
         bookmarkImage.setOnMouseClicked(event -> {
@@ -391,9 +439,13 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_bookmark.png").toString()));
         reportImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_report.png").toString()));
         speakerImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_speaker.png").toString()));
+        exitQuestionMarkIcon.setImage(new Image(getClass().getResource("/drawable/dialog_question_mark.png").toString()));
+        quitQuestionMarkIcon.setImage(new Image(getClass().getResource("/drawable/dialog_question_mark.png").toString()));
+
 
         chaptersList.setBackground(Background.EMPTY);
         tryAgainButton.setBackground(Background.EMPTY);
+        chapterQuestionsList.setBackground(Background.EMPTY);
     }
 
     private void initializeFont() {
@@ -459,7 +511,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         optionDButton.setDisable(false);
         optionEButton.setDisable(false);
 
-        updateBookmarkIcon();
         updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
 
     }
@@ -498,13 +549,11 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         quitQuizButton.setDisable(false);
 
-        updateBookmarkIcon();
         updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
 
     }
 
     private void dispatchAnswerCorrect() {
-        System.out.println(TAG + "Answer correct!");
         Media sound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setStopTime(Duration.millis(400));
@@ -520,7 +569,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     }
 
     private void dispatchAnswerIncorrect() {
-        System.out.println(TAG + "Answer Incorrect!");
         Media sound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setStopTime(Duration.millis(400));
@@ -564,17 +612,18 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private void quitQuiz() {
         viewModel.setSelectedQuestionIndex(1);
         viewModel.setFiftyFiftyCount(5);
-        Animations.slideOut(chapterQuizPane, 0f, 500f, 500);
         takeQuizButton.setDisable(false);
-//        Animations.fadeOut(dimmer, 500);
-        Animations.translateIn(chaptersListPane, 400);
+
+        viewModel.setTotalGuesses(0);
+        viewModel.setCorrectAnswers(0);
     }
 
     private void refreshQuiz() {
-        Animations.fadeIn(questionPane, 300);
-        Animations.translateOut(resultPane, 300);
         viewModel.setSelectedQuestionIndex(1);
         viewModel.setFiftyFiftyCount(5);
+
+        viewModel.setTotalGuesses(0);
+        viewModel.setCorrectAnswers(0);
     }
 
     private void renderNovel(NovelChapter chapter) {
