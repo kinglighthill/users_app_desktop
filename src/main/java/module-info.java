@@ -37,6 +37,7 @@ module com.scholarly.utme {
     exports com.scholarly.utme.network;
 
     opens com.scholarly.utme.ui.listcells to javafx.fxml;
+    opens com.scholarly.utme.network.model to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.text to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.image to com.google.gson;
@@ -74,6 +75,7 @@ module com.scholarly.utme {
 
     exports com.scholarly.utme.data.model.newDb;
     exports com.scholarly.utme.data.model.novels;
+    exports com.scholarly.utme.network.model;
     exports com.scholarly.utme.controller.landing_screens;
     exports com.scholarly.utme.viewmodels.landing_screens;
     exports com.scholarly.utme.controller.trivia_screens;

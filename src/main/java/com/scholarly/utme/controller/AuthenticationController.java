@@ -1,6 +1,13 @@
 package com.scholarly.utme.controller;
 
+import com.google.gson.Gson;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.network.NetworkModule;
+import com.scholarly.utme.network.NetworkService;
+import com.scholarly.utme.network.model.DeviceInfo;
+import com.scholarly.utme.network.model.ReferrerInfo;
+import com.scholarly.utme.network.model.SignupResponse;
+import com.scholarly.utme.network.model.User;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -17,12 +24,16 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import jidefx.scene.control.field.NumberField;
+import okhttp3.*;
 
+import java.io.IOException;
 import java.net.URL;
+import java.security.Signature;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/AuthenticationScreen.fxml")
 public class AuthenticationController implements FxmlView<AuthenticationScreenVM>, Initializable {
+    private static final String TAG = "AuthenticationController: ";
 
     @FXML
     private StackPane authenticationSection;
@@ -89,22 +100,25 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         Label signUpPhoneError = getPhoneError();
 
         signUpProceedButton.setOnAction(event -> {
+            String email = signUpEmailField.getText();
             signUpEmailSection.getChildren().remove(signUpEmailError);
-            if (!signUpEmailField.getText().contains("@")) {
+            if (!email.contains("@")) {
                 signUpEmailSection.getChildren().add(signUpEmailError);
                 return;
             }
 
+            String password = signUpPasswordField.getCharacters().toString();
             signUpPasswordSection.getChildren().remove(signUpPasswordError);
-            if (signUpPasswordField.getCharacters().length() < 6) {
+            if (password.length() < 6) {
                 if (!signUpPasswordSection.getChildren().contains(signUpPasswordError)) {
                     signUpPasswordSection.getChildren().add(signUpPasswordError);
                 }
                 return;
             }
 
+            String phoneNumber = signUpPhoneField.getCharacters().toString();
             signUpPhoneSection.getChildren().remove(signUpPhoneError);
-            if (signUpPhoneField.getCharacters().length() < 11) {
+            if (phoneNumber.length() < 11) {
                 if (!signUpPhoneSection.getChildren().contains(signUpPhoneError)) {
                     signUpPhoneSection.getChildren().add(signUpPhoneError);
                 }
@@ -115,8 +129,25 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             signUpPasswordSection.getChildren().remove(signUpPasswordError);
             signUpPhoneSection.getChildren().remove(signUpPhoneError);
 
-            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
-            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+            DeviceInfo deviceInfo = new DeviceInfo();
+            ReferrerInfo referrerInfo = new ReferrerInfo();
+            User user = new User();
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setPhoneNumber(phoneNumber);
+            user.setDeviceInfo(deviceInfo);
+            user.setReferrerInfo(referrerInfo);
+
+            SignupResponse response = NetworkService.createNewUser(user);
+            if (response != null) {
+                if (response.getMessage().equalsIgnoreCase("success")) {
+                    ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                    ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                } else {
+                    System.out.println(TAG + "Cannot sign up because -> " + response.getMessage());
+
+                }
+            }
 
         });
 
