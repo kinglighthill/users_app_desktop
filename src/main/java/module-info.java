@@ -8,6 +8,10 @@ module com.scholarly.utme {
     requires com.dlsc.formsfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
+    requires jidefx.fields;
+    requires jidefx.converters;
+    requires jidefx.common;
+    requires jidefx.decoration;
 
     requires java.sql;
     requires io.reactivex.rxjava3;
@@ -19,10 +23,8 @@ module com.scholarly.utme {
     requires java.prefs;
     requires jdk.jsobject;
     requires org.apache.commons.collections4;
-    requires jidefx.fields;
-    requires jidefx.converters;
-    requires jidefx.common;
-    requires jidefx.decoration;
+    requires okhttp3;
+    requires okhttp3.logging;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;
@@ -32,6 +34,7 @@ module com.scholarly.utme {
     exports com.scholarly.utme.data.util;
     exports com.scholarly.utme.data.model;
     exports com.scholarly.utme.ui.utils;
+    exports com.scholarly.utme.network;
 
     opens com.scholarly.utme.ui.listcells to javafx.fxml;
     opens com.scholarly.utme.data.model.newDb.contentType to com.google.gson;

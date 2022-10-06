@@ -81,32 +81,6 @@ public class Database {
 //        return false;
 //    }
 
-
-    /*private static boolean createTables() {
-
-        String sql = "CREATE TABLE IF NOT EXISTS " + BOOKMARKS_OBJECTIVE_QUESTIONS +
-                " ( _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                "subject_id INTEGER NOT NULL, " +
-                "year_id INTEGER NOT NULL, " +
-                "question_id INTEGER NOT NULL," +
-                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "FOREIGN KEY(subject_id) REFERENCES subjects(_id), " +
-                "FOREIGN KEY(year_id) REFERENCES years(_id), " +
-                "UNIQUE(subject_id, year_id, question_id) " +
-                ");";
-
-        try (Connection conn = DriverManager.getConnection(location);
-             Statement stmt = conn.createStatement()) {
-            // create a new table
-            stmt.execute(sql);
-
-            return true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }*/
-
     public static Connection connect() {
         String dbPrefix = "jdbc:sqlite:";
         Connection connection;
