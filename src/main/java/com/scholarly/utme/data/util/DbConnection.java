@@ -24,7 +24,7 @@ public class DbConnection {
             if (connection == null){
                 connection = DriverManager.getConnection(DATABASE_URL2);
                 System.out.println(TAG + "Connection created successfully: " + connection.toString());
-//                System.out.println(TAG + "Connection url -> " + DATABASE_URL2);
+
             } else {
                 System.out.println(TAG + "Retrieved existing Connection : " + connection.toString());
             }

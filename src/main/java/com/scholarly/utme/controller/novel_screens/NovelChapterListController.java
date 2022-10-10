@@ -23,8 +23,6 @@ import javafx.scene.layout.Background;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static com.scholarly.utme.util.Constants.NOVELS_SCREEN;
-
 @FxmlPath("/layouts/novel_screens/NovelChapterListScreen.fxml")
 public class NovelChapterListController implements FxmlView<NovelChapterListVM>, Initializable {
     private static final String TAG = "NovelChapterListController: ";
