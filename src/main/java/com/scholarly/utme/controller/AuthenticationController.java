@@ -9,14 +9,14 @@ import com.scholarly.utme.network.model.ReferrerInfo;
 import com.scholarly.utme.network.model.SignupResponse;
 import com.scholarly.utme.network.model.User;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -27,9 +27,18 @@ import jidefx.scene.control.field.NumberField;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.Signature;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.prefs.Preferences;
+
+import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
+import static com.scholarly.utme.util.Constants.BASE_URL;
+import static com.scholarly.utme.util.Constants.PREF_KEY_SIGNUP_TOKEN;
 
 @FxmlPath("/layouts/AuthenticationScreen.fxml")
 public class AuthenticationController implements FxmlView<AuthenticationScreenVM>, Initializable {
@@ -60,8 +69,12 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private CustomNumberField signUpPhoneField;
 
 
+    private Preferences userPreferences;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        userPreferences = AppPreferences.getPreferences();
 
         boolean showSignUpScreen = (boolean) ViewSwitcher.retrieveData();
         if (showSignUpScreen) {
@@ -129,6 +142,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             signUpPasswordSection.getChildren().remove(signUpPasswordError);
             signUpPhoneSection.getChildren().remove(signUpPhoneError);
 
+
             DeviceInfo deviceInfo = new DeviceInfo();
             ReferrerInfo referrerInfo = new ReferrerInfo();
             User user = new User();
@@ -138,18 +152,22 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             user.setDeviceInfo(deviceInfo);
             user.setReferrerInfo(referrerInfo);
 
-            SignupResponse response = NetworkService.createNewUser(user);
-            if (response != null) {
-                if (response.getMessage().equalsIgnoreCase("success")) {
-                    ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
-                    ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                } else {
-                    System.out.println(TAG + "Cannot sign up because -> " + response.getMessage());
+            // Check for internet connectivity
+            try {
+                URL url = new URL("https://staging.utme.scholarly.africa/api/v1/");
+                URLConnection connection = url.openConnection();
+                connection.connect();
 
-                }
+                signupUser(user);
+
+            } catch (Exception e) {
+                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                alertDialog.show();
+                System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
             }
 
         });
+
 
         Label loginEmailError = getEmailError();
         Label loginPasswordError = getPasswordError();
@@ -178,6 +196,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         });
 
         recoverProceedButton.setOnAction(event -> {
+
             if (!recoverEmailField.getText().contains("@")) {
                 recoverEmailError.setVisible(true);
             } else {
@@ -189,6 +208,74 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 recoverEmailError.setText("A password reset link has been sent to the above registered email");
                 recoverEmailError.setTextFill(Paint.valueOf("#053500"));
                 recoverProceedButton.setText("Back to Login");
+            }
+        });
+
+        /*try {
+            SecurityManager securityManager = new SecurityManager();
+            securityManager.checkPropertiesAccess();
+        } catch (SecurityException e) {
+            System.out.println(TAG + "Cannot access system properties because " + e.getMessage());
+        }
+        Properties properties = System.getProperties();
+
+        System.out.println(TAG + "Got device ID with OS name -> " + properties.getProperty("os.name") + " AND arch -> " + properties.getProperty("os.arch") + " AND username -> " + properties.getProperty("user.name"));
+*/
+
+    }
+
+    private void signupUser(User newUser) {
+        String END_POINT = "signup";
+
+        OkHttpClient client = NetworkModule.getHttpClient();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(newUser);
+
+        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + END_POINT)
+                .post(requestBody)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                System.out.println("Got response with code -> " + response.code());
+                try (ResponseBody responseBody = response.body()) {
+                    assert responseBody != null;
+                    SignupResponse signupResponse = gson.fromJson(responseBody.string(), SignupResponse.class);
+                    if (signupResponse.getStatus().equalsIgnoreCase("success")) {
+                        System.out.println(TAG + "Signup token -> " + signupResponse.getData());
+                        userPreferences.put(PREF_KEY_SIGNUP_TOKEN, signupResponse.getData());
+
+//                        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                        ViewSwitcher.showScreen(View.LANDING_SCREEN);
+
+                    } else if (signupResponse.getStatus().equalsIgnoreCase("error")) {
+
+                        Platform.runLater(() -> {
+                            Alert alertDialog = Alerts.info(getClass(), "Error", signupResponse.getMessage(), "");
+                            alertDialog.show();
+                        });
+
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Platform.runLater(() -> {
+                    Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                    alertDialog.show();
+                });
+                System.out.println("Request failed with exception -> " + e.getMessage());
             }
         });
 
@@ -273,9 +360,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         recoverHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
         recoverEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
-        recoverEmailError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-        recoverProceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        recoverEmailError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
     }
-
-
 }

@@ -2,6 +2,10 @@ package com.scholarly.utme.util;
 
 public class Constants {
 
+    public static String BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
+
+    public static final String PREF_KEY_SIGNUP_TOKEN = "SIGNUP_TOKEN";
+
     // Tab Preference Constants
     public static final String PREF_KEY_SELECTED_TAB = "SELECTED_TAB";
     public static final String PREF_VALUE_OBJECTIVE_TAB = "OBJECTIVE";

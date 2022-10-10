@@ -7,10 +7,11 @@ import okhttp3.*;
 
 import java.io.IOException;
 
-public class NetworkService {
-    private static String BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
+import static com.scholarly.utme.util.Constants.BASE_URL;
 
-    private static final MediaType JSON_BODY_TYPE
+public class NetworkService {
+
+    public static final MediaType JSON_BODY_TYPE
             = MediaType.parse("application/json; charset=utf-8");
 
     private static SignupResponse signupResponse;
