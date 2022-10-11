@@ -2,6 +2,9 @@ package com.scholarly.utme.network.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 public class DeviceInfo {
     private String name;
     private String version;
@@ -55,5 +58,90 @@ public class DeviceInfo {
 
     public String getAppVersionName() {
         return appVersionName;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public void setApiLevel(String apiLevel) {
+        this.apiLevel = apiLevel;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public void setFormFactor(String formFactor) {
+        this.formFactor = formFactor;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public void setAppVersionName(String appVersionName) {
+        this.appVersionName = appVersionName;
+    }
+
+    // Get Windows Machine UUID
+    public static String getWindowsDeviceUUID() {
+        try {
+            String command = "wmic csproduct get UUID";
+            StringBuilder output = new StringBuilder();
+
+            Process SerNumProcess = Runtime.getRuntime().exec(command);
+            BufferedReader sNumReader = new BufferedReader(new InputStreamReader(SerNumProcess.getInputStream()));
+
+            String line = "";
+            while ((line = sNumReader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+            String uuid= output.substring(output.indexOf("\n"), output.length()).trim();;
+            System.out.println(uuid);
+            return uuid;
+
+        } catch(Exception ex) {
+            System.out.println("Cannot get UUID because -> " + ex.getMessage());
+        }
+        return "";
+    }
+
+    //Get Mac Machine UUID
+    public static String getMacUUID() {
+        try {
+            String command = "system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'";
+
+            StringBuilder output = new StringBuilder();
+
+            Process SerNumProcess = Runtime.getRuntime().exec(command);
+
+            BufferedReader sNumReader = new BufferedReader(new InputStreamReader(SerNumProcess.getInputStream()));
+
+            String line = "";
+
+            while ((line = sNumReader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+
+            String uuid = output.substring(output.indexOf("UUID: "), output.length()).replace("UUID: ", "");
+
+            SerNumProcess.waitFor();
+
+            sNumReader.close();
+
+            System.out.println(uuid);
+
+            return uuid;
+
+        } catch (Exception ex) {
+            System.out.println("Cannot get UUID because -> " + ex.getMessage());
+        }
+
+        return "";
     }
 }

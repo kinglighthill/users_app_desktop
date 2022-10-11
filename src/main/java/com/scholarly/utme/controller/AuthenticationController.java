@@ -81,6 +81,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         });
 
         loginSignUpText.setOnMouseClicked(event -> {
+
             Animations.fadeOut(loginSection, 200);
             Animations.fadeIn(signUpSection, 300);
         });
@@ -132,7 +133,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             signUpPhoneSection.getChildren().remove(signUpPhoneError);
 
 
-            DeviceInfo deviceInfo = new DeviceInfo();
+            DeviceInfo deviceInfo = getSystemProperties();
             ReferrerInfo referrerInfo = new ReferrerInfo();
             User user = new User();
             user.setEmail(email);
@@ -143,11 +144,11 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
             // Check for internet connectivity
             try {
-                URL url = new URL("https://staging.utme.scholarly.africa/api/v1/");
+                URL url = new URL(BASE_URL);
                 URLConnection connection = url.openConnection();
                 connection.connect();
 
-                signupUser(user);
+                signupUser(user, deviceInfo.getPlatform());
 
             } catch (Exception e) {
                 Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
@@ -182,7 +183,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             loginPasswordSection.getChildren().remove(loginPasswordError);
 
 
-            DeviceInfo deviceInfo = new DeviceInfo("Windows", "10", "21", "Windows", "", "44566", "1.0");
+            DeviceInfo deviceInfo = getSystemProperties();
             LoggedInUser user = new LoggedInUser();
             user.setEmail(email);
             user.setPassword(password);
@@ -191,7 +192,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
             // Check for internet connectivity
             try {
-                URL url = new URL("https://staging.utme.scholarly.africa/api/v1/");
+                URL url = new URL(BASE_URL);
                 URLConnection connection = url.openConnection();
                 connection.connect();
 
@@ -218,11 +219,11 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 String email = recoverEmailField.getText();
                 User user = new User();
                 user.setEmail(email);
-                user.setAppId("");
+                user.setAppId(null);
 
                 // Check for internet connectivity
                 try {
-                    URL url = new URL("https://staging.utme.scholarly.africa/api/v1/");
+                    URL url = new URL(BASE_URL);
                     URLConnection connection = url.openConnection();
                     connection.connect();
 
@@ -234,24 +235,12 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
                 }
 
-
             }
         });
 
-        /*try {
-            SecurityManager securityManager = new SecurityManager();
-            securityManager.checkPropertiesAccess();
-        } catch (SecurityException e) {
-            System.out.println(TAG + "Cannot access system properties because " + e.getMessage());
-        }
-        Properties properties = System.getProperties();
-
-        System.out.println(TAG + "Got device ID with OS name -> " + properties.getProperty("os.name") + " AND arch -> " + properties.getProperty("os.arch") + " AND username -> " + properties.getProperty("user.name"));
-*/
-
     }
 
-    private void signupUser(User newUser) {
+    private void signupUser(User newUser, String platform) {
         String END_POINT = "signup";
 
         OkHttpClient client = NetworkModule.getHttpClient();
@@ -263,6 +252,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         Request request = new Request.Builder()
                 .url(BASE_URL + END_POINT)
+                .addHeader("platform", platform)
                 .post(requestBody)
                 .build();
 
@@ -273,11 +263,13 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 System.out.println("Got response with code -> " + response.code());
                 try (ResponseBody responseBody = response.body()) {
                     assert responseBody != null;
-                    SignupResponse signupResponse = gson.fromJson(responseBody.string(), SignupResponse.class);
+                    AuthResponse signupResponse = gson.fromJson(responseBody.string(), AuthResponse.class);
 
                     if (signupResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
-                        userPreferences.put(PREF_KEY_SIGNUP_CUSTOM_TOKEN, signupResponse.getData());
+                        userPreferences.put(PREF_KEY_ID_TOKEN, signupResponse.getData().getIdToken());
+                        userPreferences.put(PREF_KEY_REFRESH_TOKEN, signupResponse.getData().getRefreshToken());
+                        System.out.println("Signed up user with ID token -> " + userPreferences.get(PREF_KEY_ID_TOKEN, " ") + "\n AND Refresh Token -> " + userPreferences.get(PREF_KEY_REFRESH_TOKEN, " "));
 
 //                        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
                         ViewSwitcher.showScreen(View.LANDING_SCREEN);
@@ -336,6 +328,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     if (authResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
                         userPreferences.put(PREF_KEY_LOGIN_CUSTOM_TOKEN, authResponse.getData().getToken());
+                        System.out.println(TAG + "Logged in user with custom token " + userPreferences.get(PREF_KEY_LOGIN_CUSTOM_TOKEN, ""));
 
 //                        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
                         ViewSwitcher.showScreen(View.LANDING_SCREEN);
@@ -427,6 +420,34 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             }
         });
 
+    }
+
+    private DeviceInfo getSystemProperties() {
+
+        Properties properties = System.getProperties();
+
+        DeviceInfo deviceInfo = new DeviceInfo();
+
+        String deviceName = properties.getProperty("os.name");
+        String deviceId = "";
+        if (deviceName.contains("Windows")) {
+            deviceId = DeviceInfo.getWindowsDeviceUUID();
+            System.out.println("Got device ID -> " + deviceId);
+        } else if (deviceName.contains("Mac")) {
+            deviceId = DeviceInfo.getWindowsDeviceUUID();
+            System.out.println("Got device ID -> " + deviceId);
+        }
+
+        deviceInfo.setName(deviceName);
+        deviceInfo.setPlatform("windows");
+        deviceInfo.setFormFactor("desktop");
+        deviceInfo.setDeviceId(deviceId);
+        deviceInfo.setAppVersionName("1.0.0");
+
+
+//        System.out.println(TAG + "Got device ID with OS name -> " + properties.getProperty("os.name") + " AND arch -> " + properties.getProperty("os.arch") + " AND username -> " + properties.getProperty("user.name"));
+
+        return deviceInfo;
     }
 
     private Label getEmailErrorText() {
