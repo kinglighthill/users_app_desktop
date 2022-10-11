@@ -1,13 +1,8 @@
 package com.scholarly.utme.controller;
 
 import com.google.gson.Gson;
-import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.network.NetworkModule;
-import com.scholarly.utme.network.NetworkService;
-import com.scholarly.utme.network.model.DeviceInfo;
-import com.scholarly.utme.network.model.ReferrerInfo;
-import com.scholarly.utme.network.model.SignupResponse;
-import com.scholarly.utme.network.model.User;
+import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
@@ -23,22 +18,16 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
-import jidefx.scene.control.field.NumberField;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.Signature;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
-import static com.scholarly.utme.util.Constants.BASE_URL;
-import static com.scholarly.utme.util.Constants.PREF_KEY_SIGNUP_TOKEN;
+import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/AuthenticationScreen.fxml")
 public class AuthenticationController implements FxmlView<AuthenticationScreenVM>, Initializable {
@@ -108,9 +97,9 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         });
 
 
-        Label signUpEmailError = getEmailError();
-        Label signUpPasswordError = getPasswordError();
-        Label signUpPhoneError = getPhoneError();
+        Label signUpEmailError = getEmailErrorText();
+        Label signUpPasswordError = getPasswordErrorText();
+        Label signUpPhoneError = getPhoneErrorText();
 
         signUpProceedButton.setOnAction(event -> {
             String email = signUpEmailField.getText();
@@ -120,7 +109,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 return;
             }
 
-            String password = signUpPasswordField.getCharacters().toString();
+            String password = signUpPasswordField.getText();
             signUpPasswordSection.getChildren().remove(signUpPasswordError);
             if (password.length() < 6) {
                 if (!signUpPasswordSection.getChildren().contains(signUpPasswordError)) {
@@ -169,16 +158,18 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         });
 
 
-        Label loginEmailError = getEmailError();
-        Label loginPasswordError = getPasswordError();
+        Label loginEmailError = getEmailErrorText();
+        Label loginPasswordError = getPasswordErrorText();
 
         loginProceedButton.setOnAction(event -> {
+            String email = loginEmailField.getText();
             loginEmailSection.getChildren().remove(loginEmailError);
             if (!loginEmailField.getText().contains("@")) {
                 loginEmailSection.getChildren().add(loginEmailError);
                 return;
             }
 
+            String password = loginPasswordField.getText();
             loginPasswordSection.getChildren().remove(loginPasswordError);
             if (loginPasswordField.getCharacters().length() < 6) {
                 if (!loginPasswordSection.getChildren().contains(loginPasswordError)) {
@@ -190,8 +181,27 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             loginEmailSection.getChildren().remove(loginEmailError);
             loginPasswordSection.getChildren().remove(loginPasswordError);
 
-            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
-            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+
+            DeviceInfo deviceInfo = new DeviceInfo("Windows", "10", "21", "Windows", "", "44566", "1.0");
+            LoggedInUser user = new LoggedInUser();
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setAppId("");
+            user.setDeviceInfo(deviceInfo);
+
+            // Check for internet connectivity
+            try {
+                URL url = new URL("https://staging.utme.scholarly.africa/api/v1/");
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+                loginUser(user);
+
+            } catch (Exception e) {
+                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                alertDialog.show();
+                System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
+            }
 
         });
 
@@ -248,7 +258,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     assert responseBody != null;
                     SignupResponse signupResponse = gson.fromJson(responseBody.string(), SignupResponse.class);
                     if (signupResponse.getStatus().equalsIgnoreCase("success")) {
-                        System.out.println(TAG + "Signup token -> " + signupResponse.getData());
+                        // TODO: Encrypt and Save token with Java Keystore
                         userPreferences.put(PREF_KEY_SIGNUP_TOKEN, signupResponse.getData());
 
 //                        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
@@ -281,21 +291,78 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     }
 
-    private Label getEmailError() {
+    private void loginUser(LoggedInUser user) {
+        String END_POINT = "login";
+
+        OkHttpClient client = NetworkModule.getHttpClient();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + END_POINT)
+                .post(requestBody)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                System.out.println("Got response with code -> " + response.code());
+                try (ResponseBody responseBody = response.body()) {
+                    assert responseBody != null;
+                    LoginResponse loginResponse = gson.fromJson(responseBody.string(), LoginResponse.class);
+                    if (loginResponse.getStatus().equalsIgnoreCase("success")) {
+                        // TODO: Encrypt and Save token with Java Keystore
+                        userPreferences.put(PREF_KEY_LOGIN_TOKEN, loginResponse.getData().getToken());
+
+//                        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                        ViewSwitcher.showScreen(View.LANDING_SCREEN);
+
+                    } else if (loginResponse.getStatus().equalsIgnoreCase("error")) {
+
+                        Platform.runLater(() -> {
+                            Alert alertDialog = Alerts.info(getClass(), "Error", loginResponse.getMessage(), "");
+                            alertDialog.show();
+                        });
+
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Platform.runLater(() -> {
+                    Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                    alertDialog.show();
+                });
+                System.out.println("Request failed with exception -> " + e.getMessage());
+            }
+        });
+
+    }
+
+    private Label getEmailErrorText() {
         Label error = new Label("Please enter a valid email address");
         error.setTextFill(Paint.valueOf("#FF0000"));
         error.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         return error;
     }
 
-    private Label getPasswordError() {
+    private Label getPasswordErrorText() {
         Label error = new Label("Your password must be more than 6 characters");
         error.setTextFill(Paint.valueOf("#FF0000"));
         error.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         return error;
     }
 
-    private Label getPhoneError() {
+    private Label getPhoneErrorText() {
         Label error = new Label("Your phone number must be more than 11 characters");
         error.setTextFill(Paint.valueOf("#FF0000"));
         error.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
