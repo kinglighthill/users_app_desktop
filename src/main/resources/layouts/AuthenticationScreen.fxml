@@ -233,7 +233,7 @@
                             <Insets left="7" top="10" bottom="10"/>
                         </padding>
                     </TextField>
-                    <Label fx:id="recoverEmailError" text="Please enter a valid email address" textFill="#FF0000" visible="false" wrapText="true"/>
+                    <Label fx:id="recoverEmailPrompt" text="Please enter a valid email address" textFill="#FF0000" visible="false" wrapText="true"/>
 
                     <HBox alignment="CENTER">
                         <Button fx:id="recoverProceedButton" text="Proceed" textFill="#FFFFFF" prefWidth="400" style="-fx-background-color: #12AF20; -fx-border-radius: 10;">

@@ -46,7 +46,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private Label scholarlyText, beTheBestText, signUpHeaderText, signUpEmailText, signUpPasswordText, signUpPhoneText, signUpContinueText, signUpHaveAccountText, signUpLoginText, forgotPasswordText, resetText;
 
     @FXML
-    private Label signUpEmailError, loginHeaderText, loginEmailText, loginPasswordText, loginContinueText, loginHaveAcctText, loginSignUpText, recoverHeaderText, recoverEmailText, recoverEmailError;
+    private Label signUpEmailError, loginHeaderText, loginEmailText, loginPasswordText, loginContinueText, loginHaveAcctText, loginSignUpText, recoverHeaderText, recoverEmailText, recoverEmailPrompt;
 
     @FXML
     private Button signUpProceedButton, signUpGoogleButton, signUpFacebookButton, loginProceedButton, loginGoogleButton, loginFacebookButton, recoverProceedButton;
@@ -86,9 +86,9 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         });
 
         resetText.setOnMouseClicked(event -> {
-            recoverEmailError.setVisible(false);
-            recoverEmailError.setText("Please enter a valid email address");
-            recoverEmailError.setTextFill(Paint.valueOf("#FF0000"));
+            recoverEmailPrompt.setVisible(false);
+            recoverEmailPrompt.setText("Please enter a valid email address");
+            recoverEmailPrompt.setTextFill(Paint.valueOf("#FF0000"));
             recoverEmailField.setText("");
             recoverProceedButton.setText("Proceed");
             Animations.fadeOut(loginSection, 300);
@@ -208,16 +208,33 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         recoverProceedButton.setOnAction(event -> {
 
             if (!recoverEmailField.getText().contains("@")) {
-                recoverEmailError.setVisible(true);
+                recoverEmailPrompt.setVisible(true);
             } else {
                 if (recoverProceedButton.getText().contains("Back")) {
                     Animations.fadeOut(recoverPasswordSection, 300);
                     Animations.fadeIn(loginSection, 300);
                 }
-                recoverEmailError.setVisible(true);
-                recoverEmailError.setText("A password reset link has been sent to the above registered email");
-                recoverEmailError.setTextFill(Paint.valueOf("#053500"));
-                recoverProceedButton.setText("Back to Login");
+
+                String email = recoverEmailField.getText();
+                User user = new User();
+                user.setEmail(email);
+                user.setAppId("");
+
+                // Check for internet connectivity
+                try {
+                    URL url = new URL("https://staging.utme.scholarly.africa/api/v1/");
+                    URLConnection connection = url.openConnection();
+                    connection.connect();
+
+                    recoverPassword(user);
+
+                } catch (Exception e) {
+                    Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                    alertDialog.show();
+                    System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
+                }
+
+
             }
         });
 
@@ -257,9 +274,10 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 try (ResponseBody responseBody = response.body()) {
                     assert responseBody != null;
                     SignupResponse signupResponse = gson.fromJson(responseBody.string(), SignupResponse.class);
+
                     if (signupResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
-                        userPreferences.put(PREF_KEY_SIGNUP_TOKEN, signupResponse.getData());
+                        userPreferences.put(PREF_KEY_SIGNUP_CUSTOM_TOKEN, signupResponse.getData());
 
 //                        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
                         ViewSwitcher.showScreen(View.LANDING_SCREEN);
@@ -313,18 +331,81 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 System.out.println("Got response with code -> " + response.code());
                 try (ResponseBody responseBody = response.body()) {
                     assert responseBody != null;
-                    LoginResponse loginResponse = gson.fromJson(responseBody.string(), LoginResponse.class);
-                    if (loginResponse.getStatus().equalsIgnoreCase("success")) {
+                    AuthResponse authResponse = gson.fromJson(responseBody.string(), AuthResponse.class);
+
+                    if (authResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
-                        userPreferences.put(PREF_KEY_LOGIN_TOKEN, loginResponse.getData().getToken());
+                        userPreferences.put(PREF_KEY_LOGIN_CUSTOM_TOKEN, authResponse.getData().getToken());
 
 //                        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
                         ViewSwitcher.showScreen(View.LANDING_SCREEN);
 
-                    } else if (loginResponse.getStatus().equalsIgnoreCase("error")) {
+                    } else if (authResponse.getStatus().equalsIgnoreCase("error")) {
 
                         Platform.runLater(() -> {
-                            Alert alertDialog = Alerts.info(getClass(), "Error", loginResponse.getMessage(), "");
+                            Alert alertDialog = Alerts.info(getClass(), "Error", authResponse.getMessage(), "");
+                            alertDialog.show();
+                        });
+
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Platform.runLater(() -> {
+                    Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                    alertDialog.show();
+                });
+                System.out.println("Request failed with exception -> " + e.getMessage());
+            }
+        });
+
+    }
+
+    private void recoverPassword(User user) {
+        String END_POINT = "password-reset/send-email";
+
+        OkHttpClient client = NetworkModule.getHttpClient();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + END_POINT)
+                .post(requestBody)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                System.out.println("Got response with code -> " + response.code());
+                try (ResponseBody responseBody = response.body()) {
+                    assert responseBody != null;
+                    AuthResponse authResponse = gson.fromJson(responseBody.string(), AuthResponse.class);
+
+                    if (authResponse.getStatus().equalsIgnoreCase("success")) {
+
+                        Platform.runLater(() -> {
+                            recoverEmailPrompt.setVisible(true);
+                            recoverEmailPrompt.setText("A password reset link has been sent to the above registered email");
+                            recoverEmailPrompt.setTextFill(Paint.valueOf("#053500"));
+                            recoverProceedButton.setText("Back to Login");
+
+                        });
+                        System.out.println(TAG + "Got response with message -> " + authResponse.getMessage());
+
+                    } else if (authResponse.getStatus().equalsIgnoreCase("error")) {
+
+                        Platform.runLater(() -> {
+                            Alert alertDialog = Alerts.info(getClass(), "Error", authResponse.getMessage(), "");
                             alertDialog.show();
                         });
 
@@ -427,6 +508,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         recoverHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
         recoverEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
-        recoverEmailError.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        recoverEmailPrompt.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
     }
 }

@@ -1,11 +1,11 @@
 package com.scholarly.utme.network.model;
 
-public class LoginResponse {
+public class AuthResponse {
     private String status;
     private Data data;
     private String message;
 
-    public LoginResponse(String status, Data data, String message) {
+    public AuthResponse(String status, Data data, String message) {
         this.status = status;
         this.data = data;
         this.message = message;
