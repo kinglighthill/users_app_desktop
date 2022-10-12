@@ -6,7 +6,6 @@ public class Data {
     @SerializedName("id_token")
     private String idToken;
     private String refreshToken;
-    private String token;
     private boolean isActivationActive;
 
     public Data() {
@@ -17,7 +16,6 @@ public class Data {
         this.idToken = idToken;
         this.refreshToken = refreshToken;
         this.isActivationActive = isActivationActive;
-        this.token = token;
 
     }
 
@@ -33,7 +31,5 @@ public class Data {
         return isActivationActive;
     }
 
-    public String getToken() {
-        return token;
-    }
+
 }

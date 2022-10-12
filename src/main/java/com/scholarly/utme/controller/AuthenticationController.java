@@ -313,6 +313,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         Request request = new Request.Builder()
                 .url(BASE_URL + END_POINT)
+                .addHeader("platform", "windows")
                 .post(requestBody)
                 .build();
 
@@ -327,8 +328,9 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                     if (authResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
-                        userPreferences.put(PREF_KEY_LOGIN_CUSTOM_TOKEN, authResponse.getData().getToken());
-                        System.out.println(TAG + "Logged in user with custom token " + userPreferences.get(PREF_KEY_LOGIN_CUSTOM_TOKEN, ""));
+                        userPreferences.put(PREF_KEY_ID_TOKEN, authResponse.getData().getIdToken());
+                        userPreferences.put(PREF_KEY_REFRESH_TOKEN, authResponse.getData().getRefreshToken());
+                        System.out.println(TAG + "Logged in user with ID token -> " + userPreferences.get(PREF_KEY_ID_TOKEN, " ") + " AND Refresh Token -> " + userPreferences.get(PREF_KEY_REFRESH_TOKEN, " "));
 
 //                        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
                         ViewSwitcher.showScreen(View.LANDING_SCREEN);
