@@ -101,8 +101,8 @@ public class DeviceInfo {
             while ((line = sNumReader.readLine()) != null) {
                 output.append(line).append("\n");
             }
-            String uuid= output.substring(output.indexOf("\n"), output.length()).trim();;
-            System.out.println(uuid);
+            String uuid = output.substring(output.indexOf("\n"), output.length()).trim();;
+//            System.out.println(uuid);
             return uuid;
 
         } catch(Exception ex) {
@@ -134,7 +134,7 @@ public class DeviceInfo {
 
             sNumReader.close();
 
-            System.out.println(uuid);
+//            System.out.println(uuid);
 
             return uuid;
 
@@ -144,4 +144,34 @@ public class DeviceInfo {
 
         return "";
     }
+
+    // Method for get System UUID for Linux Machine
+    static String getLinuxUUID() {
+        String command = "dmidecode -s system-uuid";
+
+        // setting uuid to null first
+        String uuid = null;
+        try {
+            Process SerNumProcess
+                    = Runtime.getRuntime().exec(command);
+            BufferedReader sNumReader
+                    = new BufferedReader(new InputStreamReader(SerNumProcess.getInputStream()));
+
+            // reads the uuid line by line to separate the
+            // uuid into 4 parts
+            uuid = sNumReader.readLine().trim();
+
+            SerNumProcess.waitFor();
+            sNumReader.close();
+
+            return uuid;
+        }
+        catch (Exception ex) {
+            System.err.println("Linux UUID Exp : "
+                    + ex.getMessage());
+            uuid = null;
+        }
+        return " ";
+    }
+
 }

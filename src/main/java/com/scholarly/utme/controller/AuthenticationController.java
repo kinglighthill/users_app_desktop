@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller;
 
 import com.google.gson.Gson;
+import com.scholarly.utme.HelloApplication;
 import com.scholarly.utme.network.NetworkModule;
 import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.ui.utils.*;
@@ -20,9 +21,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import okhttp3.*;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.util.*;
 import java.util.prefs.Preferences;
 
@@ -238,6 +240,23 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             }
         });
 
+        signUpGoogleButton.setOnAction(event -> {
+
+            // Check for internet connectivity
+            try {
+                URL url = new URL(BASE_URL);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+                signInWithGoogle();
+
+            } catch (Exception e) {
+                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                alertDialog.show();
+                System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
+            }
+        });
+
     }
 
     private void signupUser(User newUser, String platform) {
@@ -424,6 +443,49 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     }
 
+    private void signInWithGoogle() {
+        String GOOGLE_AUTH_BASE_URL = "accounts.google.com/o/oauth2/v2/auth";
+
+        String scheme = "http://";
+
+        String url = "https://accounts.google.com/o/oauth2/v2/auth?scope=email profile&response_type=code&state=state&redirect_uri=http://127.0.0.1:12345&client_id=671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
+
+        HelloApplication application = new HelloApplication();
+//        application.openBrowser(url);
+
+
+        try {
+            InetAddress ipaddress = InetAddress.getLoopbackAddress(); // returns 127.0.0.1
+//                    System.out.println(TAG + "Got InetAdress with ip -> " + ipaddress.getHostAddress());
+            ServerSocket serverSocket = new ServerSocket(12345, 5, ipaddress);
+
+            System.out.println(TAG + "Listening on port -> " + serverSocket.getLocalPort() + " AND address -> " + serverSocket.getInetAddress().getHostAddress());
+
+//            Socket socket = serverSocket.accept();
+//            System.out.println(TAG + "Connected successfully -> " + socket.isConnected());
+//            System.out.println(TAG + "Got socket address -> " + socket.getLocalSocketAddress().toString());
+//            DataInputStream inputStream = new DataInputStream(socket.getInputStream());
+//            System.out.println(TAG + "Got query params -> " + inputStream.readUTF());
+//            DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+//            outputStream.writeUTF("Connected successfully!");
+
+//            System.out.println(TAG + "Wrote successfully -> " + inputStream.readUTF());
+
+        } catch (IOException e) {
+            System.out.println(TAG + "Cannot create socket connection because -> " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        Thread background = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+        background.start();
+
+    }
+
     private DeviceInfo getSystemProperties() {
 
         Properties properties = System.getProperties();
@@ -445,7 +507,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         deviceInfo.setFormFactor("desktop");
         deviceInfo.setDeviceId(deviceId);
         deviceInfo.setAppVersionName("1.0.0");
-
 
 //        System.out.println(TAG + "Got device ID with OS name -> " + properties.getProperty("os.name") + " AND arch -> " + properties.getProperty("os.arch") + " AND username -> " + properties.getProperty("user.name"));
 
@@ -533,4 +594,5 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         recoverEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverEmailPrompt.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
     }
+
 }

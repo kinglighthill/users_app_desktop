@@ -49,6 +49,12 @@ public class HelloApplication extends Application {
 //        stage.show();
     }
 
+    public void openBrowser(String uri) {
+
+        getHostServices().showDocument(uri);
+
+    }
+
     public static void main(String[] args) {
         launch();
     }
