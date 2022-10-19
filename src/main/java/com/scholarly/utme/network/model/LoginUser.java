@@ -2,7 +2,7 @@ package com.scholarly.utme.network.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoggedInUser {
+public class LoginUser {
     private String email;
     private String password;
     @SerializedName("app_id")
@@ -10,11 +10,11 @@ public class LoggedInUser {
     @SerializedName("device_info")
     private DeviceInfo deviceInfo;
 
-    public LoggedInUser() {
+    public LoginUser() {
 
     }
 
-    public LoggedInUser(String email, String password, String appId, DeviceInfo deviceInfo) {
+    public LoginUser(String email, String password, String appId, DeviceInfo deviceInfo) {
         this.email = email;
         this.password = password;
         this.appId = appId;

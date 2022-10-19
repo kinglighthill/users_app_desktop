@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import static com.scholarly.utme.util.Constants.PAST_QUESTION_SCREEN;
+import static com.scholarly.utme.ui.utils.Screens.PAST_QUESTION_SCREEN;
 
 @FxmlPath("/layouts/StudyPastQuestionsScreen.fxml")
 public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenVM>, Initializable, SceneLifecycle {

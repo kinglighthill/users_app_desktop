@@ -2,7 +2,7 @@ package com.scholarly.utme.controller;
 
 import com.google.gson.Gson;
 import com.scholarly.utme.HelloApplication;
-import com.scholarly.utme.network.NetworkModule;
+import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
@@ -220,7 +220,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
 
             DeviceInfo deviceInfo = getSystemProperties();
-            LoggedInUser user = new LoggedInUser();
+            LoginUser user = new LoginUser();
             user.setEmail(email);
             user.setPassword(password);
             user.setAppId("");
@@ -367,7 +367,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private void signupUser(User newUser) {
         String END_POINT = "signup";
 
-        OkHttpClient client = NetworkModule.getHttpClient();
+        OkHttpClient client = NetworkService.getHttpClient();
 
         Gson gson = new Gson();
         String json = gson.toJson(newUser);
@@ -433,7 +433,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private void signupUser(String authCode) {
         String END_POINT = "signup/google";
 
-        OkHttpClient client = NetworkModule.getHttpClient();
+        OkHttpClient client = NetworkService.getHttpClient();
 
         DeviceInfo deviceInfo = getSystemProperties();
         ReferrerInfo referrerInfo = new ReferrerInfo();
@@ -500,10 +500,10 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     }
 
-    private void loginUser(LoggedInUser user) {
+    private void loginUser(LoginUser user) {
         String END_POINT = "login";
 
-        OkHttpClient client = NetworkModule.getHttpClient();
+        OkHttpClient client = NetworkService.getHttpClient();
 
         Gson gson = new Gson();
         String json = gson.toJson(user);
@@ -555,7 +555,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             @Override
             public void onFailure(Call call, IOException e) {
                 Platform.runLater(() -> {
-                    Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                    Alert alertDialog = Alerts.info(getClass(), "Error", "Could not connect because " + e.getMessage(), "");
                     alertDialog.show();
                     hideProgressBar();
                 });
@@ -568,7 +568,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private void recoverPassword(User user) {
         String END_POINT = "password-reset/send-email";
 
-        OkHttpClient client = NetworkModule.getHttpClient();
+        OkHttpClient client = NetworkService.getHttpClient();
 
         Gson gson = new Gson();
         String json = gson.toJson(user);

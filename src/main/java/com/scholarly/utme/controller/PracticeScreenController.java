@@ -41,7 +41,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static com.scholarly.utme.util.Constants.PRACTICE_SCREEN;
+import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
 
 @FxmlPath("/layouts/PracticeScreen.fxml")
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable, SceneLifecycle {
