@@ -7,22 +7,26 @@ import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
+import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import okhttp3.*;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
@@ -39,16 +43,19 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private StackPane authenticationSection;
 
     @FXML
-    private VBox signUpSection, loginSection, recoverPasswordSection, signUpEmailSection, signUpPasswordSection, signUpPhoneSection, loginEmailSection, loginPasswordSection;
+    private VBox dimmer, signUpSection, loginSection, recoverPasswordSection, signUpEmailSection, signUpPasswordSection, signUpPhoneSection, loginEmailSection, loginPasswordSection;
 
     @FXML
     private ImageView imageView, appIcon;
 
     @FXML
+    private ProgressIndicator progressBar;
+
+    @FXML
     private Label scholarlyText, beTheBestText, signUpHeaderText, signUpEmailText, signUpPasswordText, signUpPhoneText, signUpContinueText, signUpHaveAccountText, signUpLoginText, forgotPasswordText, resetText;
 
     @FXML
-    private Label signUpEmailError, loginHeaderText, loginEmailText, loginPasswordText, loginContinueText, loginHaveAcctText, loginSignUpText, recoverHeaderText, recoverEmailText, recoverEmailPrompt;
+    private Label signUpEmailError, loginHeaderText, loginEmailText, loginPasswordText, loginContinueText, loginHaveAcctText, loginSignUpText, recoverHeaderText, recoverEmailText, recoverEmailPrompt, recoverLoginText;
 
     @FXML
     private Button signUpProceedButton, signUpGoogleButton, signUpFacebookButton, loginProceedButton, loginGoogleButton, loginFacebookButton, recoverProceedButton;
@@ -83,7 +90,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         });
 
         loginSignUpText.setOnMouseClicked(event -> {
-
             Animations.fadeOut(loginSection, 200);
             Animations.fadeIn(signUpSection, 300);
         });
@@ -99,12 +105,18 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         });
 
+        recoverLoginText.setOnMouseClicked(event -> {
+            Animations.fadeOut(recoverPasswordSection, 300);
+            Animations.fadeIn(loginSection, 300);
+        });
+
 
         Label signUpEmailError = getEmailErrorText();
         Label signUpPasswordError = getPasswordErrorText();
         Label signUpPhoneError = getPhoneErrorText();
 
         signUpProceedButton.setOnAction(event -> {
+
             String email = signUpEmailField.getText();
             signUpEmailSection.getChildren().remove(signUpEmailError);
             if (!email.contains("@")) {
@@ -130,6 +142,10 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 return;
             }
 
+            signUpProceedButton.setDisable(true);
+            showProgressBar();
+
+
             signUpEmailSection.getChildren().remove(signUpEmailError);
             signUpPasswordSection.getChildren().remove(signUpPasswordError);
             signUpPhoneSection.getChildren().remove(signUpPhoneError);
@@ -144,17 +160,31 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             user.setDeviceInfo(deviceInfo);
             user.setReferrerInfo(referrerInfo);
 
+
             // Check for internet connectivity
             try {
                 URL url = new URL(BASE_URL);
                 URLConnection connection = url.openConnection();
                 connection.connect();
 
-                signupUser(user, deviceInfo.getPlatform());
+
+                Task<Void> signupTask = new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        signupUser(user);
+                        return null;
+                    }
+                };
+                Thread signupThread = new Thread(signupTask);
+                signupThread.start();
+
+                progressBar.progressProperty().bind(signupTask.progressProperty());
+
 
             } catch (Exception e) {
                 Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
                 alertDialog.show();
+                hideProgressBar();
                 System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
             }
 
@@ -165,6 +195,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         Label loginPasswordError = getPasswordErrorText();
 
         loginProceedButton.setOnAction(event -> {
+
             String email = loginEmailField.getText();
             loginEmailSection.getChildren().remove(loginEmailError);
             if (!loginEmailField.getText().contains("@")) {
@@ -180,6 +211,9 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 }
                 return;
             }
+
+            loginProceedButton.setDisable(true);
+            showProgressBar();
 
             loginEmailSection.getChildren().remove(loginEmailError);
             loginPasswordSection.getChildren().remove(loginPasswordError);
@@ -198,11 +232,21 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 URLConnection connection = url.openConnection();
                 connection.connect();
 
-                loginUser(user);
+                Task<Void> loginTask = new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        loginUser(user);
+                        return null;
+                    }
+                };
+                Thread background = new Thread(loginTask);
+                background.start();
+                progressBar.progressProperty().bind(loginTask.progressProperty());
 
             } catch (Exception e) {
                 Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
                 alertDialog.show();
+                hideProgressBar();
                 System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
             }
 
@@ -218,6 +262,9 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     Animations.fadeIn(loginSection, 300);
                 }
 
+                recoverProceedButton.setDisable(true);
+                showProgressBar();
+
                 String email = recoverEmailField.getText();
                 User user = new User();
                 user.setEmail(email);
@@ -229,11 +276,22 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     URLConnection connection = url.openConnection();
                     connection.connect();
 
-                    recoverPassword(user);
+                    Task<Void> recoverTask = new Task<>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            recoverPassword(user);
+                            return null;
+                        }
+                    };
+                    Thread background = new Thread(recoverTask);
+                    background.start();
+                    progressBar.progressProperty().bind(recoverTask.progressProperty());
+
 
                 } catch (Exception e) {
                     Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
                     alertDialog.show();
+                    hideProgressBar();
                     System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
                 }
 
@@ -242,24 +300,71 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         signUpGoogleButton.setOnAction(event -> {
 
+            signUpGoogleButton.setDisable(true);
+            showProgressBar();
+
             // Check for internet connectivity
             try {
                 URL url = new URL(BASE_URL);
                 URLConnection connection = url.openConnection();
                 connection.connect();
 
-                signInWithGoogle();
+                Task<Void> signInGoogleTask = new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        signInWithGoogle();
+                        return null;
+                    }
+                };
+                Thread background = new Thread(signInGoogleTask);
+                background.start();
+                progressBar.progressProperty().bind(signInGoogleTask.progressProperty());
+
 
             } catch (Exception e) {
                 Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
                 alertDialog.show();
+                hideProgressBar();
                 System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
+//                e.printStackTrace();
+            }
+        });
+
+        loginGoogleButton.setOnAction(event -> {
+
+            loginGoogleButton.setDisable(true);
+            showProgressBar();
+
+            // Check for internet connectivity
+            try {
+                URL url = new URL(BASE_URL);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+                Task<Void> signInGoogleTask = new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        signInWithGoogle();
+                        return null;
+                    }
+                };
+                Thread background = new Thread(signInGoogleTask);
+                background.start();
+                progressBar.progressProperty().bind(signInGoogleTask.progressProperty());
+
+
+            } catch (Exception e) {
+                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                alertDialog.show();
+                hideProgressBar();
+                System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
+//                e.printStackTrace();
             }
         });
 
     }
 
-    private void signupUser(User newUser, String platform) {
+    private void signupUser(User newUser) {
         String END_POINT = "signup";
 
         OkHttpClient client = NetworkModule.getHttpClient();
@@ -271,11 +376,12 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         Request request = new Request.Builder()
                 .url(BASE_URL + END_POINT)
-                .addHeader("platform", platform)
+                .addHeader("platform", newUser.getDeviceInfo().getPlatform())
                 .post(requestBody)
                 .build();
 
         Call call = client.newCall(request);
+
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
@@ -290,14 +396,87 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         userPreferences.put(PREF_KEY_REFRESH_TOKEN, signupResponse.getData().getRefreshToken());
                         System.out.println("Signed up user with ID token -> " + userPreferences.get(PREF_KEY_ID_TOKEN, " ") + "\n AND Refresh Token -> " + userPreferences.get(PREF_KEY_REFRESH_TOKEN, " "));
 
-//                        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
-                        ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                        Platform.runLater(() -> {
+                            hideProgressBar();
+//                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                        });
 
                     } else if (signupResponse.getStatus().equalsIgnoreCase("error")) {
-
                         Platform.runLater(() -> {
                             Alert alertDialog = Alerts.info(getClass(), "Error", signupResponse.getMessage(), "");
                             alertDialog.show();
+                            hideProgressBar();
+                        });
+
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Platform.runLater(() -> {
+                    Alert alertDialog = Alerts.info(getClass(), "Error", "Could not sign up because " + e.getMessage(), "");
+                    alertDialog.show();
+                    hideProgressBar();
+                });
+                System.out.println("Request failed with exception -> " + e.getMessage());
+            }
+        });
+
+    }
+
+    private void signupUser(String authCode) {
+        String END_POINT = "signup/google";
+
+        OkHttpClient client = NetworkModule.getHttpClient();
+
+        DeviceInfo deviceInfo = getSystemProperties();
+        ReferrerInfo referrerInfo = new ReferrerInfo();
+        GoogleUser user = new GoogleUser("Nigeria", "fcm-token", null, authCode, "http://127.0.0.1:12345", deviceInfo, referrerInfo);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + END_POINT)
+                .addHeader("platform", user.getDeviceInfo().getPlatform())
+                .post(requestBody)
+                .build();
+
+        Call call = client.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                System.out.println("Got response with code -> " + response.code());
+                try (ResponseBody responseBody = response.body()) {
+                    assert responseBody != null;
+                    AuthResponse signupResponse = gson.fromJson(responseBody.string(), AuthResponse.class);
+
+                    if (signupResponse.getStatus().equalsIgnoreCase("success")) {
+                        // TODO: Encrypt and Save token with Java Keystore
+                        userPreferences.put(PREF_KEY_ID_TOKEN, signupResponse.getData().getIdToken());
+                        userPreferences.put(PREF_KEY_REFRESH_TOKEN, signupResponse.getData().getRefreshToken());
+                        System.out.println("Signed up user with ID token -> " + userPreferences.get(PREF_KEY_ID_TOKEN, " ") + "\n AND Refresh Token -> " + userPreferences.get(PREF_KEY_REFRESH_TOKEN, " "));
+
+                        Platform.runLater(() -> {
+                            hideProgressBar();
+//                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                        });
+
+                    } else if (signupResponse.getStatus().equalsIgnoreCase("error")) {
+                        Platform.runLater(() -> {
+                            Alert alertDialog = Alerts.info(getClass(), "Error", signupResponse.getMessage(), "");
+                            alertDialog.show();
+                            hideProgressBar();
                         });
 
                     }
@@ -313,6 +492,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 Platform.runLater(() -> {
                     Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
                     alertDialog.show();
+                    hideProgressBar();
                 });
                 System.out.println("Request failed with exception -> " + e.getMessage());
             }
@@ -351,14 +531,17 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         userPreferences.put(PREF_KEY_REFRESH_TOKEN, authResponse.getData().getRefreshToken());
                         System.out.println(TAG + "Logged in user with ID token -> " + userPreferences.get(PREF_KEY_ID_TOKEN, " ") + " AND Refresh Token -> " + userPreferences.get(PREF_KEY_REFRESH_TOKEN, " "));
 
-//                        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
-                        ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                        Platform.runLater(() -> {
+                            hideProgressBar();
+//                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                        });
 
                     } else if (authResponse.getStatus().equalsIgnoreCase("error")) {
-
                         Platform.runLater(() -> {
                             Alert alertDialog = Alerts.info(getClass(), "Error", authResponse.getMessage(), "");
                             alertDialog.show();
+                            hideProgressBar();
                         });
 
                     }
@@ -374,6 +557,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 Platform.runLater(() -> {
                     Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
                     alertDialog.show();
+                    hideProgressBar();
                 });
                 System.out.println("Request failed with exception -> " + e.getMessage());
             }
@@ -413,6 +597,8 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                             recoverEmailPrompt.setTextFill(Paint.valueOf("#053500"));
                             recoverProceedButton.setText("Back to Login");
 
+                            hideProgressBar();
+
                         });
                         System.out.println(TAG + "Got response with message -> " + authResponse.getMessage());
 
@@ -421,6 +607,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         Platform.runLater(() -> {
                             Alert alertDialog = Alerts.info(getClass(), "Error", authResponse.getMessage(), "");
                             alertDialog.show();
+                            hideProgressBar();
                         });
 
                     }
@@ -436,6 +623,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 Platform.runLater(() -> {
                     Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
                     alertDialog.show();
+                    hideProgressBar();
                 });
                 System.out.println("Request failed with exception -> " + e.getMessage());
             }
@@ -444,45 +632,56 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     }
 
     private void signInWithGoogle() {
-        String GOOGLE_AUTH_BASE_URL = "accounts.google.com/o/oauth2/v2/auth";
-
-        String scheme = "http://";
-
-        String url = "https://accounts.google.com/o/oauth2/v2/auth?scope=email profile&response_type=code&state=state&redirect_uri=http://127.0.0.1:12345&client_id=671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
-
-        HelloApplication application = new HelloApplication();
-//        application.openBrowser(url);
-
 
         try {
+            HelloApplication application = new HelloApplication();
+
             InetAddress ipaddress = InetAddress.getLoopbackAddress(); // returns 127.0.0.1
-//                    System.out.println(TAG + "Got InetAdress with ip -> " + ipaddress.getHostAddress());
-            ServerSocket serverSocket = new ServerSocket(12345, 5, ipaddress);
 
-            System.out.println(TAG + "Listening on port -> " + serverSocket.getLocalPort() + " AND address -> " + serverSocket.getInetAddress().getHostAddress());
+            HttpServer server = HttpServer.create(new InetSocketAddress(ipaddress, 12345), 0);
 
-//            Socket socket = serverSocket.accept();
-//            System.out.println(TAG + "Connected successfully -> " + socket.isConnected());
-//            System.out.println(TAG + "Got socket address -> " + socket.getLocalSocketAddress().toString());
-//            DataInputStream inputStream = new DataInputStream(socket.getInputStream());
-//            System.out.println(TAG + "Got query params -> " + inputStream.readUTF());
-//            DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
-//            outputStream.writeUTF("Connected successfully!");
+            System.out.println("Server listening on host -> " + server.getAddress().getHostName() + " AND port -> " + server.getAddress().getAddress().getHostAddress());
+            server.start();
 
-//            System.out.println(TAG + "Wrote successfully -> " + inputStream.readUTF());
+            String authorizationRequest = "https://accounts.google.com/o/oauth2/v2/auth?scope=email profile&response_type=code&state=newState&redirect_uri=http://127.0.0.1:12345&client_id=671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
+
+            application.openBrowser(authorizationRequest);
+
+            HttpContext responseContext = server.createContext("/");
+            responseContext.setHandler(new HttpHandler() {
+                @Override
+                public void handle(HttpExchange exchange) throws IOException {
+
+                    String uriResponse = exchange.getRequestURI().getQuery();
+
+                    if (uriResponse.contains("code")) {
+                        String code = uriResponse.substring(uriResponse.indexOf("code"), uriResponse.indexOf("scope")-1);
+                        System.out.println(TAG + "Got full code response -> " + code);
+                        String authCode = code.substring(uriResponse.indexOf("="));
+                        System.out.println(TAG + "Got main code response -> " + authCode);
+
+                        signupUser(authCode);
+
+                    } else {
+                        Platform.runLater(() -> {
+                            Alert alertDialog = Alerts.info(getClass(), "Error", "Could not sign in with Google", "");
+                            alertDialog.show();
+                            hideProgressBar();
+                        });
+                    }
+
+                }
+            });
+
 
         } catch (IOException e) {
-            System.out.println(TAG + "Cannot create socket connection because -> " + e.getMessage());
-            e.printStackTrace();
+            Platform.runLater(() -> {
+                Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                alertDialog.show();
+                hideProgressBar();
+            });
+            System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
         }
-
-        Thread background = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
-        background.start();
 
     }
 
@@ -511,6 +710,23 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 //        System.out.println(TAG + "Got device ID with OS name -> " + properties.getProperty("os.name") + " AND arch -> " + properties.getProperty("os.arch") + " AND username -> " + properties.getProperty("user.name"));
 
         return deviceInfo;
+    }
+
+    private void hideProgressBar() {
+        signUpProceedButton.setDisable(false);
+        loginProceedButton.setDisable(false);
+        signUpGoogleButton.setDisable(false);
+        loginGoogleButton.setDisable(false);
+        recoverProceedButton.setDisable(false);
+        dimmer.setVisible(false);
+        progressBar.setVisible(false);
+    }
+
+    private void showProgressBar() {
+        dimmer.setVisible(true);
+        progressBar.setVisible(true);
+        AnchorPane.setTopAnchor(progressBar, dimmer.getHeight()/2);
+        AnchorPane.setLeftAnchor(progressBar, dimmer.getWidth()/2);
     }
 
     private Label getEmailErrorText() {
@@ -547,14 +763,14 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         loginGoogleButton.setGraphicTextGap(20);
         loginGoogleButton.setBackground(Background.EMPTY);
 
-        ImageView facebookImage = new ImageView(new Image(getClass().getResource("/drawable/facebook_icon.png").toString()));
+        /*ImageView facebookImage = new ImageView(new Image(getClass().getResource("/drawable/facebook_icon.png").toString()));
         signUpFacebookButton.setGraphic(facebookImage);
         signUpFacebookButton.setGraphicTextGap(20);
         signUpFacebookButton.setBackground(Background.EMPTY);
         ImageView facebookImage2 = new ImageView(new Image(getClass().getResource("/drawable/facebook_icon.png").toString()));
         loginFacebookButton.setGraphic(facebookImage2);
         loginFacebookButton.setGraphicTextGap(20);
-        loginFacebookButton.setBackground(Background.EMPTY);
+        loginFacebookButton.setBackground(Background.EMPTY);*/
     }
 
     private void initializeFonts() {
@@ -570,9 +786,10 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         signUpProceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         signUpContinueText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         signUpGoogleButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-        signUpFacebookButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+//        signUpFacebookButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         signUpHaveAccountText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         signUpLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        recoverLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 
 
         loginHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
@@ -582,15 +799,17 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         loginProceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         loginContinueText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         loginGoogleButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-        loginFacebookButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+//        loginFacebookButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         loginHaveAcctText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         loginSignUpText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         forgotPasswordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         resetText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 
 
+        recoverProceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
         recoverEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        recoverLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverEmailPrompt.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
     }

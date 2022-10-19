@@ -25,6 +25,7 @@ module com.scholarly.utme {
     requires org.apache.commons.collections4;
     requires okhttp3;
     requires okhttp3.logging;
+    requires jdk.httpserver;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;
@@ -89,4 +90,5 @@ module com.scholarly.utme {
     exports com.scholarly.utme.viewmodels.settings_screens;
     exports com.scholarly.utme.controller.account_screens;
     exports com.scholarly.utme.viewmodels.account_screens;
+
 }
