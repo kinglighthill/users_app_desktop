@@ -26,6 +26,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import okhttp3.*;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.IOException;
 import java.net.*;
@@ -632,18 +633,21 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     }
 
     private void signInWithGoogle() {
+        final HttpServer server;
 
         try {
+            String state = RandomStringUtils.random(6, true, false);
+
             HelloApplication application = new HelloApplication();
 
             InetAddress ipaddress = InetAddress.getLoopbackAddress(); // returns 127.0.0.1
 
-            HttpServer server = HttpServer.create(new InetSocketAddress(ipaddress, 12345), 0);
+            server = HttpServer.create(new InetSocketAddress(ipaddress, 12345), 0);
 
             System.out.println("Server listening on host -> " + server.getAddress().getHostName() + " AND port -> " + server.getAddress().getAddress().getHostAddress());
             server.start();
 
-            String authorizationRequest = "https://accounts.google.com/o/oauth2/v2/auth?scope=email profile&response_type=code&state=newState&redirect_uri=http://127.0.0.1:12345&client_id=671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
+            String authorizationRequest = "https://accounts.google.com/o/oauth2/v2/auth?scope=email profile&response_type=code&state=" + state + "&redirect_uri=http://127.0.0.1:12345&client_id=671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
 
             application.openBrowser(authorizationRequest);
 
@@ -651,6 +655,8 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             responseContext.setHandler(new HttpHandler() {
                 @Override
                 public void handle(HttpExchange exchange) throws IOException {
+
+
 
                     String uriResponse = exchange.getRequestURI().getQuery();
 
@@ -668,11 +674,13 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                             alertDialog.show();
                             hideProgressBar();
                         });
+//                        assert server != null;
+//                        server.stop(1);
+//                        System.out.println(TAG + "Server has stopped!");
                     }
 
                 }
             });
-
 
         } catch (IOException e) {
             Platform.runLater(() -> {
