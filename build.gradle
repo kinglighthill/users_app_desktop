@@ -101,6 +101,9 @@ dependencies {
     // Common Collections by Apache
     implementation 'org.apache.commons:commons-collections4:4.4'
 
+    // Apache Commons Lang
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
     // OKHttp
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'

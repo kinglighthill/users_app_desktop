@@ -6,11 +6,16 @@ public class Constants {
 
     public static final String PREF_KEY_SIGNUP_CUSTOM_TOKEN = "SIGNUP_TOKEN";
     public static final String PREF_KEY_LOGIN_CUSTOM_TOKEN = "LOGIN_TOKEN";
+    public static final String PREF_KEY_ID_TOKEN = "ID_TOKEN";
+    public static final String PREF_KEY_REFRESH_TOKEN = "REFRESH_TOKEN";
 
     // Tab Preference Constants
     public static final String PREF_KEY_SELECTED_TAB = "SELECTED_TAB";
     public static final String PREF_VALUE_OBJECTIVE_TAB = "OBJECTIVE";
     public static final String PREF_VALUE_THEORY_TAB = "THEORY";
+
+    // Session Preference Constants
+    public static final String PREF_KEY_FIRST_TIME_USER = "FIRST_TIME_USER";
 
     // Screen Constants
     public static final String PRACTICE_SCREEN = "PRACTICE_SCREEN";

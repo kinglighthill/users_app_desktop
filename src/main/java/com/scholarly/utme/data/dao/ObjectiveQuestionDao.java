@@ -5,6 +5,7 @@ import com.scholarly.utme.data.model.novels.NovelObjectiveQuestion;
 import com.scholarly.utme.data.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -72,8 +73,9 @@ public class ObjectiveQuestionDao {
             Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
-            ResultSet rs = statement.executeQuery();
             questions.clear();
+            ResultSet rs = statement.executeQuery();
+
             while (rs.next()) {
                 questions.add(new ObjectiveQuestion(
                         rs.getInt(idColumn),
@@ -92,6 +94,7 @@ public class ObjectiveQuestionDao {
                         rs.getInt(isExplanationWebViewColumn),
                         rs.getInt(isQuestionWebViewColumn),
                         rs.getInt(isGammableColumn)));
+
             }
 
 //            System.out.println(TAG + "Got Objective questions with size -> " + questions.size());
@@ -115,23 +118,31 @@ public class ObjectiveQuestionDao {
             Connection connection = DbConnection.getDbConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
-            ResultSet rs = statement.executeQuery();
-            novelQuestions.clear();
-            while (rs.next()) {
-                novelQuestions.add(new NovelObjectiveQuestion(
-                        rs.getInt(idColumn),
-                        rs.getInt(novelIdColumn),
-                        rs.getInt(chapterIdColumn),
-                        rs.getInt(questionNumberColumn),
-                        rs.getString(questionColumn),
-                        new QuestionOption(0, rs.getString(optionAColumn)),
-                        new QuestionOption(1, rs.getString(optionBColumn)),
-                        new QuestionOption(2, rs.getString(optionCColumn)),
-                        new QuestionOption(3, rs.getString(optionDColumn)),
-                        new QuestionOption(4, rs.getString(optionEColumn)),
-                        new QuestionAnswer(rs.getInt(optionAnswerIdColumn), rs.getString(optionAnswerColumn), rs.getString(answerExplanationColumn)),
-                        rs.getInt(questionDescriptionIdColumn)));
-            }
+            Task<Void> dbTask = new Task<>() {
+                @Override
+                protected Void call() throws Exception {
+                    ResultSet rs = statement.executeQuery();
+                    novelQuestions.clear();
+                    while (rs.next()) {
+                        novelQuestions.add(new NovelObjectiveQuestion(
+                                rs.getInt(idColumn),
+                                rs.getInt(novelIdColumn),
+                                rs.getInt(chapterIdColumn),
+                                rs.getInt(questionNumberColumn),
+                                rs.getString(questionColumn),
+                                new QuestionOption(0, rs.getString(optionAColumn)),
+                                new QuestionOption(1, rs.getString(optionBColumn)),
+                                new QuestionOption(2, rs.getString(optionCColumn)),
+                                new QuestionOption(3, rs.getString(optionDColumn)),
+                                new QuestionOption(4, rs.getString(optionEColumn)),
+                                new QuestionAnswer(rs.getInt(optionAnswerIdColumn), rs.getString(optionAnswerColumn), rs.getString(answerExplanationColumn)),
+                                rs.getInt(questionDescriptionIdColumn)));
+                    }
+                    return null;
+                }
+            };
+            Thread signupThread = new Thread(dbTask);
+            signupThread.start();
 
             System.out.println(TAG + "Got Novel Objective questions with size -> " + novelQuestions.size());
 

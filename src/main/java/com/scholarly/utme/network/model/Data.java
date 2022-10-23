@@ -1,19 +1,35 @@
 package com.scholarly.utme.network.model;
 
-public class Data {
-    private boolean isActivationActive;
-    private String token;
+import com.google.gson.annotations.SerializedName;
 
-    public Data(boolean isActivationActive, String token) {
+public class Data {
+    @SerializedName("id_token")
+    private String idToken;
+    private String refreshToken;
+    private boolean isActivationActive;
+
+    public Data() {
+
+    }
+
+    public Data(String idToken, String refreshToken, String token, boolean isActivationActive) {
+        this.idToken = idToken;
+        this.refreshToken = refreshToken;
         this.isActivationActive = isActivationActive;
-        this.token = token;
+
+    }
+
+    public String getIdToken() {
+        return idToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
     public boolean isActivationActive() {
         return isActivationActive;
     }
 
-    public String getToken() {
-        return token;
-    }
+
 }

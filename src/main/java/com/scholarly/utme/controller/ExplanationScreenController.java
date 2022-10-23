@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static com.scholarly.utme.util.Constants.PRACTICE_SCREEN;
+import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
 import static com.scholarly.utme.viewmodels.SubjectListItemVM.*;
 
 
