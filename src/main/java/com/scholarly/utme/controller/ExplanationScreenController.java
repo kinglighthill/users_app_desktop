@@ -1,7 +1,9 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.ObjectiveQuestion;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
+import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -21,9 +23,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -31,15 +31,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
+import static com.scholarly.utme.viewmodels.SubjectListItemVM.*;
+
 
 @FxmlPath("/layouts/ExplanationScreen.fxml")
 public class ExplanationScreenController implements FxmlView<ExplanationScreenVM>, Initializable {
+
+    private static final String TAG = "ExplanationScreenController: ";
 
     @InjectViewModel
     private ExplanationScreenVM viewModel;
@@ -54,7 +60,22 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     private StackPane explanationPane, explanationVideo;
 
     @FXML
-    private ListView<Subject> subjectList;
+    private AnchorPane explanationAnchor;
+
+    @FXML
+    private Pane dialogDimmer;
+
+    @FXML
+    private VBox centerVBox;
+
+    @FXML
+    private HBox toggleBox;
+
+    @FXML
+    private ListView<PQSubject> subjectList;
+
+    @FXML
+    private Panel optionAPanel, optionBPanel, optionCPanel, optionDPanel;
 
     @FXML
     private Label questionOverviewLabel, questionLabel, optionA, optionB, optionC, optionD, noOptionSelected, explanationLabel;
@@ -71,11 +92,8 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     @FXML
     private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, optionAIcon, optionBIcon, optionCIcon, optionDIcon;
 
-    private Image correctImage;
+    private Image correctImage, incorrectImage;
 
-    private Image incorrectImage;
-
-    private String explanationVideoUrl;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -95,18 +113,18 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             }
         });
 
-        ObservableList<Subject> items = FXCollections.observableArrayList();
+        ObservableList<PQSubject> items = FXCollections.observableArrayList();
 
-        Subject all = new Subject();
-        all.setSubjectName("All");
+        PQSubject all = new PQSubject();
+        all.setTitle("All");
         items.add(all);
         items.addAll(viewModel.getSubjects());
 
         subjectList.setCellFactory(new PracticeSubjectListCellFactory());
         subjectList.setItems(items);
-        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
+        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) c -> {
             if (c.getList().size() == 1) {
-                Subject subject = c.getList().get(0);
+                PQSubject subject = c.getList().get(0);
                 viewModel.setSelectedSubject(subject);
             } else {
                 viewModel.setSelectedSubject(null);
@@ -117,7 +135,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
             subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
-                if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
+                if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
                     changeSelectedTile(oldValue.intValue(), newValue.intValue());
                     changeSelectedQuestion(newValue.intValue());
                 }
@@ -126,27 +144,26 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         prevButton.setOnAction(event -> {
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .setSelectedQuestion(selectedQuestion - 1);
         });
 
         nextButton.setOnAction(event -> {
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .setSelectedQuestion(selectedQuestion + 1);
         });
 
-        tilePane.setVgap(10);
-        tilePane.setHgap(10);
 
+        toggleBox.getChildren().remove(videoExplanation);
         ToggleGroup explanationGroup = new ToggleGroup();
         explanationGroup.getToggles().addAll(textExplanation, videoExplanation);
         explanationGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
@@ -161,7 +178,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                     explanationPane.getChildren().add(explanationLabel);
                 }
 
-            }else if (newValue == videoExplanation) {
+            } else if (newValue == videoExplanation) {
                 explanationVideo.setVisible(true);
                 videoExplanation.setStyle("-fx-background-color: #12AF20; -fx-border-color: #12AF20;");
                 videoExplanation.setTextFill(Paint.valueOf("#FFFFFF"));
@@ -177,8 +194,19 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         }));
 
         exitButton.setOnAction(event -> {
-            ViewSwitcher.passData("practicePanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            dialogDimmer.setVisible(true);
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Exit", null, "Are you sure you want to exit?");
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    dialogDimmer.setVisible(false);
+                    ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
+                    ViewSwitcher.showScreen(View.HOME_SCREEN);
+                } else {
+                    dialogDimmer.setVisible(false);
+                }
+                return buttonType;
+            });
+            dialog.show();
         });
 
     }
@@ -213,7 +241,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     }
 
     private void setupVideoPlayer() {
-        explanationVideoUrl = getClass().getResource("/assets/coding.mp4").toExternalForm();
+        String explanationVideoUrl = getClass().getResource("/assets/coding.mp4").toExternalForm();
 
         Media media = new Media(explanationVideoUrl);
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -266,7 +294,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
      * Initializes question layout
      */
     private void setupQuestionView() {
-        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
         PracticeScreenVM.QuestionState question = questions.get(subjectQuestionsState.getSelectedQuestion() - 1);
 
@@ -275,109 +303,122 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         questionOverviewLabel.setText("Question " + subjectQuestionsState.getSelectedQuestion() + " of " + questions.size());
 
-        questionLabel.setText(question.getObjectiveQuestion().getQuestion());
+        if (viewModel.getQuestionType() == Type.OBJECTIVE) {
 
-        optionA.setText(" (A) " + question.getObjectiveQuestion().getOptionA());
-        optionB.setText(" (B) " + question.getObjectiveQuestion().getOptionB());
-        optionC.setText(" (C) " + question.getObjectiveQuestion().getOptionC());
-        optionD.setText(" (D) " + question.getObjectiveQuestion().getOptionD());
+            String questionText = question.getObjectiveQuestion().getQuestion();
+            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-        optionA.setTextFill(Color.BLACK);
-        optionB.setTextFill(Color.BLACK);
-        optionC.setTextFill(Color.BLACK);
-        optionD.setTextFill(Color.BLACK);
+            optionA.setText(" (A) " + question.getObjectiveQuestion().getOptionA().getText());
+            optionB.setText(" (B) " + question.getObjectiveQuestion().getOptionB().getText());
+            optionC.setText(" (C) " + question.getObjectiveQuestion().getOptionC().getText());
+            optionD.setText(" (D) " + question.getObjectiveQuestion().getOptionD().getText());
 
-        String selectedOption = question.getSelectedOption();
-        String questionAnswer = question.getObjectiveQuestion().getOptionAnswer();
+            optionA.setTextFill(Color.BLACK);
+            optionB.setTextFill(Color.BLACK);
+            optionC.setTextFill(Color.BLACK);
+            optionD.setTextFill(Color.BLACK);
 
-        if (selectedOption != null) {
-            if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
-                optionAButton.setSelected(true);
-            } else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
-                optionBButton.setSelected(true);
-            } else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
-                optionCButton.setSelected(true);
-            } else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
-                optionDButton.setSelected(true);
-            }
+//            String selectedOption = question.getSelectedOption();
+//            String questionAnswer = question.getObjectiveQuestion().getQuestionAnswer().getAnswer();
 
-            if (selectedOption.equalsIgnoreCase(questionAnswer)) {
-                if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
+            int selectedOptionId = question.getSelectedOptionId();
+            int questionAnswerId = question.getObjectiveQuestion().getQuestionAnswer().getId();
+
+            int optionAId = question.getObjectiveQuestion().getOptionA().getId();
+            int optionBId = question.getObjectiveQuestion().getOptionB().getId();
+            int optionCId = question.getObjectiveQuestion().getOptionC().getId();
+            int optionDId = question.getObjectiveQuestion().getOptionD().getId();
+
+            if (selectedOptionId != -1) { // an option was selected
+
+                if (selectedOptionId == optionAId) {
+                    optionAButton.setSelected(true);
+                } else if (selectedOptionId == optionBId) {
+                    optionBButton.setSelected(true);
+                } else if (selectedOptionId == optionCId) {
+                    optionCButton.setSelected(true);
+                } else if (selectedOptionId  == optionDId) {
+                    optionDButton.setSelected(true);
+                }
+
+                if (questionAnswerId == optionAId) {
                     optionA.setTextFill(Color.GREEN);
                     optionAIcon.setImage(correctImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
+
+                } else if (questionAnswerId == optionBId) {
                     optionB.setTextFill(Color.GREEN);
                     optionBIcon.setImage(correctImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
+
+                } else if (questionAnswerId == optionCId) {
                     optionC.setTextFill(Color.GREEN);
                     optionCIcon.setImage(correctImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
+
+                } else if (questionAnswerId == optionDId) {
                     optionD.setTextFill(Color.GREEN);
                     optionDIcon.setImage(correctImage);
                 }
-            } else {
-                if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
-                    optionA.setTextFill(Color.RED);
-                    optionAIcon.setImage(incorrectImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
-                    optionB.setTextFill(Color.RED);
-                    optionBIcon.setImage(incorrectImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
-                    optionC.setTextFill(Color.RED);
-                    optionCIcon.setImage(incorrectImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
-                    optionD.setTextFill(Color.RED);
-                    optionDIcon.setImage(incorrectImage);
-                }
 
 
-                if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
+                if (selectedOptionId != questionAnswerId) { // wrong option was selected
+
+                    if (selectedOptionId == optionAId) {
+                        optionA.setTextFill(Color.RED);
+                        optionAIcon.setImage(incorrectImage);
+
+                    } else if (selectedOptionId == optionBId) {
+                        optionB.setTextFill(Color.RED);
+                        optionBIcon.setImage(incorrectImage);
+
+                    } else if (selectedOptionId == optionCId) {
+                        optionC.setTextFill(Color.RED);
+                        optionCIcon.setImage(incorrectImage);
+
+                    } else if (selectedOptionId == optionDId) {
+                        optionD.setTextFill(Color.RED);
+                        optionDIcon.setImage(incorrectImage);
+
+                    }
+
+                }
+
+                noOptionSelected.setVisible(false);
+
+            } else { // no option was selected
+
+                if (questionAnswerId == optionAId) {
                     optionA.setTextFill(Color.GREEN);
                     optionAIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
+
+                } else if (questionAnswerId == optionBId) {
                     optionB.setTextFill(Color.GREEN);
                     optionBIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
+
+                } else if (questionAnswerId == optionCId) {
                     optionC.setTextFill(Color.GREEN);
                     optionCIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
+
+                } else if (questionAnswerId == optionDId) {
                     optionD.setTextFill(Color.GREEN);
                     optionDIcon.setImage(correctImage);
+
                 }
-            }
-            noOptionSelected.setVisible(false);
-        }
-        else {
-            if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionA())) {
-                optionA.setTextFill(Color.GREEN);
-                optionAIcon.setImage(correctImage);
-            }
-            else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionB())) {
-                optionB.setTextFill(Color.GREEN);
-                optionBIcon.setImage(correctImage);
-            }
-            else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionC())) {
-                optionC.setTextFill(Color.GREEN);
-                optionCIcon.setImage(correctImage);
-            }
-            else if (questionAnswer.equalsIgnoreCase(question.getObjectiveQuestion().getOptionD())) {
-                optionD.setTextFill(Color.GREEN);
-                optionDIcon.setImage(correctImage);
+
+                noOptionSelected.setVisible(true);
             }
 
-            noOptionSelected.setVisible(true);
+            explanationLabel.setText(question.getObjectiveQuestion().getQuestionAnswer().getExplanation().replaceAll("<br>", System.lineSeparator()));
+
+        } else if (viewModel.getQuestionType() == Type.THEORY){
+
+            String questionText = question.getTheoryQuestion().getQuestion();
+            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+            String explanationText = question.getTheoryQuestion().getQuestionAnswer().getExplanation();
+            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+
+            centerVBox.getChildren().removeAll(optionAPanel, optionBPanel, optionCPanel, optionDPanel, noOptionSelected);
         }
 
-        explanationLabel.setText(question.getObjectiveQuestion().getAnswerExplanation());
     }
 
     /**
@@ -385,162 +426,174 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
      * @param questionNumber number of the selected question
      */
     private void changeSelectedQuestion(int questionNumber) {
-        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
 
         int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
 
         questionOverviewLabel.setText("Question " + questionNumber + " of " + questions.size());
 
-        questionLabel.setText(questions.get(questionNumber - 1).getObjectiveQuestion().getQuestion());
+        if (viewModel.getQuestionType() == Type.OBJECTIVE) {
 
-        optionA.setText(" (A) " + questions.get(questionNumber - 1).getObjectiveQuestion().getOptionA());
-        optionB.setText(" (B) " + questions.get(questionNumber - 1).getObjectiveQuestion().getOptionB());
-        optionC.setText(" (C) " + questions.get(questionNumber - 1).getObjectiveQuestion().getOptionC());
-        optionD.setText(" (D) " + questions.get(questionNumber - 1).getObjectiveQuestion().getOptionD());
+            ObjectiveQuestion objectiveQuestion = questions.get(questionNumber - 1).getObjectiveQuestion();
 
-        optionA.setTextFill(Color.BLACK);
-        optionB.setTextFill(Color.BLACK);
-        optionC.setTextFill(Color.BLACK);
-        optionD.setTextFill(Color.BLACK);
+            questionLabel.setText(objectiveQuestion.getQuestion().replaceAll("<br>", System.lineSeparator()));
 
-        optionAIcon.setImage(null);
-        optionBIcon.setImage(null);
-        optionCIcon.setImage(null);
-        optionDIcon.setImage(null);
+            optionA.setText(" (A) " + objectiveQuestion.getOptionA().getText());
+            optionB.setText(" (B) " + objectiveQuestion.getOptionB().getText());
+            optionC.setText(" (C) " + objectiveQuestion.getOptionC().getText());
+            optionD.setText(" (D) " + objectiveQuestion.getOptionD().getText());
 
-        optionAButton.setSelected(false);
-        optionBButton.setSelected(false);
-        optionCButton.setSelected(false);
-        optionDButton.setSelected(false);
+            optionA.setTextFill(Color.BLACK);
+            optionB.setTextFill(Color.BLACK);
+            optionC.setTextFill(Color.BLACK);
+            optionD.setTextFill(Color.BLACK);
 
-        String selectedOption = questions.get(questionNumber - 1).getSelectedOption();
-        String questionAnswer = questions.get(questionNumber - 1).getObjectiveQuestion().getOptionAnswer();
+            optionAIcon.setImage(null);
+            optionBIcon.setImage(null);
+            optionCIcon.setImage(null);
+            optionDIcon.setImage(null);
 
-        if (selectedOption != null) {
+            optionAButton.setSelected(false);
+            optionBButton.setSelected(false);
+            optionCButton.setSelected(false);
+            optionDButton.setSelected(false);
 
-            if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
-                optionAButton.setSelected(true);
-            } else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
-                optionBButton.setSelected(true);
-            } else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
-                optionCButton.setSelected(true);
-            } else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
-                optionDButton.setSelected(true);
-            }
+//            String selectedOption = questions.get(questionNumber - 1).getSelectedOption();
+//            String questionAnswer = questions.get(questionNumber - 1).getObjectiveQuestion().getQuestionAnswer().getAnswer();
 
-            if (selectedOption.equalsIgnoreCase(questionAnswer)) {
-                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
+            int selectedOptionId = questions.get(questionNumber - 1).getSelectedOptionId();
+            int questionAnswerId = questions.get(questionNumber - 1).getObjectiveQuestion().getQuestionAnswer().getId();
+
+            int optionAId = objectiveQuestion.getOptionA().getId();
+            int optionBId = objectiveQuestion.getOptionB().getId();
+            int optionCId = objectiveQuestion.getOptionC().getId();
+            int optionDId = objectiveQuestion.getOptionD().getId();
+
+            if (selectedOptionId != -1) { // an option was selected
+
+                if (selectedOptionId == optionAId) {
+                    optionAButton.setSelected(true);
+                } else if (selectedOptionId == optionBId) {
+                    optionBButton.setSelected(true);
+                } else if (selectedOptionId == optionCId) {
+                    optionCButton.setSelected(true);
+                } else if (selectedOptionId == optionDId) {
+                    optionDButton.setSelected(true);
+                }
+
+                if (questionAnswerId == optionAId) {
                     optionA.setTextFill(Color.GREEN);
                     optionAIcon.setImage(correctImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
+
+                } else if (questionAnswerId == optionBId) {
                     optionB.setTextFill(Color.GREEN);
                     optionBIcon.setImage(correctImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
+
+                } else if (questionAnswerId == optionCId) {
                     optionC.setTextFill(Color.GREEN);
                     optionCIcon.setImage(correctImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
-                    optionD.setTextFill(Color.GREEN);
-                    optionDIcon.setImage(correctImage);
-                }
-            } else {
-                if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
-                    optionA.setTextFill(Color.RED);
-                    optionAIcon.setImage(incorrectImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
-                    optionB.setTextFill(Color.RED);
-                    optionBIcon.setImage(incorrectImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
-                    optionC.setTextFill(Color.RED);
-                    optionCIcon.setImage(incorrectImage);
-                }
-                else if (selectedOption.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
+
+                } else if (questionAnswerId == optionDId) {
                     optionD.setTextFill(Color.RED);
                     optionDIcon.setImage(incorrectImage);
+
                 }
 
 
-                if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
+                if (selectedOptionId != questionAnswerId) { // wrong answer was selected
+
+                    if (selectedOptionId == optionAId) {
+                        optionA.setTextFill(Color.RED);
+                        optionAIcon.setImage(incorrectImage);
+
+                    } else if (selectedOptionId == optionBId) {
+                        optionB.setTextFill(Color.RED);
+                        optionBIcon.setImage(incorrectImage);
+
+                    } else if (selectedOptionId == optionCId) {
+                        optionC.setTextFill(Color.RED);
+                        optionCIcon.setImage(incorrectImage);
+
+                    } else if (selectedOptionId == optionDId) {
+                        optionD.setTextFill(Color.RED);
+                        optionDIcon.setImage(incorrectImage);
+
+                    }
+
+                }
+
+                noOptionSelected.setVisible(false);
+
+            } else { // no option was selected
+
+                if (questionAnswerId == optionAId) {
                     optionA.setTextFill(Color.GREEN);
                     optionAIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
+
+                } else if (questionAnswerId == optionBId) {
                     optionB.setTextFill(Color.GREEN);
                     optionBIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
+
+                } else if (questionAnswerId == optionCId) {
                     optionC.setTextFill(Color.GREEN);
                     optionCIcon.setImage(correctImage);
-                }
-                else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
+
+                } else if (questionAnswerId == optionDId) {
                     optionD.setTextFill(Color.GREEN);
                     optionDIcon.setImage(correctImage);
+
                 }
-            }
-            noOptionSelected.setVisible(false);
-        }
-        else {
-            if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionA())) {
-                optionA.setTextFill(Color.GREEN);
-                optionAIcon.setImage(correctImage);
-            }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionB())) {
-                optionB.setTextFill(Color.GREEN);
-                optionBIcon.setImage(correctImage);
-            }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionC())) {
-                optionC.setTextFill(Color.GREEN);
-                optionCIcon.setImage(correctImage);
-            }
-            else if (questionAnswer.equalsIgnoreCase(questions.get(selectedQuestion - 1).getObjectiveQuestion().getOptionD())) {
-                optionD.setTextFill(Color.GREEN);
-                optionDIcon.setImage(correctImage);
+
+                noOptionSelected.setVisible(true);
             }
 
-            noOptionSelected.setVisible(true);
+            explanationLabel.setText(questions.get(questionNumber - 1).getObjectiveQuestion().getQuestionAnswer().getExplanation());
+
+        } else if (viewModel.getQuestionType() == Type.THEORY) {
+
+            String questionText = questions.get(questionNumber - 1).getTheoryQuestion().getQuestion();
+            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+            String explanationText = questions.get(questionNumber - 1).getTheoryQuestion().getQuestionAnswer().getExplanation();
+            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+
         }
 
-        explanationLabel.setText(questions.get(questionNumber - 1).getObjectiveQuestion().getAnswerExplanation());
     }
 
     /**
      * Initializes question tiles at bottom of the screen
      */
     private void setupTilePane() {
-        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
 
         tilePane.getChildren().clear();
 
         for (int i=1; i <= questions.size(); i++) {
-            Rectangle r = new Rectangle(35, 35);
+            Rectangle r = new Rectangle(34, 34);
             r.setFill(Color.web("#FFFFFF"));
             r.setStroke(Paint.valueOf("#12AF20"));
             r.setStrokeType(StrokeType.OUTSIDE);
 
             Label l = new Label(Integer.toString(i));
 
-            if (questions.get(i - 1).getObjectiveQuestion().getOptionAnswer().equalsIgnoreCase(questions.get(i-1).getSelectedOption())) {
-                r.setFill(Color.GREEN);
-                r.setStrokeWidth(1);
-                l.setTextFill(Paint.valueOf("#FFFFFF"));
-            } else if (questions.get(i-1).getSelectedOption() != null) {
-                r.setStroke(null);
-                r.setFill(Color.web("#FA0000", 0.7));
-            } else {
-                r.setStroke(Paint.valueOf("#12AF20"));
-                r.setStrokeWidth(1.5);
-            }
+            if (viewModel.getQuestionType() == Type.OBJECTIVE) {
+                if (questions.get(i - 1).getObjectiveQuestion().getQuestionAnswer().getId() == questions.get(i-1).getSelectedOptionId()) {
+                    r.setFill(Paint.valueOf("#12AF20"));
+                    l.setTextFill(Paint.valueOf("#FFFFFF"));
 
+                } else if (questions.get(i-1).getSelectedOptionId() != -1) {
+                    r.setFill(Color.web("#FA0000", 0.5));
+                    l.setTextFill(Color.WHITE);
+                }
+
+            }
 
             if (subjectQuestionsState.getSelectedQuestion() == i) {
                 r.setStroke(Paint.valueOf("#FCB029"));
-                r.setStrokeWidth(2);
+                r.setStrokeWidth(2.0);
             }
 
             StackPane s = new StackPane(r, l);
@@ -563,19 +616,13 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestion - 1);
         StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestion - 1);
 
-
         Rectangle selectedQuestionRect = (Rectangle) selectedQuestionPane.getChildren().get(0);
         Rectangle oldQuestionRect = (Rectangle) oldQuestionPane.getChildren().get(0);
 
-        Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
-        Label oldQuestionText = (Label) oldQuestionPane.getChildren().get(1);
-
-
-//        oldQuestionText.setTextFill(Color.BLACK);
-        oldQuestionRect.setStrokeWidth(1);
+        oldQuestionRect.setStroke(Paint.valueOf("#12AF20"));
+        oldQuestionRect.setStrokeWidth(1.0);
         selectedQuestionRect.setStroke(Paint.valueOf("#FCB029"));
         selectedQuestionRect.setStrokeWidth(2);
-//        selectedQuestionText.setTextFill(Color.WHITE);
 
     }
 
@@ -587,20 +634,26 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     }
 
     public static class InitialData {
-        private List<Subject> subjects;
+        private List<PQSubject> subjects;
         private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions;
+        private Type questionType;
 
-        public InitialData(List<Subject> subjects, HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions) {
+        public InitialData(List<PQSubject> subjects, HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions, Type questionType) {
             this.subjects = subjects;
             this.subjectsQuestions = subjectsQuestions;
+            this.questionType = questionType;
         }
 
-        public List<Subject> getSubjects() {
+        public List<PQSubject> getSubjects() {
             return subjects;
         }
 
         public HashMap<String, PracticeScreenVM.SubjectQuestionsState> getSubjectsQuestions() {
             return subjectsQuestions;
+        }
+
+        public Type getQuestionType() {
+            return questionType;
         }
     }
 }

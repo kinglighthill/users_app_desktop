@@ -56,9 +56,6 @@ public class PreAuthenticationController implements FxmlView<PreAuthenticationVM
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        HBox.setMargin(separator, new Insets(0, 30, 0, 30));
-        //initializeImageSliderSection();
-        // showDefaultAuthenticationSection();
 
         initializeViews();
 
@@ -67,14 +64,14 @@ public class PreAuthenticationController implements FxmlView<PreAuthenticationVM
         startImageSlider();
 
         signupButton.setOnAction(event -> {
-            boolean isSignUpScreenShowing = true;
-            ViewSwitcher.passData(isSignUpScreenShowing);
+            boolean showSignUpScreen = true;
+            ViewSwitcher.passData(showSignUpScreen);
             ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
         });
 
         loginButton.setOnAction(event -> {
-            boolean isSignUpScreenShowing = false;
-            ViewSwitcher.passData(isSignUpScreenShowing);
+            boolean showSignUpScreen = false;
+            ViewSwitcher.passData(showSignUpScreen);
             ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
         });
     }
@@ -114,6 +111,8 @@ public class PreAuthenticationController implements FxmlView<PreAuthenticationVM
         sliderImageView1.setImage(new Image(getClass().getResource("/drawable/auth_screen_image1.jpg").toString()));
         sliderImageView2.setImage(new Image(getClass().getResource("/drawable/auth_screen_image2.jpg").toString()));
         sliderImageView3.setImage(new Image(getClass().getResource("/drawable/auth_screen_image3.jpg").toString()));
+
+
         loginButton.setBackground(Background.EMPTY);
 
     }

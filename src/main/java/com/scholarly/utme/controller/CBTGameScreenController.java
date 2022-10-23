@@ -1,32 +1,31 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.data.model.ObjectiveBookmark;
+import com.scholarly.utme.data.model.ObjectiveQuestion;
+import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.CBTGameScreenVM;
 import com.scholarly.utme.viewmodels.CBTGameScreenVM.QuestionState;
+import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -39,21 +38,29 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
+import static com.scholarly.utme.util.Constants.CBT_GAME_SCREEN;
 
 @FxmlPath("/layouts/CBTGameScreen.fxml")
-public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initializable {
+public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initializable, SceneLifecycle {
+
+    public static final String TAG = "CBTGameScreenController: ";
 
     @InjectViewModel
     private CBTGameScreenVM viewModel;
 
     @FXML
-    private ImageView bookmarkImage, calculatorImage, speakerImage, reportImage, reportDialogCloseIcon;
+    private ImageView bookmarkImage, calculatorImage, speakerImage, reportImage, reportDialogCloseIcon, quesDescriptionCloseIcon;
 
     @FXML
     private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton, exitButton, showAnswersButton, playAgainButton, submitReport;
 
     @FXML
     private Label questionNumberLabel, questionLabel, pageTitle, fiftyFiftyCount, correctAnswers, incorrectAnswers, questionAttempts, correctAnswersLabel, incorrectAnswersLabel, resultLabel, questionAttemptsLabel;
+
+    @FXML
+    private Label questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
 
     @FXML
     private TextField enterCorrectAnswerField;
@@ -68,20 +75,21 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private Pane resultDialogDimmer, reportDialogDimmer;
 
     @FXML
-    private VBox resultDialog, reportDialog, incorrectAnswerPane;
+    private VBox resultDialog, reportDialog, incorrectAnswerPane, questionDescriptionDialog;
   
     private Stage calculatorStage = new Stage();
 
-    String idleStyle =
+    String idleButtonStyle =
             "-fx-background-color: #FF8D19;" +
                     "-fx-background-radius: 10";
 
-    String hoveredStyle =
+    String hoveredButtonStyle =
             "-fx-background-color: #FFA347;" +
                     "-fx-background-radius: 10";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         List<Button> options = new ArrayList<>();
         options.add(optionAButton);
         options.add(optionBButton);
@@ -94,11 +102,13 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         initializeFonts();
         initializeGestures();
         setupQuestionView();
+        updateBookmarkIcon();
         setupReportSection();
 
 
         viewModel.selectedQuestionProperty().addListener((observableValue, number, t1) -> {
             changeSelectedQuestion(t1.intValue());
+            updateBookmarkIcon();
         });
 
         viewModel.fiftyFiftyCountProperty().addListener((observableValue, number, t1) -> {
@@ -107,35 +117,38 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
 
         fiftyFiftyButton.setOnAction(event -> {
-            viewModel.setFiftyFiftyCount(viewModel.getFiftyFiftyCount() - 1);
-            fiftyFiftyButton.setDisable(true);
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
 
-            String optionAnswer = questionState.getQuestion().getOptionAnswer();
+            int optionAnswerId = questionState.getQuestion().getQuestionAnswer().getId();
 
-            int enabled = 0;
+            int enabledButtons = 0;
 
-            for (int i = 0; i < options.size(); i++) {
-                if (!options.get(i).isDisabled()) {
-                    enabled++;
+            for (Button option : options) {
+                if (!option.isDisabled()) {
+                    enabledButtons++;
                 }
             }
 
-            if (enabled > 1) {
+            if (enabledButtons > 2) {
                 options.stream()
                         .unordered()
-                        .filter(button -> !button.getText().equalsIgnoreCase(optionAnswer) && !button.isDisabled())
-                        .limit(enabled - 2)
+                        .filter(button -> !((int) button.getUserData() == optionAnswerId) && !button.isDisabled())
+                        .limit(enabledButtons - 2)
                         .forEach(button -> button.setDisable(true));
+
+                viewModel.setFiftyFiftyCount(viewModel.getFiftyFiftyCount() - 1);
+                fiftyFiftyButton.setDisable(true);
             }
         });
 
         optionAButton.setOnAction(event -> {
+            fiftyFiftyButton.setDisable(false);
+
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
 
-            questionState.getSelectedOptions().add(optionAButton.getText());
+//            questionState.getSelectedOptions().add(optionAButton.getText());
 
-            if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionAButton.getText())) {
+            if (questionState.getQuestion().getQuestionAnswer().getId() == 0) {
                 if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
                     showResult();
                 } else {
@@ -145,13 +158,26 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                 dispatchAnswerIncorrect();
                 optionAButton.setDisable(true);
             }
+
+            int enabledButtons = 0;
+            for (Button option : options) {
+                if (!option.isDisabled()) {
+                    enabledButtons++;
+                }
+            }
+            if (enabledButtons <= 2) {
+                fiftyFiftyButton.setDisable(true);
+            }
         });
+
         optionBButton.setOnAction(event -> {
+            fiftyFiftyButton.setDisable(false);
+
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
 
-            questionState.getSelectedOptions().add(optionBButton.getText());
+//            questionState.getSelectedOptions().add(optionBButton.getText());
 
-            if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionBButton.getText())) {
+            if (questionState.getQuestion().getQuestionAnswer().getId() == 1) {
                 if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
                     showResult();
                 } else {
@@ -161,13 +187,26 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                 dispatchAnswerIncorrect();
                 optionBButton.setDisable(true);
             }
+
+            int enabledButtons = 0;
+            for (Button option : options) {
+                if (!option.isDisabled()) {
+                    enabledButtons++;
+                }
+            }
+            if (enabledButtons <= 2) {
+                fiftyFiftyButton.setDisable(true);
+            }
         });
+
         optionCButton.setOnAction(event -> {
+            fiftyFiftyButton.setDisable(false);
+
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
 
-            questionState.getSelectedOptions().add(optionCButton.getText());
+//            questionState.getSelectedOptions().add(optionCButton.getText());
 
-            if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionCButton.getText())) {
+            if (questionState.getQuestion().getQuestionAnswer().getId() == 2) {
                 if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
                     showResult();
                 } else {
@@ -177,13 +216,26 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                 dispatchAnswerIncorrect();
                 optionCButton.setDisable(true);
             }
+
+            int enabledButtons = 0;
+            for (Button option : options) {
+                if (!option.isDisabled()) {
+                    enabledButtons++;
+                }
+            }
+            if (enabledButtons <= 2) {
+                fiftyFiftyButton.setDisable(true);
+            }
         });
+
         optionDButton.setOnAction(event -> {
+            fiftyFiftyButton.setDisable(false);
+
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
 
-            questionState.getSelectedOptions().add(optionDButton.getText());
+//            questionState.getSelectedOptions().add(optionDButton.getText());
 
-            if (questionState.getQuestion().getOptionAnswer().equalsIgnoreCase(optionDButton.getText())) {
+            if (questionState.getQuestion().getQuestionAnswer().getId() == 3) {
                 if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
                     showResult();
                 } else {
@@ -193,17 +245,33 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                 dispatchAnswerIncorrect();
                 optionDButton.setDisable(true);
             }
+
+            int enabledButtons = 0;
+            for (Button option : options) {
+                if (!option.isDisabled()) {
+                    enabledButtons++;
+                }
+            }
+            if (enabledButtons <= 2) {
+                fiftyFiftyButton.setDisable(true);
+            }
         });
 
 
         options.forEach(button -> {
-            button.setStyle(idleStyle);
-            button.setOnMouseEntered(e -> button.setStyle(hoveredStyle));
-            button.setOnMouseExited(e -> button.setStyle(idleStyle));
-            button.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 24));
+            button.setStyle(idleButtonStyle);
+            button.setOnMouseEntered(e -> button.setStyle(hoveredButtonStyle));
+            button.setOnMouseExited(e -> button.setStyle(idleButtonStyle));
+            button.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 16));
+            button.setWrapText(true);
             button.setTextFill(Color.WHITE);
         });
 
+
+        bookmarkImage.setOnMouseClicked(event -> {
+            viewModel.handleBookmarkClicked();
+            updateBookmarkIcon();
+        });
 
         reportImage.setOnMouseClicked(mouseEvent -> {
             Animations.showDialog(reportDialog, reportDialogDimmer);
@@ -227,20 +295,38 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         playAgainButton.setOnAction(event -> {
             hideResult();
         });
+        
+        readQuestionDesc.setOnMouseClicked(event -> {
+            Animations.showDialog(questionDescriptionDialog, reportDialogDimmer);
+        });
+
+        quesDescriptionCloseIcon.setOnMouseClicked(event -> {
+            Animations.hideDialog(questionDescriptionDialog, reportDialogDimmer);
+        });
 
         showAnswersButton.setOnAction(event -> {
-            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions());
+            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions(), SubjectListItemVM.Type.OBJECTIVE);
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });
 
         backButton.setOnAction(e -> {
-            ViewSwitcher.passData("cbtGamePanel");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            resultDialogDimmer.setVisible(true);
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Exit", null, "Are you sure you want to Exit?");
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.CBT_GAME_SCREEN));
+                    ViewSwitcher.showScreen(View.HOME_SCREEN);
+                    resultDialogDimmer.setVisible(false);
+                }
+                resultDialogDimmer.setVisible(false);
+                return buttonType;
+            });
+            dialog.show();
         });
 
         exitButton.setOnAction(e -> {
-            ViewSwitcher.passData("cbtGamePanel");
+            ViewSwitcher.passData(new HomeScreenController.InitialData(CBT_GAME_SCREEN));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
@@ -256,15 +342,18 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         reportImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_flag.png").toString()));
         speakerImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_speaker.png").toString()));
         calculatorImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_calculator.png").toString()));
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/cbt_game_bookmark.png").toString()));
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_green.png").toString()));
         reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+        quesDescriptionCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
 
         backButton.setBackground(Background.EMPTY);
     }
 
     private void initializeFonts() {
-        questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 24));
-        questionLabel.setLineSpacing(5);
+        questionDescriptionHeader.setFont(FontUtil.getFont(GilroyFontFamily.MEDIUM_ITALIC, 16));
+        readQuestionDesc.setFont(FontUtil.getFont(GilroyFontFamily.MEDIUM_ITALIC, 16));
+        questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 22));
+//        questionLabel.setLineSpacing(5);
         fiftyFiftyButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
         fiftyFiftyCount.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 16));
         showAnswersButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
@@ -347,11 +436,26 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
     }
 
-    private void updateFiftyFiftyButton(int intValue) {
+    private void updateBookmarkIcon() {
+        List<QuestionState> questions = viewModel.getQuestions();
+        ObjectiveQuestion selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1).getQuestion();
 
-        fiftyFiftyCount.setText(Integer.toString(intValue));
+        List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
 
-        if (intValue < 1) {
+        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_green.png").toString()));
+
+        bookmarks.forEach(bookmark -> {
+            if (bookmark.getQuestionId() == selectedQuestion.getId()) {
+                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_green_filled.png").toString()));
+
+            }
+        });
+    }
+
+    private void updateFiftyFiftyButton(int count) {
+        fiftyFiftyCount.setText(Integer.toString(count));
+
+        if (count < 1) {
             fiftyFiftyButton.setDisable(true);
         } else {
             fiftyFiftyButton.setDisable(false);
@@ -374,7 +478,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             calculatorStage.setResizable(false);
 
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("/layouts/Calculator.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/layouts/CalculatorView.fxml"));
                 Scene scene = new Scene(root);
 
                 calculatorStage.setScene(scene);
@@ -507,13 +611,29 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         int selectedQuestionNumber = selectedQuestion.getQuestion().getQuestionNumber();
 
         questionNumberLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
+        
+        List<QuestionDescription> questionDescriptionList = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> 
+                questionDescription.getId() == selectedQuestion.getQuestion().getQuestionDescriptionId()).collect(Collectors.toList());
+        
+        if (questionDescriptionList.isEmpty()) {
+            readQuestionDesc.setVisible(false);
+            questionDescriptionHeader.setText("");
+        } else {
+            questionDescriptionHeader.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", " "));
+            questionDescriptionText.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+        }
 
-        questionLabel.setText(selectedQuestion.getQuestion().getQuestion());
+        String questionText = selectedQuestion.getQuestion().getQuestion();
+        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-        optionAButton.setText(selectedQuestion.getQuestion().getOptionA());
-        optionBButton.setText(selectedQuestion.getQuestion().getOptionB());
-        optionCButton.setText(selectedQuestion.getQuestion().getOptionC());
-        optionDButton.setText(selectedQuestion.getQuestion().getOptionD());
+        optionAButton.setText(selectedQuestion.getQuestion().getOptionA().getText());
+        optionAButton.setUserData(0);
+        optionBButton.setText(selectedQuestion.getQuestion().getOptionB().getText());
+        optionBButton.setUserData(1);
+        optionCButton.setText(selectedQuestion.getQuestion().getOptionC().getText());
+        optionCButton.setUserData(2);
+        optionDButton.setText(selectedQuestion.getQuestion().getOptionD().getText());
+        optionDButton.setUserData(3);
 
         optionAButton.setDisable(false);
         optionBButton.setDisable(false);
@@ -527,12 +647,28 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         questionNumberLabel.setText("Question " + newValue + " of " + questions.size());
 
-        questionLabel.setText(selectedQuestion.getQuestion().getQuestion());
+        List<QuestionDescription> questionDescriptionList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                questionDescription.getId() == selectedQuestion.getQuestion().getQuestionDescriptionId()).collect(Collectors.toList());
 
-        optionAButton.setText(selectedQuestion.getQuestion().getOptionA());
-        optionBButton.setText(selectedQuestion.getQuestion().getOptionB());
-        optionCButton.setText(selectedQuestion.getQuestion().getOptionC());
-        optionDButton.setText(selectedQuestion.getQuestion().getOptionD());
+        if (questionDescriptionList.isEmpty()) {
+            readQuestionDesc.setVisible(false);
+            questionDescriptionHeader.setText("");
+        } else {
+            questionDescriptionHeader.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", " "));
+            questionDescriptionText.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+        }
+
+        String questionText = selectedQuestion.getQuestion().getQuestion();
+        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+        optionAButton.setText(selectedQuestion.getQuestion().getOptionA().getText());
+        optionAButton.setUserData(0);
+        optionBButton.setText(selectedQuestion.getQuestion().getOptionB().getText());
+        optionBButton.setUserData(1);
+        optionCButton.setText(selectedQuestion.getQuestion().getOptionC().getText());
+        optionCButton.setUserData(2);
+        optionDButton.setText(selectedQuestion.getQuestion().getOptionD().getText());
+        optionDButton.setUserData(3);
 
         optionAButton.setDisable(false);
         optionBButton.setDisable(false);
@@ -602,6 +738,16 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
         return data;
+    }
+
+    @Override
+    public void onViewAdded() {
+
+    }
+
+    @Override
+    public void onViewRemoved() {
+        TextToSpeech.dispose();
     }
 
 

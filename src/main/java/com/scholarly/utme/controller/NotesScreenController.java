@@ -65,6 +65,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.scholarly.utme.util.Constants.NOTES_SCREEN;
+
 
 @FxmlPath("/layouts/NotesScreen.fxml")
 public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializable {
@@ -118,7 +120,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private VBox quizExplanationSection, quizBackNextAndQuitButtonsSection;
 
     @FXML
-    private HBox highlightColors, addNoteButton, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton, quizScoreCloseButton;
+    private HBox highlightColors, highlightColorsBox, addNoteButton, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton, quizScoreCloseButton;
 
     @FXML
     private Label pageTitle, subjectLabel, topicLabel, subtopicsText, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, refreshNotesCancelText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
@@ -172,6 +174,57 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         //topicLabel.setText(viewModel.getTopic().getTitle());
 
+        ToggleGroup topicListToggleGroup = new ToggleGroup();
+        viewModel.getSubTopics().forEach(subTopic -> {
+            ToggleButton button = new ToggleButton();
+            button.setUserData(subTopic);
+            topicListToggleGroup.getToggles().add(button);
+
+
+            button.setMinHeight(48);
+            button.setMaxHeight(48);
+            button.setPadding(new Insets(0, 0, 0, 20));
+            button.setAlignment(Pos.BASELINE_LEFT);
+            button.setMaxWidth(Double.MAX_VALUE);
+            button.setText(subTopic.getTitle());
+
+            button.setStyle(IDLE_BUTTON_STYLE);
+            button.setOnMouseEntered(e -> {
+                if (!button.isSelected()) {
+                    button.setStyle(HOVERED_BUTTON_STYLE);
+                }
+            });
+            button.setOnMouseExited(e -> {
+                if (!button.isSelected()) {
+                    button.setStyle(IDLE_BUTTON_STYLE);
+                }
+            });
+
+            button.selectedProperty().addListener((observe, old, newVal) -> {
+                if (newVal) {
+                    button.setStyle(PRESSED_STYLE);
+                    button.setTextFill(Color.WHITE);
+
+                    viewModel.setSelectedSubTopic(subTopic);
+                    renderNote(subTopic);
+//                    topicLabel.setText(subTopic.getTitle());
+                } else {
+                    button.setStyle(IDLE_BUTTON_STYLE);
+                    button.setTextFill(Color.BLACK);
+
+//                    viewModel.setSelectedTopic(null);
+                }
+            });
+
+            if (subTopic == viewModel.getSelectedSubTopic()) {
+                topicListToggleGroup.selectToggle(button);
+            }
+
+            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
+
+            topicVBox.getChildren().add(button);
+        });
+
         ImageView noteBackIcon = new ImageView(new Image(getClass().getResource("/drawable/notes_back_icon_2x.png").toString()));
         noteBackIcon.setFitWidth(20);
         noteBackIcon.setFitHeight(20);
@@ -186,7 +239,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
         });
         exitDialogExitButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
+            ViewSwitcher.passData(new HomeScreenController.InitialData(NOTES_SCREEN));
+            ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
         exitDialogCancelButton.setOnAction(event -> {
             Animations.translateOut(exitNotesDialog, 300);
@@ -359,12 +413,12 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         contentLayout.setOnMouseClicked(event -> {
-            if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
+            /*if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
                 onWordClickedOverlay.setVisible(true);
-            }
-            /*if (!noteOptionsLayout.isVisible()) {
-                Animations.translateIn(noteOptionsLayout, 300);
             }*/
+            if (!noteOptionsLayout.isVisible()) {
+                Animations.translateIn(noteOptionsLayout, 300);
+            }
         });
 
 
@@ -454,56 +508,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         setupQuizTilePane();
         setupQuizQuestion();
 
-        ToggleGroup topicListToggleGroup = new ToggleGroup();
-        viewModel.getSubTopics().forEach(subTopic -> {
-            ToggleButton button = new ToggleButton();
-            button.setUserData(subTopic);
-            topicListToggleGroup.getToggles().add(button);
 
-
-            button.setMinHeight(48);
-            button.setMaxHeight(48);
-            button.setPadding(new Insets(0, 0, 0, 20));
-            button.setAlignment(Pos.BASELINE_LEFT);
-            button.setMaxWidth(Double.MAX_VALUE);
-            button.setText(subTopic.getTitle());
-
-            button.setStyle(IDLE_BUTTON_STYLE);
-            button.setOnMouseEntered(e -> {
-                if (!button.isSelected()) {
-                    button.setStyle(HOVERED_BUTTON_STYLE);
-                }
-            });
-            button.setOnMouseExited(e -> {
-                if (!button.isSelected()) {
-                    button.setStyle(IDLE_BUTTON_STYLE);
-                }
-            });
-
-            button.selectedProperty().addListener((observe, old, newVal) -> {
-                if (newVal) {
-                    button.setStyle(PRESSED_STYLE);
-                    button.setTextFill(Color.WHITE);
-
-                    viewModel.setSelectedSubTopic(subTopic);
-                    renderNote(subTopic);
-//                    topicLabel.setText(subTopic.getTitle());
-                } else {
-                    button.setStyle(IDLE_BUTTON_STYLE);
-                    button.setTextFill(Color.BLACK);
-
-//                    viewModel.setSelectedTopic(null);
-                }
-            });
-
-            if (subTopic == viewModel.getSelectedSubTopic()) {
-                topicListToggleGroup.selectToggle(button);
-            }
-
-            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
-
-            topicVBox.getChildren().add(button);
-        });
 
 
         highlightColors.getChildren().clear();
@@ -526,6 +531,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         })
                         .collect(Collectors.toList())
         );
+
 
         viewModel.getSubjectHighlights().addListener((ListChangeListener<? super Highlights>) c -> {
             System.out.println("Highlight list changed");
@@ -1598,11 +1604,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                     }
                 });
 
-
         contentLayout.setSpacing(20);
         contentLayout.getChildren().clear();
         contentLayout.getChildren().addAll(contentElements);
-        contentLayout.setAlignment(Pos.CENTER);
+//        contentLayout.setAlignment(Pos.CENTER);
     }
 
     /**

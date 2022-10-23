@@ -2,12 +2,18 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.controller.CBTGameScreenController;
 import com.scholarly.utme.controller.CBTGameScreenController.InitialData;
+import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
+import com.scholarly.utme.data.dao.QuestionDescriptionDao;
+import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
+import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,14 +21,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CBTGameScreenVM implements ViewModel {
+    private static final String TAG = "CBTGameScreenVM: ";
 
     private SimpleIntegerProperty selectedQuestion = new SimpleIntegerProperty();
     private List<QuestionState> questions = new ArrayList<>();
 
     private SimpleIntegerProperty fiftyFiftyCount = new SimpleIntegerProperty();
 
-    private List<Subject> subjectList = FXCollections.observableArrayList();
+    private List<PQSubject> subjectList = FXCollections.observableArrayList();
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions = new HashMap<>();
+
+    private ObservableList<QuestionDescription> questionDescriptions = FXCollections.observableArrayList();
+
+    private ObservableList<ObjectiveBookmark> objectiveBookmarks = FXCollections.observableArrayList();
 
     private int correctAnswers, incorrectAnswers, questionAttempts;
 
@@ -37,8 +48,9 @@ public class CBTGameScreenVM implements ViewModel {
 
             List<QuestionState> questionStates = ObjectiveQuestionDao
                     .getQuestions(
-                            subjectState.getSubject().getTableName(),
+                            subjectState.getSubject().getId(),
                             subjectState.getSelectedYear().getId(),
+                            FXCollections.emptyObservableList(),
                             false
                     )
                     .stream()
@@ -48,12 +60,22 @@ public class CBTGameScreenVM implements ViewModel {
 
             List<PracticeScreenVM.QuestionState> practiceQuestionState = questionStates
                     .stream()
-                    .map(questionState -> new PracticeScreenVM.QuestionState(questionState.question, SubjectListItemVM.Type.OBJECTIVE, null))
+                    .map(questionState -> new PracticeScreenVM.QuestionState(questionState.question, SubjectListItemVM.Type.OBJECTIVE, -1))
                     .collect(Collectors.toList());
 
             questions.addAll(questionStates);
 
-            subjectsQuestions.put(subjectState.getSubject().getTableName(), new PracticeScreenVM.SubjectQuestionsState(1, practiceQuestionState));
+            subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new PracticeScreenVM.SubjectQuestionsState(1, practiceQuestionState));
+
+            List<QuestionDescription> questionDescriptionsList = QuestionDescriptionDao
+                    .getQuestionDescriptions(
+                            subjectState.getSubject().getId(),
+                            subjectState.getSelectedYear().getId()
+                    );
+
+            questionDescriptions.addAll(questionDescriptionsList);
+
+            objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks());
 
         });
 
@@ -80,6 +102,10 @@ public class CBTGameScreenVM implements ViewModel {
 
     public void setQuestions(List<QuestionState> questions) {
         this.questions = questions;
+    }
+
+    public ObservableList<QuestionDescription> getQuestionDescriptions() {
+        return questionDescriptions;
     }
 
     public int getFiftyFiftyCount() {
@@ -118,7 +144,7 @@ public class CBTGameScreenVM implements ViewModel {
         this.questionAttempts = questionAttempts;
     }
 
-    public List<Subject> getSubjectList() {
+    public List<PQSubject> getSubjectList() {
         return subjectList;
     }
 
@@ -126,7 +152,43 @@ public class CBTGameScreenVM implements ViewModel {
         return subjectsQuestions;
     }
 
-    public class QuestionState {
+    public ObservableList<ObjectiveBookmark> getObjectiveBookmarks() {
+        return objectiveBookmarks;
+    }
+
+    public void handleBookmarkClicked() {
+
+        ObjectiveQuestion question = questions.get(selectedQuestion.get() - 1).getQuestion();
+
+        ObservableList<ObjectiveBookmark> oldBookmarks = ObjectiveBookmarkDao.getBookmarks();
+        System.out.println(TAG + "oldBookmarks -> " + oldBookmarks);
+
+        boolean currentQuestionBookmarked = false;
+        ObjectiveBookmark bookmarkToDelete = null;
+
+        assert oldBookmarks != null;
+        for (ObjectiveBookmark bookmark : oldBookmarks) {
+            if (bookmark.getQuestionId() == question.getId()) {
+                currentQuestionBookmarked = true;
+                bookmarkToDelete = bookmark;
+
+            }
+        }
+
+        if (currentQuestionBookmarked) {
+            ObjectiveBookmarkDao.deleteBookmark(bookmarkToDelete.getQuestionId());
+        } else {
+            ObjectiveBookmarkDao.createBookmark(question.getSubjectId(), question.getYearId(), question.getId());
+        }
+
+        objectiveBookmarks.clear();
+        objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks());
+
+        System.out.println(TAG + "newBookmarks -> " + objectiveBookmarks);
+
+    }
+
+    public static class QuestionState {
         private ObjectiveQuestion question;
         private List<String> selectedOptions;
 

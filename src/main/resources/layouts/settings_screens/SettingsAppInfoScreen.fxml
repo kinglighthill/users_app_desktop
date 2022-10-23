@@ -31,89 +31,87 @@
     <center>
         <AnchorPane style="-fx-background-color: white;">
             <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.leftAnchor="50" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="150" AnchorPane.bottomAnchor="30">
-                <StackPane style="-fx-background-color: white;">
-                    <VBox spacing="15">
-                        <VBox fx:id="privacyVBox" spacing="10">
-                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                <left>
-                                    <HBox spacing="30" alignment="CENTER">
-                                        <ImageView fx:id="privacyImage" preserveRatio="true" pickOnBounds="true"/>
-                                        <Label text="Privacy Policy" textFill="#053500">
-                                            <font>
-                                                <Font size="16"/>
-                                            </font>
-                                        </Label>
-                                    </HBox>
-                                </left>
-                                <right>
-                                    <ToggleButton fx:id="privacyDropdown"/>
-                                </right>
-                                <padding>
-                                    <Insets top="20" bottom="20" left="30" right="30"/>
-                                </padding>
-                            </Panel>
-                            <VBox fx:id="privacyDetails" spacing="30">
-                                <Label wrapText="true" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac">
-                                    <font>
-                                        <Font size="16"/>
-                                    </font>
-                                </Label>
-                                <Label wrapText="true" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac ">
-                                    <font>
-                                        <Font size="16"/>
-                                    </font>
-                                </Label>
-                                <padding>
-                                    <Insets left="10" right="10"/>
-                                </padding>
-                            </VBox>
+                <VBox spacing="15">
+                    <VBox fx:id="privacyVBox" spacing="10">
+                        <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <left>
+                                <HBox spacing="30" alignment="CENTER">
+                                    <ImageView fx:id="privacyImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <Label text="Privacy Policy" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </HBox>
+                            </left>
+                            <right>
+                                <ToggleButton fx:id="privacyDropdown"/>
+                            </right>
+                            <padding>
+                                <Insets top="20" bottom="20" left="30" right="30"/>
+                            </padding>
+                        </Panel>
+                        <VBox fx:id="privacyDetails" spacing="30">
+                            <Label wrapText="true" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+                            <Label wrapText="true" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac ">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+                            <padding>
+                                <Insets left="10" right="10"/>
+                            </padding>
                         </VBox>
-                        <VBox fx:id="termsVBox" spacing="10">
-                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                <left>
-                                    <HBox spacing="30" alignment="CENTER">
-                                        <ImageView fx:id="termsImage" preserveRatio="true" pickOnBounds="true"/>
-                                        <Label text="Terms of use" textFill="#053500">
-                                            <font>
-                                                <Font size="16"/>
-                                            </font>
-                                        </Label>
-                                    </HBox>
-                                </left>
-                                <right>
-                                    <ToggleButton fx:id="termsDropdown"/>
-                                </right>
-                                <padding>
-                                    <Insets top="20" bottom="20" left="30" right="30"/>
-                                </padding>
-                            </Panel>
-                        </VBox>
-                        <VBox fx:id="thirdPartyVBox" spacing="10">
-                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                <left>
-                                    <HBox spacing="30" alignment="CENTER">
-                                        <ImageView fx:id="thirdPartyImage" preserveRatio="true" pickOnBounds="true"/>
-                                        <Label text="Third Party Libraries" textFill="#053500">
-                                            <font>
-                                                <Font size="16"/>
-                                            </font>
-                                        </Label>
-                                    </HBox>
-                                </left>
-                                <right>
-                                    <ToggleButton fx:id="thirdPartyDropdown"/>
-                                </right>
-                                <padding>
-                                    <Insets top="20" bottom="20" left="30" right="30"/>
-                                </padding>
-                            </Panel>
-                        </VBox>
-
                     </VBox>
-                    <padding>
-                        <Insets right="15"/>
-                    </padding>
-                </StackPane>
+                    <VBox fx:id="termsVBox" spacing="10">
+                        <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <left>
+                                <HBox spacing="30" alignment="CENTER">
+                                    <ImageView fx:id="termsImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <Label text="Terms of use" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </HBox>
+                            </left>
+                            <right>
+                                <ToggleButton fx:id="termsDropdown"/>
+                            </right>
+                            <padding>
+                                <Insets top="20" bottom="20" left="30" right="30"/>
+                            </padding>
+                        </Panel>
+                    </VBox>
+                    <VBox fx:id="thirdPartyVBox" spacing="10">
+                        <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <left>
+                                <HBox spacing="30" alignment="CENTER">
+                                    <ImageView fx:id="thirdPartyImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <Label text="Third Party Libraries" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </HBox>
+                            </left>
+                            <right>
+                                <ToggleButton fx:id="thirdPartyDropdown"/>
+                            </right>
+                            <padding>
+                                <Insets top="20" bottom="20" left="30" right="30"/>
+                            </padding>
+                        </Panel>
+                    </VBox>
+
+                </VBox>
+                <padding>
+                    <Insets right="15"/>
+                </padding>
             </ScrollPane>
         </AnchorPane>
     </center>

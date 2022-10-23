@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller.account_screens;
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.account_screens.AccountProfileScreenVM;
@@ -58,7 +59,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         });
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData("accountScreen");
+            ViewSwitcher.passData(new LandingScreenController.InitialData("accountScreen"));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 

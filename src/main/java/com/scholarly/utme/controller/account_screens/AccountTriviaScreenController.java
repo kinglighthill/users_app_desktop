@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller.account_screens;
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.listItems.TriviaParticipantItem;
+import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -176,7 +178,7 @@ public class AccountTriviaScreenController implements FxmlView<AccountTriviaScre
         });
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData("accountScreen");
+            ViewSwitcher.passData(new LandingScreenController.InitialData("accountScreen"));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 

@@ -10,6 +10,7 @@ import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelChapterListController;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelGridScreenController;
+import com.scholarly.utme.controller.novel_screens.NovelScreenController;
 import com.scholarly.utme.controller.settings_screens.SettingsAboutUsScreenController;
 import com.scholarly.utme.controller.settings_screens.SettingsAppInfoScreenController;
 import com.scholarly.utme.controller.settings_screens.SettingsHelpScreenController;
@@ -32,6 +33,7 @@ public enum View {
     EXPLANATION_SCREEN("/layouts/ExplanationScreen.fxml", ExplanationScreenController.class),
     SELECT_SYLLABUS_SCREEN("/layouts/SelectSyllabusScreen.fxml", SelectSyllabusController.class),
     SYLLABUS_SCREEN("/layouts/SyllabusScreen.fxml", SyllabusScreenController.class),
+    NOVEL_SCREEN("/layouts/novel_screens/NovelScreen.fxml", NovelScreenController.class),
     NOVEL_GRID_SCREEN("/layouts/novel_screens/NovelGridScreen.fxml", NovelGridScreenController.class),
     NOVEL_CHAPTER_LIST_SCREEN("/layouts/novel_screens/NovelChapterListScreen.fxml", NovelChapterListController.class),
     NOVEL_CONTENT_SCREEN("/layouts/novel_screens/NovelContentScreen.fxml", NovelContentScreenController.class),

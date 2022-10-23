@@ -62,7 +62,7 @@ public class HighlightsDao {
             System.out.println(e.getMessage());
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load highlights from database ");
+                    LocalDateTime.now() + ": Could not load highlights from database because " + e.getMessage());
 
             return null;
         }

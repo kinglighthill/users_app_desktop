@@ -9,10 +9,11 @@ import java.util.logging.Logger;
  *  Helper class for CRUD operations
  */
 public class CRUDHelper {
+    public static final String TAG = "CRUDHelper: ";
 
     public static Object read(String tableName, String fieldName, int fieldDataType,
                               String indexFieldName, int indexDataType, Object index) {
-        StringBuilder queryBuilder = new StringBuilder("Select ");
+        StringBuilder queryBuilder = new StringBuilder("SELECT ");
         queryBuilder.append(fieldName);
         queryBuilder.append(" from ");
         queryBuilder.append(tableName);
@@ -22,6 +23,7 @@ public class CRUDHelper {
         queryBuilder.append(convertObjectToSQLField(index, indexDataType));
         try (Connection connection = Database.connect()) {
             PreparedStatement statement = connection.prepareStatement(queryBuilder.toString());
+            System.out.println(TAG + "SELECT SQL Query -> " + queryBuilder);
             try (ResultSet rs = statement.executeQuery()) {
                 rs.next();
                 switch (fieldDataType) {
@@ -96,8 +98,11 @@ public class CRUDHelper {
         }
         queryBuilder.append(");");
 
-        try (Connection conn = Database.connect()) {
+        try {
+            Connection conn = DbConnection.getDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(queryBuilder.toString());
+
+            System.out.println(TAG + "INSERT SQL Query -> " + queryBuilder);
 
             int affectedRows = pstmt.executeUpdate();
 
@@ -112,25 +117,47 @@ public class CRUDHelper {
         } catch (SQLException ex) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not add item to database");
+                    LocalDateTime.now() + ": Could not add item to database because " + ex.getMessage());
             return -1;
         }
         return -1;
     }
 
-    public static int delete(String tableName, int id) {
-        String sql = "DELETE FROM " + tableName + " WHERE id = ?";
+    public static int delete(String tableName, int subjectId, int questionId) {
+        String sql = "DELETE FROM " + tableName + " WHERE subject_id = ? AND question_id = ?";
 
-        try (Connection conn = Database.connect()) {
+        try {
+            Connection conn = DbConnection.getDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, id);
-            return pstmt.executeUpdate();
+            pstmt.setInt(1, subjectId);
+            pstmt.setInt(2, questionId);
+            int deletedRowIndex = pstmt.executeUpdate();
+            return deletedRowIndex;
 
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not delete from " + tableName + " by id " + id +
-                            " because " + e.getCause());
+                    LocalDateTime.now() + ": Could not delete from " + tableName + " by question_id " + questionId +
+                            " because " + e.getMessage());
+            return -1;
+        }
+    }
+
+    public static int delete(String tableName, int question_id) {
+        String sql = "DELETE FROM " + tableName + " WHERE question_id = ?";
+
+        try {
+            Connection conn = DbConnection.getDbConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, question_id);
+            int deletedRowIndex = pstmt.executeUpdate();
+            return deletedRowIndex;
+
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not delete from " + tableName + " by question_id " + question_id +
+                            " because " + e.getMessage());
             return -1;
         }
     }

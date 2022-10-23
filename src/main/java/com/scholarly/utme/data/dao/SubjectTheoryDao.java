@@ -2,8 +2,11 @@ package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.SubjectTheory;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.util.Database;
+import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.Table;
+import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -12,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +46,7 @@ public class SubjectTheoryDao {
         String query = "SELECT * FROM " + tableName;
 
         try (Connection connection = Database.connect()) {
+            assert connection != null;
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             subjectsTheory.clear();
@@ -59,10 +64,38 @@ public class SubjectTheoryDao {
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Subjects from database ");
+                    LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
             subjectsTheory.clear();
         }
     }
+
+    /*private static void updatePQSubjectsFromDB() {
+
+        String query = "SELECT * FROM " + Tables.PQ_SUBJECTS + " JOIN " + Tables.SUBJECTS + " ON " + Tables.PQ_SUBJECTS + ".subject_id = " + Tables.SUBJECTS + "._id ORDER BY 'order'";
+
+        try (Connection connection = NewDatabase.connect()) {
+            assert connection != null;
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            pqSubjects.clear();
+            while (rs.next()) {
+                pqSubjects.add(new PQSubject(
+                        rs.getInt(idColumn),
+                        rs.getInt(pqSubjectIdColumn),
+                        rs.getInt(pqMinutesAllotedColumn),
+                        rs.getInt(pqOrderColumn),
+                        rs.getString(pqTitleColumn),
+                        rs.getString(pqShortTitleColumn),
+                        rs.getString(pqColorCodeColumn)));
+            }
+            System.out.println("PQSubjects updated successfully with size -> " + new ArrayList<>(pqSubjects).size());
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
+            pqSubjects.clear();
+        }
+    }*/
 
     public static ObservableList<Subject> getSubjectsTheory() {
         return FXCollections.unmodifiableObservableList(subjectsTheory);

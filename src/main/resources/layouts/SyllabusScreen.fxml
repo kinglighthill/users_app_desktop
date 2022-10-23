@@ -40,15 +40,12 @@
                                             <VBox fx:id="topicVBox" spacing="5" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" VBox.vgrow="ALWAYS"/>
                                         </content>
                                     </ScrollPane>
-
                                 </children>
-
                             </VBox>
 
                             <ScrollPane fx:id="syllabusScrollPane" fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
 
                                 <content>
-
                                     <StackPane fx:id="syllabusPane" prefHeight="1100" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
 
                                         <TabPane fx:id="syllabusTabPane" tabClosingPolicy="UNAVAILABLE" prefHeight="150" prefWidth="600" tabMinHeight="50" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF;">
@@ -93,7 +90,6 @@
 
                         </children>
                     </StackPane>
-
                 </right>
 
                 <top>

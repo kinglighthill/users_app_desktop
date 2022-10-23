@@ -8,6 +8,10 @@ module com.scholarly.utme {
     requires com.dlsc.formsfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
+    requires jidefx.fields;
+    requires jidefx.converters;
+    requires jidefx.common;
+    requires jidefx.decoration;
 
     requires java.sql;
     requires io.reactivex.rxjava3;
@@ -19,6 +23,10 @@ module com.scholarly.utme {
     requires java.prefs;
     requires jdk.jsobject;
     requires org.apache.commons.collections4;
+    requires org.apache.commons.lang3;
+    requires okhttp3;
+    requires okhttp3.logging;
+    requires jdk.httpserver;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;
@@ -28,8 +36,10 @@ module com.scholarly.utme {
     exports com.scholarly.utme.data.util;
     exports com.scholarly.utme.data.model;
     exports com.scholarly.utme.ui.utils;
+    exports com.scholarly.utme.network;
 
     opens com.scholarly.utme.ui.listcells to javafx.fxml;
+    opens com.scholarly.utme.network.model to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.text to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.image to com.google.gson;
@@ -67,6 +77,7 @@ module com.scholarly.utme {
 
     exports com.scholarly.utme.data.model.newDb;
     exports com.scholarly.utme.data.model.novels;
+    exports com.scholarly.utme.network.model;
     exports com.scholarly.utme.controller.landing_screens;
     exports com.scholarly.utme.viewmodels.landing_screens;
     exports com.scholarly.utme.controller.trivia_screens;
@@ -80,4 +91,5 @@ module com.scholarly.utme {
     exports com.scholarly.utme.viewmodels.settings_screens;
     exports com.scholarly.utme.controller.account_screens;
     exports com.scholarly.utme.viewmodels.account_screens;
+
 }

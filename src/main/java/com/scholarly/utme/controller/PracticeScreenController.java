@@ -1,16 +1,12 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.data.model.Bookmark;
+import com.scholarly.utme.data.model.*;
 //import com.gtranslate.Audio;
 //import com.gtranslate.Language;
-import com.scholarly.utme.data.model.ObjectiveQuestion;
-import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.model.TheoryQuestion;
+import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.PracticeScreenVM.QuestionState;
@@ -20,6 +16,7 @@ import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,18 +34,23 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.web.WebView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
 
 @FxmlPath("/layouts/PracticeScreen.fxml")
-public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable {
+public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable, SceneLifecycle {
 
-    private final static double rectangleBorderWidth = 2;
+    private static final String TAG = "PracticeScreenController: ";
+
+    private final static double rectangleSelectedBorderWidth = 2.0;
     private final static Color rectangleBorderSelectedColor = Color.ORANGE;
+    private final static Paint rectangleSelectedColor = Paint.valueOf("#12AF20");
 
     @InjectViewModel
     private PracticeScreenVM viewModel;
@@ -60,7 +62,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private ScrollPane tileScrollPane;
 
     @FXML
-    private ListView<Subject> subjectList;
+    private ListView<PQSubject> subjectList;
 
     private ToggleGroup toggleGroup = new ToggleGroup();
 
@@ -68,7 +70,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
 
     @FXML
-    private Label questionOverviewLabel, questionLabel, timeLabel, scoreText;
+    private Label questionOverviewLabel, questionLabel, timeLabel, scoreText, questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
 
     @FXML
     private TextField enterCorrectAnswerField;
@@ -77,21 +79,16 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
 
     @FXML
-    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog;
+    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog, centerVBox, questionDescriptionDialog;
 
     @FXML
     private Button prevButton, nextButton, exitButton, submitButton, submitReport, homePageButton, resultAnalysisButton;
 
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon, timeImage, summaryBookImage, testSummaryCloseIcon;
-
-    private Stage calculatorStage = new Stage();
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon, quesDescriptionCloseIcon, timeImage, summaryBookImage, testSummaryCloseIcon;
 
     @FXML
     private Pane dialogDimmer, exitDialogDimmer, summaryDialogDimmer;
-
-    @FXML
-    private DialogPane exitDialog;
 
     @FXML
     private WebView webView;
@@ -112,21 +109,25 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             if (newValue != null) {
                 setupQuestionView();
                 setupTilePane();
+                updateBookmarkIcon();
             }
         });
 
-        viewModel.getSubjectBookmarks().forEach((s, bookmarks) -> {
-            bookmarks.addListener((ListChangeListener<? super Bookmark>) change -> {
-
+        /*viewModel.getSubjectBookmarks().forEach((s, bookmarks) -> {
+            bookmarks.addListener((ListChangeListener<? super ObjectiveBookmark>) change -> {
+                System.out.println(TAG + "Bookmark List changed ");
+                if (viewModel.getSelectedSubject().getShortTitle()().equalsIgnoreCase(s)) {
+                    updateBookmarkIcon();
+                }
             });
-        });
+        });*/
 
         subjectList.setCellFactory(new PracticeSubjectListCellFactory());
         subjectList.setItems(viewModel.getSubjects());
-        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
-            if (c.getList().size() == 1) {
-                Subject subject = c.getList().get(0);
-                System.out.println("Content of C -> " + c);
+        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) change -> {
+            if (change.getList().size() == 1) {
+                PQSubject subject = change.getList().get(0);
+                System.out.println(TAG + "Content of change -> " + change);
                 viewModel.setSelectedSubject(subject);
             } else {
                 viewModel.setSelectedSubject(null);
@@ -141,32 +142,27 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
             subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
 
-                if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
+                if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
 
                     if (newValue.intValue() <= subjectQuestionsState.getQuestions().size()){
                         changeSelectedTile(oldValue.intValue(), newValue.intValue());
                         changeSelectedQuestion(newValue.intValue());
-
+                        updateBookmarkIcon();
                     }
 
                 }
             });
         });
-        viewModel.getSubjectBookmarks().forEach((s, bookmarks) -> {
-            bookmarks.addListener((ListChangeListener<? super Bookmark>) observable -> {
-                if (viewModel.getSelectedSubject().getTableName().equalsIgnoreCase(s)) {
-                    updateBookmarkIcon();
-                }
-            });
-        });
+
+
 
         prevButton.setOnAction(event -> {
             nextButton.setDisable(false);
-            SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+            SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
             List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
 //            System.out.println("Selected question index -> " + selectedQuestion);
@@ -177,7 +173,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             if (subjectList.getSelectionModel().getSelectedIndex() == 0) {
 
                 viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .setSelectedQuestion(selectedQuestion - 1);
 
                 if (selectedQuestion == 2) {
@@ -193,7 +189,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
                 }else {
                     viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .setSelectedQuestion(selectedQuestion - 1);
                 }
 
@@ -203,11 +199,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         nextButton.setOnAction(event -> {
             prevButton.setDisable(false);
-            SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+            SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
             List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
 
@@ -215,9 +211,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
                 subjectList.getSelectionModel().select(subjectListSelectionIndex.incrementAndGet());
 
-                System.out.println("Selected question index -> " + selectedQuestion);
-                System.out.println("SubjectList selected item index -> " + subjectList.getSelectionModel().getSelectedIndex());
-                System.out.println("Subject List Selection Index -> " + subjectListSelectionIndex);
+                System.out.println(TAG + "Selected question index -> " + selectedQuestion);
+                System.out.println(TAG + "SubjectList selected item index -> " + subjectList.getSelectionModel().getSelectedIndex());
+                System.out.println(TAG + "Subject List Selection Index -> " + subjectListSelectionIndex);
 
                 if (subjectList.getItems().size() == subjectListSelectionIndex.get()){
 
@@ -225,9 +221,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
                 }
 
-            }else {
+            } else {
                 viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .setSelectedQuestion(selectedQuestion + 1);
             }
 
@@ -242,170 +238,175 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             optionAButton.setOnAction(event -> {
                 int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getSelectedQuestion();
 
 
 
                 QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getQuestions()
                         .get(selectedQuestion - 1);
 
                 ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
 
-                if (questionState.getSelectedOption() == null) {
+                if (questionState.getSelectedOptionId() == -1) {
                     onOptionSelected(selectedQuestion);
                 }
 
-                questionState.setSelectedOption(question.getOptionA());
+//                questionState.setSelectedOption(question.getOptionA());
+                questionState.setSelectedOptionId(question.getOptionA().getId());
 
             });
             optionAButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getSelectedQuestion();
 
                     QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getQuestions()
                             .get(selectedQuestion - 1);
 
                     ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
 
-                    if (questionState.getSelectedOption() == null) {
+                    if (questionState.getSelectedOptionId() == -1) {
                         onOptionSelected(selectedQuestion);
                     }
 
-
-                    questionState.setSelectedOption(question.getOptionA());
+//                    questionState.setSelectedOption(question.getOptionA());
+                    questionState.setSelectedOptionId(question.getOptionA().getId());
                 }
             });
 
             optionBButton.setOnAction(event -> {
                 int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getSelectedQuestion();
 
                 QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getQuestions()
                         .get(selectedQuestion - 1);
 
                 ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
 
-                if (questionState.getSelectedOption() == null) {
+                if (questionState.getSelectedOptionId() == -1) {
                     onOptionSelected(selectedQuestion);
                 }
 
-                questionState.setSelectedOption(question.getOptionB());
+//                questionState.setSelectedOption(question.getOptionB());
+                questionState.setSelectedOptionId(question.getOptionB().getId());
             });
             optionBButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getSelectedQuestion();
 
                     QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getQuestions()
                             .get(selectedQuestion - 1);
 
                     ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
 
-                    if (questionState.getSelectedOption() == null) {
+                    if (questionState.getSelectedOptionId() == -1) {
                         onOptionSelected(selectedQuestion);
                     }
 
-                    questionState.setSelectedOption(question.getOptionB());
+//                    questionState.setSelectedOption(question.getOptionB());
+                    questionState.setSelectedOptionId(question.getOptionB().getId());
                 }
             });
 
             optionCButton.setOnAction(event -> {
                 int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getSelectedQuestion();
 
                 QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getQuestions()
                         .get(selectedQuestion - 1);
 
                 ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
 
-                if (questionState.getSelectedOption() == null) {
+                if (questionState.getSelectedOptionId() == -1) {
                     onOptionSelected(selectedQuestion);
                 }
 
-                questionState.setSelectedOption(question.getOptionC());
+//                questionState.setSelectedOption(question.getOptionC());
+                questionState.setSelectedOptionId(question.getOptionC().getId());
             });
             optionCButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getSelectedQuestion();
 
                     QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getQuestions()
                             .get(selectedQuestion - 1);
 
                     ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
 
-                    if (questionState.getSelectedOption() == null) {
+                    if (questionState.getSelectedOptionId() == -1) {
                         onOptionSelected(selectedQuestion);
                     }
 
-                    questionState.setSelectedOption(question.getOptionC());
+//                    questionState.setSelectedOption(question.getOptionC());
+                    questionState.setSelectedOptionId(question.getOptionC().getId());
                 }
             });
 
             optionDButton.setOnAction(event -> {
                 int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getSelectedQuestion();
 
                 QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getTableName())
+                        .get(viewModel.getSelectedSubject().getShortTitle())
                         .getQuestions()
                         .get(selectedQuestion - 1);
 
                 ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
 
-                if (questionState.getSelectedOption() == null) {
+                if (questionState.getSelectedOptionId() == -1) {
                     onOptionSelected(selectedQuestion);
                 }
 
-                questionState.setSelectedOption(question.getOptionD());
+//                questionState.setSelectedOption(question.getOptionD());
+                questionState.setSelectedOptionId(question.getOptionD().getId());
             });
             optionDButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getSelectedQuestion();
 
                     QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getTableName())
+                            .get(viewModel.getSelectedSubject().getShortTitle())
                             .getQuestions()
                             .get(selectedQuestion - 1);
 
                     ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
 
-                    if (questionState.getSelectedOption() == null) {
+                    if (questionState.getSelectedOptionId() == -1) {
                         onOptionSelected(selectedQuestion);
                     }
 
-                    questionState.setSelectedOption(question.getOptionD());
+//                    questionState.setSelectedOption(question.getOptionD());
+                    questionState.setSelectedOptionId(question.getOptionD().getId());
                 }
             });
 
-        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+        }
+        else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
 
-            optionAButton.setVisible(false);
-            optionBButton.setVisible(false);
-            optionCButton.setVisible(false);
-            optionDButton.setVisible(false);
+            centerVBox.getChildren().removeAll(optionAButton, optionBButton, optionCButton, optionDButton);
 
         }
 
@@ -425,10 +426,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             timeLabel.setText(timeText);
 
             if (newValue.intValue() == 0) {
-
                 showTimeUpDialog();
             }
-
 
             // TODO: Implement time elapsed here
         });
@@ -467,6 +466,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         bookmarkImage.setOnMouseClicked(mouseEvent -> {
             viewModel.handleBookmarkClicked();
+            updateBookmarkIcon();
+
         });
 
         reportDialogCloseIcon.setOnMouseClicked(mouseEvent -> {
@@ -479,11 +480,11 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         speakerImage.setOnMouseClicked(event -> {
             int selectedQuestion = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             QuestionState questionState = viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getTableName())
+                    .get(viewModel.getSelectedSubject().getShortTitle())
                     .getQuestions()
                     .get(selectedQuestion - 1);
 
@@ -493,6 +494,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             } else {
                 TextToSpeech.play(((TheoryQuestion) questionState.getQuestion()).getQuestion());
             }
+        });
+
+        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
+            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
+        });
+
+        quesDescriptionCloseIcon.setOnMouseClicked(mouseEvent -> {
+            Animations.hideDialog(questionDescriptionDialog, dialogDimmer);
         });
 
 
@@ -562,6 +571,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
         calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
         reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+        quesDescriptionCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
         speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
         flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
         timeImage.setImage(new Image(getClass().getResource("/drawable/practice_screen_images/time_image.jpg").toString()));
@@ -583,74 +593,84 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         submitButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
     }
 
-    private void updateBookmarkIcon() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
-        List<QuestionState> questions = subjectQuestionsState.getQuestions();
-        List<Bookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getTableName());
-
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-
-        bookmarks.forEach(bookmark -> {
-            if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-                if (bookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
-            } else {
-                if (bookmark.getQuestionId() == ((TheoryQuestion) questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
-            }
-        });
-    }
-
-    private void onOptionSelected(int selectedQuestion) {
-        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(selectedQuestion - 1);
+    private void onOptionSelected(int selectedQuestionIndex) {
+        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(selectedQuestionIndex - 1);
 
         Rectangle selectedQuestionRectangle = (Rectangle) selectedQuestionPane.getChildren().get(0);
+        Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
 
-        selectedQuestionRectangle.setStrokeWidth(rectangleBorderWidth);
-        selectedQuestionRectangle.setStroke(rectangleBorderSelectedColor);
+        selectedQuestionRectangle.setFill(rectangleSelectedColor);
+        selectedQuestionText.setTextFill(Color.WHITE);
+
     }
 
-    private void changeSelectedQuestion(int newValue) {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+    private void updateBookmarkIcon() {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
-        List<Bookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getTableName());
 
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-        bookmarks.forEach(bookmark -> {
-            if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-                if (bookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(newValue - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
-            } else {
-                if (bookmark.getQuestionId() == ((TheoryQuestion) questions.get(newValue - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
-            }
-        });
-
-//        boolean questionIsBookmarked = false;
-//        for (int i = 0; i < bookmarks.size(); i++) {
-//            if (bookmarks.get(i).getQuestionId() == questions.get(newValue - 1).getQuestion().getId()) {
-//                questionIsBookmarked = true;
-//            }
-//        }
-//
-//        if (questionIsBookmarked) {
-//            bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-//        } else {
-//            bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-//        }
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+            ObjectiveQuestion selectedQuestion = questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getObjectiveQuestion();
 
+            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks().get(viewModel.getSelectedSubject().getId());
+
+            bookmarks.forEach(bookmark -> {
+                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
+                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+
+                }
+            });
+
+        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+            TheoryQuestion selectedQuestion = questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getTheoryQuestion();
+
+            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks().get(viewModel.getSelectedSubject().getId());
+
+            bookmarks.forEach(bookmark -> {
+                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
+                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+
+                }
+            });
+        }
+    }
+
+    private void setupQuestionView() {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        int selectedQuestionIndex = subjectQuestionsState.getSelectedQuestion();
+
+
+        // prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
+        // nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
+
+        System.out.println(TAG + "Index of the selected subject in subjectList: " + subjectList.getSelectionModel().getSelectedIndex());
+        if (subjectList.getSelectionModel().getSelectedIndex() + 1 == selectedQuestionIndex - 1){
+            prevButton.setDisable(true);
+        }
+
+        questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
+
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestionIndex - 1).getQuestion();
+            questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
+
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+
+            if (quesDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
+            } else {
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
 
             questionLabel.setText(question.getQuestion());
-            String questionText = question.getQuestion();
 
+            String questionText = question.getQuestion();
 
             if (questionText.contains("<img")) {
                 int startIndexOfImg = questionText.indexOf("<img");
@@ -676,20 +696,108 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             webView.getEngine().loadContent(questionText);
 
-            optionAButton.setText(" (A) " + question.getOptionA());
-            optionBButton.setText(" (B) " + question.getOptionB());
-            optionCButton.setText(" (C) " + question.getOptionC());
-            optionDButton.setText(" (D) " + question.getOptionD());
+            optionAButton.setText(" (A) " + question.getOptionA().getText());
+            optionBButton.setText(" (B) " + question.getOptionB().getText());
+            optionCButton.setText(" (C) " + question.getOptionC().getText());
+            optionDButton.setText(" (D) " + question.getOptionD().getText());
 
-            String selectedOption = questions.get(newValue - 1).getSelectedOption();
-            if (selectedOption != null) {
-                if (selectedOption.equalsIgnoreCase(question.getOptionA())) {
+            int selectedOptionId = questions.get(selectedQuestionIndex - 1).getSelectedOptionId();
+            if (selectedOptionId != -1) {
+                if (selectedOptionId == question.getOptionA().getId()) {
                     toggleGroup.selectToggle(optionAButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionB())) {
+                } else if (selectedOptionId == question.getOptionB().getId()) {
                     toggleGroup.selectToggle(optionBButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionC())) {
+                } else if (selectedOptionId == question.getOptionC().getId()) {
                     toggleGroup.selectToggle(optionCButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionD())) {
+                } else if (selectedOptionId == question.getOptionD().getId()) {
+                    toggleGroup.selectToggle(optionDButton);
+                }
+            } else {
+                toggleGroup.selectToggle(null);
+            }
+        } else {
+            TheoryQuestion question = (TheoryQuestion) questions.get(selectedQuestionIndex - 1).getQuestion();
+            questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
+
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+
+            if (quesDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
+            } else {
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
+
+            questionLabel.setText(question.getQuestion());
+            webView.getEngine().loadContent(question.getQuestion());
+        }
+    }
+
+    private void changeSelectedQuestion(int newValue) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+
+
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
+            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+
+            if (quesDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
+            } else {
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
+
+            questionLabel.setText(question.getQuestion());
+            String questionText = question.getQuestion();
+
+            if (questionText.contains("<img")) {
+                int startIndexOfImg = questionText.indexOf("<img");
+                int endIndexOfImg = questionText.indexOf("'100%'>", startIndexOfImg);
+
+                int startIndexOfImgPath = questionText.indexOf("/android_asset", startIndexOfImg);
+                int endIndexOfImgPath = questionText.indexOf("' width", startIndexOfImg);
+
+                String imagePath = questionText.substring(startIndexOfImgPath, endIndexOfImgPath);
+
+                StringBuilder builder = new StringBuilder(questionText);
+
+                System.out.println(imagePath);
+
+                URL url = getClass().getResource(imagePath);
+                String img = "<img src='"+url+"' width='100%'>";
+
+                builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
+
+                questionText = builder.toString();
+                System.out.println(questionText);
+            }
+
+            webView.getEngine().loadContent(questionText);
+
+            optionAButton.setText(" (A) " + question.getOptionA().getText());
+            optionBButton.setText(" (B) " + question.getOptionB().getText());
+            optionCButton.setText(" (C) " + question.getOptionC().getText());
+            optionDButton.setText(" (D) " + question.getOptionD().getText());
+
+            int selectedOptionId = questions.get(newValue - 1).getSelectedOptionId();
+            if (selectedOptionId != -1) {
+                if (selectedOptionId == question.getOptionA().getId()) {
+                    toggleGroup.selectToggle(optionAButton);
+                } else if (selectedOptionId == question.getOptionB().getId()) {
+                    toggleGroup.selectToggle(optionBButton);
+                } else if (selectedOptionId == question.getOptionC().getId()) {
+                    toggleGroup.selectToggle(optionCButton);
+                } else if (selectedOptionId == question.getOptionD().getId()) {
                     toggleGroup.selectToggle(optionDButton);
                 }
             } else {
@@ -699,97 +807,16 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             TheoryQuestion question = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
-            questionLabel.setText(question.getQuestion());
-            webView.getEngine().loadContent(question.getQuestion());
-        }
-    }
-
-    private void setupQuestionView() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
-        List<QuestionState> questions = subjectQuestionsState.getQuestions();
-        int selectedQuestion = subjectQuestionsState.getSelectedQuestion();
-
-        List<Bookmark> bookmarks = viewModel.getSubjectBookmarks().get(viewModel.getSelectedSubject().getTableName());
-
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-        bookmarks.forEach(bookmark -> {
-            if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-                if (bookmark.getQuestionId() == ((ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
+            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+            if (quesDescriptionInList.isEmpty()) {
+                readQuestionDesc.setVisible(false);
+                questionDescriptionHeader.setText("");
             } else {
-                if (bookmark.getQuestionId() == ((TheoryQuestion) questions.get(selectedQuestion - 1).getQuestion()).getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                }
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
-        });
-
-       // prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
-       // nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
-
-        System.out.println("Index of the selected subject in subjectList: " + subjectList.getSelectionModel().getSelectedIndex());
-        if (subjectList.getSelectionModel().getSelectedIndex() + 1 == selectedQuestion - 1){
-            prevButton.setDisable(true);
-        }
-
-        questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestion - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
-
-            questionLabel.setText(question.getQuestion());
-
-            String questionText = question.getQuestion();
-
-
-
-            if (questionText.contains("<img")) {
-                int startIndexOfImg = questionText.indexOf("<img");
-                int endIndexOfImg = questionText.indexOf("'100%'>", startIndexOfImg);
-
-                int startIndexOfImgPath = questionText.indexOf("/android_asset", startIndexOfImg);
-                int endIndexOfImgPath = questionText.indexOf("' width", startIndexOfImg);
-
-                String imagePath = questionText.substring(startIndexOfImgPath, endIndexOfImgPath);
-
-                StringBuilder builder = new StringBuilder(questionText);
-
-                System.out.println(imagePath);
-
-                URL url = getClass().getResource(imagePath);
-                String img = "<img src='"+url+"' width='100%'>";
-
-                builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
-
-                questionText = builder.toString();
-                System.out.println(questionText);
-            }
-
-            webView.getEngine().loadContent(questionText);
-
-            optionAButton.setText(" (A) " + question.getOptionA());
-            optionBButton.setText(" (B) " + question.getOptionB());
-            optionCButton.setText(" (C) " + question.getOptionC());
-            optionDButton.setText(" (D) " + question.getOptionD());
-
-            String selectedOption = questions.get(selectedQuestion - 1).getSelectedOption();
-            if (selectedOption != null) {
-                if (selectedOption.equalsIgnoreCase(question.getOptionA())) {
-                    toggleGroup.selectToggle(optionAButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionB())) {
-                    toggleGroup.selectToggle(optionBButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionC())) {
-                    toggleGroup.selectToggle(optionCButton);
-                } else if (selectedOption.equalsIgnoreCase(question.getOptionD())) {
-                    toggleGroup.selectToggle(optionDButton);
-                }
-            } else {
-                toggleGroup.selectToggle(null);
-            }
-        } else {
-            TheoryQuestion question = (TheoryQuestion) questions.get(selectedQuestion - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + selectedQuestion + " of " + questions.size());
 
             questionLabel.setText(question.getQuestion());
             webView.getEngine().loadContent(question.getQuestion());
@@ -797,7 +824,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void setupTilePane() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getTableName());
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
         tilePane.getChildren().clear();
@@ -810,7 +837,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             Label l = new Label(Integer.toString(i));
 
-            if (questions.get(i-1).getSelectedOption() != null) {
+            if (questions.get(i-1).getSelectedOptionId() != -1) {
                 r.setFill(Paint.valueOf("#12AF20"));
                 l.setTextFill(Color.WHITE);
             }
@@ -829,46 +856,26 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         }
     }
 
-    private void changeSelectedTile(int oldSelectedQuestion, int newSelectedQuestion) {
+    private void changeSelectedTile(int oldSelectedQuestionIndex, int newSelectedQuestionIndex) {
 
-        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestion - 1);
-        StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestion - 1);
+        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestionIndex - 1);
+        StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestionIndex - 1);
 
         Rectangle selectedQuestionRectangle = (Rectangle) selectedQuestionPane.getChildren().get(0);
         Rectangle oldQuestionRectangle = (Rectangle) oldQuestionPane.getChildren().get(0);
-        Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
-        Label oldQuestionText = (Label) oldQuestionPane.getChildren().get(1);
 
+        selectedQuestionRectangle.setStroke(rectangleBorderSelectedColor);
+        selectedQuestionRectangle.setStrokeWidth(rectangleSelectedBorderWidth);
 
-        selectedQuestionRectangle.setFill(Paint.valueOf("#12AF20"));
-        oldQuestionRectangle.setFill(Paint.valueOf("#FFFFFF"));
-
-        selectedQuestionText.setTextFill(Color.WHITE);
-        oldQuestionText.setTextFill(Color.BLACK);
+        oldQuestionRectangle.setStroke(rectangleSelectedColor);
+        oldQuestionRectangle.setStrokeWidth(1.0);
 
     }
 
     private void showSubmitDialog() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        // Change dialog icon
-        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
-        dialog.setTitle("Confirm Submit");
+        Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Submit", null, "Are you sure you want to submit?");
 
         exitDialogDimmer.setVisible(true);
-        exitDialog.setVisible(true);
-        exitDialog.setContentText("Are you sure you want to submit?");
-
-        dialog.getDialogPane().setContent(exitDialog);
-
-        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-background-radius: 10;");
-
-        dialog.getDialogPane().setMinSize(350, 80);
-
-        //Adding buttons to the dialog pane
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
 
@@ -878,8 +885,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     exitDialogDimmer.setVisible(false);
                     Animations.showDialog(testSummaryDialog, summaryDialogDimmer);
 
-                }else {
-                    ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjects(), viewModel.getSubjectsQuestions());
+                } else {
+                    ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjects(), viewModel.getSubjectsQuestions(), viewModel.getQuestionType());
                     ViewSwitcher.passData(data);
                     ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
                     //TODO: Implement Theory result screen
@@ -895,32 +902,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void showExitDialog() {
-
-        Dialog<ButtonType> dialog = new Dialog<>();
-
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        // Change dialog icon
-        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
-        dialog.setTitle("Confirm Exit");
+        Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to quit?");
 
         exitDialogDimmer.setVisible(true);
-        exitDialog.setVisible(true);
-        exitDialog.setContentText("Are you sure you want to quit?");
-
-        dialog.getDialogPane().setContent(exitDialog);
-
-        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-background-radius: 10;");
-
-        dialog.getDialogPane().setMinSize(350, 80);
-
-        //Adding buttons to the dialog pane
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
-                ViewSwitcher.passData("practicePanel");
+                ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
@@ -932,77 +921,65 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
  
     private void showTimeUpDialog() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        // Change dialog icon
-        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
-        dialog.setTitle("Time Up");
+        Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Time Up", null, "Time Up! Do you want to submit?");
 
         exitDialogDimmer.setVisible(true);
-        exitDialog.setVisible(true);
-        exitDialog.setContentText("Time Up! Do you want to submit?");
-
-        dialog.getDialogPane().setContent(exitDialog);
-
-        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-background-radius: 10;");
-
-        dialog.getDialogPane().setMinSize(350, 80);
-
-        //Adding buttons to the dialog pane
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
         dialog.setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.YES){
+            if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
                 ResultScreenController.InitialData initialData =
                         new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getSubjectsQuestions(), View.HOME_SCREEN);
                 ViewSwitcher.passData(initialData);
                 ViewSwitcher.showScreen(View.RESULT_SCREEN);
 
-            }else if (buttonType == ButtonType.NO){
+            } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
 
-                ViewSwitcher.passData("practicePanel");
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             }
             return buttonType;
         });
 
-        dialog.showAndWait();
+        dialog.show();
     }
 
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
-        System.out.println("Got data -> " + data);
+        System.out.println(TAG + "Got data -> " + data);
         return data;
     }
 
     @FXML
     public void onCalculatorClicked(MouseEvent mouseEvent) {
-        if (!calculatorStage.isShowing()) {
-            calculatorStage.initModality(Modality.WINDOW_MODAL);
+        Stage calculatorStage = new Stage();
+
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/layouts/CalculatorView.fxml"));
+            Scene scene = new Scene(root);
+
+            Image appIcon = new Image(getClass().getResource("/drawable/app_logo.png").toString());
+            calculatorStage.getIcons().add(appIcon);
+
             calculatorStage.setTitle("Calculator");
             calculatorStage.setResizable(false);
+            calculatorStage.setScene(scene);
+            calculatorStage.initOwner(ViewSwitcher.getRootScene().getWindow());
 
-            try {
-                Parent root = FXMLLoader.load(getClass().getResource("/layouts/Calculator.fxml"));
-                Scene scene = new Scene(root);
+            calculatorStage.setX(ViewSwitcher.getRootScene().getWidth() / 1.3);
+            calculatorStage.setY(ViewSwitcher.getRootScene().getHeight() / 2.7);
 
-                calculatorStage.setScene(scene);
-                calculatorStage.showAndWait();
+            calculatorStage.showAndWait();
 
-            } catch (Exception e) {
-
-            }
-        } else {
-            calculatorStage.toFront();
+        } catch (Exception e) {
+            System.out.println(TAG + "Cannot create scene because " + e.getMessage());
         }
+
     }
 
     public void handleKeyPressed(KeyEvent keyEvent) {
-        System.out.println("Key pressed -> " + keyEvent.getCode());
+        System.out.println(TAG + "Key pressed -> " + keyEvent.getCode());
 
         if (keyEvent.getCode().toString().equalsIgnoreCase("A")) {
             toggleGroup.selectToggle(optionAButton);
@@ -1013,6 +990,16 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         } else if (keyEvent.getCode().toString().equalsIgnoreCase("D")) {
             toggleGroup.selectToggle(optionDButton);
         }
+    }
+
+    @Override
+    public void onViewAdded() {
+
+    }
+
+    @Override
+    public void onViewRemoved() {
+        TextToSpeech.dispose();
     }
 
     public static class InitialData {

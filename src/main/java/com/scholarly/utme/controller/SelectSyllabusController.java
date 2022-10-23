@@ -4,6 +4,7 @@ import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.newDb.SyllabusCategory;
 import com.scholarly.utme.data.model.newDb.SyllabusTopic;
+import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -50,17 +51,10 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
-        subjectsTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        categoriesTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
-        emptyCategoryListLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
-        viewSyllabusButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
 
-        ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
-        backIcon.setFitHeight(25);
-        backIcon.setPreserveRatio(true);
-        backButton.setGraphic(backIcon);
-        backButton.setBackground(Background.EMPTY);
+        initializeViews();
+        initializeFonts();
+
 
         ToggleGroup subjectListToggleGroup = new ToggleGroup();
         subjectListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
@@ -117,16 +111,25 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
 
         ToggleGroup topicListToggleGroup = new ToggleGroup();
         topicListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+
             if (newValue != null) {
                 Pair<SyllabusCategory, SyllabusTopic> userData = (Pair<SyllabusCategory, SyllabusTopic>) newValue.getUserData();
                 SyllabusCategory category = userData.getKey();
                 SyllabusTopic selectedTopic = userData.getValue();
                 viewModel.setSelectedTopic(selectedTopic);
                 viewModel.setSelectedCategory(category);
+
+                if (!viewSyllabusButton.isVisible()) {
+                    Animations.translateIn(viewSyllabusButton, 300);
+                }
+
                 System.out.println("Selected Category -> " + category.getTitle());
                 System.out.println("Selected SyllabusTopic -> " + selectedTopic.getTitle());
 
+            } else {
+                Animations.translateOut(viewSyllabusButton, 300);
             }
+
         });
 
 
@@ -211,6 +214,24 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
             ViewSwitcher.showScreen(View.SYLLABUS_SCREEN);
 
         });
+    }
+
+    private void initializeViews() {
+        ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
+        backIcon.setFitHeight(25);
+        backIcon.setPreserveRatio(true);
+//        backButton.setGraphic(backIcon);
+//        backButton.setBackground(Background.EMPTY);
+
+    }
+
+    private void initializeFonts() {
+        //        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
+        subjectsTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+        categoriesTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+        emptyCategoryListLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+        viewSyllabusButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+
     }
 
     public void backButtonClicked(MouseEvent event) {

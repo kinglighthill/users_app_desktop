@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller.novel_screens;
 
+import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.novels.Novel;
+import com.scholarly.utme.data.model.novels.NovelAuthor;
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
 import com.scholarly.utme.ui.utils.View;
@@ -23,6 +25,7 @@ import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/novel_screens/NovelChapterListScreen.fxml")
 public class NovelChapterListController implements FxmlView<NovelChapterListVM>, Initializable {
+    private static final String TAG = "NovelChapterListController: ";
 
     @FXML
     private Button backButton, readButton;
@@ -50,8 +53,8 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
 
         pageTitle.setText(viewModel.getNovel().getName());
         novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + viewModel.getNovel().getImagePath()).toString()));
-        authorLabel.setText(viewModel.getAuthor(viewModel.getNovel()));
-        chaptersLabel.setText(viewModel.getNovel().getChapters());
+        authorLabel.setText(viewModel.getAuthor().getName());
+        chaptersLabel.setText(viewModel.getNovel().getChaptersCount() + " chapters");
 
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
         chaptersList.setItems(viewModel.getChapters());
@@ -64,14 +67,12 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
         }));
 
         readButton.setOnAction(event -> {
-            Object novelData = new NovelChapterListVM.NovelState(viewModel.getNovel(), viewModel.getChapters(), viewModel.getSelectedChapter());
-            ViewSwitcher.passData(novelData);
+            ViewSwitcher.passData(new NovelContentScreenController.InitialData(viewModel.getNovel(), viewModel.getAuthor(), viewModel.getChapters(), viewModel.getSelectedChapter()));
             ViewSwitcher.showScreen(View.NOVEL_CONTENT_SCREEN);
         });
 
-        backButton.setOnAction(event -> {
-            ViewSwitcher.passData("novelsButton");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+        backButton.setOnAction(event -> {;
+            ViewSwitcher.showScreen(View.NOVEL_SCREEN);
         });
     }
 
@@ -90,7 +91,25 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
 //        novelDescription.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
     }
 
-    private Novel getInitialData() {
-        return (Novel) ViewSwitcher.retrieveData();
+    private InitialData getInitialData() {
+        return (InitialData) ViewSwitcher.retrieveData();
+    }
+
+    public static class InitialData {
+        private Novel novel;
+        private NovelAuthor author;
+
+        public InitialData(Novel novel, NovelAuthor author) {
+            this.novel = novel;
+            this.author = author;
+        }
+
+        public Novel getNovel() {
+            return novel;
+        }
+
+        public NovelAuthor getAuthor() {
+            return author;
+        }
     }
 }

@@ -16,23 +16,12 @@ public class NovelAuthor {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getNovelId() {
         return novelId;
     }
 
-    public void setNovelId(int novelId) {
-        this.novelId = novelId;
-    }
 }
