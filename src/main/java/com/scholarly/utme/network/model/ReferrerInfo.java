@@ -15,7 +15,11 @@ public class ReferrerInfo {
     private boolean instantExperienceLaunched;
 
     public ReferrerInfo() {
-
+        referrerCode = "";
+        referrerUrl = "";
+        referrerClickTime = "";
+        appInstallTime = "";
+        instantExperienceLaunched = false;
     }
 
     public ReferrerInfo(String referrerCode, String referrerUrl, String referrerClickTime, String appInstallTime, boolean instantExperienceLaunched) {

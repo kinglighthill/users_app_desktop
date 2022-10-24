@@ -24,6 +24,8 @@ import static com.scholarly.utme.util.Constants.PREF_KEY_FIRST_TIME_USER;
 public class HelloApplication extends Application {
     private final Preferences preferences = AppPreferences.getPreferences();
 
+    private static HelloApplication application;
+
     @Override
     public void start(Stage stage) throws IOException {
 //        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/layouts/PreAuthenticationScreen.fxml"));
@@ -64,9 +66,8 @@ public class HelloApplication extends Application {
     }
 
     public void openBrowser(String uri) {
-
+        System.out.println("Browser");
         getHostServices().showDocument(uri);
-
     }
 
     public static void main(String[] args) {

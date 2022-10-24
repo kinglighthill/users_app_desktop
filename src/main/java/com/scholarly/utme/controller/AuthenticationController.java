@@ -29,6 +29,7 @@ import okhttp3.*;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.*;
 import java.util.*;
 import java.util.prefs.Preferences;
@@ -70,6 +71,10 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     private Preferences userPreferences;
 
+    interface ServerCallback {
+        void stopServer();
+        void redirect();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -431,18 +436,20 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     }
 
-    private void signupUser(String authCode) {
+    private void signupUser(String authCode, ServerCallback callback) {
+        System.out.println("Google");
         String END_POINT = "signup/google";
 
         OkHttpClient client = NetworkService.getHttpClient();
 
         DeviceInfo deviceInfo = getSystemProperties();
+        deviceInfo.setVersion("");
+        deviceInfo.setApiLevel("");
         ReferrerInfo referrerInfo = new ReferrerInfo();
-        GoogleUser user = new GoogleUser("Nigeria", "fcm-token", null, authCode, "http://127.0.0.1:12345", deviceInfo, referrerInfo);
+        GoogleUser user = new GoogleUser("Nigeria", "fcm-token", "null", authCode, "http://127.0.0.1:12345", deviceInfo, referrerInfo);
 
         Gson gson = new Gson();
         String json = gson.toJson(user);
-
         RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
 
         Request request = new Request.Builder()
@@ -467,6 +474,8 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         userPreferences.put(PREF_KEY_REFRESH_TOKEN, signupResponse.getData().getRefreshToken());
                         System.out.println("Signed up user with ID token -> " + userPreferences.get(PREF_KEY_ID_TOKEN, " ") + "\n AND Refresh Token -> " + userPreferences.get(PREF_KEY_REFRESH_TOKEN, " "));
 
+                        callback.redirect();
+
                         Platform.runLater(() -> {
                             hideProgressBar();
 //                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
@@ -486,10 +495,12 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                 }
 
+                callback.stopServer();
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
+                callback.stopServer();
                 Platform.runLater(() -> {
                     Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
                     alertDialog.show();
@@ -498,7 +509,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 System.out.println("Request failed with exception -> " + e.getMessage());
             }
         });
-
     }
 
     private void loginUser(LoginUser user) {
@@ -655,9 +665,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             responseContext.setHandler(new HttpHandler() {
                 @Override
                 public void handle(HttpExchange exchange) throws IOException {
-
-
-
+                    System.out.println("Handler");
                     String uriResponse = exchange.getRequestURI().getQuery();
 
                     if (uriResponse.contains("code")) {
@@ -666,17 +674,34 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         String authCode = code.substring(uriResponse.indexOf("="));
                         System.out.println(TAG + "Got main code response -> " + authCode);
 
-                        signupUser(authCode);
+                        System.out.println("Auth code: " + authCode);
+                        signupUser(authCode, new ServerCallback() {
+                            @Override
+                            public void stopServer() {
+                                server.stop(60);
+                            }
+
+                            @Override
+                            public void redirect() {
+                                try {
+                                    byte[] response = "<html><body>Login successful. Go back to app</body></html>".getBytes();
+                                    exchange.sendResponseHeaders(200, response.length);
+                                    OutputStream os = exchange.getResponseBody();
+                                    os.write(response);
+                                    os.close();
+                                } catch (IOException exception) {
+                                    System.out.println(exception.getMessage());
+                                }
+                            }
+                        });
 
                     } else {
+                        server.stop(60);
                         Platform.runLater(() -> {
                             Alert alertDialog = Alerts.info(getClass(), "Error", "Could not sign in with Google", "");
                             alertDialog.show();
                             hideProgressBar();
                         });
-//                        assert server != null;
-//                        server.stop(1);
-//                        System.out.println(TAG + "Server has stopped!");
                     }
 
                 }
