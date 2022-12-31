@@ -122,7 +122,7 @@ public class SubjectListItemVM implements ViewModel {
     }
 
     /**
-     * Clears all previous subject selection properties
+     * Clears all existing subject selection properties
      */
     public void invalidate() {
         subjectSelected.set(false);

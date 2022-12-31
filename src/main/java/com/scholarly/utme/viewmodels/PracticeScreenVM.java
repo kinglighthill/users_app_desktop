@@ -5,7 +5,6 @@ import com.scholarly.utme.data.dao.*;
 import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.QuestionDescription;
-import com.scholarly.utme.data.util.QuestionOption;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.Type;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -42,7 +41,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     private HashMap<Integer, ObservableList<TheoryBookmark>> theoryBookmarks = new HashMap<>();
 
-    private CompositeDisposable disposables = new CompositeDisposable();
+    private CompositeDisposable timeDisposables = new CompositeDisposable();
 
     private Type questionType;
 
@@ -116,7 +115,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
         time.set(((long) data.hours * 60 * 60) + (data.minutes * 60L));
 
-        disposables.add(
+        timeDisposables.add(
                 Observable.interval(1, TimeUnit.SECONDS, Schedulers.io())
                         .observeOn(JavaFxScheduler.platform())
                         .subscribe(
@@ -239,7 +238,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     @Override
     public void onViewRemoved() {
-        disposables.dispose();
+        timeDisposables.dispose();
     }
 
     public void handleBookmarkClicked() {
@@ -338,7 +337,6 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
     public static class QuestionState {
         private Question question;
         private Type questionType;
-        private String selectedOption;
         private int selectedOptionId;
 
        /* public QuestionState(Question question, Type questionType, String selectedOption) {
@@ -365,16 +363,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
             return (TheoryQuestion) question;
         }
 
-        public String getSelectedOption() {
-            return selectedOption;
-        }
-
         public Type getQuestionType() {
             return questionType;
-        }
-
-        public void setSelectedOption(String selectedOption) {
-            this.selectedOption = selectedOption;
         }
 
         public void setSelectedOptionId(int selectedOptionId) {
