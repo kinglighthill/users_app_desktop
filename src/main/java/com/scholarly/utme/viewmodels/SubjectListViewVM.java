@@ -22,8 +22,8 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
     private ObservableList<SubjectListItemVM> objectiveSubjects = FXCollections.observableArrayList();
     private ObservableList<SubjectListItemVM> theorySubjects = FXCollections.observableArrayList();
 
-    private Map<String, SubjectState> objectiveHasMap = new LinkedHashMap<>();
-    private ObservableMap<String, SubjectState> selectedObjectiveSubjects = FXCollections.observableMap(objectiveHasMap); // LinkedHashMap because it maintains insertion order
+    private Map<String, SubjectState> objectiveHashMap = new LinkedHashMap<>();
+    private ObservableMap<String, SubjectState> selectedObjectiveSubjects = FXCollections.observableMap(objectiveHashMap); // LinkedHashMap because it maintains insertion order
 
     public ObservableMap<String, SubjectState> getSelectedObjectiveSubjects() {
         return selectedObjectiveSubjects;

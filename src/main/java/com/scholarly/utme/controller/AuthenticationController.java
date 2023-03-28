@@ -176,7 +176,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                 Task<Void> signupTask = new Task<>() {
                     @Override
-                    protected Void call() throws Exception {
+                    protected Void call() {
                         signupUser(user);
                         return null;
                     }
@@ -184,7 +184,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 Thread signupThread = new Thread(signupTask);
                 signupThread.start();
 
-                progressBar.progressProperty().bind(signupTask.progressProperty());
+//                progressBar.progressProperty().bind(signupTask.progressProperty());
 
 
             } catch (Exception e) {
@@ -247,7 +247,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 };
                 Thread background = new Thread(loginTask);
                 background.start();
-                progressBar.progressProperty().bind(loginTask.progressProperty());
+//                progressBar.progressProperty().bind(loginTask.progressProperty());
 
             } catch (Exception e) {
                 Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
@@ -291,7 +291,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     };
                     Thread background = new Thread(recoverTask);
                     background.start();
-                    progressBar.progressProperty().bind(recoverTask.progressProperty());
+//                    progressBar.progressProperty().bind(recoverTask.progressProperty());
 
 
                 } catch (Exception e) {
@@ -647,17 +647,26 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         try {
             String state = RandomStringUtils.random(6, true, false);
+            String scope = "email profile";
+            String responseType = "code";
+
+            String clientId = "671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
 
             HelloApplication application = new HelloApplication();
 
             InetAddress ipaddress = InetAddress.getLoopbackAddress(); // returns 127.0.0.1
 
-            server = HttpServer.create(new InetSocketAddress(ipaddress, 12345), 0);
+            server = HttpServer.create(new InetSocketAddress(ipaddress, 0), 0);
 
-            System.out.println("Server listening on host -> " + server.getAddress().getHostName() + " AND port -> " + server.getAddress().getAddress().getHostAddress());
+            String redirectUri = "http://" + server.getAddress().getHostName() + ":" + server.getAddress().getPort();
+
             server.start();
 
+            String authorizationRequest2 = "https://accounts.google.com/o/oauth2/v2/auth?scope=" + scope + "&response_type=" + responseType + "&state=" + state + "&redirect_uri=" + redirectUri + "&client_id=" + clientId;
+            System.out.println(TAG + "Auth request 2 -> " + authorizationRequest2);
+
             String authorizationRequest = "https://accounts.google.com/o/oauth2/v2/auth?scope=email profile&response_type=code&state=" + state + "&redirect_uri=http://127.0.0.1:12345&client_id=671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
+            System.out.println(TAG + "Auth request -> " + authorizationRequest);
 
             application.openBrowser(authorizationRequest);
 
@@ -670,11 +679,8 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                     if (uriResponse.contains("code")) {
                         String code = uriResponse.substring(uriResponse.indexOf("code"), uriResponse.indexOf("scope")-1);
-                        System.out.println(TAG + "Got full code response -> " + code);
                         String authCode = code.substring(uriResponse.indexOf("="));
-                        System.out.println(TAG + "Got main code response -> " + authCode);
 
-                        System.out.println("Auth code: " + authCode);
                         signupUser(authCode, new ServerCallback() {
                             @Override
                             public void stopServer() {
@@ -703,7 +709,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                             hideProgressBar();
                         });
                     }
-
                 }
             });
 
