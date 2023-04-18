@@ -12,7 +12,10 @@ public class Tables {
     public static final String PQ_SUBJECTS = "pq_subjects";
     public static final String PQ_OBJECTIVE_QUESTIONS = "pq_objective_questions";
     public static final String PQ_THEORY_QUESTIONS = "pq_theory_questions";
-    public static final String PQ_QUES_DESCRIPTIONS = "pq_ques_descriptions";
+    public static final String PQ_OBJECTIVE_QUES_DESCRIPTIONS = "pq_objective_questions_descriptions";
+    public static final String PQ_THEORY_QUES_DESCRIPTIONS = "pq_theory_questions_descriptions";
+    public static final String PQ_OBJECTIVE_SUBJECTS = "pq_objective_subjects";
+    public static final String PQ_THEORY_SUBJECTS = "pq_theory_subjects";
 
 
     // Novel Tables

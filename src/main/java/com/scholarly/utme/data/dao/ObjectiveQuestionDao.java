@@ -37,7 +37,7 @@ public class ObjectiveQuestionDao {
     private static final String optionAnswerIdColumn = "option_answer_id";
     private static final String isExplanationWebViewColumn = "is_exp_webview";
     private static final String isQuestionWebViewColumn = "is_ques_webview";
-    private static final String isGammableColumn = "is_gammable";
+    private static final String isGameAbleColumn = "is_game_able";
 
     private static final String novelIdColumn = "novel_id";
     private static final String chapterIdColumn = "chapter_id";
@@ -93,7 +93,7 @@ public class ObjectiveQuestionDao {
                         new QuestionAnswer(rs.getInt(optionAnswerIdColumn), rs.getString(optionAnswerColumn), rs.getString(answerExplanationColumn)),
                         rs.getInt(isExplanationWebViewColumn),
                         rs.getInt(isQuestionWebViewColumn),
-                        rs.getInt(isGammableColumn)));
+                        rs.getInt(isGameAbleColumn)));
 
             }
 

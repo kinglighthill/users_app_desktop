@@ -47,9 +47,9 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
 
 
     public SubjectListViewVM() {
-        objectiveSubjects.addAll(SubjectDao.getPQSubjects().stream().map(SubjectListItemVM::new).collect(Collectors.toList()));
+        objectiveSubjects.addAll(SubjectDao.getObjectiveSubjects().stream().map(SubjectListItemVM::new).collect(Collectors.toList()));
 
-        theorySubjects.addAll(SubjectDao.getPQSubjects().stream().map(SubjectListItemVM::new).collect(Collectors.toList()));
+        theorySubjects.addAll(SubjectDao.getTheorySubjects().stream().map(SubjectListItemVM::new).collect(Collectors.toList()));
 
         objectiveSubjects.forEach(vm -> {
             disposables.add(

@@ -4,13 +4,11 @@ public class PQTopic {
     private int id;
     private String title;
     private int subjectId;
-    private String createdAt;
 
-    public PQTopic(int id, String title, int subjectId, String createdAt) {
+    public PQTopic(int id, String title, int subjectId) {
         this.id = id;
         this.title = title;
         this.subjectId = subjectId;
-        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -23,10 +21,6 @@ public class PQTopic {
 
     public int getSubjectId() {
         return subjectId;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
     }
 
 

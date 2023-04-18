@@ -5,8 +5,10 @@ import com.scholarly.utme.data.dao.TheoryQuestionDao;
 import com.scholarly.utme.data.dao.YearsDao;
 import com.scholarly.utme.data.dao.newDb.TopicDao;
 import com.scholarly.utme.data.model.Year;
+import com.scholarly.utme.data.model.newDb.ObjectiveSubject;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.newDb.PQTopic;
+import com.scholarly.utme.data.model.newDb.Subject;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -88,7 +90,7 @@ public class SubjectListItemVM implements ViewModel {
         subjectColorName.set(getColorName(subject.getShortTitle()));
 
 //        years = YearsDao.getYears();
-        topics = TopicDao.getTopicsForSubject(subject.getSubjectId());
+        topics = TopicDao.getTopicsForSubject(subject.getId());
 
         subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedTopicsProperty.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
 

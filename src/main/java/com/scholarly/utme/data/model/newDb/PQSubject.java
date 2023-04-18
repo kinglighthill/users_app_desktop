@@ -53,32 +53,8 @@ public class PQSubject {
         return colorCode;
     }
 
-    public void setShortTitle(String shortTitle) {
-        this.shortTitle = shortTitle;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setSubjectId(int subjectId) {
-        this.subjectId = subjectId;
-    }
-
-    public void setMinutesAllotted(int minutesAllotted) {
-        this.minutesAllotted = minutesAllotted;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
-    }
-
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void setColorCode(String colorCode) {
-        this.colorCode = colorCode;
     }
 
     @Override
