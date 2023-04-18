@@ -5,14 +5,12 @@ public class QuestionDescription {
     private String description;
     private int subjectId;
     private int yearId;
-    private String createdAt;
 
-    public QuestionDescription(int id, String description, int subjectId, int yearId, String createdAt) {
+    public QuestionDescription(int id, String description, int subjectId, int yearId) {
         this.id = id;
         this.description = description;
         this.subjectId = subjectId;
         this.yearId = yearId;
-        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -29,10 +27,6 @@ public class QuestionDescription {
 
     public int getYearId() {
         return yearId;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
     }
 
 }

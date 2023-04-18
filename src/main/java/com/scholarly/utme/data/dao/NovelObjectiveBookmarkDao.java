@@ -26,7 +26,7 @@ public class NovelObjectiveBookmarkDao {
 
     static {
         objectiveBookmarks = FXCollections.observableArrayList();
-        updateNovelObjectiveBookmarks();
+//        updateNovelObjectiveBookmarks();
     }
 
     private static void updateNovelObjectiveBookmarks() {

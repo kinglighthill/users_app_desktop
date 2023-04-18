@@ -7,19 +7,17 @@ public class Subject {
     private String shortTitle;
     private String description;
     private String colorCode;
-    private String createdAt;
 
     public Subject() {
 
     }
 
-    public Subject(int id, String title, String shortTitle, String description, String colorCode, String createdAt) {
+    public Subject(int id, String title, String shortTitle, String description, String colorCode) {
         this.id = id;
         this.title = title;
         this.shortTitle = shortTitle;
         this.description = description;
         this.colorCode = colorCode;
-        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -60,13 +58,5 @@ public class Subject {
 
     public void setColorCode(String colorCode) {
         this.colorCode = colorCode;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
     }
 }

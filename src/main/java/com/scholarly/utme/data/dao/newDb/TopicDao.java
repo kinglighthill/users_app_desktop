@@ -26,9 +26,7 @@ public class TopicDao {
     private static final String idColumn = "_id";
     private static final String titleColumn = "title";
     private static final String orderColumn = "order";
-
     private static final String subjectIdColumn = "subject_id";
-    private static final String createdAtColumn = "created_at";
 
     private static final List<PQTopic> pqTopics;
 
@@ -50,8 +48,7 @@ public class TopicDao {
                 pqTopics.add(new PQTopic(
                         rs.getInt(idColumn),
                         rs.getString(titleColumn),
-                        rs.getInt(subjectIdColumn),
-                        rs.getString(createdAtColumn)));
+                        rs.getInt(subjectIdColumn)));
             }
 
 //            System.out.println(TAG + "Got topics of size -> " + pqTopics.size());
