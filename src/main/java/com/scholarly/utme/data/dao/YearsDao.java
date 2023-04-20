@@ -20,6 +20,8 @@ public class YearsDao {
 
     private static final String idColumn = "_id";
     private static final String yearColumn = "year";
+    private static final String yearIdColumn = "year_id";
+    private static final String subjectIdColumn = "subject_id";
     private static final String shortDescriptionColumn = "short_desc";
     private static final String isNewColumn = "is_new";
     private static final String availableColumn = "available";
@@ -41,10 +43,10 @@ public class YearsDao {
         String query = "";
 
         if (type == SubjectListItemVM.Type.OBJECTIVE) {
-            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_OBJECTIVE_QUESTIONS + " ON " + Tables.PQ_OBJECTIVE_QUESTIONS + ".year_id = " + Tables.YEARS + "." + idColumn + " WHERE subject_id = " + subjectId + " ORDER BY year_id DESC";
+            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_OBJECTIVE_QUESTIONS + " ON " + Tables.PQ_OBJECTIVE_QUESTIONS + "." + yearIdColumn + " = " + Tables.YEARS + "." + idColumn + " WHERE " + subjectIdColumn + " = " + subjectId + " ORDER BY " + yearIdColumn + " DESC";
 
         } else if (type == SubjectListItemVM.Type.THEORY){
-            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_THEORY_QUESTIONS + " ON " + Tables.PQ_THEORY_QUESTIONS + ".year_id = " + Tables.YEARS + "." + idColumn + " WHERE subject_id = " + subjectId + " ORDER BY year_id DESC";
+            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_THEORY_QUESTIONS + " ON " + Tables.PQ_THEORY_QUESTIONS + "." + yearIdColumn + " = " + Tables.YEARS + "." + idColumn + " WHERE " + subjectIdColumn + " = " + subjectId + " ORDER BY " + yearIdColumn + " DESC";
 
         }
 
