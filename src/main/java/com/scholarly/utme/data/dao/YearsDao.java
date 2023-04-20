@@ -1,26 +1,22 @@
 package com.scholarly.utme.data.dao;
 
+import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.Year;
-import com.scholarly.utme.data.util.Database;
-import com.scholarly.utme.data.util.DbConnection;
-import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.Tables;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class YearsDao {
     private static final String TAG = "YearsDao: ";
+
+    private static final DatabaseService databaseService = new DatabaseService();
 
     private static final String idColumn = "_id";
     private static final String yearColumn = "year";
@@ -45,10 +41,10 @@ public class YearsDao {
         String query = "";
 
         if (type == SubjectListItemVM.Type.OBJECTIVE) {
-            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_OBJECTIVE_QUESTIONS + " ON " + Tables.PQ_OBJECTIVE_QUESTIONS + ".year_id = " + Tables.YEARS + "." + idColumn + " WHERE subject_id = " + subjectId;
+            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_OBJECTIVE_QUESTIONS + " ON " + Tables.PQ_OBJECTIVE_QUESTIONS + ".year_id = " + Tables.YEARS + "." + idColumn + " WHERE subject_id = " + subjectId + " ORDER BY year_id DESC";
 
         } else if (type == SubjectListItemVM.Type.THEORY){
-            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_THEORY_QUESTIONS + " ON " + Tables.PQ_THEORY_QUESTIONS + ".year_id = " + Tables.YEARS + "." + idColumn + " WHERE subject_id = " + subjectId;
+            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_THEORY_QUESTIONS + " ON " + Tables.PQ_THEORY_QUESTIONS + ".year_id = " + Tables.YEARS + "." + idColumn + " WHERE subject_id = " + subjectId + " ORDER BY year_id DESC";
 
         }
 
@@ -56,10 +52,7 @@ public class YearsDao {
 
 //        System.out.println(TAG + "Available Years For Subject with id -> " + subjectId + " Query -> " + query + " AND Type -> " + type);
 
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
+        try (ResultSet rs = databaseService.executeQuery(query)) {
             while (rs.next()) {
                 subjectAvailableYears.add(
                         new Year(
@@ -74,7 +67,7 @@ public class YearsDao {
            // System.out.println(subjectId + " available years -> " + subjectAvailableYears);
             return subjectAvailableYears;
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load availableYears from database because " + e.getMessage());
@@ -85,13 +78,9 @@ public class YearsDao {
     }
 
     private static void updateYearsFromDB() {
-
         String query = "SELECT * FROM " + Tables.YEARS;
 
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
+        try (ResultSet rs = databaseService.executeQuery(query)) {
             years.clear();
             while (rs.next()) {
                 years.add(new Year(
@@ -101,10 +90,10 @@ public class YearsDao {
                         rs.getInt(isNewColumn),
                         rs.getInt(availableColumn)));
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Years from database ");
+                    LocalDateTime.now() + ": Could not load Years from database because " + e.getMessage());
             years.clear();
         }
     }

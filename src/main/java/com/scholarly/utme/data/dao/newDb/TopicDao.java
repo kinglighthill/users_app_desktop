@@ -40,7 +40,7 @@ public class TopicDao {
 
         try {
             Connection connection = DbConnection.getDbConnection();
-            System.out.println(TAG + "Connection object -> " + connection);
+
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             pqTopics.clear();
@@ -51,7 +51,7 @@ public class TopicDao {
                         rs.getInt(subjectIdColumn)));
             }
 
-//            System.out.println(TAG + "Got topics of size -> " + pqTopics.size());
+            System.out.println(TAG + "Got topics of size -> " + pqTopics.size());
 
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
