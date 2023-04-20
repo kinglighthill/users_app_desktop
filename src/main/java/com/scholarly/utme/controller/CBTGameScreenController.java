@@ -3,6 +3,7 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
 import com.scholarly.utme.util.TextToSpeech;
@@ -612,7 +613,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         questionNumberLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
         
-        List<QuestionDescription> questionDescriptionList = viewModel.getQuestionDescriptions().stream().filter(questionDescription -> 
+        List<ObjectiveQuestionDescription> questionDescriptionList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
                 questionDescription.getId() == selectedQuestion.getQuestion().getQuestionDescriptionId()).collect(Collectors.toList());
         
         if (questionDescriptionList.isEmpty()) {
@@ -647,7 +648,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         questionNumberLabel.setText("Question " + newValue + " of " + questions.size());
 
-        List<QuestionDescription> questionDescriptionList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+        List<ObjectiveQuestionDescription> questionDescriptionList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
                 questionDescription.getId() == selectedQuestion.getQuestion().getQuestionDescriptionId()).collect(Collectors.toList());
 
         if (questionDescriptionList.isEmpty()) {

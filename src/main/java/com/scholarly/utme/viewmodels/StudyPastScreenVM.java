@@ -4,7 +4,9 @@ import com.scholarly.utme.controller.PracticeScreenController;
 import com.scholarly.utme.controller.StudyPastQuestScreenController;
 import com.scholarly.utme.data.dao.*;
 import com.scholarly.utme.data.model.*;
+import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.data.model.newDb.TheoryQuestionDescription;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -33,6 +35,10 @@ public class StudyPastScreenVM implements ViewModel {
     private HashMap<String, SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
     private ObservableList<QuestionDescription> questionDescriptions = FXCollections.observableArrayList();
+
+    private ObservableList<ObjectiveQuestionDescription> objectiveQuestionDescriptions = FXCollections.observableArrayList();
+
+    private ObservableList<TheoryQuestionDescription> theoryQuestionDescriptions = FXCollections.observableArrayList();
 
     private HashMap<Integer, ObservableList<ObjectiveBookmark>> objectiveBookmarks = new HashMap<>();
 
@@ -68,6 +74,14 @@ public class StudyPastScreenVM implements ViewModel {
 
                 objectiveBookmarks.put(subjectState.getSubject().getId(), bookmarks);
 
+                List<ObjectiveQuestionDescription> questionDescriptionsList = QuestionDescriptionDao
+                        .getObjectiveQuestionDescriptions(
+                                subjectState.getSubject().getId(),
+                                subjectState.getSelectedYear().getId()
+                        );
+
+                objectiveQuestionDescriptions.addAll(questionDescriptionsList);
+
             } else if (subjectState.getType() == Type.THEORY) {
                 List<QuestionState> questionStates = TheoryQuestionDao
                         .getQuestions(
@@ -87,15 +101,23 @@ public class StudyPastScreenVM implements ViewModel {
                 );
 
                 theoryBookmarks.put(subjectState.getSubject().getId(), bookmarks);
+
+                List<TheoryQuestionDescription> questionDescriptionsList = QuestionDescriptionDao
+                        .getTheoryQuestionDescriptions(
+                                subjectState.getSubject().getId(),
+                                subjectState.getSelectedYear().getId()
+                        );
+
+                theoryQuestionDescriptions.addAll(questionDescriptionsList);
             }
 
-            List<QuestionDescription> questionDescriptionsList = QuestionDescriptionDao
-                    .getQuestionDescriptions(
-                            subjectState.getSubject().getId(),
-                            subjectState.getSelectedYear().getId()
-                    );
-
-            questionDescriptions.addAll(questionDescriptionsList);
+//            List<QuestionDescription> questionDescriptionsList = QuestionDescriptionDao
+//                    .getQuestionDescriptions(
+//                            subjectState.getSubject().getId(),
+//                            subjectState.getSelectedYear().getId()
+//                    );
+//
+//            questionDescriptions.addAll(questionDescriptionsList);
 
         });
     }
@@ -122,6 +144,14 @@ public class StudyPastScreenVM implements ViewModel {
 
     public ObservableList<QuestionDescription> getQuestionDescriptions() {
         return questionDescriptions;
+    }
+
+    public ObservableList<ObjectiveQuestionDescription> getObjectiveQuestionDescriptions() {
+        return objectiveQuestionDescriptions;
+    }
+
+    public ObservableList<TheoryQuestionDescription> getTheoryQuestionDescriptions() {
+        return theoryQuestionDescriptions;
     }
 
     public HashMap<Integer, ObservableList<ObjectiveBookmark>> getObjectiveBookmarks() {

@@ -3,8 +3,10 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.data.model.*;
 //import com.gtranslate.Audio;
 //import com.gtranslate.Language;
+import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.data.model.newDb.TheoryQuestionDescription;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.TextToSpeech;
@@ -656,7 +658,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestionIndex - 1).getQuestion();
             questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
 
-            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+            List<ObjectiveQuestionDescription> quesDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
 
             if (quesDescriptionInList.isEmpty()) {
@@ -719,7 +721,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             TheoryQuestion question = (TheoryQuestion) questions.get(selectedQuestionIndex - 1).getQuestion();
             questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
 
-            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+            List<TheoryQuestionDescription> quesDescriptionInList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
 
             if (quesDescriptionInList.isEmpty()) {
@@ -745,7 +747,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             ObjectiveQuestion question = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
-            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+            List<ObjectiveQuestionDescription> quesDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
 
             if (quesDescriptionInList.isEmpty()) {
@@ -807,7 +809,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             TheoryQuestion question = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
-            List<QuestionDescription> quesDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+            List<TheoryQuestionDescription> quesDescriptionInList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
             if (quesDescriptionInList.isEmpty()) {
                 readQuestionDesc.setVisible(false);

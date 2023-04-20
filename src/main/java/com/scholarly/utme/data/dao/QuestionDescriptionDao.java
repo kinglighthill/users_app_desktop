@@ -88,7 +88,7 @@ public class QuestionDescriptionDao {
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Objective Question Descriptions from database because " + e.getMessage());
+                    LocalDateTime.now() + ": Could not load Theory Question Descriptions from database because " + e.getMessage());
             theoryQuestionDescriptions.clear();
 
         }
@@ -127,6 +127,24 @@ public class QuestionDescriptionDao {
 
         return FXCollections.observableArrayList(
                 questionDescriptions.stream().filter(questionDescription ->
+                        questionDescription.getSubjectId() == subjectId && questionDescription.getYearId() == yearId).collect(Collectors.toList())
+        );
+
+    }
+
+    public static ObservableList<ObjectiveQuestionDescription> getObjectiveQuestionDescriptions(int subjectId, int yearId) {
+
+        return FXCollections.observableArrayList(
+                objectiveQuestionDescriptions.stream().filter(questionDescription ->
+                        questionDescription.getSubjectId() == subjectId && questionDescription.getYearId() == yearId).collect(Collectors.toList())
+        );
+
+    }
+
+    public static ObservableList<TheoryQuestionDescription> getTheoryQuestionDescriptions(int subjectId, int yearId) {
+
+        return FXCollections.observableArrayList(
+                theoryQuestionDescriptions.stream().filter(questionDescription ->
                         questionDescription.getSubjectId() == subjectId && questionDescription.getYearId() == yearId).collect(Collectors.toList())
         );
 
