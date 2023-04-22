@@ -3,12 +3,12 @@ package com.scholarly.utme.data.model.novels;
 public class NovelCategory {
     private int id;
     private String category;
-    private String createdAt;
+    private String order;
 
-    public NovelCategory(int id, String category, String createdAt) {
+    public NovelCategory(int id, String category, String order) {
         this.id = id;
         this.category = category;
-        this.createdAt = createdAt;
+        this.order = order;
     }
 
     public int getId() {
@@ -19,7 +19,7 @@ public class NovelCategory {
         return category;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public String getOrder() {
+        return order;
     }
 }

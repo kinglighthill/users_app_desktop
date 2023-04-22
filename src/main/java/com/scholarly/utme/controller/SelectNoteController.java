@@ -2,12 +2,12 @@ package com.scholarly.utme.controller;
 
 
 import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.model.newDb.SubTopic;
-import com.scholarly.utme.data.model.newDb.Topic;
+import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.SelectNoteVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/SelectNoteScreen.fxml")
 public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializable {
+    private static final String TAG = "SelectNoteController: ";
 
     @InjectViewModel
     private SelectNoteVM viewModel;
@@ -83,16 +84,16 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 
             if (newValue != null) {
-                Subject selectedSubject = (Subject) newValue.getUserData();
-                viewModel.setSelectedSubject(selectedSubject);
+                NoteSubject selectedSubject = (NoteSubject) newValue.getUserData();
+                viewModel.setSelectedNoteSubject(selectedSubject);
                 emptyTopicListLabel.setVisible(false);
             } else {
-                viewModel.setSelectedSubject(null);
+                viewModel.setSelectedNoteSubject(null);
                 emptyTopicListLabel.setVisible(true);
             }
         });
 
-        viewModel.getSubjects().forEach(subject -> {
+        viewModel.getNoteSubjects().forEach(subject -> {
             ToggleButton button = new ToggleButton();
             button.setUserData(subject);
             toggleGroup.getToggles().add(button);
@@ -103,7 +104,7 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
             button.setPadding(new Insets(0, 0, 0, 20));
             button.setAlignment(Pos.BASELINE_LEFT);
             button.setMaxWidth(Double.MAX_VALUE);
-            button.setText(subject.getSubjectName());
+            button.setText(subject.getTitle());
 
             button.setStyle(IDLE_BUTTON_STYLE);
             button.setOnMouseEntered(e -> {
@@ -137,9 +138,9 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         topicListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 
             if (newValue != null) {
-                Pair<Topic, SubTopic> selectedTopic = (Pair<Topic, SubTopic>) newValue.getUserData();
-                viewModel.setSelectedTopic(selectedTopic.getKey());
-                viewModel.setSelectedSubTopic(selectedTopic.getValue());
+                Pair<NoteTopic, NoteSubTopic> selectedTopic = (Pair<NoteTopic, NoteSubTopic>) newValue.getUserData();
+                viewModel.setSelectedNoteTopic(selectedTopic.getKey());
+                viewModel.setSelectedNoteSubTopic(selectedTopic.getValue());
 
                 if (!commenceButton.isVisible()) {
                     Animations.translateIn(commenceButton, 300);
@@ -149,20 +150,20 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
             }
         });
 
-        viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
+        viewModel.selectedNoteSubjectProperty().addListener((observable, oldValue, newValue) -> {
             topicListToggleGroup.getToggles().clear();
             topicListVBox.getChildren().clear();
 
             if (newValue != null) {
-                viewModel.getSubjectTopics().get(newValue.getSubjectName()).forEach(topic -> {
+                viewModel.getNoteSubjectTopics().get(newValue.getId()).forEach(topic -> {
 
                     VBox vBox = new VBox();
                     TitledPane titledPane = new TitledPane(topic.getTitle(), vBox);
 
-                    viewModel.getSubjectSubTopics().get(newValue.getSubjectName()).forEach(subTopic -> {
-                        if (subTopic.getTopicId() == topic.getId()) {
+                    viewModel.getNoteSubTopics().get(newValue.getId()).forEach(subTopic -> {
+                        if (subTopic.getTopicId() == topic.getTopicId()) {
                             ToggleButton button = new ToggleButton();
-                            Pair<Topic, SubTopic> data = new Pair<>(topic, subTopic);
+                            Pair<NoteTopic, NoteSubTopic> data = new Pair<>(topic, subTopic);
                             button.setUserData(data);
                             topicListToggleGroup.getToggles().add(button);
 
@@ -222,13 +223,18 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 //        });
 
         commenceButton.setOnAction(event -> {
+            System.out.println(TAG + "SelectedNoteSubject -> " + Helper.toString(viewModel.getSelectedNoteSubject()));
+            System.out.println(TAG + "SelectedNoteTopic -> " + Helper.toString(viewModel.getSelectedNoteTopic()));
+            System.out.println(TAG + "SelectedNoteSubtopics -> " + Helper.toString(viewModel.getNoteSubTopics().get(viewModel.getSelectedNoteTopic().getSubjectId())));
+            System.out.println(TAG + "SelectedNoteSubtopic -> " + Helper.toString(viewModel.getSelectedNoteSubTopic())
+            );
             NotesScreenController.InitialData data = new NotesScreenController.InitialData(
-                    viewModel.getSelectedSubject(),
-                    viewModel.getSelectedTopic(),
-                    viewModel.getSubjectSubTopics().get(
-                            viewModel.getSelectedSubject().getSubjectName()
-                    ).stream().filter(subTopic -> subTopic.getTopicId() == viewModel.getSelectedTopic().getId()).collect(Collectors.toList()),
-                    viewModel.getSelectedSubTopic()
+                    viewModel.getSelectedNoteSubject(),
+                    viewModel.getSelectedNoteTopic(),
+                    viewModel.getNoteSubTopics().get(
+                            viewModel.getSelectedNoteTopic().getSubjectId()
+                    ).stream().filter(subTopic -> subTopic.getTopicId() == viewModel.getSelectedNoteTopic().getTopicId()).collect(Collectors.toList()),
+                    viewModel.getSelectedNoteSubTopic()
             );
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.NOTES_SCREEN);

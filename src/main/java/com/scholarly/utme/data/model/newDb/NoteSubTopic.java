@@ -1,15 +1,15 @@
 package com.scholarly.utme.data.model.newDb;
 
-public class NoteSubject {
+public class NoteSubTopic {
     private int id;
     private String title;
-    private int subjectId;
+    private int topicId;
     private int order;
 
-    public NoteSubject(int id, String title, int subjectId, int order) {
+    public NoteSubTopic(int id, String title, int topicId, int order) {
         this.id = id;
         this.title = title;
-        this.subjectId = subjectId;
+        this.topicId = topicId;
         this.order = order;
     }
 
@@ -21,8 +21,8 @@ public class NoteSubject {
         return title;
     }
 
-    public int getSubjectId() {
-        return subjectId;
+    public int getTopicId() {
+        return topicId;
     }
 
     public int getOrder() {

@@ -90,7 +90,7 @@ public class SubjectListItemVM implements ViewModel {
         subjectColorName.set(getColorName(subject.getShortTitle()));
 
 //        years = YearsDao.getYears();
-        topics = TopicDao.getTopicsForSubject(subject.getId());
+        topics = TopicDao.getTopicsForSubject(subject.getSubjectId());
 
         subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedTopicsProperty.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
 
@@ -253,7 +253,7 @@ public class SubjectListItemVM implements ViewModel {
                     );
 
         } else {
-            Observable.just(TheoryQuestionDao.getQuestions(subject.getId(), selectedYearProperty.get().getId(), FXCollections.observableArrayList(topicIdsList), false))
+            Observable.just(Objects.requireNonNull(TheoryQuestionDao.getQuestions(subject.getId(), selectedYearProperty.get().getId(), FXCollections.observableArrayList(topicIdsList), false)))
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();

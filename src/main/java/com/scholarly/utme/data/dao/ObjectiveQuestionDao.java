@@ -1,5 +1,6 @@
 package com.scholarly.utme.data.dao;
 
+import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.novels.NovelObjectiveQuestion;
 import com.scholarly.utme.data.util.*;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 
 public class ObjectiveQuestionDao {
     private static final String TAG = "ObjectiveQuestionDao: ";
+
+    private static final DatabaseService databaseService = new DatabaseService();
 
     private static final String idColumn = "_id";
     private static final String subjectIdColumn = "subject_id";
@@ -69,13 +72,8 @@ public class ObjectiveQuestionDao {
 
 //        System.out.println(TAG + "Query = " + query);
 
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-
+        try (ResultSet rs = databaseService.executeQuery(query)){
             questions.clear();
-            ResultSet rs = statement.executeQuery();
-
             while (rs.next()) {
                 questions.add(new ObjectiveQuestion(
                         rs.getInt(idColumn),
@@ -101,7 +99,7 @@ public class ObjectiveQuestionDao {
 
             return questions;
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Objective questions from database because " + e.getMessage());
@@ -114,39 +112,27 @@ public class ObjectiveQuestionDao {
     private static void updateNovelQuestions() {
         String query = "SELECT * FROM " + Tables.NOVEL_OBJECTIVE_QUESTIONS;
 
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-
-            Task<Void> dbTask = new Task<>() {
-                @Override
-                protected Void call() throws Exception {
-                    ResultSet rs = statement.executeQuery();
-                    novelQuestions.clear();
-                    while (rs.next()) {
-                        novelQuestions.add(new NovelObjectiveQuestion(
-                                rs.getInt(idColumn),
-                                rs.getInt(novelIdColumn),
-                                rs.getInt(chapterIdColumn),
-                                rs.getInt(questionNumberColumn),
-                                rs.getString(questionColumn),
-                                new QuestionOption(0, rs.getString(optionAColumn)),
-                                new QuestionOption(1, rs.getString(optionBColumn)),
-                                new QuestionOption(2, rs.getString(optionCColumn)),
-                                new QuestionOption(3, rs.getString(optionDColumn)),
-                                new QuestionOption(4, rs.getString(optionEColumn)),
-                                new QuestionAnswer(rs.getInt(optionAnswerIdColumn), rs.getString(optionAnswerColumn), rs.getString(answerExplanationColumn)),
-                                rs.getInt(questionDescriptionIdColumn)));
-                    }
-                    return null;
-                }
-            };
-            Thread signupThread = new Thread(dbTask);
-            signupThread.start();
+        try (ResultSet rs = databaseService.executeQuery(query)) {
+            novelQuestions.clear();
+            while (rs.next()) {
+                novelQuestions.add(new NovelObjectiveQuestion(
+                        rs.getInt(idColumn),
+                        rs.getInt(novelIdColumn),
+                        rs.getInt(chapterIdColumn),
+                        rs.getInt(questionNumberColumn),
+                        rs.getString(questionColumn),
+                        new QuestionOption(0, rs.getString(optionAColumn)),
+                        new QuestionOption(1, rs.getString(optionBColumn)),
+                        new QuestionOption(2, rs.getString(optionCColumn)),
+                        new QuestionOption(3, rs.getString(optionDColumn)),
+                        new QuestionOption(4, rs.getString(optionEColumn)),
+                        new QuestionAnswer(rs.getInt(optionAnswerIdColumn), rs.getString(optionAnswerColumn), rs.getString(answerExplanationColumn)),
+                        rs.getInt(questionDescriptionIdColumn)));
+            }
 
             System.out.println(TAG + "Got Novel Objective questions with size -> " + novelQuestions.size());
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Novel Objective Questions from database because " + e.getMessage());

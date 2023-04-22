@@ -9,7 +9,6 @@ public class Tables {
     public static final String TOPICS = "topics";
     public static final String YEARS = "years";
     public static final String SUBJECTS = "subjects";
-    public static final String PQ_SUBJECTS = "pq_subjects";
     public static final String PQ_OBJECTIVE_QUESTIONS = "pq_objective_questions";
     public static final String PQ_THEORY_QUESTIONS = "pq_theory_questions";
     public static final String PQ_OBJECTIVE_QUES_DESCRIPTIONS = "pq_objective_questions_descriptions";
@@ -26,6 +25,11 @@ public class Tables {
     public static final String NOVEL_CATEGORIES = "novel_categories";
     public static final String NOVEL_SECTIONS = "novel_sections";
     public static final String NOVEL_OBJECTIVE_QUESTIONS = "novel_objective_questions";
+
+    // Note Tables
+    public static final String NOTE_SUBJECTS = "note_subjects";
+    public static final String NOTE_TOPICS = "note_topics";
+    public static final String NOTE_SUB_TOPICS = "note_sub_topics";
 
 
     // User generated Tables

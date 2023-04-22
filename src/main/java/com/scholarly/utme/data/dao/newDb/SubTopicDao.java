@@ -1,9 +1,13 @@
 package com.scholarly.utme.data.dao.newDb;
 
 
+import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.MediaSubTopic;
+import com.scholarly.utme.data.model.newDb.NoteSubTopic;
+import com.scholarly.utme.data.model.newDb.NoteTopic;
 import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.util.SyllabusDatabase;
+import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -12,17 +16,82 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class SubTopicDao {
+    private static final String TAG = "SubTopicDao: ";
+
+    private static final DatabaseService databaseService = new DatabaseService();
 
     private static final String idColumn = "_id";
     private static final String titleColumn = "title";
     private static final String orderColumn = "order";
-    private static final String topicColumn = "topic_id";
+    private static final String topicIdColumn = "topic_id";
     private static final String sectionColumn = "section_id";
 
+    private static final List<NoteSubTopic> noteSubTopics;
+
+    static {
+        noteSubTopics = FXCollections.observableArrayList();
+        updateNoteSubTopicsFromDb();
+    }
+
+    public static void updateNoteSubTopicsFromDb() {
+        String query = "SELECT * FROM " + Tables.NOTE_SUB_TOPICS;
+
+        try (ResultSet rs = databaseService.executeQuery(query)) {
+            noteSubTopics.clear();
+            while (rs.next()) {
+                noteSubTopics.add(new NoteSubTopic(
+                        rs.getInt(idColumn),
+                        rs.getString(titleColumn),
+                        rs.getInt(topicIdColumn),
+                        rs.getInt(orderColumn)));
+            }
+
+            System.out.println(TAG + "Got Note sub topics of size -> " + noteSubTopics.size());
+
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Note sub topics from database because " + e.getMessage());
+            noteSubTopics.clear();
+
+        }
+    }
+
+    public static ObservableList<SubTopic> getNoteSubTopics(String tableName) {
+        ObservableList<SubTopic> subTopics = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM " + tableName;
+
+        try (Connection connection = SyllabusDatabase.connect()) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            subTopics.clear();
+            while (rs.next()) {
+                subTopics.add(new SubTopic(
+                        rs.getInt(idColumn),
+                        rs.getString(titleColumn),
+                        rs.getInt(orderColumn),
+                        rs.getInt(topicIdColumn),
+                        rs.getInt(sectionColumn)));
+            }
+
+            return subTopics;
+
+        } catch (SQLException e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load sub topics from database ");
+            subTopics.clear();
+
+            return null;
+        }
+    }
 
     public static ObservableList<SubTopic> getSubTopics(String tableName) {
         ObservableList<SubTopic> subTopics = FXCollections.observableArrayList();
@@ -38,7 +107,7 @@ public class SubTopicDao {
                         rs.getInt(idColumn),
                         rs.getString(titleColumn),
                         rs.getInt(orderColumn),
-                        rs.getInt(topicColumn),
+                        rs.getInt(topicIdColumn),
                         rs.getInt(sectionColumn)));
             }
 
@@ -68,7 +137,7 @@ public class SubTopicDao {
                         rs.getInt(idColumn),
                         rs.getString(titleColumn),
                         rs.getInt(orderColumn),
-                        rs.getInt(topicColumn),
+                        rs.getInt(topicIdColumn),
                         rs.getInt(sectionColumn)));
             }
 
@@ -82,6 +151,15 @@ public class SubTopicDao {
 
             return null;
         }
+    }
+
+    public static ObservableList<NoteSubTopic> getSubTopicsForTopic(int topicId) {
+        return FXCollections.observableArrayList(
+                noteSubTopics.stream().filter(
+                        subTopic -> subTopic.getTopicId() == topicId).collect(Collectors.toList()
+                )
+        );
+
     }
 
 }

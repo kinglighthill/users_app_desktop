@@ -3,8 +3,10 @@ package com.scholarly.utme.viewmodels;
 import com.scholarly.utme.controller.PracticeScreenController.InitialData;
 import com.scholarly.utme.data.dao.*;
 import com.scholarly.utme.data.model.*;
+import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.data.model.newDb.TheoryQuestionDescription;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.Type;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -34,6 +36,10 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
     private HashMap<String, SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
     private ObservableList<QuestionDescription> questionDescriptions = FXCollections.observableArrayList();
+
+    private ObservableList<ObjectiveQuestionDescription> objectiveQuestionDescriptions = FXCollections.observableArrayList();
+
+    private ObservableList<TheoryQuestionDescription> theoryQuestionDescriptions = FXCollections.observableArrayList();
 
     private HashMap<String, ObservableList<ObjectiveBookmark>> subjectBookmarks = new HashMap<>();
 
@@ -79,6 +85,14 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
                 objectiveBookmarks.put(subjectState.getSubject().getId(), bookmarks);
 
+                List<ObjectiveQuestionDescription> objectiveQuestionDescriptionList = QuestionDescriptionDao
+                        .getObjectiveQuestionDescriptions(
+                                subjectState.getSubject().getId(),
+                                subjectState.getSelectedYear().getId()
+                        );
+
+                objectiveQuestionDescriptions.addAll(objectiveQuestionDescriptionList);
+
             } else if (subjectState.getType() == Type.THEORY) {
 
                 List<QuestionState> questionStates = TheoryQuestionDao
@@ -100,15 +114,23 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
                 theoryBookmarks.put(subjectState.getSubject().getId(), bookmarks);
 
+                List<TheoryQuestionDescription> theoryQuestionDescriptionList = QuestionDescriptionDao
+                        .getTheoryQuestionDescriptions(
+                                subjectState.getSubject().getId(),
+                                subjectState.getSelectedYear().getId()
+                        );
+
+                theoryQuestionDescriptions.addAll(theoryQuestionDescriptionList);
+
             }
 
-            List<QuestionDescription> questionDescriptionsList = QuestionDescriptionDao
-                    .getQuestionDescriptions(
-                            subjectState.getSubject().getId(),
-                            subjectState.getSelectedYear().getId()
-                    );
-
-            questionDescriptions.addAll(questionDescriptionsList);
+//            List<QuestionDescription> questionDescriptionsList = QuestionDescriptionDao
+//                    .getQuestionDescriptions(
+//                            subjectState.getSubject().getId(),
+//                            subjectState.getSelectedYear().getId()
+//                    );
+//
+//            questionDescriptions.addAll(questionDescriptionsList);
 
 
         });
@@ -152,6 +174,14 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     public ObservableList<QuestionDescription> getQuestionDescriptions() {
         return questionDescriptions;
+    }
+
+    public ObservableList<ObjectiveQuestionDescription> getObjectiveQuestionDescriptions() {
+        return objectiveQuestionDescriptions;
+    }
+
+    public ObservableList<TheoryQuestionDescription> getTheoryQuestionDescriptions() {
+        return theoryQuestionDescriptions;
     }
 
     public HashMap<Integer, ObservableList<ObjectiveBookmark>> getObjectiveBookmarks() {
