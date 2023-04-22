@@ -2,6 +2,7 @@ package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.NoteSubject;
 import com.scholarly.utme.data.model.newDb.ObjectiveSubject;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.newDb.TheorySubject;
@@ -40,35 +41,32 @@ public class SubjectDao {
     public static final String descriptionColumn = "description";
 
     private static final ObservableList<Subject> subjects;
-    private static final ObservableList<PQSubject> pqSubjects;
     private static final ObservableList<ObjectiveSubject> objectiveSubjects;
     private static final ObservableList<TheorySubject> theorySubjects;
 
+    private static final ObservableList<NoteSubject> noteSubjects;
+
     static {
         subjects = FXCollections.observableArrayList();
-        pqSubjects = FXCollections.observableArrayList();
         objectiveSubjects = FXCollections.observableArrayList();
         theorySubjects = FXCollections.observableArrayList();
+        noteSubjects = FXCollections.observableArrayList();
 //        updateSubjectsFromDB();
-//        updatePQSubjectsFromDB();
         updateObjectiveSubjectsFromDb();
         updateTheorySubjectsFromDb();
+        updateNoteSubjectsFromDb();
     }
 
     public static String getSubjectName(String subjectShortTitle) {
         String query = "SELECT " + titleColumn + " FROM " + Tables.SUBJECTS + " WHERE " + shortTitleColumn + " LIKE '" + subjectShortTitle + "'";
 
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            System.out.println(TAG + "Connection object -> " + connection);
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
+        try (ResultSet rs = databaseService.executeQuery(query)) {
             String subjectName = "";
             while (rs.next()) {
                 subjectName = rs.getString(titleColumn);
             }
             return subjectName;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Subject name from database because " + e.getMessage());
@@ -128,31 +126,26 @@ public class SubjectDao {
         }
     }
 
-    private static void updatePQSubjectsFromDB() {
-        String query = "SELECT * FROM " + Tables.PQ_SUBJECTS + " JOIN " + Tables.SUBJECTS + " ON " + Tables.PQ_SUBJECTS + ".subject_id = " + Tables.SUBJECTS + "._id ORDER BY 'order'";
+    private static void updateNoteSubjectsFromDb() {
+        String query = "SELECT " + Tables.NOTE_SUBJECTS + "." + idColumn + "," + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + "," + Tables.SUBJECTS + "." + titleColumn + " FROM " + Tables.NOTE_SUBJECTS + " JOIN " + Tables.SUBJECTS + " WHERE " + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + " = " + Tables.SUBJECTS + "." + idColumn;
 
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            System.out.println(TAG + "Connection object -> " + connection);
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-            pqSubjects.clear();
+        try (ResultSet rs = databaseService.executeQuery(query)) {
+            noteSubjects.clear();
             while (rs.next()) {
-                pqSubjects.add(new PQSubject(
+                noteSubjects.add(new NoteSubject(
                         rs.getInt(idColumn),
-                        rs.getInt(subjectIdColumn),
-                        rs.getInt(minutesAllotedColumn),
-                        rs.getInt(orderColumn),
                         rs.getString(titleColumn),
-                        rs.getString(shortTitleColumn),
-                        rs.getString(colorCodeColumn)));
+                        rs.getInt(subjectIdColumn),
+                        -1));
             }
 
-        } catch (SQLException e) {
+            System.out.println(TAG + "Got Note title -- " + noteSubjects.get(0).getTitle() + " with subjectId -- " + noteSubjects.get(0).getSubjectId());
+
+        } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
-            pqSubjects.clear();
+            noteSubjects.clear();
         }
     }
 
@@ -187,8 +180,8 @@ public class SubjectDao {
         return FXCollections.unmodifiableObservableList(subjects);
     }
 
-    public static ObservableList<PQSubject> getPQSubjects() {
-        return FXCollections.unmodifiableObservableList(pqSubjects);
+    public static ObservableList<NoteSubject> getNoteSubjects() {
+        return FXCollections.unmodifiableObservableList(noteSubjects);
     }
 
     public static ObservableList<ObjectiveSubject> getObjectiveSubjects() {

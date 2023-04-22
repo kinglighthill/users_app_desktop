@@ -27,6 +27,7 @@ module com.scholarly.utme {
     requires okhttp3;
     requires okhttp3.logging;
     requires jdk.httpserver;
+    requires com.fasterxml.jackson.databind;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;

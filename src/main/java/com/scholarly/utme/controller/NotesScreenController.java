@@ -6,9 +6,7 @@ import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.listItems.OrderedListItem;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.listItems.UnorderedListItem;
-import com.scholarly.utme.data.model.newDb.Section;
-import com.scholarly.utme.data.model.newDb.SubTopic;
-import com.scholarly.utme.data.model.newDb.Topic;
+import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
 import com.scholarly.utme.data.model.newDb.contentType.ContentViewTypes;
 import com.scholarly.utme.data.model.newDb.contentType.audio.AudioViewType;
@@ -523,7 +521,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                             circle.setRadius(15);
 
                             circle.setOnMouseClicked(event -> {
-                                viewModel.handleHighlight(selectedSection, colorCode);
+//                                viewModel.handleHighlight(selectedSection, colorCode);
                                 hideNoteOptions();
                             });
 
@@ -615,7 +613,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Optional<String> result = noteDialog.showAndWait();
 
             result.ifPresent(note -> {
-                viewModel.addNote(selectedSection, note);
+//                viewModel.addNote(selectedSection, note);
             });
 
             hideNoteOptions();
@@ -769,7 +767,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         quizScorePane.setVisible(false);
     }
 
-    private void renderNote(SubTopic subTopic) {
+    private void renderNote(NoteSubTopic subTopic) {
         List<Node> contentElements = new ArrayList<>();
 
 
@@ -1813,31 +1811,31 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     }
 
     public static class InitialData {
-        private Subject subject;
-        private Topic topic;
-        private List<SubTopic> subTopics;
-        private SubTopic selectedSubTopic;
+        private NoteSubject subject;
+        private NoteTopic topic;
+        private List<NoteSubTopic> subTopics;
+        private NoteSubTopic selectedSubTopic;
 
-        public InitialData(Subject subject, Topic topic, List<SubTopic> subTopics, SubTopic selectedSubTopic) {
+        public InitialData(NoteSubject subject, NoteTopic topic, List<NoteSubTopic> subTopics, NoteSubTopic selectedSubTopic) {
             this.subject = subject;
             this.topic = topic;
             this.subTopics = subTopics;
             this.selectedSubTopic = selectedSubTopic;
         }
 
-        public Subject getSubject() {
+        public NoteSubject getSubject() {
             return subject;
         }
 
-        public Topic getTopic() {
+        public NoteTopic getTopic() {
             return topic;
         }
 
-        public List<SubTopic> getSubTopics() {
+        public List<NoteSubTopic> getSubTopics() {
             return subTopics;
         }
 
-        public SubTopic getSelectedSubTopic() {
+        public NoteSubTopic getSelectedSubTopic() {
             return selectedSubTopic;
         }
     }
