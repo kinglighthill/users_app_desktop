@@ -88,7 +88,7 @@ public class NovelsDao {
     }
 
     private static void updateGenresFromDb() {
-        String query = "SELECT * FROM " + Tables.NOVEL_GENRES + " ORDER BY '" + orderColumn + "'";
+        String query = "SELECT * FROM " + Tables.NOVEL_GENRES + " ORDER BY \"" + orderColumn + "\"";
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
             genres.clear();
@@ -110,7 +110,7 @@ public class NovelsDao {
     }
 
     private static void updateCategoriesFromDb() {
-        String query = "SELECT * FROM " + Tables.NOVEL_CATEGORIES + " ORDER BY '" + orderColumn + "'";
+        String query = "SELECT * FROM " + Tables.NOVEL_CATEGORIES + " ORDER BY \"" + orderColumn + "\"";
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
             categories.clear();

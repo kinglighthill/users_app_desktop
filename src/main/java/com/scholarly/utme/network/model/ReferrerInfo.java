@@ -49,4 +49,24 @@ public class ReferrerInfo {
     public boolean isInstantExperienceLaunched() {
         return instantExperienceLaunched;
     }
+
+    public void setReferrerCode(String referrerCode) {
+        this.referrerCode = referrerCode;
+    }
+
+    public void setReferrerUrl(String referrerUrl) {
+        this.referrerUrl = referrerUrl;
+    }
+
+    public void setReferrerClickTime(String referrerClickTime) {
+        this.referrerClickTime = referrerClickTime;
+    }
+
+    public void setAppInstallTime(String appInstallTime) {
+        this.appInstallTime = appInstallTime;
+    }
+
+    public void setInstantExperienceLaunched(boolean instantExperienceLaunched) {
+        this.instantExperienceLaunched = instantExperienceLaunched;
+    }
 }

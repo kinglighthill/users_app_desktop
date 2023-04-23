@@ -4,8 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Properties;
 
 public class DeviceInfo {
+    private static final String TAG = "DeviceInfo: ";
+
     private String name;
     private String version;
     @SerializedName("api_level")
@@ -19,7 +22,13 @@ public class DeviceInfo {
     private String appVersionName;
 
     public DeviceInfo() {
-
+        name = "";
+        version = "";
+        apiLevel = "";
+        platform = "";
+        formFactor = "";
+        deviceId = "";
+        appVersionName = "";
     }
 
     public DeviceInfo(String name, String version, String apiLevel, String platform, String formFactor, String deviceId, String appVersionName) {
@@ -88,8 +97,41 @@ public class DeviceInfo {
         this.appVersionName = appVersionName;
     }
 
+    public static DeviceInfo getSystemProperties() {
+        Properties properties = System.getProperties();
+
+        DeviceInfo deviceInfo = new DeviceInfo();
+
+        String deviceName = properties.getProperty("os.name");
+        String deviceId = "";
+        String platform = "";
+        if (deviceName.contains("Windows")) {
+            deviceId = getWindowsUUID();
+            platform = "windows";
+            System.out.println(TAG + "Got Windows device ID -> " + deviceId);
+        } else if (deviceName.contains("Mac")) {
+            deviceId = getMacUUID();
+            platform = "mac";
+            System.out.println(TAG + "Got Mac device ID -> " + deviceId);
+        } else if (deviceName.contains("Linux")) {
+            deviceId = getLinuxUUID();
+            platform = "linux";
+            System.out.println(TAG + "Got Linux device ID -> " + deviceId);
+        }
+
+        deviceInfo.setName(deviceName);
+        deviceInfo.setPlatform(platform);
+        deviceInfo.setFormFactor("desktop");
+        deviceInfo.setDeviceId(deviceId);
+        deviceInfo.setAppVersionName("1.0.0");
+
+//        System.out.println(TAG + "Got device ID with OS name -> " + properties.getProperty("os.name") + " AND arch -> " + properties.getProperty("os.arch") + " AND username -> " + properties.getProperty("user.name"));
+
+        return deviceInfo;
+    }
+
     // Get Windows Machine UUID
-    public static String getWindowsDeviceUUID() {
+    private static String getWindowsUUID() {
         try {
             String command = "wmic csproduct get UUID";
             StringBuilder output = new StringBuilder();
@@ -106,7 +148,7 @@ public class DeviceInfo {
             return uuid;
 
         } catch(Exception ex) {
-            System.out.println("Cannot get UUID because -> " + ex.getMessage());
+            System.out.println(TAG + "Cannot get UUID because -> " + ex.getMessage());
         }
         return "";
     }

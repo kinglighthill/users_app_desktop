@@ -6,8 +6,8 @@ public class GoogleUser {
     private String country;
     @SerializedName("fcm_token")
     private String fcmToken;
-    @SerializedName("app_id")
-    private String appId;
+    @SerializedName("app_slug")
+    private String appSlug;
     @SerializedName("auth_code")
     private String authCode;
     @SerializedName("redirect_uri")
@@ -17,10 +17,10 @@ public class GoogleUser {
     @SerializedName("referrer_info")
     private ReferrerInfo referrerInfo;
 
-    public GoogleUser(String country, String fcmToken, String appId, String authCode, String redirectUri, DeviceInfo deviceInfo, ReferrerInfo referrerInfo) {
+    public GoogleUser(String country, String fcmToken, String appSlug, String authCode, String redirectUri, DeviceInfo deviceInfo, ReferrerInfo referrerInfo) {
         this.country = country;
         this.fcmToken = fcmToken;
-        this.appId = appId;
+        this.appSlug = appSlug;
         this.authCode = authCode;
         this.redirectUri = redirectUri;
         this.deviceInfo = deviceInfo;
@@ -43,12 +43,12 @@ public class GoogleUser {
         this.fcmToken = fcmToken;
     }
 
-    public String getAppId() {
-        return appId;
+    public String getAppSlug() {
+        return appSlug;
     }
 
-    public void setAppId(String appId) {
-        this.appId = appId;
+    public void setAppSlug(String appSlug) {
+        this.appSlug = appSlug;
     }
 
     public String getAuthCode() {

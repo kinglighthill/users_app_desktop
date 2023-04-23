@@ -4,10 +4,12 @@ public class Constants {
 
     public static String BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
 
+    // Network Preference Constants
     public static final String PREF_KEY_SIGNUP_CUSTOM_TOKEN = "SIGNUP_TOKEN";
     public static final String PREF_KEY_LOGIN_CUSTOM_TOKEN = "LOGIN_TOKEN";
     public static final String PREF_KEY_ID_TOKEN = "ID_TOKEN";
     public static final String PREF_KEY_REFRESH_TOKEN = "REFRESH_TOKEN";
+    public static final String PREF_KEY_ACCESS_TOKEN = "ACCESS_TOKEN";
 
     // Tab Preference Constants
     public static final String PREF_KEY_SELECTED_TAB = "SELECTED_TAB";

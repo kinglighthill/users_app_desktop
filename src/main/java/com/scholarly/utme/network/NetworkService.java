@@ -5,7 +5,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 public class NetworkService {
-    private static final String TAG = "NetworkModule: ";
+    private static final String TAG = "NetworkService: ";
     public static final MediaType JSON_BODY_TYPE
             = MediaType.parse("application/json; charset=utf-8");
 
