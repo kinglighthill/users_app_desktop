@@ -6,6 +6,7 @@ import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
@@ -71,6 +72,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
 
     private Preferences userPreferences;
+    OkHttpClient httpClient;
 
     interface ServerCallback {
         void stopServer();
@@ -80,6 +82,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         userPreferences = AppPreferences.getPreferences();
+        httpClient = NetworkService.getHttpClient();
 
         boolean showSignUpScreen = (boolean) ViewSwitcher.retrieveData();
         if (showSignUpScreen) {
@@ -190,7 +193,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 alertDialog.show();
                 hideProgressBar();
                 System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
-                e.printStackTrace();
             }
 
         });
@@ -252,7 +254,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 alertDialog.show();
                 hideProgressBar();
                 System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
-                e.printStackTrace();
             }
 
         });
@@ -262,10 +263,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             if (!recoverEmailField.getText().contains("@")) {
                 recoverEmailPrompt.setVisible(true);
             } else {
-//                if (recoverProceedButton.getText().contains("Back")) {
-//                    Animations.fadeOut(recoverPasswordSection, 300);
-//                    Animations.fadeIn(loginSection, 300);
-//                }
 
                 recoverProceedButton.setDisable(true);
                 showProgressBar();
@@ -319,10 +316,8 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         return null;
                     }
                 };
-                Thread signInGoogleThread = new Thread(signInGoogleTask);
-                signInGoogleThread.start();
-                progressBar.progressProperty().bind(signInGoogleTask.progressProperty());
-
+                Thread background = new Thread(signInGoogleTask);
+                background.start();
 
             } catch (Exception e) {
                 Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
@@ -343,17 +338,15 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 URLConnection connection = url.openConnection();
                 connection.connect();
 
-                Task<Void> signInGoogleTask = new Task<>() {
+                Task<Void> loginGoogleTask = new Task<>() {
                     @Override
                     protected Void call() throws Exception {
                         signInWithGoogle();
                         return null;
                     }
                 };
-                Thread background = new Thread(signInGoogleTask);
+                Thread background = new Thread(loginGoogleTask);
                 background.start();
-                progressBar.progressProperty().bind(signInGoogleTask.progressProperty());
-
 
             } catch (Exception e) {
                 Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
@@ -369,8 +362,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private void signupUser(SignupUser newUser) {
         String END_POINT = "signup";
 
-        OkHttpClient client = NetworkService.getHttpClient();
-
         Gson gson = new Gson();
         String json = gson.toJson(newUser);
 
@@ -378,15 +369,16 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         Request request = new Request.Builder()
                 .url(BASE_URL + END_POINT)
+                .addHeader("platform", newUser.getDeviceInfo().getPlatform())
                 .post(requestBody)
                 .build();
 
-        Call call = client.newCall(request);
+        Call call = httpClient.newCall(request);
 
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
-                System.out.println(TAG + "Signup response code -> " + response.code());
+                System.out.println(TAG + "Signup: Got response code -> " + response.code());
                 try (ResponseBody responseBody = response.body()) {
                     assert responseBody != null;
                     BaseResponse signupResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
@@ -394,7 +386,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     if (signupResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
                         userPreferences.put(PREF_KEY_ACCESS_TOKEN, signupResponse.getData().getAccessToken());
-//                        userPreferences.put(PREF_KEY_REFRESH_TOKEN, signupResponse.getData().getRefreshToken());
                         System.out.println(TAG + "Signed up user with Access token -> " + userPreferences.get(PREF_KEY_ACCESS_TOKEN, " "));
 
                         Platform.runLater(() -> {
@@ -414,7 +405,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                 } catch (Exception e) {
                     System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
-                    e.printStackTrace();
                 }
 
             }
@@ -434,15 +424,10 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     private void signupUser(String authCode, String redirectUri, ServerCallback callback) {
         String END_POINT = "signup/google";
-        System.out.println(TAG + "Sign in with Google");
-
-        OkHttpClient client = NetworkService.getHttpClient();
 
         DeviceInfo deviceInfo = getSystemProperties();
-        deviceInfo.setVersion("");
-        deviceInfo.setApiLevel("");
         ReferrerInfo referrerInfo = new ReferrerInfo();
-        GoogleUser user = new GoogleUser("Nigeria", "fcm-token", "utme", authCode, redirectUri, deviceInfo, referrerInfo);
+        GoogleUser user = new GoogleUser("nigeria", "fcm-token", "utme", authCode, redirectUri, deviceInfo, referrerInfo);
 
         Gson gson = new Gson();
         String json = gson.toJson(user);
@@ -450,14 +435,15 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         Request request = new Request.Builder()
                 .url(BASE_URL + END_POINT)
+                .addHeader("platform", user.getDeviceInfo().getPlatform())
                 .post(requestBody)
                 .build();
 
-        Call call = client.newCall(request);
+        Call call = httpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
-                System.out.println(TAG + "Got response with code -> " + response.code());
+                System.out.println(TAG + "SignupWithGoogle: Got response with code -> " + response.code());
                 try (ResponseBody responseBody = response.body()) {
                     assert responseBody != null;
                     BaseResponse signupResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
@@ -465,7 +451,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     if (signupResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
                         userPreferences.put(PREF_KEY_ACCESS_TOKEN, signupResponse.getData().getAccessToken());
-//                        userPreferences.put(PREF_KEY_REFRESH_TOKEN, signupResponse.getData().getRefreshToken());
                         System.out.println(TAG + "Signed up user with Access token -> " + userPreferences.get(PREF_KEY_ACCESS_TOKEN, " "));
 
                         callback.redirect();
@@ -482,7 +467,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                             alertDialog.show();
                             hideProgressBar();
                         });
-
+                        callback.stopServer();
                     }
 
                 } catch (Exception e) {
@@ -508,8 +493,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private void loginUser(LoginUser user) {
         String END_POINT = "login";
 
-        OkHttpClient client = NetworkService.getHttpClient();
-
         Gson gson = new Gson();
         String json = gson.toJson(user);
 
@@ -517,14 +500,15 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         Request request = new Request.Builder()
                 .url(BASE_URL + END_POINT)
+                .addHeader("platform", user.getDeviceInfo().getPlatform())
                 .post(requestBody)
                 .build();
 
-        Call call = client.newCall(request);
+        Call call = httpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
-                System.out.println(TAG + "Login user response code -> " + response.code());
+                System.out.println(TAG + "Login: Got response code -> " + response.code());
                 try (ResponseBody responseBody = response.body()) {
                     assert responseBody != null;
                     BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
@@ -532,7 +516,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     if (baseResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
                         userPreferences.put(PREF_KEY_ACCESS_TOKEN, baseResponse.getData().getAccessToken());
-//                        userPreferences.put(PREF_KEY_REFRESH_TOKEN, baseResponse.getData().getRefreshToken());
                         System.out.println(TAG + "Logged in user with Access token -> " + userPreferences.get(PREF_KEY_ACCESS_TOKEN, " "));
 
                         Platform.runLater(() -> {
@@ -572,8 +555,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private void recoverPassword(SignupUser signupUser) {
         String END_POINT = "password-reset/send-email";
 
-        OkHttpClient client = NetworkService.getHttpClient();
-
         Gson gson = new Gson();
         String json = gson.toJson(signupUser);
 
@@ -584,11 +565,11 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 .post(requestBody)
                 .build();
 
-        Call call = client.newCall(request);
+        Call call = httpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
-                System.out.println("Got response with code -> " + response.code());
+                System.out.println(TAG + "RecoverPassword: Got response with code -> " + response.code());
                 try (ResponseBody responseBody = response.body()) {
                     assert responseBody != null;
                     BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
@@ -599,12 +580,9 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                             recoverEmailPrompt.setVisible(true);
                             recoverEmailPrompt.setText(baseResponse.getMessage());
                             recoverEmailPrompt.setTextFill(Paint.valueOf("#053500"));
-//                            recoverProceedButton.setText("Back to Login");
 
                             hideProgressBar();
-
                         });
-                        System.out.println(TAG + "Got response with message -> " + baseResponse.getMessage());
 
                     } else if (baseResponse.getStatus().equalsIgnoreCase("error")) {
 
@@ -640,25 +618,20 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         HelloApplication application = new HelloApplication();
         InetAddress ipaddress = InetAddress.getLoopbackAddress(); // returns 127.0.0.1
 
-        try {
-            String state = RandomStringUtils.random(6, true, false);
-            String scope = "email profile";
-            String responseType = "code";
-            String clientId = "671999041043-03l7caceekjic1q3q1ghvr0iu2t9uiiv.apps.googleusercontent.com";
+        String state = RandomStringUtils.random(6, true, false);
+        String scope = "email profile";
+        String responseType = "code";
+        String clientId = "671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
 
+        try {
             server = HttpServer.create(new InetSocketAddress(ipaddress, 0), 0);
 
             String redirectUri = "http://" + server.getAddress().getHostName() + ":" + server.getAddress().getPort();
-//            System.out.println(TAG + "RedirectUri -> " + redirectUri);
-            String redirectUri2 = "https://scholarly-utme-staging.firebaseapp.com/__/auth/handler";
 
             server.start();
 
-            String authorizationRequest = "https://accounts.google.com/o/oauth2/v2/auth?scope=" + scope + "&response_type=" + responseType + "&state=" + state + "&redirect_uri=" + redirectUri2 + "&client_id=" + clientId;
-            System.out.println(TAG + "Auth request 2 -> " + authorizationRequest);
-
-            String authorizationRequest2 = "https://accounts.google.com/o/oauth2/v2/auth?scope=email profile&response_type=code&state=" + state + "&redirect_uri=http://127.0.0.1:12345&client_id=671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
-            System.out.println(TAG + "Auth request -> " + authorizationRequest2);
+            String authorizationRequest = "https://accounts.google.com/o/oauth2/v2/auth?scope=" + scope + "&response_type=" + responseType + "&state=" + state + "&redirect_uri=" + redirectUri + "&client_id=" + clientId;
+            System.out.println(TAG + "Auth request -> " + authorizationRequest);
 
             application.openBrowser(authorizationRequest);
 
@@ -666,15 +639,14 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             responseContext.setHandler(new HttpHandler() {
                 @Override
                 public void handle(HttpExchange exchange) throws IOException {
-                    System.out.println(TAG + "Inside Handler");
                     String uriResponse = exchange.getRequestURI().getQuery();
-                    System.out.println(TAG + "UriResponse -> " + uriResponse);
+                    System.out.println(TAG + "HttpContext UriResponse -> " + uriResponse);
 
                     if (uriResponse.contains("code")) {
                         String code = uriResponse.substring(uriResponse.indexOf("code"), uriResponse.indexOf("scope")-1);
                         String authCode = code.substring(uriResponse.indexOf("="));
 
-                        signupUser(authCode, redirectUri2, new ServerCallback() {
+                        signupUser(authCode, redirectUri, new ServerCallback() {
                             @Override
                             public void stopServer() {
                                 server.stop(60);
@@ -683,7 +655,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                             @Override
                             public void redirect() {
                                 try {
-                                    byte[] response = "<html><body>Login successful. Go back to app</body></html>".getBytes();
+                                    byte[] response = "<html><body>Login successful. Go back to the app</body></html>".getBytes();
                                     exchange.sendResponseHeaders(200, response.length);
                                     OutputStream os = exchange.getResponseBody();
                                     os.write(response);

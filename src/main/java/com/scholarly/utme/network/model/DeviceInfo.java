@@ -111,7 +111,7 @@ public class DeviceInfo {
             System.out.println(TAG + "Got Windows device ID -> " + deviceId);
         } else if (deviceName.contains("Mac")) {
             deviceId = getMacUUID();
-            platform = "mac";
+            platform = "macos";
             System.out.println(TAG + "Got Mac device ID -> " + deviceId);
         } else if (deviceName.contains("Linux")) {
             deviceId = getLinuxUUID();
