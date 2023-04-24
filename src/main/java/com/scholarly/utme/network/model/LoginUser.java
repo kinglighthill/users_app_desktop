@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName;
 public class LoginUser {
     private String email;
     private String password;
-    @SerializedName("app_id")
-    private String appId = "";
+    @SerializedName("app_slug")
+    private String appSlug;
     @SerializedName("device_info")
     private DeviceInfo deviceInfo;
 
@@ -14,10 +14,10 @@ public class LoginUser {
 
     }
 
-    public LoginUser(String email, String password, String appId, DeviceInfo deviceInfo) {
+    public LoginUser(String email, String password, String appSlug, DeviceInfo deviceInfo) {
         this.email = email;
         this.password = password;
-        this.appId = appId;
+        this.appSlug = appSlug;
         this.deviceInfo = deviceInfo;
     }
 
@@ -37,12 +37,12 @@ public class LoginUser {
         this.password = password;
     }
 
-    public String getAppId() {
-        return appId;
+    public String getAppSlug() {
+        return appSlug;
     }
 
-    public void setAppId(String appId) {
-        this.appId = appId;
+    public void setAppSlug(String appSlug) {
+        this.appSlug = appSlug;
     }
 
     public DeviceInfo getDeviceInfo() {

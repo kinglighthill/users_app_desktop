@@ -104,11 +104,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         initializeGestures();
 //        setupQuizView();
 
-        chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ":");
-        chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
-        renderNovel(viewModel.getSelectedChapter());
-
-
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
         chaptersList.setItems(viewModel.getChapters());
         chaptersList.getSelectionModel().select(viewModel.getSelectedChapter());
@@ -116,6 +111,20 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         chaptersList.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldValue, newValue) -> {
             viewModel.setSelectedChapter(newValue);
         }));
+
+        pageTitle.setText(viewModel.getNovel().getName());
+        if (viewModel.getSelectedChapter().getTitle() != null) {
+            chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ": ");
+            if (viewModel.getSelectedChapter().getPosition() <= 0) {
+                chapterIndex.setText(null);
+            }
+        } else {
+            chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition());
+        }
+
+        chapterCount.setText(viewModel.getSelectedChapter().getOrder() + " of " + chaptersList.getItems().size());
+        chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
+        renderNovel(viewModel.getSelectedChapter());
 
         viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
             renderNovel(newValue);
@@ -125,31 +134,19 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
             chapterQuizHeader.setText("Chapter " + newValue.getPosition() + " Quiz");
 
+            chapterCount.setText(newValue.getOrder() + " of " + chaptersList.getItems().size());
             chapterTitle.setText(newValue.getTitle());
-            if (!chapterHeader.getChildren().contains(chapterIndex)) {
-                chapterHeader.getChildren().add(0, chapterIndex);
-            }
-            if (newValue.getPosition() != -1) {
-                chapterCount.setText(newValue.getPosition() + " of " + chaptersList.getItems().size());
-                chapterIndex.setText("Chapter " + newValue.getPosition() + ":");
-                takeQuizButton.setDisable(false);
+
+            if (newValue.getTitle() != null) {
+                chapterIndex.setText("Chapter " + newValue.getPosition() + ": ");
+                if (newValue.getPosition() <= 0) {
+                    chapterIndex.setText(null);
+                }
             } else {
-                chapterCount.setText(chaptersList.getSelectionModel().getSelectedIndex() + 1 + " of " + chaptersList.getItems().size());
-                chapterHeader.getChildren().remove(chapterIndex);
-                takeQuizButton.setDisable(true);
+                chapterIndex.setText("Chapter " + newValue.getPosition());
             }
 
         }));
-
-
-        pageTitle.setText(viewModel.getNovel().getName());
-        if (viewModel.getSelectedChapter().getPosition() == -1) {
-            chapterHeader.getChildren().remove(chapterIndex);
-            chapterCount.setText(chaptersList.getSelectionModel().getSelectedIndex() + 1 + " of " + chaptersList.getItems().size());
-        } else {
-            chapterCount.setText(viewModel.getSelectedChapter().getPosition() + " of " + chaptersList.getItems().size());
-        }
-
 
         prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()).or(chapterQuizPane.visibleProperty()));
         nextButton.disableProperty().bind(Bindings.equal(chaptersList.getSelectionModel().selectedIndexProperty(), chaptersList.getItems().size()-1).or(chapterQuizPane.visibleProperty()));

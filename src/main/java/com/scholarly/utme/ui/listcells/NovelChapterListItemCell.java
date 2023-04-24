@@ -59,8 +59,11 @@ public class NovelChapterListItemCell extends ListCell<NovelChapter> {
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            if (item.getPosition() >= 1) {
-                chapterIndex.setText("Chapter " + item.getPosition() + ":  ");
+            if (item.getPosition() > 0) {
+                chapterIndex.setText("Chapter " + item.getPosition());
+                if (item.getTitle() != null) {
+                    chapterIndex.setText("Chapter " + item.getPosition() + ": ");
+                }
             } else {
                 chapterIndex.setText(null);
             }

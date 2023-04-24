@@ -3,33 +3,38 @@ package com.scholarly.utme.network.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Data {
-    @SerializedName("id_token")
-    private String idToken;
+    @SerializedName("access_token")
+    private String accessToken;
     private String refreshToken;
-    private boolean isActivationActive;
+    @SerializedName("user_data")
+    private User userData;
+    @SerializedName("activation_state")
+    private ActivationState activationState;
 
     public Data() {
 
     }
 
-    public Data(String idToken, String refreshToken, String token, boolean isActivationActive) {
-        this.idToken = idToken;
+    public Data(String accessToken, String refreshToken, User userData, ActivationState activationState) {
+        this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.isActivationActive = isActivationActive;
-
+        this.userData = userData;
+        this.activationState = activationState;
     }
 
-    public String getIdToken() {
-        return idToken;
+    public String getAccessToken() {
+        return accessToken;
     }
 
     public String getRefreshToken() {
         return refreshToken;
     }
 
-    public boolean isActivationActive() {
-        return isActivationActive;
+    public User getUserData() {
+        return userData;
     }
 
-
+    public ActivationState getActivationState() {
+        return activationState;
+    }
 }

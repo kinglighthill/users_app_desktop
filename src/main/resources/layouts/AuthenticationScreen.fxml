@@ -50,11 +50,26 @@
         <right>
             <StackPane fx:id="authenticationSection" prefWidth="500" prefHeight="200">
                 <VBox fx:id="signUpSection" prefWidth="500" prefHeight="200" alignment="TOP_CENTER" visible="false">
-                    <VBox fx:id="signUpEmailSection" spacing="10">
+                    <VBox fx:id="signUpNameSection" spacing="10">
                         <Label fx:id="signUpHeaderText" text="Sign up" textFill="#034801"/>
-                        <Label fx:id="signUpEmailText" text="Email">
+                        <Label fx:id="signUpNameText" text="Full Name">
                             <VBox.margin>
                                 <Insets top="30"/>
+                            </VBox.margin>
+                        </Label>
+
+                        <TextField fx:id="signUpNameField" promptText="Enter your First Name and Last Name" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                            <padding>
+                                <Insets left="7" top="10" bottom="10"/>
+                            </padding>
+                        </TextField>
+
+                    </VBox>
+
+                    <VBox fx:id="signUpEmailSection" spacing="10">
+                        <Label fx:id="signUpEmailText" text="Email">
+                            <VBox.margin>
+                                <Insets top="10"/>
                             </VBox.margin>
                         </Label>
 
