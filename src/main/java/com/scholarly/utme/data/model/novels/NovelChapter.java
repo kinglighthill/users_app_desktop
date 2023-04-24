@@ -8,14 +8,16 @@ public class NovelChapter {
     private String description;
     private int chapterCategoryId;
     private int novelId;
+    private int order;
 
-    public NovelChapter(int id, int position, String title, String description, int chapterCategoryId, int novelId) {
+    public NovelChapter(int id, int position, String title, String description, int chapterCategoryId, int novelId, int order) {
         this.id = id;
         this.position = position;
         this.title = title;
         this.description = description;
         this.chapterCategoryId = chapterCategoryId;
         this.novelId = novelId;
+        this.order = order;
     }
 
     public int getId() {
@@ -42,4 +44,7 @@ public class NovelChapter {
         return novelId;
     }
 
+    public int getOrder() {
+        return order;
+    }
 }

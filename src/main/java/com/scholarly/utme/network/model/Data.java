@@ -5,8 +5,9 @@ import com.google.gson.annotations.SerializedName;
 public class Data {
     @SerializedName("access_token")
     private String accessToken;
+    private String refreshToken;
     @SerializedName("user_data")
-    private SignupUser signupUserData;
+    private User userData;
     @SerializedName("activation_state")
     private ActivationState activationState;
 
@@ -14,9 +15,10 @@ public class Data {
 
     }
 
-    public Data(String accessToken, SignupUser signupUserData, ActivationState activationState) {
+    public Data(String accessToken, String refreshToken, User userData, ActivationState activationState) {
         this.accessToken = accessToken;
-        this.signupUserData = signupUserData;
+        this.refreshToken = refreshToken;
+        this.userData = userData;
         this.activationState = activationState;
     }
 
@@ -24,8 +26,12 @@ public class Data {
         return accessToken;
     }
 
-    public SignupUser getUserData() {
-        return signupUserData;
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public User getUserData() {
+        return userData;
     }
 
     public ActivationState getActivationState() {

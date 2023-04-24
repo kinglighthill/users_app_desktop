@@ -6,7 +6,6 @@ import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
-import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
@@ -71,7 +70,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private CustomNumberField signUpPhoneField;
 
 
-    private Preferences userPreferences;
+    private Preferences preferences;
     OkHttpClient httpClient;
 
     interface ServerCallback {
@@ -81,7 +80,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        userPreferences = AppPreferences.getPreferences();
+        preferences = AppPreferences.getPreferences();
         httpClient = NetworkService.getHttpClient();
 
         boolean showSignUpScreen = (boolean) ViewSwitcher.retrieveData();
@@ -385,8 +384,12 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                     if (signupResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
-                        userPreferences.put(PREF_KEY_ACCESS_TOKEN, signupResponse.getData().getAccessToken());
-                        System.out.println(TAG + "Signed up user with Access token -> " + userPreferences.get(PREF_KEY_ACCESS_TOKEN, " "));
+                        preferences.put(PREF_KEY_ACCESS_TOKEN, signupResponse.getData().getAccessToken());
+                        System.out.println(TAG + "Signed up user with Access token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN, " "));
+
+                        String userData = gson.toJson(signupResponse.getData().getUserData());
+                        preferences.put(PREF_KEY_USER_DATA, userData);
+                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE, signupResponse.getData().getActivationState().isActivationActive());
 
                         Platform.runLater(() -> {
                             hideProgressBar();
@@ -450,9 +453,14 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                     if (signupResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
-                        userPreferences.put(PREF_KEY_ACCESS_TOKEN, signupResponse.getData().getAccessToken());
-                        System.out.println(TAG + "Signed up user with Access token -> " + userPreferences.get(PREF_KEY_ACCESS_TOKEN, " "));
+                        preferences.put(PREF_KEY_ACCESS_TOKEN, signupResponse.getData().getAccessToken());
+                        preferences.put(PREF_KEY_REFRESH_TOKEN, signupResponse.getData().getRefreshToken());
 
+                        String userData = gson.toJson(signupResponse.getData().getUserData());
+                        preferences.put(PREF_KEY_USER_DATA, userData);
+                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE, signupResponse.getData().getActivationState().isActivationActive());
+
+                        System.out.println(TAG + "Signed up user with User data -> " + preferences.get(PREF_KEY_USER_DATA, " "));
                         callback.redirect();
 
                         Platform.runLater(() -> {
@@ -511,12 +519,16 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 System.out.println(TAG + "Login: Got response code -> " + response.code());
                 try (ResponseBody responseBody = response.body()) {
                     assert responseBody != null;
-                    BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+                    BaseResponse loginResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
-                    if (baseResponse.getStatus().equalsIgnoreCase("success")) {
+                    if (loginResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
-                        userPreferences.put(PREF_KEY_ACCESS_TOKEN, baseResponse.getData().getAccessToken());
-                        System.out.println(TAG + "Logged in user with Access token -> " + userPreferences.get(PREF_KEY_ACCESS_TOKEN, " "));
+                        preferences.put(PREF_KEY_ACCESS_TOKEN, loginResponse.getData().getAccessToken());
+                        System.out.println(TAG + "Logged in user with Access token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN, " "));
+
+                        String userData = gson.toJson(loginResponse.getData().getUserData());
+                        preferences.put(PREF_KEY_USER_DATA, userData);
+                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE, loginResponse.getData().getActivationState().isActivationActive());
 
                         Platform.runLater(() -> {
                             hideProgressBar();
@@ -524,9 +536,9 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                             ViewSwitcher.showScreen(View.LANDING_SCREEN);
                         });
 
-                    } else if (baseResponse.getStatus().equalsIgnoreCase("error")) {
+                    } else if (loginResponse.getStatus().equalsIgnoreCase("error")) {
                         Platform.runLater(() -> {
-                            Alert alertDialog = Alerts.info(getClass(), "Error", baseResponse.getMessage(), "");
+                            Alert alertDialog = Alerts.info(getClass(), "Error", loginResponse.getMessage(), "");
                             alertDialog.show();
                             hideProgressBar();
                         });
