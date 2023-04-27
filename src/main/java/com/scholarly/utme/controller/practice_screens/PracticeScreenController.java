@@ -1,18 +1,18 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.practice_screens;
 
+import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.*;
 //import com.gtranslate.Audio;
 //import com.gtranslate.Language;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
-import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.newDb.TheoryQuestionDescription;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.TextToSpeech;
-import com.scholarly.utme.viewmodels.PracticeScreenVM;
-import com.scholarly.utme.viewmodels.PracticeScreenVM.QuestionState;
-import com.scholarly.utme.viewmodels.PracticeScreenVM.SubjectQuestionsState;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.QuestionState;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 
 import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
 
-@FxmlPath("/layouts/PracticeScreen.fxml")
+@FxmlPath("/layouts/practice_screens/PracticeScreen.fxml")
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable, SceneLifecycle {
 
     private static final String TAG = "PracticeScreenController: ";

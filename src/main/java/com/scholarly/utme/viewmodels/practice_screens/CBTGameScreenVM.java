@@ -1,7 +1,6 @@
-package com.scholarly.utme.viewmodels;
+package com.scholarly.utme.viewmodels.practice_screens;
 
-import com.scholarly.utme.controller.CBTGameScreenController;
-import com.scholarly.utme.controller.CBTGameScreenController.InitialData;
+import com.scholarly.utme.controller.practice_screens.CBTGameScreenController.InitialData;
 import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.QuestionDescriptionDao;
@@ -9,9 +8,8 @@ import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
-import com.scholarly.utme.data.model.newDb.ObjectiveSubject;
 import com.scholarly.utme.data.model.newDb.PQSubject;
-import com.scholarly.utme.data.model.newDb.Subject;
+import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;

@@ -1,14 +1,14 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.practice_screens;
 
+import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
-import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
 import com.scholarly.utme.util.TextToSpeech;
-import com.scholarly.utme.viewmodels.CBTGameScreenVM;
-import com.scholarly.utme.viewmodels.CBTGameScreenVM.QuestionState;
+import com.scholarly.utme.viewmodels.practice_screens.CBTGameScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.CBTGameScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.CBT_GAME_SCREEN;
 
-@FxmlPath("/layouts/CBTGameScreen.fxml")
+@FxmlPath("/layouts/practice_screens/CBTGameScreen.fxml")
 public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initializable, SceneLifecycle {
 
     public static final String TAG = "CBTGameScreenController: ";

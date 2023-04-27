@@ -1,12 +1,8 @@
-package com.scholarly.utme.viewmodels;
+package com.scholarly.utme.viewmodels.note_screens;
 
-import com.scholarly.utme.controller.NotesScreenController.InitialData;
-import com.scholarly.utme.data.dao.HighlightsDao;
-import com.scholarly.utme.data.dao.NoteDao;
-import com.scholarly.utme.data.dao.newDb.SectionDao;
+import com.scholarly.utme.controller.note_screens.NotesScreenController.InitialData;
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
-import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.util.Helper;
 import de.saxsys.mvvmfx.ViewModel;

@@ -1,5 +1,6 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.practice_screens;
 
+import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
@@ -7,8 +8,8 @@ import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.ExplanationScreenVM;
-import com.scholarly.utme.viewmodels.PracticeScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.ExplanationScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -42,7 +43,7 @@ import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
 import static com.scholarly.utme.viewmodels.SubjectListItemVM.*;
 
 
-@FxmlPath("/layouts/ExplanationScreen.fxml")
+@FxmlPath("/layouts/practice_screens/ExplanationScreen.fxml")
 public class ExplanationScreenController implements FxmlView<ExplanationScreenVM>, Initializable {
 
     private static final String TAG = "ExplanationScreenController: ";

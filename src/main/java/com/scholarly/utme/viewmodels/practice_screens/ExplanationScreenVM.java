@@ -1,8 +1,8 @@
-package com.scholarly.utme.viewmodels;
+package com.scholarly.utme.viewmodels.practice_screens;
 
-import com.scholarly.utme.controller.ExplanationScreenController.InitialData;
-import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.controller.practice_screens.ExplanationScreenController.InitialData;
 import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.ObjectProperty;

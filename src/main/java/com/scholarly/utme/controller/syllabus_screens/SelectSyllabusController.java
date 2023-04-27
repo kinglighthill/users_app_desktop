@@ -1,14 +1,13 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.syllabus_screens;
 
 import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.newDb.SyllabusCategory;
 import com.scholarly.utme.data.model.newDb.SyllabusTopic;
 import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.SelectSyllabusVM;
+import com.scholarly.utme.viewmodels.syllabus_screens.SelectSyllabusVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -21,7 +20,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
@@ -30,7 +28,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-@FxmlPath("/layouts/SelectSyllabusScreen.fxml")
+@FxmlPath("/layouts/syllabus_screens/SelectSyllabusScreen.fxml")
 public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Initializable {
 
     @InjectViewModel

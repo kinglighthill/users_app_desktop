@@ -1,38 +1,30 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.note_screens;
 
 
-import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.Helper;
-import com.scholarly.utme.viewmodels.SelectNoteVM;
+import com.scholarly.utme.viewmodels.note_screens.SelectNoteVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import javafx.util.Pair;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-@FxmlPath("/layouts/SelectNoteScreen.fxml")
+@FxmlPath("/layouts/note_screens/SelectNoteScreen.fxml")
 public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializable {
     private static final String TAG = "SelectNoteController: ";
 

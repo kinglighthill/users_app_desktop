@@ -10,7 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.shape.Line?>
 
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.SyllabusScreenController" >
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.syllabus_screens.SyllabusScreenController" >
     <center>
         <StackPane fx:id="syllabusLayout" prefHeight="800" prefWidth="1000">
             <BorderPane>

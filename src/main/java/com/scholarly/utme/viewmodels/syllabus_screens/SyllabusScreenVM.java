@@ -1,16 +1,13 @@
-package com.scholarly.utme.viewmodels;
+package com.scholarly.utme.viewmodels.syllabus_screens;
 
-import com.scholarly.utme.controller.SyllabusScreenController.InitialData;
+import com.scholarly.utme.controller.syllabus_screens.SyllabusScreenController.InitialData;
 import com.scholarly.utme.data.dao.newDb.SubTopicDao;
 import com.scholarly.utme.data.dao.newDb.SyllabusSubjectDao;
-import com.scholarly.utme.data.dao.newDb.SyllabusTopicDao;
 import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.model.Topic;
 import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.newDb.SyllabusCategory;
 import com.scholarly.utme.data.model.newDb.SyllabusSubject;
 import com.scholarly.utme.data.model.newDb.SyllabusTopic;
-import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;

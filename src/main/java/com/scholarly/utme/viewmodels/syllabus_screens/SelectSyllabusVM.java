@@ -1,4 +1,4 @@
-package com.scholarly.utme.viewmodels;
+package com.scholarly.utme.viewmodels.syllabus_screens;
 
 import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.data.dao.newDb.SubTopicDao;

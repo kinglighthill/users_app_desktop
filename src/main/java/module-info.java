@@ -68,6 +68,12 @@ module com.scholarly.utme {
     opens com.scholarly.utme.viewmodels.settings_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens com.scholarly.utme.controller.account_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens com.scholarly.utme.viewmodels.account_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.controller.note_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.controller.practice_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.controller.syllabus_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.viewmodels.practice_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.viewmodels.note_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens com.scholarly.utme.viewmodels.syllabus_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts.landing_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts.trivia_screens to de.saxsys.mvvmfx, javafx.fxml;
@@ -92,5 +98,11 @@ module com.scholarly.utme {
     exports com.scholarly.utme.viewmodels.settings_screens;
     exports com.scholarly.utme.controller.account_screens;
     exports com.scholarly.utme.viewmodels.account_screens;
+    exports com.scholarly.utme.controller.note_screens;
+    exports com.scholarly.utme.controller.practice_screens;
+    exports com.scholarly.utme.controller.syllabus_screens;
+    exports com.scholarly.utme.viewmodels.practice_screens;
+    exports com.scholarly.utme.viewmodels.note_screens;
+    exports com.scholarly.utme.viewmodels.syllabus_screens;
 
 }

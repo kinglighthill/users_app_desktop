@@ -1,10 +1,10 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.note_screens;
 
 
+import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.listItems.OrderedListItem;
-import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.listItems.UnorderedListItem;
 import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
@@ -23,7 +23,7 @@ import com.scholarly.utme.data.model.newDb.contentType.webview.WebViewType;
 import com.scholarly.utme.ui.cellFactories.UnorderedListCellFactory;
 import com.scholarly.utme.ui.cellFactories.OrderedListCellFactory;
 import com.scholarly.utme.ui.utils.*;
-import com.scholarly.utme.viewmodels.NotesScreenVM;
+import com.scholarly.utme.viewmodels.note_screens.NotesScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -66,7 +66,7 @@ import java.util.stream.Collectors;
 import static com.scholarly.utme.util.Constants.NOTES_SCREEN;
 
 
-@FxmlPath("/layouts/NotesScreen.fxml")
+@FxmlPath("/layouts/note_screens/NotesScreen.fxml")
 public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializable {
 
     private enum FontSize {

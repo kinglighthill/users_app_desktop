@@ -1,17 +1,15 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.syllabus_screens;
 
 import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.model.newDb.SubTopic;
 import com.scholarly.utme.data.model.newDb.SyllabusCategory;
 import com.scholarly.utme.data.model.newDb.SyllabusTopic;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.SyllabusScreenVM;
+import com.scholarly.utme.viewmodels.syllabus_screens.SyllabusScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -28,9 +26,8 @@ import javafx.scene.text.TextAlignment;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
-@FxmlPath("/layouts/SyllabusScreen.fxml")
+@FxmlPath("/layouts/syllabus_screens/SyllabusScreen.fxml")
 public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Initializable {
 
     @FXML

@@ -1,13 +1,12 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.practice_screens;
 
-import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
-import com.scholarly.utme.util.Constants;
-import com.scholarly.utme.viewmodels.PracticeScreenVM.Result;
-import com.scholarly.utme.viewmodels.PracticeScreenVM.SubjectQuestionsState;
-import com.scholarly.utme.viewmodels.ResultScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.Result;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.SubjectQuestionsState;
+import com.scholarly.utme.viewmodels.practice_screens.ResultScreenVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -24,7 +23,6 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -33,7 +31,7 @@ import java.util.ResourceBundle;
 
 import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
 
-@FxmlPath("/layouts/ResultScreen.fxml")
+@FxmlPath("/layouts/practice_screens/ResultScreen.fxml")
 public class ResultScreenController implements FxmlView<ResultScreenVM>, Initializable {
     private static final String TAG = "ResultScreenController: ";
 

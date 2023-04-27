@@ -1,5 +1,6 @@
-package com.scholarly.utme.controller;
+package com.scholarly.utme.controller.practice_screens;
 
+import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
@@ -8,9 +9,9 @@ import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.TextToSpeech;
-import com.scholarly.utme.viewmodels.StudyPastScreenVM;
-import com.scholarly.utme.viewmodels.StudyPastScreenVM.QuestionState;
-import com.scholarly.utme.viewmodels.StudyPastScreenVM.SubjectQuestionsState;
+import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM.QuestionState;
+import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
 
 import static com.scholarly.utme.ui.utils.Screens.PAST_QUESTION_SCREEN;
 
-@FxmlPath("/layouts/StudyPastQuestionsScreen.fxml")
+@FxmlPath("/layouts/practice_screens/StudyPastQuestionsScreen.fxml")
 public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenVM>, Initializable, SceneLifecycle {
     public static final String TAG = "StudyPastQuestScreenController: ";
 

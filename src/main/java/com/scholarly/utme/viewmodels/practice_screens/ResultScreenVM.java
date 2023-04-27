@@ -1,9 +1,9 @@
-package com.scholarly.utme.viewmodels;
+package com.scholarly.utme.viewmodels.practice_screens;
 
-import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.viewmodels.PracticeScreenVM.Result;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.Result;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,7 +13,7 @@ import javafx.collections.ObservableList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.scholarly.utme.controller.ResultScreenController.*;
+import static com.scholarly.utme.controller.practice_screens.ResultScreenController.*;
 
 public class ResultScreenVM implements ViewModel, SceneLifecycle {
 
