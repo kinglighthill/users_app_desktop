@@ -30,6 +30,7 @@ public class Tables {
     public static final String NOTE_SUBJECTS = "note_subjects";
     public static final String NOTE_TOPICS = "note_topics";
     public static final String NOTE_SUB_TOPICS = "note_sub_topics";
+    public static final String NOTE_SECTIONS = "note_sections";
 
 
     // User generated Tables

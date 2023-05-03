@@ -1,8 +1,10 @@
-package com.scholarly.utme.viewmodels.trivia_screens;
+package com.scholarly.utme.viewmodels.practice_screens;
 
-import com.scholarly.utme.controller.practice_screens.ResultScreenController;
 import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.Result;
+import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -11,17 +13,32 @@ import javafx.collections.ObservableList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TriviaQuizResultScreenVM implements ViewModel {
+import static com.scholarly.utme.controller.practice_screens.ResultScreenController.*;
+
+public class ResultScreenVM implements ViewModel, SceneLifecycle {
 
     private SimpleStringProperty averageScore = new SimpleStringProperty("0%");
     private SimpleStringProperty total = new SimpleStringProperty("0");
-    private ObservableList<PracticeScreenVM.Result> results = FXCollections.observableArrayList();
+    private ObservableList<Result> results = FXCollections.observableArrayList();
 
     private List<PQSubject> subjectList;
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions;
 
+    private View previousScreen;
 
-    public void processInitialData(ResultScreenController.InitialData initialData) {
+
+    @Override
+    public void onViewAdded() {
+
+    }
+
+    @Override
+    public void onViewRemoved() {
+
+    }
+
+    public void processInitialData(InitialData initialData) {
+        previousScreen = initialData.getView();
         results.clear();
         results.addAll(initialData.getResults());
 
@@ -42,7 +59,7 @@ public class TriviaQuizResultScreenVM implements ViewModel {
     }
 
 
-    public ObservableList<PracticeScreenVM.Result> getResults() {
+    public ObservableList<Result> getResults() {
         return results;
     }
 
@@ -64,5 +81,9 @@ public class TriviaQuizResultScreenVM implements ViewModel {
 
     public HashMap<String, PracticeScreenVM.SubjectQuestionsState> getSubjectsQuestions() {
         return subjectsQuestions;
+    }
+
+    public View getPreviousScreen() {
+        return previousScreen;
     }
 }

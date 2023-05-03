@@ -43,7 +43,6 @@ public class SubjectDao {
     private static final ObservableList<Subject> subjects;
     private static final ObservableList<ObjectiveSubject> objectiveSubjects;
     private static final ObservableList<TheorySubject> theorySubjects;
-
     private static final ObservableList<NoteSubject> noteSubjects;
 
     static {
@@ -138,8 +137,6 @@ public class SubjectDao {
                         rs.getInt(subjectIdColumn),
                         -1));
             }
-
-            System.out.println(TAG + "Got Note title -- " + noteSubjects.get(0).getTitle() + " with subjectId -- " + noteSubjects.get(0).getSubjectId());
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
