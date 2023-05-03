@@ -13,6 +13,11 @@
    <StackPane fx:id="noteLayout" prefHeight="800" prefWidth="1000" AnchorPane.topAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0">
 
       <BorderPane prefHeight="600.0" prefWidth="1000.0" StackPane.alignment="CENTER" >
+         <top>
+            <HBox>
+               <Label fx:id="topicTitle" text="Topic Title" />
+            </HBox>
+         </top>
 
          <center>
             <AnchorPane prefHeight="200.0" prefWidth="600.0" style="-fx-background-color: #E7F7E9;">

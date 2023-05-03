@@ -53,7 +53,7 @@ public class HelloApplication extends Application {
         if (firstTimeUser) {
             ViewSwitcher.showScreen(View.WELCOME_SCREEN);
         } else {
-            ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
         }
 
 

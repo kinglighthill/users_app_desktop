@@ -1,6 +1,7 @@
 package com.scholarly.utme.viewmodels.note_screens;
 
 import com.scholarly.utme.controller.note_screens.NotesScreenController.InitialData;
+import com.scholarly.utme.data.dao.newDb.SectionDao;
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.newDb.*;
@@ -32,7 +33,7 @@ public class NotesScreenVM implements ViewModel {
         topic = data.getTopic();
         selectedSubTopic.set(data.getSelectedSubTopic());
         subTopics.addAll(data.getSubTopics());
-        System.out.println(TAG + "Got Subtopics -> " + Helper.toString(subTopics));
+//        System.out.println(TAG + "Got Subtopics -> " + Helper.toString(subTopics));
 
         subTopics.forEach(subTopic -> {
 //            subTopicSections.put(subTopic.getId(), SectionDao.getSections("note_" + subject.getTableName() + "_sections", subTopic.getSectionId()));
@@ -40,6 +41,8 @@ public class NotesScreenVM implements ViewModel {
 //            subjectHighlights = HighlightsDao.getHighlights("note_" + subject.getTableName() + "_sections");
 //            subjectNotes = NoteDao.getNotes("note_" + subject.getTableName() + "_sections");
         });
+
+        noteSections.put(topic.getTopicId(), SectionDao.getNoteSectionsWithTopicId(topic.getTopicId()));
     }
 
 
@@ -146,5 +149,9 @@ public class NotesScreenVM implements ViewModel {
 
     public ObservableList<Note> getSubjectNotes() {
         return subjectNotes;
+    }
+
+    public HashMap<Integer, ObservableList<NoteSection>> getNoteSections() {
+        return noteSections;
     }
 }

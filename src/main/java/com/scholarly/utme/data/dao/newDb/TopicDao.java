@@ -56,7 +56,7 @@ public class TopicDao {
                         rs.getInt(subjectIdColumn)));
             }
 
-            System.out.println(TAG + "Got topics of size -> " + pqTopics.size());
+            System.out.println(TAG + "Got PQ topics of size -> " + pqTopics.size());
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(

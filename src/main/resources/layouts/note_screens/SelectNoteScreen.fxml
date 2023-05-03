@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 
 <BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.note_screens.SelectNoteController">
-    <!--<top>
+    <top>
         <ToolBar prefHeight="75.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER">
             <items>
                 <Button fx:id="backButton" mnemonicParsing="false" onMouseClicked="#backButtonClicked"/>
@@ -24,7 +24,7 @@
                 <Insets left="10.0" />
             </padding>
         </ToolBar>
-    </top>-->
+    </top>
 
     <center>
         <StackPane prefHeight="200.0" prefWidth="100.0">
@@ -71,6 +71,7 @@
                   </VBox>
                </children>
             </HBox>
+
             <Button fx:id="commenceButton" mnemonicParsing="false" text="Commence Study" textFill="WHITE" visible="false" style="-fx-background-color: #4BB036; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_RIGHT">
                <StackPane.margin>
                   <Insets bottom="30.0" right="30.0" />
@@ -79,6 +80,15 @@
                   <Insets bottom="15.0" left="30.0" right="30.0" top="15.0" />
                </padding>
             </Button>
+
+             <Button fx:id="quitButton" mnemonicParsing="false" text="Quit Study" textFill="WHITE" visible="false" style="-fx-background-color: #4BB036; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_LEFT">
+                 <StackPane.margin>
+                     <Insets bottom="30.0" right="30.0" />
+                 </StackPane.margin>
+                 <padding>
+                     <Insets bottom="15.0" left="30.0" right="30.0" top="15.0" />
+                 </padding>
+             </Button>
          </children>
         </StackPane>
     </center>

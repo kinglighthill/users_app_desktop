@@ -41,6 +41,7 @@ module com.scholarly.utme {
 
     opens com.scholarly.utme.ui.listcells to javafx.fxml;
     opens com.scholarly.utme.network.model to com.google.gson;
+    opens com.scholarly.utme.data.model.newDb.contentViewType to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.text to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.image to com.google.gson;
@@ -81,6 +82,9 @@ module com.scholarly.utme {
     opens layouts.audio_video_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts.settings_screens to de.saxsys.mvvmfx, javafx.fxml;
     opens layouts.account_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens layouts.note_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens layouts.practice_screens to de.saxsys.mvvmfx, javafx.fxml;
+    opens layouts.syllabus_screens to de.saxsys.mvvmfx, javafx.fxml;
 
     exports com.scholarly.utme.data.model.newDb;
     exports com.scholarly.utme.data.model.novels;

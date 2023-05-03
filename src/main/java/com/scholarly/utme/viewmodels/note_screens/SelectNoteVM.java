@@ -50,7 +50,7 @@ public class SelectNoteVM implements ViewModel {
         });
 
         noteTopics.forEach(topic -> {
-            noteSubTopics.put(topic.getSubjectId(), SubTopicDao.getSubTopicsForTopic(topic.getTopicId()));
+            noteSubTopics.put(topic.getTopicId(), SubTopicDao.getSubTopicsForTopic(topic.getTopicId()));
         });
 
         subjects.forEach(subject -> {

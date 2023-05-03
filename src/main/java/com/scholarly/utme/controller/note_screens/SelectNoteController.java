@@ -16,6 +16,9 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
@@ -152,7 +155,9 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                     VBox vBox = new VBox();
                     TitledPane titledPane = new TitledPane(topic.getTitle(), vBox);
 
-                    viewModel.getNoteSubTopics().get(newValue.getId()).forEach(subTopic -> {
+//                    System.out.println("Subtopics for note with subject id -> " + newValue.getId() + " and topic id -> " + topic.getTopicId() + " is " + Helper.toString(viewModel.getNoteSubTopics().get(newValue.getId())));
+//                    System.out.println(TAG + "Subtopics for note with subject id -> " + newValue.getId() + " and topic id -> " + topic.getTopicId() + " is " + Helper.toString(viewModel.getNoteSubTopics().get(topic.getTopicId())));
+                    viewModel.getNoteSubTopics().get(topic.getTopicId()).forEach(subTopic -> {
                         if (subTopic.getTopicId() == topic.getTopicId()) {
                             ToggleButton button = new ToggleButton();
                             Pair<NoteTopic, NoteSubTopic> data = new Pair<>(topic, subTopic);
@@ -215,16 +220,16 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 //        });
 
         commenceButton.setOnAction(event -> {
-            System.out.println(TAG + "SelectedNoteSubject -> " + Helper.toString(viewModel.getSelectedNoteSubject()));
-            System.out.println(TAG + "SelectedNoteTopic -> " + Helper.toString(viewModel.getSelectedNoteTopic()));
-            System.out.println(TAG + "SelectedNoteSubtopics -> " + Helper.toString(viewModel.getNoteSubTopics().get(viewModel.getSelectedNoteTopic().getSubjectId())));
-            System.out.println(TAG + "SelectedNoteSubtopic -> " + Helper.toString(viewModel.getSelectedNoteSubTopic())
-            );
+//            System.out.println(TAG + "SelectedNoteSubject -> " + Helper.toString(viewModel.getSelectedNoteSubject()));
+//            System.out.println(TAG + "SelectedNoteTopic -> " + Helper.toString(viewModel.getSelectedNoteTopic()));
+//            System.out.println(TAG + "SelectedNoteSubtopics -> " + Helper.toString(viewModel.getNoteSubTopics().get(viewModel.getSelectedNoteTopic().getTopicId())));
+//            System.out.println(TAG + "SelectedNoteSubtopic -> " + Helper.toString(viewModel.getSelectedNoteSubTopic()));
+
             NotesScreenController.InitialData data = new NotesScreenController.InitialData(
                     viewModel.getSelectedNoteSubject(),
                     viewModel.getSelectedNoteTopic(),
                     viewModel.getNoteSubTopics().get(
-                            viewModel.getSelectedNoteTopic().getSubjectId()
+                            viewModel.getSelectedNoteTopic().getTopicId()
                     ).stream().filter(subTopic -> subTopic.getTopicId() == viewModel.getSelectedNoteTopic().getTopicId()).collect(Collectors.toList()),
                     viewModel.getSelectedNoteSubTopic()
             );
@@ -236,11 +241,15 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
     }
 
     private void initializeViews() {
-
+        ImageView backButtonImage = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
+        backButtonImage.setFitHeight(30);
+        backButtonImage.setFitWidth(35);
+        backButton.setBackground(Background.EMPTY);
+        backButton.setGraphic(backButtonImage);
     }
 
     private void initializeFonts() {
-        //        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
+        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 24));
         subjectsTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
         topicsTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
         emptyTopicListLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
@@ -249,7 +258,6 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
 
     public void backButtonClicked() {
-        ViewSwitcher.passData("studyNotesPanel");
-        ViewSwitcher.showScreen(View.HOME_SCREEN);
+        ViewSwitcher.showScreen(View.LANDING_SCREEN);
     }
 }
