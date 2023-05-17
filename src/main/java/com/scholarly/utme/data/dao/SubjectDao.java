@@ -1,6 +1,7 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.DatabaseService;
+import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.NoteSubject;
 import com.scholarly.utme.data.model.newDb.ObjectiveSubject;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class SubjectDao {
     public static final String TAG = "SubjectDao: ";
@@ -126,7 +128,8 @@ public class SubjectDao {
     }
 
     private static void updateNoteSubjectsFromDb() {
-        String query = "SELECT " + Tables.NOTE_SUBJECTS + "." + idColumn + "," + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + "," + Tables.SUBJECTS + "." + titleColumn + " FROM " + Tables.NOTE_SUBJECTS + " JOIN " + Tables.SUBJECTS + " WHERE " + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + " = " + Tables.SUBJECTS + "." + idColumn;
+        String query = "SELECT " + Tables.NOTE_SUBJECTS + "." + idColumn + "," + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + "," + Tables.SUBJECTS + "." + titleColumn + " FROM " + Tables.SUBJECTS + " JOIN " + Tables.NOTE_SUBJECTS + " WHERE " + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + " = " + Tables.SUBJECTS + "." + idColumn;
+        System.out.println(TAG + "Note Subjects Query -> " + query);
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
             noteSubjects.clear();
@@ -171,6 +174,13 @@ public class SubjectDao {
                     LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
             subjects.clear();
         }
+    }
+
+    public static int getPQSubjectId(int subjectId) {
+        for (ObjectiveSubject subject : objectiveSubjects) {
+            if (subject.getSubjectId() == subjectId) return subject.getId();
+        }
+        return 0;
     }
 
     public static ObservableList<Subject> getSubjects() {

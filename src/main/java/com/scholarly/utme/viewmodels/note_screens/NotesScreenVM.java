@@ -1,17 +1,21 @@
 package com.scholarly.utme.viewmodels.note_screens;
 
 import com.scholarly.utme.controller.note_screens.NotesScreenController.InitialData;
+import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
+import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.data.dao.newDb.SectionDao;
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
+import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.newDb.*;
-import com.scholarly.utme.util.Helper;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class NotesScreenVM implements ViewModel {
     private static final String TAG = "NotesScreenVM: ";
@@ -25,6 +29,7 @@ public class NotesScreenVM implements ViewModel {
     HashMap<Integer, ObservableList<NoteSection>> noteSections = new HashMap<>();
     ObservableList<Highlights> subjectHighlights = FXCollections.observableArrayList();
     ObservableList<Note> subjectNotes = FXCollections.observableArrayList();
+    ObservableList<ObjectiveQuestion> noteSubjectQuestions = FXCollections.observableArrayList();
 
     public NotesScreenVM() {}
 
@@ -33,6 +38,7 @@ public class NotesScreenVM implements ViewModel {
         topic = data.getTopic();
         selectedSubTopic.set(data.getSelectedSubTopic());
         subTopics.addAll(data.getSubTopics());
+        noteSubjectQuestions.addAll(ObjectiveQuestionDao.getQuestionsWithNoteSubjectId(getPQSubjectId(data.getSubject().getSubjectId())));
 //        System.out.println(TAG + "Got Subtopics -> " + Helper.toString(subTopics));
 
         subTopics.forEach(subTopic -> {
@@ -42,7 +48,7 @@ public class NotesScreenVM implements ViewModel {
 //            subjectNotes = NoteDao.getNotes("note_" + subject.getTableName() + "_sections");
         });
 
-        noteSections.put(topic.getTopicId(), SectionDao.getNoteSectionsWithTopicId(topic.getTopicId()));
+        noteSections.put(topic.getId(), SectionDao.getNoteSectionsWithTopicId(topic.getId()));
     }
 
 
@@ -153,5 +159,15 @@ public class NotesScreenVM implements ViewModel {
 
     public HashMap<Integer, ObservableList<NoteSection>> getNoteSections() {
         return noteSections;
+    }
+
+    public ObjectiveQuestion getQuestion(int yearId, int questionNum) {
+        return noteSubjectQuestions.stream().filter(objectiveQuestion ->
+            objectiveQuestion.getYearId() == yearId && objectiveQuestion.getQuestionNumber() == questionNum
+        ).collect(Collectors.toList()).get(0);
+    }
+
+    private int getPQSubjectId(int noteSubjectId) {
+        return SubjectDao.getPQSubjectId(noteSubjectId);
     }
 }

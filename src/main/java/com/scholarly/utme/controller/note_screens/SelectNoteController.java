@@ -146,6 +146,7 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         });
 
         viewModel.selectedNoteSubjectProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(TAG + "Selected Note Subject -> " + Helper.toString(newValue));
             topicListToggleGroup.getToggles().clear();
             topicListVBox.getChildren().clear();
 
@@ -157,8 +158,8 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
 //                    System.out.println("Subtopics for note with subject id -> " + newValue.getId() + " and topic id -> " + topic.getTopicId() + " is " + Helper.toString(viewModel.getNoteSubTopics().get(newValue.getId())));
 //                    System.out.println(TAG + "Subtopics for note with subject id -> " + newValue.getId() + " and topic id -> " + topic.getTopicId() + " is " + Helper.toString(viewModel.getNoteSubTopics().get(topic.getTopicId())));
-                    viewModel.getNoteSubTopics().get(topic.getTopicId()).forEach(subTopic -> {
-                        if (subTopic.getTopicId() == topic.getTopicId()) {
+                    viewModel.getNoteSubTopics().get(topic.getId()).forEach(subTopic -> {
+                        if (subTopic.getTopicId() == topic.getId()) {
                             ToggleButton button = new ToggleButton();
                             Pair<NoteTopic, NoteSubTopic> data = new Pair<>(topic, subTopic);
                             button.setUserData(data);
@@ -229,8 +230,8 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                     viewModel.getSelectedNoteSubject(),
                     viewModel.getSelectedNoteTopic(),
                     viewModel.getNoteSubTopics().get(
-                            viewModel.getSelectedNoteTopic().getTopicId()
-                    ).stream().filter(subTopic -> subTopic.getTopicId() == viewModel.getSelectedNoteTopic().getTopicId()).collect(Collectors.toList()),
+                            viewModel.getSelectedNoteTopic().getId()
+                    ).stream().filter(subTopic -> subTopic.getTopicId() == viewModel.getSelectedNoteTopic().getId()).collect(Collectors.toList()),
                     viewModel.getSelectedNoteSubTopic()
             );
             ViewSwitcher.passData(data);

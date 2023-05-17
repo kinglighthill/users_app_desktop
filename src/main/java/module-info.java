@@ -28,6 +28,10 @@ module com.scholarly.utme {
     requires okhttp3.logging;
     requires jdk.httpserver;
     requires com.fasterxml.jackson.databind;
+    requires org.commonmark;
+    requires org.jsoup;
+    requires latex.maven.plugin;
+    requires latex.converter;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;
@@ -87,6 +91,7 @@ module com.scholarly.utme {
     opens layouts.syllabus_screens to de.saxsys.mvvmfx, javafx.fxml;
 
     exports com.scholarly.utme.data.model.newDb;
+    exports com.scholarly.utme.data.model.newDb.contentType;
     exports com.scholarly.utme.data.model.novels;
     exports com.scholarly.utme.network.model;
     exports com.scholarly.utme.controller.landing_screens;

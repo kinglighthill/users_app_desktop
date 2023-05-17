@@ -48,7 +48,7 @@ public class SectionDao {
     public static ObservableList<NoteSection> getNoteSectionsWithTopicId(int topicId) {
         ObservableList<NoteSection> noteSections = FXCollections.observableArrayList();
 
-        String query = "SELECT * FROM " + Tables.NOTE_SECTIONS + " WHERE topic_id = " + topicId;
+        String query = "SELECT * FROM " + Tables.NOTE_SECTIONS + " WHERE topic_id = " + topicId + " ORDER BY " + idColumn;
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
             noteSections.clear();
@@ -67,7 +67,7 @@ public class SectionDao {
 
                 noteSections.add(section);
             }
-            System.out.println(TAG + "Got Note sections for topic Id " + topicId + " -> " + Helper.toString(noteSections));
+//            System.out.println(TAG + "Got Note sections for topic Id " + topicId + " -> " + Helper.toString(noteSections));
             return noteSections;
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
