@@ -2,13 +2,13 @@ package com.scholarly.utme.data.model.newDb;
 
 public class SyllabusTopic {
     private int id;
-    private String title;
+    private int sectionId;
     private int categoryId;
     private int order;
 
-    public SyllabusTopic(int id, String title, int subjectId, int order) {
+    public SyllabusTopic(int id, int sectionId, int subjectId, int order) {
         this.id = id;
-        this.title = title;
+        this.sectionId = sectionId;
         this.categoryId = subjectId;
         this.order = order;
     }
@@ -17,8 +17,8 @@ public class SyllabusTopic {
         return id;
     }
 
-    public String getTitle() {
-        return title;
+    public int getSectionId() {
+        return sectionId;
     }
 
     public int getCategoryId() {

@@ -1,11 +1,16 @@
 package com.scholarly.utme.controller.syllabus_screens;
 
 import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.data.model.newDb.ContentViewTypes;
 import com.scholarly.utme.data.model.newDb.SyllabusCategory;
+import com.scholarly.utme.data.model.newDb.SyllabusSubject;
 import com.scholarly.utme.data.model.newDb.SyllabusTopic;
+import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
+import com.scholarly.utme.data.model.newDb.contentViewType.HeaderViewType;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.syllabus_screens.SyllabusScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -22,6 +27,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import okhttp3.internal.http2.Header;
 
 import java.net.URL;
 import java.util.List;
@@ -29,6 +35,7 @@ import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/syllabus_screens/SyllabusScreen.fxml")
 public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Initializable {
+    private static final String TAG = "SyllabusScreenController: ";
 
     @FXML
     private VBox topicVBox, tabTopicsVBox;
@@ -72,57 +79,85 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
 
         ToggleGroup topicListToggleGroup = new ToggleGroup();
 
-        viewModel.getTopics().forEach(topic -> {
-            ToggleButton button = new ToggleButton();
-            button.setUserData(topic);
-            button.setMinHeight(48);
-            button.setMaxHeight(48);
-            button.setPadding(new Insets(0, 0, 0, 20));
-            button.setAlignment(Pos.BASELINE_LEFT);
-            button.setMaxWidth(Double.MAX_VALUE);
-            button.setText(topic.getTitle());
-            button.setStyle(IDLE_BUTTON_STYLE);
-            topicListToggleGroup.getToggles().add(button);
+        viewModel.getSyllabusCategories().forEach(syllabusCategory -> {
+            VBox categoryContent = new VBox(5.0);
 
-            button.selectedProperty().addListener(((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    viewModel.setSelectedTopic(topic);
+            Label categoryTitle = new Label(syllabusCategory.getTitle());
+            categoryContent.getChildren().add(categoryTitle);
 
-                    button.setStyle(PRESSED_STYLE);
-                    button.setTextFill(Color.WHITE);
-                }else {
-                    button.setStyle(IDLE_BUTTON_STYLE);
-                    button.setTextFill(Color.BLACK);
-                }
+            viewModel.getTopics().forEach(topic -> {
 
-            }));
+                viewModel.getSyllabusSections().get(syllabusCategory.getSubjectId()).forEach(section -> {
+                    if (topic.getSectionId() == section.getId()) {
+                        ContentViewType contentViewType = ContentViewTypes.convert(section);
+                        HeaderViewType headerViewType = (HeaderViewType) contentViewType;
 
-            if (topic == viewModel.getSelectedTopic()) {
-                topicListToggleGroup.selectToggle(button);
-            }
+                        Label topicHeader = new Label(headerViewType.getText());
 
-            topicVBox.getChildren().add(button);
-
-            Label topicItem = new Label();
-            topicItem.setText(topic.getTitle());
-            topicItem.setMinHeight(50);
-
-            topicItem.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
-            topicItem.setPadding(new Insets(0, 0, 0, 10));
-            Separator separator = new Separator();
-            tabTopicsVBox.getChildren().addAll(topicItem, separator);
-
-            viewModel.getSubtopics().forEach((s, subTopics) -> {
-               subTopics.stream().filter(subTopic -> subTopic.getTopicId() == topic.getId()).forEach(topicSubtopic -> {
-                   Label subtopicItem = new Label(topicSubtopic.getTitle());
-                   subtopicItem.setPadding(new Insets(10, 0, 10, 10));
-                   subtopicItem.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
-                   Separator separator2 = new Separator();
-
-                   tabTopicsVBox.getChildren().addAll(subtopicItem, separator2);
-               });
+                        categoryContent.getChildren().add(topicHeader);
+                    }
+                });
 
             });
+
+            tabTopicsVBox.getChildren().add(categoryContent);
+
+        });
+
+        viewModel.getTopics().forEach(topic -> {
+            System.out.println(TAG + "Got Topic -> " + Helper.toString(topic));
+
+
+//            ToggleButton button = new ToggleButton();
+//            button.setUserData(topic);
+//            button.setMinHeight(48);
+//            button.setMaxHeight(48);
+//            button.setPadding(new Insets(0, 0, 0, 20));
+//            button.setAlignment(Pos.BASELINE_LEFT);
+//            button.setMaxWidth(Double.MAX_VALUE);
+//            button.setText(topic.getTitle());
+//            button.setStyle(IDLE_BUTTON_STYLE);
+//            topicListToggleGroup.getToggles().add(button);
+//
+//            button.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+//                if (newValue) {
+//                    viewModel.setSelectedTopic(topic);
+//
+//                    button.setStyle(PRESSED_STYLE);
+//                    button.setTextFill(Color.WHITE);
+//                }else {
+//                    button.setStyle(IDLE_BUTTON_STYLE);
+//                    button.setTextFill(Color.BLACK);
+//                }
+//
+//            }));
+//
+//            if (topic == viewModel.getSelectedTopic()) {
+//                topicListToggleGroup.selectToggle(button);
+//            }
+//
+//            topicVBox.getChildren().add(button);
+//
+//            Label topicItem = new Label();
+//            topicItem.setText(topic.getTitle());
+//            topicItem.setMinHeight(50);
+//
+//            topicItem.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+//            topicItem.setPadding(new Insets(0, 0, 0, 10));
+//            Separator separator = new Separator();
+//            tabTopicsVBox.getChildren().addAll(topicItem, separator);
+//
+//            viewModel.getSubtopics().forEach((s, subTopics) -> {
+//               subTopics.stream().filter(subTopic -> subTopic.getTopicId() == topic.getId()).forEach(topicSubtopic -> {
+//                   Label subtopicItem = new Label(topicSubtopic.getTitle());
+//                   subtopicItem.setPadding(new Insets(10, 0, 10, 10));
+//                   subtopicItem.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+//                   Separator separator2 = new Separator();
+//
+//                   tabTopicsVBox.getChildren().addAll(subtopicItem, separator2);
+//               });
+//
+//            });
 
         });
 
@@ -138,6 +173,7 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
     }
 
     private void initializeViews() {
+        subjectLabel.setText(viewModel.getSubject().getTitle());
         ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/notes_back_icon_2x.png").toString()));
         backIcon.setFitWidth(20);
         backIcon.setFitHeight(20);
@@ -146,10 +182,10 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
         syllabusBackButton.setBackground(Background.EMPTY);
         syllabusBackButton.setGraphic(backIcon);
 
-        searchIcon.setImage(new Image(getClass().getResource("/drawable/note_search_icon_1.5x.png").toString()));
-        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon_1.5x.png").toString()));
-        settingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
-        notesImage.setImage(new Image(getClass().getResource("/drawable/notes.png").toString()));
+//        searchIcon.setImage(new Image(getClass().getResource("/drawable/note_search_icon_1.5x.png").toString()));
+//        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon_1.5x.png").toString()));
+//        settingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
+//        notesImage.setImage(new Image(getClass().getResource("/drawable/notes.png").toString()));
 
         syllabusTabPane.widthProperty().addListener((observable, oldValue, newValue) -> {
             syllabusTabPane.setTabMinWidth((Double) newValue/3.24);
@@ -159,7 +195,7 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
 
     private void initializeFonts() {
         subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        topicsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+//        topicsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
     }
 
     private void setupObjectivesTab() {
@@ -193,25 +229,25 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
 
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
-        System.out.println("Got data with subject -> " + data.getSubject().getSubjectName() + " and topic -> " + data.getSelectedSyllabusTopic().getTitle());
+//        System.out.println("Got data with subject -> " + data.getSubject().getSubjectName() + " and topic -> " + data.getSelectedSyllabusTopic().getTitle());
         return data;
     }
 
 
     public static class InitialData {
-        private Subject subject;
+        private SyllabusSubject subject;
         private SyllabusCategory category;
+        private List<SyllabusCategory> syllabusCategories;
         private List<SyllabusTopic> syllabusTopics;
-        private SyllabusTopic selectedSyllabusTopic;
 
-        public InitialData(Subject subject, SyllabusCategory category, List<SyllabusTopic> syllabusTopics, SyllabusTopic selectedSyllabusTopic) {
+        public InitialData(SyllabusSubject subject, SyllabusCategory category, List<SyllabusCategory> syllabusCategories, List<SyllabusTopic> syllabusTopics) {
             this.subject = subject;
             this.category = category;
+            this.syllabusCategories = syllabusCategories;
             this.syllabusTopics = syllabusTopics;
-            this.selectedSyllabusTopic = selectedSyllabusTopic;
         }
 
-        public Subject getSubject() {
+        public SyllabusSubject getSubject() {
             return subject;
         }
 
@@ -223,8 +259,9 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
             return syllabusTopics;
         }
 
-        public SyllabusTopic getSelectedSyllabusTopic() {
-            return selectedSyllabusTopic;
+        public List<SyllabusCategory> getSyllabusCategories() {
+            return syllabusCategories;
         }
+
     }
 }

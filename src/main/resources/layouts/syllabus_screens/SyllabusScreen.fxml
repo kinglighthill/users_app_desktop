@@ -17,31 +17,31 @@
                 <center>
                     <StackPane prefHeight="200.0" prefWidth="600.0" style="-fx-background-color: #E7F7E9;">
                         <HBox prefHeight="200" prefWidth="200" VBox.vgrow="ALWAYS">
-                            <VBox prefHeight="200" prefWidth="250" VBox.vgrow="ALWAYS">
-                                <children>
-                                    <HBox spacing="20" alignment="CENTER_LEFT" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
-                                        <children>
-                                            <ImageView fx:id="notesImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                                <HBox.margin>
-                                                    <Insets left="20.0" />
-                                                </HBox.margin>
-                                            </ImageView>
-                                            <Label fx:id="topicsLabel" alignment="CENTER" text="Topics" textFill="#105801"/>
-                                        </children>
+<!--                            <VBox prefHeight="200" prefWidth="250" VBox.vgrow="ALWAYS">-->
+<!--                                <children>-->
+<!--                                    <HBox spacing="20" alignment="CENTER_LEFT" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">-->
+<!--                                        <children>-->
+<!--                                            <ImageView fx:id="notesImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">-->
+<!--                                                <HBox.margin>-->
+<!--                                                    <Insets left="20.0" />-->
+<!--                                                </HBox.margin>-->
+<!--                                            </ImageView>-->
+<!--                                            <Label fx:id="topicsLabel" alignment="CENTER" text="Topics" textFill="#105801"/>-->
+<!--                                        </children>-->
 
-                                        <padding>
-                                            <Insets bottom="20.0" top="20.0" />
-                                        </padding>
-                                    </HBox>
-                                    <Line endX="190.0" startX="-100.0" stroke="#ededed" strokeWidth="5.0" />
+<!--                                        <padding>-->
+<!--                                            <Insets bottom="20.0" top="20.0" />-->
+<!--                                        </padding>-->
+<!--                                    </HBox>-->
+<!--                                    <Line endX="190.0" startX="-100.0" stroke="#ededed" strokeWidth="5.0" />-->
 
-                                    <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                                        <content>
-                                            <VBox fx:id="topicVBox" spacing="5" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" VBox.vgrow="ALWAYS"/>
-                                        </content>
-                                    </ScrollPane>
-                                </children>
-                            </VBox>
+<!--                                    <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">-->
+<!--                                        <content>-->
+<!--                                            <VBox fx:id="topicVBox" spacing="5" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" VBox.vgrow="ALWAYS"/>-->
+<!--                                        </content>-->
+<!--                                    </ScrollPane>-->
+<!--                                </children>-->
+<!--                            </VBox>-->
 
                             <ScrollPane fx:id="syllabusScrollPane" fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
 
@@ -105,7 +105,7 @@
                             </HBox.margin>
                         </Label>
 
-                        <Region prefWidth="60.0" HBox.hgrow="ALWAYS" />
+                        <!--<Region prefWidth="60.0" HBox.hgrow="ALWAYS" />
                         <StackPane prefHeight="30" prefWidth="650" StackPane.alignment="CENTER" HBox.hgrow="ALWAYS" >
                             <TextField fx:id="searchTextField" prefHeight="35" promptText="Search Notes" prefWidth="650" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5;" />
                             <ImageView fx:id="searchIcon" StackPane.alignment="CENTER_RIGHT" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
@@ -127,7 +127,7 @@
                             <padding>
                                 <Insets bottom="12.0" left="20.0" right="20.0" top="15.0" />
                             </padding>
-                        </HBox>
+                        </HBox>-->
 
                         <padding>
                             <Insets bottom="10.0" top="10.0" />

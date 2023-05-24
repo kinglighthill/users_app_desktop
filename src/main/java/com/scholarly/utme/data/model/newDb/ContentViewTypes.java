@@ -80,6 +80,13 @@ public enum ContentViewTypes {
         return null;
     }
 
+    public static ContentViewType convert(SyllabusSection section) {
+        List<ContentViewTypes> contentViewTypesList = Arrays.stream(ContentViewTypes.values()).collect(Collectors.toList());
+
+        return contentViewTypesList.get(0).getContentType(section.getContent());
+
+    }
+
     private interface Convert {
         ContentViewType convert(String content);
     }
