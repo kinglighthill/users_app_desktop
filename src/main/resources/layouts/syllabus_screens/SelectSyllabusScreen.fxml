@@ -9,6 +9,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import jidefx.scene.control.field.popup.ValuesPopupContent?>
 <BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.syllabus_screens.SelectSyllabusController">
 
     <top>
@@ -30,6 +32,49 @@
         </ToolBar>
     </top>
 
+    <right>
+        <StackPane fx:id="sectionLayout" prefHeight="100" prefWidth="350" style="-fx-background-color: #FFFFFF">
+            <children>
+                <VBox spacing="15" fx:id="sectionPane" style="-fx-background-color: #FFFFFF" visible="false" StackPane.alignment="TOP_CENTER">
+                    <StackPane>
+                        <Label fx:id="topicTitle" text="Cell structure and functions" StackPane.alignment="CENTER_LEFT">
+                            <padding>
+                                <Insets right="30.0"/>
+                            </padding>
+                        </Label>
+                        <ImageView fx:id="sectionLayoutCloseIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_RIGHT"/>
+                    </StackPane>
+
+                    <HBox spacing="35.0" alignment="CENTER">
+                        <VBox spacing="5" alignment="CENTER">
+                            <Label fx:id="objectivesTab" text="Objectives"/>
+                            <Line strokeWidth="5.0" stroke="#12AF20" endX="60.0"/>
+                        </VBox>
+                        <VBox spacing="5" alignment="CENTER">
+                            <Label fx:id="contentTab" text="Content" disable="true"/>
+                            <Line strokeWidth="5.0" stroke="#12AF20" endX="60.0" visible="false"/>
+                        </VBox>
+                        <VBox spacing="5" alignment="CENTER">
+                            <Label fx:id="evaluationTab" text="Evaluation" disable="true"/>
+                            <Line strokeWidth="5.0" stroke="#12AF20" endX="60.0" visible="false"/>
+                        </VBox>
+                    </HBox>
+
+                    <Label fx:id="sectionContent"/>
+
+                    <StackPane.margin>
+                        <Insets topRightBottomLeft="10.0"/>
+                    </StackPane.margin>
+                    <padding>
+                        <Insets topRightBottomLeft="15.0"/>
+                    </padding>
+                </VBox>
+                <Label fx:id="emptySectionText" text="Select a topic to view more details" StackPane.alignment="CENTER"/>
+            </children>
+        </StackPane>
+
+    </right>
+
     <center>
         <StackPane prefHeight="200.0" prefWidth="100.0">
             <children>
@@ -43,10 +88,14 @@
                                         <Insets bottom="20.0" left="20.0" top="20.0" />
                                     </padding>
                                 </Label>
-                                <Region prefHeight="5.0" prefWidth="200.0" />
+<!--                                <Region prefHeight="5.0" prefWidth="200.0" />-->
                                 <ScrollPane fx:id="subjectListScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-border-color: #EDEDED;" VBox.vgrow="ALWAYS">
                                     <content>
-                                        <VBox fx:id="subjectListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #F7F7F7;" />
+                                        <VBox fx:id="subjectListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #FFFFFF;">
+                                            <padding>
+                                                <Insets left="10" right="10"/>
+                                            </padding>
+                                        </VBox>
                                     </content>
                                 </ScrollPane>
                             </children>
@@ -58,7 +107,7 @@
                             <TabPane fx:id="syllabusTabPane" tabClosingPolicy="UNAVAILABLE" prefHeight="150" prefWidth="600" tabMinHeight="50" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF;">
 
                                 <tabs>
-                                    <Tab fx:id="topicsTab" text="Topic">
+                                    <Tab fx:id="topicsTab" text="Topics">
                                         <content>
                                             <ScrollPane fx:id="syllabusScrollPane" fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
                                                 <content>
@@ -75,9 +124,27 @@
                                         </content>
                                     </Tab>
 
-                                    <Tab fx:id="genObjectiveTab" text="General Objectives"/>
+                                    <Tab fx:id="genObjectiveTab" text="General Objectives">
+                                        <ScrollPane fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                                            <content>
+                                                <Label fx:id="objectivesLabel"/>
+                                            </content>
+                                            <padding>
+                                                <Insets bottom="15"/>
+                                            </padding>
+                                        </ScrollPane>
+                                    </Tab>
 
-                                    <Tab fx:id="recTextsTab" text="Recommended Texts"/>
+                                    <Tab fx:id="recTextsTab" text="Recommended Texts">
+                                        <ScrollPane fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                                            <content>
+                                                <Label fx:id="recTextLabel"/>
+                                            </content>
+                                            <padding>
+                                                <Insets bottom="15"/>
+                                            </padding>
+                                        </ScrollPane>
+                                    </Tab>
 
                                 </tabs>
 
@@ -85,6 +152,8 @@
 
                             <Label fx:id="emptySyllabusListLabel" text="Select a Subject" />
                         </StackPane>
+
+                        <Region prefHeight="200.0" prefWidth="5.0"/>
 
 <!--                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">-->
 <!--                            <children>-->

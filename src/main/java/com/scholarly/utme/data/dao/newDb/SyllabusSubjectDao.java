@@ -29,6 +29,8 @@ public class SyllabusSubjectDao {
     private static final String subjectIdColumn = "subject_id";
     private static final String orderColumn = "order";
     private static final String titleColumn = "title";
+    private static final String shortTitleColumn = "short_title";
+    private static final String colorCodeColumn = "color_code";
 
     private static final ObservableList<SyllabusSubject> syllabusSubjects;
 
@@ -39,6 +41,7 @@ public class SyllabusSubjectDao {
 
     private static void updateSyllabusSubjectsFromDB() {
         String query = "SELECT * FROM " + Tables.SYLLABUS_SUBJECTS + " JOIN " + Tables.SUBJECTS + " ON " + Tables.SYLLABUS_SUBJECTS + ".subject_id = " + Tables.SUBJECTS + "._id ORDER BY " + "\"order\"";
+        System.out.println("Syllabus Subjects Query -- " + query);
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
             syllabusSubjects.clear();
@@ -49,6 +52,8 @@ public class SyllabusSubjectDao {
                         rs.getString(recTextsColumn),
                         rs.getInt(subjectIdColumn),
                         rs.getString(titleColumn),
+                        rs.getString(shortTitleColumn),
+                        rs.getString(colorCodeColumn),
                         rs.getInt(orderColumn)));
             }
         } catch (Exception e) {
