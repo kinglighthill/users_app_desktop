@@ -1,8 +1,10 @@
 package com.scholarly.utme.data.dao.newDb;
 
+import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.newDb.SyllabusCategory;
 import com.scholarly.utme.data.model.newDb.SyllabusTopic;
 import com.scholarly.utme.data.util.SyllabusDatabase;
+import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,42 +12,47 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class SyllabusTopicDao {
+    private static final String TAG = "SyllabusTopicDao: ";
 
+    private static final DatabaseService databaseService = new DatabaseService();
     private static final String idColumn = "_id";
-    private static final String titleColumn = "title";
+    private static final String sectionColumn = "section_id";
     private static final String categoryColumn = "category_id";
     private static final String orderColumn = "order";
 
-    public static ObservableList<SyllabusTopic> getSyllabusTopics(String tableName) {
-        ObservableList<SyllabusTopic> topics = FXCollections.observableArrayList();
+    private static ObservableList<SyllabusTopic> topics;
 
-        String query = "SELECT * FROM " + tableName;
+    static {
+        topics = FXCollections.observableArrayList();
+        updateSyllabusTopicsFromDb();
+    }
 
-        try(Connection connection = SyllabusDatabase.connect()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
+    private static void updateSyllabusTopicsFromDb() {
+
+        String query = "SELECT * FROM " + Tables.SYLLABUS_TOPICS;
+
+        try(ResultSet rs = databaseService.executeQuery(query)) {
             topics.clear();
             while (rs.next()){
                 topics.add(new SyllabusTopic(
                         rs.getInt(idColumn),
-                        rs.getString(titleColumn),
+                        rs.getInt(sectionColumn),
                         rs.getInt(categoryColumn),
                         rs.getInt(orderColumn)));
             }
             //System.out.println("Got category from DB" + tableName + ": " + categories);
-            return topics;
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load categories from database ");
+                    LocalDateTime.now() + ": Could not load syllabus topics from database because " + e.getMessage());
             topics.clear();
-
-            return null;
         }
     }
 
@@ -61,7 +68,7 @@ public class SyllabusTopicDao {
             while (rs.next()){
                 topics.add(new SyllabusTopic(
                         rs.getInt(idColumn),
-                        rs.getString(titleColumn),
+                        rs.getInt(sectionColumn),
                         rs.getInt(categoryColumn),
                         rs.getInt(orderColumn)));
             }
@@ -76,5 +83,15 @@ public class SyllabusTopicDao {
 
             return null;
         }
+    }
+
+    public ObservableList<SyllabusTopic> getSyllabusTopics() {
+        return FXCollections.unmodifiableObservableList(topics);
+    }
+
+    public static ObservableList<SyllabusTopic> getTopicsForCategory(int categoryId) {
+        return FXCollections.observableArrayList(topics.stream().filter(syllabusTopic ->
+                syllabusTopic.getCategoryId() == categoryId
+        ).collect(Collectors.toList()));
     }
 }

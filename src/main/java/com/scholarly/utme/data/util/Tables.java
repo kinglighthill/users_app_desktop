@@ -32,6 +32,12 @@ public class Tables {
     public static final String NOTE_SUB_TOPICS = "note_sub_topics";
     public static final String NOTE_SECTIONS = "note_sections";
 
+    // Syllabus Tables
+    public static final String SYLLABUS_SUBJECTS = "syllabus_subjects";
+    public static final String SYLLABUS_TOPICS = "syllabus_topics";
+    public static final String SYLLABUS_CATEGORIES = "syllabus_categories";
+    public static final String SYLLABUS_SECTIONS = "syllabus_sections";
+
 
     // User generated Tables
     public static final String BOOKMARKS_OBJECTIVE_QUESTIONS = "bookmarks_objective_questions";
