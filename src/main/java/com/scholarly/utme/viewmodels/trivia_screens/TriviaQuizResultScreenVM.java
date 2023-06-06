@@ -1,8 +1,8 @@
 package com.scholarly.utme.viewmodels.trivia_screens;
 
-import com.scholarly.utme.controller.ResultScreenController;
-import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.viewmodels.PracticeScreenVM;
+import com.scholarly.utme.controller.practice_screens.ResultScreenController;
+import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,7 +17,7 @@ public class TriviaQuizResultScreenVM implements ViewModel {
     private SimpleStringProperty total = new SimpleStringProperty("0");
     private ObservableList<PracticeScreenVM.Result> results = FXCollections.observableArrayList();
 
-    private List<Subject> subjectList;
+    private List<PQSubject> subjectList;
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions;
 
 
@@ -58,7 +58,7 @@ public class TriviaQuizResultScreenVM implements ViewModel {
         return averageScore;
     }
 
-    public List<Subject> getSubjectList() {
+    public List<PQSubject> getSubjectList() {
         return subjectList;
     }
 

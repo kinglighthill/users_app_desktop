@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller.account_screens;
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.account_screens.AccountProfileScreenVM;
@@ -58,7 +59,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         });
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData("accountScreen");
+            ViewSwitcher.passData(new LandingScreenController.InitialData("accountScreen"));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
@@ -71,7 +72,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         cameraImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/camera_icon.png").toString()));
         keyImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/key_icon.png").toString()));
         infoImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/info_icon.png").toString()));
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
 
         backButton.setBackground(Background.EMPTY);
     }

@@ -1,12 +1,11 @@
 package com.scholarly.utme.controller.landing_screens;
 
-import com.scholarly.utme.controller.ResultScreenController;
-import com.scholarly.utme.data.model.Subject;
-import com.scholarly.utme.data.model.listItems.TestPerformanceItem;
+import com.scholarly.utme.controller.practice_screens.ResultScreenController;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.TestPerformanceListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.viewmodels.PracticeScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenPerformanceVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -93,16 +92,16 @@ public class LandingScreenPerformanceController implements FxmlView<LandingScree
         List<PracticeScreenVM.Result> results = new ArrayList<>();
         results.add(result);
 
-        Subject subject = new Subject(3, "english", "English Language", 50, null, null, null, null);
-        List<Subject> subjects = new ArrayList<>();
+        PQSubject subject = new PQSubject(3, 445, 30, 1, "English Language", "Eng", null);
+        List<PQSubject> subjects = new ArrayList<>();
         subjects.add(subject);
 
-        PracticeScreenVM.QuestionState questionState = new PracticeScreenVM.QuestionState(null, SubjectListItemVM.Type.OBJECTIVE, "3");
+        PracticeScreenVM.QuestionState questionState = new PracticeScreenVM.QuestionState(null, SubjectListItemVM.Type.OBJECTIVE, 1);
         List<PracticeScreenVM.QuestionState> questionStates = new ArrayList<>();
         questionStates.add(questionState);
 
         HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectQuestions = new HashMap<>();
-        subjectQuestions.put("english", new PracticeScreenVM.SubjectQuestionsState(4, questionStates));
+        subjectQuestions.put("Eng", new PracticeScreenVM.SubjectQuestionsState(4, questionStates));
 
         ResultScreenController.InitialData performance1 = new ResultScreenController.InitialData(results, subjects, subjectQuestions, View.LANDING_SCREEN);
 

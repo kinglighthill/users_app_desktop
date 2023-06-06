@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.skin.ProgressIndicatorSkin.IndeterminateSpinner.IndicatorPaths?>
-<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.scholarly.utme.controller.HomeScreenController" style="-fx-background-color: #FFFFFF">
    <left>
@@ -26,37 +23,14 @@
                   <Insets left="15"/>
                </padding>
             </ToggleButton>
+
              <ToggleButton fx:id="pastQuestionButton" text="Study Past Question" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0">
                 <padding>
                    <Insets left="15"/>
                 </padding>
              </ToggleButton>
+
             <ToggleButton fx:id="cbtGameButton" text="CBT Game" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-               <padding>
-                  <Insets left="15"/>
-               </padding>
-            </ToggleButton>
-            <ToggleButton fx:id="novelsButton" text="Novels" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-               <padding>
-                  <Insets left="15"/>
-               </padding>
-            </ToggleButton>
-             <ToggleButton fx:id="videosButton" text="Videos" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-                <padding>
-                   <Insets left="15"/>
-                </padding>
-             </ToggleButton>
-             <ToggleButton fx:id="audiosButton" text="Audios" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
-                <padding>
-                   <Insets left="15"/>
-                </padding>
-             </ToggleButton>
-             <ToggleButton fx:id="learningCenterButton" text="Learning Center" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0">
-                <padding>
-                   <Insets left="15"/>
-                </padding>
-             </ToggleButton>
-            <ToggleButton fx:id="studyNotesButton" text="Study Notes" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0" >
                <padding>
                   <Insets left="15"/>
                </padding>
@@ -64,12 +38,13 @@
          </children>
       </VBox>
    </left>
+
    <center>
       <Panel>
          <top>
             <HBox spacing="15" alignment="CENTER_LEFT">
                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9" onMouseClicked="#homeTextClicked"/>
-               <Label fx:id="pageTitle" text="CBT Practice" textFill="#034801"/>
+               <Label fx:id="pageTitle" textFill="#034801"/>
                <padding>
                   <Insets top="20" left="20" bottom="20"/>
                </padding>

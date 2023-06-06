@@ -38,9 +38,9 @@
                         </Label>
                         <TableView fx:id="questionOverviewTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="200.0">
                           <columns>
-                            <TableColumn fx:id="subjectColumn" text="Subject" style="-fx-background-color: #FFFFFF;" />
-                            <TableColumn fx:id="yearColumn" text="Year" style="-fx-background-color: #FFFFFF;"/>
-                              <TableColumn fx:id="questionsColumn" text="Questions" style="-fx-background-color: #FFFFFF;"/>
+                            <TableColumn fx:id="subjectColumn" text="Subject"/>
+                            <TableColumn fx:id="yearColumn" text="Year"/>
+                              <TableColumn fx:id="questionsColumn" text="Questions"/>
                           </columns>
                            <VBox.margin>
                               <Insets left="15.0" right="15.0" top="10.0" bottom="20.0" />
@@ -105,13 +105,14 @@
       </HBox>
    </right>
    <center>
-      <TabPane fx:id="tabMenu" prefHeight="200.0" prefWidth="200.0" tabMinHeight="50" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" style="-fx-background-color: #FFFFFF;" >
+      <TabPane fx:id="tabMenu" prefHeight="200.0" prefWidth="200.0" tabMinHeight="50" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab fx:id="objectiveTab" text="Objective">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="371.0" prefWidth="496.0" style="-fx-background-color: #FFFFFF;">
                      <children>
-                        <ListView fx:id="objectiveList" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ListView fx:id="objectiveList" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0"
+                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
               </AnchorPane>
             </content>
@@ -120,7 +121,8 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="theoryList" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ListView fx:id="theoryList" prefHeight="200.0" prefWidth="200.0"
+                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
               </AnchorPane>
             </content>

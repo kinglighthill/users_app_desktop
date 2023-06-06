@@ -1,13 +1,13 @@
 package com.scholarly.utme.controller.trivia_screens;
 
-import com.scholarly.utme.controller.ResultScreenController;
+import com.scholarly.utme.controller.practice_screens.ResultScreenController;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.listItems.TriviaParticipantItem;
 import com.scholarly.utme.ui.cellFactories.TriviaParticipantListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.PracticeScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.trivia_screens.TriviaQuizResultScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -149,7 +149,7 @@ public class TriviaQuizResultScreenController implements FxmlView<TriviaQuizResu
         showExplanationButton.setBackground(Background.EMPTY);
         backButton.setBackground(Background.EMPTY);
 
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
     }
 
     private void initializeFont() {

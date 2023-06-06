@@ -1,6 +1,7 @@
 package com.scholarly.utme.data.model.newDb.contentType;
 
 import com.google.gson.Gson;
+import com.scholarly.utme.data.model.newDb.NoteSection;
 import com.scholarly.utme.data.model.newDb.Section;
 import com.scholarly.utme.data.model.newDb.contentType.audio.AudioViewType;
 import com.scholarly.utme.data.model.newDb.contentType.cbt.CBTViewType;

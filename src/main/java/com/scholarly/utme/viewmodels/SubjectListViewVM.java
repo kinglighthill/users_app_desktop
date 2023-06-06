@@ -1,7 +1,6 @@
 package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.data.dao.SubjectDao;
-import com.scholarly.utme.data.dao.SubjectTheoryDao;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
@@ -18,29 +17,39 @@ import java.util.stream.Collectors;
 
 
 public class SubjectListViewVM implements ViewModel, SceneLifecycle {
+    private static final String TAG = "SubjectListViewVM:  ";
 
     private ObservableList<SubjectListItemVM> objectiveSubjects = FXCollections.observableArrayList();
     private ObservableList<SubjectListItemVM> theorySubjects = FXCollections.observableArrayList();
 
-    private Map<String, SubjectState> linkedHashMap = new LinkedHashMap<>();
-    private ObservableMap<String, SubjectState> selectedObjectiveSubjects = FXCollections.observableMap(linkedHashMap); // LinkedHashMap because it maintains insertion order
+    private Map<String, SubjectState> objectiveHashMap = new LinkedHashMap<>();
+    private ObservableMap<String, SubjectState> selectedObjectiveSubjects = FXCollections.observableMap(objectiveHashMap); // LinkedHashMap because it maintains insertion order
 
     public ObservableMap<String, SubjectState> getSelectedObjectiveSubjects() {
         return selectedObjectiveSubjects;
     }
 
+    private Map<String, SubjectState> theoryHashMap = new LinkedHashMap<>();
+
+    private ObservableMap<String, SubjectState> selectedTheorySubjects = FXCollections.observableMap(theoryHashMap);
+
     public ObservableMap<String, SubjectState> getSelectedTheorySubjects() {
         return selectedTheorySubjects;
     }
 
-    private ObservableMap<String, SubjectState> selectedTheorySubjects = FXCollections.observableHashMap();
+    private ObservableMap<String, Integer> selectedSubjectAllottedTime = FXCollections.observableHashMap();
+
+    public ObservableMap<String, Integer> getSelectedSubjectAllottedTime() {
+        return selectedSubjectAllottedTime;
+    }
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
 
     public SubjectListViewVM() {
-        objectiveSubjects.addAll(SubjectDao.getSubjects().stream().map(SubjectListItemVM::new).collect(Collectors.toList()));
-        theorySubjects.addAll(SubjectTheoryDao.getSubjectsTheory().stream().map(SubjectListItemVM::new).collect(Collectors.toList()));
+        objectiveSubjects.addAll(SubjectDao.getObjectiveSubjects().stream().map(SubjectListItemVM::new).collect(Collectors.toList()));
+
+        theorySubjects.addAll(SubjectDao.getTheorySubjects().stream().map(SubjectListItemVM::new).collect(Collectors.toList()));
 
         objectiveSubjects.forEach(vm -> {
             disposables.add(
@@ -50,16 +59,19 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
                             .subscribe(
                                     subjectState -> {
                                         if (subjectState.getSelected()) {
-                                            System.out.println("subject obj: " + subjectState.getSubject() + " selected.. adding to selected list in map");
-                                            selectedObjectiveSubjects.put(subjectState.getSubject().getTableName(), subjectState);
+                                            System.out.println(TAG + "subject obj: " + subjectState.getSubject() + " selected.. adding to selected list in map with allotted time -> " + subjectState.getSubject().getMinutesAllotted());
+                                            selectedObjectiveSubjects.put(subjectState.getSubject().getShortTitle(), subjectState);
+                                            selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAllotted());
 
-                                            System.out.println("Selected Objective Subjects: (Key Set) -> " + selectedObjectiveSubjects.keySet());
+                                            System.out.println(TAG + "Selected Objective Subjects: (Key Set) -> " + selectedObjectiveSubjects.keySet());
+                                            System.out.println(TAG + "Selected Objective Subjects Time Map: (Key Set) -> " + selectedSubjectAllottedTime.keySet() + " with values -> " + selectedSubjectAllottedTime.values());
+
                                           //  System.out.println("SubjectStates (shuffleQuestion): " + subjectState.getShuffleQuestions());
 
-
                                         } else {
-                                            System.out.println("subject obj unselected.. removing from selected list");
-                                            selectedObjectiveSubjects.remove(subjectState.getSubject().getTableName());
+                                            System.out.println(TAG + "subject obj: " + subjectState.getSubject() + " unselected.. removing from selected list");
+                                            selectedObjectiveSubjects.remove(subjectState.getSubject().getShortTitle());
+                                            selectedSubjectAllottedTime.remove(subjectState.getSubject().getShortTitle());
                                         }
                                     }
                             )
@@ -74,11 +86,16 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
                             .subscribe(
                                     subjectState -> {
                                         if (subjectState.getSelected()) {
-                                            System.out.println("subject theory selected.. adding to selected list");
-                                            selectedTheorySubjects.put(subjectState.getSubject().getTableName(), subjectState);
+                                            System.out.println(TAG + "subject theory: " + subjectState.getSubject() + " selected.. adding to selected list in map");
+                                            selectedTheorySubjects.put(subjectState.getSubject().getShortTitle(), subjectState);
+
+                                            selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAllotted());
+
+                                            System.out.println(TAG + "Selected Theory Subjects: (Key Set) -> " + selectedTheorySubjects.keySet());
                                         } else {
-                                            System.out.println("subject theory unselected.. removing from selected list");
-                                            selectedTheorySubjects.remove(subjectState.getSubject().getTableName());
+                                            System.out.println(TAG + "subject theory unselected.. removing from selected list");
+                                            selectedTheorySubjects.remove(subjectState.getSubject().getShortTitle());
+                                            selectedSubjectAllottedTime.remove(subjectState.getSubject().getShortTitle());
                                         }
                                     }
                             )
@@ -96,13 +113,12 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
 
     @Override
     public void onViewAdded() {
-        System.out.println("SubjectListViewModel added");
+
     }
 
     @Override
     public void onViewRemoved() {
 //        disposables.dispose();
-        System.out.println("SubjectListViewModel removed");
     }
 
     public void dispose() {

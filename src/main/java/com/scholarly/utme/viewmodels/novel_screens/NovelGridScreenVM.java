@@ -1,5 +1,6 @@
 package com.scholarly.utme.viewmodels.novel_screens;
 
+import com.scholarly.utme.controller.novel_screens.NovelGridScreenController;
 import com.scholarly.utme.data.dao.NovelsDao;
 import com.scholarly.utme.data.model.novels.Novel;
 import de.saxsys.mvvmfx.ViewModel;
@@ -18,11 +19,13 @@ public class NovelGridScreenVM implements ViewModel {
     private SimpleStringProperty novelType = new SimpleStringProperty();
 
 
-    public void processInitialData(Object data) {
-        Pair<String, ObservableList<Novel>> novelPair = (Pair<String, ObservableList<Novel>>) data;
+    public void processInitialData(NovelGridScreenController.InitialData data) {
+        novelType.set(data.getCategoryGenreTitle());
+        novels.addAll(data.getNovels());
+        /*Pair<String, ObservableList<Novel>> novelPair = (Pair<String, ObservableList<Novel>>) data;
         novelType.set(getNovelName(novelPair.getKey()));
         ObservableList<Novel> novelList = novelPair.getValue();
-        novels.addAll(novelList);
+        novels.addAll(novelList);*/
     }
 
     public ObservableList<Novel> getNovels() {

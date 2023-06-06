@@ -5,10 +5,7 @@ import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenVM;
 import com.scholarly.utme.viewmodels.landing_screens.*;
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.FxmlPath;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -17,12 +14,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/landing_screens/landing_screen.fxml")
 public class LandingScreenController implements FxmlView<LandingScreenVM>, Initializable {
+
+    @InjectViewModel
+    private LandingScreenVM viewModel;
 
     @FXML
     public ImageView profileImage, handImage, bell, appImage;
@@ -76,45 +78,43 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         homeContentPane.getChildren().add(homeView);
 
+//        viewModel.processInitialData(getInitialData());
+
         initializeViews();
 
         initializeFonts();
 
+        /*List<String> fontFamilies = Font.getFamilies();
+        List<String> fontNames    = Font.getFontNames();
 
-        if (ViewSwitcher.retrieveData() == null) {
+        fontFamilies.forEach(family -> {
+            System.out.println("Font family -> " + family);
+        });
+
+        fontNames.forEach(name -> {
+            System.out.println("Font name -> " + name);
+        });*/
+
+        /*if (viewModel.getSelectedScreen().equalsIgnoreCase("homeScreen")) {
             selectButton(homeView, homeButton);
-        }else {
-//            System.out.println("Retrieved data -> " + ViewSwitcher.retrieveData());
-            String retrievedId = (String) ViewSwitcher.retrieveData();
-
-            if (retrievedId.equalsIgnoreCase("homeButton")) {
-                selectButton(homeView, homeButton);
-
-            } else if (retrievedId.equalsIgnoreCase("accountScreen")) {
-                selectButton(accountView, accountButton);
-
-            } else if (retrievedId.equalsIgnoreCase("activateButton")) {
-                selectButton(activateView, activateButton);
-
-            } else if (retrievedId.equalsIgnoreCase("appsButton")) {
-                selectButton(appsView, appsButton);
-
-            } else if (retrievedId.equalsIgnoreCase("triviaButton")) {
-                selectButton(triviaView, triviaButton);
-
-            } else if (retrievedId.equalsIgnoreCase("performanceButton")) {
-                selectButton(performanceView, performanceButton);
-
-            } else if (retrievedId.equalsIgnoreCase("updatesButton")) {
-                selectButton(updatesView, updatesButton);
-
-            } else if (retrievedId.equalsIgnoreCase("settingsButton")) {
-                selectButton(settingsView, settingsButton);
-            }
-        }
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("accountScreen")) {
+            selectButton(accountView, accountButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("activateScreen")) {
+            selectButton(activateView, activateButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("appsScreen")) {
+            selectButton(appsView, appsButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("triviaScreen")) {
+            selectButton(triviaView, triviaButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("performanceScreen")) {
+            selectButton(performanceView, performanceButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("updatesScreen")) {
+            selectButton(updatesView, updatesButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("settingsScreen")) {
+            selectButton(settingsView, settingsButton);
+        }*/
 
 
-        toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, triviaButton, performanceButton, updatesButton, settingsButton);
+        toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, performanceButton, updatesButton, settingsButton);
 
         homeButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -140,11 +140,11 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             }
         });
 
-        triviaButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+        /*triviaButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
                 selectButton(triviaView, triviaButton);
             }
-        });
+        });*/
 
         performanceButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
@@ -189,9 +189,9 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         appsButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/landing_screen_images/apps_icon.png").toString())));
         appsButton.setGraphicTextGap(20);
 
-        triviaButton.setBackground(Background.EMPTY);
+        /*triviaButton.setBackground(Background.EMPTY);
         triviaButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/landing_screen_images/trivia_icon.png").toString())));
-        triviaButton.setGraphicTextGap(20);
+        triviaButton.setGraphicTextGap(20);*/
 
         performanceButton.setBackground(Background.EMPTY);
         performanceButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/landing_screen_images/performance_icon.png").toString())));
@@ -211,12 +211,12 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         accountButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         activateButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         appsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-        triviaButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+//        triviaButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         performanceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         updatesButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
         settingsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
 
-        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 20));
+        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 22));
 
     }
 
@@ -225,7 +225,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         accountButton.setStyle(null);
         activateButton.setStyle(null);
         appsButton.setStyle(null);
-        triviaButton.setStyle(null);
+//        triviaButton.setStyle(null);
         performanceButton.setStyle(null);
         updatesButton.setStyle(null);
         settingsButton.setStyle(null);
@@ -237,6 +237,22 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         homeContentPane.getChildren().clear();
         homeContentPane.getChildren().add(view);
         changeButtonStyle(toggleButton);
+    }
+
+//    private InitialData getInitialData() {
+//        return (InitialData) ViewSwitcher.retrieveData();
+//    }
+
+     public static class InitialData {
+        private String screen;
+
+        public InitialData(String screen) {
+            this.screen = screen;
+        }
+
+        public String getScreen() {
+            return screen;
+        }
     }
 
 }

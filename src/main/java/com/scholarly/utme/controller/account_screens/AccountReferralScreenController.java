@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
-import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -43,7 +42,7 @@ public class AccountReferralScreenController implements FxmlView<AccountReferral
     private void initializeViews() {
         centerImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/referral_screen_center_image.png").toString()));
         accountImage.setImage(new Image(getClass().getResource("/drawable/account_screen_images/account_icon.png").toString()));
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
         copyButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/account_screen_images/copy_icon.png").toString())));
 
         backButton.setBackground(Background.EMPTY);

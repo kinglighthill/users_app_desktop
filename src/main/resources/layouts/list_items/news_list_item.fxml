@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import org.controlsfx.control.HyperlinkLabel?>
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+
+    <graphic>
+        <HBox prefHeight="120" alignment="CENTER_LEFT" style="-fx-border-color: #F1F1F1; -fx-border-radius: 5;">
+            <ImageView fx:id="newsImage" fitWidth="100" fitHeight="120" preserveRatio="true" pickOnBounds="true"/>
+
+            <VBox spacing="5" prefWidth="200" prefHeight="150">
+                <Label fx:id="newsTitle" text="JAMB Registrar resigns in office" textFill="#053500" prefWidth="190" wrapText="true"/>
+                <Label fx:id="newsDate" text="6th Sept, 2021" textFill="#12AF20"/>
+                <Label fx:id="newsDetails" prefWidth="190" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae " textFill="#053500" wrapText="true"/>
+                <HBox.margin>
+                    <Insets left="10"/>
+                </HBox.margin>
+            </VBox>
+            <padding>
+                <Insets left="10" top="10" bottom="10"/>
+            </padding>
+        </HBox>
+
+    </graphic>
+
+</fx:root>

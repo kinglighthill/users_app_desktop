@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -36,7 +37,7 @@ public class UpdateScreenController implements FxmlView<UpdateScreenVM>, Initial
         initializeFonts();
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData("updatesButton");
+            ViewSwitcher.passData(new LandingScreenController.InitialData("accountScreen"));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
@@ -44,7 +45,7 @@ public class UpdateScreenController implements FxmlView<UpdateScreenVM>, Initial
 
     private void initializeViews() {
         updateImage.setImage(new Image(getClass().getResource("/drawable/update_item_image2.png").toString()));
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
 
         backButton.setBackground(Background.EMPTY);
     }

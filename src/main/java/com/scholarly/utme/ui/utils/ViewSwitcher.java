@@ -1,15 +1,11 @@
 package com.scholarly.utme.ui.utils;
 
 import com.scholarly.utme.HelloApplication;
-import com.scholarly.utme.controller.PracticeScreenController;
 import de.saxsys.mvvmfx.FluentViewLoader;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class ViewSwitcher {
 
@@ -22,8 +18,10 @@ public class ViewSwitcher {
 
             String cssResource = HelloApplication.class.getResource("/styles/main.css").toExternalForm();
             root.getStylesheets().add(cssResource);
+//            root.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 
             rootScene.setRoot(root);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

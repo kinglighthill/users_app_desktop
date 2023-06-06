@@ -5,13 +5,19 @@ public class SyllabusSubject {
     private String generalObjectives;
     private String recommendedTexts;
     private int subjectId;
+    private String title;
+    private String shortTitle;
+    private String colorCode;
     private int order;
 
-    public SyllabusSubject(int id, String generalObjectives, String recommendedTexts, int subjectId, int order) {
+    public SyllabusSubject(int id, String generalObjectives, String recommendedTexts, int subjectId, String title, String shortTitle, String colorCode, int order) {
         this.id = id;
         this.generalObjectives = generalObjectives;
         this.recommendedTexts = recommendedTexts;
         this.subjectId = subjectId;
+        this.title = title;
+        this.shortTitle = shortTitle;
+        this.colorCode = colorCode;
         this.order = order;
     }
 
@@ -21,6 +27,18 @@ public class SyllabusSubject {
 
     public String getGeneralObjectives() {
         return generalObjectives;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getShortTitle() {
+        return shortTitle;
+    }
+
+    public String getColorCode() {
+        return colorCode;
     }
 
     public String getRecommendedTexts() {

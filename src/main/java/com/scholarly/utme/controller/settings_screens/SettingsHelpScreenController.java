@@ -61,7 +61,7 @@ public class SettingsHelpScreenController implements FxmlView<SettingsHelpScreen
     }
 
     private void initializeViews() {
-        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/trivia_screen_images/back_button.png").toString())));
+        backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
 
         faqImage.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/faq_icon.png").toString()));
         contactImage.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/contact_icon.png").toString()));

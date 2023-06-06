@@ -1,6 +1,9 @@
 package com.scholarly.utme.data.util;
 
 import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.data.dao.BookmarkDao;
+import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
+import com.scholarly.utme.data.dao.TheoryBookmarkDao;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -10,6 +13,8 @@ import java.util.logging.Logger;
 
 public class Database {
 
+    public static final String TAG = "Database: ";
+
     /**
      * Location of database
      */
@@ -17,18 +22,24 @@ public class Database {
 
 
     /**
-     * Currently only table needed
+     * Table Constants
      */
     private static final String requiredTable = "Persons";
+    private static final String BOOKMARKS_OBJECTIVE_QUESTIONS = "bookmarks_objective_questions";
+    private static final String ID_COLUMN = "_id";
+
 
     public static boolean isOK() {
-        if (!checkDrivers()) return false; //driver errors
+
+        return checkDrivers() && checkConnection();
+
+        /*if (!checkDrivers()) return false; //driver errors
 
         if (!checkConnection()) return false; //can't connect to db
 
 //        if (!initialize()) return false;
 
-        return true;
+        return true;*/
 
 //        return checkTables(); //tables didn't exist
     }
@@ -48,7 +59,7 @@ public class Database {
         try (Connection connection = connect()) {
             return connection != null;
         } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, LocalDateTime.now() + ": Could not connect to database");
+            Logger.getAnonymousLogger().log(Level.SEVERE, LocalDateTime.now() + ": Could not connect to database because " + e.getMessage());
             return false;
         }
     }
@@ -70,41 +81,23 @@ public class Database {
 //        return false;
 //    }
 
-
-    private static boolean initialize() {
-        // SQLite connection string
-
-        // SQL statement for creating a new table
-        String sql = "CREATE TABLE IF NOT EXISTS bookmarks (\n"
-                + "	id integer PRIMARY KEY,\n"
-                + "	questionId integer,\n"
-                + "	subjectId integer\n"
-                + ");";
-
-        try (Connection conn = DriverManager.getConnection(location);
-             Statement stmt = conn.createStatement()) {
-            // create a new table
-            stmt.execute(sql);
-
-            return true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
-
     public static Connection connect() {
         String dbPrefix = "jdbc:sqlite:";
         Connection connection;
         try {
             connection = DriverManager.getConnection(dbPrefix + location);
+//            System.out.println(TAG + "Connection object -> " + connection);
+//            DatabaseMetaData metaData = connection.getMetaData();
+//            System.out.println(TAG + "Metadata username -> " + metaData.getUserName() + " and connection -> " + metaData.getConnection());
+//            connection.setAutoCommit(false);
         } catch (SQLException exception) {
             Logger.getAnonymousLogger().log(Level.SEVERE,
                     LocalDateTime.now() + ": Could not connect to SQLite DB at " +
-                            location);
+                            location + " because " + exception.getMessage());
             return null;
         }
         return connection;
     }
+
 
 }

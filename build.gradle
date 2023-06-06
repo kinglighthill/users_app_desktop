@@ -12,6 +12,7 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+//    google()
 }
 
 ext {
@@ -68,6 +69,9 @@ dependencies {
     implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0') {
         exclude group: 'org.openjfx'
     }
+    implementation ('com.jidesoft:jidefx-fields:0.9.1-b128') {
+        exclude group: 'org.openjfx'
+    }
     /*implementation('eu.hansolo:tilesfx:16.0.3') {
         exclude group: 'org.openjfx'
     }*/
@@ -75,14 +79,15 @@ dependencies {
     /*implementation('org.xerial:sqlite-jdbc:3.36.0.2') {
         exclude group: 'org.sqlite'
     }*/
+
     // SQL connector
-    implementation 'io.github.willena:sqlite-jdbc:3.40.1.0'
+    implementation 'io.github.willena:sqlite-jdbc:3.35.5.3'
 
     // RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
 
     //RxJavaFx
-    implementation "org.pdfsam.rxjava3:rxjavafx:3.0.2"
+    implementation 'org.pdfsam.rxjava3:rxjavafx:3.0.2'
 
     // mvvmfx
     implementation 'de.saxsys:mvvmfx:1.8.0'
@@ -96,8 +101,33 @@ dependencies {
     // Common Collections by Apache
     implementation 'org.apache.commons:commons-collections4:4.4'
 
+    // Apache Commons Lang
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
 
-   // implementation 'org.xerial:sqlite-jdbc:3.36.0.1'
+    // OKHttp
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
+
+    // Jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+
+    // Markdown
+    implementation 'org.commonmark:commonmark:0.19.0'
+
+    // HTML to Text
+    implementation 'org.jsoup:jsoup:1.14.3'
+
+    // Katex
+//    implementation 'io.github.katexjava:katex-java:0.5.0'
+    implementation 'org.codehaus.mojo:latex-maven-plugin:1.1'
+//    implementation 'com.github.mikaelstaldal:jlatexmath:1.0.10'
+//    implementation 'org.scilab.forge:texworks-core:1.0'
+//    implementation 'org.scilab.forge:jlatexmath:1.0.11'
+//    implementation 'com.googlecode.jlatexmath:jlatexmath:1.0.7'
+    implementation 'com.nfbsoftware:latex-converter:1.0.0'
+
+
+    // implementation 'org.xerial:sqlite-jdbc:3.36.0.1'
 
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")

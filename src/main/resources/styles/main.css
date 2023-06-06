@@ -1,12 +1,55 @@
+/*    -----TableView Styling-----    */
+.table-view .column-header,
+.table-view .column-header .filler,
+.table-view .column-header-background .filler {
+    -fx-background-color: #006B17;
+
+}
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 10 0;
+}
+.table-view .table-cell {
+    -fx-alignment: center;
+}
+.table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: #F1F1F1;
+    -fx-border-width: 0.5;
+}
 .table-row-cell:empty {
     -fx-background-color: transparent;
+    -fx-border-color: white;
+    -fx-border-width: 0;
 }
 
-.table-row-cell:empty .table-cell {
-    -fx-border-width: 0px;
-}
 
-.note-settings-combo-box {
+/*    -----TabPane Styling-----    */
+.tab-pane:focused .tab-header-area .headers-region .tab:selected .focus-indicator {
+     -fx-border-width: 1;
+     -fx-border-color: transparent;
+     -fx-focus-color: transparent;
+}
+.tab {
     -fx-background-color: white;
-    -fx-text-fill: #51C46B;
+    -fx-padding: 15 0 15 0;
+}
+.tab .tab-label {
+    -fx-text-fill: #000000;
+    -fx-font-size: 18px;
+    -fx-font-weight: normal;
+}
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+.tab:selected {
+    -fx-background-color: #12AF20;
+}
+
+
+/* -------ScrollPane Styling ---------- */
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
 }

@@ -30,104 +30,103 @@
 
     <center>
         <AnchorPane style="-fx-background-color: white;">
-            <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.leftAnchor="50" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="150" AnchorPane.bottomAnchor="30">
-                <StackPane prefHeight="572" style="-fx-background-color: white;">
-                    <VBox spacing="15">
-                        <VBox fx:id="faqVBox" spacing="15">
-                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                <left>
-                                    <HBox spacing="30" alignment="CENTER">
-                                        <ImageView fx:id="faqImage" preserveRatio="true" pickOnBounds="true"/>
-                                        <Label text="Frequently Asked Questions (FAQ)" textFill="#053500">
-                                            <font>
-                                                <Font size="16"/>
-                                            </font>
-                                        </Label>
-                                    </HBox>
-                                </left>
-                                <right>
-                                    <ToggleButton fx:id="faqDropdown"/>
-                                </right>
-                                <padding>
-                                    <Insets top="20" bottom="20" left="30" right="30"/>
-                                </padding>
-                            </Panel>
-                        </VBox>
-                        <VBox fx:id="contactVBox" spacing="10">
-                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                <left>
-                                    <HBox spacing="30" alignment="CENTER">
-                                        <ImageView fx:id="contactImage" preserveRatio="true" pickOnBounds="true"/>
-                                        <Label text="Contact Us" textFill="#053500">
-                                            <font>
-                                                <Font size="16"/>
-                                            </font>
-                                        </Label>
-                                    </HBox>
-                                </left>
-                                <right>
-                                    <ToggleButton fx:id="contactDropdown"/>
-                                </right>
-                                <padding>
-                                    <Insets top="20" bottom="20" left="30" right="30"/>
-                                </padding>
-                            </Panel>
-                            <VBox fx:id="contactDetails" spacing="10">
-                                <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                    <ImageView fx:id="phoneImage" preserveRatio="true" pickOnBounds="true"/>
-                                    <Label text="+234 813 694 1462" textFill="#053500">
+            <ScrollPane fitToWidth="true" style="-fx-background-color: white;"
+                        AnchorPane.leftAnchor="50" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="150" AnchorPane.bottomAnchor="30">
+                <VBox spacing="15">
+                    <VBox fx:id="faqVBox" spacing="15">
+                        <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <left>
+                                <HBox spacing="30" alignment="CENTER">
+                                    <ImageView fx:id="faqImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <Label text="Frequently Asked Questions (FAQ)" textFill="#053500">
                                         <font>
                                             <Font size="16"/>
                                         </font>
                                     </Label>
-                                    <padding>
-                                        <Insets top="20" bottom="20" left="30" right="30"/>
-                                    </padding>
                                 </HBox>
-                                <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                    <ImageView fx:id="whatsAppImage" preserveRatio="true" pickOnBounds="true"/>
-                                    <Label text="+234 813 694 1462" textFill="#053500">
-                                        <font>
-                                            <Font size="16"/>
-                                        </font>
-                                    </Label>
-                                    <padding>
-                                        <Insets top="20" bottom="20" left="30" right="30"/>
-                                    </padding>
-                                </HBox>
-                                <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                    <ImageView fx:id="mailImage" preserveRatio="true" pickOnBounds="true"/>
-                                    <Label text="scholarlyapp@gmail.com" textFill="#053500">
-                                        <font>
-                                            <Font size="16"/>
-                                        </font>
-                                    </Label>
-                                    <padding>
-                                        <Insets top="20" bottom="20" left="30" right="30"/>
-                                    </padding>
-                                </HBox>
-                                <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                    <ImageView fx:id="websiteImage" preserveRatio="true" pickOnBounds="true"/>
-                                    <Label text="www.scholarlyng.com" textFill="#053500">
-                                        <font>
-                                            <Font size="16"/>
-                                        </font>
-                                    </Label>
-                                    <padding>
-                                        <Insets top="20" bottom="20" left="30" right="30"/>
-                                    </padding>
-                                </HBox>
-                                <padding>
-                                    <Insets left="10" right="10"/>
-                                </padding>
-                            </VBox>
-                        </VBox>
-
+                            </left>
+                            <right>
+                                <ToggleButton fx:id="faqDropdown"/>
+                            </right>
+                            <padding>
+                                <Insets top="20" bottom="20" left="30" right="30"/>
+                            </padding>
+                        </Panel>
                     </VBox>
-                    <padding>
-                        <Insets right="15"/>
-                    </padding>
-                </StackPane>
+                    <VBox fx:id="contactVBox" spacing="10">
+                        <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <left>
+                                <HBox spacing="30" alignment="CENTER">
+                                    <ImageView fx:id="contactImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <Label text="Contact Us" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </HBox>
+                            </left>
+                            <right>
+                                <ToggleButton fx:id="contactDropdown"/>
+                            </right>
+                            <padding>
+                                <Insets top="20" bottom="20" left="30" right="30"/>
+                            </padding>
+                        </Panel>
+                        <VBox fx:id="contactDetails" spacing="10">
+                            <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <ImageView fx:id="phoneImage" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="+234 813 694 1462" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="30"/>
+                                </padding>
+                            </HBox>
+                            <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <ImageView fx:id="whatsAppImage" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="+234 813 694 1462" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="30"/>
+                                </padding>
+                            </HBox>
+                            <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <ImageView fx:id="mailImage" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="scholarlyapp@gmail.com" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="30"/>
+                                </padding>
+                            </HBox>
+                            <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <ImageView fx:id="websiteImage" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="www.scholarlyng.com" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="30"/>
+                                </padding>
+                            </HBox>
+                            <padding>
+                                <Insets left="10" right="10"/>
+                            </padding>
+                        </VBox>
+                    </VBox>
+
+                </VBox>
+                <padding>
+                    <Insets right="15"/>
+                </padding>
             </ScrollPane>
         </AnchorPane>
     </center>

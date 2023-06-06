@@ -1,5 +1,6 @@
 package com.scholarly.utme.viewmodels.novel_screens;
 
+import com.scholarly.utme.controller.novel_screens.NovelChapterListController;
 import com.scholarly.utme.data.dao.NovelAuthorDao;
 import com.scholarly.utme.data.dao.NovelChapterDao;
 import com.scholarly.utme.data.model.novels.Novel;
@@ -16,16 +17,17 @@ public class NovelChapterListVM implements ViewModel {
 
     private ObservableList<NovelChapter> chapters = FXCollections.observableArrayList();
 
-    private ObservableList<NovelAuthor> authors = FXCollections.observableArrayList();
+    private NovelAuthor author;
 
     private NovelChapter selectedChapter;
 
 
-    public void processInitialData(Novel novel) {
-        this.novel.set(novel);
-        authors.addAll(NovelAuthorDao.getAuthors());
+    public void processInitialData(NovelChapterListController.InitialData data) {
+        this.novel.set(data.getNovel());
+        author = data.getAuthor();
 
-        NovelChapterDao.getNovelChapters().stream().filter(novelChapter -> novelChapter.getNovelId() == novel.getId()).forEach(novelChapter -> chapters.add(novelChapter));
+        NovelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+                novelChapter.getNovelId() == data.getNovel().getId()).forEach(novelChapter -> chapters.add(novelChapter));
 
     }
 
@@ -37,13 +39,8 @@ public class NovelChapterListVM implements ViewModel {
         return chapters;
     }
 
-    public String getAuthor(Novel novel) {
-        for (NovelAuthor author : authors) {
-            if (author.getId() == novel.getId()) {
-                return author.getName();
-            }
-        }
-        return null;
+    public NovelAuthor getAuthor() {
+        return author;
     }
 
     public void setSelectedChapter(NovelChapter selectedChapter) {
@@ -52,42 +49,6 @@ public class NovelChapterListVM implements ViewModel {
 
     public NovelChapter getSelectedChapter() {
         return selectedChapter;
-    }
-
-    public static class NovelState {
-        private Novel novel;
-        private ObservableList<NovelChapter> chapters;
-        private NovelChapter selectedChapter;
-
-        public NovelState(Novel novel, ObservableList<NovelChapter> novelChapters, NovelChapter chapter) {
-            this.novel = novel;
-            this.chapters = novelChapters;
-            selectedChapter = chapter;
-        }
-
-        public Novel getNovel() {
-            return novel;
-        }
-
-        public void setNovel(Novel novel) {
-            this.novel = novel;
-        }
-
-        public ObservableList<NovelChapter> getChapters() {
-            return chapters;
-        }
-
-        public void setChapters(ObservableList<NovelChapter> chapter) {
-            this.chapters = chapter;
-        }
-
-        public NovelChapter getSelectedChapter() {
-            return selectedChapter;
-        }
-
-        public void setSelectedChapter(NovelChapter selectedChapter) {
-            this.selectedChapter = selectedChapter;
-        }
     }
 
 }
