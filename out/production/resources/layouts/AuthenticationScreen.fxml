@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import org.controlsfx.control.textfield.CustomPasswordField?>
+<?import org.controlsfx.dialog.FontSelectorDialog.FontPanel?>
+<?import javafx.scene.shape.Line?>
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.AuthenticationController" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #FFFFFF">
+
+    <HBox fx:id="rootPane" prefWidth="800" prefHeight="600">
+        <StackPane>
+            <ImageView fx:id="imageView" preserveRatio="true" pickOnBounds="true"/>
+
+            <HBox StackPane.alignment="TOP_LEFT" spacing="3">
+                <ImageView fx:id="appIcon" fitWidth="50" fitHeight="50" preserveRatio="true" pickOnBounds="true"/>
+                <Label fx:id="scholarlyText" text="Scholarly" textFill="#FFFFFF">
+                    <HBox.margin>
+                        <Insets top="7"/>
+                    </HBox.margin>
+                </Label>
+                <StackPane.margin>
+                    <Insets top="200" left="30"/>
+                </StackPane.margin>
+            </HBox>
+
+            <Label fx:id="beTheBestText" text="Be The Best You Can Be. Excel With The Scholarly CBT App." prefWidth="350" textFill="#FFFFFF"  wrapText="true" StackPane.alignment="CENTER_LEFT">
+                <StackPane.margin>
+                    <Insets top="400" left="40"/>
+                </StackPane.margin>
+            </Label>
+            <Line startX="-10" endX="70" stroke="#12AF20" strokeWidth="8" StackPane.alignment="CENTER_LEFT">
+                <StackPane.margin>
+                    <Insets top="550" left="40"/>
+                </StackPane.margin>
+            </Line>
+
+        </StackPane>
+
+
+
+        <VBox fx:id="authenticationSection"  prefWidth="800" prefHeight="200" >
+
+            <VBox fx:id="signUpSection" spacing="10">
+                <Label fx:id="signupText" text="Sign up" textFill="#034801"/>
+
+                <Label fx:id="emailText" text="Email">
+                    <VBox.margin>
+                        <Insets top="30"/>
+                    </VBox.margin>
+                </Label>
+
+                <TextField fx:id="emailField" promptText="What's your email address" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                    <padding>
+                        <Insets left="7" top="10" bottom="10"/>
+                    </padding>
+                </TextField>
+                <Label fx:id="emailError" text="Please enter a valid email address" textFill="#FF0000" visible="false" />
+
+                <Label fx:id="passwordText" text="Password">
+                    <VBox.margin>
+                        <Insets top="10"/>
+                    </VBox.margin>
+                </Label>
+
+                <PasswordField fx:id="passwordField" promptText="Enter your desired password" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                    <padding>
+                        <Insets left="7" top="10" bottom="10"/>
+                    </padding>
+                </PasswordField>
+
+                <Label fx:id="phoneText" text="Phone">
+                    <VBox.margin>
+                        <Insets top="10"/>
+                    </VBox.margin>
+                </Label>
+
+                <TextField fx:id="phoneField" promptText="Type your phone number" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                    <padding>
+                        <Insets left="7" top="10" bottom="10"/>
+                    </padding>
+                </TextField>
+<!--                <Label fx:id="phoneError" text="Please enter a valid phone number" textFill="#FF0000" visible="false" />-->
+
+            </VBox>
+
+            <Button fx:id="proceedButton" text="Proceed" textFill="#FFFFFF" prefWidth="600" style="-fx-background-color: #12AF20; -fx-border-radius: 10;">
+                <VBox.margin>
+                    <Insets top="30"/>
+                </VBox.margin>
+                <padding>
+                    <Insets top="10" bottom="10"/>
+                </padding>
+            </Button>
+
+            <VBox fx:id="googleAndFacebookSection" alignment="CENTER" spacing="10">
+
+                <Label fx:id="continueText" text="or continue using" >
+                    <VBox.margin>
+                        <Insets top="30" bottom="20"/>
+                    </VBox.margin>
+                </Label>
+
+                <Button fx:id="googleButton" prefWidth="300" text="Sign up with Google" textFill="#034801" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
+                    <padding>
+                        <Insets  top="15" bottom="15"/>
+                    </padding>
+                </Button>
+
+                <Button fx:id="facebookButton" prefWidth="300" text="Sign up with Facebook" textFill="#034801" style="-fx-border-color: #12AF20; -fx-border-radius: 5;">
+                    <padding>
+                        <Insets top="15" bottom="15"/>
+                    </padding>
+                </Button>
+
+                <HBox fx:id="haveAccountBox" alignment="CENTER" spacing="5">
+                    <Label fx:id="haveAccountText" text="Already have an account?"/>
+                    <Label fx:id="loginText" text="Login" textFill="#12AF20"/>
+
+                    <VBox.margin>
+                        <Insets top="20"/>
+                    </VBox.margin>
+                </HBox>
+                <HBox fx:id="forgotPasswordBox" alignment="CENTER" spacing="5" visible="false">
+                    <Label fx:id="forgotPasswordText" text="Forgot Password?"/>
+                    <Label fx:id="resetText" text="Reset Password" textFill="#12AF20"/>
+
+                    <HBox.margin>
+                        <Insets top="5"/>
+                    </HBox.margin>
+                </HBox>
+
+            </VBox>
+
+            <HBox.margin>
+                <Insets top="170" left="50" right="100"/>
+            </HBox.margin>
+        </VBox>
+    </HBox>
+
+
+</StackPane>

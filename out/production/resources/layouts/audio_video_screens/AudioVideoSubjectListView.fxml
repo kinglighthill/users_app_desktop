@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448.0" prefWidth="700.0" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.audio_video_screens.AudioVideoSubjectListViewController">
+
+    <right>
+        <HBox prefHeight="448.0" prefWidth="275.0" BorderPane.alignment="TOP_CENTER">
+            <children>
+                <Separator orientation="VERTICAL" prefHeight="200.0" />
+                <BorderPane prefHeight="448.0" prefWidth="289.0" BorderPane.alignment="TOP_CENTER">
+                    <top>
+                        <Button fx:id="continueButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="265.0" text="Continue" textFill="#FFFFFF" BorderPane.alignment="CENTER" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+                            <font>
+                                <Font name="Gill Sans MT" size="16.0" />
+                            </font>
+                            <BorderPane.margin>
+                                <Insets top="30.0" left="10.0" right="10.0" />
+                            </BorderPane.margin>
+                        </Button>
+                    </top>
+                </BorderPane>
+            </children>
+        </HBox>
+    </right>
+
+    <center>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="371.0" prefWidth="496.0" style="-fx-background-color: #FFFFFF;">
+            <children>
+                <Label fx:id="headerText" textFill="#053500" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <font>
+                        <Font name="Gill Sans MT" size="18"/>
+                    </font>
+                </Label>
+                <ListView fx:id="subjectList" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
+            </children>
+        </AnchorPane>
+    </center>
+
+</BorderPane>

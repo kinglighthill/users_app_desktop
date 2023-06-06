@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.GridView?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenUpdatesController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <VBox>
+            <HBox prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+                <Label text="Updates" textFill="#053500">
+                    <font>
+                        <Font name="Gill Sans MT Bold" size="24"/>
+                    </font>
+                </Label>
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </HBox>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <AnchorPane prefHeight="600" prefWidth="800">
+            <VBox spacing="30" style="-fx-background-color: white;" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="100" AnchorPane.bottomAnchor="30">
+                <StackPane maxWidth="300" minHeight="35" alignment="CENTER_LEFT">
+                    <TextField maxWidth="300" minHeight="35" promptText="Enter a keyword"/>
+                    <ImageView fx:id="searchIcon" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT">
+                        <StackPane.margin>
+                            <Insets right="20"/>
+                        </StackPane.margin>
+                    </ImageView>
+                </StackPane>
+                <GridView fx:id="updatesGrid" cellHeight="300" cellWidth="200" horizontalCellSpacing="25" />
+            </VBox>
+        </AnchorPane>
+    </center>
+
+</BorderPane>
