@@ -50,11 +50,13 @@ public class HelloApplication extends Application {
 
         ViewSwitcher.setStage(stage);
         boolean firstTimeUser = preferences.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
-        if (firstTimeUser) {
+        /*if (firstTimeUser) {
             ViewSwitcher.showScreen(View.WELCOME_SCREEN);
         } else {
             ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
-        }
+        }*/
+
+        ViewSwitcher.showScreen(View.LANDING_SCREEN);
 
 
 //        ViewTuple viewTuple = FluentViewLoader.fxmlView(PracticeScreenController.class).load();
