@@ -1,12 +1,11 @@
 package com.scholarly.utme.ui.listcells;
 
-import com.scholarly.utme.controller.ResultScreenController;
-import com.scholarly.utme.data.model.Subject;
+import com.scholarly.utme.controller.practice_screens.ResultScreenController;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.PracticeScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;

@@ -1,13 +1,13 @@
 package com.scholarly.utme.controller.trivia_screens;
 
-import com.scholarly.utme.controller.ResultScreenController;
+import com.scholarly.utme.controller.practice_screens.ResultScreenController;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.listItems.TriviaParticipantItem;
 import com.scholarly.utme.ui.cellFactories.TriviaParticipantListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.PracticeScreenVM;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.trivia_screens.TriviaQuizResultScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;

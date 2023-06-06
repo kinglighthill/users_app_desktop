@@ -28,11 +28,6 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/layouts/PreAuthenticationScreen.fxml"));
-////        Scene scene = new Scene(fxmlLoader.load());
-////        stage.setTitle("Scholarly UTME");
-////        stage.setScene(scene);
-
         System.out.println("Databases are ok..." + (NewDatabase.isOK() && Database.isOK() && UserDataDatabase.isOK() && NovelsDatabase.isOK()));
 
         System.out.println("Create tables are ok..." + (ObjectiveBookmarkDao.createTable() && TheoryBookmarkDao.createTable() && NovelObjectiveBookmarkDao.createTable()));
@@ -50,21 +45,12 @@ public class HelloApplication extends Application {
 
         ViewSwitcher.setStage(stage);
         boolean firstTimeUser = preferences.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
-        /*if (firstTimeUser) {
+        if (firstTimeUser) {
             ViewSwitcher.showScreen(View.WELCOME_SCREEN);
         } else {
             ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
-        }*/
-
-        ViewSwitcher.showScreen(View.LANDING_SCREEN);
-
-
-//        ViewTuple viewTuple = FluentViewLoader.fxmlView(PracticeScreenController.class).load();
-//
-//        Parent root = viewTuple.getView();
-//        stage.setMaximized(true);
-//        stage.setScene(new Scene(root));
-//        stage.show();
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+        }
     }
 
     public void openBrowser(String uri) {

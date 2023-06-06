@@ -7,13 +7,18 @@ import com.scholarly.utme.controller.audio_video_screens.AudiosGridScreenControl
 import com.scholarly.utme.controller.audio_video_screens.VideoContentScreenController;
 import com.scholarly.utme.controller.audio_video_screens.VideosGridScreenController;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.controller.note_screens.NotesScreenController;
+import com.scholarly.utme.controller.note_screens.SelectNoteController;
 import com.scholarly.utme.controller.novel_screens.NovelChapterListController;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelGridScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelScreenController;
+import com.scholarly.utme.controller.practice_screens.*;
 import com.scholarly.utme.controller.settings_screens.SettingsAboutUsScreenController;
 import com.scholarly.utme.controller.settings_screens.SettingsAppInfoScreenController;
 import com.scholarly.utme.controller.settings_screens.SettingsHelpScreenController;
+import com.scholarly.utme.controller.syllabus_screens.SelectSyllabusController;
+import com.scholarly.utme.controller.syllabus_screens.SyllabusScreenController;
 import com.scholarly.utme.controller.trivia_screens.*;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.ViewModel;
@@ -24,15 +29,15 @@ public enum View {
     AUTHENTICATION_SCREEN("/layouts/AuthenticationScreen.fxml", AuthenticationController.class),
     LANDING_SCREEN("/layouts/landing_screens/landing_screen.fxml", LandingScreenController.class),
     HOME_SCREEN("/layouts/HomeScreen.fxml", HomeScreenController.class),
-    RESULT_SCREEN("/layouts/ResultScreen.fxml", ResultScreenController.class),
-    PRACTICE_SCREEN("/layouts/PracticeScreen.fxml", PracticeScreenController.class),
-    STUDY_PAST_QUESTION_SCREEN("/layouts/StudyPastQuestionsScreen.fxml", StudyPastQuestScreenController.class),
-    CBT_GAME_SCREEN("/layouts/CBTGameScreen.fxml", CBTGameScreenController.class),
-    SELECT_NOTE_SCREEN("/layouts/SelectNoteScreen.fxml", SelectNoteController.class),
-    NOTES_SCREEN("/layouts/NotesScreen.fxml", NotesScreenController.class),
-    EXPLANATION_SCREEN("/layouts/ExplanationScreen.fxml", ExplanationScreenController.class),
-    SELECT_SYLLABUS_SCREEN("/layouts/SelectSyllabusScreen.fxml", SelectSyllabusController.class),
-    SYLLABUS_SCREEN("/layouts/SyllabusScreen.fxml", SyllabusScreenController.class),
+    RESULT_SCREEN("/layouts/practice_screens/ResultScreen.fxml", ResultScreenController.class),
+    PRACTICE_SCREEN("/layouts/practice_screens/PracticeScreen.fxml", PracticeScreenController.class),
+    STUDY_PAST_QUESTION_SCREEN("/layouts/practice_screens/StudyPastQuestionsScreen.fxml", StudyPastQuestScreenController.class),
+    CBT_GAME_SCREEN("/layouts/practice_screens/CBTGameScreen.fxml", CBTGameScreenController.class),
+    SELECT_NOTE_SCREEN("/layouts/note_screens/SelectNoteScreen.fxml", SelectNoteController.class),
+    NOTES_SCREEN("/layouts/note_screens/NotesScreen.fxml", NotesScreenController.class),
+    EXPLANATION_SCREEN("/layouts/practice_screens/ExplanationScreen.fxml", ExplanationScreenController.class),
+    SELECT_SYLLABUS_SCREEN("/layouts/syllabus_screens/SelectSyllabusScreen.fxml", SelectSyllabusController.class),
+    SYLLABUS_SCREEN("/layouts/syllabus_screens/SyllabusScreen.fxml", SyllabusScreenController.class),
     NOVEL_SCREEN("/layouts/novel_screens/NovelScreen.fxml", NovelScreenController.class),
     NOVEL_GRID_SCREEN("/layouts/novel_screens/NovelGridScreen.fxml", NovelGridScreenController.class),
     NOVEL_CHAPTER_LIST_SCREEN("/layouts/novel_screens/NovelChapterListScreen.fxml", NovelChapterListController.class),
