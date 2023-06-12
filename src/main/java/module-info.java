@@ -16,7 +16,8 @@ module com.scholarly.utme {
     requires java.sql;
     requires io.reactivex.rxjava3;
     requires org.pdfsam.rxjavafx;
-    requires sqlite.jdbc;
+//    requires sqlite.jdbc;
+    requires org.xerial.sqlitejdbc;
     requires de.saxsys.mvvmfx;
     requires freetts;
     requires com.google.gson;
@@ -113,5 +114,4 @@ module com.scholarly.utme {
     exports com.scholarly.utme.viewmodels.practice_screens;
     exports com.scholarly.utme.viewmodels.note_screens;
     exports com.scholarly.utme.viewmodels.syllabus_screens;
-
 }
