@@ -9,6 +9,7 @@ public class Constants {
     public static final String PREF_KEY_USER_DATA = "USER_DATA";
     public static final String PREF_KEY_REFRESH_TOKEN = "REFRESH_TOKEN";
     public static final String PREF_KEY_ACCESS_TOKEN = "ACCESS_TOKEN";
+    public static final String PREF_KEY_ACTIVATE_ACCESS_TOKEN = "ACTIVATE_ACCESS_TOKEN";
 
     // Tab Preference Constants
     public static final String PREF_KEY_SELECTED_TAB = "SELECTED_TAB";

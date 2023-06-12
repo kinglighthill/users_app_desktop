@@ -27,18 +27,17 @@ public class YearsDao {
     private static final String availableColumn = "available";
 
     private static final ObservableList<Year> years;
-
-    private static final ObservableList<Year> availableYears;
+    private static final ObservableList<Year> subjectAvailableYears;
 
     static {
         years = FXCollections.observableArrayList();
-        availableYears = FXCollections.observableArrayList();
+        subjectAvailableYears = FXCollections.observableArrayList();
         updateYearsFromDB();
 
     }
 
     public static ObservableList<Year> getAvailableYearsForSubject(SubjectListItemVM.Type type, int subjectId) {
-        ObservableList<Year> subjectAvailableYears = FXCollections.observableArrayList();
+//        subjectAvailableYears = FXCollections.observableArrayList();
 
         String query = "";
 
@@ -98,17 +97,6 @@ public class YearsDao {
                     LocalDateTime.now() + ": Could not load Years from database because " + e.getMessage());
             years.clear();
         }
-    }
-
-    public static ObservableList<Year> getAvailableYears() {
-        return FXCollections.unmodifiableObservableList(availableYears);
-    }
-
-    public static Optional<Boolean> isYearAvailable(int id) {
-        for (Year year : availableYears) {
-            if (year.getId() == id) return Optional.of(true);
-        }
-        return Optional.of(false);
     }
 
     public static ObservableList<Year> getYears() {
