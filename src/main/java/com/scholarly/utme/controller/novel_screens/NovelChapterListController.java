@@ -7,6 +7,7 @@ import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.novel_screens.NovelChapterListVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -19,32 +20,34 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import okhttp3.OkHttpClient;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 @FxmlPath("/layouts/novel_screens/NovelChapterListScreen.fxml")
 public class NovelChapterListController implements FxmlView<NovelChapterListVM>, Initializable {
     private static final String TAG = "NovelChapterListController: ";
 
+    @InjectViewModel
+    private NovelChapterListVM viewModel;
+
     @FXML
     private Button backButton, readButton;
-
     @FXML
     private Label pageTitle, authorLabel, chaptersLabel;
-
     @FXML
     private ListView<NovelChapter> chaptersList;
-
     @FXML
     private ImageView novelImage, authorIcon, chaptersIcon, timeIcon;
 
 
-    @InjectViewModel
-    private NovelChapterListVM viewModel;
+    private Preferences preferences;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        preferences = AppPreferences.getPreferences();
 
         initializeViews();
         initializeFont();
@@ -63,7 +66,13 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
 
 
         chaptersList.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldValue, newValue) -> {
-            viewModel.setSelectedChapter(newValue);
+            if (newValue.isFree()) {
+                readButton.setDisable(false);
+                viewModel.setSelectedChapter(newValue);
+            } else {
+                readButton.setDisable(true);
+            }
+
         }));
 
         readButton.setOnAction(event -> {

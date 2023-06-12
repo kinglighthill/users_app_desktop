@@ -59,7 +59,16 @@
                                         <Font size="16"/>
                                     </font>
                                 </Label>
-                                <TextField prefHeight="40" promptText="Enter activation pin here"/>
+                                <TextField fx:id="activationPinTextField" prefHeight="40" promptText="Enter activation pin here">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TextField>
+                                <Label fx:id="incorrectPinError" text="Incorrect Activation Pin" textFill="#FA0000" visible="false">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
                                 <Button fx:id="activateButton" text="Activate" textFill="white" prefWidth="700" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
                                     <font>
                                         <Font size="15"/>
@@ -137,20 +146,29 @@
 
     <Pane fx:id="dialogDimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
 
-    <VBox fx:id="paymentSuccessfulPane" spacing="30" maxWidth="400" maxHeight="350" alignment="TOP_CENTER" visible="false" style="-fx-background-color: white; -fx-background-radius: 10;" StackPane.alignment="TOP_CENTER">
+    <VBox fx:id="activationSuccessfulPane" spacing="30" maxWidth="400" maxHeight="350" alignment="TOP_CENTER" visible="false" style="-fx-background-color: white; -fx-background-radius: 10;" StackPane.alignment="TOP_CENTER">
         <Panel>
             <right>
-                <ImageView fx:id="paymentSuccessfulCloseIcon" fitWidth="30" fitHeight="30" preserveRatio="true" pickOnBounds="true"/>
+<!--                <ImageView fx:id="activationSuccessfulCloseIcon" fitWidth="30" fitHeight="30" preserveRatio="true" pickOnBounds="true"/>-->
             </right>
         </Panel>
 
-        <ImageView fx:id="paymentSuccessfulImage" preserveRatio="true" pickOnBounds="true"/>
+        <ImageView fx:id="activationSuccessfulImage" preserveRatio="true" pickOnBounds="true"/>
 
-        <Label text="Your account has been activated successfully" textFill="#053500">
+        <Label fx:id="activationSuccessfulMessage" text="Your account has been activated successfully" textFill="#053500">
             <font>
                 <Font size="16"/>
             </font>
         </Label>
+
+        <Button fx:id="loginButton" text="Login to Continue" textFill="white" prefWidth="200" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+            <font>
+                <Font size="15"/>
+            </font>
+            <VBox.margin>
+                <Insets top="5"/>
+            </VBox.margin>
+        </Button>
 
         <padding>
             <Insets top="20" bottom="25" left="30" right="30"/>
@@ -159,5 +177,7 @@
             <Insets top="100" right="50"/>
         </StackPane.margin>
     </VBox>
+
+    <ProgressIndicator fx:id="progressBar" maxWidth="150" maxHeight="50" StackPane.alignment="CENTER" visible="false"/>
 
 </StackPane>

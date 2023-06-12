@@ -155,6 +155,9 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             int selectedIndex = chaptersList.getSelectionModel().getSelectedIndex();
             chaptersList.getSelectionModel().select(selectedIndex + 1);
             viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
+            if (!viewModel.getSelectedChapter().isFree()) {
+                showActivateDialog();
+            }
         });
 
         prevButton.setOnAction(event -> {
@@ -425,6 +428,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         speakerImage.setOnMouseClicked(event -> {
             System.out.println(TAG + "Novel Question Speaker Image clicked!");
         });
+
+    }
+
+    private void showActivateDialog() {
 
     }
 

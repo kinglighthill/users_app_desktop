@@ -6,6 +6,7 @@ package com.scholarly.utme.data.util;
  */
 public class Tables {
 
+    public static final String FREE_CONTENTS = "free_contents";
     public static final String TOPICS = "topics";
     public static final String YEARS = "years";
     public static final String SUBJECTS = "subjects";

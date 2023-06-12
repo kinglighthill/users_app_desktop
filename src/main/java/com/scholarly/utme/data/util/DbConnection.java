@@ -13,7 +13,7 @@ public class DbConnection {
     private static final String path = HelloApplication.class.getResource("/assets/note_syllabus_main.db").getPath();
 
 
-    private static final String DATABASE_URL2 = "jdbc:sqlite:src/main/resources/assets/main_scholarly.db";
+    private static final String DATABASE_URL2 = "jdbc:sqlite:src/main/resources/assets/jamb_utme.db";
 
     private static final String DATABASE_URL = dbPrefix + location;
 
