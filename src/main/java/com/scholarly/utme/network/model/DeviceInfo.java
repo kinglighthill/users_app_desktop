@@ -131,7 +131,7 @@ public class DeviceInfo {
     }
 
     // Get Windows Machine UUID
-    private static String getWindowsUUID() {
+    static String getWindowsUUID() {
         try {
             String command = "wmic csproduct get UUID";
             StringBuilder output = new StringBuilder();
@@ -154,7 +154,7 @@ public class DeviceInfo {
     }
 
     //Get Mac Machine UUID
-    public static String getMacUUID() {
+    static String getMacUUID() {
         try {
             String command = "system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'";
 

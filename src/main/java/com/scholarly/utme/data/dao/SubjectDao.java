@@ -1,10 +1,8 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.DatabaseService;
-import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.*;
-import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.data.util.NewDatabase;
 import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
@@ -15,10 +13,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class SubjectDao {
-    public static final String TAG = "SubjectDao: ";
+    public static final String TAG = "SUBJECTDAO: ";
 
     private static final DatabaseService databaseService = new DatabaseService();
 
@@ -32,7 +29,7 @@ public class SubjectDao {
     private static final String colorNameColumn = "color_name";
 
     private static final String subjectIdColumn = "subject_id";
-    private static final String minutesAllotedColumn = "minutes_alloted";
+    private static final String minutesAllottedColumn = "minutes_allotted";
     private static final String orderColumn = "order";
     private static final String titleColumn = "title";
     private static final String shortTitleColumn = "short_title";
@@ -82,7 +79,7 @@ public class SubjectDao {
                 objectiveSubjects.add(new ObjectiveSubject(
                         rs.getInt(idColumn),
                         rs.getInt(subjectIdColumn),
-                        rs.getInt(minutesAllotedColumn),
+                        rs.getInt(minutesAllottedColumn),
                         rs.getInt(orderColumn),
                         rs.getString(titleColumn),
                         rs.getString(shortTitleColumn),
@@ -108,7 +105,7 @@ public class SubjectDao {
                 theorySubjects.add(new TheorySubject(
                         rs.getInt(idColumn),
                         rs.getInt(subjectIdColumn),
-                        rs.getInt(minutesAllotedColumn),
+                        rs.getInt(minutesAllottedColumn),
                         rs.getInt(orderColumn),
                         rs.getString(titleColumn),
                         rs.getString(shortTitleColumn),

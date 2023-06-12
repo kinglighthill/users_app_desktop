@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.geometry.Insets?>
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <graphic>
+        <Panel prefHeight="150" prefWidth="230" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+            <center>
+                <VBox spacing="10" alignment="TOP_CENTER">
+                    <Label fx:id="testTitle" text="CBT Practice" textFill="#12AF20"/>
+                    <Label fx:id="testDate" text="28/11/2021" textFill="#034801"/>
+                    <Label fx:id="testPercentage" text="57.87%" textFill="#12AF20"/>
+                    <Separator>
+                        <VBox.margin>
+                            <Insets top="20"/>
+                        </VBox.margin>
+                    </Separator>
+                    <Label fx:id="testSubjects" text="English, Mathematics, Chemistry, Physics" textFill="#034801" wrapText="true" textAlignment="CENTER" />
+                </VBox>
+            </center>
+
+            <padding>
+                <Insets top="20" left="10" right="10"/>
+            </padding>
+        </Panel>
+    </graphic>
+</fx:root>

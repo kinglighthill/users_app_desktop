@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.novel_screens.NovelChapterListController"
+             style="-fx-background-color: white;">
+
+    <top>
+        <VBox >
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9">
+                    <padding>
+                        <Insets top="8" right="13" bottom="8" left="13" />
+                    </padding>
+                </Button>
+                <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
+                    <font>
+                        <Font name="System Bold" size="22"/>
+                    </font>
+                </Label>
+                <padding>
+                    <Insets top="20" left="20" bottom="20"/>
+                </padding>
+            </HBox>
+            <Separator />
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="10">
+            <Label text="Chapters">
+                <font>
+                    <Font name="System Bold" size="20"/>
+                </font>
+                <VBox.margin>
+                    <Insets left="15"/>
+                </VBox.margin>
+            </Label>
+            <ListView fx:id="chaptersList" prefWidth="600" prefHeight="600"/>
+            <padding>
+                <Insets topRightBottomLeft="20"/>
+            </padding>
+        </VBox>
+    </center>
+
+    <right>
+        <HBox spacing="20" prefHeight="400" prefWidth="400">
+            <Separator orientation="VERTICAL"/>
+            <VBox spacing="50" prefHeight="300" prefWidth="300">
+                <StackPane maxWidth="200" minHeight="300" style="-fx-background-color: #D7D7D7; -fx-background-radius: 8;">
+                    <ImageView fx:id="novelImage" fitWidth="200" fitHeight="300" preserveRatio="true" pickOnBounds="true"/>
+                    <padding>
+                        <Insets topRightBottomLeft="20"/>
+                    </padding>
+                    <VBox.margin>
+                        <Insets top="20"/>
+                    </VBox.margin>
+                </StackPane>
+                <VBox spacing="20">
+                    <HBox spacing="10">
+                        <ImageView fx:id="authorIcon" preserveRatio="true" pickOnBounds="true"/>
+                        <Label fx:id="authorLabel" text="John Uzodinma"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <ImageView fx:id="chaptersIcon" preserveRatio="true" pickOnBounds="true"/>
+                        <Label fx:id="chaptersLabel" text="7 chapters"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <ImageView fx:id="timeIcon" preserveRatio="true" pickOnBounds="true"/>
+                        <Label fx:id="timeText" text="20 mins"/>
+                    </HBox>
+                    <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5;"/>
+                </VBox>
+            </VBox>
+            <HBox.margin>
+                <Insets top="30" bottom="20"/>
+            </HBox.margin>
+        </HBox>
+    </right>
+
+</BorderPane>

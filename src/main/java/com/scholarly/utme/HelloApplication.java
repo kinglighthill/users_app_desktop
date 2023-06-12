@@ -12,7 +12,9 @@ import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.util.Constants;
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -28,10 +30,6 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        System.out.println("Databases are ok..." + (NewDatabase.isOK() && Database.isOK() && UserDataDatabase.isOK() && NovelsDatabase.isOK()));
-
-        System.out.println("Create tables are ok..." + (ObjectiveBookmarkDao.createTable() && TheoryBookmarkDao.createTable() && NovelObjectiveBookmarkDao.createTable()));
-
         try {
             InputStream iconStream = HelloApplication.class.getResourceAsStream("/drawable/app_logo.png");
             assert iconStream != null;
@@ -39,6 +37,13 @@ public class HelloApplication extends Application {
 
             stage.getIcons().add(icon);
             stage.setTitle("Scholarly JAMB CBT");
+
+            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+
+            stage.setX(bounds.getMinX());
+            stage.setY(bounds.getMinY());
+            stage.setWidth(bounds.getWidth());
+            stage.setHeight(bounds.getHeight());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

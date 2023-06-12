@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.account_screens.AccountReferralScreenController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <HBox spacing="15" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+            <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+            <Label text="Referral" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT Bold" size="24"/>
+                </font>
+            </Label>
+            <padding>
+                <Insets left="30"/>
+            </padding>
+        </HBox>
+    </top>
+
+    <center>
+        <AnchorPane style="-fx-background-color: white;">
+            <VBox spacing="30" style="-fx-background-color: white;" AnchorPane.leftAnchor="40" AnchorPane.topAnchor="20" AnchorPane.rightAnchor="100" AnchorPane.bottomAnchor="20">
+                <StackPane style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                    <VBox StackPane.alignment="CENTER_LEFT">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <ImageView fx:id="accountImage" preserveRatio="true" pickOnBounds="true"/>
+                            <Label text="Number of referred people" textFill="#053500">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </Label>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="0" textFill="#053500">
+                                <font>
+                                    <Font size="26"/>
+                                </font>
+                            </Label>
+                            <Label text="/" textFill="#053500">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                            </Label>
+                            <Label text="5" textFill="#053500">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                            </Label>
+                        </HBox>
+                    </VBox>
+                    <Button text="Status:  Incomplete" textFill="#E20000" style="-fx-background-color: rgba(250, 0, 0, 0.1); -fx-background-radius: 8;" StackPane.alignment="BOTTOM_RIGHT">
+                        <padding>
+                            <Insets left="10" right="10"/>
+                        </padding>
+                    </Button>
+                    <padding>
+                        <Insets top="20" bottom="20" left="30" right="30"/>
+                    </padding>
+                </StackPane>
+
+                <ScrollPane fitToWidth="true" style="-fx-background-color: white;">
+                    <StackPane style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <VBox spacing="20" alignment="TOP_CENTER">
+                            <ImageView fx:id="centerImage" preserveRatio="true" pickOnBounds="true"/>
+                            <Label prefWidth="300" text="Activate with only NGN 750 when you refer/invite 5 friends" textFill="#12AF20" textAlignment="CENTER" wrapText="true">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+                            <Label prefWidth="650" text="You can refer friends by sharing or copying/pasting your referral link on social media, anyone who installs the app with your link gets counted" textFill="#053500" textAlignment="CENTER" wrapText="true">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+                            <Button prefWidth="650" prefHeight="45" text="Share my referral link now" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </Button>
+                            <Label text="or copy your referral link below" textFill="#12AF20">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </Label>
+                            <HBox spacing="5" alignment="CENTER">
+                                <Label text="https://JAMBCBT.web.app/y006r" textFill="#053500" wrapText="true" style="-fx-background-color: rgba(18, 175, 32, 0.1); -fx-background-radius: 7;">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                    <padding>
+                                        <Insets topRightBottomLeft="10"/>
+                                    </padding>
+                                </Label>
+                                <Button fx:id="copyButton" text="Copy" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 7;">
+                                    <font>
+                                        <Font size="15"/>
+                                    </font>
+                                    <padding>
+                                        <Insets top="8" bottom="8" left="15" right="15"/>
+                                    </padding>
+                                </Button>
+                            </HBox>
+                            <padding>
+                                <Insets topRightBottomLeft="30"/>
+                            </padding>
+                        </VBox>
+                    </StackPane>
+                </ScrollPane>
+            </VBox>
+        </AnchorPane>
+    </center>
+
+</BorderPane>
