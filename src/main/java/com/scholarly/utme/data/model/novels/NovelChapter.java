@@ -9,8 +9,9 @@ public class NovelChapter {
     private int chapterCategoryId;
     private int novelId;
     private int order;
+    private boolean free;
 
-    public NovelChapter(int id, int position, String title, String description, int chapterCategoryId, int novelId, int order) {
+    public NovelChapter(int id, int position, String title, String description, int chapterCategoryId, int novelId, int order, boolean free) {
         this.id = id;
         this.position = position;
         this.title = title;
@@ -18,6 +19,7 @@ public class NovelChapter {
         this.chapterCategoryId = chapterCategoryId;
         this.novelId = novelId;
         this.order = order;
+        this.free = free;
     }
 
     public int getId() {
@@ -46,5 +48,13 @@ public class NovelChapter {
 
     public int getOrder() {
         return order;
+    }
+
+    public boolean isFree() {
+        return free;
+    }
+
+    public void setFree(boolean free) {
+        this.free = free;
     }
 }

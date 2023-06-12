@@ -71,7 +71,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
 
     private Preferences preferences;
-    OkHttpClient httpClient;
+    private OkHttpClient httpClient;
 
     interface ServerCallback {
         void stopServer();
@@ -524,7 +524,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     if (loginResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
                         preferences.put(PREF_KEY_ACCESS_TOKEN, loginResponse.getData().getAccessToken());
-                        System.out.println(TAG + "Logged in user with Access token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN, " "));
 
                         String userData = gson.toJson(loginResponse.getData().getUserData());
                         preferences.put(PREF_KEY_USER_DATA, userData);

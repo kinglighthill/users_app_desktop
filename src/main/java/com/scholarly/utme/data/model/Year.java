@@ -7,6 +7,7 @@ public class Year {
     private String shortDescription;
     private int isNew;
     private int isAvailable;
+    private boolean free;
 
     public Year(int id, String year, String shortDescription, int isNew, int isAvailable) {
         this.id = id;
@@ -62,6 +63,9 @@ public class Year {
 
     @Override
     public String toString() {
-        return year;
+        if (free)
+            return year;
+        else
+            return year + " Locked";
     }
 }

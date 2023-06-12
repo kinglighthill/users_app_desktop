@@ -102,7 +102,7 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
             if (newValue){
                 noAccountVBox.getChildren().add(noAccountDetailsPane);
                 noAccountDropdown.setGraphic(noAccountOpenDropdownImage);
-            }else {
+            } else {
                 noAccountVBox.getChildren().remove(noAccountDetailsPane);
                 noAccountDropdown.setGraphic(noAccountCloseDropdownImage);
             }
