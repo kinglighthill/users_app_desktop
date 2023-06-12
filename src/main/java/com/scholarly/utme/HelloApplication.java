@@ -38,7 +38,7 @@ public class HelloApplication extends Application {
             Image icon = new Image(iconStream);
 
             stage.getIcons().add(icon);
-
+            stage.setTitle("Scholarly JAMB CBT");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
