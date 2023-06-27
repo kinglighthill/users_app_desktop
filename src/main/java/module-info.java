@@ -33,6 +33,8 @@ module com.scholarly.utme {
     requires org.jsoup;
     requires latex.maven.plugin;
     requires latex.converter;
+    requires com.sandec.mdfx;
+//    requires org.scilab.forge;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;

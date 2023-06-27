@@ -36,8 +36,7 @@ public class AppGridItemCell extends GridCell<AppItem> {
             loader.setRoot(this);
             loader.load();
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -51,10 +50,10 @@ public class AppGridItemCell extends GridCell<AppItem> {
             setText(null);
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-        }else {
+        } else {
             try {
                 appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/" + item.getImageUrl()).toString()));
-            }catch (Exception e) {
+            } catch (Exception e) {
                 appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/scholarly_logo.png").toString()));
                 System.out.println(e.getMessage());
                 System.out.println("App image not found, using default image (Scholarly logo)");

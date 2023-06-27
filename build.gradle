@@ -12,7 +12,11 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-//    google()
+    google()
+
+    maven {
+        url "https://sandec.jfrog.io/artifactory/repo"
+    }
 }
 
 ext {
@@ -115,16 +119,18 @@ dependencies {
     implementation 'org.commonmark:commonmark:0.19.0'
 
     // HTML to Text
-    implementation 'org.jsoup:jsoup:1.14.3'
+    implementation 'org.jsoup:jsoup:1.15.4'
 
     // Katex
 //    implementation 'io.github.katexjava:katex-java:0.5.0'
     implementation 'org.codehaus.mojo:latex-maven-plugin:1.1'
 //    implementation 'com.github.mikaelstaldal:jlatexmath:1.0.10'
 //    implementation 'org.scilab.forge:texworks-core:1.0'
-//    implementation 'org.scilab.forge:jlatexmath:1.0.11'
+    implementation 'org.scilab.forge:jlatexmath:1.0.7'
 //    implementation 'com.googlecode.jlatexmath:jlatexmath:1.0.7'
-    implementation 'com.nfbsoftware:latex-converter:1.0.0'
+    implementation 'com.nfbsoftware:latex-converter:1.0.1'
+
+    implementation "com.sandec:mdfx:0.2.12"
 
 
     // implementation 'org.xerial:sqlite-jdbc:3.36.0.1'

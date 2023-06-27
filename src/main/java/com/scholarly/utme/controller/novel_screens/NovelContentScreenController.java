@@ -1,5 +1,7 @@
 package com.scholarly.utme.controller.novel_screens;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scholarly.utme.data.model.novels.*;
 import com.scholarly.utme.ui.cellFactories.NovelChapterQuestionListCellFactory;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
@@ -29,10 +31,12 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
+import com.sandec.mdfx.MarkdownView;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/novel_screens/NovelContentScreen.fxml")
@@ -62,6 +66,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
     @FXML
     private Label pageTitle, chapterIndex, chapterTitle, chapterContent, chapterCount, questionNumberLabel, fiftyFiftyCount, questionLabel, answerLabel, explanationLabel;
+
 
     @FXML
     private Label numOfCorrectAnsLabel, numOfGuessesLabel, scorePercentageLabel, resultHeader, chapterQuizHeader, showAllAnswersLabel;
@@ -455,7 +460,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private void initializeFont() {
         chapterIndex.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.EIGHTEEN.size));
         chapterTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        chapterContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+//        chapterContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
         chapterCount.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
     }
 
@@ -631,11 +636,15 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     }
 
     private void renderNovel(NovelChapter chapter) {
-
         viewModel.getChapterSections()
                 .get(chapter.getId())
                 .forEach(section -> {
-                    chapterContent.setText(section.getContent());
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        Map<String,Object> map = mapper.readValue(section.getContent(), Map.class);
+                        String content = map.get("text").toString();
+                        chapterContent.setText(content);
+                    } catch (JsonProcessingException ignored) { }
                 });
 
     }

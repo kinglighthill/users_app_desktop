@@ -10,6 +10,7 @@
 <?import javafx.geometry.Insets?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import org.controlsfx.dialog.FontSelectorDialog.FontPanel?>
+<?import com.sandec.mdfx.MarkdownView?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.scholarly.utme.controller.novel_screens.NovelContentScreenController"
             style="-fx-background-color: white;">
