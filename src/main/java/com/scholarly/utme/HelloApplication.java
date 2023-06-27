@@ -108,15 +108,6 @@ public class HelloApplication extends Application {
         getHostServices().showDocument(uri);
     }
 
-    public void showActivateDialog() {
-        System.out.println(TAG + "Show Activate Dialog called!");
-        VBox activateNowDialog = new VBox();
-        activateNowDialog.setPrefSize(90, 200);
-        activateNowDialog.setMaxSize(100, 250);
-        Scene scene = ViewSwitcher.getRootScene();
-
-    }
-
     public static void main(String[] args) {
         launch();
     }
