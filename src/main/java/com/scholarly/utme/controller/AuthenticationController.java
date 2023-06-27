@@ -391,6 +391,8 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         preferences.put(PREF_KEY_USER_DATA, userData);
                         preferences.putBoolean(PREF_KEY_ACTIVATION_STATE, signupResponse.getData().getActivationState().isActivationActive());
 
+                        System.out.println(TAG + "Signed up user with User Activation State -> " + preferences.getBoolean(PREF_KEY_ACTIVATION_STATE, false));
+
                         Platform.runLater(() -> {
                             hideProgressBar();
 //                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
@@ -460,7 +462,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         preferences.put(PREF_KEY_USER_DATA, userData);
                         preferences.putBoolean(PREF_KEY_ACTIVATION_STATE, signupResponse.getData().getActivationState().isActivationActive());
 
-                        System.out.println(TAG + "Signed up user with User data -> " + preferences.get(PREF_KEY_USER_DATA, " "));
+                        System.out.println(TAG + "Signed up user with User Activation State -> " + preferences.getBoolean(PREF_KEY_ACTIVATION_STATE, false));
                         callback.redirect();
 
                         Platform.runLater(() -> {
@@ -516,7 +518,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
-                System.out.println(TAG + "Login: Got response code -> " + response.code());
+
                 try (ResponseBody responseBody = response.body()) {
                     assert responseBody != null;
                     BaseResponse loginResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
@@ -524,10 +526,13 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     if (loginResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
                         preferences.put(PREF_KEY_ACCESS_TOKEN, loginResponse.getData().getAccessToken());
+                        System.out.println(TAG + "Logged in user with Access Token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN, "false"));
 
                         String userData = gson.toJson(loginResponse.getData().getUserData());
                         preferences.put(PREF_KEY_USER_DATA, userData);
                         preferences.putBoolean(PREF_KEY_ACTIVATION_STATE, loginResponse.getData().getActivationState().isActivationActive());
+
+                        System.out.println(TAG + "Logged in user with User Activation State -> " + preferences.getBoolean(PREF_KEY_ACTIVATION_STATE, false));
 
                         Platform.runLater(() -> {
                             hideProgressBar();
@@ -651,7 +656,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 @Override
                 public void handle(HttpExchange exchange) throws IOException {
                     String uriResponse = exchange.getRequestURI().getQuery();
-                    System.out.println(TAG + "HttpContext UriResponse -> " + uriResponse);
 
                     if (uriResponse.contains("code")) {
                         String code = uriResponse.substring(uriResponse.indexOf("code"), uriResponse.indexOf("scope")-1);

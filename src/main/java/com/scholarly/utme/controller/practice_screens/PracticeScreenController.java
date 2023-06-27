@@ -47,7 +47,6 @@ import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
 
 @FxmlPath("/layouts/practice_screens/PracticeScreen.fxml")
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable, SceneLifecycle {
-
     private static final String TAG = "PracticeScreenController: ";
 
     private final static double rectangleSelectedBorderWidth = 2.0;

@@ -34,6 +34,10 @@ public class ViewSwitcher {
         stage.show();
     }
 
+    public static Stage getStage() {
+        return stage;
+    }
+
     public static void passData(Object data) {
         stage.setUserData(data);
     }

@@ -203,6 +203,9 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     }
 
+    private void showActivateDialog() {
+
+    }
 
     private void changeButtonStyle(ToggleButton pressedButton) {
         practiceButton.setStyle(null);

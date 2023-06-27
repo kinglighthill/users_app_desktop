@@ -19,9 +19,11 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
+import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -38,19 +40,21 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 //    private ListView<Subject> subjectList;
 
     @FXML
-    private VBox subjectListVBox, topicListVBox;
-
+    private BorderPane subtopicsDialog;
     @FXML
-    private ScrollPane subjectListScrollPane, topicListScrollPane;
-
+    private Panel startAllPanel;
+    @FXML
+    private VBox subjectListVBox, topicListVBox, dimmer, subtopicsVBox;
+    @FXML
+    private ScrollPane subjectListScrollPane, topicListScrollPane, subtopicScrollPane;
     @FXML
     private ListView<Topic> topicList;
-
     @FXML
-    private Label emptyTopicListLabel, subjectsTitle, topicsTitle, pageTitle;
-
+    private Label emptyTopicListLabel, subjectsTitle, topicsTitle, pageTitle, subtopicsLabel, subtopicsStartAllText;
     @FXML
-    private Button commenceButton, backButton;
+    private Button commenceButton, backButton, subtopicsCommenceButton;
+    @FXML
+    private ImageView startAllExpandIcon, subtopicCloseDialog;
 
 
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
@@ -63,21 +67,8 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         initializeViews();
         initializeFonts();
 
-//        subjectList.setItems(viewModel.getSubjects());
-//        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Subject>) c -> {
-//            if (c.getList().size() == 1) {
-//                Subject subject = c.getList().get(0);
-//                viewModel.setSelectedSubject(subject);
-//                emptyTopicListLabel.setVisible(false);
-//            } else {
-//                viewModel.setSelectedSubject(null);
-//                emptyTopicListLabel.setVisible(true);
-//            }
-//        });
-
-        ToggleGroup toggleGroup = new ToggleGroup();
-        toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-
+        ToggleGroup noteSubjectsToggleGroup = new ToggleGroup();
+        noteSubjectsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 NoteSubject selectedSubject = (NoteSubject) newValue.getUserData();
                 viewModel.setSelectedNoteSubject(selectedSubject);
@@ -91,7 +82,7 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         viewModel.getNoteSubjects().forEach(subject -> {
             ToggleButton button = new ToggleButton();
             button.setUserData(subject);
-            toggleGroup.getToggles().add(button);
+            noteSubjectsToggleGroup.getToggles().add(button);
 
 
             button.setMinHeight(70);
@@ -123,102 +114,151 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                 }
             });
 
-            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 13));
+            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
             subjectListVBox.getChildren().add(button);
         });
 
 
         ToggleGroup topicListToggleGroup = new ToggleGroup();
+        ToggleGroup subtopicsListToggleGroup = new ToggleGroup();
+
         topicListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-
             if (newValue != null) {
-                Pair<NoteTopic, NoteSubTopic> selectedTopic = (Pair<NoteTopic, NoteSubTopic>) newValue.getUserData();
-                viewModel.setSelectedNoteTopic(selectedTopic.getKey());
-                viewModel.setSelectedNoteSubTopic(selectedTopic.getValue());
+//                Pair<NoteTopic, NoteSubTopic> selectedTopic = (Pair<NoteTopic, NoteSubTopic>) newValue.getUserData();
+//                viewModel.setSelectedNoteTopic(selectedTopic.getKey());
+//                viewModel.setSelectedNoteSubTopic(selectedTopic.getValue());
 
-                if (!commenceButton.isVisible()) {
-                    Animations.translateIn(commenceButton, 300);
+                NoteTopic selectedTopic = (NoteTopic) newValue.getUserData();
+                viewModel.setSelectedNoteTopic(selectedTopic);
+
+                if (viewModel.getNoteSubTopics().get(selectedTopic.getId()).isEmpty()) {
+                    if (!commenceButton.isVisible())
+                        Animations.translateIn(commenceButton, 300);
+                } else {
+                    subtopicsVBox.getChildren().clear();
+                    viewModel.getNoteSubTopics().get(selectedTopic.getId()).forEach(subTopic -> {
+                        ToggleButton button = new ToggleButton();
+                        button.setText(subTopic.getTitle());
+                        button.setUserData(subTopic);
+                        subtopicsVBox.getChildren().add(button);
+                        subtopicsListToggleGroup.getToggles().add(button);
+
+                        button.setMinHeight(48);
+                        button.setMaxHeight(48);
+                        button.setPadding(new Insets(0, 15, 0, 15));
+                        button.setAlignment(Pos.BASELINE_LEFT);
+                        button.setMaxWidth(Integer.MAX_VALUE);
+                        button.setText(subTopic.getTitle());
+
+                        button.setStyle(IDLE_BUTTON_STYLE);
+                        button.setOnMouseEntered(e -> {
+                            if (!button.isSelected()) {
+                                button.setStyle(HOVERED_BUTTON_STYLE);
+                            }
+                        });
+                        button.setOnMouseExited(e -> {
+                            if (!button.isSelected()) {
+                                button.setStyle(IDLE_BUTTON_STYLE);
+                            }
+                        });
+
+                        button.selectedProperty().addListener((observe, old, newVal) -> {
+                            if (newVal) {
+                                button.setStyle(PRESSED_STYLE);
+                                button.setTextFill(Color.WHITE);
+                            } else {
+                                button.setStyle(IDLE_BUTTON_STYLE);
+                                button.setTextFill(Color.BLACK);
+                            }
+                        });
+
+                        button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
+                    });
+                    if (commenceButton.isVisible())
+                        Animations.translateOut(commenceButton, 300);
+                    dimmer.setVisible(true);
+                    Animations.translateIn(subtopicsDialog, 300);
                 }
             } else {
-                Animations.translateOut(commenceButton, 300);
+                if (commenceButton.isVisible())
+                    Animations.translateOut(commenceButton, 300);
             }
         });
 
+        subtopicsListToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (!subtopicsCommenceButton.isVisible()) {
+                    Animations.translateIn(subtopicsCommenceButton, 200);
+                }
+            } else {
+                Animations.translateOut(subtopicsCommenceButton, 200);
+            }
+        }));
+
         viewModel.selectedNoteSubjectProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(TAG + "Selected Note Subject -> " + Helper.toString(newValue));
             topicListToggleGroup.getToggles().clear();
             topicListVBox.getChildren().clear();
 
             if (newValue != null) {
                 viewModel.getNoteSubjectTopics().get(newValue.getId()).forEach(topic -> {
+                    StackPane pane = new StackPane();
+                    ToggleButton button = new ToggleButton();
+                    button.setText(topic.getTitle());
+                    button.setUserData(topic);
+                    topicListToggleGroup.getToggles().add(button);
 
-                    VBox vBox = new VBox();
-                    TitledPane titledPane = new TitledPane(topic.getTitle(), vBox);
+                    button.setMinHeight(48);
+                    button.setMaxHeight(48);
+                    button.setPadding(new Insets(0, 0, 0, 20));
+                    button.setAlignment(Pos.BASELINE_LEFT);
+                    button.setMaxWidth(Double.MAX_VALUE);
+                    button.setText(topic.getTitle());
 
-//                    System.out.println("Subtopics for note with subject id -> " + newValue.getId() + " and topic id -> " + topic.getTopicId() + " is " + Helper.toString(viewModel.getNoteSubTopics().get(newValue.getId())));
-//                    System.out.println(TAG + "Subtopics for note with subject id -> " + newValue.getId() + " and topic id -> " + topic.getTopicId() + " is " + Helper.toString(viewModel.getNoteSubTopics().get(topic.getTopicId())));
-                    viewModel.getNoteSubTopics().get(topic.getId()).forEach(subTopic -> {
-                        if (subTopic.getTopicId() == topic.getId()) {
-                            ToggleButton button = new ToggleButton();
-                            Pair<NoteTopic, NoteSubTopic> data = new Pair<>(topic, subTopic);
-                            button.setUserData(data);
-                            topicListToggleGroup.getToggles().add(button);
+                    pane.setMinHeight(48);
+                    pane.setMinWidth(48);
+                    pane.setMaxWidth(Double.MAX_VALUE);
 
+                    ImageView padlockIcon = new ImageView(new Image(getClass().getResource("/drawable/novel_images/padlock_icon.png").toString()));
+                    padlockIcon.setFitWidth(15);
+                    padlockIcon.setFitHeight(20);
+                    StackPane.setAlignment(padlockIcon, Pos.CENTER_RIGHT);
+                    StackPane.setMargin(padlockIcon, new Insets(0, 20, 0, 0));
 
-                            button.setMinHeight(48);
-                            button.setMaxHeight(48);
-                            button.setPadding(new Insets(0, 0, 0, 20));
-                            button.setAlignment(Pos.BASELINE_LEFT);
-                            button.setMaxWidth(Double.MAX_VALUE);
-                            button.setText(subTopic.getTitle());
-
+                    button.setStyle(IDLE_BUTTON_STYLE);
+                    button.setOnMouseEntered(e -> {
+                        if (!button.isSelected()) {
+                            button.setStyle(HOVERED_BUTTON_STYLE);
+                        }
+                    });
+                    button.setOnMouseExited(e -> {
+                        if (!button.isSelected()) {
                             button.setStyle(IDLE_BUTTON_STYLE);
-                            button.setOnMouseEntered(e -> {
-                                if (!button.isSelected()) {
-                                    button.setStyle(HOVERED_BUTTON_STYLE);
-                                }
-                            });
-                            button.setOnMouseExited(e -> {
-                                if (!button.isSelected()) {
-                                    button.setStyle(IDLE_BUTTON_STYLE);
-                                }
-                            });
-
-                            button.selectedProperty().addListener((observe, old, newVal) -> {
-                                if (newVal) {
-                                    button.setStyle(PRESSED_STYLE);
-                                    button.setTextFill(Color.WHITE);
-                                } else {
-                                    button.setStyle(IDLE_BUTTON_STYLE);
-                                    button.setTextFill(Color.BLACK);
-                                }
-                            });
-
-                            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
-
-                            vBox.getChildren().add(button);
                         }
                     });
 
-                    topicListVBox.getChildren().add(titledPane);
+                    button.selectedProperty().addListener((observe, old, newVal) -> {
+                        if (newVal) {
+                            button.setStyle(PRESSED_STYLE);
+                            button.setTextFill(Color.WHITE);
+                        } else {
+                            button.setStyle(IDLE_BUTTON_STYLE);
+                            button.setTextFill(Color.BLACK);
+                        }
+                    });
+
+                    button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 13));
+
+                    if (topic.isFree()) {
+                        pane.getChildren().add(button);
+                    } else {
+                        button.setDisable(true);
+                        pane.getChildren().addAll(button, padlockIcon);
+                    }
+                    topicListVBox.getChildren().add(pane);
                 });
             }
         });
-
-
-//        topicList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Topic>) c -> {
-//            if (c.getList().size() == 1) {
-//                Topic topic = c.getList().get(0);
-//                viewModel.setSelectedTopic(topic);
-//                if (!commenceButton.isVisible()) {
-//                    showCommenceButton();
-//                }
-//            } else {
-//                hideCommenceButton();
-//                viewModel.setSelectedTopic(null);
-//            }
-//        });
 
         commenceButton.setOnAction(event -> {
 //            System.out.println(TAG + "SelectedNoteSubject -> " + Helper.toString(viewModel.getSelectedNoteSubject()));
@@ -238,6 +278,21 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
             ViewSwitcher.showScreen(View.NOTES_SCREEN);
         });
 
+        startAllPanel.setOnMouseEntered(event -> {
+            startAllPanel.setStyle(HOVERED_BUTTON_STYLE);
+        });
+        startAllPanel.setOnMouseExited(event -> {
+            startAllPanel.setStyle(IDLE_BUTTON_STYLE);
+        });
+        startAllPanel.setOnMouseClicked(event -> {
+
+        });
+
+        subtopicCloseDialog.setOnMouseClicked(event -> {
+            topicListToggleGroup.getSelectedToggle().setSelected(false);
+            dimmer.setVisible(false);
+            Animations.translateOut(subtopicsDialog, 300);
+        });
 
     }
 
@@ -247,6 +302,9 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         backButtonImage.setFitWidth(35);
         backButton.setBackground(Background.EMPTY);
         backButton.setGraphic(backButtonImage);
+
+        startAllExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
+        subtopicCloseDialog.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
     }
 
     private void initializeFonts() {
@@ -255,6 +313,8 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         topicsTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
         emptyTopicListLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
         commenceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+        subtopicsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+        subtopicsStartAllText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
     }
 
 

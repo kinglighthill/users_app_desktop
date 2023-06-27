@@ -6,90 +6,151 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.note_screens.SelectNoteController">
-    <top>
-        <ToolBar prefHeight="75.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER">
-            <items>
-                <Button fx:id="backButton" mnemonicParsing="false" onMouseClicked="#backButtonClicked"/>
-                <Label fx:id="pageTitle" text="Select Note" textFill="WHITE">
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.image.ImageView?>
+<StackPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.note_screens.SelectNoteController">
+    <BorderPane>
+        <top>
+            <ToolBar prefHeight="75.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER">
+                <items>
+                    <Button fx:id="backButton" mnemonicParsing="false" onMouseClicked="#backButtonClicked"/>
+                    <Label fx:id="pageTitle" text="Select Note" textFill="WHITE">
+                        <padding>
+                            <Insets left="20.0" />
+                        </padding>
+                        <font>
+                            <Font size="24.0" />
+                        </font>
+                    </Label>
+                </items>
+                <padding>
+                    <Insets left="10.0" />
+                </padding>
+            </ToolBar>
+        </top>
+
+        <center>
+            <StackPane prefHeight="200.0" prefWidth="100.0">
+                <children>
+                    <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #EDEDED;">
+                        <children>
+                            <VBox prefHeight="716.0" prefWidth="344.0" style="-fx-background-color: #EDEDED;">
+                                <children>
+                                    <Label fx:id="subjectsTitle" prefHeight="17.0" prefWidth="361.0" style="-fx-background-color: #ffffff;" text="Subjects" textFill="#105801">
+
+                                        <padding>
+                                            <Insets bottom="20.0" left="20.0" top="20.0" />
+                                        </padding>
+                                    </Label>
+                                    <Region prefHeight="5.0" prefWidth="200.0" />
+                                    <ScrollPane fx:id="subjectListScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-border-color: #EDEDED;" VBox.vgrow="ALWAYS">
+                                        <content>
+                                            <VBox fx:id="subjectListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #F7F7F7;" />
+                                        </content>
+                                    </ScrollPane>
+                                </children>
+                            </VBox>
+                            <Region prefHeight="200.0" prefWidth="5.0" />
+                            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label fx:id="topicsTitle" prefHeight="57.0" prefWidth="2000.0" style="-fx-background-color: #ffffff;" text="Topics" textFill="#105801">
+
+                                        <padding>
+                                            <Insets bottom="20.0" left="20.0" top="20.0" />
+                                        </padding>
+                                    </Label>
+                                    <Line endX="200.0" fill="BLACK" startX="-100.0" stroke="#ebebeb00" strokeWidth="5.0"/>
+                                    <StackPane fx:id="topicStackPane" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                        <children>
+                                            <ScrollPane fx:id="topicListScrollPane" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                                                <content>
+                                                    <VBox fx:id="topicListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #F7F7F7;" />
+                                                </content>
+                                            </ScrollPane>
+                                            <Label fx:id="emptyTopicListLabel" text="Select a Subject" />
+                                        </children>
+                                    </StackPane>
+                                </children>
+                            </VBox>
+                        </children>
+                    </HBox>
+
+                    <Button fx:id="commenceButton" mnemonicParsing="false" text="Commence Study" textFill="WHITE" visible="false" style="-fx-background-color: #4BB036; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_RIGHT">
+                        <StackPane.margin>
+                            <Insets bottom="30.0" right="30.0" />
+                        </StackPane.margin>
+                        <padding>
+                            <Insets bottom="15.0" left="30.0" right="30.0" top="15.0" />
+                        </padding>
+                    </Button>
+
+                    <Button fx:id="quitButton" mnemonicParsing="false" text="Quit Study" textFill="WHITE" visible="false" style="-fx-background-color: #4BB036; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_LEFT">
+                        <StackPane.margin>
+                            <Insets bottom="30.0" right="30.0" />
+                        </StackPane.margin>
+                        <padding>
+                            <Insets bottom="15.0" left="30.0" right="30.0" top="15.0" />
+                        </padding>
+                    </Button>
+                </children>
+            </StackPane>
+        </center>
+    </BorderPane>
+    <VBox fx:id="dimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
+    <BorderPane fx:id="subtopicsDialog" maxHeight="450.0" maxWidth="380.0"  StackPane.alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 8;" visible="false">
+        <center>
+            <VBox>
+                <Panel>
+                    <left>
+                        <Label fx:id="subtopicsLabel" text="Sub Topics" textFill="#034801"/>
+                    </left>
+                    <right>
+                        <ImageView fx:id="subtopicCloseDialog" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
+                    </right>
+                </Panel>
+                <Line endX="350" stroke="#E2F2E4">
+                    <VBox.margin>
+                        <Insets top="15"/>
+                    </VBox.margin>
+                </Line>
+                <Panel fx:id="startAllPanel">
+                    <left>
+                        <Label fx:id="subtopicsStartAllText" text="Start All" textFill="#034801"/>
+                    </left>
+                    <right>
+                        <ImageView fx:id="startAllExpandIcon"/>
+                    </right>
                     <padding>
-                        <Insets left="20.0" />
+                        <Insets topRightBottomLeft="15"/>
                     </padding>
+                </Panel>
+                <Line endX="350" stroke="#E2F2E4">
+                    <VBox.margin>
+                        <Insets bottom="15"/>
+                    </VBox.margin>
+                </Line>
+                <ScrollPane fx:id="subtopicScrollPane" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: #ffffff;">
+                    <content>
+                        <VBox fx:id="subtopicsVBox" spacing="4"/>
+                    </content>
+                </ScrollPane>
+            </VBox>
+        </center>
+        <bottom>
+            <HBox alignment="BOTTOM_CENTER">
+                <Button fx:id="subtopicsCommenceButton" prefHeight="45" prefWidth="200" text="Commence Study" textFill="white" style="-fx-background-color: #4BB036; -fx-background-radius: 8;" visible="false">
                     <font>
-                        <Font size="24.0" />
+                        <Font size="16"/>
                     </font>
-                </Label>
-            </items>
-            <padding>
-                <Insets left="10.0" />
-            </padding>
-        </ToolBar>
-    </top>
-
-    <center>
-        <StackPane prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #EDEDED;">
-               <children>
-                  <VBox prefHeight="716.0" prefWidth="344.0" style="-fx-background-color: #EDEDED;">
-                     <children>
-                        <Label fx:id="subjectsTitle" prefHeight="17.0" prefWidth="361.0" style="-fx-background-color: #ffffff;" text="Subjects" textFill="#105801">
-
-                           <padding>
-                              <Insets bottom="20.0" left="20.0" top="20.0" />
-                           </padding>
-                        </Label>
-                        <Region prefHeight="5.0" prefWidth="200.0" />
-                        <ScrollPane fx:id="subjectListScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-border-color: #EDEDED;" VBox.vgrow="ALWAYS">
-                           <content>
-                              <VBox fx:id="subjectListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #F7F7F7;" />
-                           </content>
-                        </ScrollPane>
-                     </children>
-                  </VBox>
-                  <Region prefHeight="200.0" prefWidth="5.0" />
-                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                      <children>
-                          <Label fx:id="topicsTitle" prefHeight="57.0" prefWidth="2000.0" style="-fx-background-color: #ffffff;" text="Topics" textFill="#105801">
-
-                              <padding>
-                                  <Insets bottom="20.0" left="20.0" top="20.0" />
-                              </padding>
-                          </Label>
-                          <Line endX="200.0" fill="BLACK" startX="-100.0" stroke="#ebebeb00" strokeWidth="5.0"/>
-                        <StackPane fx:id="topicStackPane" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                           <children>
-                              <ScrollPane fx:id="topicListScrollPane" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
-                                 <content>
-                                    <VBox fx:id="topicListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #F7F7F7;" />
-                                 </content>
-                              </ScrollPane>
-                              <Label fx:id="emptyTopicListLabel" text="Select a Subject" />
-                           </children>
-                        </StackPane>
-                      </children>
-                  </VBox>
-               </children>
+                </Button>
+                <BorderPane.margin>
+                    <Insets top="15"/>
+                </BorderPane.margin>
             </HBox>
+        </bottom>
+        <padding>
+            <Insets top="20" right="25" left="25" bottom="20"/>
+        </padding>
+    </BorderPane>
 
-            <Button fx:id="commenceButton" mnemonicParsing="false" text="Commence Study" textFill="WHITE" visible="false" style="-fx-background-color: #4BB036; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_RIGHT">
-               <StackPane.margin>
-                  <Insets bottom="30.0" right="30.0" />
-               </StackPane.margin>
-               <padding>
-                  <Insets bottom="15.0" left="30.0" right="30.0" top="15.0" />
-               </padding>
-            </Button>
-
-             <Button fx:id="quitButton" mnemonicParsing="false" text="Quit Study" textFill="WHITE" visible="false" style="-fx-background-color: #4BB036; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_LEFT">
-                 <StackPane.margin>
-                     <Insets bottom="30.0" right="30.0" />
-                 </StackPane.margin>
-                 <padding>
-                     <Insets bottom="15.0" left="30.0" right="30.0" top="15.0" />
-                 </padding>
-             </Button>
-         </children>
-        </StackPane>
-    </center>
-</BorderPane>
+</StackPane>

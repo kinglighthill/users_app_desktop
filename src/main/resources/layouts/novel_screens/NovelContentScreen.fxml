@@ -13,7 +13,6 @@
     <StackPane AnchorPane.topAnchor="1.0" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0">
 
         <BorderPane style="-fx-background-color: white;">
-
             <top>
                 <VBox>
                     <Panel>
@@ -58,7 +57,7 @@
                             <Button fx:id="prevButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
                             <Label fx:id="chapterCount" text="1 of 10"/>
                             <Button fx:id="nextButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
-                            <Button fx:id="takeQuizButton" prefHeight="30" prefWidth="100" text="Take Quiz" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 5;"/>
+                            <Button fx:id="takeQuizButton" disable="true" prefHeight="30" prefWidth="100" text="Take Quiz" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 5;"/>
                             <padding>
                                 <Insets bottom="15" top="15"/>
                             </padding>
@@ -436,6 +435,71 @@
             </padding>
         </VBox>
 
+        <VBox fx:id="activateNowDialog" spacing="25" maxHeight="450.0" maxWidth="380.0" prefHeight="400.0" prefWidth="250.0" StackPane.alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
+            <Panel>
+                <left>
+                    <ImageView fx:id="activateNowPadlockIcon" fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true"/>
+                </left>
+                <right>
+                    <ImageView fx:id="activateNowCloseIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                </right>
+            </Panel>
+            <Label fx:id="activateHeaderText" text="Activate your App for Unlimited Access" textFill="#12AF20" wrapText="true"/>
+            <VBox spacing="15">
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <ImageView fx:id="greenTickIcon1" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                    <Label text="Unlock all Note Topics">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </Label>
+                </HBox>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <ImageView fx:id="greenTickIcon2" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                    <Label text="Unlock all Past Questions Years">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </Label>
+                </HBox>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <ImageView fx:id="greenTickIcon3" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                    <Label text="Unlock all Novel Chapters">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </Label>
+                </HBox>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <ImageView fx:id="greenTickIcon4" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                    <Label text="Use App without internet">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </Label>
+                </HBox>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <ImageView fx:id="greenTickIcon5" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                    <Label text="Activation lasts for One Academic Year">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </Label>
+                </HBox>
+            </VBox>
+
+            <HBox alignment="CENTER">
+                <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N2000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8;">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Button>
+            </HBox>
+
+            <padding>
+                <Insets topRightBottomLeft="25"/>
+            </padding>
+        </VBox>
     </StackPane>
 
 </AnchorPane>

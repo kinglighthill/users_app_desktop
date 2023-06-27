@@ -2,7 +2,9 @@ package com.scholarly.utme.controller.landing_screens;
 
 import com.scholarly.utme.data.model.Course;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenVM;
 import com.scholarly.utme.viewmodels.landing_screens.*;
 import de.saxsys.mvvmfx.*;
@@ -14,11 +16,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
+import javafx.scene.layout.VBox;
+import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
+
+import static com.scholarly.utme.util.Constants.PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED;
+import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
 
 @FxmlPath("/layouts/landing_screens/landing_screen.fxml")
 public class LandingScreenController implements FxmlView<LandingScreenVM>, Initializable {
@@ -27,20 +33,20 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     private LandingScreenVM viewModel;
 
     @FXML
-    public ImageView profileImage, handImage, bell, appImage;
-
+    public ImageView profileImage, handImage, bell, appImage, activateCloseIcon, activateInfoIcon;
+    @FXML
+    private Panel activatePanel;
     @FXML
     public StackPane homeContentPane;
-
     @FXML
     private ListView<Course> recentlyViewedListView;
-
     @FXML
     private ToggleButton homeButton, accountButton, activateButton, appsButton, triviaButton, performanceButton, updatesButton, settingsButton;
 
     @FXML
-    private Button logoutButton;
-
+    private Button logoutButton, topActivateButton;
+    @FXML
+    private VBox activateVBox;
     @FXML
     private Label scholarlyText, helloText, startLearningText;
 
@@ -49,8 +55,11 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
 
 
+    private Preferences preferences;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        preferences = AppPreferences.getPreferences();
 
         ViewTuple<LandingScreenHomeController, LandingScreenHomeVM> homeViewTuple = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load();
         Parent homeView = homeViewTuple.getView();
@@ -168,10 +177,32 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
         });*/
 
+        topActivateButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
+        });
+
+        if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE, false)) {
+            activateVBox.getChildren().remove(activatePanel);
+        } else {
+            if (!activateVBox.getChildren().contains(activatePanel)) {
+                activateVBox.getChildren().add(activatePanel);
+            }
+        }
+
+        if (preferences.getBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED, false)) {
+            activateVBox.getChildren().remove(activatePanel);
+        }
+        activateCloseIcon.setOnMouseClicked(event -> {
+            preferences.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED, activateVBox.getChildren().remove(activatePanel));
+        });
+
     }
 
     private void initializeViews() {
         appImage.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
+        activateCloseIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/activate_close_icon.png").toString()));
+        activateInfoIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/activate_info_icon.png").toString()));
+        topActivateButton.setBackground(Background.EMPTY);
 
         homeButton.setBackground(Background.EMPTY);
         homeButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/landing_screen_images/home_icon.png").toString())));

@@ -1,17 +1,17 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.controller.landing_screens.LandingScreenActivateController;
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.PQTopic;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
-import de.saxsys.mvvmfx.FxmlPath;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import io.reactivex.rxjava3.core.Observable;
-import javafx.collections.FXCollections;
+import com.scholarly.utme.viewmodels.SubjectListViewVM;
+import com.scholarly.utme.viewmodels.landing_screens.LandingScreenActivateVM;
+import de.saxsys.mvvmfx.*;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,16 +20,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.CheckComboBox;
-import org.controlsfx.control.IndexedCheckModel;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/SubjectListItemView.fxml")
 public class SubjectListItemController implements FxmlView<SubjectListItemVM>, Initializable {
+    private static final String TAG = "SubjectListItemController:  ";
 
     @FXML
     private StackPane subjectImageBackground;
@@ -38,7 +37,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     private CheckBox subjectCheckBox, shuffleQuestionsCheckBox, shuffleOptionsCheckBox;
 
     @FXML
-    private ChoiceBox<Year> yearChoiceBox;
+    public ChoiceBox<Year> yearChoiceBox;
 
     @FXML
     private CheckComboBox<PQTopic> topicsComboBox;
@@ -65,12 +64,14 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     @InjectViewModel
     private SubjectListItemVM viewModel;
 
-    private static final String TAG = "SubjectListItemController:  ";
+    SubjectListViewController subjectListViewController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         initializeViews();
+
+        ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
+        subjectListViewController = subjectListViewTuple.getCodeBehind();
 
 //        System.out.println("Subject " + viewModel.getSubjectTableName() + " color name -> " + viewModel.getSubjectColorName());
         subjectImageBackground.setStyle("-fx-background-radius: 8 0 0 8; -fx-background-color: " + viewModel.getSubjectColorName());
@@ -98,11 +99,22 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         });
 
         yearChoiceBox.getItems().addAll(viewModel.getYears());
+        List<Year> freeYears = viewModel.getYears().stream().filter(Year::isFree).collect(Collectors.toList());
+        viewModel.setSelectedYearProperty(freeYears.get(0));
         yearChoiceBox.getSelectionModel().selectedItemProperty().addListener( (observable, oldValue, newValue) -> {
-            viewModel.loadQuestionNumbersList(newValue);
-            viewModel.setSelectedYearProperty(newValue);
+            if (newValue != null) {
+                if (newValue.isFree()) {
+                    viewModel.loadQuestionNumbersList(newValue);
+                    viewModel.setSelectedYearProperty(newValue);
+                } else {
+                    yearChoiceBox.getSelectionModel().clearSelection();
+                    yearChoiceBox.getSelectionModel().select(freeYears.get(0));
+                    subjectListViewController.showActivateDialog();
+                }
+            }
+
         });
-        yearChoiceBox.setValue(viewModel.getYears().get(0));
+        yearChoiceBox.setValue(freeYears.get(0));
 
 
         topicsComboBox.getItems().addAll(viewModel.getTopics());

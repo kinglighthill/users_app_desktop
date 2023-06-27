@@ -1,4 +1,4 @@
-/*    -----TableView Styling-----    */
+/* ------ TableView Styling ----- */
 .table-view .column-header,
 .table-view .column-header .filler,
 .table-view .column-header-background .filler {
@@ -26,7 +26,7 @@
 }
 
 
-/*    -----TabPane Styling-----    */
+/* ------ TabPane Styling ------ */
 .tab-pane:focused .tab-header-area .headers-region .tab:selected .focus-indicator {
      -fx-border-width: 1;
      -fx-border-color: transparent;
@@ -49,7 +49,20 @@
 }
 
 
-/* -------ScrollPane Styling ---------- */
+/* ------- ScrollPane Styling ------- */
 .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+
+/* ------ ChoiceBox Styling ------- */
+/*.choice-box{
+     -fx-mark-color: transparent; *//* OK *//*
+     -fx-focused-mark-color: transparent;
+}*/
+
+
+/* ------ ComboBox Styling ------- */
+.combo-box {
     -fx-background-color: transparent;
 }
