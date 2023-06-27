@@ -35,6 +35,9 @@ module com.scholarly.utme {
     requires latex.converter;
     requires com.sandec.mdfx;
 //    requires org.scilab.forge;
+    requires webcam.capture;
+    requires unirest.java;
+    requires json;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;
@@ -48,6 +51,7 @@ module com.scholarly.utme {
 
     opens com.scholarly.utme.ui.listcells to javafx.fxml;
     opens com.scholarly.utme.network.model to com.google.gson;
+    opens com.scholarly.utme.network.model.response to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentViewType to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.text to com.google.gson;

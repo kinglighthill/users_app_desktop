@@ -18,7 +18,7 @@ import java.util.prefs.Preferences;
 public class NovelChapterDao {
     private static final String TAG = "NovelChapterDao: ";
     private static final DatabaseService databaseService = new DatabaseService();
-    private static final Preferences preferences = AppPreferences.getPreferences();
+    private static Preferences preferences = AppPreferences.getPreferences();
 
     private static final String idColumn = "_id";
     private static final String positionColumn = "position";
@@ -28,22 +28,17 @@ public class NovelChapterDao {
     private static final String novelIdColumn = "novel_id";
     private static final String orderColumn = "order";
 
-    private static final ObservableList<NovelChapter> novelChapters;
     private static final ObservableList<FreeContent> freeContents;
 
+    ObservableList<NovelChapter> novelChapters;
+
     static {
-        novelChapters = FXCollections.observableArrayList();
         freeContents = FXCollections.observableArrayList();
-        updateNovelChaptersFromDb();
         updateFreeChaptersColumn();
-        if (preferences.getBoolean(Constants.PREF_KEY_ACTIVATION_STATE, false))
-            openFreeChapters();
-        else
-            openAllChapters();
     }
 
-    private static void updateNovelChaptersFromDb() {
-
+    private void updateNovelChaptersFromDb() {
+        novelChapters = FXCollections.observableArrayList();
         String query = "SELECT * FROM " + Tables.NOVEL_CHAPTERS;
 
         try(ResultSet rs = databaseService.executeQuery(query)) {
@@ -86,27 +81,25 @@ public class NovelChapterDao {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Free Contents from database because " + e.getMessage());
-            novelChapters.clear();
+            freeContents.clear();
         }
     }
 
-    private static void openFreeChapters() {
-        for (NovelChapter chapter : novelChapters) {
-            for (FreeContent content : freeContents) {
-                if (content.getChapterId() == chapter.getId()) {
-                    chapter.setFree(true);
+    public ObservableList<NovelChapter> getNovelChapters() {
+        updateNovelChaptersFromDb();
+        if (preferences.getBoolean(Constants.PREF_KEY_ACTIVATION_STATE, false)) {
+            for (NovelChapter chapter : novelChapters) {
+                chapter.setFree(true);
+            }
+        } else {
+            for (NovelChapter chapter : novelChapters) {
+                for (FreeContent content : freeContents) {
+                    if (content.getChapterId() == chapter.getId()) {
+                        chapter.setFree(true);
+                    }
                 }
             }
         }
-    }
-
-    private static void openAllChapters() {
-        for (NovelChapter chapter : novelChapters) {
-            chapter.setFree(true);
-        }
-    }
-
-    public static ObservableList<NovelChapter> getNovelChapters() {
-        return FXCollections.unmodifiableObservableList(novelChapters);
+        return novelChapters;
     }
 }

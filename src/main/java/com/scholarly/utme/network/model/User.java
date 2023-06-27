@@ -15,8 +15,9 @@ public class User {
     private String profilePicUrl;
     @SerializedName("referral_code")
     private String referralCode;
+    private String gender;
 
-    public User(String fullName, String email, String phoneNumber, String country, boolean emailVerified, String profilePicUrl, String referralCode) {
+    public User(String fullName, String email, String phoneNumber, String country, boolean emailVerified, String profilePicUrl, String referralCode, String gender) {
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -24,6 +25,7 @@ public class User {
         this.emailVerified = emailVerified;
         this.profilePicUrl = profilePicUrl;
         this.referralCode = referralCode;
+        this.gender = gender;
     }
 
     public String getFullName() {
@@ -80,5 +82,13 @@ public class User {
 
     public void setReferralCode(String referralCode) {
         this.referralCode = referralCode;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

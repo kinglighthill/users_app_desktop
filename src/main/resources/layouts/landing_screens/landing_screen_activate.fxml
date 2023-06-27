@@ -31,8 +31,8 @@
 
         <center>
             <AnchorPane prefWidth="500" prefHeight="400" style="-fx-background-color: white;">
-                <VBox spacing="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="30">
-                    <StackPane style="-fx-background-color: rgba(223, 56, 102, 0.2); -fx-background-radius: 5;">
+                <VBox fx:id="centerVBox" spacing="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="30">
+                    <StackPane fx:id="notActivatedPane" style="-fx-background-color: rgba(223, 56, 102, 0.2); -fx-background-radius: 5;">
                         <HBox spacing="5" prefHeight="80" alignment="CENTER">
                             <Label text="Your app has not been activated" textFill="#FF0046">
                                 <font>
@@ -47,7 +47,7 @@
                     </StackPane>
 
                     <AnchorPane style="-fx-border-color: #F1F1F1; -fx-border-radius: 5;">
-                        <VBox spacing="40" alignment="CENTER_LEFT" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="50">
+                        <VBox fx:id="innerVBox" spacing="40" alignment="CENTER_LEFT" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="50">
                             <Label prefWidth="700" text="Enter a 16 digit activation pin to unlock all the layers and amazing features in this app. Activation lasts for one academic year!" textFill="#053500" wrapText="true">
                                 <font>
                                     <Font size="16"/>
@@ -78,7 +78,7 @@
                                     </VBox.margin>
                                 </Button>
                             </VBox>
-                            <Label text="NOTE: Activation unlocks ALL Subjects/Novels and opens ALL Years" textFill="#FA0000">
+                            <Label fx:id="activationText" text="NOTE: Activation unlocks ALL Subjects/Novels and opens ALL Years" textFill="#FA0000">
                                 <font>
                                     <Font size="16"/>
                                 </font>

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class SubjectListItemVM implements ViewModel {
-    public static final String TAG = "SubjectListItemVM: ";
+    private static final String TAG = "SubjectListItemVM: ";
 
     public Year getSelectedYearProperty() {
         return selectedYearProperty.get();
@@ -74,13 +74,11 @@ public class SubjectListItemVM implements ViewModel {
     private SimpleBooleanProperty subjectSelected = new SimpleBooleanProperty(false);
     private SimpleBooleanProperty shuffleQuestions = new SimpleBooleanProperty(false);
     private SimpleBooleanProperty shuffleOptions = new SimpleBooleanProperty(false);
-
     private ObjectProperty<List<Integer>> selectedTopicsProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Year> selectedYearProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Integer> selectedNumberOfQuestions = new SimpleObjectProperty<>();
 
     private PQSubject subject;
-
     private BehaviorSubject<SubjectState> subjectState = BehaviorSubject.create();
 
     public SubjectListItemVM(PQSubject subject) {
@@ -96,6 +94,9 @@ public class SubjectListItemVM implements ViewModel {
 
         mapPropertiesToState();
 
+    }
+
+    public SubjectListItemVM() {
 
     }
 
@@ -317,11 +318,9 @@ public class SubjectListItemVM implements ViewModel {
     public static class SubjectState {
         private PQSubject subject;
         private Type type;
-
         private Boolean isSelected;
         private Boolean shuffleQuestions;
         private Boolean shuffleOptions;
-
         private List<Integer> selectedTopics;
         private Year selectedYear;
         private Integer numberOfQuestions;

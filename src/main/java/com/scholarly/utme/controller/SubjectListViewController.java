@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -30,7 +31,6 @@ import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/SubjectListView.fxml")
 public class SubjectListViewController implements FxmlView<SubjectListViewVM>, Initializable {
-
     private static final String TAG = "SubjectListViewController:  ";
 
     @InjectViewModel
@@ -38,30 +38,22 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
     @FXML
     private ListView<SubjectListItemVM> objectiveList, theoryList;
-
     @FXML
     private Label timeSettingsLabel;
-
     @FXML
-    VBox hoursSelector, minutesSelector;
-
+    private VBox hoursSelector, minutesSelector, activateNowDialog, dimmer;
     @FXML
     ChoiceBox<Integer> hoursChoiceBox, minutesChoiceBox;
-
     @FXML
     TabPane tabMenu;
-
     @FXML
     Tab objectiveTab, theoryTab;
-
     @FXML
     private TableView<SubjectState> questionOverviewTable;
-
     @FXML
     private TableColumn<SubjectState, String> subjectColumn, yearColumn, questionsColumn;
-
     @FXML
-    private Button startButton;
+    Button startButton, activateInvisibleButton;
 
     private SubjectListOption selectedOption;
 
@@ -70,8 +62,10 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     private ObservableList<SubjectState> selectedTheorySubjects = FXCollections.observableArrayList();
 
 
+    private SubjectListItemController controller;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        controller = new SubjectListItemController();
         Preferences userPreferences = AppPreferences.getPreferences();
         String lastSelectedTab = userPreferences.get(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
 
@@ -83,7 +77,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         }
 
         initializeViews();
-
         initializeFonts();
 
         objectiveList.setItems(viewModel.getObjectiveSubjects());
@@ -182,6 +175,15 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             }
         });
 
+        activateInvisibleButton.setOnAction(event -> {
+            dimmer.setVisible(true);
+            Alerts.activateDialog(
+                    this.getClass(),
+                    "Activate",
+                    null,
+                    null
+            ).show();
+        });
 
         startButton.setOnAction(event -> {
 
@@ -238,6 +240,22 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
         });
 
+        /*viewModel.activatedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue) {
+                System.out.println(TAG + "OPEN ACTIVATION DIALOG!");
+            } else {
+                System.out.println(TAG + "CLOSE ACTIVATION DIALOG!");
+            }
+        }));*/
+
+        /*controller.yearChoiceBox.setOnAction(event -> {
+            if (!viewModel.getSelectedObjectiveSubjects().get(0).getSelectedYear().isFree()) {
+                System.out.println(TAG + "OPEN ACTIVATION DIALOG!");
+            } else {
+                System.out.println(TAG + "CLOSE ACTIVATION DIALOG!");
+            }
+        });*/
+
     }
 
     private void initializeViews() {
@@ -273,6 +291,10 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             hoursSelector.setVisible(false);
             minutesSelector.setVisible(false);
         }
+    }
+
+    public void showActivateDialog() {
+        activateInvisibleButton.fire();
     }
 
     public enum SubjectListOption {

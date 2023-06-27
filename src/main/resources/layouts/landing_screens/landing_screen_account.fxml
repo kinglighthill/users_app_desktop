@@ -36,14 +36,14 @@
                         <Panel fx:id="profilePanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="15" alignment="CENTER">
-                                    <ImageView fx:id="profileImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <ImageView fx:id="profileImage"  pickOnBounds="true"/>
                                     <VBox spacing="5" alignment="CENTER_LEFT">
-                                        <Label text="ogbonnalucy@gmail.com">
+                                        <Label fx:id="emailText" text="ogbonnalucy@gmail.com">
                                             <font>
                                                 <Font size="16"/>
                                             </font>
                                         </Label>
-                                        <Label text="ASDWERTY1234HRTSN" textFill="#12AF20">
+                                        <Label fx:id="deviceIdLabel" textFill="#12AF20">
                                             <font>
                                                 <Font size="16"/>
                                             </font>

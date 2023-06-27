@@ -6,8 +6,37 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Font?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenController">
-
+    <top>
+        <VBox fx:id="activateVBox">
+            <Panel fx:id="activatePanel" style="-fx-background-color: #FAF6CA;">
+                <left>
+                    <HBox spacing="20" alignment="CENTER">
+                        <ImageView fx:id="activateInfoIcon" fitHeight="20" fitWidth="20" preserveRatio="true" pickOnBounds="true"/>
+                        <Label text="Your app is not activated, Activate your App to access all locked Years and Novels" textFill="#5B4617">
+                            <font>
+                                <Font size="13"/>
+                            </font>
+                        </Label>
+                    </HBox>
+                </left>
+                <right>
+                    <HBox spacing="25" alignment="CENTER">
+                        <Button fx:id="topActivateButton" text="Activate now" textFill="#5B4617" style="-fx-border-color: #5B4617; -fx-border-radius: 5;">
+                            <font>
+                                <Font size="10"/>
+                            </font>
+                        </Button>
+                        <ImageView fx:id="activateCloseIcon" fitHeight="15" fitWidth="15" preserveRatio="true" pickOnBounds="true"/>
+                    </HBox>
+                </right>
+                <padding>
+                    <Insets left="30" right="25" top="5" bottom="5"/>
+                </padding>
+            </Panel>
+        </VBox>
+    </top>
     <left>
         <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="180.0" style="-fx-background-color: #006B17;">
             <children>

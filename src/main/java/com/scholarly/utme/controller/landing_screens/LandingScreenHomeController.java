@@ -1,11 +1,14 @@
 package com.scholarly.utme.controller.landing_screens;
 
+import com.google.gson.Gson;
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.listItems.NewsItem;
+import com.scholarly.utme.network.model.User;
 import com.scholarly.utme.ui.cellFactories.NewsListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -15,23 +18,24 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
+import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/landing_screens/landing_screen_home.fxml")
 public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM>, Initializable {
+    private static final String TAG = "LandingScreenHomeController: ";
 
     @InjectViewModel
     private LandingScreenHomeVM viewModel;
@@ -93,13 +97,22 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private Label whichActionText, actionCbtPracticeText, actionVideosPracticeText, actionNovelsPracticeText, actionAudioPracticeText, viewDesktopAppText;
 
+
+    private Preferences preferences = AppPreferences.getPreferences();
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        String userData = preferences.get(PREF_KEY_USER_DATA, "");
+        Gson gson = new Gson();
+        User user = gson.fromJson(userData, User.class);
 
         initializeViews();
-
         initializeFonts();
 
+        helloText.setText(helloText.getText() + user.getFullName().split(" ")[0]);
+        if (user.getProfilePicUrl() != null) {
+            compressProfileImage((new Image(user.getProfilePicUrl())));
+            System.out.println(TAG + "Image set successfully with url -> " + user.getProfilePicUrl());
+        }
 
         NewsItem newsItem1 = new NewsItem("", "", "", "");
         NewsItem newsItem2 = new NewsItem("", "", "", "");
@@ -191,9 +204,9 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         actionCloseImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/action_close_icon.png").toString()));
         boyWithLaptop.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/boy_with_laptop.png").toString()));
 
-        final Circle clip = new Circle(20, 30, 20);
-        profileImage.setClip(clip);
-        profileImage.setImage(new Image(getClass().getResource("/drawable/profileImage.jpg").toString()));
+        profileImage.setImage(null);
+//        compressProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/profile_image2.jpg").toString()));
+//        compressProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/profile_image2.png").toString()));
 
         biologyIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/biology_icon.png").toString()));
         englishIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/english_icon.png").toString()));
@@ -313,5 +326,16 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         viewDesktopAppText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
         viewDesktopAppButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 
+    }
+
+    private void compressProfileImage(Image image) {
+        Rectangle2D imageBounds = new Rectangle2D(0, 0, image.getWidth(), image.getHeight());
+        profileImage.setFitWidth(50);
+        profileImage.setFitHeight(50);
+        profileImage.setImage(image);
+        profileImage.setViewport(imageBounds);
+        profileImage.setSmooth(true);
+        Circle clip = new Circle(25, 25, 25);
+        profileImage.setClip(clip);
     }
 }
