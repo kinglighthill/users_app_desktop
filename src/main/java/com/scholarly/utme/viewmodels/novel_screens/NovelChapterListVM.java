@@ -21,12 +21,15 @@ public class NovelChapterListVM implements ViewModel {
 
     private NovelChapter selectedChapter;
 
+    private NovelChapterDao novelChapterDao;
+
 
     public void processInitialData(NovelChapterListController.InitialData data) {
+        novelChapterDao = new NovelChapterDao();
         this.novel.set(data.getNovel());
         author = data.getAuthor();
 
-        NovelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+        novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
                 novelChapter.getNovelId() == data.getNovel().getId()).forEach(novelChapter -> chapters.add(novelChapter));
 
     }

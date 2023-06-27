@@ -10,6 +10,7 @@ import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenActivateVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -21,6 +22,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import okhttp3.*;
 
@@ -44,30 +46,41 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
     @FXML
     private Pane dialogDimmer;
     @FXML
+    private StackPane notActivatedPane;
+    @FXML
     private ProgressIndicator progressBar;
     @FXML
     private ImageView padlockIcon, atmCardImage, activationSuccessfulImage;
     @FXML
-    private VBox activationSuccessfulPane;
+    private VBox activationSuccessfulPane, centerVBox, innerVBox;
     @FXML
     private TextField activationPinTextField;
     @FXML
-    private Label incorrectPinError, activationSuccessfulMessage;
+    private Label incorrectPinError, activationSuccessfulMessage, activationText;
     @FXML
     private Button activateButton, buyPinButton, loginButton;
 
-    private Preferences preferences;
-    OkHttpClient httpClient;
+    private Preferences preferences = AppPreferences.getPreferences();
+    private OkHttpClient httpClient = NetworkService.getHttpClient();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        preferences = AppPreferences.getPreferences();
-        httpClient = NetworkService.getHttpClient();
 
         ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN, "");
+//        System.out.println(TAG + "Refresh Token -> " + preferences.get(PREF_KEY_REFRESH_TOKEN, ""));
 
         initializeViews();
         initializeFonts();
+
+        centerVBox.getChildren().remove(notActivatedPane);
+        innerVBox.getChildren().remove(activationText);
+        if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE, false)) {
+            centerVBox.getChildren().remove(notActivatedPane);
+            innerVBox.getChildren().remove(activationText);
+        } else {
+            centerVBox.getChildren().add(0, notActivatedPane);
+            innerVBox.getChildren().add(innerVBox.getChildren().size(), activationText);
+        }
 
         activateButton.setOnAction(event -> {
 //            if (activationPinTextField.getCharacters().length() < 16) {
@@ -136,6 +149,8 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
+                System.out.println(TAG + "Activate: Got Request -> " + request);
+                System.out.println(TAG + "Activate: Got Request Body -> " + requestBody);
                 System.out.println(TAG + "Activate: Got response code -> " + response.code());
                 try (ResponseBody responseBody = response.body()) {
                     assert responseBody != null;
@@ -154,6 +169,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                         });
 
                     } else if (activationResponse.getStatus().equalsIgnoreCase("error")) {
+
                         Platform.runLater(() -> {
                             Alert alertDialog = Alerts.info(getClass(), "Error", activationResponse.getMessage(), "");
                             alertDialog.show();
@@ -165,7 +181,6 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                 } catch (Exception e) {
                     System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                 }
-
             }
 
             @Override

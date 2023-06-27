@@ -2,10 +2,12 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
+import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -17,7 +19,10 @@ import java.util.stream.Collectors;
 
 
 public class SubjectListViewVM implements ViewModel, SceneLifecycle {
-    private static final String TAG = "SubjectListViewVM:  ";
+    private static final String TAG = "SubjectListViewVM: ";
+
+    @InjectViewModel
+    SubjectListItemVM subjectListItemViewModel;
 
     private ObservableList<SubjectListItemVM> objectiveSubjects = FXCollections.observableArrayList();
     private ObservableList<SubjectListItemVM> theorySubjects = FXCollections.observableArrayList();
@@ -47,6 +52,7 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
 
 
     public SubjectListViewVM() {
+        subjectListItemViewModel = new SubjectListItemVM();
         objectiveSubjects.addAll(SubjectDao.getObjectiveSubjects().stream().map(SubjectListItemVM::new).collect(Collectors.toList()));
 
         theorySubjects.addAll(SubjectDao.getTheorySubjects().stream().map(SubjectListItemVM::new).collect(Collectors.toList()));

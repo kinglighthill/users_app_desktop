@@ -9,7 +9,9 @@ public class Constants {
     public static final String PREF_KEY_USER_DATA = "USER_DATA";
     public static final String PREF_KEY_REFRESH_TOKEN = "REFRESH_TOKEN";
     public static final String PREF_KEY_ACCESS_TOKEN = "ACCESS_TOKEN";
+    public static final String PREF_KEY_PROFILE_IMAGE_URL = "PROFILE_IMAGE_URL";
     public static final String PREF_KEY_ACTIVATE_ACCESS_TOKEN = "ACTIVATE_ACCESS_TOKEN";
+    public static final String PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED = "HOME_SCREEN_ACTIVATE_PROMPT_REMOVED";
 
     // Tab Preference Constants
     public static final String PREF_KEY_SELECTED_TAB = "SELECTED_TAB";
