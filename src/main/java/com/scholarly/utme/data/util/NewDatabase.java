@@ -18,9 +18,7 @@ public class NewDatabase {
 
 
     public static boolean isOK() {
-
         return checkDrivers();
-
     }
 
     private static boolean checkDrivers() {

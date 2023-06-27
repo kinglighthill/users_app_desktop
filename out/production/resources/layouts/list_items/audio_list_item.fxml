@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+
+    <graphic>
+        <HBox spacing="20" prefWidth="400" style="-fx-background-color: #F1F1F1; -fx-background-radius: 5;">
+            <StackPane>
+                <ImageView fx:id="audioImage" fitHeight="100" fitWidth="150" />
+                <ImageView fx:id="playIcon" fitWidth="40" fitHeight="40" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER"/>
+            </StackPane>
+
+            <AnchorPane prefWidth="300">
+                <VBox spacing="10" prefWidth="250" prefHeight="100">
+                    <Label fx:id="videoTitle" text="Central Nervous System"/>
+                    <HBox spacing="30">
+                        <HBox spacing="5">
+                            <ImageView fx:id="clockIcon" fitHeight="15" fitWidth="15" preserveRatio="true" pickOnBounds="true"/>
+                            <Label fx:id="timeLabel" text="45 mins"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER">
+                            <ImageView fx:id="ratingStar1" fitHeight="10" fitWidth="10" preserveRatio="true" pickOnBounds="true"/>
+                            <ImageView fx:id="ratingStar2" fitHeight="10" fitWidth="10" preserveRatio="true" pickOnBounds="true"/>
+                            <ImageView fx:id="ratingStar3" fitHeight="10" fitWidth="10" preserveRatio="true" pickOnBounds="true"/>
+                            <ImageView fx:id="ratingStar4" fitHeight="10" fitWidth="10" preserveRatio="true" pickOnBounds="true"/>
+                            <ImageView fx:id="ratingStar5" fitHeight="10" fitWidth="10" preserveRatio="true" pickOnBounds="true"/>
+
+                            <Label fx:id="audioRating" />
+                        </HBox>
+                    </HBox>
+
+                    <Label fx:id="videoDescription" text=" Please I dont need you to extend Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae Will you work now?" wrapText="true"/>
+                </VBox>
+                <ImageView fx:id="optionsIcon" preserveRatio="true" pickOnBounds="true" AnchorPane.topAnchor="5.0" AnchorPane.rightAnchor="5.0"/>
+
+            </AnchorPane>
+
+            <padding>
+                <Insets topRightBottomLeft="10"/>
+            </padding>
+
+        </HBox>
+
+    </graphic>
+
+</fx:root>

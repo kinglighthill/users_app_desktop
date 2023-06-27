@@ -20,6 +20,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -39,21 +42,22 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/layouts/PreAuthenticationScreen.fxml"));
-////        Scene scene = new Scene(fxmlLoader.load());
-////        stage.setTitle("Scholarly UTME");
-////        stage.setScene(scene);
-
-        System.out.println("Databases are ok..." + (NewDatabase.isOK() && Database.isOK() && UserDataDatabase.isOK() && NovelsDatabase.isOK()));
-
-        System.out.println("Create tables are ok..." + (ObjectiveBookmarkDao.createTable() && TheoryBookmarkDao.createTable() && NovelObjectiveBookmarkDao.createTable()));
-
         try {
             InputStream iconStream = HelloApplication.class.getResourceAsStream("/drawable/app_logo.png");
             assert iconStream != null;
             Image icon = new Image(iconStream);
 
             stage.getIcons().add(icon);
+            stage.setTitle("Scholarly JAMB CBT");
+
+//            stage.setWidth(1200);
+
+            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+
+            stage.setX(bounds.getMinX());
+            stage.setY(bounds.getMinY());
+            stage.setWidth(bounds.getWidth());
+            stage.setHeight(bounds.getHeight());
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -66,7 +70,6 @@ public class HelloApplication extends Application {
         } else {
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         }
-
 
 //        try {
 //            webcam = Webcam.getDefault();

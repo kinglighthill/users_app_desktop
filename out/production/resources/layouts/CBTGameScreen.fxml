@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.CBTGameScreenController">
+   <top>
+      <ToolBar prefHeight="84.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER">
+        <items>
+          <Button fx:id="backButton" mnemonicParsing="false" />
+            <Label fx:id="pageTitle" text="CBT Game" textFill="WHITE">
+               <padding>
+                  <Insets left="20.0" />
+               </padding>
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+        </items>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+      </ToolBar>
+   </top>
+   <center>
+      <StackPane prefHeight="200.0" prefWidth="100.0">
+
+         <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <children>
+               <HBox alignment="CENTER_LEFT" prefHeight="9.0" prefWidth="600.0">
+                  <children>
+                     <Label fx:id="questionNumberLabel" text="Question 1 of 2">
+                        <HBox.margin>
+                           <Insets left="10.0" />
+                        </HBox.margin>
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+
+                     <ImageView fx:id="bookmarkImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                           <Insets left="15.0" right="10.0" />
+                        </HBox.margin>
+                     </ImageView>
+                     <ImageView fx:id="reportImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                           <Insets left="15.0" right="10.0" />
+                        </HBox.margin>
+                     </ImageView>
+                     <ImageView fx:id="speakerImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                           <Insets left="10.0" right="10.0" />
+                        </HBox.margin>
+                     </ImageView>
+
+                     <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     <StackPane>
+                        <Button fx:id="fiftyFiftyButton" mnemonicParsing="false" text="50:50" textFill="#1B9D01" style="-fx-background-color: #E6F4E3; -fx-background-radius: 500; -fx-border-color: #1B9D01; -fx-border-radius: 500; -fx-border-width: 1;">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                           <StackPane.margin>
+                              <Insets top="3" right="3"/>
+                           </StackPane.margin>
+                        </Button>
+                        <Circle stroke="#1B9D01" fill="white" radius="10" StackPane.alignment="TOP_RIGHT">
+                           <StackPane.margin>
+                              <Insets bottom="10" left="10"/>
+                           </StackPane.margin>
+                        </Circle>
+                        <Label fx:id="fiftyFiftyCount" text="0" StackPane.alignment="TOP_RIGHT">
+                           <StackPane.margin>
+                              <Insets right="3"/>
+                           </StackPane.margin>
+                        </Label>
+
+                        <HBox.margin>
+                              <Insets right="40.0" />
+                           </HBox.margin>
+                     </StackPane>
+
+
+                     <ImageView fx:id="calculatorImage" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#onCalculatorClicked" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                           <Insets right="40.0" />
+                        </HBox.margin>
+                     </ImageView>
+                  </children>
+                  <padding>
+                     <Insets bottom="30.0" top="30.0" />
+                  </padding>
+               </HBox>
+               <Separator prefWidth="200.0">
+                  <VBox.margin>
+                     <Insets left="10.0" />
+                  </VBox.margin></Separator>
+               <HBox fx:id="questionLayout" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <children>
+                     <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Label fx:id="questionLabel" text="Simplify 0.000215 x 0.000028 and Express your answer in standard form" textAlignment="CENTER" textFill="#178102" wrapText="true" VBox.vgrow="ALWAYS">
+                              <font>
+                                 <Font size="24.0" />
+                              </font>
+                           </Label>
+                        </children>
+                        <HBox.margin>
+                           <Insets />
+                        </HBox.margin>
+                        <padding>
+                           <Insets left="40.0" right="40.0" />
+                        </padding>
+                     </VBox>
+                     <Separator orientation="VERTICAL" prefHeight="200.0" />
+                     <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Button fx:id="optionAButton" mnemonicParsing="false" prefHeight="140.0" prefWidth="60000.0" style="-fx-background-color: ##F7B71D; -fx-border-radius: 34; -fx-border-width: 2; -fx-border-color: #00ffff;" text="Button">
+                              <VBox.margin>
+                                 <Insets left="60.0" right="40.0" />
+                              </VBox.margin>
+                              <font>
+                                 <Font size="18.0" />
+                              </font>
+                           </Button>
+
+                           <Button fx:id="optionBButton" mnemonicParsing="false" prefHeight="140.0" prefWidth="800000.0" text="Button">
+                              <VBox.margin>
+                                 <Insets left="60.0" right="40.0" top="20.0" />
+                              </VBox.margin>
+                              <font>
+                                 <Font size="18.0" />
+                              </font>
+                           </Button>
+
+                           <Button fx:id="optionCButton" mnemonicParsing="false" prefHeight="140.0" prefWidth="800000.0" text="Button">
+                              <VBox.margin>
+                                 <Insets left="60.0" right="40.0" top="20.0" />
+                              </VBox.margin>
+                              <font>
+                                 <Font size="18.0" />
+                              </font>
+                           </Button>
+
+                           <Button fx:id="optionDButton" mnemonicParsing="false" prefHeight="140.0" prefWidth="800000.0" text="Button">
+                              <VBox.margin>
+                                 <Insets left="60.0" right="40.0" top="20.0" />
+                              </VBox.margin>
+                              <font>
+                                 <Font size="18.0" />
+                              </font>
+                           </Button>
+                        </children>
+                        <padding>
+                           <Insets bottom="40.0" top="40.0" />
+                        </padding>
+                     </VBox>
+                  </children>
+               </HBox>
+            </children>
+            <padding>
+               <Insets left="20.0" right="20.0" />
+            </padding>
+         </VBox>
+
+         <Pane fx:id="resultDialogDimmer" opacity="0.34" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" visible="false" />
+         <VBox fx:id="resultDialog" maxHeight="-Infinity" maxWidth="500.0" prefHeight="330.0" prefWidth="100.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;" visible="false">
+            <children>
+               <Label fx:id="resultLabel" text="Result" textFill="#177803">
+                  <VBox.margin>
+                     <Insets left="20.0" top="20.0" />
+                  </VBox.margin>
+                  <font>
+                     <Font size="18.0" />
+                  </font>
+               </Label>
+               <Line endX="400.0" startX="-100.0" stroke="#ebebeb" strokeWidth="4.0">
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </Line>
+               <HBox prefWidth="200.0">
+                  <children>
+                     <Label fx:id="correctAnswersLabel" text="Correct Answers">
+                        <HBox.margin>
+                           <Insets left="20.0" />
+                        </HBox.margin>
+                        <font>
+                           <Font size="18.0" />
+                        </font></Label>
+                     <Label fx:id="correctAnswers" text="20">
+                        <padding>
+                           <Insets left="20.0" />
+                        </padding>
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                  </children>
+                  <VBox.margin>
+                     <Insets top="25.0" />
+                  </VBox.margin>
+               </HBox>
+               <HBox prefWidth="200.0">
+                  <children>
+                     <Label fx:id="incorrectAnswersLabel" text="Incorrect Answers">
+                        <HBox.margin>
+                           <Insets left="20.0" />
+                        </HBox.margin>
+                        <font>
+                           <Font size="18.0" />
+                        </font></Label>
+                     <Label fx:id="incorrectAnswers" text="30">
+                        <padding>
+                           <Insets left="20.0" />
+                        </padding>
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                  </children>
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </HBox>
+               <HBox prefWidth="200.0">
+                  <children>
+                     <Label fx:id="questionAttemptsLabel" text="Question Attempts">
+                        <HBox.margin>
+                           <Insets left="20.0" />
+                        </HBox.margin>
+                        <font>
+                           <Font size="18.0" />
+                        </font></Label>
+                     <Label fx:id="questionAttempts" text="50">
+                        <padding>
+                           <Insets left="20.0" />
+                        </padding>
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                  </children>
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </HBox>
+               <HBox alignment="TOP_CENTER" maxHeight="45.0" prefHeight="45.0" prefWidth="200.0" spacing="10.0">
+                  <VBox.margin>
+                     <Insets left="20.0" right="20.0" top="45.0" />
+                  </VBox.margin>
+                  <children>
+                     <Button fx:id="exitButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #1B9D01; -fx-border-width: .6;" text="Exit" textFill="#1b9d01" HBox.hgrow="ALWAYS">
+                        <font>
+                           <Font size="18.0" />
+                        </font></Button>
+                     <Button fx:id="playAgainButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #1B9D01; -fx-border-width: .6;" text="Play Again" textFill="#1b9d01" HBox.hgrow="ALWAYS">
+                        <font>
+                           <Font size="18.0" />
+                        </font></Button>
+                     <Button fx:id="showAnswersButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #1B9D01; -fx-background-radius: 5;" text="Show Answers" textFill="WHITE" HBox.hgrow="ALWAYS">
+                        <font>
+                           <Font size="18.0" />
+                        </font></Button>
+                  </children>
+               </HBox>
+            </children>
+            <padding>
+               <Insets bottom="20.0" />
+            </padding>
+         </VBox>
+
+
+         <Pane fx:id="reportDialogDimmer" opacity="0.34" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" visible="false" />
+         <VBox fx:id="reportDialog" maxHeight="350.0" maxWidth="500.0" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
+            <children>
+               <HBox alignment="CENTER_LEFT" prefWidth="200.0">
+                  <children>
+                     <ImageView fx:id="reportDialogCloseIcon" fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                           <Insets left="15.0" />
+                        </HBox.margin>
+                     </ImageView>
+                     <Label text="Report Question">
+                        <font>
+                           <Font name="System Bold" size="14.0" />
+                        </font>
+                        <HBox.margin>
+                           <Insets left="20.0" />
+                        </HBox.margin>
+                     </Label>
+                  </children>
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </HBox>
+               <Line endX="400.0" startX="-100.0" stroke="#f0f0f0" strokeWidth="4.0">
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </Line>
+               <CheckBox fx:id="questionErrorCheckBox" mnemonicParsing="false" prefHeight="17.0" prefWidth="638.0" text="There is an error in the question">
+                  <VBox.margin>
+                     <Insets left="20.0" right="20.0" top="25.0" />
+                  </VBox.margin>
+               </CheckBox>
+               <VBox fx:id="incorrectAnswerPane" prefWidth="100.0">
+                  <children>
+                     <CheckBox fx:id="incorrectAnswerCheckBox" mnemonicParsing="false" prefHeight="17.0" prefWidth="638.0" text="Answer is not correct">
+                        <VBox.margin>
+                           <Insets left="20.0" right="20.0" top="30.0" />
+                        </VBox.margin>
+                     </CheckBox>
+                     <TextField fx:id="enterCorrectAnswerField" prefHeight="30.0" promptText="Type the correct answer... (Optional)" >
+                        <VBox.margin>
+                           <Insets left="20.0" right="20.0" top="10.0" />
+                        </VBox.margin>
+                     </TextField>
+                  </children>
+               </VBox>
+               <CheckBox fx:id="okayCheckBox" mnemonicParsing="false" prefHeight="17.0" prefWidth="638.0" text="Everything is okay">
+                  <VBox.margin>
+                     <Insets left="20.0" right="20.0" top="30.0" />
+                  </VBox.margin>
+               </CheckBox>
+
+               <Button fx:id="submitReport" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" text="Submit" textFill="white" disable="true" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+                  <font>
+                     <Font size="14"/>
+                  </font>
+                  <VBox.margin>
+                     <Insets left="20.0" right="20.0" top="40.0" />
+                  </VBox.margin>
+               </Button>
+
+            </children>
+         </VBox>
+
+      </StackPane>
+   </center>
+</BorderPane>

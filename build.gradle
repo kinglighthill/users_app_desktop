@@ -1,8 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
-//    id 'org.jetbrains.kotlin.jvm' version '1.6.0-RC'
+    id 'org.openjfx.javafxplugin' version '0.0.13'//    id 'org.jetbrains.kotlin.jvm' version '1.6.0-RC'
 //    id 'org.sqlite'
 }
 
@@ -17,11 +16,11 @@ repositories {
 }
 
 ext {
-    junitVersion = '5.8.0'
+    junitVersion = '5.9.2'
 }
 
-sourceCompatibility = '15'
-targetCompatibility = '15'
+sourceCompatibility = '17'
+targetCompatibility = '17'
 
 //sourceSets {
 //    create("intTest") {
@@ -50,21 +49,21 @@ application {
 }
 
 javafx {
-    version = '15.0.1'
+    version = '18.0.2'
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.web']
 }
 
 dependencies {
-    implementation('org.controlsfx:controlsfx:11.1.0') {
+    implementation('org.controlsfx:controlsfx:11.1.2') {
         exclude group: 'org.openjfx'
     }
-    implementation('com.dlsc.formsfx:formsfx-core:11.4.2') {
+    implementation('com.dlsc.formsfx:formsfx-core:11.6.0') {
         exclude group: 'org.openjfx'
     }
-    implementation('net.synedra:validatorfx:0.1.13') {
+    implementation('net.synedra:validatorfx:0.4.0') {
         exclude(group: 'org.openjfx')
     }
-    implementation('org.kordamp.ikonli:ikonli-javafx:12.2.0') {
+    implementation('org.kordamp.ikonli:ikonli-javafx:12.3.1') {
         exclude group: 'org.openjfx'
     }
     implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0') {
@@ -77,15 +76,15 @@ dependencies {
         exclude group: 'org.openjfx'
     }*/
 
-    /*implementation('org.xerial:sqlite-jdbc:3.36.0.2') {
+    implementation('org.xerial:sqlite-jdbc:3.36.0.2') {
         exclude group: 'org.sqlite'
-    }*/
+    }
 
     // SQL connector
-    implementation 'io.github.willena:sqlite-jdbc:3.35.5.3'
+//    implementation 'io.github.willena:sqlite-jdbc:3.35.5.3'
 
     // RxJava
-    implementation 'io.reactivex.rxjava3:rxjava:3.1.1'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
 
     //RxJavaFx
     implementation 'org.pdfsam.rxjava3:rxjavafx:3.0.2'
@@ -97,7 +96,7 @@ dependencies {
     implementation 'net.sf.sociaal:freetts:1.2.2'
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     // Common Collections by Apache
     implementation 'org.apache.commons:commons-collections4:4.4'
