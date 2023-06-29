@@ -4,6 +4,7 @@ import com.scholarly.utme.controller.note_screens.NotesScreenController.InitialD
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.data.dao.newDb.SectionDao;
+import com.scholarly.utme.data.dao.newDb.SubTopicDao;
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
@@ -15,16 +16,19 @@ import javafx.collections.ObservableList;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class NotesScreenVM implements ViewModel {
     private static final String TAG = "NotesScreenVM: ";
 
     NoteSubject subject;
-    NoteTopic topic;
-    ObservableList<NoteSubTopic> subTopics = FXCollections.observableArrayList();
+    NoteTopic noteTopic;
+    ObservableList<NoteTopic> noteTopics = FXCollections.observableArrayList();
+    SimpleObjectProperty<NoteTopic> selectedTopic = new SimpleObjectProperty<>(null);
     SimpleObjectProperty<NoteSubTopic> selectedSubTopic = new SimpleObjectProperty<>(null);
+    SimpleObjectProperty<NoteSection> selectedSubtopicSection = new SimpleObjectProperty<>(null);
+    SimpleObjectProperty<Integer> selectedTopicIndex = new SimpleObjectProperty<>(null);
 
+    HashMap<Integer, ObservableList<NoteSubTopic>> subTopics = new HashMap<>();
     HashMap<Integer, ObservableList<Section>> subTopicSections = new HashMap<>();
     HashMap<Integer, ObservableList<NoteSection>> noteSections = new HashMap<>();
     ObservableList<Highlights> subjectHighlights = FXCollections.observableArrayList();
@@ -35,20 +39,26 @@ public class NotesScreenVM implements ViewModel {
 
     public void initialize(InitialData data) {
         subject = data.getSubject();
-        topic = data.getTopic();
+        noteTopics.addAll(data.getTopics());
+        noteTopic = data.getSelectedNoteTopic();
+        selectedTopic.set(noteTopic);
         selectedSubTopic.set(data.getSelectedSubTopic());
-        subTopics.addAll(data.getSubTopics());
+//        subTopics.addAll(data.getSubTopics());
         noteSubjectQuestions.addAll(ObjectiveQuestionDao.getQuestionsWithNoteSubjectId(getPQSubjectId(data.getSubject().getSubjectId())));
-//        System.out.println(TAG + "Got Subtopics -> " + Helper.toString(subTopics));
 
-        subTopics.forEach(subTopic -> {
-//            subTopicSections.put(subTopic.getId(), SectionDao.getSections("note_" + subject.getTableName() + "_sections", subTopic.getSectionId()));
-//            noteSections.put();
-//            subjectHighlights = HighlightsDao.getHighlights("note_" + subject.getTableName() + "_sections");
-//            subjectNotes = NoteDao.getNotes("note_" + subject.getTableName() + "_sections");
+        selectedTopicIndex.set(data.getSelectedNoteTopic().getOrder()-1);
+
+
+        noteTopics.forEach(topic -> {
+            noteSections.put(topic.getId(), SectionDao.getNoteSectionsWithTopicId(topic.getId()));
+            subTopics.put(topic.getId(), SubTopicDao.getSubTopicsForTopic(topic.getId()));
         });
 
-        noteSections.put(topic.getId(), SectionDao.getNoteSectionsWithTopicId(topic.getId()));
+        if (selectedSubTopic.get() != null) {
+            List<NoteSection> selectedNoteSection = noteSections.get(selectedTopic.get().getId()).stream().filter(section -> section.getSubtopicId() == selectedSubTopic.get().getId()).toList();
+            System.out.println(TAG + "SelectedSubtopic Section -> " + selectedNoteSection);
+            selectedSubtopicSection.set(selectedNoteSection.get(0));
+        }
     }
 
 
@@ -88,31 +98,70 @@ public class NotesScreenVM implements ViewModel {
     }
 
     public NoteTopic getTopic() {
-        return topic;
+        return noteTopic;
     }
 
-    public void setTopic(NoteTopic topic) {
-        this.topic = topic;
+    public void setNoteTopic(NoteTopic noteTopic) {
+        this.noteTopic = noteTopic;
     }
 
-    public ObservableList<NoteSubTopic> getSubTopics() {
+    public HashMap<Integer, ObservableList<NoteSubTopic>> getSubTopics() {
         return subTopics;
     }
 
-    public void setSubTopics(ObservableList<NoteSubTopic> subTopics) {
-        this.subTopics = subTopics;
+    public ObservableList<NoteTopic> getNoteTopics() {
+        return noteTopics;
     }
+
+//    public void setSubTopics(ObservableList<NoteSubTopic> subTopics) {
+//        this.subTopics = subTopics;
+//    }
 
     public NoteSubTopic getSelectedSubTopic() {
         return selectedSubTopic.get();
     }
+    public NoteSection getSelectedSubtopicSection() {
+        return selectedSubtopicSection.get();
+    }
 
+    public NoteTopic getSelectedTopic() {
+        return selectedTopic.get();
+    }
+
+    public Integer getSelectedTopicIndex() {
+        return selectedTopicIndex.get();
+    }
+
+
+    public SimpleObjectProperty<NoteTopic> selectedTopicProperty() {
+        return selectedTopic;
+    }
     public SimpleObjectProperty<NoteSubTopic> selectedSubTopicProperty() {
         return selectedSubTopic;
     }
 
+    public SimpleObjectProperty<NoteSection> selectedSubtopicSectionProperty() {
+        return selectedSubtopicSection;
+    }
+
+    public SimpleObjectProperty<Integer> selectedTopicIndexProperty() {
+        return selectedTopicIndex;
+    }
+
+    public void setSelectedTopic(NoteTopic selectedTopic) {
+        this.selectedTopic.set(selectedTopic);
+    }
+
     public void setSelectedSubTopic(NoteSubTopic selectedSubTopic) {
         this.selectedSubTopic.set(selectedSubTopic);
+    }
+
+    public void setSelectedSubtopicSection(NoteSection selectedSubTopicSection) {
+        this.selectedSubtopicSection.set(selectedSubTopicSection);
+    }
+
+    public void setSelectedTopicIndex(Integer selectedTopicIndex) {
+        this.selectedTopicIndex.set(selectedTopicIndex);
     }
 
     public HashMap<Integer, ObservableList<Section>> getSubTopicSections() {
@@ -161,10 +210,14 @@ public class NotesScreenVM implements ViewModel {
         return noteSections;
     }
 
+    public NoteSection getNoteSubtopicSection(NoteSubTopic subTopic) {
+        return noteSections.get(selectedTopic.get().getId()).stream().filter(section -> section.getSubtopicId() == subTopic.getId()).toList().get(0);
+    }
+
     public ObjectiveQuestion getQuestion(int yearId, int questionNum) {
         return noteSubjectQuestions.stream().filter(objectiveQuestion ->
-            objectiveQuestion.getYearId() == yearId && objectiveQuestion.getQuestionNumber() == questionNum
-        ).collect(Collectors.toList()).get(0);
+                objectiveQuestion.getYearId() == yearId && objectiveQuestion.getQuestionNumber() == questionNum
+        ).toList().get(0);
     }
 
     private int getPQSubjectId(int noteSubjectId) {

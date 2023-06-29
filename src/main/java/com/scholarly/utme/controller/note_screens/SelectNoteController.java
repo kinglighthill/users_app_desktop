@@ -188,6 +188,7 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
         subtopicsListToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                viewModel.setSelectedNoteSubTopic((NoteSubTopic) newValue.getUserData());
                 if (!subtopicsCommenceButton.isVisible()) {
                     Animations.translateIn(subtopicsCommenceButton, 200);
                 }
@@ -268,10 +269,35 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
             NotesScreenController.InitialData data = new NotesScreenController.InitialData(
                     viewModel.getSelectedNoteSubject(),
+                    viewModel.getNoteSubjectTopics().get(
+                            viewModel.getSelectedNoteSubject().getId()
+                    ),
                     viewModel.getSelectedNoteTopic(),
                     viewModel.getNoteSubTopics().get(
                             viewModel.getSelectedNoteTopic().getId()
-                    ).stream().filter(subTopic -> subTopic.getTopicId() == viewModel.getSelectedNoteTopic().getId()).collect(Collectors.toList()),
+                    ),
+                    viewModel.getSelectedNoteSubTopic()
+            );
+            ViewSwitcher.passData(data);
+            ViewSwitcher.showScreen(View.NOTES_SCREEN);
+        });
+
+        subtopicsCommenceButton.setOnAction(event -> {
+//            System.out.println(TAG + "SelectedNoteSubject -> " + Helper.toString(viewModel.getSelectedNoteSubject()));
+//            System.out.println(TAG + "SelectedNoteTopic -> " + Helper.toString(viewModel.getSelectedNoteTopic()));
+//            System.out.println(TAG + "SelectedNoteSubtopics -> " + Helper.toString(viewModel.getNoteSubTopics().get(viewModel.getSelectedNoteTopic().getId())));
+//            System.out.println(TAG + "SelectedNoteSubtopics with Filter -> " + Helper.toString(viewModel.getNoteSubTopics().get(viewModel.getSelectedNoteTopic().getId()).stream().filter(subTopic -> subTopic.getTopicId() == viewModel.getSelectedNoteTopic().getId()).collect(Collectors.toList())));
+//            System.out.println(TAG + "SelectedNoteSubtopic -> " + Helper.toString(viewModel.getSelectedNoteSubTopic()));
+
+            NotesScreenController.InitialData data = new NotesScreenController.InitialData(
+                    viewModel.getSelectedNoteSubject(),
+                    viewModel.getNoteSubjectTopics().get(
+                            viewModel.getSelectedNoteSubject().getId()
+                    ),
+                    viewModel.getSelectedNoteTopic(),
+                    viewModel.getNoteSubTopics().get(
+                            viewModel.getSelectedNoteTopic().getId()
+                    ),
                     viewModel.getSelectedNoteSubTopic()
             );
             ViewSwitcher.passData(data);
@@ -285,7 +311,19 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
             startAllPanel.setStyle(IDLE_BUTTON_STYLE);
         });
         startAllPanel.setOnMouseClicked(event -> {
-
+            NotesScreenController.InitialData data = new NotesScreenController.InitialData(
+                    viewModel.getSelectedNoteSubject(),
+                    viewModel.getNoteSubjectTopics().get(
+                            viewModel.getSelectedNoteSubject().getId()
+                    ),
+                    viewModel.getSelectedNoteTopic(),
+                    viewModel.getNoteSubTopics().get(
+                            viewModel.getSelectedNoteTopic().getId()
+                    ),
+                    viewModel.getSelectedNoteSubTopic()
+            );
+            ViewSwitcher.passData(data);
+            ViewSwitcher.showScreen(View.NOTES_SCREEN);
         });
 
         subtopicCloseDialog.setOnMouseClicked(event -> {
