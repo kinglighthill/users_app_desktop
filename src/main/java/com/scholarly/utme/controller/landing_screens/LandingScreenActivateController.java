@@ -56,7 +56,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
     @FXML
     private TextField activationPinTextField;
     @FXML
-    private Label incorrectPinError, activationSuccessfulMessage, activationText;
+    private Label incorrectPinError, activationSuccessfulMessage, activationText, headerLabel;
     @FXML
     private Button activateButton, buyPinButton, loginButton;
 
@@ -77,9 +77,15 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
         if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE, false)) {
             centerVBox.getChildren().remove(notActivatedPane);
             innerVBox.getChildren().remove(activationText);
+            activationPinTextField.setDisable(true);
+            activateButton.setDisable(true);
+            headerLabel.setText("Your app has been activated!");
         } else {
+            activationPinTextField.setDisable(false);
+            activateButton.setDisable(false);
             centerVBox.getChildren().add(0, notActivatedPane);
             innerVBox.getChildren().add(innerVBox.getChildren().size(), activationText);
+            headerLabel.setText("Enter a 16 digit activation pin to unlock all the layers and amazing features in this app. Activation lasts for one academic year!");
         }
 
         activateButton.setOnAction(event -> {

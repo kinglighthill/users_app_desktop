@@ -5,12 +5,16 @@ public class NoteSubject {
     private String title;
     private int subjectId;
     private int order;
+    private String shortTitle;
+    private String colorCode;
 
-    public NoteSubject(int id, String title, int subjectId, int order) {
+    public NoteSubject(int id, String title, int subjectId, int order, String shortTitle, String colorCode) {
         this.id = id;
         this.title = title;
         this.subjectId = subjectId;
         this.order = order;
+        this.shortTitle = shortTitle;
+        this.colorCode = colorCode;
     }
 
     public int getId() {
@@ -27,5 +31,13 @@ public class NoteSubject {
 
     public int getOrder() {
         return order;
+    }
+
+    public String getShortTitle() {
+        return shortTitle;
+    }
+
+    public String getColorCode() {
+        return colorCode;
     }
 }

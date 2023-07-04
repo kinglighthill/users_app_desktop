@@ -45,7 +45,11 @@
                                     <Region prefHeight="5.0" prefWidth="200.0" />
                                     <ScrollPane fx:id="subjectListScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-border-color: #EDEDED;" VBox.vgrow="ALWAYS">
                                         <content>
-                                            <VBox fx:id="subjectListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #F7F7F7;" />
+                                            <VBox fx:id="subjectListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #FFFFFF;">
+                                                <padding>
+                                                    <Insets left="8" right="8" top="5"/>
+                                                </padding>
+                                            </VBox>
                                         </content>
                                     </ScrollPane>
                                 </children>

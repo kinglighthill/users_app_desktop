@@ -150,7 +150,7 @@ public class TopicDao {
                         false));
             }
 
-            System.out.println(TAG + "Got Note topics of size -> " + noteTopics.size());
+//            System.out.println(TAG + "Got Note topics of size -> " + noteTopics.size());
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(

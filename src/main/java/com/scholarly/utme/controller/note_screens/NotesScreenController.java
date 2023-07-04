@@ -113,7 +113,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private Label pageTitle, subjectLabel, topicLabel, noteTopicLabel, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, refreshNotesCancelText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
 
     @FXML
-    private Label fontText, fontSizeText, backgroundText, settingsCloseText, quizYourScoreText, quizScore, quizExplanationText, quizExplanationButton, activateHeaderText;
+    private Label fontText, fontSizeText, backgroundText, settingsCloseText, quizYourScoreText, quizScore, quizExplanationText, quizExplanationButton, activateHeaderText, noSubtopicsLabel;
 
     @FXML
     private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, createNoteBackIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
@@ -191,12 +191,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         });
 
+        noSubtopicsLabel.setVisible(viewModel.getSubTopics().get(viewModel.getTopic().getId()).isEmpty());
+
         ToggleGroup subtopicsListToggleGroup = new ToggleGroup();
-        viewModel.getSubTopics().get(viewModel.getTopic().getId()).forEach(subTopic -> {
+        viewModel.getSubTopics().get(viewModel.getSelectedTopic().getId()).forEach(subTopic -> {
             ToggleButton button = new ToggleButton();
             button.setUserData(subTopic);
             subtopicsListToggleGroup.getToggles().add(button);
-
 
             button.setMinHeight(48);
             button.setMaxHeight(48);
@@ -249,10 +250,14 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             if (newValue != null) {
                 ObservableList<NoteSection> topicSections = viewModel.getNoteSections().get(newValue.getId());
                 noteContentList.setItems(topicSections);
+                noteContentList.scrollTo(0);
                 noteTopicLabel.setText(newValue.getTitle());
                 subtopicsListToggleGroup.getToggles().clear();
                 subtopicsVBox.getChildren().clear();
 
+                noSubtopicsLabel.setVisible(viewModel.getSubTopics().get(newValue.getId()).isEmpty());
+
+                System.out.println(TAG + "Selected topic Id -> " + newValue.getId());
                 viewModel.getSubTopics().get(newValue.getId()).forEach(subTopic -> {
                     ToggleButton button = new ToggleButton();
                     button.setUserData(subTopic);
@@ -361,22 +366,22 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
 
         /***************** Refresh Notes Section *******************/
-        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon_1.5x.png").toString()));
-        refreshIcon.setOnMouseClicked((event -> {
-            if (!refreshNoteLayout.isVisible()) {
-                refreshStatusContent.getChildren().remove(refreshNoteProgressIndicator);
-                refreshStatusContent.getChildren().remove(refreshStatusNoUpdateIcon);
-                refreshStatusContent.getChildren().remove(refreshStatusUpdateFoundIcon);
-                refreshStatusFirstText.setText("Network Unavailable");
-                refreshStatusFirstText.setTextFill(Paint.valueOf("#EE8989"));
-                refreshStatusFirstText.setPadding(new Insets(10, 0, 0, 0));
-                refreshStatusSecondText.setText("Connect your device and try again");
-                //refreshStatusSecondText.setTextFill(Paint.valueOf("#51C46B"));
-                //refreshNoteTextContent.getChildren().remove(refreshStatusSecondText);
-                Animations.translateIn(refreshNoteLayout, 200);
-            }
-
-        }));
+//        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon_1.5x.png").toString()));
+//        refreshIcon.setOnMouseClicked((event -> {
+//            if (!refreshNoteLayout.isVisible()) {
+//                refreshStatusContent.getChildren().remove(refreshNoteProgressIndicator);
+//                refreshStatusContent.getChildren().remove(refreshStatusNoUpdateIcon);
+//                refreshStatusContent.getChildren().remove(refreshStatusUpdateFoundIcon);
+//                refreshStatusFirstText.setText("Network Unavailable");
+//                refreshStatusFirstText.setTextFill(Paint.valueOf("#EE8989"));
+//                refreshStatusFirstText.setPadding(new Insets(10, 0, 0, 0));
+//                refreshStatusSecondText.setText("Connect your device and try again");
+//                //refreshStatusSecondText.setTextFill(Paint.valueOf("#51C46B"));
+//                //refreshNoteTextContent.getChildren().remove(refreshStatusSecondText);
+//                Animations.translateIn(refreshNoteLayout, 200);
+//            }
+//
+//        }));
         refreshNotesCancelButton.setOnMouseEntered(event -> {
             refreshNotesCancelButton.setStyle(HOVERED_BUTTON_STYLE);
         });
@@ -389,19 +394,19 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
 
         /**************** Note Settings Section ***************/
-        noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
+//        noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
         refreshStatusNoUpdateIcon.setImage(new Image(getClass().getResource("/drawable/no_update_found_icon_1x.png").toString()));
         refreshStatusUpdateFoundIcon.setImage(new Image(getClass().getResource("/drawable/updates_found_icon_1x.png").toString()));
         refreshStatusNoNetworkIcon.setImage(new Image(getClass().getResource("/drawable/no_network_icon_1x.png").toString()));
-        noteSettingsIcon.setOnMouseClicked(event -> {
-            if (!noteSettingsLayout.isVisible()) {
-                Animations.translateIn(noteSettingsLayout, 200);
-            }
-
-            int stackItems = noteLayout.getChildren().size();
-            System.out.println("StackPane Items -> " + stackItems);
-
-        });
+//        noteSettingsIcon.setOnMouseClicked(event -> {
+//            if (!noteSettingsLayout.isVisible()) {
+//                Animations.translateIn(noteSettingsLayout, 200);
+//            }
+//
+//            int stackItems = noteLayout.getChildren().size();
+//            System.out.println("StackPane Items -> " + stackItems);
+//
+//        });
         fontDropdownList.setItems(FXCollections.observableArrayList(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size)));
         fontDropdownList.valueProperty().addListener((observer, oldValue, newValue) -> {
             fontDropdownList.getSelectionModel().select(newValue);
@@ -725,7 +730,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         noteBackIcon.setFitHeight(20);
         noteBackIcon.setPreserveRatio(true);
         noteBackIcon.setPickOnBounds(true);
-        searchIcon.setImage(new Image(getClass().getResource("/drawable/note_search_icon_1.5x.png").toString()));
+//        searchIcon.setImage(new Image(getClass().getResource("/drawable/note_search_icon_1.5x.png").toString()));
 
         notesBackButton.setBackground(Background.EMPTY);
         notesBackButton.setGraphic(noteBackIcon);
@@ -749,6 +754,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         prevButton.setBackground(Background.EMPTY);
 
         activateHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
+        noSubtopicsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
 
         activateNowCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
         activateNowPadlockIcon.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/padlock_icon.png").toString()));

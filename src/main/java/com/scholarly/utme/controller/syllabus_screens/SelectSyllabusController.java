@@ -20,7 +20,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
@@ -99,10 +98,11 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
             button.setAlignment(Pos.BASELINE_LEFT);
             button.setMaxWidth(Double.MAX_VALUE);
             button.setText(syllabusSubject.getTitle());
+            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
-            ImageView graphic = new ImageView(new Image(getClass().getResource("/drawable/syllabus_subject_images/" + syllabusSubject.getShortTitle() + "_image.png").toString()));
-            graphic.setFitWidth(25);
-            graphic.setFitHeight(25);
+            ImageView graphic = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + syllabusSubject.getShortTitle() + "_image.png").toString()));
+            graphic.setFitWidth(27);
+            graphic.setFitHeight(27);
             button.setGraphic(graphic);
             button.setGraphicTextGap(25.0);
 
@@ -127,8 +127,6 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
 //                    button.setTextFill(Color.BLACK);
                 }
             });
-
-            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 13));
 
             subjectListVBox.getChildren().add(button);
         });

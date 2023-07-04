@@ -132,9 +132,9 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 //            System.out.println(TAG + "ContentViewType -> CBTViewType");
 
             int yearId = cbtViewType.getYearId();
-            int questionId = cbtViewType.getQuestionId();
+            int questionNum = cbtViewType.getQuestionId();
 
-            ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
+            ObjectiveQuestion question = viewModel.getQuestion(yearId, questionNum);
 
             VBox cbtVBox = new VBox();
             cbtVBox.setPadding(new Insets(20, 20, 30, 20));
@@ -145,7 +145,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             Document doc = Jsoup.parse(question.getQuestion());
             String formattedText = doc.body().text();
             Label questionBox = new Label(formattedText);
-            questionBox.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+            questionBox.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
             questionBox.setWrapText(true);
             questionBox.setPadding(new Insets(10));
             questionBox.setStyle("-fx-background-color: #E7F7E9; -fx-border-color: #034801; -fx-border-radius: 5; ");
@@ -178,12 +178,6 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             optionDButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
             optionDButton.setPadding(new Insets(10));
 
-            questionBox.widthProperty().addListener(((observable, oldValue, newValue) -> {
-                optionAButton.setMinWidth((Double) newValue);
-                optionBButton.setMinWidth((Double) newValue);
-                optionCButton.setMinWidth((Double) newValue);
-                optionDButton.setMinWidth((Double) newValue);
-            }));
 
             ToggleGroup optionsToggle = new ToggleGroup();
             optionsToggle.getToggles().addAll(optionAButton, optionBButton, optionCButton, optionDButton);
@@ -247,6 +241,15 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             explanationText.setWrapText(true);
             explanationText.setPadding(new Insets(10));
             explanationText.setStyle("-fx-border-color: #034801; -fx-border-radius: 5; ");
+
+            cbtVBox.widthProperty().addListener(((observable, oldValue, newValue) -> {
+                optionAButton.setPrefWidth((Double) newValue);
+                optionBButton.setPrefWidth((Double) newValue);
+                optionCButton.setPrefWidth((Double) newValue);
+                optionDButton.setPrefWidth((Double) newValue);
+                questionBox.setPrefWidth((Double) newValue);
+                explanationText.setPrefWidth((Double) newValue);
+            }));
 
             cbtVBox.getChildren().addAll(questionBox, optionAButton, optionBButton, optionCButton, optionDButton, hBox);
 

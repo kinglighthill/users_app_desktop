@@ -122,7 +122,7 @@ public class SubjectDao {
     }
 
     private static void updateNoteSubjectsFromDb() {
-        String query = "SELECT " + Tables.NOTE_SUBJECTS + "." + idColumn + "," + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + "," + Tables.SUBJECTS + "." + titleColumn + " FROM " + Tables.SUBJECTS + " JOIN " + Tables.NOTE_SUBJECTS + " WHERE " + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + " = " + Tables.SUBJECTS + "." + idColumn;
+        String query = "SELECT " + Tables.NOTE_SUBJECTS + "." + idColumn + ", " + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + ", " + Tables.NOTE_SUBJECTS + ".'" + orderColumn + "', " + Tables.SUBJECTS + "." + titleColumn + ", " + Tables.SUBJECTS + "." + shortTitleColumn + ", " + Tables.SUBJECTS + "." + colorCodeColumn + " FROM " + Tables.NOTE_SUBJECTS + " JOIN " + Tables.SUBJECTS + " ON " + Tables.NOTE_SUBJECTS + ".subject_id = " + Tables.SUBJECTS + "._id ORDER BY " + "\"order\"";
         System.out.println(TAG + "Note Subjects Query -> " + query);
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
@@ -132,7 +132,9 @@ public class SubjectDao {
                         rs.getInt(idColumn),
                         rs.getString(titleColumn),
                         rs.getInt(subjectIdColumn),
-                        -1));
+                        rs.getInt(orderColumn),
+                        rs.getString(shortTitleColumn),
+                        rs.getString(colorCodeColumn)));
             }
 
         } catch (Exception e) {

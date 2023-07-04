@@ -411,7 +411,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 } catch (Exception e) {
                     System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                 }
-
             }
 
             @Override
@@ -424,7 +423,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 System.out.println("Request failed with exception -> " + e.getMessage());
             }
         });
-
     }
 
     private void signupUser(String authCode, String redirectUri, ServerCallback callback) {

@@ -9,6 +9,7 @@ import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.newDb.*;
+import com.scholarly.utme.util.Helper;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -44,7 +45,8 @@ public class NotesScreenVM implements ViewModel {
         selectedTopic.set(noteTopic);
         selectedSubTopic.set(data.getSelectedSubTopic());
 //        subTopics.addAll(data.getSubTopics());
-        noteSubjectQuestions.addAll(ObjectiveQuestionDao.getQuestionsWithNoteSubjectId(getPQSubjectId(data.getSubject().getSubjectId())));
+//        System.out.println(TAG + "Got questions for subject with id -> " + getPQSubjectId(data.getSubject().getSubjectId()) + ObjectiveQuestionDao.getQuestionsWithNoteSubjectId(getPQSubjectId(data.getSubject().getSubjectId())));
+//        noteSubjectQuestions.addAll(ObjectiveQuestionDao.getQuestionsWithNoteSubjectId(getPQSubjectId(data.getSubject().getSubjectId())));
 
         selectedTopicIndex.set(data.getSelectedNoteTopic().getOrder()-1);
 
@@ -211,13 +213,16 @@ public class NotesScreenVM implements ViewModel {
     }
 
     public NoteSection getNoteSubtopicSection(NoteSubTopic subTopic) {
+        System.out.println(TAG + "getNoteSubtopicSection Subtopic Id -> " + subTopic.getId());
+        System.out.println(TAG + "getNoteSubtopicSection selectedTopic Id -> " + selectedTopic.get().getId());
         return noteSections.get(selectedTopic.get().getId()).stream().filter(section -> section.getSubtopicId() == subTopic.getId()).toList().get(0);
     }
 
     public ObjectiveQuestion getQuestion(int yearId, int questionNum) {
-        return noteSubjectQuestions.stream().filter(objectiveQuestion ->
-                objectiveQuestion.getYearId() == yearId && objectiveQuestion.getQuestionNumber() == questionNum
-        ).toList().get(0);
+        return ObjectiveQuestionDao.getQuestionWithYearAndQuestionNum(yearId, questionNum);
+//        return noteSubjectQuestions.stream().filter(objectiveQuestion ->
+//                objectiveQuestion.getYearId() == yearId && objectiveQuestion.getQuestionNumber() == questionNum
+//        ).toList().get(0);
     }
 
     private int getPQSubjectId(int noteSubjectId) {
