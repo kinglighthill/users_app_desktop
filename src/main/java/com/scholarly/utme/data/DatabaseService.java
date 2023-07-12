@@ -20,4 +20,22 @@ public class DatabaseService {
             throw new SQLException(e);
         }
     }
+
+    public long executeUpdate(String query) throws Exception {
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows > 0) {
+                try (ResultSet rs = statement.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getLong(1);
+                    }
+                }
+            }
+            return -1;
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        }
+    }
 }

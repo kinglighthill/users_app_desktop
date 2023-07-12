@@ -38,6 +38,7 @@ module com.scholarly.utme {
     requires webcam.capture;
     requires unirest.java;
     requires json;
+    requires java.desktop;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;

@@ -1,14 +1,20 @@
 package com.scholarly.utme.viewmodels.note_screens;
 
+import com.google.gson.Gson;
 import com.scholarly.utme.controller.note_screens.NotesScreenController.InitialData;
+import com.scholarly.utme.data.dao.NoteDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.SubjectDao;
+import com.scholarly.utme.network.model.User;
+import com.scholarly.utme.data.model.newDb.NoteLastSection;
 import com.scholarly.utme.data.dao.newDb.SectionDao;
 import com.scholarly.utme.data.dao.newDb.SubTopicDao;
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.newDb.*;
+import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.Helper;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,6 +23,7 @@ import javafx.collections.ObservableList;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class NotesScreenVM implements ViewModel {
     private static final String TAG = "NotesScreenVM: ";
@@ -28,6 +35,7 @@ public class NotesScreenVM implements ViewModel {
     SimpleObjectProperty<NoteSubTopic> selectedSubTopic = new SimpleObjectProperty<>(null);
     SimpleObjectProperty<NoteSection> selectedSubtopicSection = new SimpleObjectProperty<>(null);
     SimpleObjectProperty<Integer> selectedTopicIndex = new SimpleObjectProperty<>(null);
+    SimpleObjectProperty<NoteSection> selectedSection = new SimpleObjectProperty<>(null);
 
     HashMap<Integer, ObservableList<NoteSubTopic>> subTopics = new HashMap<>();
     HashMap<Integer, ObservableList<Section>> subTopicSections = new HashMap<>();
@@ -36,7 +44,16 @@ public class NotesScreenVM implements ViewModel {
     ObservableList<Note> subjectNotes = FXCollections.observableArrayList();
     ObservableList<ObjectiveQuestion> noteSubjectQuestions = FXCollections.observableArrayList();
 
-    public NotesScreenVM() {}
+    Preferences preferences = AppPreferences.getPreferences();
+
+    private User user;
+
+    public NotesScreenVM() {
+        String userData = preferences.get(Constants.PREF_KEY_USER_DATA, "");
+        Gson gson = new Gson();
+        user = gson.fromJson(userData, User.class);
+        System.out.println(TAG + "Got User with details -> " + Helper.toString(user));
+    }
 
     public void initialize(InitialData data) {
         subject = data.getSubject();
@@ -44,6 +61,7 @@ public class NotesScreenVM implements ViewModel {
         noteTopic = data.getSelectedNoteTopic();
         selectedTopic.set(noteTopic);
         selectedSubTopic.set(data.getSelectedSubTopic());
+        selectedSection.set(data.getSelectedSection());
 //        subTopics.addAll(data.getSubTopics());
 //        System.out.println(TAG + "Got questions for subject with id -> " + getPQSubjectId(data.getSubject().getSubjectId()) + ObjectiveQuestionDao.getQuestionsWithNoteSubjectId(getPQSubjectId(data.getSubject().getSubjectId())));
 //        noteSubjectQuestions.addAll(ObjectiveQuestionDao.getQuestionsWithNoteSubjectId(getPQSubjectId(data.getSubject().getSubjectId())));
@@ -63,6 +81,10 @@ public class NotesScreenVM implements ViewModel {
         }
     }
 
+    public void putLastSession(NoteLastSection lastSession) {
+        int id = SectionDao.insertLastSection(lastSession);
+        System.out.println(TAG + "Inserted last session with id -> " + id);
+    }
 
 //    public void handleHighlight(Section selectedSection, String colorCode) {
 //
@@ -134,6 +156,9 @@ public class NotesScreenVM implements ViewModel {
         return selectedTopicIndex.get();
     }
 
+    public NoteSection getSelectedSection() {
+        return selectedSection.get();
+    }
 
     public SimpleObjectProperty<NoteTopic> selectedTopicProperty() {
         return selectedTopic;
@@ -174,8 +199,11 @@ public class NotesScreenVM implements ViewModel {
         this.subTopicSections = subTopicSections;
     }
 
+    public User getUser() {
+        return user;
+    }
 
-//    public void addNote(Section selectedSection, String note) {
+    //    public void addNote(Section selectedSection, String note) {
 //
 //        boolean noted = false;
 //

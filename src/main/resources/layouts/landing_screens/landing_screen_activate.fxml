@@ -8,6 +8,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import jidefx.scene.control.field.NumberField?>
+<?import com.scholarly.utme.ui.utils.CustomNumberField?>
 <StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenActivateController"
            prefHeight="400.0" prefWidth="600.0">
@@ -59,11 +61,11 @@
                                         <Font size="16"/>
                                     </font>
                                 </Label>
-                                <TextField fx:id="activationPinTextField" prefHeight="40" promptText="Enter activation pin here">
+                                <CustomNumberField fx:id="activationPinTextField" prefHeight="40" promptText="Enter activation pin here">
                                     <font>
                                         <Font size="16"/>
                                     </font>
-                                </TextField>
+                                </CustomNumberField>
                                 <Label fx:id="incorrectPinError" text="Incorrect Activation Pin" textFill="#FA0000" visible="false">
                                     <font>
                                         <Font size="16"/>

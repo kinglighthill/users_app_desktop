@@ -3,6 +3,7 @@ package com.scholarly.utme.network.model;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
+    private String id;
     @SerializedName("full_name")
     private String fullName;
     private String email;
@@ -17,7 +18,8 @@ public class User {
     private String referralCode;
     private String gender;
 
-    public User(String fullName, String email, String phoneNumber, String country, boolean emailVerified, String profilePicUrl, String referralCode, String gender) {
+    public User(String id, String fullName, String email, String phoneNumber, String country, boolean emailVerified, String profilePicUrl, String referralCode, String gender) {
+        this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -26,6 +28,10 @@ public class User {
         this.profilePicUrl = profilePicUrl;
         this.referralCode = referralCode;
         this.gender = gender;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getFullName() {

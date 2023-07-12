@@ -280,7 +280,8 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                     viewModel.getNoteSubTopics().get(
                             viewModel.getSelectedNoteTopic().getId()
                     ),
-                    viewModel.getSelectedNoteSubTopic()
+                    viewModel.getSelectedNoteSubTopic(),
+                    null
             );
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.NOTES_SCREEN);
@@ -302,7 +303,8 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                     viewModel.getNoteSubTopics().get(
                             viewModel.getSelectedNoteTopic().getId()
                     ),
-                    viewModel.getSelectedNoteSubTopic()
+                    viewModel.getSelectedNoteSubTopic(),
+                    null
             );
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.NOTES_SCREEN);
@@ -329,6 +331,7 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                         viewModel.getNoteSubTopics().get(
                                 viewModel.getSelectedNoteTopic().getId()
                         ),
+                        null,
                         null
                 );
                 ViewSwitcher.passData(data);

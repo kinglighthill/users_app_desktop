@@ -333,9 +333,9 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
             for (int row = 0; row < content.size(); row++) {
 
-                System.out.println("Row Content -> " + content.get(row));
+//                System.out.println("Row Content -> " + content.get(row));
                 for (int col = 0; col < content.get(row).size(); col++) {
-                    System.out.println("Column content -> " + content.get(row).get(col));
+//                    System.out.println("Column content -> " + content.get(row).get(col));
                     Label grid = new Label(content.get(row).get(col));
                     grid.setWrapText(true);
                     grid.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));

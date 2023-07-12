@@ -31,11 +31,19 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import okhttp3.*;
 
-import java.io.File;
-import java.io.IOException;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Iterator;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.Preferences;
@@ -67,12 +75,12 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
 
     private Preferences preferences = AppPreferences.getPreferences();
     private OkHttpClient httpClient = NetworkService.getHttpClient();
-    Gson gson = new Gson();
     HelloApplication application = new HelloApplication();
 
     @Override
     public void initialize(URL location, ResourceBundle resourceBundle) {
         String userData = preferences.get(PREF_KEY_USER_DATA, "");
+        Gson gson = new Gson();
         User user = gson.fromJson(userData, User.class);
 
         AtomicReference<String> gender = new AtomicReference<>("");
@@ -81,7 +89,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         initializeFonts();
 
         String profileImageUrl = user.getProfilePicUrl();
-        if (profileImageUrl != null) {
+        if (profileImageUrl != null && !profileImageUrl.contains("empty")) {
             compressProfileImage(new Image(profileImageUrl));
             System.out.println(TAG + "Set Image successfully for url -> " + profileImageUrl);
         }
@@ -103,10 +111,12 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         genderToggle.getToggles().addAll(maleRadioButton, femaleRadioButton);
         genderToggle.getToggles().get(0).setUserData("m");
         genderToggle.getToggles().get(1).setUserData("f");
-        if (user.getGender().equals("m")) {
-            genderToggle.selectToggle(genderToggle.getToggles().get(0));
-        } else {
-            genderToggle.selectToggle(genderToggle.getToggles().get(1));
+        if (user.getGender() != null) {
+            if (user.getGender().equals("m")) {
+                genderToggle.selectToggle(genderToggle.getToggles().get(0));
+            } else {
+                genderToggle.selectToggle(genderToggle.getToggles().get(1));
+            }
         }
 
         genderToggle.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
@@ -122,7 +132,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         cameraImage.setOnMouseClicked(event -> {
             File imageFile = application.openFileChooser(ViewSwitcher.getStage());
 //            File imageFile = new File("");
-            System.out.println(TAG + "Got image file -> " + imageFile);
+            System.out.println(TAG + "Got image file of size -> " + imageFile.length());
+
+//            File compressedImage = compressImage(imageFile);
+
+//            System.out.println(TAG + "Image file size after compression -> " + compressedImage.length());
 
 //            application.openWebcam();
 
@@ -146,12 +160,12 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                 Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
                 alertDialog.show();
                 hideProgressBar();
-                System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
+                System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
             }
 
-//            String imageUrl = preferences.get(PREF_KEY_PROFILE_IMAGE_URL, "");
-//            Image image = new Image(imageUrl);
-//            compressProfileImage(image);
+            String imageUrl = preferences.get(PREF_KEY_PROFILE_IMAGE_URL, "");
+            Image image = new Image(imageUrl);
+            compressProfileImage(image);
         });
 
         saveButton.setOnAction(event -> {
@@ -192,6 +206,136 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
+    }
+
+    private File rescaleAndCompressImage(File imageFile) {
+        try {
+            System.out.println(TAG + "File size before compression -> " + imageFile.length());
+            File compressedImageFile = new File(imageFile.getName()+"compressed");
+
+            InputStream is = new FileInputStream(imageFile);
+            OutputStream os = new FileOutputStream(compressedImageFile);
+
+            float quality = 0.5f;
+
+            long divisor = imageFile.length()/1000;
+
+            if (divisor > 10 && divisor < 50) {
+                divisor = imageFile.length()/10000;
+            }
+            if (divisor > 50 && divisor < 100) {
+                divisor = imageFile.length()/50000;
+            }
+            if (divisor > 100 && divisor < 150) {
+                divisor = imageFile.length()/100000;
+            }
+            if (divisor > 150 && divisor < 200) {
+                divisor = imageFile.length()/150000;
+            }
+            System.out.println(TAG + "Divisor -> " + divisor);
+            if (divisor > 1) {
+                quality = 1.0f/divisor;
+            }
+
+            System.out.println(TAG + "New Quality size -> " + quality);
+
+
+            // create a BufferedImage as the result of decoding the supplied InputStream
+            BufferedImage image = ImageIO.read(is);
+
+            // get all image writers for JPG format
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+
+            ImageWriter writer = (ImageWriter) writers.next();
+            ImageOutputStream ios = ImageIO.createImageOutputStream(os);
+            writer.setOutput(ios);
+
+            ImageWriteParam param = writer.getDefaultWriteParam();
+
+            // compress to a given quality
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            param.setCompressionQuality(0.05f);
+
+            // appends a complete image stream containing a single image and
+            //associated stream and image metadata and thumbnails to the output
+            writer.write(null, new IIOImage(image, null, null), param);
+
+            // close all streams
+            is.close();
+            os.close();
+            ios.close();
+            writer.dispose();
+
+            System.out.println(TAG + "File size after compression -> " + compressedImageFile.length());
+
+        } catch (Exception e) {
+            System.out.println(TAG + "Error compressing image " + e.getMessage());
+        }
+        return null;
+    }
+
+    private File compressImage(File imageFile) {
+        if (imageFile != null) {
+            File newFile = compressImageFile(imageFile);
+            do {
+                newFile = compressImageFile(newFile);
+            } while (Objects.requireNonNull(newFile).length() > 4000);
+            return newFile;
+        }
+        return new File("");
+    }
+
+    private File compressImageFile(File inputImage) {
+        try {
+//            System.out.println(TAG + "File size before compression -> " + inputImage.length());
+            File compressedImageFile = new File(inputImage.getName()+"compressed");
+
+            InputStream is = new FileInputStream(inputImage);
+            OutputStream os = new FileOutputStream(compressedImageFile);
+
+            float quality = 0.5f;
+
+            long divisor = inputImage.length()/1000;
+
+            System.out.println(TAG + "Divisor -> " + divisor);
+            if (divisor > 1) {
+                quality = 1.0f/divisor;
+            }
+            System.out.println(TAG + "New Quality size -> " + quality);
+
+            // create a BufferedImage as the result of decoding the supplied InputStream
+            BufferedImage image = ImageIO.read(is);
+
+            // get all image writers for JPG format
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+
+            ImageWriter writer = (ImageWriter) writers.next();
+            ImageOutputStream ios = ImageIO.createImageOutputStream(os);
+            writer.setOutput(ios);
+
+            ImageWriteParam param = writer.getDefaultWriteParam();
+
+            // compress to a given quality
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            param.setCompressionQuality(quality);
+
+            // appends a complete image stream containing a single image and
+            //associated stream and image metadata and thumbnails to the output
+            writer.write(null, new IIOImage(image, null, null), param);
+
+            // close all streams
+            is.close();
+            os.close();
+            ios.close();
+            writer.dispose();
+
+            System.out.println(TAG + "Compressed image to size -> " + compressedImageFile.length());
+            return compressedImageFile;
+
+        } catch (Exception e) {
+            System.out.println(TAG + "Error compressing image -> " + e.getMessage());
+        }
+        return null;
     }
 
     private void initializeViews() {
@@ -310,6 +454,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
             public void onResponse(Call call, Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
                     assert responseBody != null;
+                    Gson gson = new Gson();
                     UploadResponse uploadResponse = gson.fromJson(responseBody.string(), UploadResponse.class);
                     if (uploadResponse.getStatus().equalsIgnoreCase("success")) {
                         String imageUrl = uploadResponse.getData();

@@ -1,14 +1,13 @@
 package com.scholarly.utme.controller.landing_screens;
 
-import com.google.gson.Gson;
 import com.scholarly.utme.controller.HomeScreenController;
+import com.scholarly.utme.controller.note_screens.NotesScreenController;
 import com.scholarly.utme.data.model.listItems.NewsItem;
-import com.scholarly.utme.network.model.User;
-import com.scholarly.utme.ui.cellFactories.NewsListCellFactory;
+import com.scholarly.utme.data.model.newDb.NoteLastSection;
+import com.scholarly.utme.data.model.newDb.NoteSubject;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -19,19 +18,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
-import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
-import static com.scholarly.utme.util.Constants.*;
+import static com.scholarly.utme.util.Constants.PRACTICE_SCREEN;
 
 @FxmlPath("/layouts/landing_screens/landing_screen_home.fxml")
 public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM>, Initializable {
@@ -42,76 +42,63 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
     @FXML
     private BorderPane rootPane;
-
     @FXML
     private ScrollPane mainScrollPane, previousSessionScrollPane, performanceScrollPane;
-
     @FXML
     private StackPane actionsPane;
-
     @FXML
     private GridPane previousSessionGridPane;
-
     @FXML
     private HBox scrollHBox;
-
+    @FXML
+    private VBox continuePreviousSessionVBox;
     @FXML
     private Button viewDesktopAppButton;
-
     @FXML
     ListView<NewsItem> newsList;
-
     @FXML
     private ImageView handImage, notificationIcon, profileImage, biologyIcon, englishIcon, physicsIcon, chemistryIcon, mathematicsIcon, geographyIcon, boyWithLaptop;
-
     @FXML
-    private ImageView cbtPracticeIcon, videosIcon, novelsIcon, studyNotesIcon, cbtCentresIcon, audioIcon, syllabusIcon, firstSessionVideoImage, firstSessionPlayIcon, thirdSessionVideoImage, thirdSessionPlayIcon;
-
+    private ImageView cbtPracticeIcon, videosIcon, novelsIcon, studyNotesIcon, cbtCentresIcon, audioIcon, syllabusIcon, noteSessionSubjectImage, firstSessionPlayIcon, thirdSessionVideoImage, thirdSessionPlayIcon;
     @FXML
     private ImageView firstSessionOneStar, firstSessionTwoStar, firstSessionThreeStar, firstSessionFourStar, firstSessionFiveStar, thirdSessionOneStar, thirdSessionTwoStar, thirdSessionThreeStar, thirdSessionFourStar, thirdSessionFiveStar;
-
     @FXML
     private ImageView secondSessionBookImage, secondSessionAuthorIcon, secondSessionChaptersIcon, fourthSessionBookImage, fourthSessionAuthorIcon, fourthSessionChaptersIcon, actionCloseImage, actionCbtPracticeIcon, actionVideosPracticeIcon, actionNovelsPracticeIcon, actionAudioPracticeIcon;
-
     @FXML
     private Panel biologyPane, englishPane, physicsPane, chemistryPane, mathematicsPane, geographyPane;
-
     @FXML
     private Panel cbtPracticePanel, pastQuestionsPanel, cbtGamePanel, videosPanel, audioPanel, novelsPanel,  studyNotesPanel, cbtCentresPanel, syllabusPanel;
-
     @FXML
     private Panel firstSession, secondSession, thirdSession, fourthSession, actionCbtPracticePanel;
-
     @FXML
     private Label helloText, startLearningText, topSubjectsText, biologyText, englishText, physicsText, chemistryText, mathematicsText, geographyText, activitiesText, continueSessionsText;
-
     @FXML
-    private Label cbtPracticeText, videosText, novelsText, pastQuestionsLabel, audioText, syllabusText, studyNotesText, cbtCentresText, syllabusLabel, firstSessionVideoTitle, firstSessionTimeText, firstSessionRatingNumber, firstSessionDescriptionText;
-
+    private Label cbtPracticeText, videosText, novelsText, pastQuestionsLabel, audioText, syllabusText, studyNotesText, cbtCentresText, syllabusLabel, noteSessionSubjectName, firstSessionTimeText, firstSessionRatingNumber, noteLastSessionText;
     @FXML
     private Label secondSessionBookTitle, secondSessionAuthorName, secondSessionChaptersText, thirdSessionVideoTitle, thirdSessionTimeText, thirdSessionRatingNumber, thirdSessionDescriptionText, fourthSessionBookTitle, fourthSessionAuthorName, fourthSessionChaptersText;
-
     @FXML
     private Label newsFeedText, seeAllText, performanceChartText, firstPerformanceCBTText, firstPerformanceCBTDate, firstPerformancePercentText, secondPerformanceCBTText, secondPerformanceCBTDate, secondPerformancePercentText;
-
     @FXML
     private Label whichActionText, actionCbtPracticeText, actionVideosPracticeText, actionNovelsPracticeText, actionAudioPracticeText, viewDesktopAppText;
 
 
-    private Preferences preferences = AppPreferences.getPreferences();
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        String userData = preferences.get(PREF_KEY_USER_DATA, "");
-        Gson gson = new Gson();
-        User user = gson.fromJson(userData, User.class);
 
         initializeViews();
         initializeFonts();
 
-        helloText.setText(helloText.getText() + user.getFullName().split(" ")[0]);
-        if (user.getProfilePicUrl() != null) {
-            compressProfileImage((new Image(user.getProfilePicUrl())));
-            System.out.println(TAG + "Image set successfully with url -> " + user.getProfilePicUrl());
+        helloText.setText(helloText.getText() + viewModel.getUser().getFullName().trim().split(" ")[0]);
+        if (viewModel.getUser().getProfilePicUrl() != null && !viewModel.getUser().getProfilePicUrl().contains("empty")) {
+            compressProfileImage((new Image(viewModel.getUser().getProfilePicUrl())));
+            System.out.println(TAG + "Image set successfully with url -> " + viewModel.getUser().getProfilePicUrl());
+        }
+
+        continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionGridPane);
+        if (populateLastSession()) {
+            continuePreviousSessionVBox.getChildren().addAll(continueSessionsText, previousSessionGridPane);
+        } else {
+            continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionGridPane);
         }
 
         NewsItem newsItem1 = new NewsItem("", "", "", "");
@@ -122,8 +109,8 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         NewsItem newsItem6 = new NewsItem("", "", "", "");
 
         ObservableList<NewsItem> newsList = FXCollections.observableArrayList(newsItem1, newsItem2, newsItem3, newsItem4, newsItem5, newsItem6);
-        this.newsList.setCellFactory(new NewsListCellFactory());
-        this.newsList.setItems(newsList);
+//        this.newsList.setCellFactory(new NewsListCellFactory());
+//        this.newsList.setItems(newsList);
 
         biologyPane.setOnMouseClicked(event -> {
             mainScrollPane.setOpacity(0.3);
@@ -156,6 +143,22 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
         });
 
+        firstSession.setOnMouseClicked(e -> {
+            NotesScreenController.InitialData data = new NotesScreenController.InitialData(
+                    viewModel.getLastSessionSubject(),
+                    viewModel.getNoteSubjectTopics().get(
+                            viewModel.getLastSessionSubject().getId()
+                    ),
+                    viewModel.getSelectedNoteTopic(),
+                    viewModel.getNoteSubTopics().get(
+                            viewModel.getSelectedNoteTopic().getId()
+                    ),
+                    null,
+                    viewModel.getNoteSection()
+            );
+            ViewSwitcher.passData(data);
+            ViewSwitcher.showScreen(View.NOTES_SCREEN);
+        });
 
        /* pastQuestionsPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("pastQuestionsPanel");
@@ -223,7 +226,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        audioIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/audio_icon.png").toString()));
         syllabusIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/syllabus_icon.png").toString()));
 
-        firstSessionVideoImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/session_lung_image.png").toString()));
+//        lastSessionSubjectImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/session_lung_image.png").toString()));
 //        firstSessionPlayIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/session_play_icon.png").toString()));
 //        firstSessionOneStar.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/rating_star.png").toString()));
 //        firstSessionTwoStar.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/rating_star.png").toString()));
@@ -287,10 +290,10 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        cbtCentresText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 
         continueSessionsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
-        firstSessionVideoTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+        noteSessionSubjectName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
 //        firstSessionTimeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
 //        firstSessionRatingNumber.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-        firstSessionDescriptionText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        noteLastSessionText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 
         secondSessionBookTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
         secondSessionAuthorName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
@@ -305,8 +308,8 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        fourthSessionAuthorName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
 //        fourthSessionChaptersText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
 
-        newsFeedText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
-        seeAllText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        newsFeedText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+//        seeAllText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 //        performanceChartText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
 
 //        firstPerformanceCBTText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
@@ -326,6 +329,20 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         viewDesktopAppText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
         viewDesktopAppButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 
+    }
+
+    private boolean populateLastSession() {
+        NoteLastSection lastSection = viewModel.getLastSession();
+        if (lastSection != null) {
+            noteLastSessionText.setText(lastSection.getSectionTitle());
+
+            NoteSubject lastSectionSubject = viewModel.getLastSessionSubject();
+            noteSessionSubjectName.setText(lastSectionSubject.getTitle());
+            noteSessionSubjectImage.setImage(new Image(getClass().getResource("/drawable/subject_images/" + lastSectionSubject.getShortTitle() + "_image.png").toString()));
+
+            return true;
+        }
+        return false;
     }
 
     private void compressProfileImage(Image image) {

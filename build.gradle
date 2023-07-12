@@ -137,6 +137,7 @@ dependencies {
 
     // implementation 'org.xerial:sqlite-jdbc:3.36.0.1'
 
+    // Webcam Library
     implementation 'com.github.sarxos:webcam-capture:0.3.12'
 
 

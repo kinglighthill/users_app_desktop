@@ -195,6 +195,13 @@ public class SubjectDao {
         return FXCollections.unmodifiableObservableList(theorySubjects);
     }
 
+    public static NoteSubject getNoteSubject(int id) {
+        for (NoteSubject subject : noteSubjects) {
+            if (subject.getId() == id) return subject;
+        }
+        return null;
+    }
+
     public static Optional<Subject> getSubject(int id) {
         for (Subject subject : subjects) {
             if (subject.getId() == id) return Optional.of(subject);

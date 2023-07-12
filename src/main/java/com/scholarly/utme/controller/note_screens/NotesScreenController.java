@@ -25,9 +25,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.ListViewSkin;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -48,6 +51,7 @@ import org.jsoup.nodes.Document;
 
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
@@ -126,7 +130,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     @FXML
     private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitOrCloseButton, submitDialogSubmitButton, submitDialogCancelButton, quizQuitButton, quitDialogQuitButton, quitDialogCancelButton, exitDialogExitButton, exitDialogCancelButton, notesBackButton, quizScoreQuitButton, quizScoreAnswersButton, activateNowButton;
-
     @FXML
     private ToggleButton fontSmallButton, fontMediumButton, fontLargeButton;
 
@@ -163,8 +166,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 //        }
 
         viewModel.initialize(getInitialData());
-        initializeViews();
 
+        initializeViews();
         initializeTextFont(FontSize.MEDIUM);
         highlightColorsList.addAll(Arrays.stream(HighlightColors.values()).map(highlightColors1 -> highlightColors1.colorCode).toList());
 
@@ -176,8 +179,17 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         noteContentList.setItems(noteSections);
         noteContentList.setSelectionModel(new NoSelectionModel<>());
         noteContentList.setPadding(new Insets(10, 5, 5, 5));
-        if (viewModel.getSelectedSubtopicSection() != null)
+
+        if (viewModel.getSelectedSubtopicSection() != null) {
             noteContentList.scrollTo(viewModel.getSelectedSubtopicSection());
+        }
+
+        if (viewModel.getSelectedSection() != null) {
+            int lastSectionIndex = noteSections.indexOf(noteSections.stream().filter(section ->
+                    section.getId() == viewModel.getSelectedSection().getId()).toList().get(0));
+            System.out.println(TAG + "Note Section Index -> " + lastSectionIndex);
+            noteContentList.scrollTo(lastSectionIndex);
+        }
 
         noteContentList.setOnScrollFinished(event -> {
             System.out.println(TAG + "Scroll Y-axis value -> " + event.getY());
@@ -190,6 +202,14 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             System.out.println(TAG + "Scroll Scene-Y value -> " + event.getSceneY());
 
         });
+
+//        noteContentList.skinProperty().addListener(((observable, oldValue, newValue) -> {
+//            if (newValue != null) {
+//                System.out.println(TAG + "New Skin value -> " + newValue);
+//                int firstVisibleIndex = getFirstVisibleIndex(newValue);
+//                System.out.println("First Visible Index: " + firstVisibleIndex);
+//            }
+//        }));
 
         noSubtopicsLabel.setVisible(viewModel.getSubTopics().get(viewModel.getTopic().getId()).isEmpty());
 
@@ -352,10 +372,76 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         notesBackButton.setOnAction(event -> {
+            if (noteContentList.getSkin() != null) {
+                VirtualFlow<?> vf = (VirtualFlow<?>) ((ListViewSkin<?>) noteContentList.getSkin()).getChildren().get(0);
+
+                System.out.println(TAG + "Position -> " + vf.getPosition());
+                System.out.println(TAG + "Cell count -> " + vf.getCellCount());
+
+                double lastSectionIndex = vf.getPosition() * vf.getCellCount();
+                System.out.println(TAG + "Last Section Index -> " + lastSectionIndex);
+
+                if ((int)lastSectionIndex == noteContentList.getItems().size()) {
+                    lastSectionIndex = (int) lastSectionIndex - 1;
+                }
+                NoteSection lastSection = noteContentList.getItems().get((int) lastSectionIndex);
+                System.out.println(TAG + "Last Section -> " + Helper.toString(lastSection));
+
+                StringBuilder sectionTitle = new StringBuilder();
+                        ContentViewType contentViewType = ContentViewTypes.convert(lastSection);
+                if (contentViewType instanceof HeaderViewType headerViewType) {
+                    if (headerViewType.getText() != null) {
+                        sectionTitle = new StringBuilder(headerViewType.getText());
+                    }
+                } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
+                    if (paragraphViewType.getText() != null) {
+                        sectionTitle = new StringBuilder(paragraphViewType.getText());
+                    }
+                } else if (contentViewType instanceof CBTViewType cbtViewType) {
+                    int yearId = cbtViewType.getYearId();
+                    int questionId = cbtViewType.getQuestionId();
+                    ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
+
+                    sectionTitle = new StringBuilder(question.getQuestion());
+                } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
+                    if (latexMathViewType.getKatex() != null) {
+                        sectionTitle = new StringBuilder(latexMathViewType.getKatex());
+                    }
+                } else if (contentViewType instanceof ListViewType listViewType) {
+                    sectionTitle = new StringBuilder(listViewType.getItems().get(0));
+                } else if (contentViewType instanceof ReferenceViewType referenceViewType) {
+                    sectionTitle = new StringBuilder(referenceViewType.getText());
+                } else if (contentViewType instanceof TableViewType tableViewType) {
+
+                    List<List<String>> content = tableViewType.getContent();
+
+                    for (int row = 0; row < 1; row++) {
+
+                        System.out.println("Row Content -> " + content.get(row));
+                        for (int col = 0; col < content.get(row).size(); col++) {
+                            System.out.println("Column content -> " + content.get(row).get(col));
+                            sectionTitle.append(" | ").append(content.get(row).get(col));
+                        }
+                    }
+                }
+                System.out.println(TAG + "Got Section title -> " + sectionTitle.toString());
+
+
+                NoteLastSection noteLastSection = new NoteLastSection(
+                        viewModel.getUser().getId().hashCode(),
+                        lastSection.getId(),
+                        sectionTitle.toString(),
+                        viewModel.getUser().getId()
+                );
+
+                viewModel.putLastSession(noteLastSection);
+            }
             Animations.translateIn(exitNotesDialog, 300);
             Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
         });
         exitDialogExitButton.setOnAction(event -> {
+            // TODO: Save last section
+//            noteContentList.g
 //            ViewSwitcher.passData(new HomeScreenController.InitialData(NOTES_SCREEN));
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
         });
@@ -912,6 +998,42 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
 //        Animations.slideIn(quizPane);
 //        quizScorePane.setVisible(false);
+    }
+
+    private ScrollBar getVerticalScrollBar(ListView<?> listView) {
+        for (Node node : listView.lookupAll(".scroll-bar")) {
+            if (node instanceof ScrollBar) {
+                ScrollBar scrollBar = (ScrollBar) node;
+                if (scrollBar.getOrientation() == Orientation.VERTICAL) {
+                    return scrollBar;
+                }
+            }
+        }
+        return null;
+    }
+
+    private int getFirstVisibleIndex(Skin<?> skin) {
+        if (skin instanceof ListViewSkin) {
+            VirtualFlow<?> vf = (VirtualFlow<?>) ((ListViewSkin<?>) skin).getChildren().get(0);
+            System.out.println(TAG + "Got VirtualFlow -> " + vf);
+            System.out.println(TAG + "Position -> " + vf.getPosition());
+            System.out.println(TAG + "Cell count -> " + vf.getCellCount());
+//            System.out.println(TAG + "First Visible Cell -> " + vf.getLastVisibleCell().getIndex());
+//            return vf.getFirstVisibleCell().getIndex();
+        }
+        return -1;
+    }
+
+    public void getFirstAndLast(ListView<?> t) {
+        try {
+            ListViewSkin<?> ts = (ListViewSkin<?>) t.getSkin();
+            VirtualFlow<?> vf = (VirtualFlow<?>) ts.getChildren().get(0);
+            int first = vf.getFirstVisibleCell().getIndex();
+            int last = vf.getLastVisibleCell().getIndex();
+            System.out.println(TAG + "##### Scrolling first " + first + " last " + last);
+        } catch (Exception ex) {
+            System.out.println(TAG + "##### Scrolling: Exception " + ex);
+        }
     }
 
     private void renderNote(NoteSubTopic subTopic) {
@@ -1783,6 +1905,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         System.out.println(TAG + "ContentViewType -> CBTViewType");
                         CBTViewType cbtViewType = (CBTViewType) contentViewType;
 
+                        // Show the question
+
                         int yearId = cbtViewType.getYearId();
                         int questionId = cbtViewType.getQuestionId();
 
@@ -1922,6 +2046,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         System.out.println(TAG + "ContentViewType -> LatexMathViewType");
                         LatexMathViewType latexMathViewType = (LatexMathViewType) contentViewType;
 
+                        // Show the content
+
                         if (latexMathViewType.getKatex() != null) {
                             org.commonmark.node.Node document = markdownParser.parse(latexMathViewType.getKatex());
                             String htmlKatex = htmlRenderer.render(document);
@@ -1939,6 +2065,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                     } else if (contentViewType instanceof ListViewType) {
                         System.out.println(TAG + "ContentViewType -> ListViewType");
                         ListViewType listViewType = (ListViewType) contentViewType;
+
+                        // Show the first item in the List
 
                         if (listViewType.getStyle().equalsIgnoreCase("unordered")) {
 
@@ -1966,6 +2094,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                     } else if (contentViewType instanceof ReferenceViewType) {
                         System.out.println(TAG + "ContentViewType -> ReferenceViewType");
 
+                        // Show the Reference content
+
                         ReferenceViewType referenceViewType = (ReferenceViewType) contentViewType;
                         if (referenceViewType.getText() != null) {
                             Document doc = Jsoup.parse(referenceViewType.getText());
@@ -1983,6 +2113,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         System.out.println(TAG + "ContentViewType -> TableViewType");
 
                         TableViewType tableViewType = (TableViewType) contentViewType;
+
+                        // Show the first two headers
 
                         GridPane tableGrid = new GridPane();
                         tableGrid.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #F4D242");
@@ -2213,7 +2345,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
-        System.out.println(TAG + "Got data -> " + Helper.toString(data));
+//        System.out.println(TAG + "Got data -> " + Helper.toString(data));
         return data;
     }
 
@@ -2223,13 +2355,15 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         private NoteTopic selectedNoteTopic;
         private List<NoteSubTopic> subTopics;
         private NoteSubTopic selectedSubTopic;
+        private NoteSection selectedSection;
 
-        public InitialData(NoteSubject subject, List<NoteTopic> topics, NoteTopic selectedNoteTopic, List<NoteSubTopic> subTopics, NoteSubTopic selectedSubTopic) {
+        public InitialData(NoteSubject subject, List<NoteTopic> topics, NoteTopic selectedNoteTopic, List<NoteSubTopic> subTopics, NoteSubTopic selectedSubTopic, NoteSection selectedSection) {
             this.subject = subject;
             this.topics = topics;
             this.selectedNoteTopic = selectedNoteTopic;
             this.subTopics = subTopics;
             this.selectedSubTopic = selectedSubTopic;
+            this.selectedSection = selectedSection;
         }
 
         public NoteSubject getSubject() {
@@ -2250,6 +2384,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         public NoteSubTopic getSelectedSubTopic() {
             return selectedSubTopic;
+        }
+
+        public NoteSection getSelectedSection() {
+            return selectedSection;
         }
     }
 }

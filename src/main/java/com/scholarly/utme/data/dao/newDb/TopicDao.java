@@ -3,6 +3,7 @@ package com.scholarly.utme.data.dao.newDb;
 
 import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.FreeContent;
+import com.scholarly.utme.data.model.newDb.NoteSubject;
 import com.scholarly.utme.data.model.newDb.NoteTopic;
 import com.scholarly.utme.data.model.newDb.PQTopic;
 import com.scholarly.utme.data.model.newDb.Topic;
@@ -181,33 +182,11 @@ public class TopicDao {
 
     }
 
-    public static ObservableList<Topic> getTopics(String tableName) {
-        ObservableList<Topic> topics = FXCollections.observableArrayList();
-
-        String query = "SELECT * FROM " + tableName;
-
-        try (Connection connection = SyllabusDatabase.connect()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-            topics.clear();
-            while (rs.next()) {
-                topics.add(new Topic(
-                        rs.getInt(idColumn),
-                        rs.getString(titleColumn),
-                        rs.getInt(orderColumn)));
-            }
-
-            return topics;
-
-        } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(
-                    Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load topics from database because " + e.getMessage());
-            topics.clear();
-
-            return null;
+    public static NoteTopic getTopic(int id) {
+        for (NoteTopic topic : noteTopics) {
+            if (topic.getId() == id) return topic;
         }
-
+        return null;
     }
 
 }

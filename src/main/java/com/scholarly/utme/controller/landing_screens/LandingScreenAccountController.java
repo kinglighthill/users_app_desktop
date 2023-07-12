@@ -66,7 +66,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
         emailText.setText(user.getEmail());
         deviceIdLabel.setText(DeviceInfo.getSystemProperties().getDeviceId());
 
-        if (user.getProfilePicUrl() != null){
+        if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().contains("empty")){
             compressProfileImage((new Image(user.getProfilePicUrl())));
             System.out.println(TAG + "Set Image successfully for url -> " + user.getProfilePicUrl());
         }
