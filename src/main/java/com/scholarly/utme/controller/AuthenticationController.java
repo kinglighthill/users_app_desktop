@@ -411,7 +411,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 } catch (Exception e) {
                     System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                 }
-
             }
 
             @Override
@@ -424,7 +423,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 System.out.println("Request failed with exception -> " + e.getMessage());
             }
         });
-
     }
 
     private void signupUser(String authCode, String redirectUri, ServerCallback callback) {
@@ -526,13 +524,13 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     if (loginResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
                         preferences.put(PREF_KEY_ACCESS_TOKEN, loginResponse.getData().getAccessToken());
-                        System.out.println(TAG + "Logged in user with Access Token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN, "false"));
+//                        System.out.println(TAG + "Logged in user with Access Token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN, "false"));
 
                         String userData = gson.toJson(loginResponse.getData().getUserData());
                         preferences.put(PREF_KEY_USER_DATA, userData);
                         preferences.putBoolean(PREF_KEY_ACTIVATION_STATE, loginResponse.getData().getActivationState().isActivationActive());
 
-                        System.out.println(TAG + "Logged in user with User Activation State -> " + preferences.getBoolean(PREF_KEY_ACTIVATION_STATE, false));
+//                        System.out.println(TAG + "Logged in user with User Activation State -> " + preferences.getBoolean(PREF_KEY_ACTIVATION_STATE, false));
 
                         Platform.runLater(() -> {
                             hideProgressBar();

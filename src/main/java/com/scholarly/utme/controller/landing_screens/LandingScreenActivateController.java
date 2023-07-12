@@ -5,10 +5,7 @@ import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.ActivationInfo;
 import com.scholarly.utme.network.model.BaseResponse;
 import com.scholarly.utme.network.model.DeviceInfo;
-import com.scholarly.utme.ui.utils.Alerts;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenActivateVM;
@@ -24,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import jidefx.scene.control.field.NumberField;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -54,9 +52,9 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
     @FXML
     private VBox activationSuccessfulPane, centerVBox, innerVBox;
     @FXML
-    private TextField activationPinTextField;
+    private CustomNumberField activationPinTextField;
     @FXML
-    private Label incorrectPinError, activationSuccessfulMessage, activationText;
+    private Label incorrectPinError, activationSuccessfulMessage, activationText, headerLabel;
     @FXML
     private Button activateButton, buyPinButton, loginButton;
 
@@ -77,17 +75,36 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
         if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE, false)) {
             centerVBox.getChildren().remove(notActivatedPane);
             innerVBox.getChildren().remove(activationText);
+            activationPinTextField.setDisable(true);
+            activateButton.setDisable(true);
+            headerLabel.setText("Your app has been activated!");
         } else {
+            activationPinTextField.setDisable(false);
+            activateButton.setDisable(false);
             centerVBox.getChildren().add(0, notActivatedPane);
             innerVBox.getChildren().add(innerVBox.getChildren().size(), activationText);
+            headerLabel.setText("Enter your 16 digit activation pin to unlock all the layers and amazing features in this app. Activation lasts for one academic year!");
         }
 
-        activateButton.setOnAction(event -> {
-//            if (activationPinTextField.getCharacters().length() < 16) {
-//                incorrectPinError.setVisible(true);
-//            } else {
-//                Animations.showDialog(paymentSuccessfulPane, dialogDimmer);
+        activateButton.setDisable(activationPinTextField.getText().length() != 16);
+
+        activationPinTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+//            if (newValue.length() % 4 == 0 && newValue.length() / 4 == 1) {
+//                System.out.println(TAG + "NewVlaue for 4 is " + newValue);
+//                activationPinTextField.setText(newValue+="-");
 //            }
+//            if (newValue.length() % 9 == 0&& newValue.length() / 9 == 1) {
+//                System.out.println(TAG + "NewVlaue for 9 is " + newValue);
+//                activationPinTextField.setText(newValue+="-");
+//            }
+//            if (newValue.length() % 14 == 0&& newValue.length() / 14 == 1) {
+//                System.out.println(TAG + "NewVlaue for 14 is " + newValue);
+//                activationPinTextField.setText(newValue+="-");
+//            }
+            activateButton.setDisable(newValue.length() != 16);
+        }));
+
+        activateButton.setOnAction(event -> {
             DeviceInfo deviceInfo = DeviceInfo.getSystemProperties();
 
             showProgressBar();

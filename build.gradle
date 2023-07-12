@@ -23,8 +23,8 @@ ext {
     junitVersion = '5.9.2'
 }
 
-sourceCompatibility = '17'
-targetCompatibility = '17'
+sourceCompatibility = '16'
+targetCompatibility = '16'
 
 //sourceSets {
 //    create("intTest") {
@@ -137,6 +137,7 @@ dependencies {
 
     // implementation 'org.xerial:sqlite-jdbc:3.36.0.1'
 
+    // Webcam Library
     implementation 'com.github.sarxos:webcam-capture:0.3.12'
 
 

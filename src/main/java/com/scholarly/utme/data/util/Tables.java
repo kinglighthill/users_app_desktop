@@ -32,6 +32,7 @@ public class Tables {
     public static final String NOTE_TOPICS = "note_topics";
     public static final String NOTE_SUB_TOPICS = "note_sub_topics";
     public static final String NOTE_SECTIONS = "note_sections";
+    public static final String NOTE_LAST_SECTION = "note_last_session";
 
     // Syllabus Tables
     public static final String SYLLABUS_SUBJECTS = "syllabus_subjects";

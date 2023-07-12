@@ -8,6 +8,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import jidefx.scene.control.field.NumberField?>
+<?import com.scholarly.utme.ui.utils.CustomNumberField?>
 <StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenActivateController"
            prefHeight="400.0" prefWidth="600.0">
@@ -48,7 +50,7 @@
 
                     <AnchorPane style="-fx-border-color: #F1F1F1; -fx-border-radius: 5;">
                         <VBox fx:id="innerVBox" spacing="40" alignment="CENTER_LEFT" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="50">
-                            <Label prefWidth="700" text="Enter a 16 digit activation pin to unlock all the layers and amazing features in this app. Activation lasts for one academic year!" textFill="#053500" wrapText="true">
+                            <Label fx:id="headerLabel" prefWidth="700" text="Enter a 16 digit activation pin to unlock all the layers and amazing features in this app. Activation lasts for one academic year!" textFill="#053500" wrapText="true">
                                 <font>
                                     <Font size="16"/>
                                 </font>
@@ -59,11 +61,11 @@
                                         <Font size="16"/>
                                     </font>
                                 </Label>
-                                <TextField fx:id="activationPinTextField" prefHeight="40" promptText="Enter activation pin here">
+                                <CustomNumberField fx:id="activationPinTextField" prefHeight="40" promptText="Enter activation pin here">
                                     <font>
                                         <Font size="16"/>
                                     </font>
-                                </TextField>
+                                </CustomNumberField>
                                 <Label fx:id="incorrectPinError" text="Incorrect Activation Pin" textFill="#FA0000" visible="false">
                                     <font>
                                         <Font size="16"/>

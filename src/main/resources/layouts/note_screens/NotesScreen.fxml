@@ -8,21 +8,20 @@
 <?import javafx.scene.text.*?>
 
 
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.note_screens.NotesScreenController">
 
    <StackPane fx:id="noteLayout" prefHeight="800" prefWidth="1000" AnchorPane.topAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0">
 
-      <BorderPane prefHeight="600.0" prefWidth="1000.0" StackPane.alignment="CENTER" >
-<!--         <top>-->
-<!--            <HBox>-->
-<!--               <Label fx:id="topicTitle" text="Topic Title" />-->
-<!--            </HBox>-->
-<!--         </top>-->
+      <BorderPane prefHeight="600.0" prefWidth="1000.0" StackPane.alignment="CENTER">
 
          <center>
             <AnchorPane prefHeight="200.0" prefWidth="600.0" style="-fx-background-color: #E7F7E9;">
 
-               <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0"
+               <ListView fx:id="noteContentList" maxWidth="200" editable="true" prefHeight="200.0" prefWidth="200.0"
+                         AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0" />
+
+               <!--<ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0"
                            AnchorPane.topAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0">
 
                   <content>
@@ -36,7 +35,7 @@
 
                      </StackPane>
                   </content>
-               </ScrollPane>
+               </ScrollPane>-->
 
                <Button fx:id="prevButton" mnemonicParsing="false" prefWidth="50"
                        style="-fx-background-color: #ffffff; -fx-background-radius: 5px; "
@@ -142,7 +141,6 @@
             </StackPane>-->
 
             </AnchorPane>
-
          </center>
 
          <left>
@@ -158,40 +156,39 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                         </ImageView>
-                        <Label fx:id="subtopicsText" alignment="CENTER" text="Sub-Topics" textFill="#105801">
+                        <Label fx:id="noteTopicLabel" alignment="CENTER" text="Comprehension" textFill="#105801">
                            <HBox.margin>
                               <Insets left="20.0" />
                            </HBox.margin>
                         </Label>
                      </children>
                      <padding>
-                        <Insets bottom="15.0" top="15.0" />
+                        <Insets bottom="15.0" top="20.0" />
                      </padding>
                   </HBox>
                   <Line endX="190.0" startX="-100.0" stroke="#ededed" strokeWidth="5.0" />
 
                   <StackPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
-
                      <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                         <content>
-                           <VBox fx:id="topicVBox" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" VBox.vgrow="ALWAYS"/>
+                           <VBox fx:id="subtopicsVBox" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #F7F7F7;" VBox.vgrow="ALWAYS"/>
                         </content>
                      </ScrollPane>
-                     <Button fx:id="quizButton" text="Take Quiz" textFill="#FFFFFF" mnemonicParsing="false" StackPane.alignment="BOTTOM_CENTER" style="-fx-background-color: #51C46B; -fx-background-radius: 5;" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                     <Label fx:id="noSubtopicsLabel" text="No subtopics to display" StackPane.alignment="CENTER" visible="false"/>
+                     <!--<Button fx:id="quizButton" text="Take Quiz" textFill="#FFFFFF" mnemonicParsing="false" StackPane.alignment="BOTTOM_CENTER" style="-fx-background-color: #51C46B; -fx-background-radius: 5;" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
                         <StackPane.margin>
                            <Insets bottom="10.0"/>
                         </StackPane.margin>
                         <padding>
                            <Insets topRightBottomLeft="15"/>
                         </padding>
-                     </Button>
+                     </Button>-->
                   </StackPane>
-
                </children>
             </VBox>
          </left>
 
-         <right>
+         <!--<right>
             <StackPane fx:id="quizLayout" prefHeight="100" prefWidth="350">
                <children>
                   <VBox fx:id="quizPane" style="-fx-background-color: #FFFFFF" visible="false" StackPane.alignment="TOP_CENTER">
@@ -212,9 +209,7 @@
                      </HBox>
 
                      <ScrollPane fitToWidth="true" style="-fx-background-color: #FFFFFF">
-                        <TilePane fx:id="quizTilePane" prefHeight="120" prefWidth="150" style="-fx-background-color: #FFFFFF">
-
-                        </TilePane>
+                        <TilePane fx:id="quizTilePane" prefHeight="120" prefWidth="150" style="-fx-background-color: #FFFFFF"/>
                         <padding>
                            <Insets topRightBottomLeft="5.0"/>
                         </padding>
@@ -224,17 +219,11 @@
                      </ScrollPane>
 
                      <VBox fx:id="quizQuestionPane">
-                        <children>
-
-                        </children>
                         <VBox fx:id="questionBox" prefWidth="350" prefHeight="80">
                            <StackPane>
                               <children>
-                                 <Rectangle fx:id="quizQuestionLayout" width="300" height="80" arcHeight="8.0" arcWidth="8.0" stroke="#EDEDED" fill="#FFFFFF">
-
-                                 </Rectangle>
+                                 <Rectangle fx:id="quizQuestionLayout" width="300" height="80" arcHeight="8.0" arcWidth="8.0" stroke="#EDEDED" fill="#FFFFFF"/>
                                  <Label fx:id="quizQuestion" wrapText="true" alignment="TOP_CENTER" StackPane.alignment="TOP_CENTER">
-
                                     <font>
                                        <Font size="14"/>
                                     </font>
@@ -272,7 +261,6 @@
                                  </padding>
                               </RadioButton>
                            </children>
-
                            <VBox.margin>
                               <Insets top="10.0" left="5.0" right="5.0"/>
                            </VBox.margin>
@@ -309,7 +297,6 @@
                                  <Insets top="5" bottom="5"/>
                               </VBox.margin>
                            </Label>
-
                         </children>
                      </VBox>
 
@@ -400,8 +387,7 @@
 
                </children>
             </StackPane>
-
-         </right>
+         </right>-->
 
          <top>
             <ToolBar fx:id="noteTopBar"  prefHeight="75" prefWidth="800.0" style="-fx-effect: dropshadow(gaussian, gray, 10.0, 0.5, 0.0,  5.0); -fx-background-color: #E7F7E9;">
@@ -420,24 +406,23 @@
                   <Region prefWidth="80.0" HBox.hgrow="ALWAYS" />
                   <StackPane prefHeight="30" prefWidth="650" StackPane.alignment="CENTER" HBox.hgrow="ALWAYS" >
                      <children>
-                        <TextField fx:id="searchTextField" prefHeight="35" promptText="Search Notes" prefWidth="650" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5;" />
-                        <ImageView fx:id="searchIcon" StackPane.alignment="CENTER_RIGHT" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <StackPane.margin>
-                              <Insets right="30.0" top="5.0" bottom="5.0"/>
-                           </StackPane.margin>
-                        </ImageView>
+<!--                        <TextField fx:id="searchTextField" prefHeight="35" promptText="Search Notes" prefWidth="650" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5;" />-->
+<!--                        <ImageView fx:id="searchIcon" StackPane.alignment="CENTER_RIGHT" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">-->
+<!--                           <StackPane.margin>-->
+<!--                              <Insets right="30.0" top="5.0" bottom="5.0"/>-->
+<!--                           </StackPane.margin>-->
+<!--                        </ImageView>-->
                      </children>
-
                   </StackPane>
                   <Region prefWidth="40.0" HBox.hgrow="ALWAYS" />
 
                   <HBox >
                      <children>
-                        <ImageView fx:id="refreshIcon" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                           <HBox.margin>
-                              <Insets right="35.0"/>
-                           </HBox.margin>
-                        </ImageView>
+<!--                        <ImageView fx:id="refreshIcon" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">-->
+<!--                           <HBox.margin>-->
+<!--                              <Insets right="35.0"/>-->
+<!--                           </HBox.margin>-->
+<!--                        </ImageView>-->
                         <ImageView fx:id="noteSettingsIcon" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true"/>
                      </children>
                      <HBox.margin>
@@ -451,12 +436,78 @@
                <padding>
                   <Insets bottom="10.0" top="10.0" />
                </padding>
-
             </ToolBar>
-
          </top>
 
       </BorderPane>
+
+      <Pane fx:id="dialogDimmer" opacity="0.5" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" visible="false" />
+
+      <VBox fx:id="activateNowDialog" spacing="25" maxHeight="450.0" maxWidth="380.0" prefHeight="400.0" prefWidth="250.0" StackPane.alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
+         <Panel>
+            <left>
+               <ImageView fx:id="activateNowPadlockIcon" fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true"/>
+            </left>
+            <right>
+               <ImageView fx:id="activateNowCloseIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+            </right>
+         </Panel>
+         <Label fx:id="activateHeaderText" text="Activate your App for Unlimited Access" textFill="#12AF20" wrapText="true"/>
+         <VBox spacing="15">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+               <ImageView fx:id="greenTickIcon1" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+               <Label text="Unlock all Note Topics">
+                  <font>
+                     <Font size="16"/>
+                  </font>
+               </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+               <ImageView fx:id="greenTickIcon2" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+               <Label text="Unlock all Past Questions Years">
+                  <font>
+                     <Font size="16"/>
+                  </font>
+               </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+               <ImageView fx:id="greenTickIcon3" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+               <Label text="Unlock all Novel Chapters">
+                  <font>
+                     <Font size="16"/>
+                  </font>
+               </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+               <ImageView fx:id="greenTickIcon4" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+               <Label text="Use App without internet">
+                  <font>
+                     <Font size="16"/>
+                  </font>
+               </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+               <ImageView fx:id="greenTickIcon5" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+               <Label text="Activation lasts for One Academic Year">
+                  <font>
+                     <Font size="16"/>
+                  </font>
+               </Label>
+            </HBox>
+         </VBox>
+
+         <HBox alignment="CENTER">
+            <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N2000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8;">
+               <font>
+                  <Font size="16"/>
+               </font>
+            </Button>
+         </HBox>
+
+         <padding>
+            <Insets topRightBottomLeft="25"/>
+         </padding>
+      </VBox>
 
       <VBox fx:id="refreshNoteLayout" maxHeight="200" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5" StackPane.alignment="TOP_RIGHT" visible="false">
          <children>
@@ -979,8 +1030,6 @@
             <Insets top="65"/>
          </StackPane.margin>
       </VBox>
-
-      <Pane fx:id="dialogDimmer" opacity="0.5" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" visible="false" />
 
       <VBox fx:id="quizSubmitDialog" spacing="10" maxHeight="150" maxWidth="300" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5.0;" StackPane.alignment="CENTER" visible="false">
          <Label text="Confirm Submission">

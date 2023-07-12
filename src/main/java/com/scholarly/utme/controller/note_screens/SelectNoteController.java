@@ -6,7 +6,6 @@ import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.note_screens.SelectNoteVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -27,7 +26,6 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/note_screens/SelectNoteScreen.fxml")
 public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializable {
@@ -35,9 +33,6 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
     @InjectViewModel
     private SelectNoteVM viewModel;
-
-//    @FXML
-//    private ListView<Subject> subjectList;
 
     @FXML
     private BorderPane subtopicsDialog;
@@ -60,6 +55,9 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
+
+    final String PRESSED_STYLE2 = "-fx-background-color: #EDEDED; -fx-background-radius: 10; -fx-border-radius: 10;";
+    final String HOVERED_BUTTON_STYLE2 = "-fx-background-color: #F7F7F7; -fx-background-radius: 10; -fx-border-radius: 10;";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -91,11 +89,18 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
             button.setAlignment(Pos.BASELINE_LEFT);
             button.setMaxWidth(Double.MAX_VALUE);
             button.setText(subject.getTitle());
+            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 15));
+
+            ImageView graphic = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + subject.getShortTitle() + "_image.png").toString()));
+            graphic.setFitWidth(27);
+            graphic.setFitHeight(27);
+            button.setGraphic(graphic);
+            button.setGraphicTextGap(25.0);
 
             button.setStyle(IDLE_BUTTON_STYLE);
             button.setOnMouseEntered(e -> {
                 if (!button.isSelected()) {
-                    button.setStyle(HOVERED_BUTTON_STYLE);
+                    button.setStyle(HOVERED_BUTTON_STYLE2);
                 }
             });
             button.setOnMouseExited(e -> {
@@ -106,15 +111,13 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
             button.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    button.setStyle(PRESSED_STYLE);
-                    button.setTextFill(Color.WHITE);
+                    button.setStyle(PRESSED_STYLE2);
+//                    button.setTextFill(Color.WHITE);
                 } else {
                     button.setStyle(IDLE_BUTTON_STYLE);
-                    button.setTextFill(Color.BLACK);
+//                    button.setTextFill(Color.BLACK);
                 }
             });
-
-            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
             subjectListVBox.getChildren().add(button);
         });
@@ -188,10 +191,12 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
         subtopicsListToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                viewModel.setSelectedNoteSubTopic((NoteSubTopic) newValue.getUserData());
                 if (!subtopicsCommenceButton.isVisible()) {
                     Animations.translateIn(subtopicsCommenceButton, 200);
                 }
             } else {
+                viewModel.setSelectedNoteSubTopic(null);
                 Animations.translateOut(subtopicsCommenceButton, 200);
             }
         }));
@@ -268,28 +273,77 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
             NotesScreenController.InitialData data = new NotesScreenController.InitialData(
                     viewModel.getSelectedNoteSubject(),
+                    viewModel.getNoteSubjectTopics().get(
+                            viewModel.getSelectedNoteSubject().getId()
+                    ),
                     viewModel.getSelectedNoteTopic(),
                     viewModel.getNoteSubTopics().get(
                             viewModel.getSelectedNoteTopic().getId()
-                    ).stream().filter(subTopic -> subTopic.getTopicId() == viewModel.getSelectedNoteTopic().getId()).collect(Collectors.toList()),
-                    viewModel.getSelectedNoteSubTopic()
+                    ),
+                    viewModel.getSelectedNoteSubTopic(),
+                    null
+            );
+            ViewSwitcher.passData(data);
+            ViewSwitcher.showScreen(View.NOTES_SCREEN);
+        });
+
+        subtopicsCommenceButton.setOnAction(event -> {
+//            System.out.println(TAG + "SelectedNoteSubject -> " + Helper.toString(viewModel.getSelectedNoteSubject()));
+//            System.out.println(TAG + "SelectedNoteTopic -> " + Helper.toString(viewModel.getSelectedNoteTopic()));
+//            System.out.println(TAG + "SelectedNoteSubtopics -> " + Helper.toString(viewModel.getNoteSubTopics().get(viewModel.getSelectedNoteTopic().getId())));
+//            System.out.println(TAG + "SelectedNoteSubtopics with Filter -> " + Helper.toString(viewModel.getNoteSubTopics().get(viewModel.getSelectedNoteTopic().getId()).stream().filter(subTopic -> subTopic.getTopicId() == viewModel.getSelectedNoteTopic().getId()).collect(Collectors.toList())));
+//            System.out.println(TAG + "SelectedNoteSubtopic -> " + Helper.toString(viewModel.getSelectedNoteSubTopic()));
+
+            NotesScreenController.InitialData data = new NotesScreenController.InitialData(
+                    viewModel.getSelectedNoteSubject(),
+                    viewModel.getNoteSubjectTopics().get(
+                            viewModel.getSelectedNoteSubject().getId()
+                    ),
+                    viewModel.getSelectedNoteTopic(),
+                    viewModel.getNoteSubTopics().get(
+                            viewModel.getSelectedNoteTopic().getId()
+                    ),
+                    viewModel.getSelectedNoteSubTopic(),
+                    null
             );
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.NOTES_SCREEN);
         });
 
         startAllPanel.setOnMouseEntered(event -> {
-            startAllPanel.setStyle(HOVERED_BUTTON_STYLE);
+            if (subtopicsListToggleGroup.getSelectedToggle() != null) {
+                startAllPanel.setStyle(IDLE_BUTTON_STYLE);
+            } else {
+                startAllPanel.setStyle(HOVERED_BUTTON_STYLE);
+            }
         });
         startAllPanel.setOnMouseExited(event -> {
             startAllPanel.setStyle(IDLE_BUTTON_STYLE);
         });
         startAllPanel.setOnMouseClicked(event -> {
-
+            if (subtopicsListToggleGroup.getSelectedToggle() == null) {
+                NotesScreenController.InitialData data = new NotesScreenController.InitialData(
+                        viewModel.getSelectedNoteSubject(),
+                        viewModel.getNoteSubjectTopics().get(
+                                viewModel.getSelectedNoteSubject().getId()
+                        ),
+                        viewModel.getSelectedNoteTopic(),
+                        viewModel.getNoteSubTopics().get(
+                                viewModel.getSelectedNoteTopic().getId()
+                        ),
+                        null,
+                        null
+                );
+                ViewSwitcher.passData(data);
+                ViewSwitcher.showScreen(View.NOTES_SCREEN);
+            }
         });
 
         subtopicCloseDialog.setOnMouseClicked(event -> {
             topicListToggleGroup.getSelectedToggle().setSelected(false);
+            if (subtopicsListToggleGroup.getSelectedToggle() != null) {
+                subtopicsListToggleGroup.getSelectedToggle().setSelected(false);
+            }
             dimmer.setVisible(false);
             Animations.translateOut(subtopicsDialog, 300);
         });
@@ -298,8 +352,8 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
     private void initializeViews() {
         ImageView backButtonImage = new ImageView(new Image(getClass().getResource("/drawable/back_button_white.png").toString()));
-        backButtonImage.setFitHeight(30);
-        backButtonImage.setFitWidth(35);
+        backButtonImage.setFitHeight(25);
+        backButtonImage.setPreserveRatio(true);
         backButton.setBackground(Background.EMPTY);
         backButton.setGraphic(backButtonImage);
 
