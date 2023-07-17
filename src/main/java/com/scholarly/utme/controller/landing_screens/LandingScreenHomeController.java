@@ -3,11 +3,16 @@ package com.scholarly.utme.controller.landing_screens;
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.controller.note_screens.NotesScreenController;
 import com.scholarly.utme.data.model.listItems.NewsItem;
+import com.scholarly.utme.data.model.newDb.FavoriteSubject;
 import com.scholarly.utme.data.model.newDb.NoteLastSection;
 import com.scholarly.utme.data.model.newDb.NoteSubject;
+import com.scholarly.utme.data.model.newDb.ObjectiveSubject;
+import com.scholarly.utme.ui.cellFactories.SubjectGridCellFactory;
+import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -25,11 +30,14 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import org.controlsfx.control.GridView;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.PRACTICE_SCREEN;
 
@@ -45,17 +53,21 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private ScrollPane mainScrollPane, previousSessionScrollPane, performanceScrollPane;
     @FXML
-    private StackPane actionsPane;
+    private StackPane selectSubjectPane;
+    @FXML
+    private TilePane favoriteSubjectsTile;
     @FXML
     private GridPane previousSessionGridPane;
     @FXML
+    private GridView<FavoriteSubject> selectSubjectsGrid;
+    @FXML
     private HBox scrollHBox;
     @FXML
-    private VBox continuePreviousSessionVBox;
+    private VBox continuePreviousSessionVBox, dimmer;
     @FXML
-    private Button viewDesktopAppButton;
+    private Button viewDesktopAppButton, completeEditSubjectsButton;
     @FXML
-    ListView<NewsItem> newsList;
+    private ListView<NewsItem> newsList;
     @FXML
     private ImageView handImage, notificationIcon, profileImage, biologyIcon, englishIcon, physicsIcon, chemistryIcon, mathematicsIcon, geographyIcon, boyWithLaptop;
     @FXML
@@ -63,7 +75,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private ImageView firstSessionOneStar, firstSessionTwoStar, firstSessionThreeStar, firstSessionFourStar, firstSessionFiveStar, thirdSessionOneStar, thirdSessionTwoStar, thirdSessionThreeStar, thirdSessionFourStar, thirdSessionFiveStar;
     @FXML
-    private ImageView secondSessionBookImage, secondSessionAuthorIcon, secondSessionChaptersIcon, fourthSessionBookImage, fourthSessionAuthorIcon, fourthSessionChaptersIcon, actionCloseImage, actionCbtPracticeIcon, actionVideosPracticeIcon, actionNovelsPracticeIcon, actionAudioPracticeIcon;
+    private ImageView secondSessionBookImage, secondSessionAuthorIcon, secondSessionChaptersIcon, fourthSessionBookImage, fourthSessionAuthorIcon, fourthSessionChaptersIcon, selectSubjectCloseIcon, actionCbtPracticeIcon, actionVideosPracticeIcon, actionNovelsPracticeIcon, actionAudioPracticeIcon;
     @FXML
     private Panel biologyPane, englishPane, physicsPane, chemistryPane, mathematicsPane, geographyPane;
     @FXML
@@ -71,7 +83,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private Panel firstSession, secondSession, thirdSession, fourthSession, actionCbtPracticePanel;
     @FXML
-    private Label helloText, startLearningText, topSubjectsText, biologyText, englishText, physicsText, chemistryText, mathematicsText, geographyText, activitiesText, continueSessionsText;
+    private Label helloText, startLearningText, editSubjectsText, topSubjectsText, biologyText, englishText, physicsText, chemistryText, mathematicsText, geographyText, activitiesText, continueSessionsText;
     @FXML
     private Label cbtPracticeText, videosText, novelsText, pastQuestionsLabel, audioText, syllabusText, studyNotesText, cbtCentresText, syllabusLabel, noteSessionSubjectName, firstSessionTimeText, firstSessionRatingNumber, noteLastSessionText;
     @FXML
@@ -79,7 +91,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private Label newsFeedText, seeAllText, performanceChartText, firstPerformanceCBTText, firstPerformanceCBTDate, firstPerformancePercentText, secondPerformanceCBTText, secondPerformanceCBTDate, secondPerformancePercentText;
     @FXML
-    private Label whichActionText, actionCbtPracticeText, actionVideosPracticeText, actionNovelsPracticeText, actionAudioPracticeText, viewDesktopAppText;
+    private Label selectFavoriteText, moreThanOneText, actionCbtPracticeText, actionVideosPracticeText, actionNovelsPracticeText, actionAudioPracticeText, viewDesktopAppText;
 
 
     @Override
@@ -87,12 +99,18 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         initializeViews();
         initializeFonts();
+        initializeGestures();
 
         helloText.setText(helloText.getText() + viewModel.getUser().getFullName().trim().split(" ")[0]);
         if (viewModel.getUser().getProfilePicUrl() != null && !viewModel.getUser().getProfilePicUrl().contains("empty")) {
             compressProfileImage((new Image(viewModel.getUser().getProfilePicUrl())));
             System.out.println(TAG + "Image set successfully with url -> " + viewModel.getUser().getProfilePicUrl());
         }
+
+        selectSubjectsGrid.setCellFactory(new SubjectGridCellFactory());
+        selectSubjectsGrid.setItems(viewModel.getSubjects());
+
+        updateFavoriteSubjects(viewModel.getFavoriteSubjects());
 
         continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionGridPane);
         if (populateLastSession()) {
@@ -112,21 +130,28 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        this.newsList.setCellFactory(new NewsListCellFactory());
 //        this.newsList.setItems(newsList);
 
-        biologyPane.setOnMouseClicked(event -> {
-            mainScrollPane.setOpacity(0.3);
-            actionsPane.setVisible(true);
+
+        editSubjectsText.setOnMouseClicked(e -> {
+            Animations.fadeIn(selectSubjectPane, 300);
+            Animations.fadeIn(dimmer, 250);
         });
-        actionCloseImage.setOnMouseClicked(event -> {
-            mainScrollPane.setOpacity(1.0);
-            actionsPane.setVisible(false);
+
+        selectSubjectCloseIcon.setOnMouseClicked(event -> {
+            Animations.fadeOut(selectSubjectPane, 300);
+            Animations.fadeOut(dimmer, 250);
         });
+
+        completeEditSubjectsButton.setOnAction(event -> {
+            ObservableList<FavoriteSubject> updatedFavoriteSubjects = selectSubjectsGrid.getItems().stream().filter(FavoriteSubject::isSelected).collect(Collectors.toCollection(FXCollections::observableArrayList));
+            viewModel.putSubjectCombination(updatedFavoriteSubjects);
+
+            updateFavoriteSubjects(updatedFavoriteSubjects);
+            Animations.fadeOut(selectSubjectPane, 300);
+            Animations.fadeOut(dimmer, 250);
+        });
+
 
         cbtPracticePanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
-        });
-
-        actionCbtPracticePanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
@@ -200,23 +225,44 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
     }
 
+    private void updateFavoriteSubjects(ObservableList<FavoriteSubject> selectedSubjects) {
+        favoriteSubjectsTile.getChildren().clear();
+        selectedSubjects.forEach(subject -> {
+            Panel panel = new Panel();
+            panel.setPrefSize(110, 90);
+            ImageView subjectImage = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + subject.getShortTitle() + "_image.png").toString()));
+            panel.setTop(subjectImage);
+
+            Label subjectLabel = new Label(subject.getTitle());
+            subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+            subjectLabel.setTextFill(Paint.valueOf(subject.getColorCode()));
+            subjectLabel.setPadding(new Insets(5, 0, 0, 0));
+            panel.setBottom(subjectLabel);
+
+            panel.setStyle("-fx-background-color: rgba(143, 152, 255, 0.10); -fx-background-radius: 7");
+            panel.setPadding(new Insets(10, 0, 10, 15));
+
+            favoriteSubjectsTile.getChildren().add(panel);
+        });
+    }
+
     private void initializeViews() {
         rootPane.setPadding(new Insets(0,15, 0, 0));
         notificationIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/bell_without_notification.png").toString()));
         handImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/hand_image2.png").toString()));
-        actionCloseImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/action_close_icon.png").toString()));
+        selectSubjectCloseIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/action_close_icon.png").toString()));
         boyWithLaptop.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/boy_with_laptop.png").toString()));
 
         profileImage.setImage(null);
 //        compressProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/profile_image2.jpg").toString()));
 //        compressProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/profile_image2.png").toString()));
 
-        biologyIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/biology_icon.png").toString()));
-        englishIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/english_icon.png").toString()));
-        physicsIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/physics_icon.png").toString()));
-        chemistryIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/chemistry_icon.png").toString()));
-        mathematicsIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/mathematics_icon.png").toString()));
-        geographyIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/geography_icon.png").toString()));
+//        biologyIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/biology_icon.png").toString()));
+//        englishIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/english_icon.png").toString()));
+//        physicsIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/physics_icon.png").toString()));
+//        chemistryIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/chemistry_icon.png").toString()));
+//        mathematicsIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/mathematics_icon.png").toString()));
+//        geographyIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/geography_icon.png").toString()));
 
         cbtPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_practice_icon.png").toString()));
 //        videosIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/videos_icon.png").toString()));
@@ -250,10 +296,10 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        fourthSessionAuthorIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/session_author_icon.png").toString()));
 //        fourthSessionChaptersIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/session_chapters_icon.png").toString()));
 
-        actionCbtPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_practice_icon.png").toString()));
-        actionVideosPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/videos_icon.png").toString()));
-        actionNovelsPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/novels_icon.png").toString()));
-        actionAudioPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/audio_icon.png").toString()));
+//        actionCbtPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_practice_icon.png").toString()));
+//        actionVideosPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/videos_icon.png").toString()));
+//        actionNovelsPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/novels_icon.png").toString()));
+//        actionAudioPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/audio_icon.png").toString()));
 
         mainScrollPane.widthProperty().addListener(((observable, oldValue, newValue) -> {
 //            firstSession.setPrefWidth((Double) newValue/2);
@@ -271,13 +317,14 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         helloText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 22));
         startLearningText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         topSubjectsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        editSubjectsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
 
-        biologyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        englishText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        physicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        chemistryText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        mathematicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        geographyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        biologyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        englishText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        physicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        chemistryText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        mathematicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        geographyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 
         activitiesText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 
@@ -320,15 +367,26 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        secondPerformanceCBTDate.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 //        secondPerformancePercentText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.EIGHTEEN.size));
 
-        whichActionText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
-        actionCbtPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        actionVideosPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        actionNovelsPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        actionAudioPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        selectFavoriteText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        moreThanOneText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+//        actionCbtPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        actionVideosPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        actionNovelsPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        actionAudioPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 
-        viewDesktopAppText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
+        viewDesktopAppText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
         viewDesktopAppButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        completeEditSubjectsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
 
+    }
+
+    private void initializeGestures() {
+        editSubjectsText.setOnMouseEntered(e -> {
+            editSubjectsText.setUnderline(true);
+        });
+        editSubjectsText.setOnMouseExited(e -> {
+            editSubjectsText.setUnderline(false);
+        });
     }
 
     private boolean populateLastSession() {

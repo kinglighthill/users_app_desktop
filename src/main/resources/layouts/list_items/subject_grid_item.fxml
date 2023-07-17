@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.geometry.Insets?>
+<fx:root type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <graphic>
+        <StackPane>
+            <Panel>
+                <left>
+                    <HBox>
+                        <ImageView fx:id="subjectImage" fitWidth="30" fitHeight="30" preserveRatio="true" pickOnBounds="true"/>
+                        <padding>
+                            <Insets top="20" left="10"/>
+                        </padding>
+                    </HBox>
+                </left>
+                <bottom>
+                    <Label fx:id="subjectName">
+                        <padding>
+                            <Insets left="10" bottom="10"/>
+                        </padding>
+                    </Label>
+                </bottom>
+            </Panel>
+            <ImageView fx:id="greenTickImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_RIGHT"/>
+        </StackPane>
+    </graphic>
+</fx:root>

@@ -15,7 +15,6 @@ import java.util.HashMap;
 
 public class SelectNoteVM implements ViewModel {
 
-    private ObservableList<Subject> subjects = FXCollections.observableArrayList();
     private ObservableList<NoteSubject> noteSubjects = FXCollections.observableArrayList();
     private ObservableList<NoteTopic> noteTopics = FXCollections.observableArrayList();
     private HashMap<String, ObservableList<Topic>> subjectTopics = new HashMap<>();
@@ -33,13 +32,9 @@ public class SelectNoteVM implements ViewModel {
 
     public SelectNoteVM() {
 
-        ObservableList<Subject> subjectList = SubjectDao.getSubjects();
-
         ObservableList<NoteSubject> noteSubjectsList = SubjectDao.getNoteSubjects();
 
         ObservableList<NoteTopic> noteTopicsList = TopicDao.getNoteTopics();
-
-        subjects.addAll(subjectList);
 
         noteSubjects.addAll(noteSubjectsList);
 
@@ -62,10 +57,6 @@ public class SelectNoteVM implements ViewModel {
 //        });
     }
 
-
-    public ObservableList<Subject> getSubjects() {
-        return subjects;
-    }
 
     public HashMap<String, ObservableList<Topic>> getSubjectTopics() {
         return subjectTopics;
