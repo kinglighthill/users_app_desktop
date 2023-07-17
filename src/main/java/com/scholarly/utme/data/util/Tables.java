@@ -16,6 +16,7 @@ public class Tables {
     public static final String PQ_THEORY_QUES_DESCRIPTIONS = "pq_theory_questions_descriptions";
     public static final String PQ_OBJECTIVE_SUBJECTS = "pq_objective_subjects";
     public static final String PQ_THEORY_SUBJECTS = "pq_theory_subjects";
+    public static final String SUBJECTS_COMBINATION = "subjects_combination";
 
 
     // Novel Tables
