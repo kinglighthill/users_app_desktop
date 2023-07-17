@@ -27,13 +27,12 @@
                     </ImageView>
 
                     <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" HBox.hgrow="ALWAYS">
-                        <ImageView fx:id="notificationIcon" pickOnBounds="true" preserveRatio="true">
-                            <HBox.margin>
-                                <Insets right="20.0"/>
-                            </HBox.margin>
-                        </ImageView>
+<!--                        <ImageView fx:id="notificationIcon" pickOnBounds="true" preserveRatio="true">-->
+<!--                            <HBox.margin>-->
+<!--                                <Insets right="20.0"/>-->
+<!--                            </HBox.margin>-->
+<!--                        </ImageView>-->
                         <ImageView fx:id="profileImage" pickOnBounds="true"/>
-
                         <HBox.margin>
                             <Insets left="20.0"/>
                         </HBox.margin>
