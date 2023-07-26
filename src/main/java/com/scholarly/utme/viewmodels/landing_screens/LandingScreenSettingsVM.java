@@ -25,9 +25,10 @@ public class LandingScreenSettingsVM implements ViewModel {
         String userData = preferences.get(PREF_KEY_USER_DATA, "");
         Gson gson = new Gson();
         user = gson.fromJson(userData, User.class);
+        String USER_ID = user.getId();
 
-        vibration.set(preferences.getBoolean(PREF_KEY_VIBRATION+user.getId(), false));
-        sound.set(preferences.getBoolean(PREF_KEY_SOUND+user.getId(), false));
+        vibration.set(preferences.getBoolean(PREF_KEY_VIBRATION+USER_ID, false));
+        sound.set(preferences.getBoolean(PREF_KEY_SOUND+USER_ID, false));
 
     }
 

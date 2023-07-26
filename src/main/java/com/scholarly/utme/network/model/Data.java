@@ -1,6 +1,9 @@
 package com.scholarly.utme.network.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.scholarly.utme.data.model.listItems.AppItem;
+
+import java.util.List;
 
 public class Data {
     @SerializedName("access_token")
@@ -17,11 +20,12 @@ public class Data {
     private String userId;
     @SerializedName("activation_state")
     private ActivationState activationState;
+    private List<AppItem> apps;
 
     public Data() {
     }
 
-    public Data(String accessToken, String refreshToken, String fullName, String phoneNumber, String gender, User userData, String userId, ActivationState activationState) {
+    public Data(String accessToken, String refreshToken, String fullName, String phoneNumber, String gender, User userData, String userId, ActivationState activationState, List<AppItem> apps) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.fullName = fullName;
@@ -30,6 +34,7 @@ public class Data {
         this.userData = userData;
         this.userId = userId;
         this.activationState = activationState;
+        this.apps = apps;
     }
 
     public String getAccessToken() {
@@ -62,5 +67,9 @@ public class Data {
 
     public ActivationState getActivationState() {
         return activationState;
+    }
+
+    public List<AppItem> getApps() {
+        return apps;
     }
 }

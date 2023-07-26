@@ -17,9 +17,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -93,16 +95,16 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         initializeFonts();
 
-        /*List<String> fontFamilies = Font.getFamilies();
+        List<String> fontFamilies = Font.getFamilies();
         List<String> fontNames    = Font.getFontNames();
 
-        fontFamilies.forEach(family -> {
-            System.out.println("Font family -> " + family);
-        });
+//        fontFamilies.forEach(family -> {
+//            System.out.println("Font family -> " + family);
+//        });
 
-        fontNames.forEach(name -> {
-            System.out.println("Font name -> " + name);
-        });*/
+//        fontNames.forEach(name -> {
+//            System.out.println("Font name -> " + name);
+//        });
 
         /*if (viewModel.getSelectedScreen().equalsIgnoreCase("homeScreen")) {
             selectButton(homeView, homeButton);

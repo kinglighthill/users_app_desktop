@@ -133,6 +133,18 @@ public class SubjectListItemVM implements ViewModel {
         shuffleOptions.set(false);
     }
 
+    public void selectSubject(boolean value) {
+        type = Type.OBJECTIVE;
+        subjectSelected.set(value);
+        shuffleQuestions.set(true);
+        shuffleOptions.set(true);
+//        setSelectedTopics();
+    }
+
+    public void setSubject(PQSubject subject) {
+        this.subject = subject;
+    }
+
     public String getSubjectName() {
         return subjectName.get();
     }
@@ -274,6 +286,7 @@ public class SubjectListItemVM implements ViewModel {
 
     public void populateYearsList() {
         years = YearsDao.getAvailableYearsForSubject(type, subject.getId());
+        System.out.println(TAG + "Got Years of size -> " + years.size() + " for subject -> " + subject.getTitle());
     }
 
     public void setType(Type type) {

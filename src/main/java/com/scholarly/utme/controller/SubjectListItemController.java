@@ -34,8 +34,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     private StackPane subjectImageBackground;
 
     @FXML
-    private CheckBox subjectCheckBox, shuffleQuestionsCheckBox, shuffleOptionsCheckBox;
-
+    public CheckBox subjectCheckBox, shuffleQuestionsCheckBox, shuffleOptionsCheckBox;
     @FXML
     public ChoiceBox<Year> yearChoiceBox;
 
@@ -81,6 +80,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
             subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/IRS_image.png").toString()));
             System.out.println(TAG + e.toString());
         }
+
         subjectText.textProperty().bind(viewModel.subjectNameProperty());
         subjectCheckBox.selectedProperty().bindBidirectional(viewModel.subjectSelectedProperty());
 
@@ -99,7 +99,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         });
 
         yearChoiceBox.getItems().addAll(viewModel.getYears());
-        List<Year> freeYears = viewModel.getYears().stream().filter(Year::isFree).collect(Collectors.toList());
+        List<Year> freeYears = viewModel.getYears().stream().filter(Year::isFree).toList();
         viewModel.setSelectedYearProperty(freeYears.get(0));
         yearChoiceBox.getSelectionModel().selectedItemProperty().addListener( (observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -131,8 +131,10 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
             viewModel.setSelectedTopics(changedTopicsList);
         });
 
-
         subRoot.getChildren().removeAll(divider, optionPanel);
+        if (viewModel.isSubjectSelected())
+            subRoot.getChildren().addAll(divider, optionPanel);
+
         viewModel.subjectSelectedProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println(TAG + viewModel.getSubject() + " selected property changed to -> " + newValue + " from -> " + oldValue);
             if (newValue) {

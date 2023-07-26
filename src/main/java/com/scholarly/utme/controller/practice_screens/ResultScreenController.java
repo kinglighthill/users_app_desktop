@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
+import static com.scholarly.utme.ui.utils.Screen.PRACTICE_SCREEN;
 
 @FxmlPath("/layouts/practice_screens/ResultScreen.fxml")
 public class ResultScreenController implements FxmlView<ResultScreenVM>, Initializable {
@@ -208,7 +208,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN, null));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);

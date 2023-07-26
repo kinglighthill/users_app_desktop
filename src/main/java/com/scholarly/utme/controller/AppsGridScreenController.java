@@ -26,10 +26,8 @@ public class AppsGridScreenController implements FxmlView<AppsGridScreenVM>, Ini
 
     @FXML
     private GridView<AppItem> appsGrid;
-
     @FXML
     private Button backButton;
-
     @FXML
     private Label appsTitle;
 
@@ -43,9 +41,9 @@ public class AppsGridScreenController implements FxmlView<AppsGridScreenVM>, Ini
         initializeViews();
         initializeFonts();
 
-        appsTitle.textProperty().bind(viewModel.typeProperty());
-
         viewModel.processInitialData(getInitialData());
+
+        appsTitle.textProperty().bind(viewModel.typeProperty());
 
         appsGrid.setCellFactory(new AppGridCellFactory());
         appsGrid.setItems(viewModel.getApps());

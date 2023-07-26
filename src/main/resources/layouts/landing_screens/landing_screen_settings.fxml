@@ -174,8 +174,18 @@
                                 <right>
                                     <ImageView fx:id="aboutExpandIcon"/>
                                 </right>
+                                <bottom>
+                                    <Label text="Know more about the team behind the Software">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                        <padding>
+                                            <Insets left="50" top="5"/>
+                                        </padding>
+                                    </Label>
+                                </bottom>
                                 <padding>
-                                    <Insets top="20" left="20" bottom="20" right="25"/>
+                                    <Insets top="20" left="20" bottom="15" right="25"/>
                                 </padding>
                             </Panel>
 
@@ -196,8 +206,18 @@
                                 <right>
                                     <ImageView fx:id="helpExpandIcon"/>
                                 </right>
+                                <bottom>
+                                    <Label text="FAQ, Contact us">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                        <padding>
+                                            <Insets left="50" top="5"/>
+                                        </padding>
+                                    </Label>
+                                </bottom>
                                 <padding>
-                                    <Insets top="20" left="20" bottom="20" right="25"/>
+                                    <Insets top="20" left="20" bottom="15" right="25"/>
                                 </padding>
                             </Panel>
 
@@ -218,8 +238,18 @@
                                 <right>
                                     <ImageView fx:id="appInfoExpandIcon"/>
                                 </right>
+                                <bottom>
+                                    <Label text="Terms of use, Privacy policy, Third-party libraries">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                        <padding>
+                                            <Insets left="50" top="5"/>
+                                        </padding>
+                                    </Label>
+                                </bottom>
                                 <padding>
-                                    <Insets top="20" left="20" bottom="20" right="25"/>
+                                    <Insets top="20" left="20" bottom="15" right="25"/>
                                 </padding>
                             </Panel>
                         </VBox>

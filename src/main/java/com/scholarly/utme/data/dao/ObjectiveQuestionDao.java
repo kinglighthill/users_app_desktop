@@ -44,7 +44,7 @@ public class ObjectiveQuestionDao {
 
     static {
         novelQuestions = FXCollections.observableArrayList();
-        updateNovelQuestions();
+//        updateNovelQuestions();
     }
 
 

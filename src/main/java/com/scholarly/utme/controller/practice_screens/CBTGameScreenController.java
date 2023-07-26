@@ -6,6 +6,7 @@ import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
+import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.practice_screens.CBTGameScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.CBTGameScreenVM.QuestionState;
@@ -39,14 +40,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.CBT_GAME_SCREEN;
 
 @FxmlPath("/layouts/practice_screens/CBTGameScreen.fxml")
 public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initializable, SceneLifecycle {
+    private static final String TAG = "CBTGameScreenController: ";
 
-    public static final String TAG = "CBTGameScreenController: ";
+    private final Preferences preferences = AppPreferences.getPreferences();
+
 
     @InjectViewModel
     private CBTGameScreenVM viewModel;
@@ -87,6 +91,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     String hoveredButtonStyle =
             "-fx-background-color: #FFA347;" +
                     "-fx-background-radius: 10";
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -313,10 +318,10 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         backButton.setOnAction(e -> {
             resultDialogDimmer.setVisible(true);
-            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Exit", null, "Are you sure you want to Exit?");
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to quit?");
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
-                    ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.CBT_GAME_SCREEN));
+                    ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.CBT_GAME_SCREEN, null));
                     ViewSwitcher.showScreen(View.HOME_SCREEN);
                     resultDialogDimmer.setVisible(false);
                 }
@@ -327,7 +332,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         exitButton.setOnAction(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(CBT_GAME_SCREEN));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.CBT_GAME_SCREEN, null));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
@@ -562,10 +567,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     }
 
     private void dispatchAnswerCorrect() {
-        Media sound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        mediaPlayer.setStopTime(Duration.millis(500));
-        mediaPlayer.play();
+        if (viewModel.getSoundPreference()) {
+            Media sound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+            mediaPlayer.setStopTime(Duration.millis(500));
+            mediaPlayer.play();
+        }
 
         FadeTransition fadeTransition = new FadeTransition();
 
@@ -596,10 +603,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     }
 
     private void dispatchAnswerIncorrect() {
-        Media sound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        mediaPlayer.setStopTime(Duration.millis(500));
-        mediaPlayer.play();
+        if (viewModel.getSoundPreference()) {
+            Media sound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+            mediaPlayer.setStopTime(Duration.millis(500));
+            mediaPlayer.play();
+        }
 
         viewModel.setIncorrectAnswers(viewModel.getIncorrectAnswers() + 1);
         viewModel.setQuestionAttempts(viewModel.getQuestionAttempts() + 1);

@@ -4,10 +4,7 @@ import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM.QuestionState;
@@ -29,19 +26,15 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import static com.scholarly.utme.ui.utils.Screens.PAST_QUESTION_SCREEN;
-
 @FxmlPath("/layouts/practice_screens/StudyPastQuestionsScreen.fxml")
 public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenVM>, Initializable, SceneLifecycle {
-    public static final String TAG = "StudyPastQuestScreenController: ";
+    private static final String TAG = "StudyPastQuestScreenController: ";
 
     @InjectViewModel
     private StudyPastScreenVM viewModel;
@@ -216,10 +209,10 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         });
 
-        bookmarkImage.setOnMouseClicked(event -> {
-            viewModel.handleBookmarkClicked();
-            updateBookmarkIcon();
-        });
+//        bookmarkImage.setOnMouseClicked(event -> {
+//            viewModel.handleBookmarkClicked();
+//            updateBookmarkIcon();
+//        });
 
 
         exitButton.setOnAction(event -> {
@@ -243,10 +236,10 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         showAnswerButton.setBackground(Background.EMPTY);
         showExplanationButton.setBackground(Background.EMPTY);
 
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+//        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
         calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
         speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
-        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
+//        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
         quesDescriptionCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
 
         ImageView prevImage = new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/prev_btn_icon.png").toString()));
@@ -272,7 +265,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+//        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
             ObjectiveQuestion selectedQuestion = (ObjectiveQuestion) questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion();
@@ -281,7 +274,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
             bookmarks.forEach(bookmark -> {
                 if (bookmark.getQuestionId() == selectedQuestion.getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+//                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
                     System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
                 }
             });
@@ -293,7 +286,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
             bookmarks.forEach(bookmark -> {
                 if (bookmark.getQuestionId() == selectedQuestion.getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+//                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
                     System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
                 }
             });
@@ -318,6 +311,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
             List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).collect(Collectors.toList());
+
+            System.out.println(TAG + "setupQuestionView: questionDescriptionInList -> " + questionDescriptionInList);
 
             if (questionDescriptionInList.isEmpty()) {
                 readQuestionDesc.setVisible(false);
@@ -508,39 +503,22 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     }
 
     private void showExitDialog() {
+        Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to quit?");
 
-        Dialog<ButtonType> dialog = new Dialog<>();
-
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        // Change dialog icon
-        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
-        dialog.setTitle("Confirm Exit");
-
-        exitDialogPane.setVisible(true);
         dialogDimmer.setVisible(true);
 
-        dialog.getDialogPane().setContent(exitDialogPane);
-
-        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-background-radius: 10;");
-
-        dialog.getDialogPane().setMinSize(350, 80);
-
-        //Adding buttons to the dialog pane
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
-
         dialog.setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.YES){
+            if (buttonType == ButtonType.YES) {
                 dialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new HomeScreenController.InitialData(PAST_QUESTION_SCREEN));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PAST_QUESTION_SCREEN, null));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
-            }else if (buttonType == ButtonType.NO){;
-                dialogDimmer.setVisible(false);
             }
-            return null;
+            dialogDimmer.setVisible(false);
+            return buttonType;
         });
 
-        dialog.showAndWait();
+        dialog.show();
+
     }
 
 

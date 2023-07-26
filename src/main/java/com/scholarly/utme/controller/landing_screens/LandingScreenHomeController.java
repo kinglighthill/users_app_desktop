@@ -8,10 +8,7 @@ import com.scholarly.utme.data.model.newDb.NoteLastSection;
 import com.scholarly.utme.data.model.newDb.NoteSubject;
 import com.scholarly.utme.data.model.newDb.ObjectiveSubject;
 import com.scholarly.utme.ui.cellFactories.SubjectGridCellFactory;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -122,17 +119,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionGridPane);
         }
 
-        NewsItem newsItem1 = new NewsItem("", "", "", "");
-        NewsItem newsItem2 = new NewsItem("", "", "", "");
-        NewsItem newsItem3 = new NewsItem("", "", "", "");
-        NewsItem newsItem4 = new NewsItem("", "", "", "");
-        NewsItem newsItem5 = new NewsItem("", "", "", "");
-        NewsItem newsItem6 = new NewsItem("", "", "", "");
-
-        ObservableList<NewsItem> newsList = FXCollections.observableArrayList(newsItem1, newsItem2, newsItem3, newsItem4, newsItem5, newsItem6);
-//        this.newsList.setCellFactory(new NewsListCellFactory());
-//        this.newsList.setItems(newsList);
-
 
         editSubjectsText.setOnMouseClicked(e -> {
             Animations.fadeIn(selectSubjectPane, 300);
@@ -155,7 +141,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
 
         cbtPracticePanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, null));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
@@ -377,6 +363,11 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
             panel.setStyle("-fx-background-color: rgba(143, 152, 255, 0.10); -fx-background-radius: 7");
             panel.setPadding(new Insets(10, 0, 10, 15));
+
+            panel.setOnMouseClicked(event -> {
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, subject));
+                ViewSwitcher.showScreen(View.HOME_SCREEN);
+            });
 
             favoriteSubjectsTile.getChildren().add(panel);
         });
