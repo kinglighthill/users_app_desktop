@@ -46,8 +46,6 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    private SubjectListItemVM selectedSubjectVM;
-
 
     public SubjectListViewVM() {
 
@@ -119,17 +117,11 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
         if (subject != null) {
             objectiveSubjects.forEach(vm -> {
                 if (vm.getSubject().getSubjectId() == subject.getSubjectId()) {
-                    selectedSubjectVM = vm;
                     vm.selectSubject(true);
                     vm.setSubject(subject);
                 }
             });
         }
-    }
-
-    public SubjectListItemVM getSelectedSubjectVM() {
-        System.out.println(TAG + "Selected Subject VM -> " + selectedSubjectVM);
-        return selectedSubjectVM;
     }
 
 

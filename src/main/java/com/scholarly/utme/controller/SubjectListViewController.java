@@ -64,8 +64,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ViewTuple<SubjectListItemController, SubjectListItemVM> subjectListItemTuple = FluentViewLoader.fxmlView(SubjectListItemController.class).load();
-
         Preferences userPreferences = AppPreferences.getPreferences();
         String lastSelectedTab = userPreferences.get(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
 
@@ -99,8 +97,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
         objectiveList.setSelectionModel(new NoSelectionModel<>());
         objectiveList.setFocusTraversable(false);
-//        objectiveList.scrollTo(6);
-//        System.out.println(TAG + "Selected subject -> " + viewModel.getSelectedSubjectVM().getSubject());
 
 //        theoryList.setSelectionModel(new NoSelectionModel<>());
 //        theoryList.setFocusTraversable(false);
@@ -280,6 +276,12 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     }
 
     public void setSelectedSubject(PQSubject subject) {
+        viewModel.getObjectiveSubjects().forEach(vm -> {
+            if (vm.getSubject().getSubjectId() == subject.getSubjectId()) {
+                objectiveList.scrollTo(vm);
+            }
+        });
+
         viewModel.setSubjectSelected(subject);
     }
 

@@ -63,7 +63,7 @@
                                     <Insets topRightBottomLeft="20"/>
                                 </padding>
                             </Panel>-->
-                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            <!--<Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="20" alignment="CENTER">
                                         <ImageView fx:id="vibrationIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -83,7 +83,8 @@
                                 <padding>
                                     <Insets topRightBottomLeft="20"/>
                                 </padding>
-                            </Panel>
+                            </Panel>-->
+
                             <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">

@@ -41,13 +41,13 @@ public class LandingScreenSettingsController implements FxmlView<LandingScreenSe
         initializeViews();
         initializeFonts();
 
-        vibrationSwitch.selectedProperty().bindBidirectional(viewModel.vibrationProperty());
+//        vibrationSwitch.selectedProperty().bindBidirectional(viewModel.vibrationProperty());
         soundSwitch.selectedProperty().bindBidirectional(viewModel.soundProperty());
 
 
-        vibrationSwitch.selectedProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.getPreferences().putBoolean(PREF_KEY_VIBRATION+viewModel.getUser().getId(), newValue);
-        }));
+//        vibrationSwitch.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+//            viewModel.getPreferences().putBoolean(PREF_KEY_VIBRATION+viewModel.getUser().getId(), newValue);
+//        }));
 
         soundSwitch.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             viewModel.getPreferences().putBoolean(PREF_KEY_SOUND+viewModel.getUser().getId(), newValue);
@@ -68,7 +68,7 @@ public class LandingScreenSettingsController implements FxmlView<LandingScreenSe
 
     private void initializeViews() {
 //        notificationIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/notification_bell.png").toString()));
-        vibrationIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/vibration_icon.png").toString()));
+//        vibrationIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/vibration_icon.png").toString()));
         soundIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/sound_icon.png").toString()));
 //        shareIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/share_icon.png").toString()));
 //        ratingIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/star_icon.png").toString()));

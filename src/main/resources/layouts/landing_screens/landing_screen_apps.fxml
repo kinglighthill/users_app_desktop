@@ -28,70 +28,75 @@
 
     <center>
         <AnchorPane prefHeight="600" prefWidth="800">
-            <StackPane AnchorPane.leftAnchor="30" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="100" AnchorPane.bottomAnchor="30">
-                <VBox fx:id="applicationsVBox" spacing="35">
-                    <!--<StackPane maxWidth="300" minHeight="35" alignment="CENTER_LEFT">
-                        <TextField maxWidth="300" minHeight="35" promptText="Enter a keyword"/>
-                        <ImageView fx:id="searchIcon" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT">
-                            <StackPane.margin>
-                                <Insets right="20"/>
-                            </StackPane.margin>
-                        </ImageView>
-                    </StackPane>-->
+            <StackPane AnchorPane.leftAnchor="30" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="80" AnchorPane.bottomAnchor="30">
+                <ScrollPane fx:id="centerScrollPane" fitToWidth="true">
+                    <VBox fx:id="applicationsVBox" spacing="35">
+                        <!--<StackPane maxWidth="300" minHeight="35" alignment="CENTER_LEFT">
+                            <TextField maxWidth="300" minHeight="35" promptText="Enter a keyword"/>
+                            <ImageView fx:id="searchIcon" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT">
+                                <StackPane.margin>
+                                    <Insets right="20"/>
+                                </StackPane.margin>
+                            </ImageView>
+                        </StackPane>-->
 
-                    <Panel prefHeight="100" prefWidth="500">
-                        <left>
-                            <Label fx:id="mobileAppsLabel" text="Mobile Apps">
-                                <font>
-                                    <Font size="16"/>
-                                </font>
-                            </Label>
-                        </left>
-                        <right>
-                            <Button fx:id="mobileAppsButton" text="View all Mobile Apps" textFill="#053500" style="-fx-border-color: #053500; -fx-border-radius: 5;">
-                                <padding>
-                                    <Insets left="10" right="10" top="5" bottom="5"/>
-                                </padding>
-                            </Button>
-                        </right>
-                        <bottom>
-                            <VBox prefWidth="700">
-                                <TilePane fx:id="mobileAppsTile" prefHeight="50" maxHeight="50" hgap="15" vgap="10">
+                        <Panel prefHeight="100" prefWidth="500">
+                            <left>
+                                <Label fx:id="mobileAppsLabel" text="Mobile Apps">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                            </left>
+                            <right>
+                                <Button fx:id="mobileAppsButton" text="View all Mobile Apps" textFill="#053500" style="-fx-border-color: #053500; -fx-border-radius: 5;">
                                     <padding>
-                                        <Insets top="10" left="15"/>
+                                        <Insets left="10" right="10" top="5" bottom="5"/>
                                     </padding>
-                                </TilePane>
-                            </VBox>
-                        </bottom>
-                    </Panel>
+                                </Button>
+                            </right>
+                            <bottom>
+                                <VBox prefWidth="700">
+                                    <TilePane fx:id="mobileAppsTile" prefHeight="50" maxHeight="50" hgap="15" vgap="10">
+                                        <padding>
+                                            <Insets top="10" left="15"/>
+                                        </padding>
+                                    </TilePane>
+                                </VBox>
+                            </bottom>
+                        </Panel>
 
-                    <Panel prefHeight="100" prefWidth="500">
-                        <left>
-                            <Label fx:id="desktopAppsLabel" text="Desktop Apps">
-                                <font>
-                                    <Font size="16"/>
-                                </font>
-                            </Label>
-                        </left>
-                        <right>
-                            <Button fx:id="desktopAppsButton" text="View all Desktop Apps" textFill="#053500" style="-fx-border-color: #053500; -fx-border-radius: 5;">
-                                <padding>
-                                    <Insets left="10" right="10" top="5" bottom="5"/>
-                                </padding>
-                            </Button>
-                        </right>
-                        <bottom>
-                            <VBox prefWidth="700">
-                                <TilePane fx:id="desktopAppsTile" prefHeight="50" maxHeight="50" hgap="15" vgap="10" prefColumns="8">
+                        <Panel prefHeight="100" prefWidth="500">
+                            <left>
+                                <Label fx:id="desktopAppsLabel" text="Desktop Apps">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                            </left>
+                            <right>
+                                <Button fx:id="desktopAppsButton" text="View all Desktop Apps" textFill="#053500" style="-fx-border-color: #053500; -fx-border-radius: 5;">
                                     <padding>
-                                        <Insets top="10" left="15"/>
+                                        <Insets left="10" right="10" top="5" bottom="5"/>
                                     </padding>
-                                </TilePane>
-                            </VBox>
-                        </bottom>
-                    </Panel>
+                                </Button>
+                            </right>
+                            <bottom>
+                                <VBox prefWidth="700">
+                                    <TilePane fx:id="desktopAppsTile" prefHeight="50" maxHeight="50" hgap="15" vgap="10" prefColumns="8">
+                                        <padding>
+                                            <Insets top="10" left="15"/>
+                                        </padding>
+                                    </TilePane>
+                                </VBox>
+                            </bottom>
+                        </Panel>
 
-                </VBox>
+                    </VBox>
+                    <padding>
+                        <Insets right="15"/>
+                    </padding>
+                </ScrollPane>
 
                 <VBox fx:id="noApplicationVBox" StackPane.alignment="CENTER" visible="false">
                     <Label fx:id="noApplicationsText" text="No Applications Found"/>

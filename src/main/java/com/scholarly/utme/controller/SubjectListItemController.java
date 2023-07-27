@@ -15,10 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
@@ -30,38 +27,33 @@ import java.util.stream.Collectors;
 public class SubjectListItemController implements FxmlView<SubjectListItemVM>, Initializable {
     private static final String TAG = "SubjectListItemController:  ";
 
+    @InjectViewModel
+    private SubjectListItemVM viewModel;
+
+
+    @FXML
+    private BorderPane subjectPane;
     @FXML
     private StackPane subjectImageBackground;
-
     @FXML
     public CheckBox subjectCheckBox, shuffleQuestionsCheckBox, shuffleOptionsCheckBox;
     @FXML
     public ChoiceBox<Year> yearChoiceBox;
-
     @FXML
     private CheckComboBox<PQTopic> topicsComboBox;
-
     @FXML
     private VBox subRoot;
-
     @FXML
     private ChoiceBox<Integer> questionNoChoiceBox;
-
     @FXML
     private Separator divider;
-
     @FXML
     private HBox optionPanel;
-
     @FXML
     private ImageView subjectImage;
-
     @FXML
     private Label subjectText;
 
-
-    @InjectViewModel
-    private SubjectListItemVM viewModel;
 
     SubjectListViewController subjectListViewController;
 
@@ -82,8 +74,10 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         }
 
         subjectText.textProperty().bind(viewModel.subjectNameProperty());
-        subjectCheckBox.selectedProperty().bindBidirectional(viewModel.subjectSelectedProperty());
 
+        subjectPane.setOnMouseClicked(event -> subjectCheckBox.setSelected(!subjectCheckBox.isSelected()));
+
+        subjectCheckBox.selectedProperty().bindBidirectional(viewModel.subjectSelectedProperty());
         shuffleQuestionsCheckBox.selectedProperty().bindBidirectional(viewModel.shuffleQuestionsProperty());
         shuffleOptionsCheckBox.selectedProperty().bindBidirectional(viewModel.shuffleOptionsProperty());
 
@@ -120,7 +114,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         topicsComboBox.getItems().addAll(viewModel.getTopics());
         topicsComboBox.getCheckModel().checkAll();
         List<Integer> topicsIdList = topicsComboBox.getCheckModel().getCheckedItems().stream().map(PQTopic::getId).collect(Collectors.toList());
-        viewModel.setSelectedTopics(topicsIdList);
+        viewModel. setSelectedTopics(topicsIdList);
 
         topicsComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<PQTopic>) changeList -> {
             if (topicsComboBox.getCheckModel().getCheckedItems().size() == 0) {

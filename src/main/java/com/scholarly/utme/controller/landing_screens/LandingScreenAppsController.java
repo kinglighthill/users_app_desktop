@@ -21,10 +21,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -55,6 +52,8 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
 
     @FXML
     private TilePane mobileAppsTile, desktopAppsTile;
+    @FXML
+    private ScrollPane centerScrollPane;
     @FXML
     private VBox noApplicationVBox, applicationsVBox;
     @FXML
@@ -118,6 +117,8 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
         mobileAppsButton.setBackground(Background.EMPTY);
         desktopAppsButton.setBackground(Background.EMPTY);
 
+        centerScrollPane.setBackground(Background.EMPTY);
+
     }
 
     private void initializeFonts() {
@@ -135,7 +136,6 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
     private void loadMobileApps() {
         String END_POINT = "exam-apps";
         String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN, "");
-        String ACCESS_TOKEN2 = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE0ZWI4YTNiNjgzN2Y2MTU4ZWViNjA3NmU2YThjNDI4YTVmNjJhN2IiLCJ0eXAiOiJKV1QifQ.eyJ1dWlkIjoiNXV0OVhFdzNraEJYRllqSmdSdGQiLCJlbWFpbF9hZGRyZXNzIjoiYW1ha2FAZ21haWwuY29tIiwiY291bnRyeSI6Im5pZ2VyaWEiLCJpc19hY3RpdmF0aW9uX2FjdGl2ZSI6ZmFsc2UsImRldmljZV9pZCI6ImRldmljZS1pZCIsImFwcF9zbHVnIjoidXRtZSIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9zY2hvbGFybHktdXRtZS1zdGFnaW5nIiwiYXVkIjoic2Nob2xhcmx5LXV0bWUtc3RhZ2luZyIsImF1dGhfdGltZSI6MTY4OTkyMzc3MCwidXNlcl9pZCI6IjV1dDlYRXcza2hCWEZZakpnUnRkIiwic3ViIjoiNXV0OVhFdzNraEJYRllqSmdSdGQiLCJpYXQiOjE2ODk5MjM3NzAsImV4cCI6MTY4OTkyNzM3MCwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6e30sInNpZ25faW5fcHJvdmlkZXIiOiJjdXN0b20ifX0.rH6pF381MPVwDgI7R51ok_2Rcm4IyuJQRALawC63BCRjDZaW2anvrF7gvlVhAwQH_ADl850JRyX_XnQYg5w6bmQY4ol1VTz_slFJrDYTudiZma0QCpTKv8XXVJGTPP_k7-PpxgnEFol2JrKeN_pwwGMdE3bHlSl3Do2jXE4fgIYFc74U-0fEuaZ_3yum_23bxsJ6EnE_jfZHwTLHfqXdWX8xtLKz5h9BjgNdIYdXR6VkI9MEQWFyWO8kI1aR9f31RDbOe4eL5mM57BmaCIPd92hG2cvkJQiz9ej6eEG4v-2NhMbCMITfNIuuognXgVmVLexdLLcgsWpyLOaTIPuJkw";
 
         Gson gson = new Gson();
 
@@ -152,15 +152,11 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                 assert responseBody != null;
                 BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
-                if (baseResponse.getStatus().equalsIgnoreCase("success")) {
-
+                if (baseResponse.getStatus().equalsIgnoreCase("success"))
                     mobileApps.addAll(baseResponse.getData().getApps());
-                    System.out.println(TAG + "Network Operation Done! MobileApps List size -> " + mobileApps.size());
-
-                } else if (baseResponse.getStatus().equalsIgnoreCase("error")) {
+                else
                     Platform.runLater(this::showEmptyAppsScreen);
 
-                }
 
             } catch (Exception e) {
                 System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
@@ -169,46 +165,11 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
             System.out.println("Request failed with exception -> " + e.getMessage());
         }
 
-        /*call.enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) {
-                System.out.println(TAG + "LoadMobileApps Got response with code -> " + response.code());
-                try (ResponseBody responseBody = response.body()) {
-                    assert responseBody != null;
-                    BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
-
-                    if (baseResponse.getStatus().equalsIgnoreCase("success")) {
-
-                        mobileApps.addAll(baseResponse.getData().getApps().stream().limit(3).toList());
-                        System.out.println(TAG + "Network Operation Done! MobileApps List size -> " + mobileApps.size());
-
-                    } else if (baseResponse.getStatus().equalsIgnoreCase("error")) {
-                        Platform.runLater(() -> {
-                            showEmptyAppsScreen();
-                        });
-
-                    }
-
-                } catch (Exception e) {
-                    System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Platform.runLater(() -> {
-                    showEmptyAppsScreen();
-                });
-                System.out.println("Request failed with exception -> " + e.getMessage());
-            }
-        });*/
     }
 
     private void loadDesktopApps() {
         String END_POINT = "exam-apps/desktop";
         String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN, "");
-        String ACCESS_TOKEN2 = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE0ZWI4YTNiNjgzN2Y2MTU4ZWViNjA3NmU2YThjNDI4YTVmNjJhN2IiLCJ0eXAiOiJKV1QifQ.eyJ1dWlkIjoiNXV0OVhFdzNraEJYRllqSmdSdGQiLCJlbWFpbF9hZGRyZXNzIjoiYW1ha2FAZ21haWwuY29tIiwiY291bnRyeSI6Im5pZ2VyaWEiLCJpc19hY3RpdmF0aW9uX2FjdGl2ZSI6ZmFsc2UsImRldmljZV9pZCI6ImRldmljZS1pZCIsImFwcF9zbHVnIjoidXRtZSIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9zY2hvbGFybHktdXRtZS1zdGFnaW5nIiwiYXVkIjoic2Nob2xhcmx5LXV0bWUtc3RhZ2luZyIsImF1dGhfdGltZSI6MTY4OTkyMzc3MCwidXNlcl9pZCI6IjV1dDlYRXcza2hCWEZZakpnUnRkIiwic3ViIjoiNXV0OVhFdzNraEJYRllqSmdSdGQiLCJpYXQiOjE2ODk5MjM3NzAsImV4cCI6MTY4OTkyNzM3MCwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6e30sInNpZ25faW5fcHJvdmlkZXIiOiJjdXN0b20ifX0.rH6pF381MPVwDgI7R51ok_2Rcm4IyuJQRALawC63BCRjDZaW2anvrF7gvlVhAwQH_ADl850JRyX_XnQYg5w6bmQY4ol1VTz_slFJrDYTudiZma0QCpTKv8XXVJGTPP_k7-PpxgnEFol2JrKeN_pwwGMdE3bHlSl3Do2jXE4fgIYFc74U-0fEuaZ_3yum_23bxsJ6EnE_jfZHwTLHfqXdWX8xtLKz5h9BjgNdIYdXR6VkI9MEQWFyWO8kI1aR9f31RDbOe4eL5mM57BmaCIPd92hG2cvkJQiz9ej6eEG4v-2NhMbCMITfNIuuognXgVmVLexdLLcgsWpyLOaTIPuJkw";
 
         Gson gson = new Gson();
 
@@ -225,15 +186,11 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                 assert responseBody != null;
                 BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
-                if (baseResponse.getStatus().equalsIgnoreCase("success")) {
-
+                if (baseResponse.getStatus().equalsIgnoreCase("success"))
                     desktopApps.addAll(baseResponse.getData().getApps());
-                    System.out.println(TAG + "Network Operation Done! DesktopApps List size -> " + desktopApps.size());
-
-                } else if (baseResponse.getStatus().equalsIgnoreCase("error")) {
+                else
                     Platform.runLater(this::showEmptyAppsScreen);
 
-                }
 
             } catch (Exception e) {
                 System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
@@ -242,46 +199,11 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
             System.out.println("Request failed with exception -> " + e.getMessage());
         }
 
-        /*call.enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) {
-                System.out.println(TAG + "LoadDesktopApps Got response with code -> " + response.code());
-                try (ResponseBody responseBody = response.body()) {
-                    assert responseBody != null;
-                    BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
-
-                    if (baseResponse.getStatus().equalsIgnoreCase("success")) {
-
-                        Platform.runLater(() -> {
-                            desktopAppsList.setItems(FXCollections.observableArrayList(baseResponse.getData().getApps()));
-                        });
-
-                    } else if (baseResponse.getStatus().equalsIgnoreCase("error")) {
-                        Platform.runLater(() -> {
-                            showEmptyAppsScreen();
-                        });
-
-                    }
-
-                } catch (Exception e) {
-                    System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Platform.runLater(() -> {
-                    showEmptyAppsScreen();
-                });
-                System.out.println("Request failed with exception -> " + e.getMessage());
-            }
-        });*/
     }
 
     private void displayMobileApps(List<AppItem> mobileApps) {
         mobileAppsTile.getChildren().clear();
-        mobileApps.stream().limit(4).forEach(appItem -> {
+        mobileApps.stream().limit(3).forEach(appItem -> {
             Panel panel = new Panel();
             panel.setPrefSize(250, 150);
             ImageView appImage = new ImageView(new Image("https://storage.googleapis.com/scholarly-utme-staging.appspot.com/profile_pictures%2F5ut9XEw3khBXFYjJgRtd"));

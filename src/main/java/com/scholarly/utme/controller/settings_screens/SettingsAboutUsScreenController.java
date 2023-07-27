@@ -55,21 +55,10 @@ public class SettingsAboutUsScreenController implements FxmlView<SettingsAboutUs
         missionVBox.getChildren().remove(missionLabel);
         visionVBox.getChildren().remove(visionLabel);
 
-        appDetailsPanel.setOnMouseClicked(event -> {
-            appDetailsDropdown.setSelected(!appDetailsDropdown.isSelected());
-        });
-
-        ourTeamPanel.setOnMouseClicked(event -> {
-            ourTeamDropdown.setSelected(!ourTeamDropdown.isSelected());
-        });
-
-        missionPanel.setOnMouseClicked(event -> {
-            missionDropdown.setSelected(!missionDropdown.isSelected());
-        });
-
-        visionPanel.setOnMouseClicked(event -> {
-            visionDropdown.setSelected(!visionDropdown.isSelected());
-        });
+        appDetailsPanel.setOnMouseClicked(event -> appDetailsDropdown.setSelected(!appDetailsDropdown.isSelected()));
+        ourTeamPanel.setOnMouseClicked(event -> ourTeamDropdown.setSelected(!ourTeamDropdown.isSelected()));
+        missionPanel.setOnMouseClicked(event -> missionDropdown.setSelected(!missionDropdown.isSelected()));
+        visionPanel.setOnMouseClicked(event -> visionDropdown.setSelected(!visionDropdown.isSelected()));
 
         appDetailsDropdown.selectedProperty().addListener(((observableValue, oldValue, newValue) -> {
             if (newValue) {
