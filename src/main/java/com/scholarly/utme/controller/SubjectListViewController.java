@@ -276,13 +276,15 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     }
 
     public void setSelectedSubject(PQSubject subject) {
-        viewModel.getObjectiveSubjects().forEach(vm -> {
-            if (vm.getSubject().getSubjectId() == subject.getSubjectId()) {
-                objectiveList.scrollTo(vm);
-            }
-        });
+        if (subject != null) {
+            viewModel.getObjectiveSubjects().forEach(vm -> {
+                if (vm.getSubject().getSubjectId() == subject.getSubjectId()) {
+                    objectiveList.scrollTo(vm);
+                }
+            });
 
-        viewModel.setSubjectSelected(subject);
+            viewModel.setSubjectSelected(subject);
+        }
     }
 
     public void showActivateDialog() {
