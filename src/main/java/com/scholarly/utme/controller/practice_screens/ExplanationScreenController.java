@@ -4,10 +4,7 @@ import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
-import com.scholarly.utme.ui.utils.Alerts;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.practice_screens.ExplanationScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -39,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
+import static com.scholarly.utme.ui.utils.Screen.PRACTICE_SCREEN;
 import static com.scholarly.utme.viewmodels.SubjectListItemVM.*;
 
 
@@ -200,7 +197,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
                     dialogDimmer.setVisible(false);
-                    ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
+                    ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, null));
                     ViewSwitcher.showScreen(View.HOME_SCREEN);
                 } else {
                     dialogDimmer.setVisible(false);

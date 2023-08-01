@@ -109,7 +109,7 @@
         <center>
             <TabPane fx:id="tabMenu" prefHeight="200.0" prefWidth="200.0" tabMinHeight="50" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                 <tabs>
-                    <Tab fx:id="objectiveTab" text="Objective">
+                    <Tab fx:id="objectiveTab"  text="Objective">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="371.0" prefWidth="496.0" style="-fx-background-color: #FFFFFF;">
                                 <children>
@@ -119,7 +119,7 @@
                             </AnchorPane>
                         </content>
                     </Tab>
-                    <Tab fx:id="theoryTab" text="Theory">
+                    <!--<Tab fx:id="theoryTab" text="Theory">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
@@ -128,7 +128,7 @@
                                 </children>
                             </AnchorPane>
                         </content>
-                    </Tab>
+                    </Tab>-->
                 </tabs>
             </TabPane>
         </center>

@@ -61,9 +61,9 @@
                     <VBox spacing="15">
                         <VBox fx:id="appDetailsVBox" spacing="20">
                             <children>
-                                <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <Panel fx:id="appDetailsPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
                                     <left>
-                                        <Label text="See app details" textFill="#053500">
+                                        <Label text="The App" textFill="#053500">
                                             <font>
                                                 <Font size="16"/>
                                             </font>
@@ -76,7 +76,8 @@
                                         <Insets top="20" bottom="20" left="30" right="25"/>
                                     </padding>
                                 </Panel>
-                                <Label fx:id="appDetails" wrapText="true" lineSpacing="5" style="-fx-background-color: white;" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac ">
+
+                                <Label fx:id="appDetailsLabel" wrapText="true" lineSpacing="5" style="-fx-background-color: white;">
                                     <font>
                                         <Font size="14"/>
                                     </font>
@@ -86,8 +87,9 @@
                                 </Label>
                             </children>
                         </VBox>
-                        <VBox fx:id="teamVBox" spacing="20">
-                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+
+                        <VBox fx:id="ourTeamVBox" spacing="20">
+                            <Panel fx:id="ourTeamPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
                                 <left>
                                     <Label text="Our Team" textFill="#053500">
                                         <font>
@@ -96,15 +98,25 @@
                                     </Label>
                                 </left>
                                 <right>
-                                    <ToggleButton fx:id="teamDropdown"/>
+                                    <ToggleButton fx:id="ourTeamDropdown"/>
                                 </right>
                                 <padding>
                                     <Insets top="20" bottom="20" left="30" right="25"/>
                                 </padding>
                             </Panel>
+
+                            <Label fx:id="ourTeamLabel" wrapText="true" lineSpacing="5" style="-fx-background-color: white;">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                                <padding>
+                                    <Insets left="30" right="30"/>
+                                </padding>
+                            </Label>
                         </VBox>
+
                         <VBox fx:id="missionVBox" spacing="20">
-                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <Panel fx:id="missionPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
                                 <left>
                                     <Label text="Mission" textFill="#053500">
                                         <font>
@@ -119,9 +131,19 @@
                                     <Insets top="20" bottom="20" left="30" right="25"/>
                                 </padding>
                             </Panel>
+
+                            <Label fx:id="missionLabel" wrapText="true" lineSpacing="5" style="-fx-background-color: white;">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                                <padding>
+                                    <Insets left="30" right="30"/>
+                                </padding>
+                            </Label>
                         </VBox>
+
                         <VBox fx:id="visionVBox" spacing="20">
-                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <Panel fx:id="visionPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
                                 <left>
                                     <Label text="Vision" textFill="#053500">
                                         <font>
@@ -136,8 +158,18 @@
                                     <Insets top="20" bottom="20" left="30" right="25"/>
                                 </padding>
                             </Panel>
+
+                            <Label fx:id="visionLabel" wrapText="true" lineSpacing="5" style="-fx-background-color: white;">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                                <padding>
+                                    <Insets left="30" right="30"/>
+                                </padding>
+                            </Label>
                         </VBox>
                     </VBox>
+
                     <padding>
                         <Insets right="15"/>
                     </padding>

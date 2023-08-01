@@ -107,7 +107,7 @@ public class HelloApplication extends Application {
     }
 
     public void openBrowser(String uri) {
-        System.out.println("Browser");
+        System.out.println(TAG + "Browser");
         getHostServices().showDocument(uri);
     }
 

@@ -7,6 +7,7 @@
 <?import javafx.scene.text.*?>
 
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.web.WebView?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController">
     <center>
         <StackPane>
@@ -43,7 +44,8 @@
                                                     </Label>
                                                 </children>
                                             </VBox>
-                                            <VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
+
+                                            <!--<VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
                                                 <children>
                                                     <ImageView fx:id="flagImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                                                         <VBox.margin>
@@ -59,8 +61,9 @@
                                                         </font>
                                                     </Label>
                                                 </children>
-                                            </VBox>
-                                            <VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
+                                            </VBox>-->
+
+                                            <!--<VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
                                                 <children>
                                                     <ImageView fx:id="bookmarkImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                                                         <VBox.margin>
@@ -76,7 +79,8 @@
                                                         </font>
                                                     </Label>
                                                 </children>
-                                            </VBox>
+                                            </VBox>-->
+
                                             <VBox fx:id="calculatorButton" alignment="TOP_CENTER" onMouseClicked="#onCalculatorClicked" prefHeight="78.0" prefWidth="85.0">
                                                 <children>
                                                     <ImageView fx:id="calculatorImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
@@ -214,6 +218,7 @@
 
                             <ScrollPane fitToWidth="true" prefHeight="500" style="-fx-background-color: #ffffff; -fx-border-color: #F1F1F1; -fx-border-radius: 5;">
                                 <VBox>
+
                                     <HBox fx:id="quesDescriptionHBox">
                                         <Label fx:id="questionDescriptionHeader" text="COMPREHENSION: Read the passage..." prefHeight="20" prefWidth="500" wrapText="true">
                                             <font>
@@ -229,19 +234,30 @@
                                             <Insets bottom="10"/>
                                         </padding>
                                     </HBox>
-                                    <Label fx:id="questionLabel" text="Label" alignment="TOP_LEFT" wrapText="true">
-                                        <font>
-                                            <Font size="15.0"/>
-                                        </font>
-                                        <padding>
-                                            <Insets top="10"/>
-                                        </padding>
-                                    </Label>
+
+                                    <StackPane>
+                                        <children>
+                                            <WebView fx:id="webView" prefHeight="400.0" prefWidth="200.0"/>
+
+                                            <Label fx:id="questionLabel" text="Label" alignment="TOP_LEFT" wrapText="true">
+                                                <font>
+                                                    <Font size="15.0"/>
+                                                </font>
+                                                <padding>
+                                                    <Insets top="10"/>
+                                                </padding>
+                                            </Label>
+                                        </children>
+                                    </StackPane>
+
                                     <padding>
                                         <Insets topRightBottomLeft="10"/>
                                     </padding>
                                 </VBox>
 
+                                <VBox.margin>
+                                    <Insets top="20.0" />
+                                </VBox.margin>
                             </ScrollPane>
 
                             <Label fx:id="optionA" text="Label">

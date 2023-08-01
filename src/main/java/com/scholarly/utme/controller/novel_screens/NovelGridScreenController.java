@@ -3,7 +3,7 @@ package com.scholarly.utme.controller.novel_screens;
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.ui.cellFactories.NovelGridCellFactory;
-import com.scholarly.utme.ui.utils.Screens;
+import com.scholarly.utme.ui.utils.Screen;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.novel_screens.NovelGridScreenVM;
@@ -56,7 +56,7 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
 
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.NOVELS_SCREEN));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.NOVELS_SCREEN, null));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 

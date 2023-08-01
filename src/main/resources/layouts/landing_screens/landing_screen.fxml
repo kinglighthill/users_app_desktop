@@ -82,17 +82,17 @@
                     </padding>
                 </ToggleButton>-->
 
-                <ToggleButton fx:id="performanceButton" text="Performance" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                <!--<ToggleButton fx:id="performanceButton" text="Performance" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
                     <padding>
                         <Insets left="30"/>
                     </padding>
-                </ToggleButton>
+                </ToggleButton>-->
 
-                <ToggleButton fx:id="updatesButton" text="Updates" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                <!--<ToggleButton fx:id="updatesButton" text="Updates" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
                     <padding>
                         <Insets left="30"/>
                     </padding>
-                </ToggleButton>
+                </ToggleButton>-->
 
                 <ToggleButton fx:id="settingsButton" text="Settings" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
                     <padding>

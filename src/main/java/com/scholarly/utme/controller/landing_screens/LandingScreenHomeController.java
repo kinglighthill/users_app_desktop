@@ -8,10 +8,7 @@ import com.scholarly.utme.data.model.newDb.NoteLastSection;
 import com.scholarly.utme.data.model.newDb.NoteSubject;
 import com.scholarly.utme.data.model.newDb.ObjectiveSubject;
 import com.scholarly.utme.ui.cellFactories.SubjectGridCellFactory;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -102,9 +99,12 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         initializeGestures();
 
         helloText.setText(helloText.getText() + viewModel.getUser().getFullName().trim().split(" ")[0]);
+
         if (viewModel.getUser().getProfilePicUrl() != null && !viewModel.getUser().getProfilePicUrl().contains("empty")) {
             compressProfileImage((new Image(viewModel.getUser().getProfilePicUrl())));
             System.out.println(TAG + "Image set successfully with url -> " + viewModel.getUser().getProfilePicUrl());
+        } else {
+            compressProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/default_profile_image.png").toString()));
         }
 
         selectSubjectsGrid.setCellFactory(new SubjectGridCellFactory());
@@ -118,17 +118,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         } else {
             continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionGridPane);
         }
-
-        NewsItem newsItem1 = new NewsItem("", "", "", "");
-        NewsItem newsItem2 = new NewsItem("", "", "", "");
-        NewsItem newsItem3 = new NewsItem("", "", "", "");
-        NewsItem newsItem4 = new NewsItem("", "", "", "");
-        NewsItem newsItem5 = new NewsItem("", "", "", "");
-        NewsItem newsItem6 = new NewsItem("", "", "", "");
-
-        ObservableList<NewsItem> newsList = FXCollections.observableArrayList(newsItem1, newsItem2, newsItem3, newsItem4, newsItem5, newsItem6);
-//        this.newsList.setCellFactory(new NewsListCellFactory());
-//        this.newsList.setItems(newsList);
 
 
         editSubjectsText.setOnMouseClicked(e -> {
@@ -152,7 +141,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
 
         cbtPracticePanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, null));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
@@ -215,54 +204,30 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
         });*/
 
-        notificationIcon.setOnMouseClicked(event -> {
-            ViewSwitcher.showScreen(View.ACCOUNT_NOTIFICATIONS_SCREEN);
-        });
+//        notificationIcon.setOnMouseClicked(event -> {
+//            ViewSwitcher.showScreen(View.ACCOUNT_NOTIFICATIONS_SCREEN);
+//        });
 
         profileImage.setOnMouseClicked(event -> {
             ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN);
         });
 
-    }
-
-    private void updateFavoriteSubjects(ObservableList<FavoriteSubject> selectedSubjects) {
-        favoriteSubjectsTile.getChildren().clear();
-        selectedSubjects.forEach(subject -> {
-            Panel panel = new Panel();
-            panel.setPrefSize(110, 90);
-            ImageView subjectImage = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + subject.getShortTitle() + "_image.png").toString()));
-            panel.setTop(subjectImage);
-
-            Label subjectLabel = new Label(subject.getTitle());
-            subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-            subjectLabel.setTextFill(Paint.valueOf(subject.getColorCode()));
-            subjectLabel.setPadding(new Insets(5, 0, 0, 0));
-            panel.setBottom(subjectLabel);
-
-            panel.setStyle("-fx-background-color: rgba(143, 152, 255, 0.10); -fx-background-radius: 7");
-            panel.setPadding(new Insets(10, 0, 10, 15));
-
-            favoriteSubjectsTile.getChildren().add(panel);
+        viewDesktopAppButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
+
     }
 
     private void initializeViews() {
         rootPane.setPadding(new Insets(0,15, 0, 0));
-        notificationIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/bell_without_notification.png").toString()));
+//        notificationIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/bell_without_notification.png").toString()));
         handImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/hand_image2.png").toString()));
         selectSubjectCloseIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/action_close_icon.png").toString()));
         boyWithLaptop.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/boy_with_laptop.png").toString()));
 
-        profileImage.setImage(null);
 //        compressProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/profile_image2.jpg").toString()));
 //        compressProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/profile_image2.png").toString()));
 
-//        biologyIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/biology_icon.png").toString()));
-//        englishIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/english_icon.png").toString()));
-//        physicsIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/physics_icon.png").toString()));
-//        chemistryIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/chemistry_icon.png").toString()));
-//        mathematicsIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/mathematics_icon.png").toString()));
-//        geographyIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/geography_icon.png").toString()));
 
         cbtPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_practice_icon.png").toString()));
 //        videosIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/videos_icon.png").toString()));
@@ -318,13 +283,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         startLearningText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         topSubjectsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
         editSubjectsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
-
-//        biologyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//        englishText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//        physicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//        chemistryText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//        mathematicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//        geographyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 
         activitiesText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 
@@ -386,6 +344,32 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         });
         editSubjectsText.setOnMouseExited(e -> {
             editSubjectsText.setUnderline(false);
+        });
+    }
+
+    private void updateFavoriteSubjects(ObservableList<FavoriteSubject> selectedSubjects) {
+        favoriteSubjectsTile.getChildren().clear();
+        selectedSubjects.forEach(subject -> {
+            Panel panel = new Panel();
+            panel.setPrefSize(110, 90);
+            ImageView subjectImage = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + subject.getShortTitle() + "_image.png").toString()));
+            panel.setTop(subjectImage);
+
+            Label subjectLabel = new Label(subject.getTitle());
+            subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+            subjectLabel.setTextFill(Paint.valueOf(subject.getColorCode()));
+            subjectLabel.setPadding(new Insets(5, 0, 0, 0));
+            panel.setBottom(subjectLabel);
+
+            panel.setStyle("-fx-background-color: rgba(143, 152, 255, 0.10); -fx-background-radius: 7");
+            panel.setPadding(new Insets(10, 0, 10, 15));
+
+            panel.setOnMouseClicked(event -> {
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, subject));
+                ViewSwitcher.showScreen(View.HOME_SCREEN);
+            });
+
+            favoriteSubjectsTile.getChildren().add(panel);
         });
     }
 

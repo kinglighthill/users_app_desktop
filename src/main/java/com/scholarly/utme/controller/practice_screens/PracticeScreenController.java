@@ -43,8 +43,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
-
 @FxmlPath("/layouts/practice_screens/PracticeScreen.fxml")
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable, SceneLifecycle {
     private static final String TAG = "PracticeScreenController: ";
@@ -465,19 +463,19 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             ViewSwitcher.showScreen(View.RESULT_SCREEN);
         });
 
-        bookmarkImage.setOnMouseClicked(mouseEvent -> {
-            viewModel.handleBookmarkClicked();
-            updateBookmarkIcon();
-
-        });
+//        bookmarkImage.setOnMouseClicked(mouseEvent -> {
+//            viewModel.handleBookmarkClicked();
+//            updateBookmarkIcon();
+//
+//        });
 
         reportDialogCloseIcon.setOnMouseClicked(mouseEvent -> {
             Animations.hideDialog(reportDialog, dialogDimmer);
         });
 
-        flagImage.setOnMouseClicked(mouseEvent -> {
-            Animations.showDialog(reportDialog, dialogDimmer);
-        });
+//        flagImage.setOnMouseClicked(mouseEvent -> {
+//            Animations.showDialog(reportDialog, dialogDimmer);
+//        });
 
         speakerImage.setOnMouseClicked(event -> {
             int selectedQuestion = viewModel.getSubjectsQuestions()
@@ -569,12 +567,12 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         tileScrollPane.setBackground(Background.EMPTY);
         homePageButton.setBackground(Background.EMPTY);
 
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+//        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
         calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
         reportDialogCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
         quesDescriptionCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
         speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
-        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
+//        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
         timeImage.setImage(new Image(getClass().getResource("/drawable/practice_screen_images/time_image.jpg").toString()));
 
         ImageView prevImage = new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/prev_btn_icon.png").toString()));
@@ -609,7 +607,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+//        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
             ObjectiveQuestion selectedQuestion = questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getObjectiveQuestion();
@@ -618,7 +616,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             bookmarks.forEach(bookmark -> {
                 if (bookmark.getQuestionId() == selectedQuestion.getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+//                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
 
                 }
             });
@@ -630,7 +628,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             bookmarks.forEach(bookmark -> {
                 if (bookmark.getQuestionId() == selectedQuestion.getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+//                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
 
                 }
             });
@@ -658,7 +656,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
 
             List<ObjectiveQuestionDescription> quesDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
-                    questionDescription.getId() == question.getQuestionDescriptionId()).collect(Collectors.toList());
+                    questionDescription.getId() == question.getQuestionDescriptionId()).toList();
+
+            System.out.println(TAG + "setupQuestionView: quesDescriptionInList -> " + quesDescriptionInList);
 
             if (quesDescriptionInList.isEmpty()) {
                 readQuestionDesc.setVisible(false);
@@ -910,11 +910,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, null));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
-            } else if (buttonType == ButtonType.NO) {
-                exitDialogDimmer.setVisible(false);
             }
+            exitDialogDimmer.setVisible(false);
             return buttonType;
         });
 
@@ -937,7 +936,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
 
-                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, null));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             }
             return buttonType;

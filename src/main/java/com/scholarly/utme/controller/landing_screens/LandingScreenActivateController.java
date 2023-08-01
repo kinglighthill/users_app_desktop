@@ -7,7 +7,6 @@ import com.scholarly.utme.network.model.BaseResponse;
 import com.scholarly.utme.network.model.DeviceInfo;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
-import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenActivateVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -21,7 +20,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import jidefx.scene.control.field.NumberField;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -86,13 +84,24 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
             headerLabel.setText("Enter your 16 digit activation pin to unlock all the layers and amazing features in this app. Activation lasts for one academic year!");
         }
 
-        activateButton.setDisable(activationPinTextField.getText().length() != 16);
+        activateButton.setDisable(activationPinTextField.getText().length() < 16);
+
+        TextFormatter<String> textFormatter = new TextFormatter<>(change -> {
+            if (!change.isContentChange()) {
+                return change;
+            }
+
+            String text = change.getControlNewText();
+
+            if (text.length() > 16) {
+                return null;
+            }
+            return change;
+        });
+
+        activationPinTextField.setTextFormatter(textFormatter);
 
         activationPinTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
-//            if (newValue.length() % 4 == 0 && newValue.length() / 4 == 1) {
-//                System.out.println(TAG + "NewVlaue for 4 is " + newValue);
-//                activationPinTextField.setText(newValue+="-");
-//            }
 //            if (newValue.length() % 9 == 0&& newValue.length() / 9 == 1) {
 //                System.out.println(TAG + "NewVlaue for 9 is " + newValue);
 //                activationPinTextField.setText(newValue+="-");
@@ -101,7 +110,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 //                System.out.println(TAG + "NewVlaue for 14 is " + newValue);
 //                activationPinTextField.setText(newValue+="-");
 //            }
-            activateButton.setDisable(newValue.length() != 16);
+            activateButton.setDisable(newValue.length() < 16);
         }));
 
         activateButton.setOnAction(event -> {
