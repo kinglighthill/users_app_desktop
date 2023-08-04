@@ -1,5 +1,6 @@
 package com.scholarly.utme.ui.listcells;
 
+import com.scholarly.utme.HelloApplication;
 import com.scholarly.utme.data.model.listItems.AppItem;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
@@ -20,13 +21,11 @@ public class AppGridItemCell extends GridCell<AppItem> {
     public ImageView appImage;
     public Label appName;
 
+    HelloApplication application = new HelloApplication();
+
     public AppGridItemCell() {
         loadFxml();
 
-        setOnMouseClicked(event -> {
-            ViewSwitcher.passData(appItem);
-            ViewSwitcher.showScreen(View.APP_DETAILS_SCREEN);
-        });
     }
 
     private void loadFxml() {
@@ -51,8 +50,9 @@ public class AppGridItemCell extends GridCell<AppItem> {
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
+
             try {
-                appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/" + item.getImageUrl()).toString()));
+                appImage.setImage(new Image(item.getImageUrl()));
             } catch (Exception e) {
                 appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/scholarly_logo.png").toString()));
                 System.out.println(e.getMessage());
@@ -60,7 +60,11 @@ public class AppGridItemCell extends GridCell<AppItem> {
             }
 
             appName.setText(item.getName());
-            appName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+            appName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+
+            setOnMouseClicked(event -> {
+                application.openBrowser(item.getDownloadLink());
+            });
 
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }

@@ -15,10 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
@@ -30,39 +27,33 @@ import java.util.stream.Collectors;
 public class SubjectListItemController implements FxmlView<SubjectListItemVM>, Initializable {
     private static final String TAG = "SubjectListItemController:  ";
 
+    @InjectViewModel
+    private SubjectListItemVM viewModel;
+
+
+    @FXML
+    private BorderPane subjectPane;
     @FXML
     private StackPane subjectImageBackground;
-
     @FXML
-    private CheckBox subjectCheckBox, shuffleQuestionsCheckBox, shuffleOptionsCheckBox;
-
+    public CheckBox subjectCheckBox, shuffleQuestionsCheckBox, shuffleOptionsCheckBox;
     @FXML
     public ChoiceBox<Year> yearChoiceBox;
-
     @FXML
     private CheckComboBox<PQTopic> topicsComboBox;
-
     @FXML
     private VBox subRoot;
-
     @FXML
     private ChoiceBox<Integer> questionNoChoiceBox;
-
     @FXML
     private Separator divider;
-
     @FXML
     private HBox optionPanel;
-
     @FXML
     private ImageView subjectImage;
-
     @FXML
     private Label subjectText;
 
-
-    @InjectViewModel
-    private SubjectListItemVM viewModel;
 
     SubjectListViewController subjectListViewController;
 
@@ -81,9 +72,12 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
             subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/IRS_image.png").toString()));
             System.out.println(TAG + e.toString());
         }
-        subjectText.textProperty().bind(viewModel.subjectNameProperty());
-        subjectCheckBox.selectedProperty().bindBidirectional(viewModel.subjectSelectedProperty());
 
+        subjectText.textProperty().bind(viewModel.subjectNameProperty());
+
+        subjectPane.setOnMouseClicked(event -> subjectCheckBox.setSelected(!subjectCheckBox.isSelected()));
+
+        subjectCheckBox.selectedProperty().bindBidirectional(viewModel.subjectSelectedProperty());
         shuffleQuestionsCheckBox.selectedProperty().bindBidirectional(viewModel.shuffleQuestionsProperty());
         shuffleOptionsCheckBox.selectedProperty().bindBidirectional(viewModel.shuffleOptionsProperty());
 
@@ -99,7 +93,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         });
 
         yearChoiceBox.getItems().addAll(viewModel.getYears());
-        List<Year> freeYears = viewModel.getYears().stream().filter(Year::isFree).collect(Collectors.toList());
+        List<Year> freeYears = viewModel.getYears().stream().filter(Year::isFree).toList();
         viewModel.setSelectedYearProperty(freeYears.get(0));
         yearChoiceBox.getSelectionModel().selectedItemProperty().addListener( (observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -120,7 +114,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         topicsComboBox.getItems().addAll(viewModel.getTopics());
         topicsComboBox.getCheckModel().checkAll();
         List<Integer> topicsIdList = topicsComboBox.getCheckModel().getCheckedItems().stream().map(PQTopic::getId).collect(Collectors.toList());
-        viewModel.setSelectedTopics(topicsIdList);
+        viewModel. setSelectedTopics(topicsIdList);
 
         topicsComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<PQTopic>) changeList -> {
             if (topicsComboBox.getCheckModel().getCheckedItems().size() == 0) {
@@ -131,8 +125,10 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
             viewModel.setSelectedTopics(changedTopicsList);
         });
 
-
         subRoot.getChildren().removeAll(divider, optionPanel);
+        if (viewModel.isSubjectSelected())
+            subRoot.getChildren().addAll(divider, optionPanel);
+
         viewModel.subjectSelectedProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println(TAG + viewModel.getSubject() + " selected property changed to -> " + newValue + " from -> " + oldValue);
             if (newValue) {

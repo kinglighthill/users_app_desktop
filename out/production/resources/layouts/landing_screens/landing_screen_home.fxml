@@ -471,10 +471,10 @@
                 </VBox>
             </ScrollPane>
 
-            <StackPane fx:id="actionsPane" prefWidth="200" prefHeight="100" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF;" visible="false">
+            <StackPane fx:id="selectSubjectPane" prefWidth="200" prefHeight="100" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF;" visible="false">
 
                 <VBox alignment="CENTER" >
-                    <Label fx:id="whichActionText" text="Which action would you like to perform now" textFill="#034801" StackPane.alignment="TOP_CENTER">
+                    <Label fx:id="selectFavoriteText" text="Which action would you like to perform now" textFill="#034801" StackPane.alignment="TOP_CENTER">
                         <VBox.margin>
                             <Insets  bottom="50"/>
                         </VBox.margin>
@@ -539,7 +539,7 @@
                     </HBox>
                 </VBox>
 
-                <ImageView fx:id="actionCloseImage" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_RIGHT"/>
+                <ImageView fx:id="selectSubjectCloseIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_RIGHT"/>
 
                 <padding>
                     <Insets topRightBottomLeft="30"/>

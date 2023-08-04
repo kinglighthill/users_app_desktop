@@ -1,9 +1,13 @@
 package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.controller.HomeScreenController;
+import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.data.model.newDb.Subject;
+import com.scholarly.utme.ui.utils.Screen;
 import com.scholarly.utme.util.AppPreferences;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.util.prefs.Preferences;
@@ -11,18 +15,28 @@ import java.util.prefs.Preferences;
 public class HomeScreenVM implements ViewModel, SceneLifecycle {
     public static final String TAG = "HomeScreenVM: ";
 
-    private SimpleStringProperty screenProperty = new SimpleStringProperty();
+    private SimpleObjectProperty<Screen> screenProperty = new SimpleObjectProperty();
+    private SimpleObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty();
 
     public void processInitialData(HomeScreenController.InitialData data) {
-        screenProperty.set(data.getScreen());
+        if (data.getScreen() != null) {
+            screenProperty.set(data.getScreen());
+        }
+        if (data.getSelectedSubject() != null) {
+            selectedSubject.set(data.getSelectedSubject());
+        }
     }
 
-    public String getSelectedScreen() {
+    public Screen getSelectedScreen() {
         return screenProperty.get();
     }
 
-    public SimpleStringProperty selectedScreenProperty() {
+    public SimpleObjectProperty<Screen> selectedScreenProperty() {
         return screenProperty;
+    }
+
+    public PQSubject getSelectedSubject() {
+        return selectedSubject.get();
     }
 
     @Override

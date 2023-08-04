@@ -15,7 +15,7 @@
    <VBox fx:id="subRoot" prefWidth="600.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-border-color: #e5e5e5; -fx-border-width: 1; -fx-border-radius: 8;"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-         <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="490.0">
+         <BorderPane fx:id="subjectPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="490.0">
             <left>
                <StackPane fx:id="subjectImageBackground" minWidth="100">
                   <ImageView fx:id="subjectImage" preserveRatio="true" pickOnBounds="true">

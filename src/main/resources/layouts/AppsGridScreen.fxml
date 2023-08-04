@@ -32,8 +32,8 @@
     <center>
         <AnchorPane style="-fx-background-color: white;">
             <TextField prefHeight="40" minWidth="300" promptText="Enter a keyword" style="-fx-border-radius: 10;" AnchorPane.leftAnchor="40" AnchorPane.topAnchor="20"/>
-            <GridView fx:id="appsGrid" cellWidth="170" cellHeight="200" horizontalCellSpacing="15"
-                      AnchorPane.leftAnchor="30" AnchorPane.topAnchor="60" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="20"/>
+            <GridView fx:id="appsGrid" cellWidth="250" cellHeight="200" verticalCellSpacing="10" horizontalCellSpacing="15"
+                      AnchorPane.leftAnchor="30" AnchorPane.topAnchor="70" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="20"/>
         </AnchorPane>
     </center>
 

@@ -106,7 +106,7 @@ public class SectionDao {
     }
 
     public static int insertLastSection(NoteLastSection section) {
-        String query = CRUDHelper.createInsertOrReplaceQuery(
+        String query = CRUDHelper.insertOrReplaceQuery(
                 Tables.NOTE_LAST_SECTION,
                 new String[]{"_id", "section_id","section_title", "uid"},
                 new Object[]{section.getId(), section.getSectionId(), section.getSectionTitle(), section.getUserId()},

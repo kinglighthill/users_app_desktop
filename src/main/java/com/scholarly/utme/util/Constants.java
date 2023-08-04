@@ -21,6 +21,10 @@ public class Constants {
     // Session Preference Constants
     public static final String PREF_KEY_FIRST_TIME_USER = "FIRST_TIME_USER";
 
+    // Settings Preference Constants
+    public static final String PREF_KEY_VIBRATION = "VIBRATION";
+    public static final String PREF_KEY_SOUND = "SOUND";
+
     // Screen Constants
     public static final String PRACTICE_SCREEN = "PRACTICE_SCREEN";
     public static final String PAST_QUESTION_SCREEN = "PAST_QUESTION_SCREEN";
