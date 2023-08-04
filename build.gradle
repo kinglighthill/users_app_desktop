@@ -132,6 +132,7 @@ dependencies {
     implementation 'org.scilab.forge:jlatexmath:1.0.7'
 //    implementation 'com.googlecode.jlatexmath:jlatexmath:1.0.7'
     implementation 'com.nfbsoftware:latex-converter:1.0.1'
+//    implementation 'io.github.egormkn:latexview:0.6.1'
 
     implementation "com.sandec:mdfx:0.2.12"
 

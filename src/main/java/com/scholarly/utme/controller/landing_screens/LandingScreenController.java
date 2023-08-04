@@ -248,7 +248,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         settingsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
 
         scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 22));
-
     }
 
     private void changeButtonStyle(ToggleButton pressedButton) {
@@ -285,5 +284,4 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             return screen;
         }
     }
-
 }

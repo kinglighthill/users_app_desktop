@@ -35,6 +35,7 @@ module com.scholarly.utme {
     requires latex.converter;
     requires com.sandec.mdfx;
 //    requires org.scilab.forge;
+
     requires webcam.capture;
     requires unirest.java;
     requires json;
