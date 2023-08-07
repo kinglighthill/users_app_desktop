@@ -1,7 +1,7 @@
 package com.scholarly.utme.controller;
 
 import com.google.gson.Gson;
-import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.ui.utils.*;
@@ -629,7 +629,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     private void signInWithGoogle() {
         final HttpServer server;
-        HelloApplication application = new HelloApplication();
+        MainApplication application = new MainApplication();
         InetAddress ipaddress = InetAddress.getLoopbackAddress(); // returns 127.0.0.1
 
         String state = RandomStringUtils.random(6, true, false);

@@ -1,6 +1,6 @@
 package com.scholarly.utme.data.util;
 
-import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.MainApplication;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class NewDatabase {
     public static final String TAG = "NewDatabase: ";
 
-    private static final String location = HelloApplication.class.getResource("/assets/note_syllabus_main.db").toExternalForm();
+    private static final String location = MainApplication.class.getResource("/assets/note_syllabus_main.db").toExternalForm();
 
     private static Connection connection;
 

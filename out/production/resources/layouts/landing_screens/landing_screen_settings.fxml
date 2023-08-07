@@ -42,7 +42,7 @@
                                     <Font name="Gill Sans MT Bold" size="18"/>
                                 </font>
                             </Label>
-                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            <!--<Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="notificationIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -62,8 +62,8 @@
                                 <padding>
                                     <Insets topRightBottomLeft="20"/>
                                 </padding>
-                            </Panel>
-                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            </Panel>-->
+                            <!--<Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="20" alignment="CENTER">
                                         <ImageView fx:id="vibrationIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -83,7 +83,8 @@
                                 <padding>
                                     <Insets topRightBottomLeft="20"/>
                                 </padding>
-                            </Panel>
+                            </Panel>-->
+
                             <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
@@ -113,7 +114,7 @@
                                     <Font name="Gill Sans MT Bold" size="18"/>
                                 </font>
                             </Label>
-                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            <!--<Panel fx:id="sharePanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="shareIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -133,8 +134,9 @@
                                 <padding>
                                     <Insets top="20" left="20" bottom="20" right="25"/>
                                 </padding>
-                            </Panel>
-                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            </Panel>-->
+
+                            <!--<Panel fx:id="ratingPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="ratingIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -154,7 +156,8 @@
                                 <padding>
                                     <Insets top="20" left="20" bottom="20" right="25"/>
                                 </padding>
-                            </Panel>
+                            </Panel>-->
+
                             <Panel fx:id="aboutPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
@@ -172,10 +175,21 @@
                                 <right>
                                     <ImageView fx:id="aboutExpandIcon"/>
                                 </right>
+                                <bottom>
+                                    <Label text="Know more about the team behind the Software">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                        <padding>
+                                            <Insets left="50" top="5"/>
+                                        </padding>
+                                    </Label>
+                                </bottom>
                                 <padding>
-                                    <Insets top="20" left="20" bottom="20" right="25"/>
+                                    <Insets top="20" left="20" bottom="15" right="25"/>
                                 </padding>
                             </Panel>
+
                             <Panel fx:id="helpPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
@@ -193,10 +207,21 @@
                                 <right>
                                     <ImageView fx:id="helpExpandIcon"/>
                                 </right>
+                                <bottom>
+                                    <Label text="FAQ, Contact us">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                        <padding>
+                                            <Insets left="50" top="5"/>
+                                        </padding>
+                                    </Label>
+                                </bottom>
                                 <padding>
-                                    <Insets top="20" left="20" bottom="20" right="25"/>
+                                    <Insets top="20" left="20" bottom="15" right="25"/>
                                 </padding>
                             </Panel>
+
                             <Panel fx:id="appInfoPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
@@ -214,8 +239,18 @@
                                 <right>
                                     <ImageView fx:id="appInfoExpandIcon"/>
                                 </right>
+                                <bottom>
+                                    <Label text="Terms of use, Privacy policy, Third-party libraries">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                        <padding>
+                                            <Insets left="50" top="5"/>
+                                        </padding>
+                                    </Label>
+                                </bottom>
                                 <padding>
-                                    <Insets top="20" left="20" bottom="20" right="25"/>
+                                    <Insets top="20" left="20" bottom="15" right="25"/>
                                 </padding>
                             </Panel>
                         </VBox>

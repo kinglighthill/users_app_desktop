@@ -1,7 +1,7 @@
 package com.scholarly.utme.controller.account_screens;
 
 import com.google.gson.Gson;
-import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.*;
@@ -19,15 +19,12 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Camera;
-import javafx.scene.ParallelCamera;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import okhttp3.*;
 
@@ -39,7 +36,6 @@ import javax.imageio.stream.ImageOutputStream;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
@@ -50,7 +46,6 @@ import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
 import static com.scholarly.utme.util.Constants.*;
-import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
 
 @FxmlPath("/layouts/account_screens/AccountProfileScreen.fxml")
 public class AccountProfileScreenController implements FxmlView<AccountProfileScreenVM>, Initializable {
@@ -75,7 +70,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
 
     private Preferences preferences = AppPreferences.getPreferences();
     private OkHttpClient httpClient = NetworkService.getHttpClient();
-    HelloApplication application = new HelloApplication();
+    MainApplication application = new MainApplication();
 
     @Override
     public void initialize(URL location, ResourceBundle resourceBundle) {

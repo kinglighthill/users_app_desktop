@@ -1,10 +1,8 @@
 package com.scholarly.utme.ui.listcells;
 
-import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.data.model.listItems.AppItem;
 import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -21,7 +19,7 @@ public class AppListItemCell extends ListCell<AppItem> {
     public ImageView appImage;
     public Label appName;
 
-    HelloApplication application = new HelloApplication();
+    MainApplication application = new MainApplication();
 
     public AppListItemCell() {
         loadFxml();

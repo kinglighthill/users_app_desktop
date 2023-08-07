@@ -1,13 +1,11 @@
 package com.scholarly.utme.controller.landing_screens;
 
 import com.google.gson.Gson;
-import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.AppsGridScreenController;
-import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.listItems.AppItem;
 import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.BaseResponse;
-import com.scholarly.utme.ui.cellFactories.AppListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAppsVM;
@@ -15,8 +13,6 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -28,23 +24,18 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.TextAlignment;
 import okhttp3.*;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
 
-import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
 import static com.scholarly.utme.util.Constants.*;
-import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
 
 @FxmlPath("/layouts/landing_screens/landing_screen_apps.fxml")
 public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM>, Initializable {
@@ -67,7 +58,7 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
     private OkHttpClient httpClient;
     private final Preferences preferences = AppPreferences.getPreferences();
 
-    HelloApplication application = new HelloApplication();
+    MainApplication application = new MainApplication();
 
     List<AppItem> mobileApps = new ArrayList<>();
     List<AppItem> desktopApps = new ArrayList<>();

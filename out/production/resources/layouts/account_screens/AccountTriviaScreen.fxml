@@ -32,7 +32,7 @@
 
     <center>
         <AnchorPane prefWidth="500" prefHeight="400" style="-fx-background-color: white">
-            <VBox spacing="15" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="30">
+            <VBox fx:id="centerVBox" spacing="15" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="30">
                 <Label text="Ranking Leaderboard" textFill="#053500">
                     <font>
                         <Font size="16"/>
@@ -40,7 +40,7 @@
                 </Label>
                 <TableView fx:id="rankingTable">
                     <columns>
-                        <TableColumn fx:id="rankingColumn" text="Ranking"/>
+                        <TableColumn id="column" fx:id="rankingColumn" text="Ranking" editable="false"/>
                         <TableColumn fx:id="nameColumn" text="Name"/>
                         <TableColumn fx:id="ratingColumn" text="Rating"/>
                     </columns>
@@ -55,7 +55,7 @@
     <right>
         <AnchorPane prefWidth="400" prefHeight="400" style="-fx-background-color: white;">
             <VBox spacing="20" alignment="TOP_CENTER" style="-fx-background-color: #F4FFF5; -fx-background-radius: 7;"
-                  AnchorPane.rightAnchor="30" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="50">
+                  AnchorPane.rightAnchor="30" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="30">
                 <Label text="Your Ranking Profile" textFill="#053500">
                     <font>
                         <Font size="20"/>
@@ -65,7 +65,7 @@
                     </VBox.margin>
                 </Label>
                 <ImageView fx:id="profileImage" fitWidth="180" fitHeight="180" preserveRatio="true" pickOnBounds="true"/>
-                <Label fx:id="profileName" text="MaryRose Ekeh" textFill="#006B17">
+                <Label text="MaryRose Ekeh" textFill="#006B17">
                     <font>
                         <Font size="18"/>
                     </font>

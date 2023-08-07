@@ -1,6 +1,6 @@
 package com.scholarly.utme.controller.settings_screens;
 
-import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.settings_screens.SettingsHelpScreenVM;
@@ -42,7 +42,7 @@ public class SettingsHelpScreenController implements FxmlView<SettingsHelpScreen
     private ImageView faqOpenDropdownIcon, contactOpenDropdownIcon;
     private ImageView faqCloseDropdownIcon, contactCloseDropdownIcon;
 
-    HelloApplication application = new HelloApplication();
+    MainApplication application = new MainApplication();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

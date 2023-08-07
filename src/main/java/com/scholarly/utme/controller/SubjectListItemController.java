@@ -1,17 +1,13 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.HelloApplication;
-import com.scholarly.utme.controller.landing_screens.LandingScreenActivateController;
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.PQTopic;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
-import com.scholarly.utme.viewmodels.landing_screens.LandingScreenActivateVM;
 import de.saxsys.mvvmfx.*;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

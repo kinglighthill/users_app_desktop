@@ -1,6 +1,6 @@
 package com.scholarly.utme.controller.settings_screens;
 
-import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.settings_screens.SettingsAppInfoScreenVM;
@@ -37,7 +37,7 @@ public class SettingsAppInfoScreenController implements FxmlView<SettingsAppInfo
     private ImageView privacyOpenDropdownIcon, termsOpenDropdownIcon, thirdPartyOpenDropdownIcon;
     private ImageView privacyCloseDropdownIcon, termsCloseDropdownIcon, thirdPartyCloseDropdownIcon;
 
-    HelloApplication application = new HelloApplication();
+    MainApplication application = new MainApplication();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

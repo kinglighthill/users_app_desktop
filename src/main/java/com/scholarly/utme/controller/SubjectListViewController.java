@@ -2,7 +2,8 @@ package com.scholarly.utme.controller;
 
 import com.scholarly.utme.controller.practice_screens.CBTGameScreenController;
 import com.scholarly.utme.controller.practice_screens.PracticeScreenController;
-import com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController;
+//import com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController;
+import com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController2;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
@@ -199,7 +200,8 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 Object initialData = null;
 
                  if (selectedOption == SubjectListOption.STUDY) {
-                    initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
+//                    initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
+                    initialData = new StudyPastQuestScreenController2.InitialData(subjectStates);
                     ViewSwitcher.passData(initialData);
                     ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
                 } else if (selectedOption == SubjectListOption.CBT_GAME) {

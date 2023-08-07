@@ -1,6 +1,6 @@
 package com.scholarly.utme.ui.utils;
 
-import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.MainApplication;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,7 +16,7 @@ public class ViewSwitcher {
         try {
             Parent root = FluentViewLoader.fxmlView(view.getControllerClass()).load().getView();
 
-            String cssResource = HelloApplication.class.getResource("/styles/main.css").toExternalForm();
+            String cssResource = MainApplication.class.getResource("/styles/main.css").toExternalForm();
             root.getStylesheets().add(cssResource);
 //            root.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 
