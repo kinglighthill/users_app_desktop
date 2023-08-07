@@ -25,6 +25,7 @@ public class StudyPastScreenVM implements ViewModel {
 
     private ObservableList<PQSubject> subjects = FXCollections.observableArrayList();
     private ObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty<>();
+    private List<QuestionState> questions = new ArrayList<>();
 
     private HashMap<String, SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
@@ -59,6 +60,8 @@ public class StudyPastScreenVM implements ViewModel {
                         .limit(subjectState.getNumberOfQuestions())
                         .map(objectiveQuestion -> new QuestionState(objectiveQuestion, false, false))
                         .collect(Collectors.toList());
+
+                questions.addAll(questionStates);
 
                 subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
 
@@ -134,6 +137,14 @@ public class StudyPastScreenVM implements ViewModel {
 
     public HashMap<String, SubjectQuestionsState> getSubjectsQuestions() {
         return subjectsQuestions;
+    }
+
+    public List<QuestionState> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<QuestionState> questions) {
+        this.questions = questions;
     }
 
     public ObservableList<QuestionDescription> getQuestionDescriptions() {

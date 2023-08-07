@@ -32,10 +32,12 @@ public class YearsDao {
     private static final String isNewColumn = "is_new";
     private static final String availableColumn = "available";
 
+    private static final ObservableList<Year> allYears;
     private static final ObservableList<Year> subjectAvailableYears;
     private static final ObservableList<FreeContent> freeContents;
 
     static {
+        allYears = FXCollections.observableArrayList();
         subjectAvailableYears = FXCollections.observableArrayList();
         freeContents = FXCollections.observableArrayList();
         updateYearsFromDB();
@@ -106,9 +108,9 @@ public class YearsDao {
         String query = "SELECT * FROM " + Tables.YEARS;
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
-            subjectAvailableYears.clear();
+            allYears.clear();
             while (rs.next()) {
-                subjectAvailableYears.add(new Year(
+                allYears.add(new Year(
                         rs.getInt(idColumn),
                         rs.getString(yearColumn),
                         rs.getString(shortDescriptionColumn),
@@ -120,7 +122,7 @@ public class YearsDao {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Years from database because " + e.getMessage());
-            subjectAvailableYears.clear();
+            allYears.clear();
         }
     }
 
@@ -151,7 +153,7 @@ public class YearsDao {
     }
 
     public static Optional<Year> getYear(int id) {
-        for (Year year : subjectAvailableYears) {
+        for (Year year : allYears) {
             if (year.getId() == id) return Optional.of(year);
         }
         return Optional.empty();
