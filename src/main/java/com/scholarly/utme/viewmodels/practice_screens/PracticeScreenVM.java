@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class PracticeScreenVM implements ViewModel, SceneLifecycle {
-
     private static final String TAG = "PracticeScreenViewModel: ";
 
     private ObservableList<PQSubject> subjects = FXCollections.observableArrayList();
@@ -57,7 +56,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     public void processInitialData(InitialData data) {
 
-        subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).collect(Collectors.toList()));
+        subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).toList());
 
         data.questionData.forEach(subjectState -> {
 

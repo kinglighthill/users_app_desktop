@@ -96,7 +96,7 @@ public class LandingScreenPerformanceController implements FxmlView<LandingScree
         List<PQSubject> subjects = new ArrayList<>();
         subjects.add(subject);
 
-        PracticeScreenVM.QuestionState questionState = new PracticeScreenVM.QuestionState(null, SubjectListItemVM.Type.OBJECTIVE, 1);
+        PracticeScreenVM.QuestionState questionState = new PracticeScreenVM.QuestionState(null, SubjectListItemVM.Type.OBJECTIVE, -1);
         List<PracticeScreenVM.QuestionState> questionStates = new ArrayList<>();
         questionStates.add(questionState);
 

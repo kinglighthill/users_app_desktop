@@ -42,7 +42,6 @@ import static com.scholarly.utme.viewmodels.SubjectListItemVM.*;
 
 @FxmlPath("/layouts/practice_screens/ExplanationScreen.fxml")
 public class ExplanationScreenController implements FxmlView<ExplanationScreenVM>, Initializable {
-
     private static final String TAG = "ExplanationScreenController: ";
 
     @InjectViewModel
@@ -50,43 +49,30 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
     @FXML
     private TilePane tilePane;
-
     @FXML
     private ScrollPane tileScrollPane;
-
     @FXML
     private StackPane explanationPane, explanationVideo;
-
     @FXML
     private AnchorPane explanationAnchor;
-
     @FXML
     private Pane dialogDimmer;
-
     @FXML
     private VBox centerVBox;
-
     @FXML
     private HBox toggleBox;
-
     @FXML
     private ListView<PQSubject> subjectList;
-
     @FXML
     private Panel optionAPanel, optionBPanel, optionCPanel, optionDPanel;
-
     @FXML
     private Label questionOverviewLabel, questionLabel, optionA, optionB, optionC, optionD, noOptionSelected, explanationLabel;
-
     @FXML
     private Button prevButton, nextButton, exitButton;
-
     @FXML
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
-
     @FXML
     private ToggleButton textExplanation, videoExplanation;
-
     @FXML
     private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, optionAIcon, optionBIcon, optionCIcon, optionDIcon;
 
@@ -161,15 +147,25 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         });
 
 
-        toggleBox.getChildren().remove(videoExplanation);
+        textExplanation.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue) {
+                textExplanation.setText("Hide Explanation");
+                explanationLabel.setVisible(true);
+            } else {
+                textExplanation.setText("Show Explanation");
+                explanationLabel.setVisible(false);
+            }
+        }));
+
+//        toggleBox.getChildren().remove(videoExplanation);
         ToggleGroup explanationGroup = new ToggleGroup();
-        explanationGroup.getToggles().addAll(textExplanation, videoExplanation);
-        explanationGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
+        explanationGroup.getToggles().addAll(textExplanation);
+        /*explanationGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue == textExplanation) {
                 textExplanation.setStyle("-fx-background-color: #12AF20; -fx-border-color: #12AF20;");
                 textExplanation.setTextFill(Paint.valueOf("#FFFFFF"));
-                videoExplanation.setStyle("-fx-border-color: #12AF20;");
-                videoExplanation.setTextFill(Paint.valueOf("#12AF20"));
+//                videoExplanation.setStyle("-fx-border-color: #12AF20;");
+//                videoExplanation.setTextFill(Paint.valueOf("#12AF20"));
 
                 explanationPane.getChildren().remove(explanationVideo);
                 if (!explanationPane.getChildren().contains(explanationLabel)) {
@@ -189,7 +185,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                 }
 
             }
-        }));
+        }));*/
 
         exitButton.setOnAction(event -> {
             dialogDimmer.setVisible(true);
@@ -215,12 +211,12 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         prevButton.setBackground(Background.EMPTY);
         tileScrollPane.setBackground(Background.EMPTY);
         textExplanation.setBackground(Background.EMPTY);
-        videoExplanation.setBackground(Background.EMPTY);
+//        videoExplanation.setBackground(Background.EMPTY);
 
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-        calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
-        speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
-        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
+//        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+//        calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
+//        speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
+//        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
 
         correctImage = new Image(getClass().getResource("/drawable/practice_screen_images/correct_icon.png").toString());
         incorrectImage = new Image(getClass().getResource("/drawable/practice_screen_images/incorrect_icon.png").toString());

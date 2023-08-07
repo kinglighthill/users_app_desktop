@@ -2,6 +2,7 @@ package com.scholarly.utme.controller.practice_screens;
 
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.*;
+import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
@@ -26,6 +27,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.web.WebView;
 
 import java.net.URL;
 import java.util.List;
@@ -39,6 +41,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     @InjectViewModel
     private StudyPastScreenVM viewModel;
 
+    @FXML
+    private WebView webView;
     @FXML
     private HBox answerHeaderHBox, rightPane;
 
@@ -112,6 +116,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
                 }
             });
         });
+
+        System.out.println(TAG + "Total Questions -> " + viewModel.getQuestions().size());
 
         prevButton.setOnAction(event -> {
             int selectedQuestion = viewModel.getSubjectsQuestions()
@@ -306,13 +312,12 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
             ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
-
             questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
-            List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
-                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).collect(Collectors.toList());
+            List<ObjectiveQuestionDescription> questionDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
 
-            System.out.println(TAG + "setupQuestionView: questionDescriptionInList -> " + questionDescriptionInList);
+            System.out.println(TAG + "SetupQuestionView: questionDescriptionInList -> " + questionDescriptionInList);
 
             if (questionDescriptionInList.isEmpty()) {
                 readQuestionDesc.setVisible(false);
@@ -323,8 +328,33 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
                 questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
 
+            questionLabel.setText(currentQuestion.getQuestion());
+
             String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+            if (questionText.contains("<img")) {
+                int startIndexOfImg = questionText.indexOf("<img");
+                int endIndexOfImg = questionText.indexOf("'100%'>", startIndexOfImg);
+
+                int startIndexOfImgPath = questionText.indexOf("/android_asset", startIndexOfImg);
+                int endIndexOfImgPath = questionText.indexOf("' width", startIndexOfImg);
+
+                String imagePath = questionText.substring(startIndexOfImgPath, endIndexOfImgPath);
+
+                StringBuilder builder = new StringBuilder(questionText);
+
+                System.out.println(imagePath);
+
+                URL url = getClass().getResource(imagePath);
+                String img = "<img src='"+url+"' width='100%'>";
+
+                builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
+
+                questionText = builder.toString();
+                System.out.println(questionText);
+            }
+
+            webView.getEngine().loadContent(questionText);
 
             optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
             optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
@@ -338,7 +368,6 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
             TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
-
             questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
             String questionText = currentQuestion.getQuestion();
@@ -364,11 +393,10 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
             ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
-
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
-            List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
-                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).collect(Collectors.toList());
+            List<ObjectiveQuestionDescription> questionDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
 
             if (questionDescriptionInList.isEmpty()) {
                 readQuestionDesc.setVisible(false);
