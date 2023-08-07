@@ -205,124 +205,125 @@
                 </right>
 
                 <center>
-                    <VBox fx:id="centerVBox" spacing="20" prefHeight="600.0" prefWidth="500.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER" >
-                        <children>
-                            <Label fx:id="questionOverviewLabel" text="Question 3 of 40">
-                                <VBox.margin>
-                                    <Insets top="20.0"/>
-                                </VBox.margin>
-                                <font>
-                                    <Font name="Gill Sans MT Bold" size="18.0"/>
-                                </font>
-                            </Label>
+                    <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #FFFFFF;" BorderPane.alignment="CENTER">
+                        <VBox fx:id="centerVBox" spacing="20" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER" >
+                            <children>
+                                <Label fx:id="questionOverviewLabel" text="Question 3 of 40">
+                                    <VBox.margin>
+                                        <Insets top="20.0"/>
+                                    </VBox.margin>
+                                    <font>
+                                        <Font name="Gill Sans MT Bold" size="18.0"/>
+                                    </font>
+                                </Label>
 
-                            <ScrollPane fitToWidth="true" prefHeight="500" style="-fx-background-color: #ffffff; -fx-border-color: #F1F1F1; -fx-border-radius: 5;">
-                                <VBox>
-
-                                    <HBox fx:id="quesDescriptionHBox">
-                                        <Label fx:id="questionDescriptionHeader" text="COMPREHENSION: Read the passage..." prefHeight="20" prefWidth="500" wrapText="true">
-                                            <font>
-                                                <Font size="14.0"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="readQuestionDesc" text="[READ]" textFill="#12AF20" underline="true">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <padding>
-                                            <Insets bottom="10"/>
-                                        </padding>
-                                    </HBox>
-
-                                    <StackPane>
-                                        <children>
-                                            <WebView fx:id="webView" prefHeight="400.0" prefWidth="200.0"/>
-
-                                            <Label fx:id="questionLabel" text="Label" alignment="TOP_LEFT" wrapText="true">
+                                <ScrollPane fitToWidth="true" prefHeight="500" style="-fx-background-color: #ffffff; -fx-border-color: #F1F1F1; -fx-border-radius: 5;">
+                                    <VBox>
+                                        <HBox fx:id="quesDescriptionHBox">
+                                            <Label fx:id="questionDescriptionHeader" text="COMPREHENSION: Read the passage..." prefHeight="20" prefWidth="500" wrapText="true">
                                                 <font>
-                                                    <Font size="15.0"/>
+                                                    <Font size="14.0"/>
                                                 </font>
-                                                <padding>
-                                                    <Insets top="10"/>
-                                                </padding>
                                             </Label>
-                                        </children>
-                                    </StackPane>
+                                            <Label fx:id="readQuestionDesc" text="[READ]" textFill="#12AF20" underline="true">
+                                                <font>
+                                                    <Font size="14.0" />
+                                                </font>
+                                            </Label>
+                                            <padding>
+                                                <Insets bottom="10"/>
+                                            </padding>
+                                        </HBox>
 
-                                    <padding>
-                                        <Insets topRightBottomLeft="10"/>
-                                    </padding>
+                                        <StackPane>
+                                            <children>
+                                                <WebView fx:id="webView" prefHeight="100.0" prefWidth="200.0"/>
+
+                                                <Label fx:id="questionLabel" prefHeight="64.0" prefWidth="1024.0" text="Label" visible="false" wrapText="true">
+                                                    <font>
+                                                        <Font size="15.0"/>
+                                                    </font>
+                                                    <padding>
+                                                        <Insets top="10"/>
+                                                    </padding>
+                                                </Label>
+                                            </children>
+                                        </StackPane>
+
+                                        <padding>
+                                            <Insets topRightBottomLeft="10"/>
+                                        </padding>
+                                    </VBox>
+
+                                    <VBox.margin>
+                                        <Insets top="20.0" />
+                                    </VBox.margin>
+                                </ScrollPane>
+
+                                <Label fx:id="optionA" text="Label">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets top="10.0"/>
+                                    </VBox.margin>
+                                </Label>
+                                <Label fx:id="optionB" text="Label">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="optionC" text="Label">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="optionD" text="Label">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+
+                                <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <Panel>
+                                            <left>
+                                                <Button fx:id="prevButton" mnemonicParsing="false" text="Previous" textFill="#12AF20" style=" -fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
+                                                    <padding>
+                                                        <Insets left="20" right="20" top="5" bottom="5"/>
+                                                    </padding>
+                                                </Button>
+                                            </left>
+                                            <right>
+                                                <Button fx:id="nextButton" mnemonicParsing="false" text="Next" textFill="#FFFFFF" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+                                                    <padding>
+                                                        <Insets left="25" right="25" top="5" bottom="5"/>
+                                                    </padding>
+                                                </Button>
+                                            </right>
+                                        </Panel>
+                                        <Separator prefWidth="200.0">
+                                            <VBox.margin>
+                                                <Insets top="15"/>
+                                            </VBox.margin>
+                                        </Separator>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets top="15.0" />
+                                    </VBox.margin>
                                 </VBox>
-
-                                <VBox.margin>
-                                    <Insets top="20.0" />
-                                </VBox.margin>
-                            </ScrollPane>
-
-                            <Label fx:id="optionA" text="Label">
-                                <font>
-                                    <Font size="14.0"/>
-                                </font>
-                                <VBox.margin>
-                                    <Insets top="10.0"/>
-                                </VBox.margin>
-                            </Label>
-                            <Label fx:id="optionB" text="Label">
-                                <font>
-                                    <Font size="14.0"/>
-                                </font>
-                            </Label>
-                            <Label fx:id="optionC" text="Label">
-                                <font>
-                                    <Font size="14.0"/>
-                                </font>
-                            </Label>
-                            <Label fx:id="optionD" text="Label">
-                                <font>
-                                    <Font size="14.0"/>
-                                </font>
-                            </Label>
-
-                            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
-                                <children>
-                                    <Panel>
-                                        <left>
-                                            <Button fx:id="prevButton" mnemonicParsing="false" text="Previous" textFill="#12AF20" style=" -fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                                <padding>
-                                                    <Insets left="20" right="20" top="5" bottom="5"/>
-                                                </padding>
-                                            </Button>
-                                        </left>
-                                        <right>
-                                            <Button fx:id="nextButton" mnemonicParsing="false" text="Next" textFill="#FFFFFF" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
-                                                <padding>
-                                                    <Insets left="25" right="25" top="5" bottom="5"/>
-                                                </padding>
-                                            </Button>
-                                        </right>
-                                    </Panel>
-                                    <Separator prefWidth="200.0">
-                                        <VBox.margin>
-                                            <Insets top="15"/>
-                                        </VBox.margin>
-                                    </Separator>
-                                </children>
-                                <VBox.margin>
-                                    <Insets top="15.0" />
-                                </VBox.margin>
-                            </VBox>
-                            <ScrollPane fx:id="tileScrollPane" prefWidth="600" prefHeight="400" fitToWidth="true" >
-                                <TilePane fx:id="tilePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;"/>
-                                <VBox.margin>
-                                    <Insets bottom="20.0" />
-                                </VBox.margin>
-                            </ScrollPane>
-                        </children>
-                        <padding>
-                            <Insets left="20.0" right="20.0" />
-                        </padding>
-                    </VBox>
+                                <ScrollPane fx:id="tileScrollPane" prefWidth="600" prefHeight="400" fitToWidth="true" >
+                                    <TilePane fx:id="tilePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;"/>
+                                    <VBox.margin>
+                                        <Insets bottom="20.0" />
+                                    </VBox.margin>
+                                </ScrollPane>
+                            </children>
+                            <padding>
+                                <Insets left="20.0" right="20.0" />
+                            </padding>
+                        </VBox>
+                    </ScrollPane>
                 </center>
 
                 <left>

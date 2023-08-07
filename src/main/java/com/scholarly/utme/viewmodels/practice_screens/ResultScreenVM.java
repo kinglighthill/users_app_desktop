@@ -45,16 +45,17 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
         subjectList = initialData.getSubjects();
         subjectsQuestions = initialData.getSubjectsQuestions();
 
-        int totalScore = 0;
+        double totalScore = 0;
         double totalPercent = 0;
-        int totalQuestions = 0;
+        double totalQuestions = 0;
         for (int i = 0; i < results.size(); i++) {
             totalScore += results.get(i).getCorrectAnswers();
             totalPercent += results.get(i).getPercentage();
             totalQuestions += results.get(i).getTotalQuestions();
         }
 
-        total.set(totalScore + "/" + totalQuestions);
+        double newTotalScore = (totalScore / totalQuestions) * 400;
+        total.set((int)newTotalScore + "/" + 400);
         averageScore.set(String.format("%.1f", (totalPercent/results.size())) + "%");
     }
 
