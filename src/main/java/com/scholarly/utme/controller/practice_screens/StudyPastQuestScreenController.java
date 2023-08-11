@@ -15,7 +15,6 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.SceneLifecycle;
-import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -32,7 +31,7 @@ import javafx.scene.web.WebView;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @FxmlPath("/layouts/practice_screens/StudyPastQuestionsScreen.fxml")
 public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenVM>, Initializable, SceneLifecycle {
@@ -42,40 +41,29 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     private StudyPastScreenVM viewModel;
 
     @FXML
-    private WebView webView;
+    private WebView questionWebView, explanationWebView, questionWithImageWebView;
     @FXML
-    private HBox answerHeaderHBox, rightPane;
-
+    private HBox answerHeaderHBox, rightPane, quesDescriptionHBox, questionWithImageHBox;
     @FXML
-    private VBox centerVBox, rightVBox, questionDescriptionDialog;
-
+    private VBox centerVBox, rightVBox, questionDescriptionDialog, explanationVBox;
     @FXML
     private TilePane tilePane;
-
     @FXML
     private ScrollPane tileScrollPane, explanationScrollPane;
-
     @FXML
-    private StackPane answerPane, explanationPane;
-
+    private StackPane answerPane, explanationPane, questionStackPane;
     @FXML
     private ListView<PQSubject> subjectList;
-
     @FXML
-    private Label questionOverviewLabel, questionLabel, optionA, optionB, optionC, optionD, explanationLabel, explanationTitle, correctAnswerTitle, correctAnswerLabel, questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
-
+    private Label questionOverviewLabel, optionA, optionB, optionC, optionD, explanationLabel, explanationTitle, correctAnswerTitle, correctAnswerLabel, questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
     @FXML
-    private Button prevButton, nextButton, exitButton, hideAnswerButton;
-
+    private Button prevButton, nextButton, exitButton, hideAnswerButton, viewImageButton;
     @FXML
     private ToggleButton showAnswerButton, showExplanationButton;
-
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, quesDescriptionCloseIcon;
-
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, quesDescriptionCloseIcon, questionImage;
     @FXML
     private Pane dialogDimmer;
-
     @FXML
     private DialogPane exitDialogPane;
 
@@ -86,16 +74,9 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         initializeViews();
         initializeFont();
 
-        viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                setupQuestionView();
-                setupTilePane();
-                updateBookmarkIcon();
-            }
-        });
-
         subjectList.setCellFactory(new PracticeSubjectListCellFactory());
         subjectList.setItems(viewModel.getSubjects());
+        subjectList.getSelectionModel().selectFirst();
         subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) c -> {
             if (c.getList().size() == 1) {
                 PQSubject subject = c.getList().get(0);
@@ -105,7 +86,17 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             }
         });
 
-        subjectList.getSelectionModel().select(0);
+        viewModel.setSelectedSubject(subjectList.getSelectionModel().getSelectedItem());
+        setupQuestionView(viewModel.getSelectedSubject());
+        setupTilePane(viewModel.getSelectedSubject());
+
+        viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                setupQuestionView(newValue);
+                setupTilePane(newValue);
+                updateBookmarkIcon();
+            }
+        });
 
         viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
             subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
@@ -117,26 +108,68 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             });
         });
 
-        System.out.println(TAG + "Total Questions -> " + viewModel.getQuestions().size());
+
+        // Integer value to track subjectList subject selection
+        AtomicInteger subjectListSelectionAtomicIndex = new AtomicInteger(0);
+
+        subjectList.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<? super Integer>) observable -> {
+            if (observable.getList().size() == 1) {
+                subjectListSelectionAtomicIndex.set(observable.getList().get(0));
+            }
+        });
 
         prevButton.setOnAction(event -> {
-            int selectedQuestion = viewModel.getSubjectsQuestions()
+            nextButton.setDisable(false);
+
+            int selectedQuestionIndex = viewModel.getSubjectsQuestions()
                     .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
-            viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getShortTitle())
-                    .setSelectedQuestion(selectedQuestion - 1);
+            if (subjectList.getSelectionModel().getSelectedIndex() == 0) {
+                viewModel.getSubjectsQuestions()
+                        .get(viewModel.getSelectedSubject().getShortTitle())
+                        .setSelectedQuestion(selectedQuestionIndex - 1);
+
+                if (selectedQuestionIndex == 2) {
+                    prevButton.setDisable(true);
+                }
+            } else {
+                if (selectedQuestionIndex == 1) {
+                    subjectList.getSelectionModel().select(subjectListSelectionAtomicIndex.decrementAndGet());
+                } else {
+                    viewModel.getSubjectsQuestions()
+                            .get(viewModel.getSelectedSubject().getShortTitle())
+                            .setSelectedQuestion(selectedQuestionIndex - 1);
+                }
+            }
+
         });
 
         nextButton.setOnAction(event -> {
-            int selectedQuestion = viewModel.getSubjectsQuestions()
+            prevButton.setDisable(false);
+            StudyPastScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+            List<StudyPastScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
+
+            int selectedQuestionIndex = viewModel.getSubjectsQuestions()
                     .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
-            viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getShortTitle())
-                    .setSelectedQuestion(selectedQuestion + 1);
+            if (selectedQuestionIndex == questions.size()) {
+                subjectList.getSelectionModel().select(subjectListSelectionAtomicIndex.incrementAndGet());
+                prevButton.setDisable(false);
+
+            } else {
+                viewModel.getSubjectsQuestions()
+                        .get(viewModel.getSelectedSubject().getShortTitle())
+                        .setSelectedQuestion(selectedQuestionIndex + 1);
+
+                int newSelectedQuestionIndex = viewModel.getSubjectsQuestions()
+                        .get(viewModel.getSelectedSubject().getShortTitle())
+                        .getSelectedQuestion();
+
+                if (newSelectedQuestionIndex == questions.size() && subjectList.getItems().size()-1 == subjectListSelectionAtomicIndex.get())
+                    nextButton.setDisable(true);
+            }
         });
 
         showAnswerButton.setOnAction(event -> {
@@ -188,6 +221,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             explanationTitle.setVisible(false);
             explanationScrollPane.setVisible(false);
             explanationLabel.setVisible(false);
+            explanationWebView.setVisible(false);
             correctAnswerLabel.setVisible(false);
             correctAnswerTitle.setVisible(false);
             hideAnswerButton.setVisible(false);
@@ -221,6 +255,10 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 //        });
 
 
+//        questionImageCloseIcon.setOnMouseClicked(event -> {
+//            questionImageBox.setVisible(false);
+//        });
+
         exitButton.setOnAction(event -> {
             showExitDialog();
         });
@@ -228,6 +266,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         readQuestionDesc.setOnMouseClicked(mouseEvent -> {
             Animations.showDialog(questionDescriptionDialog, dialogDimmer);
         });
+        readQuestionDesc.setOnMouseEntered(event -> readQuestionDesc.setUnderline(true));
+        readQuestionDesc.setOnMouseExited(event -> readQuestionDesc.setUnderline(false));
 
         quesDescriptionCloseIcon.setOnMouseClicked(mouseEvent -> {
             Animations.hideDialog(questionDescriptionDialog, dialogDimmer);
@@ -267,6 +307,198 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
     }
 
+    private void setupQuestionView(PQSubject selectedSubject) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        int selectedQuestionNumber = subjectQuestionsState.getSelectedQuestion();
+
+        questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
+
+//        prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
+//        nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
+
+        prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && selectedQuestionNumber == 1);
+
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
+
+            List<ObjectiveQuestionDescription> questionDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
+
+            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+            if (!questionDescriptionInList.isEmpty()) {
+                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
+
+            String questionText = currentQuestion.getQuestion();
+
+            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+
+            if (questionText.contains("<img")) {
+                questionStackPane.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText);
+
+            } else {
+                questionStackPane.getChildren().add(questionWebView);
+                questionWebView.getEngine().loadContent(questionText);
+            }
+
+            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
+            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
+            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
+            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
+
+            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
+            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
+            explanationVBox.getChildren().clear();
+            if (explanationText.contains("<img")) {
+                explanationVBox.getChildren().addAll(explanationTitle, explanationWebView);
+                String questionWithImageText = parseExplanationWithImageView(explanationText);
+                explanationWebView.getEngine().loadContent(questionWithImageText);
+            } else {
+                explanationVBox.getChildren().addAll(explanationTitle, explanationScrollPane);
+                explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+            }
+
+
+        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+            TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
+            questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
+
+            String questionText = currentQuestion.getQuestion();
+//            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+            centerVBox.getChildren().removeAll(optionA, optionB, optionC, optionD);
+
+            rightVBox.getChildren().remove(answerPane);
+
+//            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
+            answerHeaderHBox.getChildren().remove(showExplanationButton);
+            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
+            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+
+        }
+
+        updateExplanationView();
+    }
+
+    private void changeSelectedQuestion(int newValue) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+
+        prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && newValue == 1);
+
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
+            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            List<ObjectiveQuestionDescription> questionDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
+
+            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+            if (!questionDescriptionInList.isEmpty()) {
+                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
+
+            String questionText = currentQuestion.getQuestion();
+
+            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+
+            if (questionText.contains("<img")) {
+                questionStackPane.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText);
+                System.out.println(TAG + "questionWithImageHBox.heightProperty() -> " + questionWithImageHBox.heightProperty().get());
+                questionWebView.setMinHeight(questionWithImageHBox.heightProperty().get());
+            } else {
+                questionStackPane.getChildren().add(questionWebView);
+                questionWebView.getEngine().loadContent(questionText);
+            }
+
+            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
+            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
+            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
+            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
+
+            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
+
+            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
+            explanationVBox.getChildren().clear();
+            if (explanationText.contains("<img")) {
+                explanationVBox.getChildren().addAll(explanationTitle, explanationWebView);
+                String questionWithImageText = parseExplanationWithImageView(explanationText);
+                explanationWebView.getEngine().loadContent(questionWithImageText);
+            } else {
+                explanationVBox.getChildren().addAll(explanationTitle, explanationScrollPane);
+                explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+            }
+
+        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+            TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
+
+            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            String questionText = currentQuestion.getQuestion();
+//            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
+            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
+            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+
+        }
+
+        updateExplanationView();
+
+    }
+
+    private void showQuestionWithImage(String questionWithImageText) {
+        int startIndexOfImg = questionWithImageText.indexOf("<img");
+        int endIndexOfImg = questionWithImageText.indexOf("'100%'>", startIndexOfImg);
+
+        int startIndexOfImgPath = questionWithImageText.indexOf("/android_asset", startIndexOfImg);
+        int endIndexOfImgPath = questionWithImageText.indexOf("' width", startIndexOfImg);
+
+        String imagePath = questionWithImageText.substring(startIndexOfImgPath, endIndexOfImgPath);
+        questionImage.setImage(new Image(getClass().getResource(imagePath).toString()));
+
+        String imageQuestion = questionWithImageText.substring(questionWithImageText.lastIndexOf(">")+1);
+        questionWithImageWebView.getEngine().loadContent(imageQuestion);
+
+        StringBuilder builder = new StringBuilder(questionWithImageText);
+
+        URL url = getClass().getResource(imagePath);
+        String img = "<img src='"+url+"' width='100%'>";
+
+        builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
+
+        questionWithImageText = builder.toString();
+    }
+
+    private String parseExplanationWithImageView(String explanationWithImageText) {
+        int startIndexOfImg = explanationWithImageText.indexOf("<img");
+        int endIndexOfImg = explanationWithImageText.indexOf("'100%'>", startIndexOfImg);
+
+        int startIndexOfImgPath = explanationWithImageText.indexOf("/android_asset", startIndexOfImg);
+        int endIndexOfImgPath = explanationWithImageText.indexOf("' width", startIndexOfImg);
+
+        String imagePath = explanationWithImageText.substring(startIndexOfImgPath, endIndexOfImgPath);
+
+        URL url = getClass().getResource(imagePath);
+        String img = "<img src='"+url+"' width='100%'>";
+
+        StringBuilder builder = new StringBuilder(explanationWithImageText);
+        builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
+
+        explanationWithImageText = builder.toString();
+        System.out.println(TAG + "Final ExplanationText -> " + explanationWithImageText);
+        return explanationWithImageText;
+    }
+
     private void updateBookmarkIcon() {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
@@ -300,144 +532,6 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
     }
 
-    private void setupQuestionView() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
-        List<QuestionState> questions = subjectQuestionsState.getQuestions();
-        int selectedQuestionNumber = subjectQuestionsState.getSelectedQuestion();
-
-        prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
-        nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
-
-        questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
-
-            List<ObjectiveQuestionDescription> questionDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
-                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
-
-            System.out.println(TAG + "SetupQuestionView: questionDescriptionInList -> " + questionDescriptionInList);
-
-            if (questionDescriptionInList.isEmpty()) {
-                readQuestionDesc.setVisible(false);
-                questionDescriptionHeader.setText("");
-            } else {
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
-                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-            }
-
-            questionLabel.setText(currentQuestion.getQuestion());
-
-            String questionText = currentQuestion.getQuestion();
-
-            if (questionText.contains("<img")) {
-                int startIndexOfImg = questionText.indexOf("<img");
-                int endIndexOfImg = questionText.indexOf("'100%'>", startIndexOfImg);
-
-                int startIndexOfImgPath = questionText.indexOf("/android_asset", startIndexOfImg);
-                int endIndexOfImgPath = questionText.indexOf("' width", startIndexOfImg);
-
-                String imagePath = questionText.substring(startIndexOfImgPath, endIndexOfImgPath);
-
-                StringBuilder builder = new StringBuilder(questionText);
-
-                System.out.println(imagePath);
-
-                URL url = getClass().getResource(imagePath);
-                String img = "<img src='"+url+"' width='100%'>";
-
-                builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
-
-                questionText = builder.toString();
-                System.out.println(questionText);
-            }
-
-            webView.getEngine().loadContent(questionText);
-
-            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
-            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
-            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
-            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
-
-            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
-            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
-            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
-
-
-        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
-            TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
-
-            String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-
-            centerVBox.getChildren().removeAll(optionA, optionB, optionC, optionD);
-
-            rightVBox.getChildren().remove(answerPane);
-
-//            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
-            answerHeaderHBox.getChildren().remove(showExplanationButton);
-            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
-            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
-
-        }
-
-        updateExplanationView();
-    }
-
-    private void changeSelectedQuestion(int newValue) {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
-        List<QuestionState> questions = subjectQuestionsState.getQuestions();
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
-
-            List<ObjectiveQuestionDescription> questionDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
-                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
-
-            if (questionDescriptionInList.isEmpty()) {
-                readQuestionDesc.setVisible(false);
-                questionDescriptionHeader.setText("");
-            } else {
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
-                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-            }
-
-            String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-
-            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
-            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
-            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
-            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
-
-
-            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
-
-            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
-            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
-
-        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
-            TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
-
-            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
-
-            String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-
-            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
-            String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
-            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
-
-        }
-
-        updateExplanationView();
-    }
-
     private void  updateExplanationView() {
         SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
                 .get(viewModel.getSelectedSubject().getShortTitle());
@@ -445,12 +539,13 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         QuestionState questionState = questionsState.getQuestions().get(questionsState.getSelectedQuestion() - 1);
 
         if (!questionState.isShowExplanation() && !questionState.isShowAnswer()) {
-            System.out.println(TAG + "showing default explanation view");
+//            System.out.println(TAG + "showing default explanation view");
             showAnswerButton.setDisable(false);
             showExplanationButton.setDisable(false);
             explanationTitle.setVisible(false);
             explanationScrollPane.setVisible(false);
             explanationLabel.setVisible(false);
+            explanationWebView.setVisible(false);
             correctAnswerLabel.setVisible(false);
             correctAnswerTitle.setVisible(false);
 
@@ -458,10 +553,11 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         } else if (questionState.isShowExplanation()) {
 
-            System.out.println(TAG + "showing explanation and answer view");
+//            System.out.println(TAG + "showing explanation and answer view");
             explanationTitle.setVisible(true);
             explanationScrollPane.setVisible(true);
             explanationLabel.setVisible(true);
+            explanationWebView.setVisible(true);
             showExplanationButton.setDisable(true);
 
             correctAnswerLabel.setVisible(true);
@@ -474,7 +570,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         } else if (questionState.isShowAnswer()) {
 
-            System.out.println(TAG + "showing show answer view alone");
+//            System.out.println(TAG + "showing show answer view alone");
             correctAnswerLabel.setVisible(true);
             correctAnswerTitle.setVisible(true);
             showAnswerButton.setDisable(true);
@@ -485,8 +581,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         }
     }
 
-    private void setupTilePane() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+    private void setupTilePane(PQSubject selectedSubject) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
         tilePane.setVgap(10);
