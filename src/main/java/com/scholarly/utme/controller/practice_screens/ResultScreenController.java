@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller.practice_screens;
 
 import com.scholarly.utme.controller.HomeScreenController;
+import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
@@ -170,7 +172,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
 
         showExplanationButton.setOnAction(event -> {
-            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getSubjectsQuestions(), SubjectListItemVM.Type.OBJECTIVE);
+            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), SubjectListItemVM.Type.OBJECTIVE);
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });
@@ -228,18 +230,24 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
     public static class InitialData {
         private List<Result> results;
         private List<PQSubject> subjects;
+        private List<QuestionDescription> questionDescriptions;
         private HashMap<String, SubjectQuestionsState> subjectsQuestions;
-        private View view;
+        private View previousScreen;
 
-        public InitialData(List<Result> results, List<PQSubject> subjects, HashMap<String, SubjectQuestionsState> subjectsQuestions, View view) {
+        public InitialData(List<Result> results, List<PQSubject> subjects, List<QuestionDescription> questionDescriptions, HashMap<String, SubjectQuestionsState> subjectsQuestions, View previousScreen) {
             this.results = results;
             this.subjects = subjects;
+            this.questionDescriptions = questionDescriptions;
             this.subjectsQuestions = subjectsQuestions;
-            this.view = view;
+            this.previousScreen = previousScreen;
         }
 
         public List<PQSubject> getSubjects() {
             return subjects;
+        }
+
+        public List<QuestionDescription> getQuestionDescriptions() {
+            return questionDescriptions;
         }
 
         public HashMap<String, SubjectQuestionsState> getSubjectsQuestions() {
@@ -250,8 +258,8 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
             return results;
         }
 
-        public View getView() {
-            return view;
+        public View getPreviousScreen() {
+            return previousScreen;
         }
     }
 }
