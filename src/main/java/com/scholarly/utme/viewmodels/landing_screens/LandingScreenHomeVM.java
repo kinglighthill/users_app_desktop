@@ -6,7 +6,7 @@ import com.scholarly.utme.data.dao.newDb.SectionDao;
 import com.scholarly.utme.data.dao.newDb.SubTopicDao;
 import com.scholarly.utme.data.dao.newDb.TopicDao;
 import com.scholarly.utme.data.model.newDb.*;
-import com.scholarly.utme.network.model.User;
+import com.scholarly.utme.network.model.UserData;
 import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.util.Constants;
 import de.saxsys.mvvmfx.ViewModel;
@@ -16,7 +16,9 @@ import javafx.collections.ObservableList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
+
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_DATA;
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class LandingScreenHomeVM implements ViewModel {
     private static final String TAG = "LandingScreenHomeVM: ";
@@ -26,37 +28,41 @@ public class LandingScreenHomeVM implements ViewModel {
     private NoteSubject lastSectionSubject;
     private NoteTopic selectedNoteTopic;
 
-    private ObservableList<FavoriteSubject> subjects;
+    private final ObservableList<FavoriteSubject> subjects;
 
     private ObservableList<FavoriteSubject> favoriteSubjects;
 
     private final HashMap<Integer, ObservableList<NoteTopic>> noteSubjectTopics = new HashMap<>();
     private final HashMap<Integer, ObservableList<NoteSubTopic>> noteSubTopics = new HashMap<>();
 
-    private final User user;
+    Gson gson = new Gson();
+
+    private final UserData userData;
+    private final String userId;
 
 
     public LandingScreenHomeVM() {
-        String userData = preferences.get(Constants.PREF_KEY_USER_DATA, "");
-        Gson gson = new Gson();
-        user = gson.fromJson(userData, User.class);
+        userId = preferences.get(PREF_KEY_USER_ID, "");
+
+        String userDataString = preferences.get(PREF_KEY_USER_DATA+userId, "");
+        userData = gson.fromJson(userDataString, UserData.class);
 
         favoriteSubjects = FXCollections.observableArrayList();
         subjects = SubjectDao.getFavoriteSubjects();
 
-        ObservableList<SubjectCombination> subjectCombinations = SubjectDao.retrieveSubjectCombination(user.getId());
+        ObservableList<SubjectCombination> subjectCombinations = SubjectDao.retrieveSubjectCombination(userData.getId());
 
         subjects.forEach(subject -> {
             subject.setSelected(false);
             subjectCombinations.forEach(subjectCombination -> {
                 if (subject.getSubjectId() == subjectCombination.getSubjectId()) {
-                    favoriteSubjects.add(subject);
                     subject.setSelected(true);
+                    favoriteSubjects.add(subject);
                 }
             });
         });
 
-        noteLastSection = SectionDao.retrieveLastSection(user.getId());
+        noteLastSection = SectionDao.retrieveLastSection(userData.getId());
         if (noteLastSection != null) {
             noteSection = SectionDao.getNoteSectionWithId(noteLastSection.getSectionId());
             assert noteSection != null;
@@ -68,6 +74,14 @@ public class LandingScreenHomeVM implements ViewModel {
                 noteSubTopics.put(topic.getId(), SubTopicDao.getSubTopicsForTopic(topic.getId()));
             });
         }
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public UserData getUser() {
+        return userData;
     }
 
     public ObservableList<FavoriteSubject> getFavoriteSubjects() {
@@ -104,12 +118,12 @@ public class LandingScreenHomeVM implements ViewModel {
     }
 
     public void putSubjectCombination(ObservableList<FavoriteSubject> subjects) {
-        List<SubjectCombination> subjectCombinationList = subjects.stream().map(objectiveSubject -> new SubjectCombination(objectiveSubject.getId(), objectiveSubject.getSubjectId(), user.getId())).toList();
-        SubjectDao.deletePreviousSubjectCombination(user.getId());
+        List<SubjectCombination> subjectCombinationList = subjects.stream().map(objectiveSubject -> new SubjectCombination(objectiveSubject.getId(), objectiveSubject.getSubjectId(), userData.getId())).toList();
+        SubjectDao.deletePreviousSubjectCombination(userData.getId());
         subjectCombinationList.forEach(SubjectDao::insertSubjectCombination);
     }
     public ObservableList<ObjectiveSubject> getSubjectCombination() {
-        List<SubjectCombination> subjectCombinationList = SubjectDao.retrieveSubjectCombination(user.getId());
+        List<SubjectCombination> subjectCombinationList = SubjectDao.retrieveSubjectCombination(userData.getId());
         ObservableList<ObjectiveSubject> favSubjects = FXCollections.observableArrayList();
         subjects.forEach(subject -> {
             subjectCombinationList.forEach(subjectCombination -> {
@@ -127,9 +141,5 @@ public class LandingScreenHomeVM implements ViewModel {
 
     public HashMap<Integer, ObservableList<NoteSubTopic>> getNoteSubTopics() {
         return noteSubTopics;
-    }
-
-    public User getUser() {
-        return user;
     }
 }

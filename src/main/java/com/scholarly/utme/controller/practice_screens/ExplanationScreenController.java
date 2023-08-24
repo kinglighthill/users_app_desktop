@@ -351,6 +351,8 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
 
+        prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && selectedQuestionIndex == 1);
+
         if (viewModel.getQuestionType() == Type.OBJECTIVE) {
             List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getObjectiveQuestion().getQuestionDescriptionId()).toList();
@@ -390,6 +392,11 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             optionBIcon.setImage(null);
             optionCIcon.setImage(null);
             optionDIcon.setImage(null);
+
+            optionAButton.setSelected(false);
+            optionBButton.setSelected(false);
+            optionCButton.setSelected(false);
+            optionDButton.setSelected(false);
 
 //            String selectedOption = question.getSelectedOption();
 //            String questionAnswer = question.getObjectiveQuestion().getQuestionAnswer().getAnswer();
@@ -458,6 +465,9 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
             } else { // no option was selected
 
+                noOptionSelected.setText("No option was selected");
+                noOptionSelected.setTextFill(Paint.valueOf("#FF0000"));
+
                 if (questionAnswerId == optionAId) {
                     optionA.setTextFill(Color.GREEN);
                     optionAIcon.setImage(correctImage);
@@ -474,6 +484,9 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                     optionD.setTextFill(Color.GREEN);
                     optionDIcon.setImage(correctImage);
 
+                } else if (questionAnswerId == -1) {
+                    noOptionSelected.setText("No correct answer for this question (Bonus)");
+                    noOptionSelected.setTextFill(Paint.valueOf("#12AF20"));
                 }
 
                 noOptionSelected.setVisible(true);
@@ -636,6 +649,9 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
             } else { // no option was selected
 
+                noOptionSelected.setText("No option was selected");
+                noOptionSelected.setTextFill(Paint.valueOf("#FF0000"));
+
                 if (questionAnswerId == optionAId) {
                     optionA.setTextFill(Color.GREEN);
                     optionAIcon.setImage(correctImage);
@@ -652,6 +668,9 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                     optionD.setTextFill(Color.GREEN);
                     optionDIcon.setImage(correctImage);
 
+                } else if (questionAnswerId == -1) {
+                    noOptionSelected.setText("No correct answer for this question (Bonus)");
+                    noOptionSelected.setTextFill(Paint.valueOf("#12AF20"));
                 }
 
                 noOptionSelected.setVisible(true);

@@ -1,17 +1,15 @@
 package com.scholarly.utme.controller.landing_screens;
 
-import com.google.gson.Gson;
+import com.scholarly.utme.controller.AuthenticationController;
 import com.scholarly.utme.network.model.DeviceInfo;
-import com.scholarly.utme.network.model.User;
 import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.util.AppPreferences;
-import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAccountVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
@@ -23,13 +21,19 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
-import static com.scholarly.utme.util.Constants.PREF_KEY_USER_DATA;
+import static com.scholarly.utme.util.Constants.BASE_URL;
+import static com.scholarly.utme.util.Constants.PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED;
 
 @FxmlPath("/layouts/landing_screens/landing_screen_account.fxml")
 public class LandingScreenAccountController implements FxmlView<LandingScreenAccountVM>, Initializable {
@@ -55,6 +59,9 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        String userId = viewModel.getUserId();
+
+        boolean internetEnabled = checkNetworkConnectivity();
 
         initializeViews();
         initializeFonts();
@@ -62,12 +69,30 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
         emailText.setText(viewModel.getUser().getEmail());
         deviceIdLabel.setText(DeviceInfo.getSystemProperties().getDeviceId());
 
-        if (viewModel.getUser().getProfilePicUrl() != null && !viewModel.getUser().getProfilePicUrl().contains("empty")){
-            compressProfileImage((new Image(viewModel.getUser().getProfilePicUrl())));
-            System.out.println(TAG + "Set Image successfully for url -> " + viewModel.getUser().getProfilePicUrl());
+        String imageUrl = viewModel.getUser().getProfilePicUrl();
+        String imageUrlWithQueryString = imageUrl + "?" + RandomStringUtils.random(6, true, true);
+
+        long start = System.currentTimeMillis();
+
+        if (imageUrl != null && !imageUrl.contains("empty")) {
+            Image image = new Image(imageUrlWithQueryString, true);
+            if (image.isError() || !internetEnabled) {
+                try {
+                    InputStream inputStream = new FileInputStream("scholarly_profile_image.jpg");
+                    renderProfileImage(new Image(inputStream));
+                    System.out.println(TAG + "Loaded Image from File");
+                } catch (Exception e) {
+                    System.out.println(TAG + "Error loading image from File system");
+                }
+            } else {
+                renderProfileImage(image);
+                System.out.println(TAG + "Loaded image from url -> " + imageUrlWithQueryString);
+            }
         } else {
-            compressProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/default_profile_image.png").toString()));
+            renderProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/default_profile_image.png").toString()));
         }
+
+        System.out.println(TAG + "Time taken to load image -> " + (System.currentTimeMillis() - start) + "ms");
 
         profilePanel.setOnMouseClicked(mouseEvent -> {
             ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN);
@@ -100,10 +125,10 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
-                    viewModel.getPreferences().putBoolean(Constants.PREF_KEY_ACTIVATION_STATE, false);
-                    viewModel.getPreferences().putBoolean(Constants.PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED, false);
+//                    viewModel.getPreferences().putBoolean(Constants.PREF_KEY_ACTIVATION_STATE, false);
+                    viewModel.getPreferences().putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
                     dialogDimmer.setVisible(true);
-                    ViewSwitcher.passData(false);
+                    ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                 } else {
                     dialogDimmer.setVisible(false);
@@ -147,7 +172,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
         logoutButton.setGraphicTextGap(40);
     }
 
-    private void compressProfileImage(Image image) {
+    private void renderProfileImage(Image image) {
         Circle clip = new Circle(40, 40, 40);
         profileImage.setClip(clip);
         Rectangle2D imageBounds = new Rectangle2D(0, 0, image.getWidth(), image.getHeight());
@@ -155,10 +180,22 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
         profileImage.setFitHeight(80);
         profileImage.setViewport(imageBounds);
         profileImage.setSmooth(true);
+        profileImage.setCache(true);
         profileImage.setImage(image);
     }
 
     private void initializeFonts() {
 
+    }
+
+    private boolean checkNetworkConnectivity() {
+        try {
+            URL url = new URL(BASE_URL);
+            URLConnection connection = url.openConnection();
+            connection.connect();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

@@ -28,6 +28,7 @@ import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/HomeScreen.fxml")
 public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializable{
+    private static final String TAG = "HomeScreenController: ";
 
     @InjectViewModel
     private HomeScreenVM viewModel;
@@ -49,17 +50,17 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
 
-    private SubjectListViewController subjectListController;
+    private static SubjectListViewController subjectListController;
 
+    private static Parent subjectListView;
     private final ToggleGroup toggleGroup = new ToggleGroup();
-
-    private static final String TAG = "HomeScreenController: ";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
         subjectListController = subjectListViewTuple.getCodeBehind();
-        Parent subjectListView = subjectListViewTuple.getView();
+        subjectListView = subjectListViewTuple.getView();
 
         initializeViews();
         initializeFonts();

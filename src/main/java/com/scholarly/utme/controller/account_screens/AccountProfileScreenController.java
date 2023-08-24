@@ -1,19 +1,26 @@
 package com.scholarly.utme.controller.account_screens;
 
 import com.google.gson.Gson;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
 import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.*;
+import com.scholarly.utme.network.model.request.UpdateUserRequest;
+import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.network.model.response.UploadResponse;
 import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.account_screens.AccountProfileScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -27,6 +34,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import okhttp3.*;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -36,8 +44,7 @@ import javax.imageio.stream.ImageOutputStream;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -50,6 +57,9 @@ import static com.scholarly.utme.util.Constants.*;
 @FxmlPath("/layouts/account_screens/AccountProfileScreen.fxml")
 public class AccountProfileScreenController implements FxmlView<AccountProfileScreenVM>, Initializable {
     private static final String TAG = "AccountProfileScreenController: ";
+
+    @InjectViewModel
+    private AccountProfileScreenVM viewModel;
 
     @FXML
     private Pane dialogDimmer;
@@ -68,51 +78,79 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
     @FXML
     private Label changeProfileName, changePhoneNum, deviceIdLabel, toastLabel;
 
-    private Preferences preferences = AppPreferences.getPreferences();
-    private OkHttpClient httpClient = NetworkService.getHttpClient();
+    private Preferences preferences;
+    private OkHttpClient httpClient;
     MainApplication application = new MainApplication();
+
+    interface NetworkCallback {
+        void refreshToken();
+
+        void resendRequest();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resourceBundle) {
-        String userData = preferences.get(PREF_KEY_USER_DATA, "");
-        Gson gson = new Gson();
-        User user = gson.fromJson(userData, User.class);
+        preferences = AppPreferences.getPreferences();
+        httpClient = NetworkService.getHttpClient();
 
-        AtomicReference<String> gender = new AtomicReference<>("");
+        boolean internetEnabled = checkNetworkConnectivity();
 
         initializeViews();
         initializeFonts();
 
-        String profileImageUrl = user.getProfilePicUrl();
-        if (profileImageUrl != null && !profileImageUrl.contains("empty")) {
-            compressProfileImage(new Image(profileImageUrl));
-            System.out.println(TAG + "Set Image successfully for url -> " + profileImageUrl);
+        String imageUrl = viewModel.getUser().getProfilePicUrl();
+        String imageUrlWithQueryString = imageUrl + "?" + RandomStringUtils.random(6, true, true);
+
+        if (imageUrl != null && !imageUrl.contains("empty")) {
+            Image image = new Image(imageUrlWithQueryString, false);
+            if (image.isError() || !internetEnabled) {
+                try {
+                    InputStream inputStream = new FileInputStream("scholarly_profile_image.jpg");
+                    renderProfileImage(new Image(inputStream));
+                    System.out.println(TAG + "Loaded Image from File");
+                } catch (Exception e) {
+                    System.out.println(TAG + "Error loading image from File system");
+                }
+            } else {
+                renderProfileImage(image);
+                System.out.println(TAG + "Loaded Image from url -> " + imageUrlWithQueryString);
+            }
+        } else {
+            renderProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/default_profile_image.png").toString()));
         }
 
-        emailTextField.setText(user.getEmail());
-        profileNameTextField.setText(user.getFullName());
-        phoneTextField.setText(user.getPhoneNumber());
+        emailTextField.setText(viewModel.getUser().getEmail());
+        profileNameTextField.setText(viewModel.getUser().getFullName());
+        phoneTextField.setText(viewModel.getUser().getPhoneNumber());
         deviceIdLabel.setText(DeviceInfo.getSystemProperties().getDeviceId());
 
         changeProfileName.setOnMouseClicked(event -> {
             profileNameTextField.setEditable(true);
         });
+        changeProfileName.setOnMouseEntered(event -> changeProfileName.setUnderline(true));
+        changeProfileName.setOnMouseExited(event -> changeProfileName.setUnderline(false));
 
         changePhoneNum.setOnMouseClicked(event -> {
             phoneTextField.setEditable(true);
         });
+        changePhoneNum.setOnMouseEntered(event -> changePhoneNum.setUnderline(true));
+        changePhoneNum.setOnMouseExited(event -> changePhoneNum.setUnderline(false));
 
         ToggleGroup genderToggle = new ToggleGroup();
         genderToggle.getToggles().addAll(maleRadioButton, femaleRadioButton);
         genderToggle.getToggles().get(0).setUserData("m");
         genderToggle.getToggles().get(1).setUserData("f");
-        if (user.getGender() != null) {
-            if (user.getGender().equals("m")) {
+        if (viewModel.getUser().getGender() != null) {
+            if (viewModel.getUser().getGender().equals("m")) {
                 genderToggle.selectToggle(genderToggle.getToggles().get(0));
             } else {
                 genderToggle.selectToggle(genderToggle.getToggles().get(1));
             }
         }
+
+        AtomicReference<String> gender = new AtomicReference<>("");
+
+        gender.set((String) genderToggle.getSelectedToggle().getUserData());
 
         genderToggle.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue.isSelected()) {
@@ -120,20 +158,16 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
             }
         }));
 
-        profileImage.imageProperty().addListener(((observableValue, oldImage, newImage) -> {
-            compressProfileImage(newImage);
-        }));
-
         cameraImage.setOnMouseClicked(event -> {
             File imageFile = application.openFileChooser(ViewSwitcher.getStage());
-//            File imageFile = new File("");
             System.out.println(TAG + "Got image file of size -> " + imageFile.length());
+            String END_POINT = "user-profile/upload-profile-pic";
 
-//            File compressedImage = compressImage(imageFile);
+            Gson gson = new Gson();
 
-//            System.out.println(TAG + "Image file size after compression -> " + compressedImage.length());
+            String userId = viewModel.getUserId();
 
-//            application.openWebcam();
+            String REFRESH_TOKEN = preferences.get(PREF_KEY_REFRESH_TOKEN+userId, "");
 
             // Check for internet connectivity
             try {
@@ -143,8 +177,134 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
 
                 Task<Void> uploadTask = new Task<>() {
                     @Override
-                    protected Void call() throws Exception {
-                        uploadImage(imageFile);
+                    protected Void call() {
+                        uploadImage(imageFile, new NetworkCallback() {
+                            @Override
+                            public void refreshToken() {
+                                System.out.println(TAG + "Refreshing token...");
+                                RefreshRequest refreshRequest = new RefreshRequest(REFRESH_TOKEN);
+
+                                String json = gson.toJson(refreshRequest);
+
+                                RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+                                Request request = new Request.Builder()
+                                        .url(REFRESH_URL)
+                                        .addHeader("platform", DeviceInfo.getSystemProperties().getPlatform())
+                                        .post(requestBody)
+                                        .build();
+
+                                Call call = httpClient.newCall(request);
+
+                                call.enqueue(new Callback() {
+                                    @Override
+                                    public void onResponse(Call call, Response response) {
+                                        System.out.println(TAG + "Got OkHttp refreshToken response -> " + response);
+                                        try(ResponseBody responseBody = response.body()) {
+                                            assert responseBody != null;
+                                            BaseResponse refreshResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+                                            if (refreshResponse.getStatus().equalsIgnoreCase("success")) {
+                                                System.out.println(TAG + "Refreshed Token Response user id -> " + refreshResponse.getData().getUserId());
+
+                                                preferences.put(PREF_KEY_ACCESS_TOKEN+userId, refreshResponse.getData().getAccessToken());
+                                                preferences.put(PREF_KEY_REFRESH_TOKEN+userId, refreshResponse.getData().getRefreshToken());
+
+                                            } else if (refreshResponse.getStatus().equalsIgnoreCase("error")) {
+                                                Platform.runLater(() -> {
+                                                    Alert alertDialog = Alerts.info(getClass(), "Error", refreshResponse.getMessage(), "");
+                                                    alertDialog.show();
+                                                    hideProgressBar();
+                                                });
+                                            }
+                                        } catch (Exception e) {
+                                            System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        Platform.runLater(() -> {
+                                            Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                                            alertDialog.show();
+                                            hideProgressBar();
+                                        });
+                                        System.out.println(TAG + "Request failed with exception -> " + e.getMessage());
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void resendRequest() {
+                                System.out.println(TAG + "Resending request...");
+
+                                String NEW_ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+
+                                RequestBody requestBody = new MultipartBody.Builder()
+                                        .setType(MultipartBody.FORM)
+                                        .addFormDataPart("image", imageFile.getName(),
+                                                RequestBody.create(MediaType.parse("image/jpg"), imageFile))
+                                        .build();
+
+                                // Create the request
+                                Request request = new Request.Builder()
+                                        .url(BASE_URL + END_POINT)
+                                        .header("Authorization", "Bearer " + NEW_ACCESS_TOKEN)
+                                        .addHeader("platform", DeviceInfo.getSystemProperties().getPlatform())
+                                        .post(requestBody)
+                                        .build();
+
+                                Call call = httpClient.newCall(request);
+
+                                call.enqueue(new Callback() {
+                                    @Override
+                                    public void onResponse(Call call, Response response) {
+                                        try (ResponseBody responseBody = response.body()) {
+                                            assert responseBody != null;
+                                            Gson gson = new Gson();
+                                            UploadResponse uploadResponse = gson.fromJson(responseBody.string(), UploadResponse.class);
+                                            if (uploadResponse.getStatus().equalsIgnoreCase("success")) {
+                                                String imageUrl = uploadResponse.getData();
+                                                System.out.println(TAG + "Uploaded image successfully with url -> " + imageUrl);
+
+                                                String userData = preferences.get(PREF_KEY_USER_DATA+userId, "");
+                                                UserData user = gson.fromJson(userData, UserData.class);
+                                                user.setProfilePicUrl(imageUrl);
+
+                                                String updatedUser = gson.toJson(user);
+                                                preferences.put(PREF_KEY_USER_DATA+userId, updatedUser);
+
+                                                Platform.runLater(() -> {
+                                                    hideProgressBar();
+                                                    renderProfileImage(new Image(user.getProfilePicUrl() + "?" + RandomStringUtils.random(6, true, true)));
+                                                    toastLabel.setText("Image uploaded successfully!");
+                                                    Animations.showToast(toastBar);
+                                                });
+
+                                            } else if (uploadResponse.getStatus().equalsIgnoreCase("error")) {
+                                                Platform.runLater(() -> {
+                                                    Alert alertDialog = Alerts.info(getClass(), "Error", uploadResponse.getMessage(), "");
+                                                    alertDialog.show();
+                                                    hideProgressBar();
+                                                });
+                                            }
+
+                                        } catch (Exception e) {
+                                            System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        Platform.runLater(() -> {
+                                            Alert alertDialog = Alerts.info(getClass(), "Error", "Image upload failed " + e.getMessage(), "");
+                                            alertDialog.show();
+                                            hideProgressBar();
+                                        });
+                                        System.out.println("Request failed with exception -> " + e.getMessage());
+                                    }
+                                });
+                            }
+                        });
                         return null;
                     }
                 };
@@ -157,17 +317,20 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                 hideProgressBar();
                 System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
             }
-
-            String imageUrl = preferences.get(PREF_KEY_PROFILE_IMAGE_URL, "");
-            Image image = new Image(imageUrl);
-            compressProfileImage(image);
         });
 
         saveButton.setOnAction(event -> {
             profileNameTextField.setEditable(false);
             phoneTextField.setEditable(false);
 
-            UpdateUserRequest request = new UpdateUserRequest(profileNameTextField.getText(), phoneTextField.getText(), gender.get());
+            String UPDATE_END_POINT = "user-profile/update-profile";
+
+            String userId = viewModel.getUserId();
+
+            String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+            String REFRESH_TOKEN = preferences.get(PREF_KEY_REFRESH_TOKEN+userId, "");
+
+            UpdateUserRequest updateUserRequest = new UpdateUserRequest(profileNameTextField.getText(), phoneTextField.getText(), gender.get());
 
             showProgressBar();
 
@@ -177,10 +340,142 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                 URLConnection connection = url.openConnection();
                 connection.connect();
 
+                Gson gson = new Gson();
+
+                String json = gson.toJson(updateUserRequest);
+
+                RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+                Request updateRequest = new Request.Builder()
+                        .url(BASE_URL + UPDATE_END_POINT)
+                        .addHeader("Authorization", "Bearer " + ACCESS_TOKEN)
+                        .addHeader("platform", DeviceInfo.getSystemProperties().getPlatform())
+                        .post(requestBody)
+                        .build();
+
                 Task<Void> updateTask = new Task<>() {
                     @Override
-                    protected Void call() throws Exception {
-                        updateUser(request);
+                    protected Void call() {
+                        updateUser(updateRequest, new NetworkCallback() {
+                            @Override
+                            public void refreshToken() {
+                                System.out.println(TAG + "Refreshing token...");
+                                RefreshRequest refreshRequest = new RefreshRequest(REFRESH_TOKEN);
+
+                                String json = gson.toJson(refreshRequest);
+
+                                RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+                                Request request = new Request.Builder()
+                                        .url(REFRESH_URL)
+                                        .addHeader("platform", DeviceInfo.getSystemProperties().getPlatform())
+                                        .post(requestBody)
+                                        .build();
+
+                                Call call = httpClient.newCall(request);
+
+                                call.enqueue(new Callback() {
+                                    @Override
+                                    public void onResponse(Call call, Response response) {
+                                        System.out.println(TAG + "Got OkHttp refreshToken response -> " + response);
+                                        try(ResponseBody responseBody = response.body()) {
+                                            assert responseBody != null;
+                                            BaseResponse refreshResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+                                            if (refreshResponse.getStatus().equalsIgnoreCase("success")) {
+                                                System.out.println(TAG + "Refreshed Token with user id -> " + refreshResponse.getData().getUserId());
+                                                System.out.println(TAG + "Put Refresh Token User Id -> " + userId);
+
+                                                preferences.put(PREF_KEY_ACCESS_TOKEN+userId, refreshResponse.getData().getAccessToken());
+                                                preferences.put(PREF_KEY_REFRESH_TOKEN+userId, refreshResponse.getData().getRefreshToken());
+
+                                            } else if (refreshResponse.getStatus().equalsIgnoreCase("error")) {
+                                                Platform.runLater(() -> {
+                                                    Alert alertDialog = Alerts.info(getClass(), "Error", refreshResponse.getMessage(), "");
+                                                    alertDialog.show();
+                                                    hideProgressBar();
+                                                });
+                                            }
+                                        } catch (Exception e) {
+                                            System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        Platform.runLater(() -> {
+                                            Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                                            alertDialog.show();
+                                            hideProgressBar();
+                                        });
+                                        System.out.println(TAG + "Request failed with exception -> " + e.getMessage());
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void resendRequest() {
+                                System.out.println(TAG + "Resending request...");
+
+                                String NEW_ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+
+                                Request updateRequest = new Request.Builder()
+                                        .url(BASE_URL + UPDATE_END_POINT)
+                                        .addHeader("Authorization", "Bearer " + NEW_ACCESS_TOKEN)
+                                        .addHeader("platform", DeviceInfo.getSystemProperties().getPlatform())
+                                        .post(requestBody)
+                                        .build();
+
+                                Call call = httpClient.newCall(updateRequest);
+                                call.enqueue(new Callback() {
+                                    @Override
+                                    public void onResponse(Call call, Response response) {
+
+                                        try(ResponseBody responseBody = response.body()) {
+                                            assert responseBody != null;
+                                            BaseResponse updateResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+                                            if (updateResponse.getStatus().equalsIgnoreCase("success")) {
+
+                                                String oldUserData = preferences.get(PREF_KEY_USER_DATA+userId, "");
+                                                UserData oldUser = gson.fromJson(oldUserData, UserData.class);
+
+                                                UserData newUser = new UserData(oldUser.getId(), updateResponse.getData().getFullName(), oldUser.getEmail(), updateResponse.getData().getPhoneNumber(),
+                                                        oldUser.getCountry(), oldUser.isEmailVerified(), oldUser.getProfilePicUrl(), oldUser.getReferralCode(), updateResponse.getData().getGender());
+
+                                                String updatedUserData = gson.toJson(newUser);
+                                                preferences.put(PREF_KEY_USER_DATA+userId, updatedUserData);
+
+                                                Platform.runLater(() -> {
+                                                    hideProgressBar();
+                                                    toastLabel.setText("Account updated successfully!");
+                                                    Animations.showToast(toastBar);
+                                                });
+
+                                            } else if (updateResponse.getStatus().equalsIgnoreCase("error")) {
+                                                Platform.runLater(() -> {
+                                                    Alert alertDialog = Alerts.info(getClass(), "Error", updateResponse.getMessage(), "");
+                                                    alertDialog.show();
+                                                    hideProgressBar();
+                                                });
+                                            }
+                                            response.close();
+                                        } catch (Exception e) {
+                                            System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        Platform.runLater(() -> {
+                                            Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                                            alertDialog.show();
+                                            hideProgressBar();
+                                        });
+                                        System.out.println(TAG + "Request failed with exception -> " + e.getMessage());
+                                    }
+                                });
+                            }
+                        });
                         return null;
                     }
                 };
@@ -206,30 +501,30 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
     private File rescaleAndCompressImage(File imageFile) {
         try {
             System.out.println(TAG + "File size before compression -> " + imageFile.length());
-            File compressedImageFile = new File(imageFile.getName()+"compressed");
+            File compressedImageFile = new File(imageFile.getName() + "compressed");
 
             InputStream is = new FileInputStream(imageFile);
             OutputStream os = new FileOutputStream(compressedImageFile);
 
             float quality = 0.5f;
 
-            long divisor = imageFile.length()/1000;
+            long divisor = imageFile.length() / 1000;
 
             if (divisor > 10 && divisor < 50) {
-                divisor = imageFile.length()/10000;
+                divisor = imageFile.length() / 10000;
             }
             if (divisor > 50 && divisor < 100) {
-                divisor = imageFile.length()/50000;
+                divisor = imageFile.length() / 50000;
             }
             if (divisor > 100 && divisor < 150) {
-                divisor = imageFile.length()/100000;
+                divisor = imageFile.length() / 100000;
             }
             if (divisor > 150 && divisor < 200) {
-                divisor = imageFile.length()/150000;
+                divisor = imageFile.length() / 150000;
             }
             System.out.println(TAG + "Divisor -> " + divisor);
             if (divisor > 1) {
-                quality = 1.0f/divisor;
+                quality = 1.0f / divisor;
             }
 
             System.out.println(TAG + "New Quality size -> " + quality);
@@ -280,21 +575,72 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         return new File("");
     }
 
+    private void saveImageToFile2(File image) {
+        try {
+            BufferedImage bufferedImage = ImageIO.read(image);
+            File outputFile = new File("test_profile_image.jpg");
+            ImageIO.write(bufferedImage, "jpg", outputFile);
+        } catch (Exception e) {
+            System.out.println(TAG + "Error saving image to File -> " + e.getMessage());
+        }
+    }
+
+    private void saveImageToFile(File image) {
+        File localImage = new File("scholarly_profile_image.jpg");
+
+        try {
+            InputStream inputStream = new FileInputStream(image);
+            OutputStream outputStream = new FileOutputStream(localImage);
+
+            // create a BufferedImage as the result of decoding the supplied InputStream
+            BufferedImage bufferedImage = ImageIO.read(inputStream);
+
+            // get all image writers for JPG format
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+
+            ImageWriter writer = writers.next();
+            ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream);
+            writer.setOutput(ios);
+
+            ImageWriteParam param = writer.getDefaultWriteParam();
+
+            // compress to a given quality
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            param.setCompressionQuality(0.5f);
+
+            // appends a complete image stream containing a single image and
+            //associated stream and image metadata and thumbnails to the output
+            writer.write(null, new IIOImage(bufferedImage, null, null), param);
+
+            System.out.println(TAG + "Saved image successfully with name -> " + localImage.getName() + " and size -> " + localImage.length());
+            System.out.println(TAG + "Saved image successfully with image path -> " + localImage.getPath());
+
+            // close all streams
+            inputStream.close();
+            outputStream.close();
+            ios.close();
+            writer.dispose();
+
+        } catch (Exception e) {
+            System.out.println(TAG + "Error saving image -> " + e.getMessage());
+        }
+    }
+
     private File compressImageFile(File inputImage) {
         try {
 //            System.out.println(TAG + "File size before compression -> " + inputImage.length());
-            File compressedImageFile = new File(inputImage.getName()+"compressed");
+            File compressedImageFile = new File(inputImage.getName() + "compressed");
 
             InputStream is = new FileInputStream(inputImage);
             OutputStream os = new FileOutputStream(compressedImageFile);
 
             float quality = 0.5f;
 
-            long divisor = inputImage.length()/1000;
+            long divisor = inputImage.length() / 1000;
 
             System.out.println(TAG + "Divisor -> " + divisor);
             if (divisor > 1) {
-                quality = 1.0f/divisor;
+                quality = 1.0f / divisor;
             }
             System.out.println(TAG + "New Quality size -> " + quality);
 
@@ -304,7 +650,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
             // get all image writers for JPG format
             Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
 
-            ImageWriter writer = (ImageWriter) writers.next();
+            ImageWriter writer = writers.next();
             ImageOutputStream ios = ImageIO.createImageOutputStream(os);
             writer.setOutput(ios);
 
@@ -356,60 +702,58 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         Animations.hideDialog(progressBar, dialogDimmer);
     }
 
-    private void updateUser(UpdateUserRequest updateRequest) {
-        String END_POINT = "user-profile/update-profile";
-        String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN, "");
-        System.out.println(TAG + "Update User Request with Access Token -> " + ACCESS_TOKEN);
-
+    private void updateUser(Request updateRequest, NetworkCallback callback) {
         Gson gson = new Gson();
-        String json = gson.toJson(updateRequest);
 
-        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
-
-        Request request = new Request.Builder()
-                .url(BASE_URL + END_POINT)
-                .addHeader("Authorization", "Bearer " + ACCESS_TOKEN)
-                .post(requestBody)
-                .build();
-
-        Call call = httpClient.newCall(request);
+        Call call = httpClient.newCall(updateRequest);
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
-                try (ResponseBody responseBody = response.body()) {
-                    assert responseBody != null;
-                    BaseResponse updateResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+                System.out.println(TAG + "UpdateUser: Got response with code -> " + response.code());
+                if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                    callback.refreshToken();
+                    callback.resendRequest();
 
-                    if (updateResponse.getStatus().equalsIgnoreCase("success")) {
-                        String userData = preferences.get(PREF_KEY_USER_DATA, "");
-                        User user = gson.fromJson(userData, User.class);
-                        user.setFullName(updateResponse.getData().getFullName());
-                        user.setPhoneNumber(updateResponse.getData().getPhoneNumber());
-                        user.setGender(updateResponse.getData().getGender());
+                } else {
 
-                        String updatedUser = gson.toJson(user);
-                        preferences.put(PREF_KEY_USER_DATA, updatedUser);
+                    try(ResponseBody responseBody = response.body()) {
+                        assert responseBody != null;
+                        BaseResponse updateResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+                        if (updateResponse.getStatus().equalsIgnoreCase("success")) {
+                            String userId = viewModel.getUserId();
 
-                        Platform.runLater(() -> {
-                            hideProgressBar();
-                            toastLabel.setText("Account updated successfully!");
-                            Animations.showToast(toastBar);
-                        });
+                            String oldUserData = preferences.get(PREF_KEY_USER_DATA+userId, "");
+                            UserData oldUser = gson.fromJson(oldUserData, UserData.class);
 
-                    } else if (updateResponse.getStatus().equalsIgnoreCase("error")) {
+                            System.out.println(TAG + "OldUserData -> " + oldUserData);
 
-                        Platform.runLater(() -> {
-                            Alert alertDialog = Alerts.info(getClass(), "Error", updateResponse.getMessage(), "");
-                            alertDialog.show();
-                            hideProgressBar();
-                        });
+                            UserData newUser = new UserData(oldUser.getId(), updateResponse.getData().getFullName(), oldUser.getEmail(), updateResponse.getData().getPhoneNumber(),
+                                    oldUser.getCountry(), oldUser.isEmailVerified(), oldUser.getProfilePicUrl(), oldUser.getReferralCode(), updateResponse.getData().getGender());
 
+                            String updatedUserData = gson.toJson(newUser);
+                            preferences.put(PREF_KEY_USER_DATA+userId, updatedUserData);
+
+                            System.out.println(TAG + "New UserData -> " + updatedUserData);
+
+                            Platform.runLater(() -> {
+                                hideProgressBar();
+                                toastLabel.setText("Account updated successfully!");
+                                Animations.showToast(toastBar);
+                            });
+
+                        } else if (updateResponse.getStatus().equalsIgnoreCase("error")) {
+                            Platform.runLater(() -> {
+                                Alert alertDialog = Alerts.info(getClass(), "Error", updateResponse.getMessage(), "");
+                                alertDialog.show();
+                                hideProgressBar();
+                            });
+                        }
+                        response.close();
+                    } catch (Exception e) {
+                        System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                     }
 
-                } catch (Exception e) {
-                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                 }
-                response.close();
             }
 
             @Override
@@ -425,9 +769,12 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
 
     }
 
-    private void uploadImage(File imageFile) {
+    private void uploadImage(File imageFile, NetworkCallback callback) {
         String END_POINT = "user-profile/upload-profile-pic";
-        String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN, "");
+
+        String userId = viewModel.getUserId();
+
+        String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
 //        System.out.println(TAG + "Upload Profile Image Request with Access Token -> " + ACCESS_TOKEN);
 
         RequestBody requestBody = new MultipartBody.Builder()
@@ -440,50 +787,52 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         Request request = new Request.Builder()
                 .url(BASE_URL + END_POINT)
                 .header("Authorization", "Bearer " + ACCESS_TOKEN)
+                .addHeader("platform", DeviceInfo.getSystemProperties().getPlatform())
                 .post(requestBody)
                 .build();
 
         Call call = httpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    assert responseBody != null;
-                    Gson gson = new Gson();
-                    UploadResponse uploadResponse = gson.fromJson(responseBody.string(), UploadResponse.class);
-                    if (uploadResponse.getStatus().equalsIgnoreCase("success")) {
-                        String imageUrl = uploadResponse.getData();
-                        preferences.put(PREF_KEY_PROFILE_IMAGE_URL, imageUrl);
-                        System.out.println(TAG + "Uploaded image successfully with url -> " + imageUrl);
-//                        compressProfileImage(new Image(imageUrl));
+            public void onResponse(Call call, Response response) {
+                if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                    callback.refreshToken();
+                    callback.resendRequest();
+                } else {
+                    try (ResponseBody responseBody = response.body()) {
+                        assert responseBody != null;
+                        Gson gson = new Gson();
+                        UploadResponse uploadResponse = gson.fromJson(responseBody.string(), UploadResponse.class);
+                        if (uploadResponse.getStatus().equalsIgnoreCase("success")) {
+                            String imageUrl = uploadResponse.getData();
+                            System.out.println(TAG + "Uploaded image successfully with url -> " + imageUrl);
 
-                        String userData = preferences.get(PREF_KEY_USER_DATA, "");
-                        User user = gson.fromJson(userData, User.class);
-                        user.setProfilePicUrl(imageUrl);
-                        compressProfileImage(new Image(user.getProfilePicUrl()));
+                            String userData = preferences.get(PREF_KEY_USER_DATA+userId, "");
+                            UserData user = gson.fromJson(userData, UserData.class);
+                            user.setProfilePicUrl(imageUrl);
 
-                        String updatedUser = gson.toJson(user);
-                        preferences.put(PREF_KEY_USER_DATA, updatedUser);
+                            String updatedUser = gson.toJson(user);
+                            preferences.put(PREF_KEY_USER_DATA+userId, updatedUser);
 
-                        Platform.runLater(() -> {
-                            hideProgressBar();
-                            compressProfileImage(new Image(user.getProfilePicUrl()));
-                            toastLabel.setText("Image uploaded successfully!");
-                            Animations.showToast(toastBar);
-                        });
+                            Platform.runLater(() -> {
+                                hideProgressBar();
+                                renderProfileImage(new Image(user.getProfilePicUrl() + "?" + RandomStringUtils.random(6, true, true)));
+                                toastLabel.setText("Image uploaded successfully!");
+                                Animations.showToast(toastBar);
+                                saveImageToFile(imageFile);
+                            });
 
-                    } else if (uploadResponse.getStatus().equalsIgnoreCase("error")) {
+                        } else if (uploadResponse.getStatus().equalsIgnoreCase("error")) {
+                            Platform.runLater(() -> {
+                                Alert alertDialog = Alerts.info(getClass(), "Error", uploadResponse.getMessage(), "");
+                                alertDialog.show();
+                                hideProgressBar();
+                            });
+                        }
 
-                        Platform.runLater(() -> {
-                            Alert alertDialog = Alerts.info(getClass(), "Error", uploadResponse.getMessage(), "");
-                            alertDialog.show();
-                            hideProgressBar();
-                        });
-
+                    } catch (Exception e) {
+                        System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                     }
-
-                } catch (Exception e) {
-                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                 }
                 response.close();
             }
@@ -501,14 +850,59 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
 
     }
 
-    private void compressProfileImage(Image image) {
+    private void renderProfileImage(Image image) {
+        Circle clip = new Circle(60, 60, 60);
+        profileImage.setClip(clip);
         Rectangle2D imageBounds = new Rectangle2D(0, 0, image.getWidth(), image.getHeight());
         profileImage.setFitWidth(120);
         profileImage.setFitHeight(120);
-        profileImage.setImage(image);
         profileImage.setViewport(imageBounds);
         profileImage.setSmooth(true);
-        Circle clip = new Circle(60, 60, 60);
-        profileImage.setClip(clip);
+        profileImage.setCache(true);
+        profileImage.setImage(image);
     }
+
+    private boolean checkNetworkConnectivity() {
+        try {
+            URL url = new URL(BASE_URL);
+            URLConnection connection = url.openConnection();
+            connection.connect();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private BaseResponse refreshAccessToken() {
+        System.out.println(TAG + "Inside Refresh Access Token!");
+        String END_POINT = "/login/refresh";
+
+        System.out.println(TAG + "Got Refresh Token -> " + preferences.get(PREF_KEY_REFRESH_TOKEN, ""));
+        String refreshToken = preferences.get(PREF_KEY_REFRESH_TOKEN, "");
+        RefreshRequest refreshRequest = new RefreshRequest(refreshToken);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(refreshRequest);
+        System.out.println(TAG + "JSON Request Body -> " + json);
+
+        BaseResponse responseObject = null;
+
+        JsonNode body = new JsonNode(json);
+        try {
+            HttpResponse<String> response = Unirest.post(BASE_URL + END_POINT)
+                    .body(body)
+                    .asString();
+            if (response.getCode() == 200) {
+                System.out.println(TAG + "Got Access Token successfully!");
+
+                responseObject = gson.fromJson(response.getBody(), BaseResponse.class);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(TAG + "Cannot execute Unirest because " + e.getMessage());
+        }
+
+        return responseObject;
+    }
+
 }

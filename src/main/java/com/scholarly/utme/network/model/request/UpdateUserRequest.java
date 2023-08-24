@@ -1,4 +1,4 @@
-package com.scholarly.utme.network.model;
+package com.scholarly.utme.network.model.request;
 
 import com.google.gson.annotations.SerializedName;
 

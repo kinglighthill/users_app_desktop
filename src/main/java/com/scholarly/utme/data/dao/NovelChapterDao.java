@@ -15,6 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
+
 public class NovelChapterDao {
     private static final String TAG = "NovelChapterDao: ";
     private static final DatabaseService databaseService = new DatabaseService();
@@ -31,8 +34,10 @@ public class NovelChapterDao {
     private static final ObservableList<FreeContent> freeContents;
 
     ObservableList<NovelChapter> novelChapters;
+    private static final String userId;
 
     static {
+        userId = preferences.get(PREF_KEY_USER_ID, "");
         freeContents = FXCollections.observableArrayList();
         updateFreeChaptersColumn();
     }
@@ -87,7 +92,7 @@ public class NovelChapterDao {
 
     public ObservableList<NovelChapter> getNovelChapters() {
         updateNovelChaptersFromDb();
-        if (preferences.getBoolean(Constants.PREF_KEY_ACTIVATION_STATE, false)) {
+        if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
             for (NovelChapter chapter : novelChapters) {
                 chapter.setFree(true);
             }

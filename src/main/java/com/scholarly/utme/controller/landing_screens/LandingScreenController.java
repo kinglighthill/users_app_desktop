@@ -30,6 +30,7 @@ import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
 
 @FxmlPath("/layouts/landing_screens/landing_screen.fxml")
 public class LandingScreenController implements FxmlView<LandingScreenVM>, Initializable {
+    private static final String TAG = "LandingScreenController: ";
 
     @InjectViewModel
     private LandingScreenVM viewModel;
@@ -56,36 +57,38 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
 
-
     private Preferences preferences;
+
+    private static Parent homeView;
+    private static Parent accountView;
+    private static Parent activateView;
+    private static Parent appsView;
+    private static Parent settingsView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        String userId = viewModel.getUserId();
         preferences = AppPreferences.getPreferences();
 
-        ViewTuple<LandingScreenHomeController, LandingScreenHomeVM> homeViewTuple = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load();
-        Parent homeView = homeViewTuple.getView();
+        long start = System.currentTimeMillis();
 
-        ViewTuple<LandingScreenAccountController, LandingScreenAccountVM> accountViewTuple = FluentViewLoader.fxmlView(LandingScreenAccountController.class).load();
-        Parent accountView = accountViewTuple.getView();
+        Parent homeView = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView();
+//        homeView = homeView == null ? FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView() : homeView;
 
-        ViewTuple<LandingScreenActivateController, LandingScreenActivateVM> activateViewTuple = FluentViewLoader.fxmlView(LandingScreenActivateController.class).load();
-        Parent activateView = activateViewTuple.getView();
+        Parent accountView = FluentViewLoader.fxmlView(LandingScreenAccountController.class).load().getView();
+//        accountView = accountView == null ? FluentViewLoader.fxmlView(LandingScreenAccountController.class).load().getView() : accountView;
 
-        ViewTuple<LandingScreenAppsController, LandingScreenAppsVM> appsViewTuple = FluentViewLoader.fxmlView(LandingScreenAppsController.class).load();
-        Parent appsView = appsViewTuple.getView();
+//        Parent activateView = FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView();
+        activateView = activateView == null ? FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView() : activateView;
 
-        ViewTuple<LandingScreenTriviaController, LandingScreenTriviaVM> triviaViewTuple = FluentViewLoader.fxmlView(LandingScreenTriviaController.class).load();
-        Parent triviaView = triviaViewTuple.getView();
+//        Parent appsView = FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView();
+        appsView = appsView == null ? FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView() : appsView;
 
-        ViewTuple<LandingScreenPerformanceController, LandingScreenPerformanceVM> performanceViewTuple = FluentViewLoader.fxmlView(LandingScreenPerformanceController.class).load();
-        Parent performanceView = performanceViewTuple.getView();
+//        Parent settingsView = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView();
+        settingsView = settingsView == null ? FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView() : settingsView;
 
-        ViewTuple<LandingScreenUpdatesController, LandingScreenUpdatesVM> updatesViewTuple = FluentViewLoader.fxmlView(LandingScreenUpdatesController.class).load();
-        Parent updatesView = updatesViewTuple.getView();
-
-        ViewTuple<LandingScreenSettingsController, LandingScreenSettingsVM> settingsViewTuple = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load();
-        Parent settingsView = settingsViewTuple.getView();
+        long end = System.currentTimeMillis();
+        System.out.println(TAG + "Time taken to load Views -> " + (end - start)+"ms");
 
         homeContentPane.getChildren().add(homeView);
 
@@ -183,7 +186,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
         });
 
-        if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE, false)) {
+        if (viewModel.isActivated()) {
             activateVBox.getChildren().remove(activatePanel);
         } else {
             if (!activateVBox.getChildren().contains(activatePanel)) {
@@ -191,11 +194,11 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             }
         }
 
-        if (preferences.getBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED, false)) {
+        if (preferences.getBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false)) {
             activateVBox.getChildren().remove(activatePanel);
         }
         activateCloseIcon.setOnMouseClicked(event -> {
-            preferences.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED, activateVBox.getChildren().remove(activatePanel));
+            preferences.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, activateVBox.getChildren().remove(activatePanel));
         });
 
     }
@@ -276,14 +279,14 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 //    }
 
      public static class InitialData {
-        private String screen;
+        private String screenToShow;
 
-        public InitialData(String screen) {
-            this.screen = screen;
+        public InitialData(String screenToShow) {
+            this.screenToShow = screenToShow;
         }
 
-        public String getScreen() {
-            return screen;
+         public String getScreenToShow() {
+            return screenToShow;
         }
     }
 }

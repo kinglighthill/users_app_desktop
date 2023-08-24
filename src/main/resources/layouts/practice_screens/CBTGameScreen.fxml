@@ -118,16 +118,16 @@
 
                            <VBox fx:id="questionVBox" alignment="TOP_CENTER">
                               <ScrollPane fx:id="questionScrollPane" fitToWidth="true" prefWidth="100" prefHeight="400">
-                                 <!--<Label fx:id="questionLabel" text="Simplify 0.000215 x 0.000028 and Express your answer in standard form" textAlignment="CENTER" textFill="#178102" wrapText="true" VBox.vgrow="ALWAYS">
+                                 <Label fx:id="questionLabel" text="Simplify 0.000215 x 0.000028 and Express your answer in standard form" textAlignment="CENTER" textFill="#178102" wrapText="true" VBox.vgrow="ALWAYS">
                                     <font>
                                        <Font size="24.0" />
                                     </font>
                                     <padding>
                                        <Insets topRightBottomLeft="10"/>
                                     </padding>
-                                 </Label>-->
-                                 <WebView fx:id="questionLabel" VBox.vgrow="ALWAYS">
-                                 </WebView>
+                                 </Label>
+                                 <!--<WebView fx:id="questionWebView" VBox.vgrow="ALWAYS">
+                                 </WebView>-->
                               </ScrollPane>
                               <VBox fx:id="questionWithImageVBox" spacing="5" prefHeight="400" prefWidth="300" alignment="TOP_CENTER" StackPane.alignment="TOP_CENTER">
                                  <ImageView fx:id="questionImage" fitHeight="200" fitWidth="300" StackPane.alignment="TOP_CENTER"/>

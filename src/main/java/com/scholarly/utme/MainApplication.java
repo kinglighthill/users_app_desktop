@@ -1,6 +1,7 @@
 package com.scholarly.utme;
 
 import com.github.sarxos.webcam.Webcam;
+import com.scholarly.utme.controller.AuthenticationController;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.AppPreferences;
@@ -54,7 +55,8 @@ public class MainApplication extends Application {
         if (firstTimeUser) {
             ViewSwitcher.showScreen(View.WELCOME_SCREEN);
         } else {
-            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+            ViewSwitcher.passData(new AuthenticationController.InitialData(false));
+            ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
         }
 
 //        try {

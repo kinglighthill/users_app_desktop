@@ -3,15 +3,17 @@ package com.scholarly.utme.controller.landing_screens;
 import com.google.gson.Gson;
 import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.ActivationInfo;
-import com.scholarly.utme.network.model.BaseResponse;
+import com.scholarly.utme.network.model.RefreshRequest;
+import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.network.model.DeviceInfo;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenActivateVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.ViewModel;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -23,6 +25,7 @@ import javafx.scene.layout.VBox;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ResourceBundle;
@@ -36,8 +39,8 @@ import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
 public class LandingScreenActivateController implements FxmlView<LandingScreenActivateVM>, Initializable {
     private static final String TAG = "LandingScreenActivateController: ";
 
-    private static final String BEARER_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0NWUyNDZjNTEwNmExMGQ2MzFiMTA0M2E3MWJiNTllNWJhMGM5NGQiLCJ0eXAiOiJKV1QifQ.eyJ1dWlkIjoiakFiaXBFY1BHZ0VkaTB2VTI1SlYiLCJlbWFpbF9hZGRyZXNzIjoiam9obmRvZUBnbWFpbC5jb20iLCJjb3VudHJ5IjoibmlnZXJpYSIsImlzX2FjdGl2YXRpb25fYWN0aXZlIjp0cnVlLCJkZXZpY2VfaWQiOiJkZXZpY2UtaWQiLCJhcHBfc2x1ZyI6InV0bWUiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vc2Nob2xhcmx5LXV0bWUtc3RhZ2luZyIsImF1ZCI6InNjaG9sYXJseS11dG1lLXN0YWdpbmciLCJhdXRoX3RpbWUiOjE2ODYzNTU0MzgsInVzZXJfaWQiOiJqQWJpcEVjUEdnRWRpMHZVMjVKViIsInN1YiI6ImpBYmlwRWNQR2dFZGkwdlUyNUpWIiwiaWF0IjoxNjg2MzU1NDM4LCJleHAiOjE2ODYzNTkwMzgsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnt9LCJzaWduX2luX3Byb3ZpZGVyIjoiY3VzdG9tIn19.MrIVwiOYFv2vz8-GdoPs8hjhprVWj_9LHOwZmGTlF_9ESiSe8nL5fZLEt1SBXaBMl_XVaJ3waPEL7J7XmDlmpaTynC2nGGxYAVxl2Zqqj9fB_ihRlWDrnsOtCf2Y6WIdI-x1ad4XOGDfQmN1qhGdrBsamK2dEDWtCj1G4slBNc-QmnXBPT_lUUmWG6JxXpeaZLoCuuyccP0YEnjJguEPK0-RNJDX2xTD0aEH_ioIRHu0qNLHK5-4fwf46JdHO78d6e1XGhB9XMjjuU1FOzS7NSwhTrMBiKEhoAZlKlVJKM9emyrouoKUseGIjpwT9Z69_feQ80EIyWPsik0ZzL1h5A";
-    private String ACCESS_TOKEN = "";
+    @InjectViewModel
+    private LandingScreenActivateVM viewModel;
 
     @FXML
     private Pane dialogDimmer;
@@ -54,23 +57,27 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
     @FXML
     private Label incorrectPinError, activationSuccessfulMessage, activationText, headerLabel;
     @FXML
-    private Button activateButton, buyPinButton, loginButton;
+    private Button activateButton, buyPinButton, continueButton;
 
-    private Preferences preferences = AppPreferences.getPreferences();
-    private OkHttpClient httpClient = NetworkService.getHttpClient();
+    private Preferences preferences;
+    private OkHttpClient httpClient;
+
+    interface NetworkCallback {
+        void resendRequest();
+        void refreshToken();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN, "");
-//        System.out.println(TAG + "Refresh Token -> " + preferences.get(PREF_KEY_REFRESH_TOKEN, ""));
+        preferences = AppPreferences.getPreferences();
+        httpClient = NetworkService.getHttpClient();
 
         initializeViews();
         initializeFonts();
 
         centerVBox.getChildren().remove(notActivatedPane);
         innerVBox.getChildren().remove(activationText);
-        if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE, false)) {
+        if (viewModel.isActivated()) {
             centerVBox.getChildren().remove(notActivatedPane);
             innerVBox.getChildren().remove(activationText);
             activationPinTextField.setDisable(true);
@@ -102,19 +109,10 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
         activationPinTextField.setTextFormatter(textFormatter);
 
         activationPinTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
-//            if (newValue.length() % 9 == 0&& newValue.length() / 9 == 1) {
-//                System.out.println(TAG + "NewVlaue for 9 is " + newValue);
-//                activationPinTextField.setText(newValue+="-");
-//            }
-//            if (newValue.length() % 14 == 0&& newValue.length() / 14 == 1) {
-//                System.out.println(TAG + "NewVlaue for 14 is " + newValue);
-//                activationPinTextField.setText(newValue+="-");
-//            }
             activateButton.setDisable(newValue.length() < 16);
         }));
 
         activateButton.setOnAction(event -> {
-            DeviceInfo deviceInfo = DeviceInfo.getSystemProperties();
 
             showProgressBar();
             // Check for internet connectivity
@@ -123,15 +121,136 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                 URLConnection connection = url.openConnection();
                 connection.connect();
 
-                Task<Void> activateTask = new Task<>() {
+                String END_POINT = "activations";
+                String userId = viewModel.getUserId();
+
+                String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+
+                ActivationInfo activationInfo = new ActivationInfo(activationPinTextField.getText(), DeviceInfo.getSystemProperties().getDeviceId());
+
+                Gson gson = new Gson();
+                String json = gson.toJson(activationInfo);
+
+                RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+                Request request = new Request.Builder()
+                        .url(BASE_URL + END_POINT)
+                        .addHeader("Authorization", "Bearer " + ACCESS_TOKEN)
+                        .addHeader("platform", DeviceInfo.getSystemProperties().getDeviceId())
+                        .put(requestBody)
+                        .build();
+
+                activateUser(request, new NetworkCallback() {
                     @Override
-                    protected Void call() throws Exception {
-                        activateUser(activationPinTextField.getText(), deviceInfo.getDeviceId());
-                        return null;
+                    public void refreshToken() {
+                        System.out.println(TAG + "Refreshing token...");
+                        String REFRESH_TOKEN = preferences.get(PREF_KEY_REFRESH_TOKEN+userId, "");
+                        RefreshRequest refreshTokenRequest = new RefreshRequest(REFRESH_TOKEN);
+
+                        String refreshJson = gson.toJson(refreshTokenRequest);
+
+                        RequestBody refreshRequestBody = RequestBody.create(JSON_BODY_TYPE, refreshJson);
+
+                        Request refreshRequest = new Request.Builder()
+                                .url(REFRESH_URL)
+                                .post(refreshRequestBody)
+                                .build();
+
+                        Call call = httpClient.newCall(refreshRequest);
+
+                        try(Response response = call.execute()) {
+                            if (response.code() == 200) {
+                                try(ResponseBody responseBody = response.body()) {
+                                    assert responseBody != null;
+                                    BaseResponse refreshResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+                                    if (refreshResponse.getStatus().equalsIgnoreCase("success")) {
+                                        System.out.println(TAG + "Refreshed Token for user with id -> " + refreshResponse.getData().getUserId());
+
+                                        preferences.put(PREF_KEY_ACCESS_TOKEN+userId, refreshResponse.getData().getAccessToken());
+                                        preferences.put(PREF_KEY_REFRESH_TOKEN+userId, refreshResponse.getData().getRefreshToken());
+
+                                        System.out.println(TAG + "Refreshed Token New Access Token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN+userId, ""));
+
+                                    } else if (refreshResponse.getStatus().equalsIgnoreCase("error")) {
+                                        Platform.runLater(() -> {
+                                            Alert alertDialog = Alerts.info(getClass(), "Error", refreshResponse.getMessage(), "");
+                                            alertDialog.show();
+
+                                        });
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                                }
+
+                                response.close();
+                            }
+                        } catch (Exception e) {
+                            Platform.runLater(() -> {
+                                Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                                alertDialog.show();
+
+                            });
+                        }
                     }
-                };
-                Thread activateThread = new Thread(activateTask);
-                activateThread.start();
+                    @Override
+                    public void resendRequest() {
+                        System.out.println(TAG + "Resending request...");
+
+                        String NEW_ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+
+                        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+                        Request request = new Request.Builder()
+                                .url(BASE_URL + END_POINT)
+                                .addHeader("Authorization", "Bearer " + NEW_ACCESS_TOKEN)
+                                .addHeader("platform", DeviceInfo.getSystemProperties().getDeviceId())
+                                .put(requestBody)
+                                .build();
+
+                        Call call = httpClient.newCall(request);
+
+                        call.enqueue(new Callback() {
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                try (ResponseBody responseBody = response.body()) {
+                                    assert responseBody != null;
+                                    BaseResponse activationResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+
+                                    if (activationResponse.getStatus().equalsIgnoreCase("success")) {
+                                        // TODO: Encrypt and Save token with Java Keystore
+                                        preferences.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
+                                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
+
+                                        Platform.runLater(() -> {
+                                            progressBar.setVisible(false);
+                                            Animations.showDialog(activationSuccessfulPane, dialogDimmer);
+                                        });
+
+                                    } else if (activationResponse.getStatus().equalsIgnoreCase("error")) {
+                                        Platform.runLater(() -> {
+                                            Alert alertDialog = Alerts.info(getClass(), "Error", activationResponse.getMessage(), "");
+                                            alertDialog.show();
+                                            hideProgressBar();
+                                        });
+                                    }
+
+                                } catch (Exception e) {
+                                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                Platform.runLater(() -> {
+                                    Alert alertDialog = Alerts.info(getClass(), "Error", "Could not connect because " + e.getMessage(), "");
+                                    alertDialog.show();
+                                    hideProgressBar();
+                                });
+                                System.out.println(TAG + "Request failed with exception -> " + e.getMessage());
+                            }
+                        });
+                    }
+                });
 
             } catch (Exception e) {
                 Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
@@ -149,63 +268,50 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 //            Animations.hideDialog(activationSuccessfulPane, dialogDimmer);
 //        });
 
-        loginButton.setOnAction(event -> {
-            ViewSwitcher.passData(false);
-            ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+        continueButton.setOnAction(event -> {
+//            ViewSwitcher.passData(false);
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
     }
 
-    private void activateUser(String pin, String deviceId) {
-        String END_POINT = "activations";
-
-        ActivationInfo activationInfo = new ActivationInfo(pin, deviceId);
-
+    private void activateUser(Request request, NetworkCallback callback) {
         Gson gson = new Gson();
-        String json = gson.toJson(activationInfo);
 
-        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
-
-        Request request = new Request.Builder()
-                .url(BASE_URL + END_POINT)
-                .addHeader("Authorization", "Bearer " + ACCESS_TOKEN)
-                .put(requestBody)
-                .build();
+        String userId = viewModel.getUserId();
 
         Call call = httpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
-                System.out.println(TAG + "Activate: Got Request -> " + request);
-                System.out.println(TAG + "Activate: Got Request Body -> " + requestBody);
-                System.out.println(TAG + "Activate: Got response code -> " + response.code());
-                try (ResponseBody responseBody = response.body()) {
-                    assert responseBody != null;
-                    BaseResponse activationResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+                if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                    callback.refreshToken();
+                    callback.resendRequest();
+                } else {
+                    try (ResponseBody responseBody = response.body()) {
+                        assert responseBody != null;
+                        BaseResponse activationResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
-                    if (activationResponse.getStatus().equalsIgnoreCase("success")) {
-                        // TODO: Encrypt and Save token with Java Keystore
-                        preferences.put(PREF_KEY_ACTIVATE_ACCESS_TOKEN, activationResponse.getData().getAccessToken());
-                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE, true);
+                        if (activationResponse.getStatus().equalsIgnoreCase("success")) {
+                            // TODO: Encrypt and Save token with Java Keystore
+                            preferences.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
+                            preferences.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
 
-                        Platform.runLater(() -> {
-                            progressBar.setVisible(false);
-//                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
-//                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                            Animations.showDialog(activationSuccessfulPane, dialogDimmer);
-                        });
+                            Platform.runLater(() -> {
+                                progressBar.setVisible(false);
+                                Animations.showDialog(activationSuccessfulPane, dialogDimmer);
+                            });
 
-                    } else if (activationResponse.getStatus().equalsIgnoreCase("error")) {
+                        } else if (activationResponse.getStatus().equalsIgnoreCase("error")) {
+                            Platform.runLater(() -> {
+                                Alert alertDialog = Alerts.info(getClass(), "Error", activationResponse.getMessage(), "");
+                                alertDialog.show();
+                                hideProgressBar();
+                            });
+                        }
 
-                        Platform.runLater(() -> {
-                            Alert alertDialog = Alerts.info(getClass(), "Error", activationResponse.getMessage(), "");
-                            alertDialog.show();
-                            hideProgressBar();
-                        });
-
+                    } catch (Exception e) {
+                        System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                     }
-
-                } catch (Exception e) {
-                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                 }
             }
 
@@ -216,7 +322,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                     alertDialog.show();
                     hideProgressBar();
                 });
-                System.out.println("Request failed with exception -> " + e.getMessage());
+                System.out.println(TAG + "Request failed with exception -> " + e.getMessage());
             }
         });
 

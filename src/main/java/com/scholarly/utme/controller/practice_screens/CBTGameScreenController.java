@@ -55,7 +55,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private CBTGameScreenVM viewModel;
 
     @FXML
-    private WebView questionWebView, questionWithImageLabel, questionLabel;
+    private WebView questionWebView, questionWithImageLabel;
     @FXML
     private ScrollPane questionScrollPane;
     @FXML
@@ -63,7 +63,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     @FXML
     private Button backButton, fiftyFiftyButton, optionAButton, optionBButton, optionCButton, optionDButton, exitButton, showAnswersButton, playAgainButton, submitReport;
     @FXML
-    private Label questionNumberLabel, pageTitle, fiftyFiftyCount, correctAnswers, incorrectAnswers, questionAttempts, correctAnswersLabel, incorrectAnswersLabel, resultLabel, questionAttemptsLabel;
+    private Label questionNumberLabel, pageTitle, fiftyFiftyCount, questionLabel, correctAnswers, incorrectAnswers, questionAttempts, correctAnswersLabel, incorrectAnswersLabel, resultLabel, questionAttemptsLabel;
     @FXML
     private Label questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
     @FXML
@@ -356,7 +356,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private void initializeFonts() {
         questionDescriptionHeader.setFont(FontUtil.getFont(GilroyFontFamily.MEDIUM_ITALIC, 16));
         readQuestionDesc.setFont(FontUtil.getFont(GilroyFontFamily.MEDIUM_ITALIC, 16));
-//        questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 22));
+        questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 22));
 //        questionWithImageLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 20));
         fiftyFiftyButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
         fiftyFiftyCount.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 16));
@@ -633,15 +633,16 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         String questionText = selectedQuestion.getQuestion().getQuestion();
 
-        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
-        if (questionText.contains("<img")) {
-            questionVBox.getChildren().add(questionWithImageVBox);
-            questionText = parseQuestionWithImageView(questionText);
-        } else {
-            questionVBox.getChildren().add(questionScrollPane);
+//        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
+//        if (questionText.contains("<img")) {
+//            questionVBox.getChildren().add(questionWithImageVBox);
+//            questionText = parseQuestionWithImageView(questionText);
+//        } else {
+//            questionVBox.getChildren().add(questionScrollPane);
 //            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-            questionLabel.getEngine().loadContent(questionText);
-        }
+////            questionWebView.getEngine().loadContent(questionText);
+//        }
+        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
         optionAButton.setText(selectedQuestion.getQuestion().getOptionA().getText());
         optionAButton.setUserData(0);
@@ -676,15 +677,17 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         }
 
         String questionText = selectedQuestion.getQuestion().getQuestion();
-        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
-        if (questionText.contains("<img")) {
-            questionVBox.getChildren().add(questionWithImageVBox);
-            questionText = parseQuestionWithImageView(questionText);
-        } else {
-            questionVBox.getChildren().add(questionScrollPane);
+//        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
+//        if (questionText.contains("<img")) {
+//            questionVBox.getChildren().add(questionWithImageVBox);
+//            questionText = parseQuestionWithImageView(questionText);
+//        } else {
+//            questionVBox.getChildren().add(questionScrollPane);
 //            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-            questionLabel.getEngine().loadContent(questionText);
-        }
+////            questionWebView.getEngine().loadContent(questionText);
+//        }
+
+        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
         optionAButton.setText(selectedQuestion.getQuestion().getOptionA().getText());
         optionAButton.setUserData(0);

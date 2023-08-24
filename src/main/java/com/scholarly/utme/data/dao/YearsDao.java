@@ -3,10 +3,8 @@ package com.scholarly.utme.data.dao;
 import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.FreeContent;
 import com.scholarly.utme.data.model.Year;
-import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.data.util.Tables;
 import com.scholarly.utme.util.AppPreferences;
-import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +15,9 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+
+import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class YearsDao {
     private static final String TAG = "YearsDao: ";
@@ -35,8 +36,10 @@ public class YearsDao {
     private static final ObservableList<Year> allYears;
     private static final ObservableList<Year> subjectAvailableYears;
     private static final ObservableList<FreeContent> freeContents;
+    private static final String userId;
 
     static {
+        userId = preferences.get(PREF_KEY_USER_ID, "");
         allYears = FXCollections.observableArrayList();
         subjectAvailableYears = FXCollections.observableArrayList();
         freeContents = FXCollections.observableArrayList();
@@ -55,14 +58,12 @@ public class YearsDao {
 
         }
 
-//        System.out.println(TAG + "Query -> " + query);
-
 //        System.out.println(TAG + "Available Years For Subject with id -> " + subjectId + " Query -> " + query + " AND Type -> " + type);
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
             subjectAvailableYears.clear();
             while (rs.next()) {
-                if (preferences.getBoolean(Constants.PREF_KEY_ACTIVATION_STATE, false)) {
+                if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
                     subjectAvailableYears.add(
                             new Year(
                                     rs.getInt(idColumn),

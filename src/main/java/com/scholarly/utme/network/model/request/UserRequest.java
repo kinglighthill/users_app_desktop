@@ -1,8 +1,10 @@
-package com.scholarly.utme.network.model;
+package com.scholarly.utme.network.model.request;
 
 import com.google.gson.annotations.SerializedName;
+import com.scholarly.utme.network.model.DeviceInfo;
+import com.scholarly.utme.network.model.ReferrerInfo;
 
-public class SignupUser {
+public class UserRequest {
     @SerializedName("full_name")
     private String fullName;
     private String email;
@@ -23,11 +25,11 @@ public class SignupUser {
     @SerializedName("referrer_info")
     private ReferrerInfo referrerInfo;
 
-    public SignupUser() {
+    public UserRequest() {
 
     }
 
-    public SignupUser(String fullName, String email, String phoneNumber, String password, String country, String fcmToken, String appSlug, boolean emailVerified, String profilePicUrl, DeviceInfo deviceInfo, ReferrerInfo referrerInfo) {
+    public UserRequest(String fullName, String email, String phoneNumber, String password, String country, String fcmToken, String appSlug, boolean emailVerified, String profilePicUrl, DeviceInfo deviceInfo, ReferrerInfo referrerInfo) {
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;

@@ -2,10 +2,9 @@ package com.scholarly.utme.viewmodels.note_screens;
 
 import com.google.gson.Gson;
 import com.scholarly.utme.controller.note_screens.NotesScreenController.InitialData;
-import com.scholarly.utme.data.dao.NoteDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.SubjectDao;
-import com.scholarly.utme.network.model.User;
+import com.scholarly.utme.network.model.UserData;
 import com.scholarly.utme.data.model.newDb.NoteLastSection;
 import com.scholarly.utme.data.dao.newDb.SectionDao;
 import com.scholarly.utme.data.dao.newDb.SubTopicDao;
@@ -24,6 +23,9 @@ import javafx.collections.ObservableList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.prefs.Preferences;
+
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_DATA;
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class NotesScreenVM implements ViewModel {
     private static final String TAG = "NotesScreenVM: ";
@@ -46,13 +48,16 @@ public class NotesScreenVM implements ViewModel {
 
     Preferences preferences = AppPreferences.getPreferences();
 
-    private User user;
+    Gson gson = new Gson();
+
+    private final UserData userData;
+    private final String userId;
 
     public NotesScreenVM() {
-        String userData = preferences.get(Constants.PREF_KEY_USER_DATA, "");
-        Gson gson = new Gson();
-        user = gson.fromJson(userData, User.class);
-        System.out.println(TAG + "Got User with details -> " + Helper.toString(user));
+        userId = preferences.get(PREF_KEY_USER_ID, "");
+        String userDataString = preferences.get(PREF_KEY_USER_DATA+userId, "");
+
+        userData = gson.fromJson(userDataString, UserData.class);
     }
 
     public void initialize(InitialData data) {
@@ -67,7 +72,6 @@ public class NotesScreenVM implements ViewModel {
 //        noteSubjectQuestions.addAll(ObjectiveQuestionDao.getQuestionsWithNoteSubjectId(getPQSubjectId(data.getSubject().getSubjectId())));
 
         selectedTopicIndex.set(data.getSelectedNoteTopic().getOrder()-1);
-
 
         noteTopics.forEach(topic -> {
             noteSections.put(topic.getId(), SectionDao.getNoteSectionsWithTopicId(topic.getId()));
@@ -199,8 +203,8 @@ public class NotesScreenVM implements ViewModel {
         this.subTopicSections = subTopicSections;
     }
 
-    public User getUser() {
-        return user;
+    public UserData getUser() {
+        return userData;
     }
 
     //    public void addNote(Section selectedSection, String note) {

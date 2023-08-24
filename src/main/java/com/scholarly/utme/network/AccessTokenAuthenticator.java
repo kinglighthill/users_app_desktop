@@ -1,23 +1,17 @@
 package com.scholarly.utme.network;
 
 import com.google.gson.Gson;
-import com.scholarly.utme.network.model.ActivationInfo;
-import com.scholarly.utme.network.model.BaseResponse;
+import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.network.model.RefreshRequest;
 import com.scholarly.utme.ui.utils.Alerts;
-import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.util.Constants;
 import io.reactivex.rxjava3.annotations.NonNull;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.IllegalFormatCodePointException;
 import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;

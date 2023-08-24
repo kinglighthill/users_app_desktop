@@ -112,7 +112,7 @@ public class SectionDao {
                 new Object[]{section.getId(), section.getSectionId(), section.getSectionTitle(), section.getUserId()},
                 new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.VARCHAR});
 
-        System.out.println(TAG + "INSERT SQL Query -> " + query);
+        System.out.println(TAG + "InsertLastSection SQL Query -> " + query);
 
         try {
             return (int) databaseService.executeUpdate(query);

@@ -1,8 +1,9 @@
 package com.scholarly.utme.network.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.scholarly.utme.data.model.User;
 
-public class User {
+public class UserData {
     private String id;
     @SerializedName("full_name")
     private String fullName;
@@ -18,7 +19,7 @@ public class User {
     private String referralCode;
     private String gender;
 
-    public User(String id, String fullName, String email, String phoneNumber, String country, boolean emailVerified, String profilePicUrl, String referralCode, String gender) {
+    public UserData(String id, String fullName, String email, String phoneNumber, String country, boolean emailVerified, String profilePicUrl, String referralCode, String gender) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
