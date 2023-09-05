@@ -4,6 +4,7 @@ import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.listItems.BookmarkItem;
 import com.scholarly.utme.ui.cellFactories.BookmarkGridCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.account_screens.AccountBookmarksScreenVM;
@@ -107,7 +108,7 @@ public class AccountBookmarksScreenController implements FxmlView<AccountBookmar
         });
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData(new LandingScreenController.InitialData("accountScreen"));
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACCOUNT_SCREEN));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 

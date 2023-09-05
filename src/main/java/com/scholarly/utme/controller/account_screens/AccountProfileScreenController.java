@@ -11,12 +11,8 @@ import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.network.model.request.UpdateUserRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.network.model.response.UploadResponse;
-import com.scholarly.utme.ui.utils.Alerts;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.AppPreferences;
-import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.account_screens.AccountProfileScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -35,6 +31,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import okhttp3.*;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.unbrokendome.base62.Base62;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -48,6 +45,7 @@ import java.net.*;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.Preferences;
 
@@ -101,28 +99,38 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         String imageUrl = viewModel.getUser().getProfilePicUrl();
         String imageUrlWithQueryString = imageUrl + "?" + RandomStringUtils.random(6, true, true);
 
-        if (imageUrl != null && !imageUrl.contains("empty")) {
-            Image image = new Image(imageUrlWithQueryString, false);
-            if (image.isError() || !internetEnabled) {
-                try {
-                    InputStream inputStream = new FileInputStream("scholarly_profile_image.jpg");
-                    renderProfileImage(new Image(inputStream));
-                    System.out.println(TAG + "Loaded Image from File");
-                } catch (Exception e) {
-                    System.out.println(TAG + "Error loading image from File system");
+        Task<Void> imageTask = new Task<>() {
+            @Override
+            protected Void call() {
+                if (imageUrl != null && !imageUrl.contains("empty")) {
+                    Image image = new Image(imageUrlWithQueryString, false);
+                    if (image.isError() || !internetEnabled) {
+                        try {
+                            InputStream inputStream = new FileInputStream("scholarly_profile_image.jpg");
+                            renderProfileImage(new Image(inputStream));
+                            System.out.println(TAG + "Loaded Image from File");
+                        } catch (Exception e) {
+                            System.out.println(TAG + "Error loading image from File system");
+                        }
+                    } else {
+                        renderProfileImage(image);
+                        System.out.println(TAG + "Loaded Image from url -> " + imageUrlWithQueryString);
+                    }
+                } else {
+                    renderProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/default_profile_image.png").toString()));
                 }
-            } else {
-                renderProfileImage(image);
-                System.out.println(TAG + "Loaded Image from url -> " + imageUrlWithQueryString);
+                return null;
             }
-        } else {
-            renderProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/default_profile_image.png").toString()));
-        }
+        };
+        Thread imageThread = new Thread(imageTask);
+        imageThread.start();
 
         emailTextField.setText(viewModel.getUser().getEmail());
         profileNameTextField.setText(viewModel.getUser().getFullName());
         phoneTextField.setText(viewModel.getUser().getPhoneNumber());
-        deviceIdLabel.setText(DeviceInfo.getSystemProperties().getDeviceId());
+
+        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+        deviceIdLabel.setText(encodedDeviceId.toUpperCase());
 
         changeProfileName.setOnMouseClicked(event -> {
             profileNameTextField.setEditable(true);
@@ -492,7 +500,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         });
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData(new LandingScreenController.InitialData("accountScreen"));
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACCOUNT_SCREEN));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 

@@ -374,6 +374,12 @@
                             <Insets top="30" left="15" right="15" bottom="20"/>
                         </VBox.margin>
                     </Panel>
+
+                    <VBox fx:id="fontVBox" spacing="10">
+                        <VBox.margin>
+                            <Insets left="20" bottom="10"/>
+                        </VBox.margin>
+                    </VBox>
                 </VBox>
             </ScrollPane>
 

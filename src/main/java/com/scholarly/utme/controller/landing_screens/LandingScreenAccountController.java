@@ -3,6 +3,7 @@ package com.scholarly.utme.controller.landing_screens;
 import com.scholarly.utme.controller.AuthenticationController;
 import com.scholarly.utme.network.model.DeviceInfo;
 import com.scholarly.utme.ui.utils.Alerts;
+import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAccountVM;
@@ -27,13 +28,14 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Base64;
 import java.util.ResourceBundle;
+import java.util.UUID;
+import org.unbrokendome.base62.Base62;
 
-import static com.scholarly.utme.util.Constants.BASE_URL;
-import static com.scholarly.utme.util.Constants.PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED;
+import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/landing_screens/landing_screen_account.fxml")
 public class LandingScreenAccountController implements FxmlView<LandingScreenAccountVM>, Initializable {
@@ -67,30 +69,41 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
         initializeFonts();
 
         emailText.setText(viewModel.getUser().getEmail());
-        deviceIdLabel.setText(DeviceInfo.getSystemProperties().getDeviceId());
+
+        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+
+        deviceIdLabel.setText(encodedDeviceId.toUpperCase());
 
         String imageUrl = viewModel.getUser().getProfilePicUrl();
         String imageUrlWithQueryString = imageUrl + "?" + RandomStringUtils.random(6, true, true);
 
         long start = System.currentTimeMillis();
 
-        if (imageUrl != null && !imageUrl.contains("empty")) {
-            Image image = new Image(imageUrlWithQueryString, true);
-            if (image.isError() || !internetEnabled) {
-                try {
-                    InputStream inputStream = new FileInputStream("scholarly_profile_image.jpg");
-                    renderProfileImage(new Image(inputStream));
-                    System.out.println(TAG + "Loaded Image from File");
-                } catch (Exception e) {
-                    System.out.println(TAG + "Error loading image from File system");
+        Task<Void> imageTask = new Task<>() {
+            @Override
+            protected Void call() {
+                if (imageUrl != null && !imageUrl.contains("empty")) {
+                    Image image = new Image(imageUrlWithQueryString, true);
+                    if (image.isError() || !internetEnabled) {
+                        try {
+                            InputStream inputStream = new FileInputStream("scholarly_profile_image.jpg");
+                            renderProfileImage(new Image(inputStream));
+                            System.out.println(TAG + "Loaded Image from File");
+                        } catch (Exception e) {
+                            System.out.println(TAG + "Error loading image from File system");
+                        }
+                    } else {
+                        renderProfileImage(image);
+                        System.out.println(TAG + "Loaded image from url -> " + imageUrlWithQueryString);
+                    }
+                } else {
+                    renderProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/default_profile_image.png").toString()));
                 }
-            } else {
-                renderProfileImage(image);
-                System.out.println(TAG + "Loaded image from url -> " + imageUrlWithQueryString);
+                return null;
             }
-        } else {
-            renderProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/default_profile_image.png").toString()));
-        }
+        };
+        Thread imageThread = new Thread(imageTask);
+        imageThread.start();
 
         System.out.println(TAG + "Time taken to load image -> " + (System.currentTimeMillis() - start) + "ms");
 
@@ -99,6 +112,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
         });
 
         settingsPanel.setOnMouseClicked(mouseEvent -> {
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.SETTINGS_SCREEN));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
@@ -125,7 +139,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
-//                    viewModel.getPreferences().putBoolean(Constants.PREF_KEY_ACTIVATION_STATE, false);
+                    viewModel.getPreferences().putBoolean(PREF_KEY_LOGGED_USER_OUT, true);
                     viewModel.getPreferences().putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
                     dialogDimmer.setVisible(true);
                     ViewSwitcher.passData(new AuthenticationController.InitialData(false));

@@ -35,11 +35,13 @@ module com.scholarly.utme {
     requires latex.converter;
     requires com.sandec.mdfx;
 //    requires org.scilab.forge;
+    requires com.luciad.imageio.webp;
 
     requires webcam.capture;
     requires unirest.java;
     requires json;
     requires java.desktop;
+    requires base62;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;

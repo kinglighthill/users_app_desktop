@@ -236,7 +236,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
                     dialogDimmer.setVisible(false);
-                    ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, null));
+                    ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
                     ViewSwitcher.showScreen(View.HOME_SCREEN);
                 } else {
                     dialogDimmer.setVisible(false);

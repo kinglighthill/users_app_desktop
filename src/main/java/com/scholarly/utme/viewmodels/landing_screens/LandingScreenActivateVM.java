@@ -18,7 +18,9 @@ public class LandingScreenActivateVM implements ViewModel {
 
     public LandingScreenActivateVM(){
         userId = preferences.get(PREF_KEY_USER_ID, "");
+        System.out.println(TAG + "User id -> " + userId);
         activated = preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false);
+        System.out.println(TAG + "Activation state -> " + activated);
     }
 
     public String getUserId() {

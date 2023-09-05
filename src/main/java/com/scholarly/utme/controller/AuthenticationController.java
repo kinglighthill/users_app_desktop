@@ -2,6 +2,7 @@ package com.scholarly.utme.controller;
 
 import com.google.gson.Gson;
 import com.scholarly.utme.MainApplication;
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.network.model.request.UserRequest;
@@ -399,7 +400,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                         Platform.runLater(() -> {
                             hideProgressBar();
-//                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
                             ViewSwitcher.showScreen(View.LANDING_SCREEN);
                         });
 
@@ -472,7 +473,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                         Platform.runLater(() -> {
                             hideProgressBar();
-//                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
                             ViewSwitcher.showScreen(View.LANDING_SCREEN);
                         });
 
@@ -543,7 +544,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                         Platform.runLater(() -> {
                             hideProgressBar();
-//                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
                             ViewSwitcher.showScreen(View.LANDING_SCREEN);
                         });
 

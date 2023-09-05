@@ -31,13 +31,22 @@ import javafx.scene.text.TextAlignment;
 import okhttp3.*;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
 import static com.scholarly.utme.util.Constants.*;
@@ -60,7 +69,7 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
     @FXML
     private Button mobileAppsButton, desktopAppsButton;
     @FXML
-    private ImageView searchIcon;
+    private ImageView searchIcon, noAppsImage;
     @FXML
     private Label mobileAppsLabel, desktopAppsLabel, noApplicationsText;
     @FXML
@@ -214,6 +223,47 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
             searchIcon.setVisible(!newValue);
         }));
 
+
+        TextFormatter<String> textFormatter = new TextFormatter<>(change -> {
+            if (!change.isContentChange()) {
+                return change;
+            }
+
+            String text = change.getControlNewText();
+
+            if (text.isBlank()) {
+                displayMobileApps(mobileApps);
+                displayDesktopApps(desktopApps);
+                return change;
+            }
+
+            List<AppItem> searchedMobileApps = new ArrayList<>();
+            List<AppItem> searchedDesktopApps = new ArrayList<>();
+
+            for (AppItem appItem : mobileApps) {
+                if (appItem.keywords.contains(text)) {
+                    searchedMobileApps.add(appItem);
+                }
+            }
+
+            for (AppItem appItem : desktopApps) {
+                if (appItem.keywords.contains(text)) {
+                    searchedDesktopApps.add(appItem);
+                }
+            }
+
+            long mobileStart = System.currentTimeMillis();
+            displayMobileApps(searchedMobileApps);
+            System.out.println(TAG + "Time taken to load Mobile Apps -> " + (System.currentTimeMillis() - mobileStart) + "ms");
+            long desktopStart = System.currentTimeMillis();
+            displayDesktopApps(searchedDesktopApps);
+            System.out.println(TAG + "Time taken to load Desktop Apps -> " + (System.currentTimeMillis() - desktopStart) + "ms");
+
+            return change;
+        });
+
+        searchTextField.setTextFormatter(textFormatter);
+
         mobileAppsButton.setOnAction(event -> {
             AppsGridScreenController.InitialData data = new AppsGridScreenController.InitialData(FXCollections.observableArrayList(mobileApps), "Mobile Apps");
             ViewSwitcher.passData(data);
@@ -230,6 +280,7 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
 
     private void initializeViews() {
         searchIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/search_icon.png").toString()));
+        noAppsImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/no_apps_image.png").toString()));
 
         mobileAppsButton.setBackground(Background.EMPTY);
         desktopAppsButton.setBackground(Background.EMPTY);
@@ -337,15 +388,18 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                 application.openBrowser(appItem.getDownloadLink());
             });
 
-            mobileAppsTile.getChildren().add(panel);
+            Platform.runLater(() -> {
+                mobileAppsTile.getChildren().add(panel);
+            });
         });
     }
 
     private void displayDesktopApps(List<AppItem> desktopApps) {
         desktopAppsTile.getChildren().clear();
-        desktopApps.stream().limit(3).forEach(appItem -> {
+        desktopApps.parallelStream().limit(3).forEach(appItem -> {
             Panel panel = new Panel();
             panel.setPrefSize(250, 150);
+
             ImageView appImage = new ImageView(new Image(appItem.getImageUrl()));
             appImage.setFitHeight(100);
             appImage.setFitWidth(100);
@@ -367,7 +421,9 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                 application.openBrowser(appItem.getDownloadLink());
             });
 
-            desktopAppsTile.getChildren().add(panel);
+            Platform.runLater(() -> {
+                desktopAppsTile.getChildren().add(panel);
+            });
         });
     }
 

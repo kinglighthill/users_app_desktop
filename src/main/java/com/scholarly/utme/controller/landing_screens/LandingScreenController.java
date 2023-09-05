@@ -2,11 +2,11 @@ package com.scholarly.utme.controller.landing_screens;
 
 import com.scholarly.utme.data.model.Course;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenVM;
-import com.scholarly.utme.viewmodels.landing_screens.*;
 import de.saxsys.mvvmfx.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,16 +17,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED;
-import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
 
 @FxmlPath("/layouts/landing_screens/landing_screen.fxml")
 public class LandingScreenController implements FxmlView<LandingScreenVM>, Initializable {
@@ -78,8 +75,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         Parent accountView = FluentViewLoader.fxmlView(LandingScreenAccountController.class).load().getView();
 //        accountView = accountView == null ? FluentViewLoader.fxmlView(LandingScreenAccountController.class).load().getView() : accountView;
 
-//        Parent activateView = FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView();
-        activateView = activateView == null ? FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView() : activateView;
+        Parent activateView = FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView();
+//        activateView = activateView == null ? FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView() : activateView;
 
 //        Parent appsView = FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView();
         appsView = appsView == null ? FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView() : appsView;
@@ -92,22 +89,30 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         homeContentPane.getChildren().add(homeView);
 
-//        viewModel.processInitialData(getInitialData());
+        viewModel.processInitialData(getInitialData());
 
         initializeViews();
 
         initializeFonts();
 
-        List<String> fontFamilies = Font.getFamilies();
-        List<String> fontNames    = Font.getFontNames();
-
-//        fontFamilies.forEach(family -> {
-//            System.out.println("Font family -> " + family);
-//        });
-
-//        fontNames.forEach(name -> {
-//            System.out.println("Font name -> " + name);
-//        });
+        if (viewModel.getScreenToShow().equals(Screens.ACCOUNT_SCREEN)) {
+            selectButton(accountView, accountButton);
+        } else if (viewModel.getScreenToShow().equals(Screens.ACTIVATE_SCREEN)) {
+            selectButton(activateView, activateButton);
+        } else if (viewModel.getScreenToShow().equals(Screens.APPS_SCREEN)) {
+            selectButton(appsView, appsButton);
+        } else if (viewModel.getScreenToShow().equals(Screens.SETTINGS_SCREEN)) {
+            selectButton(settingsView, settingsButton);
+        } else {
+            selectButton(homeView, homeButton);
+        }
+        /* else if (viewModel.getScreenToShow().equalsIgnoreCase("triviaScreen")) {
+            selectButton(triviaView, triviaButton);
+        } else if (viewModel.getScreenToShow().equalsIgnoreCase("performanceScreen")) {
+            selectButton(performanceView, performanceButton);
+        } else if (viewModel.getScreenToShow().equalsIgnoreCase("updatesScreen")) {
+            selectButton(updatesView, updatesButton);
+        }*/
 
         /*if (viewModel.getSelectedScreen().equalsIgnoreCase("homeScreen")) {
             selectButton(homeView, homeButton);
@@ -274,18 +279,22 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         changeButtonStyle(toggleButton);
     }
 
-//    private InitialData getInitialData() {
-//        return (InitialData) ViewSwitcher.retrieveData();
-//    }
+    private InitialData getInitialData() {
+        if (ViewSwitcher.retrieveData() != null) {
+            return (InitialData) ViewSwitcher.retrieveData();
+        } else {
+            return null;
+        }
+    }
 
      public static class InitialData {
-        private String screenToShow;
+        private Screens screenToShow;
 
-        public InitialData(String screenToShow) {
+        public InitialData(Screens screenToShow) {
             this.screenToShow = screenToShow;
         }
 
-         public String getScreenToShow() {
+         public Screens getScreenToShow() {
             return screenToShow;
         }
     }

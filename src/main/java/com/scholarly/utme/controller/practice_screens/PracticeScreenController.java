@@ -435,7 +435,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         homePageButton.setOnAction(event -> {
             Animations.hideDialog(testSummaryDialog, summaryDialogDimmer);
-            ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, null));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
@@ -904,7 +904,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, null));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             }
             exitDialogDimmer.setVisible(false);
@@ -930,7 +930,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
 
-                ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, null));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             }
             return buttonType;

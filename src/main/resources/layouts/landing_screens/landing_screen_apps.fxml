@@ -102,11 +102,14 @@
                 </ScrollPane>
 
                 <HBox fx:id="noApplicationHBox" alignment="CENTER" visible="false">
-                    <Label fx:id="noApplicationsText" text="No Item Available at the moment">
-                        <font>
-                            <Font size="18"/>
-                        </font>
-                    </Label>
+                    <VBox spacing="15" alignment="CENTER">
+                        <ImageView fx:id="noAppsImage" fitHeight="220" fitWidth="220"/>
+                        <Label fx:id="noApplicationsText" text="Oops...No Item Available at the moment">
+                            <font>
+                                <Font size="18"/>
+                            </font>
+                        </Label>
+                    </VBox>
                 </HBox>
             </StackPane>
 

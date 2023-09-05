@@ -2,14 +2,10 @@ package com.scholarly.utme.controller.account_screens;
 
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.listItems.TriviaParticipantItem;
-import com.scholarly.utme.ui.utils.Alerts;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.account_screens.AccountTriviaScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -178,7 +173,7 @@ public class AccountTriviaScreenController implements FxmlView<AccountTriviaScre
         });
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData(new LandingScreenController.InitialData("accountScreen"));
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACCOUNT_SCREEN));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 

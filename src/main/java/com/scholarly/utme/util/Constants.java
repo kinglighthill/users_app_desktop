@@ -13,6 +13,7 @@ public class Constants {
     public static final String PREF_KEY_ACCESS_TOKEN = "ACCESS_TOKEN";
     public static final String PREF_KEY_PROFILE_IMAGE_URL = "PROFILE_IMAGE_URL";
     public static final String PREF_KEY_ACTIVATE_ACCESS_TOKEN = "ACTIVATE_ACCESS_TOKEN";
+    public static final String PREF_KEY_LOGGED_USER_OUT = "LOGGED_USER_OUT";
     public static final String PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED = "HOME_SCREEN_ACTIVATE_PROMPT_REMOVED";
 
     // Tab Preference Constants

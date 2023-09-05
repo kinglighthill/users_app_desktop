@@ -2,7 +2,6 @@ package com.scholarly.utme.controller.landing_screens;
 
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.controller.note_screens.NotesScreenController;
-import com.scholarly.utme.data.model.TheoryBookmark;
 import com.scholarly.utme.data.model.listItems.NewsItem;
 import com.scholarly.utme.data.model.newDb.FavoriteSubject;
 import com.scholarly.utme.data.model.newDb.NoteLastSection;
@@ -29,17 +28,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.controlsfx.control.GridView;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -67,7 +66,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private HBox scrollHBox;
     @FXML
-    private VBox continuePreviousSessionVBox, dimmer;
+    private VBox continuePreviousSessionVBox, dimmer, fontVBox;
     @FXML
     private Button viewDesktopAppButton, completeEditSubjectsButton;
     @FXML
@@ -114,23 +113,32 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         long start = System.currentTimeMillis();
 
-        if (imageUrl != null && !imageUrl.contains("empty")) {
-            Image image = new Image(imageUrlWithQueryString, true);
-            if (image.isError() || !internetEnabled) {
-                try {
-                    InputStream inputStream = new FileInputStream("scholarly_profile_image.jpg");
-                    displayProfileImage(new Image(inputStream));
-                    System.out.println(TAG + "Loaded Image from File");
-                } catch (Exception e) {
-                    System.out.println(TAG + "Error loading image from File system");
+        Task<Void> imageTask = new Task<>() {
+            @Override
+            protected Void call() {
+                if (imageUrl != null && !imageUrl.contains("empty")) {
+                    Image image = new Image(imageUrlWithQueryString, true);
+                    if (image.isError() || !internetEnabled) {
+                        try {
+                            InputStream inputStream = new FileInputStream("scholarly_profile_image.jpg");
+                            displayProfileImage(new Image(inputStream));
+                            System.out.println(TAG + "Loaded Image from File");
+                        } catch (Exception e) {
+                            System.out.println(TAG + "Error loading image from File system");
+                        }
+                    } else {
+                        displayProfileImage(image);
+                        System.out.println(TAG + "Loaded Image from url -> " + imageUrlWithQueryString);
+                    }
+                } else {
+                    displayProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/default_profile_image.png").toString()));
                 }
-            } else {
-                displayProfileImage(image);
-                System.out.println(TAG + "Loaded Image from url -> " + imageUrlWithQueryString);
+                return null;
             }
-        } else {
-            displayProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/default_profile_image.png").toString()));
-        }
+        };
+        Thread imageThread = new Thread(imageTask);
+        imageThread.setDaemon(true);
+        imageThread.start();
 
         System.out.println(TAG + "Time taken to load image -> " + (System.currentTimeMillis() - start) + "ms");
 
@@ -168,7 +176,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
 
         cbtPracticePanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, null));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
@@ -240,8 +248,30 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         });
 
         viewDesktopAppButton.setOnAction(event -> {
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.APPS_SCREEN));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
+
+//        List<String> fontFamilies = Font.getFamilies();
+//        List<String> fontNames    = Font.getFontNames();
+//
+//        long startTime = System.currentTimeMillis();
+//        fontFamilies.forEach(family -> {
+//            System.out.println("Font family -> " + family);
+//            Label label = new Label("Font family -> " + family);
+//            label.setFont(Font.font(family, 16));
+////            fontVBox.getChildren().add(label);
+//        });
+//        System.out.println(TAG + "Time taken to load font families -> " + (System.currentTimeMillis() - startTime) + "ms");
+//
+//        long nameStartTime = System.currentTimeMillis();
+//        fontNames.forEach(name -> {
+//            System.out.println("Font name -> " + name);
+//            Label label = new Label("Font name -> " + name);
+//            label.setFont(Font.font(name, 16));
+////            fontVBox.getChildren().add(label);
+//        });
+//        System.out.println(TAG + "Time taken to load font names -> " + (System.currentTimeMillis() - nameStartTime) + "ms");
 
     }
 
@@ -251,9 +281,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         handImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/hand_image2.png").toString()));
         selectSubjectCloseIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/action_close_icon.png").toString()));
         boyWithLaptop.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/boy_with_laptop.png").toString()));
-
-//        compressProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/profile_image2.jpg").toString()));
-//        compressProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/profile_image2.png").toString()));
 
 
         cbtPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_practice_icon.png").toString()));
@@ -392,7 +419,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             panel.setPadding(new Insets(10, 0, 10, 15));
 
             panel.setOnMouseClicked(event -> {
-                ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PRACTICE_SCREEN, subject));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, subject));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             });
 

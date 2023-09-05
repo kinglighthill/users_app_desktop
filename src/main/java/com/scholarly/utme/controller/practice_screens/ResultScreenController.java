@@ -2,7 +2,6 @@ package com.scholarly.utme.controller.practice_screens;
 
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.QuestionDescription;
-import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
@@ -30,8 +29,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.scholarly.utme.ui.utils.Screen.PRACTICE_SCREEN;
 
 @FxmlPath("/layouts/practice_screens/ResultScreen.fxml")
 public class ResultScreenController implements FxmlView<ResultScreenVM>, Initializable {
@@ -210,7 +207,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN, null));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);

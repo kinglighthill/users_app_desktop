@@ -1,8 +1,10 @@
 package com.scholarly.utme.viewmodels.landing_screens;
 
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.util.AppPreferences;
 import de.saxsys.mvvmfx.ViewModel;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.util.prefs.Preferences;
@@ -19,12 +21,16 @@ public class LandingScreenVM implements ViewModel {
 
     private final SimpleStringProperty screenProperty = new SimpleStringProperty();
 
+    private SimpleObjectProperty<Screens> currentScreen = new SimpleObjectProperty<>(null);
+
     public LandingScreenVM() {
         userId = preferences.get(PREF_KEY_USER_ID, "");
         activated = preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false);
     }
     public void processInitialData(LandingScreenController.InitialData data) {
-        screenProperty.set(data.getScreenToShow());
+        if (data != null) {
+            currentScreen.set(data.getScreenToShow());
+        }
     }
 
     public String getUserId() {
@@ -33,6 +39,10 @@ public class LandingScreenVM implements ViewModel {
 
     public boolean isActivated() {
         return activated;
+    }
+
+    public Screens getScreenToShow() {
+        return currentScreen.get();
     }
 
     public String getSelectedScreen() {

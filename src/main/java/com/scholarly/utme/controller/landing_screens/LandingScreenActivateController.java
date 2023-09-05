@@ -23,12 +23,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import okhttp3.*;
+import org.unbrokendome.base62.Base62;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
@@ -126,7 +128,9 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
                 String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
 
-                ActivationInfo activationInfo = new ActivationInfo(activationPinTextField.getText(), DeviceInfo.getSystemProperties().getDeviceId());
+                String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+
+                ActivationInfo activationInfo = new ActivationInfo(activationPinTextField.getText(), encodedDeviceId);
 
                 Gson gson = new Gson();
                 String json = gson.toJson(activationInfo);
@@ -136,7 +140,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                 Request request = new Request.Builder()
                         .url(BASE_URL + END_POINT)
                         .addHeader("Authorization", "Bearer " + ACCESS_TOKEN)
-                        .addHeader("platform", DeviceInfo.getSystemProperties().getDeviceId())
+                        .addHeader("platform", DeviceInfo.getSystemProperties().getPlatform())
                         .put(requestBody)
                         .build();
 
@@ -203,7 +207,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                         Request request = new Request.Builder()
                                 .url(BASE_URL + END_POINT)
                                 .addHeader("Authorization", "Bearer " + NEW_ACCESS_TOKEN)
-                                .addHeader("platform", DeviceInfo.getSystemProperties().getDeviceId())
+                                .addHeader("platform", DeviceInfo.getSystemProperties().getPlatform())
                                 .put(requestBody)
                                 .build();
 
