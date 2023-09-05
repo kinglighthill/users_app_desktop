@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller.settings_screens;
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.settings_screens.SettingsAboutUsScreenVM;
@@ -105,7 +107,7 @@ public class SettingsAboutUsScreenController implements FxmlView<SettingsAboutUs
         });
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData("settingsButton");
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.SETTINGS_SCREEN));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
     }

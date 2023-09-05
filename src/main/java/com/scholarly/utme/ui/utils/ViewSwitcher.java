@@ -12,6 +12,8 @@ public class ViewSwitcher {
     private static Stage stage;
     private static final Scene rootScene = new Scene(new Pane());
 
+    private static View currentView;
+
     public static void showScreen(View view) {
         try {
             Parent root = FluentViewLoader.fxmlView(view.getControllerClass()).load().getView();
@@ -20,6 +22,7 @@ public class ViewSwitcher {
             root.getStylesheets().add(cssResource);
 //            root.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 
+            currentView = view;
             rootScene.setRoot(root);
 
         } catch (Exception e) {
@@ -48,5 +51,9 @@ public class ViewSwitcher {
 
     public static Scene getRootScene() {
         return rootScene;
+    }
+
+    public static View getCurrentView() {
+        return currentView;
     }
 }

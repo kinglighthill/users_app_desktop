@@ -1,8 +1,12 @@
 package com.scholarly.utme.ui.utils;
 
-public enum Screen {
+public enum Screens {
 
-
+    HOME_SCREEN("HOME_SCREEN"),
+    ACCOUNT_SCREEN("ACCOUNT_SCREEN"),
+    ACTIVATE_SCREEN("ACTIVATE_SCREEN"),
+    APPS_SCREEN("APPS_SCREEN"),
+    SETTINGS_SCREEN("SETTINGS_SCREEN"),
     PRACTICE_SCREEN("PRACTICE_SCREEN"),
     PAST_QUESTION_SCREEN("PAST_QUESTION_SCREEN"),
     CBT_GAME_SCREEN("CBT_GAME_SCREEN"),
@@ -27,7 +31,7 @@ public enum Screen {
 
     private String name;
 
-    Screen(String name) {
+    Screens(String name) {
         this.name = name;
     }
 

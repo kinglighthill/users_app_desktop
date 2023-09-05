@@ -2,20 +2,15 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.newDb.PQSubject;
-import com.scholarly.utme.data.model.newDb.Subject;
-import com.scholarly.utme.ui.utils.Screen;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.ui.utils.Screens;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-
-import java.util.prefs.Preferences;
 
 public class HomeScreenVM implements ViewModel, SceneLifecycle {
     public static final String TAG = "HomeScreenVM: ";
 
-    private SimpleObjectProperty<Screen> screenProperty = new SimpleObjectProperty();
+    private SimpleObjectProperty<Screens> screenProperty = new SimpleObjectProperty();
     private SimpleObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty();
 
     public void processInitialData(HomeScreenController.InitialData data) {
@@ -27,11 +22,11 @@ public class HomeScreenVM implements ViewModel, SceneLifecycle {
         }
     }
 
-    public Screen getSelectedScreen() {
+    public Screens getSelectedScreen() {
         return screenProperty.get();
     }
 
-    public SimpleObjectProperty<Screen> selectedScreenProperty() {
+    public SimpleObjectProperty<Screens> selectedScreenProperty() {
         return screenProperty;
     }
 

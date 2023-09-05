@@ -29,7 +29,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -516,7 +515,7 @@ public class StudyPastQuestScreenController2 implements FxmlView<StudyPastScreen
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 dialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PAST_QUESTION_SCREEN, null));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PAST_QUESTION_SCREEN, null));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             }
             dialogDimmer.setVisible(false);

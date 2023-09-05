@@ -31,14 +31,18 @@
             <StackPane AnchorPane.leftAnchor="30" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="80" AnchorPane.bottomAnchor="30">
                 <ScrollPane fx:id="centerScrollPane" fitToWidth="true">
                     <VBox fx:id="applicationsVBox" spacing="35">
-                        <!--<StackPane maxWidth="300" minHeight="35" alignment="CENTER_LEFT">
-                            <TextField maxWidth="300" minHeight="35" promptText="Enter a keyword"/>
+                        <StackPane maxWidth="300" minHeight="35" alignment="CENTER_LEFT">
+                            <TextField fx:id="searchTextField" maxWidth="300" minHeight="35" promptText="Enter a keyword">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </TextField>
                             <ImageView fx:id="searchIcon" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT">
                                 <StackPane.margin>
                                     <Insets right="20"/>
                                 </StackPane.margin>
                             </ImageView>
-                        </StackPane>-->
+                        </StackPane>
 
                         <Panel prefHeight="100" prefWidth="500">
                             <left>
@@ -91,16 +95,22 @@
                                 </VBox>
                             </bottom>
                         </Panel>
-
                     </VBox>
                     <padding>
                         <Insets right="15"/>
                     </padding>
                 </ScrollPane>
 
-                <VBox fx:id="noApplicationVBox" StackPane.alignment="CENTER" visible="false">
-                    <Label fx:id="noApplicationsText" text="No Applications Found"/>
-                </VBox>
+                <HBox fx:id="noApplicationHBox" alignment="CENTER" visible="false">
+                    <VBox spacing="15" alignment="CENTER">
+                        <ImageView fx:id="noAppsImage" fitHeight="220" fitWidth="220"/>
+                        <Label fx:id="noApplicationsText" text="Oops...No Item Available at the moment">
+                            <font>
+                                <Font size="18"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                </HBox>
             </StackPane>
 
         </AnchorPane>

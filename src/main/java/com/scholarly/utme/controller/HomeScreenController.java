@@ -3,7 +3,6 @@ package com.scholarly.utme.controller;
 
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.newDb.PQSubject;
-import com.scholarly.utme.data.model.newDb.Subject;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.*;
 import de.saxsys.mvvmfx.*;
@@ -23,11 +22,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static com.scholarly.utme.controller.SubjectListViewController.*;
-import static com.scholarly.utme.ui.utils.Screen.PAST_QUESTION_SCREEN;
-import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/HomeScreen.fxml")
 public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializable{
+    private static final String TAG = "HomeScreenController: ";
 
     @InjectViewModel
     private HomeScreenVM viewModel;
@@ -49,44 +47,44 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
 
-    private SubjectListViewController subjectListController;
+    private static SubjectListViewController subjectListController;
 
+    private static Parent subjectListView;
     private final ToggleGroup toggleGroup = new ToggleGroup();
-
-    private static final String TAG = "HomeScreenController: ";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
         subjectListController = subjectListViewTuple.getCodeBehind();
-        Parent subjectListView = subjectListViewTuple.getView();
+        subjectListView = subjectListViewTuple.getView();
 
         initializeViews();
         initializeFonts();
 
         viewModel.processInitialData(getInitialData());
 
-        if (viewModel.getSelectedScreen().equals(Screen.PRACTICE_SCREEN)) {
+        if (viewModel.getSelectedScreen().equals(Screens.PRACTICE_SCREEN)) {
             pageTitle.setText("CBT Practice");
             toggleGroup.selectToggle(practiceButton);
             subjectListController.setOption(SubjectListOption.PRACTICE);
             subjectListController.setSelectedSubject(viewModel.getSelectedSubject());
             selectButton(subjectListView, practiceButton);
-        } else if (viewModel.getSelectedScreen().equals(Screen.PAST_QUESTION_SCREEN)) {
+        } else if (viewModel.getSelectedScreen().equals(Screens.PAST_QUESTION_SCREEN)) {
             pageTitle.setText("Study Past Questions");
             toggleGroup.selectToggle(pastQuestionButton);
             subjectListController.setOption(SubjectListOption.STUDY);
             selectButton(subjectListView, pastQuestionButton);
-        } else if (viewModel.getSelectedScreen().equals(Screen.CBT_GAME_SCREEN)) {
+        } else if (viewModel.getSelectedScreen().equals(Screens.CBT_GAME_SCREEN)) {
             pageTitle.setText("CBT Game");
             toggleGroup.selectToggle(cbtGameButton);
             subjectListController.setOption(SubjectListOption.CBT_GAME);
             selectButton(subjectListView, cbtGameButton);
-        } else if (viewModel.getSelectedScreen().equals(Screen.VIDEOS_SCREEN)) {
+        } else if (viewModel.getSelectedScreen().equals(Screens.VIDEOS_SCREEN)) {
 //            selectButton(audioVideoView, videosButton);
-        } else if (viewModel.getSelectedScreen().equals(Screen.AUDIOS_SCREEN)) {
+        } else if (viewModel.getSelectedScreen().equals(Screens.AUDIOS_SCREEN)) {
 //            selectButton(audioVideoView, audiosButton);
-        } else if (viewModel.getSelectedScreen().equals(Screen.LEARNING_CENTER_SCREEN)) {
+        } else if (viewModel.getSelectedScreen().equals(Screens.LEARNING_CENTER_SCREEN)) {
 //            selectButton(audioVideoView, learningCenterButton);
         }
 
@@ -219,7 +217,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     public void homeTextClicked() {
         subjectListController.dispose();
-        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+        ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
         ViewSwitcher.showScreen(View.LANDING_SCREEN);
     }
 
@@ -228,15 +226,15 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
     }
 
     public static class InitialData {
-        private Screen screen;
+        private Screens screen;
         private PQSubject selectedSubject;
 
-        public InitialData(Screen screen, PQSubject selectedSubject) {
+        public InitialData(Screens screen, PQSubject selectedSubject) {
             this.screen = screen;
             this.selectedSubject = selectedSubject;
         }
 
-        public Screen getScreen() {
+        public Screens getScreen() {
             return screen;
         }
 

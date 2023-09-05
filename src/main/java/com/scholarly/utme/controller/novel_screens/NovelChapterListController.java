@@ -43,11 +43,8 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
     private ImageView novelImage, authorIcon, chaptersIcon, timeIcon;
 
 
-    private Preferences preferences;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        preferences = AppPreferences.getPreferences();
 
         initializeViews();
         initializeFont();

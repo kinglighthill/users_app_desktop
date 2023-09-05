@@ -1,12 +1,10 @@
 package com.scholarly.utme.controller.syllabus_screens;
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
 import com.scholarly.utme.data.model.newDb.contentViewType.HeaderViewType;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.syllabus_screens.SelectSyllabusVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -392,6 +390,7 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
         };
     }
     public void backButtonClicked(MouseEvent event) {
+        ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
         ViewSwitcher.showScreen(View.LANDING_SCREEN);
     }
 

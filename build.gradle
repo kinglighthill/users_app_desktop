@@ -134,6 +134,13 @@ dependencies {
     // HTML to Text
     implementation 'org.jsoup:jsoup:1.15.4'
 
+    implementation 'org.unbroken-dome.base62:base62:1.1.0'
+
+//    implementation 'org.bytedeco:javacpp:1.7.6' // Use the latest version
+//    implementation 'org.bytedeco.javacpp-presets:webp:1.1.6'
+
+    implementation 'org.sejda.imageio:webp-imageio:0.1.6'
+
     // Katex
 //    implementation 'io.github.katexjava:katex-java:0.5.0'
     implementation 'org.codehaus.mojo:latex-maven-plugin:1.1'

@@ -35,11 +35,13 @@ module com.scholarly.utme {
     requires latex.converter;
     requires com.sandec.mdfx;
 //    requires org.scilab.forge;
+    requires com.luciad.imageio.webp;
 
     requires webcam.capture;
     requires unirest.java;
     requires json;
     requires java.desktop;
+    requires base62;
 
     exports com.scholarly.utme;
     exports com.scholarly.utme.controller;
@@ -54,6 +56,7 @@ module com.scholarly.utme {
     opens com.scholarly.utme.ui.listcells to javafx.fxml;
     opens com.scholarly.utme.network.model to com.google.gson;
     opens com.scholarly.utme.network.model.response to com.google.gson;
+    opens com.scholarly.utme.network.model.request to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentViewType to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType to com.google.gson;
     opens com.scholarly.utme.data.model.newDb.contentType.text to com.google.gson;
@@ -103,6 +106,8 @@ module com.scholarly.utme {
     exports com.scholarly.utme.data.model.newDb.contentType;
     exports com.scholarly.utme.data.model.novels;
     exports com.scholarly.utme.network.model;
+    exports com.scholarly.utme.network.model.request;
+    exports com.scholarly.utme.network.model.response;
     exports com.scholarly.utme.controller.landing_screens;
     exports com.scholarly.utme.viewmodels.landing_screens;
     exports com.scholarly.utme.controller.trivia_screens;

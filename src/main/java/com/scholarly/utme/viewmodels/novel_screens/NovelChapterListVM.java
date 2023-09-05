@@ -21,11 +21,9 @@ public class NovelChapterListVM implements ViewModel {
 
     private NovelChapter selectedChapter;
 
-    private NovelChapterDao novelChapterDao;
-
 
     public void processInitialData(NovelChapterListController.InitialData data) {
-        novelChapterDao = new NovelChapterDao();
+        NovelChapterDao novelChapterDao = new NovelChapterDao();
         this.novel.set(data.getNovel());
         author = data.getAuthor();
 

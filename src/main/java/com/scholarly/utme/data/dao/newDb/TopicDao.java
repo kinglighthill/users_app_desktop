@@ -30,6 +30,9 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
+import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
+
 public class TopicDao {
     private static final String TAG = "TopicDao: ";
 
@@ -46,7 +49,10 @@ public class TopicDao {
     private static final ObservableList<NoteTopic> noteTopics;
     private static final ObservableList<FreeContent> freeContents;
 
+    private static final String userId;
+
     static {
+        userId = preferences.get(PREF_KEY_USER_ID, "");
         pqTopics = FXCollections.observableArrayList();
         noteTopics = FXCollections.observableArrayList();
         freeContents = FXCollections.observableArrayList();
@@ -58,6 +64,8 @@ public class TopicDao {
     private static void updateTopicsFromDb() {
         String query = "SELECT * FROM " + Tables.TOPICS;
 
+        long start = System.currentTimeMillis();
+
         try (ResultSet rs = databaseService.executeQuery(query)) {
             pqTopics.clear();
             while (rs.next()) {
@@ -67,7 +75,9 @@ public class TopicDao {
                         rs.getInt(subjectIdColumn)));
             }
 
-            System.out.println(TAG + "Got PQ topics of size -> " + pqTopics.size());
+            long end = System.currentTimeMillis();
+
+            System.out.println(TAG + "Got PQ topics of size -> " + pqTopics.size() + " in -> " + (end - start)+"ms");
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
@@ -161,7 +171,7 @@ public class TopicDao {
 
         }
 
-        if (preferences.getBoolean(Constants.PREF_KEY_ACTIVATION_STATE, false)) {
+        if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
             for (NoteTopic topic : noteTopics) {
                 topic.setFree(true);
             }

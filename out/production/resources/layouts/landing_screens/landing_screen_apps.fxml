@@ -98,7 +98,7 @@
                     </padding>
                 </ScrollPane>
 
-                <VBox fx:id="noApplicationVBox" StackPane.alignment="CENTER" visible="false">
+                <VBox fx:id="noApplicationHBox" StackPane.alignment="CENTER" visible="false">
                     <Label fx:id="noApplicationsText" text="No Applications Found"/>
                 </VBox>
             </StackPane>

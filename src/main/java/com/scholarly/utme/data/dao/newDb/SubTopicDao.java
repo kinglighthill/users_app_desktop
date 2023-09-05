@@ -42,6 +42,8 @@ public class SubTopicDao {
     public static void updateNoteSubTopicsFromDb() {
         String query = "SELECT * FROM " + Tables.NOTE_SUB_TOPICS;
 
+        long start = System.currentTimeMillis();
+
         try (ResultSet rs = databaseService.executeQuery(query)) {
             noteSubTopics.clear();
             while (rs.next()) {
@@ -52,7 +54,9 @@ public class SubTopicDao {
                         rs.getInt(orderColumn)));
             }
 
-            System.out.println(TAG + "Got Note sub topics of size -> " + noteSubTopics.size());
+            long end = System.currentTimeMillis();
+
+            System.out.println(TAG + "Got Note sub topics of size -> " + noteSubTopics.size() + " in -> " + (end - start)+"ms");
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(

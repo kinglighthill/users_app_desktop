@@ -1,4 +1,6 @@
-package com.scholarly.utme.network.model;
+package com.scholarly.utme.network.model.response;
+
+import com.scholarly.utme.network.model.Data;
 
 public class BaseResponse {
     private String status;

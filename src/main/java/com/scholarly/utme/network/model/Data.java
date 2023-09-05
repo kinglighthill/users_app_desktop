@@ -15,9 +15,11 @@ public class Data {
     private String phoneNumber;
     private String gender;
     @SerializedName("user_data")
-    private User userData;
+    private UserData userData;
     @SerializedName("user_id")
     private String userId;
+    @SerializedName("project_id")
+    private String projectId;
     @SerializedName("activation_state")
     private ActivationState activationState;
     private List<AppItem> apps;
@@ -25,7 +27,7 @@ public class Data {
     public Data() {
     }
 
-    public Data(String accessToken, String refreshToken, String fullName, String phoneNumber, String gender, User userData, String userId, ActivationState activationState, List<AppItem> apps) {
+    public Data(String accessToken, String refreshToken, String fullName, String phoneNumber, String gender, UserData userData, String userId, String projectId, ActivationState activationState, List<AppItem> apps) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.fullName = fullName;
@@ -33,6 +35,7 @@ public class Data {
         this.gender = gender;
         this.userData = userData;
         this.userId = userId;
+        this.projectId = projectId;
         this.activationState = activationState;
         this.apps = apps;
     }
@@ -57,12 +60,16 @@ public class Data {
         return gender;
     }
 
-    public User getUserData() {
+    public UserData getUserData() {
         return userData;
     }
 
     public String getUserId() {
         return userId;
+    }
+
+    public String getProjectId() {
+        return projectId;
     }
 
     public ActivationState getActivationState() {

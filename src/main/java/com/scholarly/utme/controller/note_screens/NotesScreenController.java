@@ -372,6 +372,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         notesBackButton.setOnAction(event -> {
+            Animations.translateIn(exitNotesDialog, 300);
+            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
+        });
+        exitDialogExitButton.setOnAction(event -> {
             if (noteContentList.getSkin() != null) {
                 VirtualFlow<?> vf = (VirtualFlow<?>) ((ListViewSkin<?>) noteContentList.getSkin()).getChildren().get(0);
 
@@ -388,7 +392,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 System.out.println(TAG + "Last Section -> " + Helper.toString(lastSection));
 
                 StringBuilder sectionTitle = new StringBuilder();
-                        ContentViewType contentViewType = ContentViewTypes.convert(lastSection);
+                ContentViewType contentViewType = ContentViewTypes.convert(lastSection);
                 if (contentViewType instanceof HeaderViewType headerViewType) {
                     if (headerViewType.getText() != null) {
                         sectionTitle = new StringBuilder(headerViewType.getText());
@@ -424,7 +428,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         }
                     }
                 }
-                System.out.println(TAG + "Got Section title -> " + sectionTitle.toString());
+                System.out.println(TAG + "Got Section title -> " + sectionTitle);
 
 
                 NoteLastSection noteLastSection = new NoteLastSection(
@@ -436,15 +440,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                 viewModel.putLastSession(noteLastSection);
             }
-            Animations.translateIn(exitNotesDialog, 300);
-            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
-        });
-        exitDialogExitButton.setOnAction(event -> {
-            // TODO: Save last section
-//            noteContentList.g
-//            ViewSwitcher.passData(new HomeScreenController.InitialData(NOTES_SCREEN));
+
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
         });
+
         exitDialogCancelButton.setOnAction(event -> {
             Animations.translateOut(exitNotesDialog, 300);
             Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);

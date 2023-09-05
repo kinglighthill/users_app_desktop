@@ -10,7 +10,7 @@ import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
-import com.scholarly.utme.network.model.User;
+import com.scholarly.utme.network.model.UserData;
 import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
@@ -48,7 +48,7 @@ public class CBTGameScreenVM implements ViewModel {
 
     private int correctAnswers, incorrectAnswers, questionAttempts;
 
-    private final User user;
+    private final UserData userData;
 
     private final Boolean vibrationPreference;
     private final Boolean soundPreference;
@@ -56,8 +56,8 @@ public class CBTGameScreenVM implements ViewModel {
     public CBTGameScreenVM() {
         String userData = preferences.get(PREF_KEY_USER_DATA, "");
         Gson gson = new Gson();
-        user = gson.fromJson(userData, User.class);
-        String USER_ID = user.getId();
+        this.userData = gson.fromJson(userData, UserData.class);
+        String USER_ID = this.userData.getId();
 
         vibrationPreference = preferences.getBoolean(Constants.PREF_KEY_VIBRATION + USER_ID, false);
         soundPreference = preferences.getBoolean(Constants.PREF_KEY_SOUND + USER_ID, false);
@@ -185,8 +185,8 @@ public class CBTGameScreenVM implements ViewModel {
         return objectiveBookmarks;
     }
 
-    public User getUser() {
-        return user;
+    public UserData getUser() {
+        return userData;
     }
 
     public Boolean getVibrationPreference() {

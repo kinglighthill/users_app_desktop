@@ -1,20 +1,13 @@
 package com.scholarly.utme.network;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import com.scholarly.utme.network.model.BaseResponse;
 import com.scholarly.utme.network.model.RefreshRequest;
-import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.util.AppPreferences;
-import com.scholarly.utme.util.Constants;
 import io.reactivex.rxjava3.annotations.NonNull;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
 import okhttp3.*;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -40,12 +33,12 @@ public class AccessTokenInterceptor implements Interceptor {
             System.out.println(TAG + "Access Token is expired");
 
 //            String refreshedAccessToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjhkMDNhZTdmNDczZjJjNmIyNTI3NmMwNjM2MGViOTk4ODdlMjNhYTrekiLCJ0eXAiOiJKV1QifQ.eyJ1dWlkIjoiY0NWT2FZMDllYXJVYVFDRHVCVDciLCJlbWFpbF9hZGRyZXNzIjoicHJpbmNlY2hpbmVjaGVyZW0zNUBnbWFpbC5jb20iLCJjb3VudHJ5IjoibmlnZXJpYSIsImlzX2FjdGl2YXRpb25fYWN0aXZlIjpmYWxzZSwiZGV2aWNlX2lkIjoiQkQxREFEQzQtMjg1RC01OTRBLUJDNEEtNUNDRjNBNTUxOTkxIiwiYXBwX3NsdWciOiJ1dG1lIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3NjaG9sYXJseS11dG1lLXN0YWdpbmciLCJhdWQiOiJzY2hvbGFybHktdXRtZS1zdGFnaW5nIiwiYXV0aF90aW1lIjoxNjgyNjY2NjU1LCJ1c2VyX2lkIjoiY0NWT2FZMDllYXJVYVFDRHVCVDciLCJzdWIiOiJjQ1ZPYVkwOWVhclVhUUNEdUJUNyIsImlhdCI6MTY4NzQ0Mjk5MiwiZXhwIjoxNjg3NDQ2NTkyLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7fSwic2lnbl9pbl9wcm92aWRlciI6ImN1c3RvbSJ9fQ.wbZP4N1lKXyVEoOq3osMEfBTutjEX5yxQzRchKLWN6x9CQHXKvotgaun7T8f36eakU2y2EzV8-kgBxeiSd4k1y-4mKANk-_tVZGDt33pyGNvt8-QcUFA3J9ZQEUG2IXj4bAoZb_5P39XOAkbkphNJna8317yqqYtPdhw-LeyQHgnH9fv4xI4fURGf2K-umLbDxZMKpHvwIudTQhfnU9sE_NQXuGMDNR4dN199nPr41HOmceLYSW5NTVUSZbJpu8iPyS_h4-asthn-QW550V5Ruq7RaGTa8jOdUY1jc9-wyzGT_cTC5has5FfkEusEU33r80RuaPhteInxU7X_VTFLw";
-            String refreshedAccessToken = refreshAccessToken();
-            System.out.println(TAG + " New AccessToken -> " + refreshedAccessToken);
-            Request newRequest = chain.request().newBuilder()
-                    .header("Authorization", "Bearer " + refreshedAccessToken)
-                    .build();
-            return chain.proceed(newRequest);
+//            String refreshedAccessToken = refreshAccessToken();
+//            System.out.println(TAG + " New AccessToken -> " + refreshedAccessToken);
+//            Request newRequest = chain.request().newBuilder()
+//                    .header("Authorization", "Bearer " + refreshedAccessToken)
+//                    .build();
+//            return chain.proceed(newRequest);
         }
 
         return response;

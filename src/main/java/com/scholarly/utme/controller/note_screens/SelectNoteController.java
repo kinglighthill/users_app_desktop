@@ -1,11 +1,9 @@
 package com.scholarly.utme.controller.note_screens;
 
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.newDb.*;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.note_screens.SelectNoteVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -373,6 +371,7 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
 
     public void backButtonClicked() {
+        ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
         ViewSwitcher.showScreen(View.LANDING_SCREEN);
     }
 }

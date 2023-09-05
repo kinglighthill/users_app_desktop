@@ -634,7 +634,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 dialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new HomeScreenController.InitialData(Screen.PAST_QUESTION_SCREEN, null));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PAST_QUESTION_SCREEN, null));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             }
             dialogDimmer.setVisible(false);
