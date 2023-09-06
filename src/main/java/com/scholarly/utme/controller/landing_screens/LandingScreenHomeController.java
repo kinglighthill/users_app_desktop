@@ -29,6 +29,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.controlsfx.control.GridView;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
@@ -252,9 +253,9 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
-//        List<String> fontFamilies = Font.getFamilies();
-//        List<String> fontNames    = Font.getFontNames();
-//
+        List<String> fontFamilies = Font.getFamilies();
+        List<String> fontNames    = Font.getFontNames();
+
 //        long startTime = System.currentTimeMillis();
 //        fontFamilies.forEach(family -> {
 //            System.out.println("Font family -> " + family);
@@ -263,7 +264,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 ////            fontVBox.getChildren().add(label);
 //        });
 //        System.out.println(TAG + "Time taken to load font families -> " + (System.currentTimeMillis() - startTime) + "ms");
-//
+
 //        long nameStartTime = System.currentTimeMillis();
 //        fontNames.forEach(name -> {
 //            System.out.println("Font name -> " + name);
@@ -334,6 +335,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
     private void initializeFonts() {
         helloText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 22));
+//        helloText.setFont(Font.font("SansSerif", FontWeight.SEMI_BOLD, 22));
         startLearningText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         topSubjectsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
         editSubjectsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));

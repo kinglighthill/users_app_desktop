@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.Screens;
@@ -35,7 +36,7 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
     private VBox bankTransferVBox, bankTransferDetailsPane, paystackVBox, paystackDetailsPane, flutterwaveVBox, flutterwaveDetailsPane, monnifyVBox, monnifyDetailsPane, noAccountVBox, noAccountDetailsPane;
 
     @FXML
-    private Label customerSupportLabel, paymentMethodText;
+    private Label customerSupportLabel, paymentMethodText, chatUsLabel;
 
     @FXML
     private Button backButton;
@@ -47,6 +48,9 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
     private ImageView bankTransferOpenDropdownImage, paystackOpenDropdownImage, flutterwaveOpenDropdownImage, monnifyOpenDropdownImage, noAccountOpenDropdownImage;
 
     private ImageView bankTransferCloseDropdownImage, paystackCloseDropdownImage, flutterwaveCloseDropdownImage, monnifyCloseDropdownImage, noAccountCloseDropdownImage;
+
+
+    MainApplication application = new MainApplication();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -109,6 +113,14 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
                 noAccountDropdown.setGraphic(noAccountCloseDropdownImage);
             }
         }));
+
+        chatUsLabel.setOnMouseClicked(event -> {
+            String whatsAppUrl = "https://wa.me/2348136941462";
+            application.openBrowser(whatsAppUrl);
+        });
+
+        chatUsLabel.setOnMouseEntered(event -> chatUsLabel.setUnderline(true));
+        chatUsLabel.setOnMouseExited(event -> chatUsLabel.setUnderline(false));
 
         backButton.setOnAction(event -> {
             ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));

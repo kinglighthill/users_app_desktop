@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller.landing_screens;
 
 import com.google.gson.Gson;
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.ActivationInfo;
 import com.scholarly.utme.network.model.RefreshRequest;
@@ -57,12 +58,14 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
     @FXML
     private CustomNumberField activationPinTextField;
     @FXML
-    private Label incorrectPinError, activationSuccessfulMessage, activationText, headerLabel;
+    private Label incorrectPinError, activationSuccessfulMessage, activationText, headerLabel, chatUsLabel;
     @FXML
     private Button activateButton, buyPinButton, continueButton;
 
-    private Preferences preferences;
-    private OkHttpClient httpClient;
+    private final Preferences preferences = AppPreferences.getPreferences();
+    private final OkHttpClient httpClient = NetworkService.getHttpClient();
+
+    MainApplication application = new MainApplication();
 
     interface NetworkCallback {
         void resendRequest();
@@ -71,8 +74,6 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        preferences = AppPreferences.getPreferences();
-        httpClient = NetworkService.getHttpClient();
 
         initializeViews();
         initializeFonts();
@@ -215,7 +216,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
                         call.enqueue(new Callback() {
                             @Override
-                            public void onResponse(Call call, Response response) throws IOException {
+                            public void onResponse(Call call, Response response) {
                                 try (ResponseBody responseBody = response.body()) {
                                     assert responseBody != null;
                                     BaseResponse activationResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
@@ -263,6 +264,13 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                 System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
             }
         });
+
+        chatUsLabel.setOnMouseClicked(event -> {
+            String whatsAppUrl = "https://wa.me/2348136941462";
+            application.openBrowser(whatsAppUrl);
+        });
+        chatUsLabel.setOnMouseEntered(event -> chatUsLabel.setUnderline(true));
+        chatUsLabel.setOnMouseExited(event -> chatUsLabel.setUnderline(false));
 
         buyPinButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);

@@ -101,10 +101,12 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 String formattedText = doc.body().text();
                 Label label = new Label(formattedText);
                 label.setWrapText(true);
+                label.setLineSpacing(20);
                 label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                 if (section.getSubtopicId() != 0 || section.getMainSectionOrder() != 0) {
                     label.setPadding(new Insets(10, 0, 0, 0));
                     label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+                    label.setLineSpacing(20);
                 }
 
                 contentElement = label;
@@ -119,10 +121,12 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 String formattedText = doc.body().text();
                 Label label = new Label(formattedText);
                 label.setWrapText(true);
+                label.setLineSpacing(20);
                 label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                 if (section.getSubtopicId() != 0 || section.getMainSectionOrder() != 0) {
                     label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
                     label.setPadding(new Insets(10, 0, 0, 0));
+                    label.setLineSpacing(20);
                 }
 
                 contentElement = label;

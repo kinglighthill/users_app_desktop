@@ -105,7 +105,7 @@
                         <VBox alignment="CENTER">
                             <Label text="Don't have activation pin?">
                                 <font>
-                                    <Font size="14"/>
+                                    <Font size="15"/>
                                 </font>
                             </Label>
                             <Label text="Get one below">
@@ -114,7 +114,11 @@
                                 </font>
                             </Label>
                         </VBox>
-                        <Button fx:id="buyPinButton" text="Buy Pins Here" prefWidth="250" prefHeight="35" textFill="#053500" style="-fx-background-color: #FCB029; -fx-background-radius: 5;"/>
+                        <Button fx:id="buyPinButton" text="Buy Pins Here" prefWidth="250" prefHeight="35" textFill="#053500" style="-fx-background-color: #FCB029; -fx-background-radius: 5;">
+                            <font>
+                                <Font size="14"/>
+                            </font>
+                        </Button>
                         <VBox spacing="10" alignment="CENTER">
                             <HBox spacing="5">
                                 <Label text="Need help?" textFill="#053500">
@@ -122,7 +126,7 @@
                                         <Font size="14"/>
                                     </font>
                                 </Label>
-                                <Label text="Chat us" textFill="#12AF20">
+                                <Label fx:id="chatUsLabel" text="Chat us" textFill="#12AF20">
                                     <font>
                                         <Font size="14"/>
                                     </font>
