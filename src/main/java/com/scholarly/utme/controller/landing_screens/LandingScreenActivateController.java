@@ -128,7 +128,8 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
                 String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
 
-                String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+//                String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+                String encodedDeviceId = DeviceInfo.getSystemProperties().getDeviceId();
 
                 ActivationInfo activationInfo = new ActivationInfo(activationPinTextField.getText(), encodedDeviceId);
 

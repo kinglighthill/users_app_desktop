@@ -5,6 +5,7 @@ import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.AppsGridScreenController;
 import com.scholarly.utme.data.model.listItems.AppItem;
 import com.scholarly.utme.network.NetworkService;
+import com.scholarly.utme.network.model.BaseResponse2;
 import com.scholarly.utme.network.model.RefreshRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.ui.utils.*;
@@ -23,10 +24,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.TextAlignment;
 import okhttp3.*;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
@@ -41,6 +40,8 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -367,7 +368,8 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
         mobileApps.stream().limit(3).forEach(appItem -> {
             Panel panel = new Panel();
             panel.setPrefSize(250, 150);
-            ImageView appImage = new ImageView(new Image("https://storage.googleapis.com/scholarly-utme-staging.appspot.com/profile_pictures%2F5ut9XEw3khBXFYjJgRtd"));
+
+            ImageView appImage = new ImageView(appItem.getImage());
             appImage.setFitHeight(100);
             appImage.setFitWidth(100);
             HBox hBox = new HBox(appImage);
@@ -400,7 +402,7 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
             Panel panel = new Panel();
             panel.setPrefSize(250, 150);
 
-            ImageView appImage = new ImageView(new Image(appItem.getImageUrl()));
+            ImageView appImage = new ImageView(appItem.getImage());
             appImage.setFitHeight(100);
             appImage.setFitWidth(100);
             HBox hBox = new HBox(appImage);
@@ -426,5 +428,5 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
             });
         });
     }
-
 }
+

@@ -16,7 +16,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 
+import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/AppDetailsScreen.fxml")
@@ -53,7 +55,11 @@ public class AppDetailsScreenController implements FxmlView<AppDetailsScreenVM>,
     }
 
     private void initializeViews() {
-        appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/" + viewModel.getAppImageUrl()).toString()));
+        byte[] imageByteArray = viewModel.getAppImageUrl().getBytes(StandardCharsets.UTF_8);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(imageByteArray);
+        appImage.setImage(new Image(byteArrayInputStream));
+
+//        appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/" + viewModel.getAppImageUrl()).toString()));
         backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/top_back_button.png").toString())));
 
         backButton.setBackground(Background.EMPTY);

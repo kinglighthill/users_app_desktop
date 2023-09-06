@@ -56,7 +56,7 @@ public class AppListItemCell extends ListCell<AppItem> {
             appName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
 
             try {
-                appImage.setImage(new Image(item.getImageUrl()));
+                appImage.setImage(item.getImage());
             } catch (Exception e) {
                 appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/scholarly_logo.png").toString()));
                 System.out.println(e.getMessage());

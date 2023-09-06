@@ -50,7 +50,7 @@ public class AppGridItemCell extends GridCell<AppItem> {
         } else {
 
             try {
-                appImage.setImage(new Image(item.getImageUrl()));
+                appImage.setImage(item.getImage());
             } catch (Exception e) {
                 appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/scholarly_logo.png").toString()));
                 System.out.println(e.getMessage());

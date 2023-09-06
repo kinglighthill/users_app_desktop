@@ -70,7 +70,8 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
         emailText.setText(viewModel.getUser().getEmail());
 
-        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+//        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+        String encodedDeviceId = DeviceInfo.getSystemProperties().getDeviceId();
 
         deviceIdLabel.setText(encodedDeviceId.toUpperCase());
 
