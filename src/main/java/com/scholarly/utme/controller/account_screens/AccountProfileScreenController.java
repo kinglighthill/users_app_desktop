@@ -74,7 +74,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
     @FXML
     private TextField profileNameTextField, phoneTextField, emailTextField;
     @FXML
-    private Label changeProfileName, changePhoneNum, deviceIdLabel, toastLabel;
+    private Label changeProfileName, changePhoneNum, deviceIdLabel, toastLabel, changeMailHereLabel;
 
     private Preferences preferences;
     private OkHttpClient httpClient;
@@ -132,17 +132,12 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
         deviceIdLabel.setText(encodedDeviceId.toUpperCase());
 
-        changeProfileName.setOnMouseClicked(event -> {
-            profileNameTextField.setEditable(true);
+        changeMailHereLabel.setOnMouseClicked(event -> {
+            String gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=info@scholarly.africa";
+            application.openBrowser(gmailUrl);
         });
-        changeProfileName.setOnMouseEntered(event -> changeProfileName.setUnderline(true));
-        changeProfileName.setOnMouseExited(event -> changeProfileName.setUnderline(false));
-
-        changePhoneNum.setOnMouseClicked(event -> {
-            phoneTextField.setEditable(true);
-        });
-        changePhoneNum.setOnMouseEntered(event -> changePhoneNum.setUnderline(true));
-        changePhoneNum.setOnMouseExited(event -> changePhoneNum.setUnderline(false));
+        changeMailHereLabel.setOnMouseEntered(event -> changeMailHereLabel.setUnderline(true));
+        changeMailHereLabel.setOnMouseExited(event -> changeMailHereLabel.setUnderline(false));
 
         ToggleGroup genderToggle = new ToggleGroup();
         genderToggle.getToggles().addAll(maleRadioButton, femaleRadioButton);
