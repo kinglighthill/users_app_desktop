@@ -20,7 +20,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
-import okhttp3.OkHttpClient;
+import javafx.embed.swing.SwingNode;
+
+import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -53,7 +56,7 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
 
         pageTitle.setText(viewModel.getNovel().getName());
         novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + viewModel.getNovel().getImagePath()).toString()));
-        authorLabel.setText(viewModel.getAuthor().getName());
+//        authorLabel.setText(viewModel.getAuthor().getName());
         chaptersLabel.setText(viewModel.getNovel().getChaptersCount() + " chapters");
 
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
@@ -105,9 +108,9 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
         private Novel novel;
         private NovelAuthor author;
 
-        public InitialData(Novel novel, NovelAuthor author) {
+        public InitialData(Novel novel) {
             this.novel = novel;
-            this.author = author;
+//            this.author = author;
         }
 
         public Novel getNovel() {

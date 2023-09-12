@@ -57,7 +57,6 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
         setPrefWidth(400);
         setOnMouseClicked(event -> {
             System.out.println(TAG + "Section clicked!");
-
         });
     }
 
@@ -84,11 +83,15 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            setPadding(new Insets(5, 10, 5, 5));
 
 //            System.out.println(TAG + "Got Section -> " + Helper.toString(item));
             Parent node = renderNote(item);
 //            System.out.println(TAG + "Before setGraphic -> " + node);
+            if (node instanceof Label) {
+                ((Label) node).setLineSpacing(10);
+                ((Label) node).setPadding(new Insets(5, 15, 5, 5));
+                
+            }
             setOnMouseClicked(event -> {
                 if (node instanceof Label) {
                     ((Label) node).setUnderline(!((Label) node).isUnderline());
@@ -110,12 +113,10 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 String formattedText = doc.body().text();
                 Label label = new Label(formattedText);
                 label.setWrapText(true);
-                label.setLineSpacing(20);
                 label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                 if (section.getSubtopicId() != 0 || section.getMainSectionOrder() != 0) {
                     label.setPadding(new Insets(10, 0, 0, 0));
                     label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-                    label.setLineSpacing(20);
                 }
 
                 contentElement = label;
@@ -130,12 +131,10 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 String formattedText = doc.body().text();
                 Label label = new Label(formattedText);
                 label.setWrapText(true);
-                label.setLineSpacing(20);
                 label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                 if (section.getSubtopicId() != 0 || section.getMainSectionOrder() != 0) {
                     label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
                     label.setPadding(new Insets(10, 0, 0, 0));
-                    label.setLineSpacing(20);
                 }
 
                 contentElement = label;

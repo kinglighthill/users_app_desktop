@@ -68,16 +68,6 @@ public class SettingsHelpScreenController implements FxmlView<SettingsHelpScreen
         contactVBox.getChildren().remove(contactDetails);
         faqVBox.getChildren().remove(faqDetails);
 
-        faqDropdown.selectedProperty().addListener(((observableValue, oldValue, newValue) -> {
-            if (newValue) {
-                faqVBox.getChildren().add(faqDetails);
-                faqDropdown.setGraphic(faqCloseDropdownIcon);
-            } else {
-                faqVBox.getChildren().remove(faqDetails);
-                faqDropdown.setGraphic(faqOpenDropdownIcon);
-            }
-        }));
-
         contactDropdown.selectedProperty().addListener(((observableValue, oldValue, newValue) -> {
             if (newValue) {
                 contactVBox.getChildren().add(contactDetails);
@@ -85,6 +75,16 @@ public class SettingsHelpScreenController implements FxmlView<SettingsHelpScreen
             } else {
                 contactVBox.getChildren().remove(contactDetails);
                 contactDropdown.setGraphic(contactOpenDropdownIcon);
+            }
+        }));
+
+        faqDropdown.selectedProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (newValue) {
+                faqVBox.getChildren().add(faqDetails);
+                faqDropdown.setGraphic(faqCloseDropdownIcon);
+            } else {
+                faqVBox.getChildren().remove(faqDetails);
+                faqDropdown.setGraphic(faqOpenDropdownIcon);
             }
         }));
 

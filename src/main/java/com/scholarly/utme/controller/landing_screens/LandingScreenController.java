@@ -53,6 +53,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     private final ToggleGroup toggleGroup = new ToggleGroup();
 
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
+    private static final String HOVER_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FFFFFF; -fx-border-width: 0 0 0 0;";
 
     private Preferences preferences;
 
@@ -114,24 +115,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             selectButton(updatesView, updatesButton);
         }*/
 
-        /*if (viewModel.getSelectedScreen().equalsIgnoreCase("homeScreen")) {
-            selectButton(homeView, homeButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("accountScreen")) {
-            selectButton(accountView, accountButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("activateScreen")) {
-            selectButton(activateView, activateButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("appsScreen")) {
-            selectButton(appsView, appsButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("triviaScreen")) {
-            selectButton(triviaView, triviaButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("performanceScreen")) {
-            selectButton(performanceView, performanceButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("updatesScreen")) {
-            selectButton(updatesView, updatesButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase("settingsScreen")) {
-            selectButton(settingsView, settingsButton);
-        }*/
-
 
         toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, settingsButton);
 
@@ -140,23 +123,71 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
                 selectButton(homeView, homeButton);
             }
          });
+        homeButton.setOnMouseEntered(event -> {
+            if (homeButton.getStyle().equals(PRESSED_BUTTON_STYLE))
+                event.consume();
+            else
+                homeButton.setStyle(HOVER_BUTTON_STYLE);
+        });
+        homeButton.setOnMouseExited(event -> {
+            if (homeButton.getStyle().equals(PRESSED_BUTTON_STYLE))
+                event.consume();
+            else
+                homeButton.setStyle(null);
+        });
 
         accountButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
              if (newValue){
                  selectButton(accountView, accountButton);
              }
          });
+        accountButton.setOnMouseEntered(event -> {
+            if (accountButton.getStyle().equals(PRESSED_BUTTON_STYLE))
+                event.consume();
+            else
+                accountButton.setStyle(HOVER_BUTTON_STYLE);
+        });
+        accountButton.setOnMouseExited(event -> {
+            if (accountButton.getStyle().equals(PRESSED_BUTTON_STYLE))
+                event.consume();
+            else
+                accountButton.setStyle(null);
+        });
 
         activateButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
                 selectButton(activateView, activateButton);
             }
         });
+        activateButton.setOnMouseEntered(event -> {
+            if (activateButton.getStyle().equals(PRESSED_BUTTON_STYLE))
+                event.consume();
+            else
+                activateButton.setStyle(HOVER_BUTTON_STYLE);
+        });
+        activateButton.setOnMouseExited(event -> {
+            if (activateButton.getStyle().equals(PRESSED_BUTTON_STYLE))
+                event.consume();
+            else
+                activateButton.setStyle(null);
+        });
 
         appsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
                 selectButton(appsView, appsButton);
             }
+        });
+        appsButton.setOnMouseEntered(event -> {
+            if (appsButton.getStyle().equals(PRESSED_BUTTON_STYLE))
+                event.consume();
+            else
+                appsButton.setStyle(HOVER_BUTTON_STYLE);
+        });
+        appsButton.setOnMouseExited(event -> {
+            if (appsButton.getStyle().equals(PRESSED_BUTTON_STYLE))
+                event.consume();
+            else
+                appsButton.setStyle(null);
         });
 
         /*triviaButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -181,6 +212,18 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             if (newValue){
                 selectButton(settingsView, settingsButton);
             }
+        });
+        settingsButton.setOnMouseEntered(event -> {
+            if (settingsButton.getStyle().equals(PRESSED_BUTTON_STYLE))
+                event.consume();
+            else
+                settingsButton.setStyle(HOVER_BUTTON_STYLE);
+        });
+        settingsButton.setOnMouseExited(event -> {
+            if (settingsButton.getStyle().equals(PRESSED_BUTTON_STYLE))
+                event.consume();
+            else
+                settingsButton.setStyle(null);
         });
 
         /*logoutButton.setOnAction(e -> {

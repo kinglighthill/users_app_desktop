@@ -1,5 +1,6 @@
 package com.scholarly.utme.ui.listcells;
 
+import com.scholarly.utme.controller.novel_screens.NovelChapterListController;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
@@ -30,7 +31,7 @@ public class NovelGridItemCell extends GridCell<Novel> {
         loadFxml();
 
         setOnMouseClicked(event -> {
-            ViewSwitcher.passData(novel);
+            ViewSwitcher.passData(new NovelChapterListController.InitialData(novel));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
     }

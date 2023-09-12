@@ -178,7 +178,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         noteContentList.setCellFactory(new NoteContentListCellFactory());
         noteContentList.setItems(noteSections);
         noteContentList.setSelectionModel(new NoSelectionModel<>());
-        noteContentList.setPadding(new Insets(10, 5, 5, 5));
+        noteContentList.setPadding(new Insets(10, 250, 10, 15));
 
         if (viewModel.getSelectedSubtopicSection() != null) {
             noteContentList.scrollTo(viewModel.getSelectedSubtopicSection());
@@ -187,29 +187,21 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         if (viewModel.getSelectedSection() != null) {
             int lastSectionIndex = noteSections.indexOf(noteSections.stream().filter(section ->
                     section.getId() == viewModel.getSelectedSection().getId()).toList().get(0));
-            System.out.println(TAG + "Note Section Index -> " + lastSectionIndex);
+            System.out.println(TAG + "Note Last Section Index -> " + lastSectionIndex);
             noteContentList.scrollTo(lastSectionIndex);
         }
 
-        noteContentList.setOnScrollFinished(event -> {
-            System.out.println(TAG + "Scroll Y-axis value -> " + event.getY());
-            System.out.println(TAG + "Scroll Screen-Y value -> " + event.getScreenY());
-            System.out.println(TAG + "Scroll Delta-Y value -> " + event.getDeltaY());
-            System.out.println(TAG + "Scroll Multiplier-Y value -> " + event.getMultiplierY());
-            System.out.println(TAG + "Scroll TextDelta-Y Units value -> " + event.getTextDeltaYUnits());
-            System.out.println(TAG + "Scroll TextDelta-Y value -> " + event.getTextDeltaY());
-            System.out.println(TAG + "Scroll Total Delta-Y value -> " + event.getTotalDeltaY());
-            System.out.println(TAG + "Scroll Scene-Y value -> " + event.getSceneY());
-
-        });
-
-//        noteContentList.skinProperty().addListener(((observable, oldValue, newValue) -> {
-//            if (newValue != null) {
-//                System.out.println(TAG + "New Skin value -> " + newValue);
-//                int firstVisibleIndex = getFirstVisibleIndex(newValue);
-//                System.out.println("First Visible Index: " + firstVisibleIndex);
-//            }
-//        }));
+//        noteContentList.setOnScrollFinished(event -> {
+//            System.out.println(TAG + "Scroll Y-axis value -> " + event.getY());
+//            System.out.println(TAG + "Scroll Screen-Y value -> " + event.getScreenY());
+//            System.out.println(TAG + "Scroll Delta-Y value -> " + event.getDeltaY());
+//            System.out.println(TAG + "Scroll Multiplier-Y value -> " + event.getMultiplierY());
+//            System.out.println(TAG + "Scroll TextDelta-Y Units value -> " + event.getTextDeltaYUnits());
+//            System.out.println(TAG + "Scroll TextDelta-Y value -> " + event.getTextDeltaY());
+//            System.out.println(TAG + "Scroll Total Delta-Y value -> " + event.getTotalDeltaY());
+//            System.out.println(TAG + "Scroll Scene-Y value -> " + event.getSceneY());
+//
+//        });
 
         noSubtopicsLabel.setVisible(viewModel.getSubTopics().get(viewModel.getTopic().getId()).isEmpty());
 
