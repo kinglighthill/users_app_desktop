@@ -18,7 +18,7 @@ public class NetworkService {
         try {
             if (httpClient == null) {
                 httpClient = new OkHttpClient.Builder()
-                        .addInterceptor(loggingInterceptor)
+//                        .addInterceptor(loggingInterceptor)
 //                        .addInterceptor(new AccessTokenInterceptor())
                         .build();
             }

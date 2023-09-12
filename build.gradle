@@ -55,7 +55,7 @@ application {
 
 javafx {
     version = '18.0.2'
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web']
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing']
 }
 
 mainClassName = "$moduleName/com.scholarly.utme.MainApplication"
@@ -93,6 +93,10 @@ dependencies {
     implementation('org.xerial:sqlite-jdbc:3.36.0.2') {
         exclude group: 'org.sqlite'
     }
+
+    implementation 'org.openjfx:javafx-controls:16'
+
+    implementation 'org.openjfx:javafx-swing:18.0.2'
 
     // SQL connector
 //    implementation 'io.github.willena:sqlite-jdbc:3.35.5.3'

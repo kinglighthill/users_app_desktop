@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller.novel_screens;
 
 import com.scholarly.utme.controller.HomeScreenController;
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.ui.cellFactories.NovelGridCellFactory;
 import com.scholarly.utme.ui.utils.Screens;
@@ -56,8 +57,8 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
 
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.NOVELS_SCREEN, null));
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.NOVELS_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
 

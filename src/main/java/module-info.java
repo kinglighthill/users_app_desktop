@@ -3,6 +3,7 @@ module com.scholarly.utme {
     requires javafx.fxml;
     requires javafx.web;
     requires javafx.media;
+    requires javafx.swing;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;

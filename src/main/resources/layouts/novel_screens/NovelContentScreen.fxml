@@ -47,7 +47,11 @@
                         </HBox>
 
                         <ScrollPane fx:id="contentPane" fitToWidth="true" style="-fx-background-color: #FFFFFF;" prefHeight="400"  VBox.vgrow="ALWAYS">
-                            <Label fx:id="chapterContent" wrapText="true" lineSpacing="5" style="-fx-background-color: #FFFFFF;"/>
+                            <Label fx:id="chapterContent" wrapText="true" lineSpacing="6" style="-fx-background-color: #FFFFFF;">
+                                <padding>
+                                    <Insets top="5" bottom="5" left="5" right="15"/>
+                                </padding>
+                            </Label>
                             <padding>
                                 <Insets topRightBottomLeft="5"/>
                             </padding>
