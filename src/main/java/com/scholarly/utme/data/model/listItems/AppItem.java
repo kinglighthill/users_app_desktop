@@ -1,6 +1,7 @@
 package com.scholarly.utme.data.model.listItems;
 
 import com.google.gson.annotations.SerializedName;
+import com.scholarly.utme.util.Helper;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -13,11 +14,11 @@ public class AppItem {
     public String name;
     public String keywords;
     @SerializedName("image_url")
-    public byte[] imageUrl;
+    public String imageUrl;
     @SerializedName("download_link")
     public String downloadLink;
 
-    public AppItem(String bitlink, String name, String keywords, byte[] imageUrl, String downloadLink) {
+    public AppItem(String bitlink, String name, String keywords, String imageUrl, String downloadLink) {
         this.bitlink = bitlink;
         this.name = name;
         this.keywords = keywords;
@@ -38,13 +39,18 @@ public class AppItem {
     }
 
     public String getImageUrl() {
-        return new String(imageUrl, StandardCharsets.UTF_8);
+        return imageUrl;
     }
 
     public Image getImage() {
-        byte[] data = imageUrl;
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
-        return new Image(byteArrayInputStream);
+        Image image = Helper.loadWebpFromUrl(imageUrl);
+
+        if (image != null) {
+            return image;
+        } else {
+            //TODO return default scholarly logo
+            return new Image("");
+        }
     }
 
     public String getDownloadLink() {

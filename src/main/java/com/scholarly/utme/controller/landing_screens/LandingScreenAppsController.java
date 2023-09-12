@@ -5,7 +5,6 @@ import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.AppsGridScreenController;
 import com.scholarly.utme.data.model.listItems.AppItem;
 import com.scholarly.utme.network.NetworkService;
-import com.scholarly.utme.network.model.BaseResponse2;
 import com.scholarly.utme.network.model.RefreshRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.ui.utils.*;
@@ -32,14 +31,8 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.*;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -390,9 +383,7 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                 application.openBrowser(appItem.getDownloadLink());
             });
 
-            Platform.runLater(() -> {
-                mobileAppsTile.getChildren().add(panel);
-            });
+            Platform.runLater(() -> mobileAppsTile.getChildren().add(panel));
         });
     }
 

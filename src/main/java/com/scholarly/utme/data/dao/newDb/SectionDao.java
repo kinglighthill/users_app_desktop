@@ -8,6 +8,7 @@ import com.scholarly.utme.data.model.newDb.Section;
 import com.scholarly.utme.data.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.json.JSONObject;
 
 
 import java.sql.*;
@@ -59,7 +60,9 @@ public class SectionDao {
                         rs.getInt(parentSectionIdColumn),
                         rs.getInt(mainSectionOrderColumn),
                         rs.getInt(childSectionOrderColumn),
-                        rs.getInt(contentViewTypeColumn)
+                        rs.getInt(contentViewTypeColumn),
+                        new JSONObject()
+//                        rs.getObject(contentColumn, JSONObject.class)
                 );
 
                 noteSections.add(section);
@@ -93,7 +96,10 @@ public class SectionDao {
                         rs.getInt(parentSectionIdColumn),
                         rs.getInt(mainSectionOrderColumn),
                         rs.getInt(childSectionOrderColumn),
-                        rs.getInt(contentViewTypeColumn));
+                        rs.getInt(contentViewTypeColumn),
+                        new JSONObject()
+//                        rs.getObject(contentColumn, JSONObject.class)
+                );
             }
             return section;
         } catch (Exception e) {

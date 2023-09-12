@@ -1,5 +1,6 @@
 package com.scholarly.utme.ui.listcells;
 
+import com.sandec.mdfx.MarkdownView;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.listItems.UnorderedListItem;
 import com.scholarly.utme.data.model.newDb.ContentViewTypes;
@@ -9,30 +10,38 @@ import com.scholarly.utme.data.model.newDb.contentViewType.*;
 import com.scholarly.utme.ui.cellFactories.UnorderedListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.NoSelectionModel;
-import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.note_screens.NotesScreenVM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
+//import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
+//import org.commonmark.parser.Parser;
+//import org.commonmark.renderer.html.HtmlRenderer;
+//import org.commonmark.Extension;
+import javafx.scene.web.HTMLEditor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.data.MutableDataSet;
+
+import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class NoteContentListItemCell extends ListCell<NoteSection> {
@@ -274,22 +283,28 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             contentElement = cbtVBox;
 
         } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
-//            System.out.println(TAG + "ContentViewType -> LatexMathViewType");
-
             if (latexMathViewType.getKatex() != null) {
-                org.commonmark.node.Node document = markdownParser.parse(latexMathViewType.getKatex());
-                String htmlKatex = htmlRenderer.render(document);
+//                org.commonmark.node.Node document = markdownParser.parse(latexMathViewType.getKatex());
+//                String htmlKatex = htmlRenderer.render(document);
+//
+//                Document doc = Jsoup.parse(htmlKatex);
+//                String formattedText = doc.body().text();
 
-                Document doc = Jsoup.parse(htmlKatex);
-                String formattedText = doc.body().text();
+//                Label label = new Label(formattedText);
+//                label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+//                label.setWrapText(true);
 
-                Label label = new Label(formattedText);
-                label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-                label.setWrapText(true);
+                Label label1 = new Label(section.getContent());
+                Label label2 = new Label(latexMathViewType.getKatex());
+                label1.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+                label1.setWrapText(true);
+                label2.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+                label2.setWrapText(true);
 
-                contentElement = label;
+//                contentElement = label;
+                MarkdownView mdfx = new MarkdownView(latexMathViewType.getKatex());
+                contentElement = formatMarkdown(latexMathViewType.getKatex());
             }
-
         } else if (contentViewType instanceof ListViewType listViewType) {
 //            System.out.println(TAG + "ContentViewType -> ListViewType");
 
@@ -354,5 +369,65 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
         }
 //        System.out.println(TAG + "ContentElement returned -> " + contentElement);
         return contentElement;
+    }
+
+    private Parent formatMarkdown(String content) {
+//        List<Extension> DEFAULT_EXTENSIONS = ImmutableList.<Extension>builder()
+//                .add(AbbreviationExtension.create())
+//                .add(AutolinkExtension.create())
+//                .add(AutoLinkRendererExtension.create())
+//                .add(EscapedCharacterExtension.create())
+//                .add(TaskListExtension.create())
+//                .add(StrikethroughExtension.create())
+//                .add(TablesExtension.create())
+//                .add(TaskListRendererExtension.create())
+//                .add(InsExtension.create())
+//                .add(SuperscriptExtension.create())
+//                .add(TocExtension.create())
+//                .add(JekyllFrontMatterExtension.create())
+//                .build();
+
+        MutableDataSet options = new MutableDataSet();
+
+        // uncomment to set optional extensions
+//        options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()));
+
+        // uncomment to convert soft-breaks to hard breaks
+//        options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
+
+        Parser parser = Parser.builder(options).build();
+        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+
+        // You can re-use parser and renderer instances
+        Node document = parser.parse(content);
+        String html = renderer.render(document);  // "<p>This is <em>Sparta</em></p>\n"
+        System.out.println(html);
+
+//        final SwingNode swingNode = new SwingNode();
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                swingNode.setContent(new JButton("Click me!"));
+//            }
+//        });
+
+        HTMLEditorKit kit = new HTMLEditorKit();
+        JTextPane chatPane = new JTextPane();
+        chatPane.setEditable(false);
+        chatPane.setContentType("text/html");
+        chatPane.setEditorKit(kit);
+        chatPane.setText(html);
+
+        SwingNode swingNode = new SwingNode();
+//        try {
+//            SwingUtilities.invokeAndWait(() -> swingNode.setContent(chatPane));
+//        } catch (InterruptedException | InvocationTargetException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        StackPane pane = new StackPane();
+        pane.getChildren().add(swingNode);
+
+        return pane;
     }
 }
