@@ -12,9 +12,11 @@ import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -34,6 +36,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.controlsfx.control.GridView;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
+import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -256,6 +260,37 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         List<String> fontFamilies = Font.getFamilies();
         List<String> fontNames    = Font.getFontNames();
 
+        if (Platform.isFxApplicationThread()) {
+            SwingUtilities.invokeLater(() -> {
+                SwingNode swingNode = new SwingNode();
+                JEditorPane editorPane = new JEditorPane();
+                editorPane.setEditable(false);
+                editorPane.setEditorKit(new HTMLEditorKit());
+                editorPane.setContentType("text/html");
+                editorPane.setText("<html><body><h1>Hello, <em>World</em>!</h1></body></html>");
+
+                fontVBox.getChildren().addAll(swingNode, new Label("This is the Label"));
+                fontVBox.layout();
+            });
+        }
+
+//        Thread appThread = new Thread(() -> {
+//            try {
+////                editorPane.setPage("http://www.google.com");
+//                swingNode.setContent(editorPane);
+//                fontVBox.getChildren().addAll(swingNode, new Label("This is the Label"));
+//                fontVBox.layout();
+////                SwingUtilities.invokeAndWait(() -> {
+////
+////                });
+//            }
+//            catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            System.out.println("Finished on " + Thread.currentThread());
+//        });
+//        appThread.start();
+
 //        long startTime = System.currentTimeMillis();
 //        fontFamilies.forEach(family -> {
 //            System.out.println("Font family -> " + family);
@@ -274,6 +309,18 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        });
 //        System.out.println(TAG + "Time taken to load font names -> " + (System.currentTimeMillis() - nameStartTime) + "ms");
 
+    }
+
+    private void createSwingContent(final SwingNode swingNode) {
+        SwingUtilities.invokeLater(() -> {
+            JEditorPane editorPane = new JEditorPane();
+            editorPane.setEditorKit(new HTMLEditorKit());
+            editorPane.setContentType("text/html");
+            editorPane.setText("<html><body><h1>Hello, <em>World</em>!</h1></body></html>");
+
+            JScrollPane scrollPane = new JScrollPane(editorPane);
+            swingNode.setContent(editorPane);
+        });
     }
 
     private void initializeViews() {

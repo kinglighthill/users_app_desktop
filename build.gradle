@@ -101,6 +101,10 @@ dependencies {
         exclude group: 'org.sqlite'
     }
 
+    implementation 'org.openjfx:javafx-controls:16'
+
+    implementation 'org.openjfx:javafx-swing:18.0.2'
+
     // SQL connector
 //    implementation 'io.github.willena:sqlite-jdbc:3.35.5.3'
 

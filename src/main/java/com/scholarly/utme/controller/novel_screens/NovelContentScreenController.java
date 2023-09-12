@@ -169,7 +169,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         });
 
         exitDialogExitButton.setOnAction(event -> {
-            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovel(), viewModel.getAuthor()));
+            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovel()));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
 
@@ -607,15 +607,15 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         NovelObjectiveQuestion selectedQuestion = questions.get(viewModel.getSelectedQuestionIndex() - 1);
 
-        ObservableList<NovelObjectiveBookmark> bookmarks = viewModel.getChapterBookmarks().get(selectedChapter.getId());
+//        ObservableList<NovelObjectiveBookmark> bookmarks = viewModel.getChapterBookmarks().get(selectedChapter.getId());
 
         bookmarkImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_bookmark.png").toString()));
 
-        bookmarks.forEach(novelObjectiveBookmark -> {
-            if (novelObjectiveBookmark.getQuestionId() == selectedQuestion.getId()) {
-                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_bookmark_filled.png").toString()));
-            }
-        });
+//        bookmarks.forEach(novelObjectiveBookmark -> {
+//            if (novelObjectiveBookmark.getQuestionId() == selectedQuestion.getId()) {
+//                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_bookmark_filled.png").toString()));
+//            }
+//        });
     }
 
     private void showResult() {
@@ -651,7 +651,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
                     try {
                         Map<String,Object> map = mapper.readValue(section.getContent(), Map.class);
                         String content = map.get("text").toString();
-                        chapterContent.setText(content);
+                        chapterContent.setText(content.replaceAll("<br>", System.lineSeparator()));
                     } catch (JsonProcessingException ignored) { }
                 });
 

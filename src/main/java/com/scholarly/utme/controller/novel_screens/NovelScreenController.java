@@ -140,7 +140,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         });
 
         readButton.setOnAction(event -> {
-            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getSelectedNovel(), viewModel.getAuthor(viewModel.getSelectedNovel())));
+            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getSelectedNovel()));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
 

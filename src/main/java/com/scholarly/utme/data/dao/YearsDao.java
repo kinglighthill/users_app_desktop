@@ -135,7 +135,8 @@ public class YearsDao {
             while (rs.next()) {
                 freeContents.add(new FreeContent(
                         rs.getInt(idColumn),
-                        rs.getInt("subject_id"),
+                        rs.getInt("objective_subject_id"),
+                        rs.getInt("theory_subject_id"),
                         rs.getInt("year_id"),
                         rs.getInt("topic_id"),
                         rs.getInt("chapter_id")));

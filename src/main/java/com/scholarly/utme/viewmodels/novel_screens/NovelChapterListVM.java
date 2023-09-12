@@ -17,7 +17,7 @@ public class NovelChapterListVM implements ViewModel {
 
     private ObservableList<NovelChapter> chapters = FXCollections.observableArrayList();
 
-    private NovelAuthor author;
+    private ObservableList<NovelAuthor> authors = FXCollections.observableArrayList();
 
     private NovelChapter selectedChapter;
 
@@ -25,7 +25,7 @@ public class NovelChapterListVM implements ViewModel {
     public void processInitialData(NovelChapterListController.InitialData data) {
         NovelChapterDao novelChapterDao = new NovelChapterDao();
         this.novel.set(data.getNovel());
-        author = data.getAuthor();
+        authors.addAll(NovelAuthorDao.getAuthors());
 
         novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
                 novelChapter.getNovelId() == data.getNovel().getId()).forEach(novelChapter -> chapters.add(novelChapter));
@@ -40,8 +40,14 @@ public class NovelChapterListVM implements ViewModel {
         return chapters;
     }
 
+
     public NovelAuthor getAuthor() {
-        return author;
+        for (NovelAuthor author : authors) {
+            if (author.getNovelId() == novel.get().getId()) {
+                return author;
+            }
+        }
+        return null;
     }
 
     public void setSelectedChapter(NovelChapter selectedChapter) {
