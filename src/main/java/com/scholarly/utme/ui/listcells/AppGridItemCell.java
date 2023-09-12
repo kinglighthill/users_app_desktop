@@ -54,7 +54,6 @@ public class AppGridItemCell extends GridCell<AppItem> {
             } catch (Exception e) {
                 appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/scholarly_logo.png").toString()));
                 System.out.println(e.getMessage());
-                System.out.println("App image not found, using default image (Scholarly logo)");
             }
 
             appName.setText(item.getName());

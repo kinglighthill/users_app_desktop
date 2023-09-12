@@ -70,7 +70,7 @@ public enum ContentViewTypes {
     }
 
     public static ContentViewType convert(NoteSection section) {
-        List<ContentViewTypes> contentViewTypesList = Arrays.stream(ContentViewTypes.values()).collect(Collectors.toList());
+        List<ContentViewTypes> contentViewTypesList = Arrays.stream(ContentViewTypes.values()).toList();
 
         for (ContentViewTypes contentViewTypes : contentViewTypesList) {
             if (contentViewTypes.id == section.getContentViewTypeId()) {
@@ -82,7 +82,7 @@ public enum ContentViewTypes {
     }
 
     public static ContentViewType convert(SyllabusSection section) {
-        List<ContentViewTypes> contentViewTypesList = Arrays.stream(ContentViewTypes.values()).collect(Collectors.toList());
+        List<ContentViewTypes> contentViewTypesList = Arrays.stream(ContentViewTypes.values()).toList();
 
         return contentViewTypesList.get(0).getContentType(section.getContent());
 

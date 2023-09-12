@@ -178,7 +178,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         noteContentList.setCellFactory(new NoteContentListCellFactory());
         noteContentList.setItems(noteSections);
         noteContentList.setSelectionModel(new NoSelectionModel<>());
-        noteContentList.setPadding(new Insets(10, 250, 10, 15));
+        noteContentList.setPadding(new Insets(10, 20, 10, 15));
 
         if (viewModel.getSelectedSubtopicSection() != null) {
             noteContentList.scrollTo(viewModel.getSelectedSubtopicSection());
@@ -380,57 +380,61 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 if ((int)lastSectionIndex == noteContentList.getItems().size()) {
                     lastSectionIndex = (int) lastSectionIndex - 1;
                 }
-                NoteSection lastSection = noteContentList.getItems().get((int) lastSectionIndex);
-                System.out.println(TAG + "Last Section -> " + Helper.toString(lastSection));
+                if (!noteContentList.getItems().isEmpty()) {
+                    NoteSection lastSection = noteContentList.getItems().get((int) lastSectionIndex);
 
-                StringBuilder sectionTitle = new StringBuilder();
-                ContentViewType contentViewType = ContentViewTypes.convert(lastSection);
-                if (contentViewType instanceof HeaderViewType headerViewType) {
-                    if (headerViewType.getText() != null) {
-                        sectionTitle = new StringBuilder(headerViewType.getText());
-                    }
-                } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
-                    if (paragraphViewType.getText() != null) {
-                        sectionTitle = new StringBuilder(paragraphViewType.getText());
-                    }
-                } else if (contentViewType instanceof CBTViewType cbtViewType) {
-                    int yearId = cbtViewType.getYearId();
-                    int questionId = cbtViewType.getQuestionId();
-                    ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
+                    StringBuilder sectionTitle = new StringBuilder();
+                    ContentViewType contentViewType = ContentViewTypes.convert(lastSection);
+                    if (contentViewType instanceof HeaderViewType headerViewType) {
+                        if (headerViewType.getText() != null) {
+                            sectionTitle = new StringBuilder(headerViewType.getText());
+                        }
+                    } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
+                        if (paragraphViewType.getText() != null) {
+                            sectionTitle = new StringBuilder(paragraphViewType.getText());
+                        }
+                    } else if (contentViewType instanceof CBTViewType cbtViewType) {
+                        int yearId = cbtViewType.getYearId();
+                        int questionId = cbtViewType.getQuestionId();
+                        ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
 
-                    sectionTitle = new StringBuilder(question.getQuestion());
-                } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
-                    if (latexMathViewType.getKatex() != null) {
-                        sectionTitle = new StringBuilder(latexMathViewType.getKatex());
-                    }
-                } else if (contentViewType instanceof ListViewType listViewType) {
-                    sectionTitle = new StringBuilder(listViewType.getItems().get(0));
-                } else if (contentViewType instanceof ReferenceViewType referenceViewType) {
-                    sectionTitle = new StringBuilder(referenceViewType.getText());
-                } else if (contentViewType instanceof TableViewType tableViewType) {
+                        sectionTitle = new StringBuilder(question.getQuestion());
+                    } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
+                        if (latexMathViewType.getKatex() != null) {
+                            sectionTitle = new StringBuilder(latexMathViewType.getKatex());
+                        }
+                    } else if (contentViewType instanceof ListViewType listViewType) {
+                        sectionTitle = new StringBuilder(listViewType.getItems().get(0));
+                    } else if (contentViewType instanceof ReferenceViewType referenceViewType) {
+                        sectionTitle = new StringBuilder(referenceViewType.getText());
+                    } else if (contentViewType instanceof TableViewType tableViewType) {
 
-                    List<List<String>> content = tableViewType.getContent();
+                        List<List<String>> content = tableViewType.getContent();
 
-                    for (int row = 0; row < 1; row++) {
+                        for (int row = 0; row < 1; row++) {
 
-                        System.out.println("Row Content -> " + content.get(row));
-                        for (int col = 0; col < content.get(row).size(); col++) {
-                            System.out.println("Column content -> " + content.get(row).get(col));
-                            sectionTitle.append(" | ").append(content.get(row).get(col));
+                            System.out.println("Row Content -> " + content.get(row));
+                            for (int col = 0; col < content.get(row).size(); col++) {
+                                System.out.println("Column content -> " + content.get(row).get(col));
+                                sectionTitle.append(" | ").append(content.get(row).get(col));
+                            }
                         }
                     }
+                    System.out.println(TAG + "Got Section title -> " + sectionTitle);
+
+
+                    NoteLastSection noteLastSection = new NoteLastSection(
+                            viewModel.getUser().getId().hashCode(),
+                            lastSection.getId(),
+                            sectionTitle.toString(),
+                            viewModel.getUser().getId()
+                    );
+
+                    viewModel.putLastSession(noteLastSection);
+
+                } else {
+                    ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
                 }
-                System.out.println(TAG + "Got Section title -> " + sectionTitle);
-
-
-                NoteLastSection noteLastSection = new NoteLastSection(
-                        viewModel.getUser().getId().hashCode(),
-                        lastSection.getId(),
-                        sectionTitle.toString(),
-                        viewModel.getUser().getId()
-                );
-
-                viewModel.putLastSession(noteLastSection);
             }
 
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);

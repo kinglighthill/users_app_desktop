@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 public class AppItem {
     public String bitlink;
@@ -45,12 +46,7 @@ public class AppItem {
     public Image getImage() {
         Image image = Helper.loadWebpFromUrl(imageUrl);
 
-        if (image != null) {
-            return image;
-        } else {
-            //TODO return default scholarly logo
-            return new Image("");
-        }
+        return Objects.requireNonNullElseGet(image, () -> new Image(getClass().getResource("/drawable/app_screen_images/scholarly_logo.png").toString()));
     }
 
     public String getDownloadLink() {

@@ -147,10 +147,15 @@ public class TopicDao {
     }
 
     public static ObservableList<NoteTopic> getNoteTopicsForSubject(int subjectId) {
-        String query = "SELECT * FROM " + Tables.NOTE_TOPICS + " WHERE " + subjectIdColumn + " = " + subjectId + " ORDER BY '" + orderColumn + "'";
+//        String query = "SELECT DISTINCT note_topics._id, note_topics.title, note_topics.topic_id, note_topics.subject_id, note_topics.'order' FROM note_topics JOIN note_sections ON note_topics.topic_id = note_sections.topic_id WHERE note_topics.subject_id = " + subjectId + " ORDER BY 'order'";
+        String query2 = "SELECT DISTINCT " + Tables.NOTE_TOPICS + "." + idColumn + ", " + Tables.NOTE_TOPICS + "." + titleColumn + ", " +
+                Tables.NOTE_TOPICS + "." + topicIdColumn + ", " + Tables.NOTE_TOPICS + "." + subjectIdColumn + ", " + Tables.NOTE_TOPICS + ".'" + orderColumn +
+                "' FROM " + Tables.NOTE_TOPICS + " INNER JOIN " + Tables.NOTE_SECTIONS + " ON " + Tables.NOTE_SECTIONS + "." + topicIdColumn + " = " + Tables.NOTE_TOPICS + "." + idColumn + " WHERE " + Tables.NOTE_TOPICS + "." + subjectIdColumn + " = " + subjectId + " ORDER BY '" + orderColumn + "'";
+//        System.out.println(TAG + "NoteTopicsForSubject Query -> " + query);
+//        System.out.println(TAG + "NoteTopicsForSubject Query 2 -> " + query2);
         ObservableList<NoteTopic> noteTopics = FXCollections.observableArrayList();
 
-        try (ResultSet rs = databaseService.executeQuery(query)) {
+        try (ResultSet rs = databaseService.executeQuery(query2)) {
             noteTopics.clear();
             while (rs.next()) {
                 noteTopics.add(new NoteTopic(
