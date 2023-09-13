@@ -612,26 +612,26 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
             ObjectiveQuestion selectedQuestion = questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getObjectiveQuestion();
 
-            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks().get(viewModel.getSelectedSubject().getId());
-
-            bookmarks.forEach(bookmark -> {
-                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
-//                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-
-                }
-            });
+//            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks().get(viewModel.getSelectedSubject().getId());
+//
+//            bookmarks.forEach(bookmark -> {
+//                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
+////                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+//
+//                }
+//            });
 
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
             TheoryQuestion selectedQuestion = questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getTheoryQuestion();
 
-            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks().get(viewModel.getSelectedSubject().getId());
-
-            bookmarks.forEach(bookmark -> {
-                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
-//                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-
-                }
-            });
+//            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks().get(viewModel.getSelectedSubject().getId());
+//
+//            bookmarks.forEach(bookmark -> {
+//                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
+////                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+//
+//                }
+//            });
         }
     }
 
@@ -845,6 +845,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void showQuestionWithImage(String questionWithImageText) {
+        System.out.println(TAG + "QuestionWithImageText -> " + questionWithImageText);
         int startIndexOfImg = questionWithImageText.indexOf("<img");
         int endIndexOfImg = questionWithImageText.indexOf("'100%'>", startIndexOfImg);
 
@@ -852,15 +853,19 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         int endIndexOfImgPath = questionWithImageText.indexOf("' width", startIndexOfImg);
 
         String imagePath = questionWithImageText.substring(startIndexOfImgPath, endIndexOfImgPath);
-        questionImage.setImage(new Image(getClass().getResource(imagePath).toString()));
+        System.out.println(TAG + "QuestionWithImagePath -> " + imagePath);
+        String newImagePath = imagePath.replace("android_asset", "assets");
+        System.out.println(TAG + "New QuestionWithImagePath -> " + newImagePath);
+        questionImage.setImage(new Image(getClass().getResource(newImagePath).toString()));
 
         String imageQuestion = questionWithImageText.substring(questionWithImageText.lastIndexOf(">")+1);
         questionWithImageWebView.getEngine().loadContent(imageQuestion);
 
         StringBuilder builder = new StringBuilder(questionWithImageText);
 
-        URL url = getClass().getResource(imagePath);
+        URL url = getClass().getResource(newImagePath);
         String img = "<img src='"+url+"' width='100%'>";
+        System.out.println(TAG + "QuestionWithImageUrl -> " + img);
 
         builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
 
