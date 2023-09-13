@@ -42,6 +42,7 @@ public class Helper {
                 return new Image(inputStream);
             }
 
+            outputStream.close();
             return null;
         } catch (Exception e) {
             return null;

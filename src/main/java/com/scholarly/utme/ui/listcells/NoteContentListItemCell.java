@@ -27,6 +27,7 @@ import javafx.scene.paint.Paint;
 //import org.commonmark.parser.Parser;
 //import org.commonmark.renderer.html.HtmlRenderer;
 //import org.commonmark.Extension;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.web.HTMLEditor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -40,6 +41,7 @@ import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -82,21 +84,28 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
 //            System.out.println(TAG + "Got Section -> " + Helper.toString(item));
             Parent node = renderNote(item);
 //            System.out.println(TAG + "Before setGraphic -> " + node);
+            if (node instanceof VBox) {
+                System.out.println(TAG + "Node is instance of VBox");
+                ((VBox) node).setPadding(new Insets(0, 130, 0, 130));
+            }
+
             if (node instanceof Label) {
                 ((Label) node).setLineSpacing(10);
-                ((Label) node).setPadding(new Insets(5, 15, 5, 5));
-                
+                ((Label) node).setPadding(new Insets(5, 130, 5, 130));
+                ((Label) node).setTextAlignment(TextAlignment.JUSTIFY);
             }
+
             setOnMouseClicked(event -> {
                 if (node instanceof Label) {
                     ((Label) node).setUnderline(!((Label) node).isUnderline());
                 }
             });
+
+            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             setGraphic(node);
 
         }
@@ -125,7 +134,6 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
         } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
 //            System.out.println(TAG + "ContentViewType -> ParagraphViewType");
-
             if (paragraphViewType.getText() != null) {
                 Document doc = Jsoup.parse(paragraphViewType.getText());
                 String formattedText = doc.body().text();
@@ -140,6 +148,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 contentElement = label;
 //                System.out.println(TAG + "ParagraphViewType text -> " + label.getText());
             }
+
         } else if (contentViewType instanceof CBTViewType cbtViewType) {
 //            System.out.println(TAG + "ContentViewType -> CBTViewType");
 
@@ -149,10 +158,10 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             ObjectiveQuestion question = viewModel.getQuestion(yearId, questionNum);
 
             VBox cbtVBox = new VBox();
-            cbtVBox.setPadding(new Insets(20, 20, 30, 20));
+            cbtVBox.setPadding(new Insets(20, 50, 30, 50));
             cbtVBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #51C46B; -fx-border-radius: 10;");
             cbtVBox.setSpacing(10);
-            VBox.setMargin(cbtVBox, new Insets(20, 0, 0, 0));
+            VBox.setMargin(cbtVBox, new Insets(0, 130, 0, 130));
 
             Document doc = Jsoup.parse(question.getQuestion());
             String formattedText = doc.body().text();
@@ -277,8 +286,6 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 }
             });
 
-            VBox.setMargin(cbtVBox, new Insets(0, 100, 0, 0));
-
             contentElement = cbtVBox;
 
         } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
@@ -323,7 +330,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 contentList.setBackground(Background.EMPTY);
                 contentList.setCellFactory(new UnorderedListCellFactory());
                 contentList.setSelectionModel(new NoSelectionModel<>());
-                contentList.setPadding(new Insets(0, 0, 0, 10));
+                contentList.setPadding(new Insets(0, 120, 0, 120));
 
                 contentElement = contentList;
             }
@@ -365,8 +372,22 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
             contentElement = tableGrid;
 
+        } else if (contentViewType instanceof SimpleImageViewType simpleImageViewType) {
+            System.out.println(TAG + "ContentViewType -> SimpleImageViewType");
+            String imageUrl = simpleImageViewType.getUrl();
+            System.out.println(TAG + "Image Url -> " + imageUrl);
+            StringBuilder builder = new StringBuilder(imageUrl);
+            builder.insert(0, "/assets/");
+            URL url = getClass().getResource(builder.toString());
+            if (url != null) {
+                System.out.println(TAG + "Url -> " + url);
+                ImageView imageView = new ImageView(new Image(url.toString()));
+
+                contentElement = new StackPane(imageView);
+            } else {
+                System.out.println(TAG + "IMAGE WITH URL NOT FOUND -> " + imageUrl);
+            }
         }
-//        System.out.println(TAG + "ContentElement returned -> " + contentElement);
         return contentElement;
     }
 
