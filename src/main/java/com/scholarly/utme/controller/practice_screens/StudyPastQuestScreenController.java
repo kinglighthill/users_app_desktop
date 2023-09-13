@@ -95,7 +95,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             if (newValue != null) {
                 setupQuestionView(newValue);
                 setupTilePane(newValue);
-                updateBookmarkIcon();
+//                updateBookmarkIcon();
             }
         });
 
@@ -104,7 +104,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
                 if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
                     changeSelectedTile(oldValue.intValue(), newValue.intValue());
                     changeSelectedQuestion(newValue.intValue());
-                    updateBookmarkIcon();
+//                    updateBookmarkIcon();
                 }
             });
         });
