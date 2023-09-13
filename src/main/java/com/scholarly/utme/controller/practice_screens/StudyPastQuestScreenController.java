@@ -94,7 +94,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             if (newValue != null) {
                 setupQuestionView(newValue);
                 setupTilePane(newValue);
-                updateBookmarkIcon();
+//                updateBookmarkIcon();
             }
         });
 
@@ -103,7 +103,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
                 if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
                     changeSelectedTile(oldValue.intValue(), newValue.intValue());
                     changeSelectedQuestion(newValue.intValue());
-                    updateBookmarkIcon();
+//                    updateBookmarkIcon();
                 }
             });
         });
@@ -464,7 +464,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         int endIndexOfImgPath = questionWithImageText.indexOf("' width", startIndexOfImg);
 
         String imagePath = questionWithImageText.substring(startIndexOfImgPath, endIndexOfImgPath);
-        questionImage.setImage(new Image(getClass().getResource(imagePath).toString()));
+        String newImagePath = imagePath.replace("android_asset", "assets");
+        questionImage.setImage(new Image(getClass().getResource(newImagePath).toString()));
 
         String imageQuestion = questionWithImageText.substring(questionWithImageText.lastIndexOf(">")+1);
         questionWithImageWebView.getEngine().loadContent(imageQuestion);

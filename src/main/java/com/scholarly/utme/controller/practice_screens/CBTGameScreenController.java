@@ -103,13 +103,13 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         initializeFonts();
         initializeGestures();
         setupQuestionView();
-        updateBookmarkIcon();
+//        updateBookmarkIcon();
         setupReportSection();
 
 
         viewModel.selectedQuestionProperty().addListener((observableValue, number, t1) -> {
             changeSelectedQuestion(t1.intValue());
-            updateBookmarkIcon();
+//            updateBookmarkIcon();
         });
 
         viewModel.fiftyFiftyCountProperty().addListener((observableValue, number, t1) -> {
@@ -633,16 +633,16 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         String questionText = selectedQuestion.getQuestion().getQuestion();
 
-//        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
-//        if (questionText.contains("<img")) {
-//            questionVBox.getChildren().add(questionWithImageVBox);
-//            questionText = parseQuestionWithImageView(questionText);
-//        } else {
-//            questionVBox.getChildren().add(questionScrollPane);
-//            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-////            questionWebView.getEngine().loadContent(questionText);
-//        }
-        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
+        if (questionText.contains("<img")) {
+            questionVBox.getChildren().add(questionWithImageVBox);
+            questionText = parseQuestionWithImageView(questionText);
+        } else {
+            questionVBox.getChildren().add(questionScrollPane);
+            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+//            questionWebView.getEngine().loadContent(questionText);
+        }
+//        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
         optionAButton.setText(selectedQuestion.getQuestion().getOptionA().getText());
         optionAButton.setUserData(0);
@@ -677,17 +677,17 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         }
 
         String questionText = selectedQuestion.getQuestion().getQuestion();
-//        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
-//        if (questionText.contains("<img")) {
-//            questionVBox.getChildren().add(questionWithImageVBox);
-//            questionText = parseQuestionWithImageView(questionText);
-//        } else {
-//            questionVBox.getChildren().add(questionScrollPane);
-//            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-////            questionWebView.getEngine().loadContent(questionText);
-//        }
+        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
+        if (questionText.contains("<img")) {
+            questionVBox.getChildren().add(questionWithImageVBox);
+            questionText = parseQuestionWithImageView(questionText);
+        } else {
+            questionVBox.getChildren().add(questionScrollPane);
+            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+//            questionWebView.getEngine().loadContent(questionText);
+        }
 
-        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+//        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
         optionAButton.setText(selectedQuestion.getQuestion().getOptionA().getText());
         optionAButton.setUserData(0);
@@ -771,6 +771,8 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         String imagePath = questionWithImageText.substring(startIndexOfImgPath, endIndexOfImgPath);
         System.out.println(TAG + "Image Path -> " + imagePath);
+        String newImagePath = imagePath.replace("android_asset", "assets");
+        System.out.println(TAG + "New QuestionWithImagePath -> " + newImagePath);
         questionImage.setImage(new Image(getClass().getResource(imagePath).toString()));
 
         String imageQuestion = questionWithImageText.substring(questionWithImageText.lastIndexOf(">")+1);
