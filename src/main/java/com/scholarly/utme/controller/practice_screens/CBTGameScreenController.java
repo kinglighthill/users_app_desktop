@@ -7,6 +7,7 @@ import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
 import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.practice_screens.CBTGameScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.CBTGameScreenVM.QuestionState;
@@ -333,8 +334,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.CBT_GAME_SCREEN, null));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
-
-
     }
 
     private void initializeViews() {
@@ -394,7 +393,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             fiftyFiftyButton.setTextFill(Color.web("#1B9D01"));
         });
 
-
         String idleExitButtonStyle = exitButton.getStyle();
         String hoveredExitButtonStyle =
                 "-fx-background-color:#F1F9F0;" +
@@ -451,7 +449,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         bookmarks.forEach(bookmark -> {
             if (bookmark.getQuestionId() == selectedQuestion.getId()) {
 //                bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_green_filled.png").toString()));
-
             }
         });
     }
@@ -763,29 +760,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     }
 
     private String parseQuestionWithImageView(String questionWithImageText) {
-        int startIndexOfImg = questionWithImageText.indexOf("<img");
-        int endIndexOfImg = questionWithImageText.indexOf("'100%'>", startIndexOfImg);
-
-        int startIndexOfImgPath = questionWithImageText.indexOf("/android_asset", startIndexOfImg);
-        int endIndexOfImgPath = questionWithImageText.indexOf("' width", startIndexOfImg);
-
-        String imagePath = questionWithImageText.substring(startIndexOfImgPath, endIndexOfImgPath);
-        System.out.println(TAG + "Image Path -> " + imagePath);
-        questionImage.setImage(new Image(getClass().getResource(imagePath).toString()));
-
-        String imageQuestion = questionWithImageText.substring(questionWithImageText.lastIndexOf(">")+1);
-        questionWithImageLabel.getEngine().loadContent(imageQuestion);
-
-        StringBuilder builder = new StringBuilder(questionWithImageText);
-
-        URL url = getClass().getResource(imagePath);
-        String img = "<img src='"+url+"' width='100%'>";
-
-        builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
-
-        questionWithImageText = builder.toString();
-        System.out.println(TAG + "Final QuestionText -> " + questionWithImageText);
-        return questionWithImageText;
+        return Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageLabel, questionWithImageText);
     }
 
 

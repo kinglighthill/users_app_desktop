@@ -6,6 +6,7 @@ import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.practice_screens.ExplanationScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -768,45 +769,11 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     }
 
     private void showQuestionWithImage(String questionWithImageText) {
-        int startIndexOfImg = questionWithImageText.indexOf("<img");
-        int endIndexOfImg = questionWithImageText.indexOf("'100%'>", startIndexOfImg);
-
-        int startIndexOfImgPath = questionWithImageText.indexOf("/android_asset", startIndexOfImg);
-        int endIndexOfImgPath = questionWithImageText.indexOf("' width", startIndexOfImg);
-
-        String imagePath = questionWithImageText.substring(startIndexOfImgPath, endIndexOfImgPath);
-        questionImage.setImage(new Image(getClass().getResource(imagePath).toString()));
-
-        String questionWithImage = questionWithImageText.substring(questionWithImageText.lastIndexOf(">")+1);
-        questionWithImageWebView.getEngine().loadContent(questionWithImage);
-
-        StringBuilder builder = new StringBuilder(questionWithImageText);
-
-        URL url = getClass().getResource(imagePath);
-        String img = "<img src='"+url+"' width='100%'>";
-
-        builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
-
-        questionWithImageText = builder.toString();
+        questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText);
     }
 
     private String formatExplanationTextWithImage(String explanationText) {
-        int startIndexOfImg = explanationText.indexOf("<img");
-        int endIndexOfImg = explanationText.indexOf("'100%'>", startIndexOfImg);
-
-        int startIndexOfImgPath = explanationText.indexOf("/android_asset", startIndexOfImg);
-        int endIndexOfImgPath = explanationText.indexOf("' width", startIndexOfImg);
-
-        String imagePath = explanationText.substring(startIndexOfImgPath, endIndexOfImgPath);
-
-        StringBuilder builder = new StringBuilder(explanationText);
-
-        URL url = getClass().getResource(imagePath);
-        String img = "<img src='"+url+"' width='100%'>";
-
-        builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
-
-        return builder.toString();
+        return Helper.parsePQImageUrl(getClass(), explanationText);
     }
 
 

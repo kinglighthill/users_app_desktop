@@ -6,6 +6,7 @@ import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM.QuestionState;
@@ -457,46 +458,11 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     }
 
     private void showQuestionWithImage(String questionWithImageText) {
-        int startIndexOfImg = questionWithImageText.indexOf("<img");
-        int endIndexOfImg = questionWithImageText.indexOf("'100%'>", startIndexOfImg);
-
-        int startIndexOfImgPath = questionWithImageText.indexOf("/android_asset", startIndexOfImg);
-        int endIndexOfImgPath = questionWithImageText.indexOf("' width", startIndexOfImg);
-
-        String imagePath = questionWithImageText.substring(startIndexOfImgPath, endIndexOfImgPath);
-        questionImage.setImage(new Image(getClass().getResource(imagePath).toString()));
-
-        String imageQuestion = questionWithImageText.substring(questionWithImageText.lastIndexOf(">")+1);
-        questionWithImageWebView.getEngine().loadContent(imageQuestion);
-
-        StringBuilder builder = new StringBuilder(questionWithImageText);
-
-        URL url = getClass().getResource(imagePath);
-        String img = "<img src='"+url+"' width='100%'>";
-
-        builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
-
-        questionWithImageText = builder.toString();
+        questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText);
     }
 
     private String parseExplanationWithImageView(String explanationWithImageText) {
-        int startIndexOfImg = explanationWithImageText.indexOf("<img");
-        int endIndexOfImg = explanationWithImageText.indexOf("'100%'>", startIndexOfImg);
-
-        int startIndexOfImgPath = explanationWithImageText.indexOf("/android_asset", startIndexOfImg);
-        int endIndexOfImgPath = explanationWithImageText.indexOf("' width", startIndexOfImg);
-
-        String imagePath = explanationWithImageText.substring(startIndexOfImgPath, endIndexOfImgPath);
-
-        URL url = getClass().getResource(imagePath);
-        String img = "<img src='"+url+"' width='100%'>";
-
-        StringBuilder builder = new StringBuilder(explanationWithImageText);
-        builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
-
-        explanationWithImageText = builder.toString();
-        System.out.println(TAG + "Final ExplanationText -> " + explanationWithImageText);
-        return explanationWithImageText;
+        return Helper.parsePQImageUrl(getClass(), explanationWithImageText);
     }
 
     private void updateBookmarkIcon() {

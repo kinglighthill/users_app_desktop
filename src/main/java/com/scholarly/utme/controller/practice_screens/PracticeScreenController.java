@@ -9,6 +9,7 @@ import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.newDb.TheoryQuestionDescription;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.QuestionState;
@@ -845,32 +846,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     private void showQuestionWithImage(String questionWithImageText) {
-        System.out.println(TAG + "QuestionWithImageText -> " + questionWithImageText);
-        int startIndexOfImg = questionWithImageText.indexOf("<img");
-        int endIndexOfImg = questionWithImageText.indexOf("'100%'>", startIndexOfImg);
-
-        int startIndexOfImgPath = questionWithImageText.indexOf("/android_asset", startIndexOfImg);
-        int endIndexOfImgPath = questionWithImageText.indexOf("' width", startIndexOfImg);
-
-        String imagePath = questionWithImageText.substring(startIndexOfImgPath, endIndexOfImgPath);
-        System.out.println(TAG + "QuestionWithImagePath -> " + imagePath);
-        String newImagePath = imagePath.replace("android_asset", "assets");
-        System.out.println(TAG + "New QuestionWithImagePath -> " + newImagePath);
-        questionImage.setImage(new Image(getClass().getResource(newImagePath).toString()));
-
-        String imageQuestion = questionWithImageText.substring(questionWithImageText.lastIndexOf(">")+1);
-        questionWithImageWebView.getEngine().loadContent(imageQuestion);
-
-        StringBuilder builder = new StringBuilder(questionWithImageText);
-
-        URL url = getClass().getResource(newImagePath);
-        String img = "<img src='"+url+"' width='100%'>";
-        System.out.println(TAG + "QuestionWithImageUrl -> " + img);
-
-        builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
-
-        questionWithImageText = builder.toString();
-
+        questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText);
     }
 
     private void showSubmitDialog() {

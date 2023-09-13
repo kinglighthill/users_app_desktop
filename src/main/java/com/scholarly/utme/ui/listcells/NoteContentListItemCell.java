@@ -377,7 +377,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             String imageUrl = simpleImageViewType.getUrl();
             System.out.println(TAG + "Image Url -> " + imageUrl);
             StringBuilder builder = new StringBuilder(imageUrl);
-            builder.insert(0, "/assets/");
+            builder.insert(0, "/assets/images/");
             URL url = getClass().getResource(builder.toString());
             if (url != null) {
                 System.out.println(TAG + "Url -> " + url);
