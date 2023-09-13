@@ -100,7 +100,7 @@ public class CBTGameScreenVM implements ViewModel {
 
             objectiveQuestionDescriptions.addAll(questionDescriptionsList);
 
-            objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks());
+//            objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks());
 
         });
 
