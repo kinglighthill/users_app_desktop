@@ -24,12 +24,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -104,9 +106,59 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
                         viewModel.setSelectedNovel(newValue);
                     });
 
+
+                    TilePane tilePane = new TilePane(Orientation.HORIZONTAL, 15, 10);
+
+                    novels.stream().limit(4).forEach(novel -> {
+                        VBox novelVBox = new VBox(10);
+                        novelVBox.setPadding(new Insets(10, 15, 10, 15));
+
+                        ImageView novelImage = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/drawable/novel_images/" + novel.getImagePath())).toString()));
+                        novelImage.setFitHeight(150);
+                        novelImage.setFitWidth(90);
+
+                        StackPane stackPane = new StackPane(novelImage);
+                        stackPane.setStyle("-fx-background-color: #D7D7D7; -fx-background-radius: 8;");
+                        StackPane.setMargin(novelImage, new Insets(10));
+
+                        Label name = new Label("Name");
+                        name.setText(novel.getName());
+                        name.setTextFill(Paint.valueOf("#000000"));
+                        name.setPrefWidth(120);
+                        name.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
+
+                        Label chapters = new Label("Chapters");
+                        chapters.setText(novel.getChaptersCount() + " chapters");
+                        chapters.setTextFill(Paint.valueOf("#12AF20"));
+
+                        VBox bottomBox = new VBox(name, chapters);
+                        bottomBox.setPadding(new Insets(5, 0, 0, 0));
+
+                        novelVBox.getChildren().addAll(stackPane, bottomBox);
+                        novelVBox.setOnMouseClicked(event -> {
+//                            novelsVBox.getChildren().forEach(node -> {
+//                                node.getParent().getBottom().getChildren().forEach(vbox -> vbox.setStyle(null));
+//                            });
+//                            System.out.println(TAG + "Panel Bottom children -> " + ((TilePane) panel.getBottom()).getChildren());
+//                            System.out.println(TAG + "Novels VBox children -> " + novelsVBox.getChildren());
+
+                            if (viewModel.getSelectedNovel() == novel) {
+//                                novelVBox.setStyle(null);
+                                viewModel.setSelectedNovel(null);
+                            } else {
+//                                novelVBox.setStyle("-fx-border-color: #12AF20; -fx-border-radius: 8;");
+//                                System.out.println(TAG + "NovelVbox -> " + novelVBox);
+                                viewModel.setSelectedNovel(novel);
+
+                            }
+                        });
+
+                        tilePane.getChildren().add(novelVBox);
+                    });
+
                     panel.setLeft(header);
                     panel.setRight(viewAllButton);
-                    panel.setBottom(listView);
+                    panel.setBottom(tilePane);
 
                     novelsVBox.getChildren().add(panel);
 
@@ -117,16 +169,30 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
 
         viewModel.selectedNovelProperty().addListener(((observable, oldValue, newValue) -> {
-            authorIcon.setVisible(true);
-            chaptersIcon.setVisible(true);
-            timeIcon.setVisible(true);
-            readButton.setVisible(true);
-            timeText.setVisible(true);
+            if (newValue != null) {
+                authorIcon.setVisible(true);
+                chaptersIcon.setVisible(true);
+                timeIcon.setVisible(true);
+                readButton.setVisible(true);
+                timeText.setVisible(true);
 
-            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
-            novelDescription.setText(newValue.getAbout());
-            authorLabel.setText(viewModel.getAuthor(newValue).getName());
-            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
+                novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
+                novelDescription.setText(newValue.getAbout());
+                authorLabel.setText(viewModel.getAuthor(newValue).getName());
+                chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
+            } else {
+
+                authorIcon.setVisible(false);
+                chaptersIcon.setVisible(false);
+                timeIcon.setVisible(false);
+                readButton.setVisible(false);
+                timeText.setVisible(false);
+
+                novelImage.setImage(null);
+                novelDescription.setText(null);
+                authorLabel.setText(null);
+                chaptersLabel.setText(null);
+            }
 
         }));
 
