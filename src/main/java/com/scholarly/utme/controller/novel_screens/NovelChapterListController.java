@@ -1,13 +1,11 @@
 package com.scholarly.utme.controller.novel_screens;
 
-import com.scholarly.utme.controller.HomeScreenController;
-import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelAuthor;
 import com.scholarly.utme.data.model.novels.NovelChapter;
+import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.novel_screens.NovelChapterListVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -20,14 +18,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
-import javafx.embed.swing.SwingNode;
-
-import javax.swing.*;
-import javax.swing.text.html.HTMLEditorKit;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 @FxmlPath("/layouts/novel_screens/NovelChapterListScreen.fxml")
 public class NovelChapterListController implements FxmlView<NovelChapterListVM>, Initializable {
@@ -54,10 +47,10 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
 
         viewModel.processInitialData(getInitialData());
 
-        pageTitle.setText(viewModel.getNovel().getName());
-        novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + viewModel.getNovel().getImagePath()).toString()));
-//        authorLabel.setText(viewModel.getAuthor().getName());
-        chaptersLabel.setText(viewModel.getNovel().getChaptersCount() + " chapters");
+        pageTitle.setText(viewModel.getNovelModel().getNovel().getName());
+        novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + viewModel.getNovelModel().getNovel().getImagePath()).toString()));
+        authorLabel.setText(viewModel.getAuthor().getName());
+        chaptersLabel.setText(viewModel.getNovelModel().getChapterText());
 
         chaptersList.setCellFactory(new NovelChapterListCellFactory());
         chaptersList.setItems(viewModel.getChapters());
@@ -76,7 +69,7 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
         }));
 
         readButton.setOnAction(event -> {
-            ViewSwitcher.passData(new NovelContentScreenController.InitialData(viewModel.getNovel(), viewModel.getAuthor(), viewModel.getChapters(), viewModel.getSelectedChapter()));
+            ViewSwitcher.passData(new NovelContentScreenController.InitialData(viewModel.getNovelModel(), viewModel.getAuthor(), viewModel.getChapters(), viewModel.getSelectedChapter()));
             ViewSwitcher.showScreen(View.NOVEL_CONTENT_SCREEN);
         });
 
@@ -105,16 +98,16 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
     }
 
     public static class InitialData {
-        private Novel novel;
+        private NovelModel novelModel;
         private NovelAuthor author;
 
-        public InitialData(Novel novel) {
-            this.novel = novel;
+        public InitialData(NovelModel novelModel) {
+            this.novelModel = novelModel;
 //            this.author = author;
         }
 
-        public Novel getNovel() {
-            return novel;
+        public NovelModel getNovelModel() {
+            return novelModel;
         }
 
         public NovelAuthor getAuthor() {

@@ -41,10 +41,7 @@
             <center>
                 <StackPane>
                     <VBox spacing="20" prefWidth="600" prefHeight="400" style="-fx-background-color: white;">
-                        <HBox fx:id="chapterHeader" spacing="10">
-                            <Label fx:id="chapterIndex" text="Chapter 1:"/>
-                            <Label fx:id="chapterTitle" text="The Letter"/>
-                        </HBox>
+                        <Label fx:id="chapterTitle" text="The Letter"/>
 
                         <ScrollPane fx:id="contentPane" fitToWidth="true" style="-fx-background-color: #FFFFFF;" prefHeight="400"  VBox.vgrow="ALWAYS">
                             <Label fx:id="chapterContent" wrapText="true" lineSpacing="6" style="-fx-background-color: #FFFFFF;">
@@ -81,7 +78,7 @@
                     <VBox>
                         <StackPane>
                             <VBox fx:id="chaptersListPane" spacing="15" prefHeight="300" prefWidth="400">
-                                <Label text="Chapters">
+                                <Label text="Text Breakdown">
                                     <font>
                                         <Font name="System Bold" size="16"/>
                                     </font>

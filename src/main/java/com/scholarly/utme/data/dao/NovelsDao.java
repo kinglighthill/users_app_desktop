@@ -1,13 +1,12 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.DatabaseService;
-import com.scholarly.utme.data.model.novels.Novel;
-import com.scholarly.utme.data.model.novels.NovelCategory;
-import com.scholarly.utme.data.model.novels.NovelGenre;
+import com.scholarly.utme.data.model.novels.*;
 import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,6 +34,7 @@ public class NovelsDao {
     private static final String typeIdColumn = "type_id";
     private static final String categoryIdColumn = "category_id";
     private static final String divisionIdColumn = "division_id";
+    private static final String divisionColumn = "division";
     private static final String positionColumn = "position";
     private static final String isNewColumn = "is_new";
     private static final String availableColumn = "available";
@@ -42,17 +44,25 @@ public class NovelsDao {
     private static final String categoryColumn = "category";
     private static final String orderColumn = "order";
 
+    private static final String mCategoryIdColumn = "categoryId";
+    private static final String mGenreIdColumn = "genreId";
+
     private static final ObservableList<Novel> novels;
     private static final ObservableList<NovelGenre> genres;
     private static final ObservableList<NovelCategory> categories;
+
+    private static final ObservableMap<NovelCategoryGenre, List<NovelModel>> genresCategories;
 
     static {
         novels = FXCollections.observableArrayList();
         genres = FXCollections.observableArrayList();
         categories = FXCollections.observableArrayList();
+        genresCategories = FXCollections.observableHashMap();
+
         updateNovelsFromDb();
         updateGenresFromDb();
         updateCategoriesFromDb();
+        updateGenresCategoriesFromDb();
     }
 
     private static void updateNovelsFromDb() {
@@ -131,6 +141,63 @@ public class NovelsDao {
         }
     }
 
+    private static void updateGenresCategoriesFromDb() {
+        String query = """
+                WITH category_genre_ids AS (SELECT DISTINCT category_id, genre_id FROM novels),\s
+                category_genre AS (SELECT category_genre_ids.category_id AS categoryId, category_genre_ids.genre_id AS genreId, novel_categories.category, novel_genres.genre, novel_categories."order" AS category_order, novel_genres."order" AS genre_order\s
+                                FROM category_genre_ids JOIN  novel_categories ON  novel_categories._id = category_genre_ids.category_id JOIN  novel_genres ON  novel_genres._id = category_genre_ids.genre_id\s
+                                WHERE novel_categories._id = category_genre_ids.category_id AND novel_genres._id = category_genre_ids.genre_id ORDER BY novel_categories."order", novel_genres."order")
+                                SELECT novels._id, novels.image_path, novels.name, novels.summary, novels.about, novels.chapters_count, novels.category_id, novels.genre_id, novels.division_id, novels.position, novels.is_new, novels.available, novels.credit_id, category_genre.categoryId, category_genre.genreId, category_genre.category, category_genre.genre, novel_divisions.division\s
+                                FROM category_genre JOIN novels ON category_genre.categoryId = novels.category_id AND category_genre.genreId = novels.genre_id JOIN novel_divisions ON novels.division_id = novel_divisions._id
+                                ORDER BY category_genre."category_order", category_genre."genre_order", novels.position;""";
+
+        try (ResultSet rs = databaseService.executeQuery(query)) {
+            genresCategories.clear();
+            while (rs.next()) {
+                int id = rs.getInt(idColumn);
+                String imagePath = rs.getString(imagePathColumn);
+                String name = rs.getString(nameColumn);
+                String summary = rs.getString(summaryColumn);
+                String about = rs.getString(aboutColumn);
+                int chaptersCount = rs.getInt(chaptersCountColumn);
+                int categoryId = rs.getInt(categoryIdColumn);
+                int genreId = rs.getInt(genreIdColumn);
+                int divisionId = rs.getInt(divisionIdColumn);
+                int position = rs.getInt(positionColumn);
+                int isNew = rs.getInt(isNewColumn);
+                int available = rs.getInt(availableColumn);
+                int creditId = rs.getInt(creditIdColumn);
+                String division = rs.getString(divisionColumn);
+
+                int mCategoryId = rs.getInt(mCategoryIdColumn);
+                int mGenreId = rs.getInt(mGenreIdColumn);
+                String category = rs.getString(categoryColumn);
+                String genre = rs.getString(genreColumn);
+
+                NovelCategoryGenre novelCategoryGenre = new NovelCategoryGenre(mCategoryId, mGenreId, category, genre);
+                NovelModel novelModel = new NovelModel(
+                        new Novel(id, imagePath, name, summary, about, chaptersCount, genreId, categoryId, divisionId, position, isNew, available, creditId),
+                        division
+                );
+
+                List<NovelModel> novelModels = genresCategories.get(novelCategoryGenre);
+                if (novelModels == null) {
+                    novelModels = new ArrayList<>();
+                }
+                novelModels.add(novelModel);
+                genresCategories.put(novelCategoryGenre, novelModels);
+            }
+
+            System.out.println(TAG + "Got categories of size -> " + genresCategories.size());
+
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Categories from database because " + e.getMessage());
+            categories.clear();
+        }
+    }
+
     public static ObservableList<Novel> getNovels() {
         return FXCollections.unmodifiableObservableList(novels);
     }
@@ -143,4 +210,7 @@ public class NovelsDao {
         return FXCollections.unmodifiableObservableList(categories);
     }
 
+    public static ObservableMap<NovelCategoryGenre, List<NovelModel>> getGenresCategories() {
+        return FXCollections.unmodifiableObservableMap(genresCategories);
+    }
 }

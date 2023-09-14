@@ -2,14 +2,12 @@ package com.scholarly.utme.viewmodels.novel_screens;
 
 import com.scholarly.utme.data.dao.NovelAuthorDao;
 import com.scholarly.utme.data.dao.NovelsDao;
-import com.scholarly.utme.data.model.novels.Novel;
-import com.scholarly.utme.data.model.novels.NovelAuthor;
-import com.scholarly.utme.data.model.novels.NovelCategory;
-import com.scholarly.utme.data.model.novels.NovelGenre;
+import com.scholarly.utme.data.model.novels.*;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +23,11 @@ public class NovelScreenVM implements ViewModel {
 
     private ObservableList<NovelCategory> categories = FXCollections.observableArrayList();
 
-    private ObjectProperty<Novel> selectedNovel = new SimpleObjectProperty<>();
+    private ObjectProperty<NovelModel> selectedNovelModel = new SimpleObjectProperty<>();
 
     private HashMap<NovelGenre, List<NovelCategory>> genreCategoryMap = new HashMap<>();
+
+    private ObservableMap<NovelCategoryGenre, List<NovelModel>> genresCategories = FXCollections.observableHashMap();
 
 
     public NovelScreenVM() {
@@ -35,6 +35,7 @@ public class NovelScreenVM implements ViewModel {
         genres.addAll(NovelsDao.getGenres());
         authors.addAll(NovelAuthorDao.getAuthors());
         categories.addAll(NovelsDao.getCategories());
+        genresCategories.putAll(NovelsDao.getGenresCategories());
 
         genres.forEach(novelGenre -> {
             genreCategoryMap.put(novelGenre, categories);
@@ -64,8 +65,12 @@ public class NovelScreenVM implements ViewModel {
         return genreCategoryMap;
     }
 
-    public void setSelectedNovel(Novel selectedNovel) {
-        this.selectedNovel.set(selectedNovel);
+    public ObservableMap<NovelCategoryGenre, List<NovelModel>> getGenresCategories() {
+        return genresCategories;
+    }
+
+    public void setSelectedNovelModel(NovelModel selectedNovelModel) {
+        this.selectedNovelModel.set(selectedNovelModel);
     }
 
     public NovelAuthor getAuthor(Novel selectedNovel) {
@@ -78,12 +83,12 @@ public class NovelScreenVM implements ViewModel {
     }
 
 
-    public Novel getSelectedNovel() {
-        return selectedNovel.get();
+    public NovelModel getSelectedNovelModel() {
+        return selectedNovelModel.get();
     }
 
-    public ObjectProperty<Novel> selectedNovelProperty() {
-        return selectedNovel;
+    public ObjectProperty<NovelModel> selectedNovelModelProperty() {
+        return selectedNovelModel;
     }
 
 }

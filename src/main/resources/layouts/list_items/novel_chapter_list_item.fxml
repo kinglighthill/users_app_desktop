@@ -13,10 +13,7 @@
     <graphic>
         <Panel fx:id="panel" style="-fx-background-color: #F1F1F1; -fx-background-radius: 5;">
             <left>
-                <HBox>
-                    <Label fx:id="chapterIndex"/>
-                    <Label fx:id="chapterTitle"/>
-                </HBox>
+                <Label fx:id="chapterTitle"/>
             </left>
             <right>
                 <ImageView fx:id="padlockIcon" preserveRatio="true" pickOnBounds="true"/>

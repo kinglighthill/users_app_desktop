@@ -31,7 +31,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
-import com.sandec.mdfx.MarkdownView;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     @FXML
     private Button optionAButton, optionBButton, optionCButton, optionDButton, optionEButton, answerContinueButton, tryAgainButton, resultContinueButton, activateNowButton;
     @FXML
-    private Label pageTitle, chapterIndex, chapterTitle, chapterContent, chapterCount, questionNumberLabel, fiftyFiftyCount, questionLabel, answerLabel, explanationLabel;
+    private Label pageTitle, chapterTitle, chapterContent, chapterCount, questionNumberLabel, fiftyFiftyCount, questionLabel, answerLabel, explanationLabel;
 
     @FXML
     private Label numOfCorrectAnsLabel, numOfGuessesLabel, scorePercentageLabel, resultHeader, chapterQuizHeader, showAllAnswersLabel, activateHeaderText;
@@ -106,18 +105,9 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             viewModel.setSelectedChapter(newValue);
         }));
 
-        pageTitle.setText(viewModel.getNovel().getName());
-        if (viewModel.getSelectedChapter().getTitle() != null) {
-            chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + ": ");
-            if (viewModel.getSelectedChapter().getPosition() <= 0) {
-                chapterIndex.setText(null);
-            }
-        } else {
-            chapterIndex.setText("Chapter " + viewModel.getSelectedChapter().getPosition());
-        }
-
+        pageTitle.setText(viewModel.getNovelModel().getNovel().getName());
         chapterCount.setText(viewModel.getSelectedChapter().getOrder() + " of " + chaptersList.getItems().size());
-        chapterTitle.setText(viewModel.getSelectedChapter().getTitle());
+        chapterTitle.setText(viewModel.getSelectedChapter().getChapterHeading());
         renderNovel(viewModel.getSelectedChapter());
 
         viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
@@ -131,17 +121,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             chapterQuizHeader.setText("Chapter " + newValue.getPosition() + " Quiz");
 
             chapterCount.setText(newValue.getOrder() + " of " + chaptersList.getItems().size());
-            chapterTitle.setText(newValue.getTitle());
-
-            if (newValue.getTitle() != null) {
-                chapterIndex.setText("Chapter " + newValue.getPosition() + ": ");
-                if (newValue.getPosition() <= 0) {
-                    chapterIndex.setText(null);
-                }
-            } else {
-                chapterIndex.setText("Chapter " + newValue.getPosition());
-            }
-
+            chapterTitle.setText(newValue.getChapterHeading());
         }));
 
         prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()).or(chapterQuizPane.visibleProperty()));
@@ -169,7 +149,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         });
 
         exitDialogExitButton.setOnAction(event -> {
-            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovel()));
+            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovelModel()));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
 
@@ -465,7 +445,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     }
 
     private void initializeFont() {
-        chapterIndex.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
         chapterTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
         chapterContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
         chapterCount.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
@@ -662,20 +641,20 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     }
 
     public static class InitialData {
-        private Novel novel;
+        private NovelModel novelModel;
         private NovelAuthor author;
         private ObservableList<NovelChapter> chapters;
         private NovelChapter selectedChapter;
 
-        public InitialData(Novel novel, NovelAuthor author, ObservableList<NovelChapter> novelChapters, NovelChapter chapter) {
-            this.novel = novel;
+        public InitialData(NovelModel novelModel, NovelAuthor author, ObservableList<NovelChapter> novelChapters, NovelChapter chapter) {
+            this.novelModel = novelModel;
             this.author = author;
             this.chapters = novelChapters;
             selectedChapter = chapter;
         }
 
-        public Novel getNovel() {
-            return novel;
+        public NovelModel getNovelModel() {
+            return novelModel;
         }
 
         public NovelAuthor getAuthor() {

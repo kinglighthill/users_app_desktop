@@ -3,6 +3,7 @@ package com.scholarly.utme.viewmodels.novel_screens;
 import com.scholarly.utme.controller.novel_screens.NovelGridScreenController;
 import com.scholarly.utme.data.dao.NovelsDao;
 import com.scholarly.utme.data.model.novels.Novel;
+import com.scholarly.utme.data.model.novels.NovelModel;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,22 +15,22 @@ import java.util.stream.Collectors;
 
 public class NovelGridScreenVM implements ViewModel {
 
-    private ObservableList<Novel> novels = FXCollections.observableArrayList();
+    private ObservableList<NovelModel> novelModels = FXCollections.observableArrayList();
 
     private SimpleStringProperty novelType = new SimpleStringProperty();
 
 
     public void processInitialData(NovelGridScreenController.InitialData data) {
         novelType.set(data.getCategoryGenreTitle());
-        novels.addAll(data.getNovels());
+        novelModels.addAll(data.getNovelModels());
         /*Pair<String, ObservableList<Novel>> novelPair = (Pair<String, ObservableList<Novel>>) data;
         novelType.set(getNovelName(novelPair.getKey()));
         ObservableList<Novel> novelList = novelPair.getValue();
         novels.addAll(novelList);*/
     }
 
-    public ObservableList<Novel> getNovels() {
-        return novels;
+    public ObservableList<NovelModel> getNovelModels() {
+        return novelModels;
     }
 
     public String getNovelType() {

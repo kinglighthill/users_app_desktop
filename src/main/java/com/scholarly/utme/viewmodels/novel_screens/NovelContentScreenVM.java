@@ -12,16 +12,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static com.scholarly.utme.viewmodels.novel_screens.NovelChapterListVM.*;
 
 public class NovelContentScreenVM implements ViewModel {
     private static final String TAG = "NovelContentScreenVM: ";
 
-    private Novel novel;
+    private NovelModel novelModel;
 
     private NovelAuthor author;
 
@@ -44,7 +41,7 @@ public class NovelContentScreenVM implements ViewModel {
 
     public void processInitialData(NovelContentScreenController.InitialData data) {
         chapters.addAll(data.getChapters());
-        novel = data.getNovel();
+        novelModel = data.getNovelModel();
         author = data.getAuthor();
         selectedChapter.set(data.getSelectedChapter());
 
@@ -86,7 +83,7 @@ public class NovelContentScreenVM implements ViewModel {
             int response = NovelObjectiveBookmarkDao.deleteBookmark(bookmarkToDelete.getQuestionId());
             System.out.println(TAG + "Bookmark with question ID -> " + bookmarkToDelete.getQuestionId() + " deleted with SQL response " + response);
         } else {
-            NovelObjectiveBookmarkDao.createBookmark(novel.getId(), selectedChapter.get().getId(), currentQuestion.getId());
+            NovelObjectiveBookmarkDao.createBookmark(novelModel.getNovel().getId(), selectedChapter.get().getId(), currentQuestion.getId());
         }
 
 //        ObservableList<NovelObjectiveBookmark> newBookmarks = NovelObjectiveBookmarkDao.getNovelBookmarks(
@@ -97,8 +94,8 @@ public class NovelContentScreenVM implements ViewModel {
 //        chapterBookmarks.put(selectedChapter.get().getId(), newBookmarks);
     }
 
-    public Novel getNovel() {
-        return novel;
+    public NovelModel getNovelModel() {
+        return novelModel;
     }
 
     public NovelAuthor getAuthor() {
