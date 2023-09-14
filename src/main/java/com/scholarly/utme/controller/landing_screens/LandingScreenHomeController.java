@@ -28,10 +28,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.controlsfx.control.GridView;
-import org.controlsfx.control.HyperlinkLabel;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import javax.swing.*;
@@ -148,7 +146,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         selectSubjectsGrid.setCellFactory(new SubjectGridCellFactory());
         selectSubjectsGrid.setItems(viewModel.getSubjects());
 
-        updateFavoriteSubjects(viewModel.getFavoriteSubjects());
+        displayFavoriteSubjects(viewModel.getFavoriteSubjects());
 
         continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionGridPane);
         if (populateLastSession()) {
@@ -172,7 +170,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             ObservableList<FavoriteSubject> updatedFavoriteSubjects = selectSubjectsGrid.getItems().stream().filter(FavoriteSubject::isSelected).collect(Collectors.toCollection(FXCollections::observableArrayList));
             viewModel.putSubjectCombination(updatedFavoriteSubjects);
 
-            updateFavoriteSubjects(updatedFavoriteSubjects);
+            displayFavoriteSubjects(updatedFavoriteSubjects);
             Animations.fadeOut(selectSubjectPane, 300);
             Animations.fadeOut(dimmer, 250);
         });
@@ -448,7 +446,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         });
     }
 
-    private void updateFavoriteSubjects(ObservableList<FavoriteSubject> selectedSubjects) {
+    private void displayFavoriteSubjects(ObservableList<FavoriteSubject> selectedSubjects) {
         favoriteSubjectsTile.getChildren().clear();
         selectedSubjects.forEach(subject -> {
             Panel panel = new Panel();
