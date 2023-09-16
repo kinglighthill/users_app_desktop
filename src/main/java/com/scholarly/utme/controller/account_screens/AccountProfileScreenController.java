@@ -146,14 +146,16 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         if (viewModel.getUser().getGender() != null) {
             if (viewModel.getUser().getGender().equals("m")) {
                 genderToggle.selectToggle(genderToggle.getToggles().get(0));
-            } else {
+            } else if (viewModel.getUser().getGender().equals("f")){
                 genderToggle.selectToggle(genderToggle.getToggles().get(1));
             }
         }
 
         AtomicReference<String> gender = new AtomicReference<>("");
 
-        gender.set((String) genderToggle.getSelectedToggle().getUserData());
+        if (genderToggle.getSelectedToggle() != null) {
+            gender.set((String) genderToggle.getSelectedToggle().getUserData());
+        }
 
         genderToggle.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue.isSelected()) {

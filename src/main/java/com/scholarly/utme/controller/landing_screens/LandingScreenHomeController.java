@@ -256,19 +256,19 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         List<String> fontFamilies = Font.getFamilies();
         List<String> fontNames    = Font.getFontNames();
 
-        if (Platform.isFxApplicationThread()) {
-            SwingUtilities.invokeLater(() -> {
-                SwingNode swingNode = new SwingNode();
-                JEditorPane editorPane = new JEditorPane();
-                editorPane.setEditable(false);
-                editorPane.setEditorKit(new HTMLEditorKit());
-                editorPane.setContentType("text/html");
-                editorPane.setText("<html><body><h1>Hello, <em>World</em>!</h1></body></html>");
-
-                fontVBox.getChildren().addAll(swingNode, new Label("This is the Label"));
-                fontVBox.layout();
-            });
-        }
+//        if (Platform.isFxApplicationThread()) {
+//            SwingUtilities.invokeLater(() -> {
+//                SwingNode swingNode = new SwingNode();
+//                JEditorPane editorPane = new JEditorPane();
+//                editorPane.setEditable(false);
+//                editorPane.setEditorKit(new HTMLEditorKit());
+//                editorPane.setContentType("text/html");
+//                editorPane.setText("<html><body><h1>Hello, <em>World</em>!</h1></body></html>");
+//
+//                fontVBox.getChildren().addAll(swingNode, new Label("This is the Label"));
+//                fontVBox.layout();
+//            });
+//        }
 
 //        Thread appThread = new Thread(() -> {
 //            try {

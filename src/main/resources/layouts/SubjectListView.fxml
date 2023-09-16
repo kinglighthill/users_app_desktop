@@ -10,7 +10,7 @@
 <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.SubjectListViewController">
     <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" >
         <right>
-            <HBox prefHeight="448.0" prefWidth="275.0" BorderPane.alignment="TOP_CENTER">
+            <HBox prefHeight="448.0" prefWidth="300.0" BorderPane.alignment="TOP_CENTER">
                 <children>
                     <Separator orientation="VERTICAL" prefHeight="200.0" />
                     <BorderPane prefHeight="448.0" prefWidth="289.0" BorderPane.alignment="TOP_CENTER">

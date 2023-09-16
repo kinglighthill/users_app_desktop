@@ -59,12 +59,12 @@ public class MainApplication extends Application {
 
 
         stage.setOnCloseRequest(event -> {
-            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to exit?");
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to exit the application?");
 
             dialog.showAndWait().filter(buttonType -> buttonType != ButtonType.YES).ifPresentOrElse(
                     buttonType -> event.consume(), () -> {
-                        System.out.println(TAG + "CurrentView: " + ViewSwitcher.getCurrentView());
-                        preferences.putBoolean(PREF_KEY_LOGGED_USER_OUT, ViewSwitcher.getCurrentView() == View.AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.WELCOME_SCREEN);
+                        System.out.println(TAG + "Screen showing before exit -> " + ViewSwitcher.getCurrentView());
+                        preferences.putBoolean(PREF_KEY_LOGGED_USER_OUT, ViewSwitcher.getCurrentView() == View.AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.PRE_AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.WELCOME_SCREEN);
                     }
             );
         });
@@ -76,7 +76,7 @@ public class MainApplication extends Application {
             boolean loggedUserOut = preferences.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
             if (loggedUserOut) {
                 ViewSwitcher.passData(new AuthenticationController.InitialData(false));
-                ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+                ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
             } else {
                 ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
                 ViewSwitcher.showScreen(View.LANDING_SCREEN);
