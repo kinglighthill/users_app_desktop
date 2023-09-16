@@ -7,6 +7,7 @@
 <?import org.kordamp.bootstrapfx.scene.layout.*?>
 <?import org.controlsfx.control.GridView?>
 <?import org.controlsfx.control.CheckListView?>
+<?import javafx.scene.text.Font?>
 <BorderPane fx:id="rootPane" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenHomeController">
 
@@ -15,6 +16,9 @@
             <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
                 <children>
                     <Label fx:id="helloText" text="Hello! " textFill="#034801">
+                        <!--<font>
+                            <Font name="SansSerif" size="22"/>
+                        </font>-->
                         <HBox.margin>
                             <Insets left="20.0" />
                         </HBox.margin>
@@ -40,6 +44,9 @@
                 </children>
             </HBox>
             <Label fx:id="startLearningText" text="Let's start learning" textFill="#034801">
+                <!--<font>
+                    <Font name="SansSerif" size="15"/>
+                </font>-->
                 <VBox.margin>
                     <Insets left="20.0" />
                 </VBox.margin>
@@ -86,7 +93,7 @@
                                 </padding>
                             </Label>
 
-                            <GridPane prefHeight="200" prefWidth="350" alignment="CENTER_LEFT" hgap="10.0" vgap="10.0">
+                            <GridPane prefHeight="200" prefWidth="350" alignment="CENTER_LEFT" hgap="15.0" vgap="15.0">
 
                                 <children>
                                     <Panel fx:id="cbtPracticePanel" GridPane.columnIndex="0" GridPane.rowIndex="0"
@@ -95,7 +102,11 @@
                                             <ImageView fx:id="cbtPracticeIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true"/>
                                         </top>
                                         <bottom>
-                                            <Label fx:id="cbtPracticeText" text="CBT Practice" textFill="white"/>
+                                            <Label fx:id="cbtPracticeText" text="CBT Practice" textFill="white">
+                                                <!--<font>
+                                                    <Font name="SansSerif" size="18"/>
+                                                </font>-->
+                                            </Label>
                                         </bottom>
 
                                         <padding>
@@ -109,7 +120,11 @@
                                             <ImageView fx:id="novelsIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
                                         </top>
                                         <bottom>
-                                            <Label fx:id="novelsText" text="Novels" textFill="white"/>
+                                            <Label fx:id="novelsText" text="Novels" textFill="white">
+                                                <!--<font>
+                                                    <Font name="SansSerif" size="18"/>
+                                                </font>-->
+                                            </Label>
                                         </bottom>
                                         <padding>
                                             <Insets left="30" bottom="20" top="20"/>
@@ -122,7 +137,11 @@
                                             <ImageView fx:id="studyNotesIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
                                         </top>
                                         <bottom>
-                                            <Label fx:id="studyNotesText" text="Study Notes" textFill="white"/>
+                                            <Label fx:id="studyNotesText" text="Study Notes" textFill="white">
+                                                <!--<font>
+                                                    <Font name="SansSerif" size="18"/>
+                                                </font>-->
+                                            </Label>
                                         </bottom>
                                         <padding>
                                             <Insets left="30" bottom="20" top="20"/>
@@ -135,7 +154,11 @@
                                             <ImageView fx:id="syllabusIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
                                         </top>
                                         <bottom>
-                                            <Label fx:id="syllabusText" text="Syllabus" textFill="white" />
+                                            <Label fx:id="syllabusText" text="Syllabus" textFill="white">
+                                                <!--<font>
+                                                    <Font name="SansSerif" size="18"/>
+                                                </font>-->
+                                            </Label>
                                         </bottom>
                                         <padding>
                                             <Insets left="30" bottom="20" top="20"/>
@@ -374,6 +397,12 @@
                             <Insets top="30" left="15" right="15" bottom="20"/>
                         </VBox.margin>
                     </Panel>
+
+                    <VBox fx:id="fontVBox" spacing="10">
+                        <VBox.margin>
+                            <Insets left="20" bottom="10"/>
+                        </VBox.margin>
+                    </VBox>
                 </VBox>
             </ScrollPane>
 

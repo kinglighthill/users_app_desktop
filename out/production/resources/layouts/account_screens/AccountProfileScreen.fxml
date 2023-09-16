@@ -60,7 +60,7 @@
                                     <Font size="16"/>
                                 </font>
                             </Label>
-                            <TextField fx:id="emailTextField" prefHeight="40" text="princejohnc35@gmail.com" editable="false">
+                            <TextField fx:id="emailTextField" prefHeight="40" editable="false">
                                 <font>
                                     <Font size="15"/>
                                 </font>
@@ -68,11 +68,18 @@
                             <HBox>
                                 <ImageView fx:id="infoImage" preserveRatio="true" pickOnBounds="true"/>
                                 <Label text="To change email, contact support ">
+                                    <font>
+                                        <Font size="13"/>
+                                    </font>
                                     <HBox.margin>
                                         <Insets left="8"/>
                                     </HBox.margin>
                                 </Label>
-                                <Label text="here" textFill="#12AF20"/>
+                                <Label fx:id="changeMailHereLabel" text="here" textFill="#12AF20">
+                                    <font>
+                                        <Font size="13"/>
+                                    </font>
+                                </Label>
                             </HBox>
                         </VBox>
                         <VBox spacing="10">
@@ -81,18 +88,11 @@
                                     <Font size="16"/>
                                 </font>
                             </Label>
-                            <StackPane>
-                                <TextField fx:id="profileNameTextField" prefHeight="40" text="John Prince Uzodinma" editable="false">
-                                    <font>
-                                        <Font size="15"/>
-                                    </font>
-                                </TextField>
-                                <Label fx:id="changeProfileName" text="change" textFill="#12AF20" StackPane.alignment="CENTER_RIGHT">
-                                    <padding>
-                                        <Insets right="10"/>
-                                    </padding>
-                                </Label>
-                            </StackPane>
+                            <TextField fx:id="profileNameTextField" prefHeight="40">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </TextField>
                         </VBox>
                         <VBox spacing="10">
                             <Label text="Phone">
@@ -100,18 +100,11 @@
                                     <Font size="16"/>
                                 </font>
                             </Label>
-                            <StackPane>
-                                <TextField fx:id="phoneTextField" prefHeight="40" text="08109514619" editable="false">
-                                    <font>
-                                        <Font size="15"/>
-                                    </font>
-                                </TextField>
-                                <Label fx:id="changePhoneNum" text="change" textFill="#12AF20" StackPane.alignment="CENTER_RIGHT">
-                                    <padding>
-                                        <Insets right="10"/>
-                                    </padding>
-                                </Label>
-                            </StackPane>
+                            <TextField fx:id="phoneTextField" prefHeight="40">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </TextField>
                         </VBox>
                         <VBox spacing="10">
                             <Label text="Gender" textFill="#053500">

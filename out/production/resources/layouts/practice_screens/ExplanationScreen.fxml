@@ -10,11 +10,11 @@
 <?import javafx.scene.web.WebView?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.practice_screens.ExplanationScreenController">
     <StackPane AnchorPane.topAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0">
-        <BorderPane prefHeight="400.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <top>
-                <VBox prefHeight="66.0" prefWidth="389.0" style="-fx-background-color: white;">
+                <VBox prefHeight="55.0" prefWidth="389.0" style="-fx-background-color: white;">
                     <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="389.0" BorderPane.alignment="CENTER">
+                        <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="389.0" BorderPane.alignment="CENTER">
                             <children>
                                 <Label text="Question Answers">
                                     <HBox.margin>
@@ -26,7 +26,7 @@
                                 </Label>
                                 <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
+                                        <!--<VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
                                             <children>
                                                 <ImageView fx:id="speakerImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                                                     <VBox.margin>
@@ -42,8 +42,8 @@
                                                     </font>
                                                 </Label>
                                             </children>
-                                        </VBox>
-                                        <VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
+                                        </VBox>-->
+                                        <!--<VBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="85.0">
                                             <children>
                                                 <ImageView fx:id="flagImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                                                     <VBox.margin>
@@ -93,7 +93,7 @@
                                                     </font>
                                                 </Label>
                                             </children>
-                                        </VBox>
+                                        </VBox>-->
                                     </children>
                                 </HBox>
                             </children>
@@ -104,41 +104,29 @@
             </top>
 
             <right>
-                <AnchorPane prefHeight="513.0" prefWidth="295.0" style="-fx-background-color: #F4FFF5;"
+                <AnchorPane prefHeight="513.0" prefWidth="280.0" style="-fx-background-color: #F4FFF5;"
                             BorderPane.alignment="CENTER">
-                    <HBox fx:id="toggleBox" prefWidth="300" AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0">
-                        <ToggleButton fx:id="textExplanation" text="Solution" textFill="white" prefWidth="150" style="-fx-background-color: #12AF20; -fx-border-color: #12AF20;">
+                    <HBox fx:id="toggleBox" prefWidth="200" alignment="CENTER" AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0">
+                        <ToggleButton fx:id="textExplanation" prefWidth="200" text="Show Explanation" textFill="white" style="-fx-background-color: #12AF20; -fx-border-color: #12AF20;">
                             <font>
-                                <Font name="Gill Sans MT" size="15.0"/>
+                                <Font name="Gill Sans MT" size="16.0"/>
                             </font>
                             <padding>
-                                <Insets topRightBottomLeft="5"/>
+                                <Insets top="10" bottom="10"/>
                             </padding>
                         </ToggleButton>
-                        <ToggleButton fx:id="videoExplanation" text="Video explanation" textFill="#12AF20" prefWidth="150" style="-fx-border-color: #12AF20;">
+                        <!--<ToggleButton fx:id="videoExplanation" text="Video explanation" textFill="#12AF20" prefWidth="150" style="-fx-border-color: #12AF20;">
                             <padding>
                                 <Insets topRightBottomLeft="5"/>
                             </padding>
-                        </ToggleButton>
+                        </ToggleButton>-->
                         <VBox.margin>
-                            <Insets top="20.0" bottom="30.0"/>
+                            <Insets top="20.0" bottom="30.0" left="10" right="10"/>
                         </VBox.margin>
                     </HBox>
 
-                    <StackPane fx:id="explanationPane" AnchorPane.topAnchor="50.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.bottomAnchor="10">
-                        <ScrollPane fitToWidth="true" style="-fx-background-color: #ffffff;">
-                            <Label fx:id="explanationLabel" alignment="TOP_LEFT" style="-fx-background-color: #ffffff;" wrapText="true">
-                                <VBox.margin>
-                                    <Insets bottom="30.0" left="10.0" right="10.0" top="30.0"/>
-                                </VBox.margin>
-                                <font>
-                                    <Font name="Gill Sans MT" size="15.0"/>
-                                </font>
-                                <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                </padding>
-                            </Label>
-                        </ScrollPane>
+                    <StackPane fx:id="explanationPane" AnchorPane.topAnchor="60.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.bottomAnchor="10">
+                        <WebView fx:id="explanationWebView" visible="false"/>
 
                         <StackPane fx:id="explanationVideo" visible="false"/>
                     </StackPane>
@@ -150,153 +138,184 @@
             </right>
 
             <center>
-                <VBox fx:id="centerVBox" spacing="10" style="-fx-background-color: #ffffff;">
-
-                    <Label fx:id="questionOverviewLabel" text="Question 3 of 40">
-                        <VBox.margin>
-                            <Insets top="20.0"/>
-                        </VBox.margin>
-                        <font>
-                            <Font name="Gill Sans MT Bold" size="18.0"/>
-                        </font>
-                    </Label>
-                    <ScrollPane fitToWidth="true" prefHeight="380"
-                                style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
-                        <Label fx:id="questionLabel" text="Label" wrapText="true">
-                            <font>
-                                <Font size="15.0"/>
-                            </font>
-                            <padding>
-                                <Insets topRightBottomLeft="10"/>
-                            </padding>
-                        </Label>
-                    </ScrollPane>
-
-                    <Panel fx:id="optionAPanel" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
-                        <left>
-                            <Label fx:id="optionA" text="Label" textFill="#000000">
+                <AnchorPane prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #FFFFFF;" BorderPane.alignment="CENTER">
+                    <ScrollPane fitToWidth="true" AnchorPane.topAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.bottomAnchor="1.0">
+                        <VBox fx:id="centerVBox" spacing="10" prefWidth="300.0" prefHeight="300" style="-fx-background-color: #ffffff;">
+                            <Label fx:id="questionOverviewLabel" text="Question 3 of 40">
+                                <VBox.margin>
+                                    <Insets top="20.0"/>
+                                </VBox.margin>
                                 <font>
-                                    <Font size="14.0"/>
+                                    <Font name="Gill Sans MT Bold" size="18.0"/>
                                 </font>
                             </Label>
-                        </left>
-                        <right>
-                            <HBox spacing="30" alignment="CENTER">
-                                <ImageView fx:id="optionAIcon" preserveRatio="true" pickOnBounds="true"/>
-                                <RadioButton fx:id="optionAButton" disable="true"/>
-                            </HBox>
-                        </right>
 
-                        <VBox.margin>
-                            <Insets top="10.0"/>
-                        </VBox.margin>
-                        <padding>
-                            <Insets left="10" top="10" right="20" bottom="10"/>
-                        </padding>
-                    </Panel>
-                    <Panel fx:id="optionBPanel" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
-                        <left>
-                            <Label fx:id="optionB" text="Label">
-                                <font>
-                                    <Font size="14.0"/>
-                                </font>
-                            </Label>
-                        </left>
-                        <right>
-                            <HBox spacing="30" alignment="CENTER">
-                                <ImageView fx:id="optionBIcon" preserveRatio="true" pickOnBounds="true"/>
-                                <RadioButton fx:id="optionBButton" disable="true"/>
-                            </HBox>
-                        </right>
-                        <padding>
-                            <Insets left="10" top="10" right="20" bottom="10"/>
-                        </padding>
-                    </Panel>
-                    <Panel fx:id="optionCPanel" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
-                        <left>
-                            <Label fx:id="optionC" text="Label" textFill="black">
-                                <font>
-                                    <Font size="14.0"/>
-                                </font>
-                            </Label>
-                        </left>
-                        <right>
-                            <HBox spacing="30" alignment="CENTER">
-                                <ImageView fx:id="optionCIcon" preserveRatio="true" pickOnBounds="true"/>
-                                <RadioButton fx:id="optionCButton" disable="true"/>
-                            </HBox>
-                        </right>
-                        <padding>
-                            <Insets left="10" top="10" right="20" bottom="10"/>
-                        </padding>
-                    </Panel>
-                    <Panel fx:id="optionDPanel" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
-                        <left>
-                            <Label fx:id="optionD" text="Label">
-                                <font>
-                                    <Font size="14.0"/>
-                                </font>
-                            </Label>
-                        </left>
-                        <right>
-                            <HBox spacing="30" alignment="CENTER">
-                                <ImageView fx:id="optionDIcon" preserveRatio="true" pickOnBounds="true"/>
-                                <RadioButton fx:id="optionDButton" disable="true"/>
-                            </HBox>
-                        </right>
-                        <padding>
-                            <Insets left="10" top="10" right="20" bottom="10"/>
-                        </padding>
-                    </Panel>
+                            <VBox prefHeight="200" style="-fx-background-color: #ffffff; -fx-border-color: #F1F1F1; -fx-border-radius: 5;">
+                                <HBox fx:id="quesDescriptionHBox" alignment="CENTER_LEFT">
+                                    <Label fx:id="questionDescriptionHeader" text="COMPREHENSION: Read the passage..." prefHeight="20" prefWidth="500" wrapText="true">
+                                        <font>
+                                            <Font size="15.0"/>
+                                        </font>
+                                    </Label>
+                                    <Label fx:id="readQuestionDesc" text="[READ]" textFill="#12AF20">
+                                        <font>
+                                            <Font size="15.0" />
+                                        </font>
+                                    </Label>
+                                    <padding>
+                                        <Insets bottom="10"/>
+                                    </padding>
+                                </HBox>
 
-                    <Label fx:id="noOptionSelected" text="No option was selected" textFill="RED">
-                        <font>
-                            <Font size="14.0"/>
-                        </font>
-                        <padding>
-                            <Insets left="10" bottom="10"/>
-                        </padding>
-                    </Label>
+                                <StackPane fx:id="questionStackPane">
+                                    <children>
+                                        <WebView fx:id="questionWebView" minHeight="200" prefHeight="200.0" prefWidth="200.0"/>
 
-                    <VBox spacing="15" alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
-                        <children>
-                            <Panel prefHeight="55.0" prefWidth="449.0">
+                                        <HBox fx:id="questionWithImageHBox" spacing="5" minHeight="210" prefHeight="200" prefWidth="300" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5">
+                                            <ImageView fx:id="questionImage" fitHeight="200" fitWidth="400" StackPane.alignment="CENTER"/>
+                                            <WebView fx:id="questionWithImageWebView" prefHeight="200"/>
+                                            <padding>
+                                                <Insets topRightBottomLeft="10"/>
+                                            </padding>
+                                        </HBox>
+                                    </children>
+                                </StackPane>
+
+                                <padding>
+                                    <Insets top="10" right="10" left="10" bottom="10"/>
+                                </padding>
+                            </VBox>
+
+                            <Panel fx:id="optionAPanel" prefHeight="17.0" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
                                 <left>
-                                    <Button fx:id="prevButton" mnemonicParsing="false" text="Previous"
-                                            textFill="#12AF20"
-                                            style=" -fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                        <padding>
-                                            <Insets left="20" right="20" top="5" bottom="5"/>
-                                        </padding>
-                                    </Button>
+                                    <Label fx:id="optionA" text="Label" textFill="#000000">
+                                        <font>
+                                            <Font size="14.0"/>
+                                        </font>
+                                    </Label>
                                 </left>
                                 <right>
-                                    <Button fx:id="nextButton" mnemonicParsing="false" text="Next" textFill="#FFFFFF"
-                                            style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
-                                        <padding>
-                                            <Insets left="25" right="25" top="5" bottom="5"/>
-                                        </padding>
-                                    </Button>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="optionAIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <RadioButton fx:id="optionAButton" disable="true"/>
+                                    </HBox>
                                 </right>
-                                <VBox.margin>
-                                    <Insets left="10" right="10"/>
-                                </VBox.margin>
-                            </Panel>
-                            <Separator prefWidth="200.0"/>
-                            <ScrollPane fx:id="tileScrollPane" prefWidth="600" prefHeight="200" fitToWidth="true">
-                                <TilePane fx:id="tilePane" prefHeight="200.0" prefWidth="200.0" hgap="10" vgap="10" style="-fx-background-color: #FFFFFF;"/>
-                            </ScrollPane>
-                        </children>
-                    </VBox>
 
-                    <padding>
-                        <Insets left="20.0" right="20.0"/>
-                    </padding>
-                </VBox>
+                                <VBox.margin>
+                                    <Insets top="10.0"/>
+                                </VBox.margin>
+                                <padding>
+                                    <Insets left="10" top="10" right="20" bottom="10"/>
+                                </padding>
+                            </Panel>
+                            <Panel fx:id="optionBPanel"  prefHeight="17.0" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
+                                <left>
+                                    <Label fx:id="optionB" text="Label">
+                                        <font>
+                                            <Font size="14.0"/>
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="optionBIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <RadioButton fx:id="optionBButton" disable="true"/>
+                                    </HBox>
+                                </right>
+                                <padding>
+                                    <Insets left="10" top="10" right="20" bottom="10"/>
+                                </padding>
+                            </Panel>
+                            <Panel fx:id="optionCPanel" prefHeight="17.0" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
+                                <left>
+                                    <Label fx:id="optionC" text="Label" textFill="black">
+                                        <font>
+                                            <Font size="14.0"/>
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="optionCIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <RadioButton fx:id="optionCButton" disable="true"/>
+                                    </HBox>
+                                </right>
+                                <padding>
+                                    <Insets left="10" top="10" right="20" bottom="10"/>
+                                </padding>
+                            </Panel>
+                            <Panel fx:id="optionDPanel" prefHeight="17.0" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
+                                <left>
+                                    <Label fx:id="optionD" text="Label">
+                                        <font>
+                                            <Font size="14.0"/>
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <HBox spacing="30" alignment="CENTER">
+                                        <ImageView fx:id="optionDIcon" preserveRatio="true" pickOnBounds="true"/>
+                                        <RadioButton fx:id="optionDButton" disable="true"/>
+                                    </HBox>
+                                </right>
+                                <padding>
+                                    <Insets left="10" top="10" right="20" bottom="10"/>
+                                </padding>
+                            </Panel>
+
+                            <Label fx:id="noOptionSelected" text="No option was selected" textFill="RED">
+                                <font>
+                                    <Font size="14.0"/>
+                                </font>
+                                <padding>
+                                    <Insets left="10" bottom="10"/>
+                                </padding>
+                            </Label>
+
+                            <VBox spacing="15" alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                <children>
+                                    <Panel prefHeight="55.0" prefWidth="449.0">
+                                        <left>
+                                            <Button fx:id="prevButton" mnemonicParsing="false" text="Previous"
+                                                    textFill="#12AF20"
+                                                    style=" -fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
+                                                <padding>
+                                                    <Insets left="20" right="20" top="5" bottom="5"/>
+                                                </padding>
+                                            </Button>
+                                        </left>
+                                        <right>
+                                            <Button fx:id="nextButton" mnemonicParsing="false" text="Next" textFill="#FFFFFF"
+                                                    style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+                                                <padding>
+                                                    <Insets left="25" right="25" top="5" bottom="5"/>
+                                                </padding>
+                                            </Button>
+                                        </right>
+                                        <VBox.margin>
+                                            <Insets left="10" right="10"/>
+                                        </VBox.margin>
+                                    </Panel>
+                                    <Separator prefWidth="200.0"/>
+                                    <TilePane fx:id="tilePane" prefWidth="200.0" hgap="10" vgap="10" style="-fx-background-color: #FFFFFF;">
+                                        <VBox.margin>
+                                            <Insets bottom="10"/>
+                                        </VBox.margin>
+                                    </TilePane>
+
+                                </children>
+
+                            </VBox>
+                            <padding>
+                                <Insets left="20.0" right="20.0"/>
+                            </padding>
+                        </VBox>
+                    </ScrollPane>
+                </AnchorPane>
             </center>
 
             <left>
-                <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                <HBox prefHeight="100.0" prefWidth="230.0" BorderPane.alignment="CENTER">
                     <children>
                         <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #006B17;" HBox.hgrow="ALWAYS">
                             <children>
@@ -322,6 +341,24 @@
                 </HBox>
             </left>
         </BorderPane>
+
         <Pane fx:id="dialogDimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
+
+        <VBox fx:id="questionDescriptionDialog" spacing="15" maxHeight="450.0" maxWidth="400.0" prefHeight="400.0" prefWidth="250.0" StackPane.alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
+            <ImageView fx:id="quesDescriptionCloseIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
+            <ScrollPane fitToWidth="true" prefWidth="200" prefHeight="400" style="-fx-background-color: white;">
+                <Label fx:id="questionDescriptionText"  wrapText="true" alignment="TOP_CENTER">
+                    <font>
+                        <Font size="14"/>
+                    </font>
+                </Label>
+                <padding>
+                    <Insets right="10"/>
+                </padding>
+            </ScrollPane>
+            <padding>
+                <Insets topRightBottomLeft="15"/>
+            </padding>
+        </VBox>
     </StackPane>
 </AnchorPane>
