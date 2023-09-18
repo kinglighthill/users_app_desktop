@@ -244,7 +244,7 @@
 
                         <GridPane fx:id="previousSessionGridPane" prefWidth="500" alignment="CENTER_LEFT" hgap="15.0" vgap="15.0" style="-fx-background-color: #FFFFFF;">
                             <children>
-                                <Panel fx:id="firstSession" prefWidth="250" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                <Panel fx:id="noteLastSession" prefWidth="250" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                     <left>
                                         <StackPane prefWidth="100" style="-fx-background-color: white; -fx-background-radius: 10;">
                                             <ImageView fx:id="noteSessionSubjectImage" preserveRatio="true" pickOnBounds="true"/>
@@ -264,7 +264,7 @@
                                     </padding>
                                 </Panel>
 
-                                <Panel fx:id="secondSession" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                <Panel fx:id="novelLastSession" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                     <left>
                                         <StackPane>
                                             <ImageView fx:id="secondSessionBookImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_LEFT"/>

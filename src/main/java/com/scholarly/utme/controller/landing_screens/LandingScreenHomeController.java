@@ -12,7 +12,6 @@ import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -85,7 +84,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private Panel cbtPracticePanel, pastQuestionsPanel, cbtGamePanel, videosPanel, audioPanel, novelsPanel,  studyNotesPanel, cbtCentresPanel, syllabusPanel;
     @FXML
-    private Panel firstSession, secondSession, thirdSession, fourthSession, actionCbtPracticePanel;
+    private Panel noteLastSession, novelLastSession, thirdSession, fourthSession, actionCbtPracticePanel;
     @FXML
     private Label helloText, startLearningText, editSubjectsText, topSubjectsText, biologyText, englishText, physicsText, chemistryText, mathematicsText, geographyText, activitiesText, continueSessionsText;
     @FXML
@@ -193,7 +192,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
         });
 
-        firstSession.setOnMouseClicked(e -> {
+        noteLastSession.setOnMouseClicked(e -> {
             NotesScreenController.InitialData data = new NotesScreenController.InitialData(
                     viewModel.getLastSessionSubject(),
                     viewModel.getNoteSubjectTopics().get(
@@ -270,22 +269,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //            });
 //        }
 
-//        Thread appThread = new Thread(() -> {
-//            try {
-////                editorPane.setPage("http://www.google.com");
-//                swingNode.setContent(editorPane);
-//                fontVBox.getChildren().addAll(swingNode, new Label("This is the Label"));
-//                fontVBox.layout();
-////                SwingUtilities.invokeAndWait(() -> {
-////
-////                });
-//            }
-//            catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            System.out.println("Finished on " + Thread.currentThread());
-//        });
-//        appThread.start();
 
 //        long startTime = System.currentTimeMillis();
 //        fontFamilies.forEach(family -> {
@@ -438,12 +421,26 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     }
 
     private void initializeGestures() {
-        editSubjectsText.setOnMouseEntered(e -> {
-            editSubjectsText.setUnderline(true);
-        });
-        editSubjectsText.setOnMouseExited(e -> {
-            editSubjectsText.setUnderline(false);
-        });
+        editSubjectsText.setOnMouseEntered(e -> editSubjectsText.setUnderline(true));
+        editSubjectsText.setOnMouseExited(e -> editSubjectsText.setUnderline(false));
+
+        cbtPracticePanel.setOnMouseEntered(e -> cbtPracticePanel.setStyle("-fx-background-color: #F5A100; -fx-background-radius: 10;"));
+        cbtPracticePanel.setOnMouseExited(e -> cbtPracticePanel.setStyle("-fx-background-color: #E18400; -fx-background-radius: 10;"));
+
+        novelsPanel.setOnMouseEntered(e -> novelsPanel.setStyle("-fx-background-color: #3289C6; -fx-background-radius: 10;"));
+        novelsPanel.setOnMouseExited(e -> novelsPanel.setStyle("-fx-background-color: #1B68AF; -fx-background-radius: 10;"));
+
+        studyNotesPanel.setOnMouseEntered(e -> studyNotesPanel.setStyle("-fx-background-color: #0EA362; -fx-background-radius: 10;"));
+        studyNotesPanel.setOnMouseExited(e -> studyNotesPanel.setStyle("-fx-background-color: #1CA687; -fx-background-radius: 10;"));
+
+        syllabusPanel.setOnMouseEntered(e -> syllabusPanel.setStyle("-fx-background-color: #FF29A3; -fx-background-radius: 10;"));
+        syllabusPanel.setOnMouseExited(e -> syllabusPanel.setStyle("-fx-background-color: #D4107A; -fx-background-radius: 10;"));
+
+        noteLastSession.setOnMouseEntered(e -> noteLastSession.setStyle("-fx-background-color: #A2CAA6; -fx-background-radius: 10;"));
+        noteLastSession.setOnMouseExited(e -> noteLastSession.setStyle("-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;"));
+
+        novelLastSession.setOnMouseEntered(e -> novelLastSession.setStyle("-fx-background-color: #A2CAA6; -fx-background-radius: 10;"));
+        novelLastSession.setOnMouseExited(e -> novelLastSession.setStyle("-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;"));
     }
 
     private void displayFavoriteSubjects(ObservableList<FavoriteSubject> selectedSubjects) {
