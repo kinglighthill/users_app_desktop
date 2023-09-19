@@ -11,7 +11,6 @@ import com.scholarly.utme.data.model.newDb.contentViewType.*;
 import com.scholarly.utme.ui.cellFactories.NoteContentListCellFactory;
 import com.scholarly.utme.ui.cellFactories.UnorderedListCellFactory;
 import com.scholarly.utme.ui.utils.*;
-import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.note_screens.NotesScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -51,7 +50,6 @@ import org.jsoup.nodes.Document;
 
 import java.net.URL;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
@@ -371,8 +369,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             if (noteContentList.getSkin() != null) {
                 VirtualFlow<?> vf = (VirtualFlow<?>) ((ListViewSkin<?>) noteContentList.getSkin()).getChildren().get(0);
 
-                System.out.println(TAG + "Position -> " + vf.getPosition());
-                System.out.println(TAG + "Cell count -> " + vf.getCellCount());
+//                System.out.println(TAG + "Position -> " + vf.getPosition());
+//                System.out.println(TAG + "Cell count -> " + vf.getCellCount());
 
                 double lastSectionIndex = vf.getPosition() * vf.getCellCount();
                 System.out.println(TAG + "Last Section Index -> " + lastSectionIndex);
@@ -380,61 +378,57 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 if ((int)lastSectionIndex == noteContentList.getItems().size()) {
                     lastSectionIndex = (int) lastSectionIndex - 1;
                 }
-                if (!noteContentList.getItems().isEmpty()) {
-                    NoteSection lastSection = noteContentList.getItems().get((int) lastSectionIndex);
 
-                    StringBuilder sectionTitle = new StringBuilder();
-                    ContentViewType contentViewType = ContentViewTypes.convert(lastSection);
-                    if (contentViewType instanceof HeaderViewType headerViewType) {
-                        if (headerViewType.getText() != null) {
-                            sectionTitle = new StringBuilder(headerViewType.getText());
-                        }
-                    } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
-                        if (paragraphViewType.getText() != null) {
-                            sectionTitle = new StringBuilder(paragraphViewType.getText());
-                        }
-                    } else if (contentViewType instanceof CBTViewType cbtViewType) {
-                        int yearId = cbtViewType.getYearId();
-                        int questionId = cbtViewType.getQuestionId();
-                        ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
+                NoteSection lastSection = noteContentList.getItems().get((int) lastSectionIndex);
 
-                        sectionTitle = new StringBuilder(question.getQuestion());
-                    } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
-                        if (latexMathViewType.getKatex() != null) {
-                            sectionTitle = new StringBuilder(latexMathViewType.getKatex());
-                        }
-                    } else if (contentViewType instanceof ListViewType listViewType) {
-                        sectionTitle = new StringBuilder(listViewType.getItems().get(0));
-                    } else if (contentViewType instanceof ReferenceViewType referenceViewType) {
-                        sectionTitle = new StringBuilder(referenceViewType.getText());
-                    } else if (contentViewType instanceof TableViewType tableViewType) {
+                StringBuilder sectionTitle = new StringBuilder();
+                ContentViewType contentViewType = ContentViewTypes.convert(lastSection);
+                if (contentViewType instanceof HeaderViewType headerViewType) {
+                    if (headerViewType.getText() != null) {
+                        sectionTitle = new StringBuilder(headerViewType.getText());
+                    }
+                } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
+                    if (paragraphViewType.getText() != null) {
+                        sectionTitle = new StringBuilder(paragraphViewType.getText());
+                    }
+                } else if (contentViewType instanceof CBTViewType cbtViewType) {
+                    int yearId = cbtViewType.getYearId();
+                    int questionId = cbtViewType.getQuestionId();
+                    ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
 
-                        List<List<String>> content = tableViewType.getContent();
+                    sectionTitle = new StringBuilder(question.getQuestion());
+                } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
+                    if (latexMathViewType.getKatex() != null) {
+                        sectionTitle = new StringBuilder(latexMathViewType.getKatex());
+                    }
+                } else if (contentViewType instanceof ListViewType listViewType) {
+                    sectionTitle = new StringBuilder(listViewType.getItems().get(0));
+                } else if (contentViewType instanceof ReferenceViewType referenceViewType) {
+                    sectionTitle = new StringBuilder(referenceViewType.getText());
+                } else if (contentViewType instanceof TableViewType tableViewType) {
 
-                        for (int row = 0; row < 1; row++) {
+                    List<List<String>> content = tableViewType.getContent();
 
-                            System.out.println("Row Content -> " + content.get(row));
-                            for (int col = 0; col < content.get(row).size(); col++) {
-                                System.out.println("Column content -> " + content.get(row).get(col));
-                                sectionTitle.append(" | ").append(content.get(row).get(col));
-                            }
+                    for (int row = 0; row < 1; row++) {
+
+                        System.out.println("Row Content -> " + content.get(row));
+                        for (int col = 0; col < content.get(row).size(); col++) {
+                            System.out.println("Column content -> " + content.get(row).get(col));
+                            sectionTitle.append(" | ").append(content.get(row).get(col));
                         }
                     }
-                    System.out.println(TAG + "Got Section title -> " + sectionTitle);
-
-
-                    NoteLastSection noteLastSection = new NoteLastSection(
-                            viewModel.getUser().getId().hashCode(),
-                            lastSection.getId(),
-                            sectionTitle.toString(),
-                            viewModel.getUser().getId()
-                    );
-
-                    viewModel.putLastSession(noteLastSection);
-
-                } else {
-                    ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
                 }
+                System.out.println(TAG + "Got Section title -> " + sectionTitle);
+
+
+                NoteLastSession noteLastSession = new NoteLastSession(
+                        viewModel.getUser().getId().hashCode(),
+                        lastSection.getId(),
+                        sectionTitle.toString(),
+                        viewModel.getUser().getId()
+                );
+
+                viewModel.putLastSession(noteLastSession);
             }
 
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);

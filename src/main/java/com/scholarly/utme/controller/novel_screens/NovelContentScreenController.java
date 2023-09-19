@@ -2,6 +2,7 @@ package com.scholarly.utme.controller.novel_screens;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.data.model.novels.*;
 import com.scholarly.utme.ui.cellFactories.NovelChapterQuestionListCellFactory;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
@@ -145,10 +146,19 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         backButton.setOnAction(event -> {
             exitDialogDimmer.setVisible(true);
             Animations.translateIn(exitNovelDialog, 300);
-
         });
 
         exitDialogExitButton.setOnAction(event -> {
+            exitDialogDimmer.setVisible(false);
+            NovelLastSession novelLastSession = new NovelLastSession(
+                    viewModel.getUser().getId().hashCode(),
+                    viewModel.getSelectedChapter().getId(),
+                    viewModel.getSelectedChapter().getChapterHeading(),
+                    viewModel.getUser().getId()
+            );
+
+            viewModel.putLastSession(novelLastSession);
+
             ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovelModel()));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
@@ -642,23 +652,17 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
     public static class InitialData {
         private NovelModel novelModel;
-        private NovelAuthor author;
         private ObservableList<NovelChapter> chapters;
         private NovelChapter selectedChapter;
 
-        public InitialData(NovelModel novelModel, NovelAuthor author, ObservableList<NovelChapter> novelChapters, NovelChapter chapter) {
+        public InitialData(NovelModel novelModel, ObservableList<NovelChapter> novelChapters, NovelChapter selectedChapter) {
             this.novelModel = novelModel;
-            this.author = author;
             this.chapters = novelChapters;
-            selectedChapter = chapter;
+            this.selectedChapter = selectedChapter;
         }
 
         public NovelModel getNovelModel() {
             return novelModel;
-        }
-
-        public NovelAuthor getAuthor() {
-            return author;
         }
 
         public ObservableList<NovelChapter> getChapters() {

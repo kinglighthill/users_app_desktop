@@ -242,9 +242,9 @@
                     <VBox fx:id="continuePreviousSessionVBox" spacing="10">
                         <Label fx:id="continueSessionsText" text="Continue previous sessions" textFill="#034801"/>
 
-                        <GridPane fx:id="previousSessionGridPane" prefWidth="500" alignment="CENTER_LEFT" hgap="15.0" vgap="15.0" style="-fx-background-color: #FFFFFF;">
+                        <HBox fx:id="previousSessionHBox" spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: #FFFFFF;">
                             <children>
-                                <Panel fx:id="noteLastSession" prefWidth="250" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                <Panel fx:id="noteLastSessionPanel" prefWidth="500" prefHeight="250" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;">
                                     <left>
                                         <StackPane prefWidth="100" style="-fx-background-color: white; -fx-background-radius: 10;">
                                             <ImageView fx:id="noteSessionSubjectImage" preserveRatio="true" pickOnBounds="true"/>
@@ -264,23 +264,29 @@
                                     </padding>
                                 </Panel>
 
-                                <Panel fx:id="novelLastSession" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                <Panel fx:id="novelLastSessionPanel" prefWidth="500" prefHeight="250" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;">
                                     <left>
-                                        <StackPane>
-                                            <ImageView fx:id="secondSessionBookImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_LEFT"/>
+                                        <StackPane  style="-fx-background-color: white; -fx-background-radius: 10;">
+                                            <ImageView fx:id="novelLastSessionImage" fitWidth="80" fitHeight="100" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER"/>
+                                            <padding>
+                                                <Insets topRightBottomLeft="10"/>
+                                            </padding>
                                         </StackPane>
                                     </left>
                                     <center>
-                                        <VBox spacing="10">
-                                            <Label fx:id="secondSessionBookTitle" text="The Life Changer" textFill="#034801"/>
-                                            <HBox spacing="5" alignment="CENTER_LEFT">
-                                                <ImageView fx:id="secondSessionAuthorIcon" preserveRatio="true" pickOnBounds="true"/>
-                                                <Label fx:id="secondSessionAuthorName" text="John Uzodinma" textFill="#034801"/>
-                                            </HBox>
-                                            <HBox spacing="5" alignment="CENTER_LEFT">
-                                                <ImageView fx:id="secondSessionChaptersIcon" preserveRatio="true" pickOnBounds="true"/>
-                                                <Label fx:id="secondSessionChaptersText" text="7 chapters" textFill="#034801"/>
-                                            </HBox>
+                                        <VBox spacing="10" alignment="CENTER_LEFT">
+                                            <Label fx:id="novelLastSessionTitle" text="The Life Changer" textFill="#034801"/>
+
+                                            <Label fx:id="novelLastSessionChapterText" text="7 chapters" textFill="#034801"/>
+
+<!--                                            <HBox spacing="5" alignment="CENTER_LEFT">-->
+<!--                                                <Label fx:id="novelLastSessionChapterText" text="7 chapters" textFill="#034801"/>-->
+<!--                                            </HBox>-->
+
+<!--                                            <HBox spacing="5" alignment="CENTER_LEFT">-->
+<!--                                                <ImageView fx:id="novelLastSessionAuthorIcon" preserveRatio="true" pickOnBounds="true"/>-->
+<!--                                                <Label fx:id="novelLastSessionAuthorName" text="John Uzodinma" textFill="#034801"/>-->
+<!--                                            </HBox>-->
 
                                             <padding>
                                                 <Insets left="30" top="10"/>
@@ -361,7 +367,7 @@
                             <padding>
                                 <Insets right="5" bottom="5"/>
                             </padding>
-                        </GridPane>
+                        </HBox>
 
                         <padding>
                             <Insets top="20" left="20" right="10"/>

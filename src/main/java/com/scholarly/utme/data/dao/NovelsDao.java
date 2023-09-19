@@ -4,6 +4,7 @@ import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.novels.*;
 import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.data.util.Tables;
+import com.scholarly.utme.util.Helper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -195,6 +196,55 @@ public class NovelsDao {
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Categories from database because " + e.getMessage());
             categories.clear();
+        }
+    }
+
+    public static NovelModel getNovel(int novelId) {
+        String query = "SELECT * FROM " + Tables.NOVELS + " WHERE " + idColumn + " = " + novelId;
+
+        Novel novel;
+
+        try(ResultSet rs = databaseService.executeQuery(query)) {
+            novel = new Novel(
+                    rs.getInt(idColumn),
+                    rs.getString(imagePathColumn),
+                    rs.getString(nameColumn),
+                    rs.getString(summaryColumn),
+                    rs.getString(aboutColumn),
+                    rs.getInt(chaptersCountColumn),
+                    rs.getInt(genreIdColumn),
+                    rs.getInt(categoryIdColumn),
+                    rs.getInt(divisionIdColumn),
+                    rs.getInt(positionColumn),
+                    rs.getInt(isNewColumn),
+                    rs.getInt(availableColumn),
+                    rs.getInt(creditIdColumn)
+            );
+
+            String divisionQuery = "SELECT * FROM " + Tables.NOVEL_DIVISIONS + " WHERE " + idColumn + " = " + novel.getDivisionId();
+
+            String division = "";
+
+            try(ResultSet resultSet = databaseService.executeQuery(divisionQuery)) {
+                division = resultSet.getString(divisionColumn);
+            } catch (Exception e) {
+                Logger.getAnonymousLogger().log(
+                        Level.SEVERE,
+                        LocalDateTime.now() + ": Could not find Novel Division from database because " + e.getMessage());
+            }
+
+
+            NovelModel novelModel = new NovelModel(novel, division);
+
+//            System.out.println(TAG + "Got NovelModel -> " + Helper.toString(novelModel));
+
+            return novelModel;
+
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not find Novel from database because " + e.getMessage());
+            return null;
         }
     }
 
