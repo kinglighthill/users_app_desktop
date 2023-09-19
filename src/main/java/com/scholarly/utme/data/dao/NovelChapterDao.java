@@ -2,19 +2,23 @@ package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.FreeContent;
+import com.scholarly.utme.data.model.newDb.NoteLastSession;
+import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.data.model.novels.NovelChapter;
+import com.scholarly.utme.data.util.CRUDHelper;
 import com.scholarly.utme.data.util.Tables;
 import com.scholarly.utme.util.AppPreferences;
-import com.scholarly.utme.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
@@ -22,7 +26,7 @@ import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 public class NovelChapterDao {
     private static final String TAG = "NovelChapterDao: ";
     private static final DatabaseService databaseService = new DatabaseService();
-    private static Preferences preferences = AppPreferences.getPreferences();
+    private static final Preferences preferences = AppPreferences.getPreferences();
 
     private static final String idColumn = "_id";
     private static final String positionColumn = "position";
@@ -34,6 +38,10 @@ public class NovelChapterDao {
 
     private static final String divisionColumn = "division";
     private static final String chapterCategoryColumn = "chapter_category";
+
+    private static final String chapterIdColumn = "chapter_id";
+    private static final String chapterTitleColumn = "chapter_title";
+    private static final String userIdColumn = "uid";
 
     private static final ObservableList<FreeContent> freeContents;
 
@@ -178,4 +186,45 @@ public class NovelChapterDao {
 
         return heading;
     }
+
+    public static int insertLastSection(NovelLastSession chapter) {
+        String query = CRUDHelper.insertOrReplaceQuery(
+                Tables.NOVEL_LAST_SESSION,
+                new String[]{"_id", "chapter_id","chapter_title", "uid"},
+                new Object[]{chapter.getId(), chapter.getChapterId(), chapter.getChapterTitle(), chapter.getUserId()},
+                new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.VARCHAR});
+
+        try {
+            return (int) databaseService.executeUpdate(query);
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not insert item to database because " + ex.getMessage());
+            return -1;
+        }
+
+    }
+
+    public static NovelLastSession retrieveLastSession(String userId) {
+        NovelLastSession lastSection = null;
+        String query = "SELECT * FROM " + Tables.NOVEL_LAST_SESSION + " WHERE " + userIdColumn + " = '" + userId + "'";
+
+        try(ResultSet rs = databaseService.executeQuery(query)) {
+            while (rs.next()) {
+                lastSection = new NovelLastSession(
+                        rs.getInt(idColumn),
+                        rs.getInt(chapterIdColumn),
+                        rs.getString(chapterTitleColumn),
+                        rs.getString(userIdColumn));
+            }
+            return lastSection;
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load last session from database because " + e.getMessage());
+
+            return null;
+        }
+    }
+
 }

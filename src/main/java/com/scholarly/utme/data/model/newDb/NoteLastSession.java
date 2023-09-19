@@ -1,16 +1,12 @@
 package com.scholarly.utme.data.model.newDb;
 
-public class NoteLastSection {
+public class NoteLastSession {
     private int id;
     private int sectionId;
     private String sectionTitle;
     private String userId;
 
-    public NoteLastSection() {
-
-    }
-
-    public NoteLastSection(int id, int sectionId, String sectionTitle, String userId) {
+    public NoteLastSession(int id, int sectionId, String sectionTitle, String userId) {
         this.id = id;
         this.sectionId = sectionId;
         this.sectionTitle = sectionTitle;
