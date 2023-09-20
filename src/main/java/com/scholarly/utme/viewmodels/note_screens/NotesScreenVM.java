@@ -5,7 +5,7 @@ import com.scholarly.utme.controller.note_screens.NotesScreenController.InitialD
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.network.model.UserData;
-import com.scholarly.utme.data.model.newDb.NoteLastSection;
+import com.scholarly.utme.data.model.newDb.NoteLastSession;
 import com.scholarly.utme.data.dao.newDb.SectionDao;
 import com.scholarly.utme.data.dao.newDb.SubTopicDao;
 import com.scholarly.utme.data.model.Highlights;
@@ -13,8 +13,6 @@ import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.util.AppPreferences;
-import com.scholarly.utme.util.Constants;
-import com.scholarly.utme.util.Helper;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -85,7 +83,7 @@ public class NotesScreenVM implements ViewModel {
         }
     }
 
-    public void putLastSession(NoteLastSection lastSession) {
+    public void putLastSession(NoteLastSession lastSession) {
         int id = SectionDao.insertLastSection(lastSession);
         System.out.println(TAG + "Inserted last session with id -> " + id);
     }

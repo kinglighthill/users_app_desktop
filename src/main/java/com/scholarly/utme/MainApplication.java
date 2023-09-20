@@ -73,9 +73,9 @@ public class MainApplication extends Application {
         if (firstTimeUser) {
             ViewSwitcher.showScreen(View.WELCOME_SCREEN);
         } else {
-            boolean loggedUserOut = preferences.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
-            if (loggedUserOut) {
-                ViewSwitcher.passData(new AuthenticationController.InitialData(false));
+            boolean userLoggedOut = preferences.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
+            if (userLoggedOut) {
+//                ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                 ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
             } else {
                 ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));

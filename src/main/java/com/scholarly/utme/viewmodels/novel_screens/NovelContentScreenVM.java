@@ -1,10 +1,18 @@
 package com.scholarly.utme.viewmodels.novel_screens;
 
+import com.google.gson.Gson;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
+import com.scholarly.utme.data.dao.NovelChapterDao;
 import com.scholarly.utme.data.dao.NovelObjectiveBookmarkDao;
 import com.scholarly.utme.data.dao.NovelSectionDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
+import com.scholarly.utme.data.dao.newDb.SectionDao;
+import com.scholarly.utme.data.model.User;
+import com.scholarly.utme.data.model.newDb.NoteLastSession;
+import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.data.model.novels.*;
+import com.scholarly.utme.network.model.UserData;
+import com.scholarly.utme.util.AppPreferences;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -14,13 +22,15 @@ import javafx.collections.ObservableList;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.prefs.Preferences;
+
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_DATA;
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class NovelContentScreenVM implements ViewModel {
     private static final String TAG = "NovelContentScreenVM: ";
 
     private NovelModel novelModel;
-
-    private NovelAuthor author;
 
     private ObservableList<NovelChapter> chapters = FXCollections.observableArrayList();
 
@@ -38,11 +48,20 @@ public class NovelContentScreenVM implements ViewModel {
 
     private double correctAnswers, totalGuesses;
 
+    private Preferences preferences = AppPreferences.getPreferences();
+
+    private UserData user;
+
+    public NovelContentScreenVM() {
+        Gson gson = new Gson();
+        String userId = preferences.get(PREF_KEY_USER_ID, "");
+        String userData = preferences.get(PREF_KEY_USER_DATA+userId, "");
+        user = gson.fromJson(userData, UserData.class);
+    }
 
     public void processInitialData(NovelContentScreenController.InitialData data) {
         chapters.addAll(data.getChapters());
         novelModel = data.getNovelModel();
-        author = data.getAuthor();
         selectedChapter.set(data.getSelectedChapter());
 
         selectedQuestionIndex.set(1);
@@ -58,6 +77,11 @@ public class NovelContentScreenVM implements ViewModel {
         int fiftyFifty = Math.round(chapterQuestions.get(selectedChapter.get().getId()).size()/10f);
 
         fiftyFiftyCount.set(5);
+    }
+
+    public void putLastSession(NovelLastSession lastSession) {
+        int id = NovelChapterDao.insertLastSection(lastSession);
+        System.out.println(TAG + "Inserted Novel last session with id -> " + id);
     }
 
 
@@ -96,10 +120,6 @@ public class NovelContentScreenVM implements ViewModel {
 
     public NovelModel getNovelModel() {
         return novelModel;
-    }
-
-    public NovelAuthor getAuthor() {
-        return author;
     }
 
     public ObservableList<NovelChapter> getChapters() {
@@ -174,6 +194,9 @@ public class NovelContentScreenVM implements ViewModel {
         return (correctAnswers/totalGuesses) * 100;
     }
 
+    public UserData getUser() {
+        return user;
+    }
 
     public static class QuestionState {
         private NovelObjectiveQuestion question;
