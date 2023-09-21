@@ -16,6 +16,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -26,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -33,6 +35,11 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
+import javax.swing.*;
+import javax.swing.text.*;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
+import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +51,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     private static final String TAG = "NovelContentScreenController: ";
 
     @FXML
-    private ScrollPane contentPane;
+    private StackPane contentPane;
+
     @FXML
     private ListView<NovelChapter> chaptersList;
     @FXML
@@ -58,7 +66,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     @FXML
     private Button optionAButton, optionBButton, optionCButton, optionDButton, optionEButton, answerContinueButton, tryAgainButton, resultContinueButton, activateNowButton;
     @FXML
-    private Label pageTitle, chapterTitle, chapterContent, chapterCount, questionNumberLabel, fiftyFiftyCount, questionLabel, answerLabel, explanationLabel;
+    private Label pageTitle, chapterTitle, chapterCount, questionNumberLabel, fiftyFiftyCount, questionLabel, answerLabel, explanationLabel;
 
     @FXML
     private Label numOfCorrectAnsLabel, numOfGuessesLabel, scorePercentageLabel, resultHeader, chapterQuizHeader, showAllAnswersLabel, activateHeaderText;
@@ -456,7 +464,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
     private void initializeFont() {
         chapterTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-        chapterContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+//        chapterContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
         chapterCount.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
         activateHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
     }
@@ -518,7 +526,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         optionEButton.setDisable(false);
 
         updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
-
     }
 
     private void changeSelectedQuestion(int questionIndex) {
@@ -640,10 +647,31 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
                     try {
                         Map<String,Object> map = mapper.readValue(section.getContent(), Map.class);
                         String content = map.get("text").toString();
-                        chapterContent.setText(content.replaceAll("<br>", System.lineSeparator()));
+                        SwingNode swingNode = new SwingNode();
+
+                        SwingUtilities.invokeLater(() -> {
+                            HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
+                            StyleSheet styleSheet = htmlEditorKit.getStyleSheet();
+                            styleSheet.addRule("body { font-size: 18pt; line-height: 2; }");
+
+                            JTextPane jContentPane = new JTextPane();
+                            jContentPane.setEditable(false);
+                            jContentPane.setContentType("text/html");
+                            jContentPane.setEditorKit(htmlEditorKit);
+
+                            jContentPane.setText(
+                                    content.replaceAll("<br>\r\n", "<br><br>")
+                                            .replaceAll("\r\n", "<br><br>")
+                            );
+                            jContentPane.setPreferredSize(new Dimension(600, 800));
+                            JScrollPane scrollPane = new JScrollPane(jContentPane);
+                            scrollPane.setBorder(null);
+                            swingNode.setContent(scrollPane);
+                        });
+                        contentPane.getChildren().clear();
+                        contentPane.getChildren().addAll(swingNode);
                     } catch (JsonProcessingException ignored) { }
                 });
-
     }
 
     private InitialData getInitialData() {

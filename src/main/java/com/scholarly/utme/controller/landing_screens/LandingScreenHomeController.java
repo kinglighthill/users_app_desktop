@@ -396,14 +396,14 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         editSubjectsText.setOnMouseEntered(e -> editSubjectsText.setUnderline(true));
         editSubjectsText.setOnMouseExited(e -> editSubjectsText.setUnderline(false));
 
-        cbtPracticePanel.setOnMouseEntered(e -> cbtPracticePanel.setStyle("-fx-background-color: #F5A100; -fx-background-radius: 10;"));
-        cbtPracticePanel.setOnMouseExited(e -> cbtPracticePanel.setStyle("-fx-background-color: #E18400; -fx-background-radius: 10;"));
+        cbtPracticePanel.setOnMouseEntered(e -> cbtPracticePanel.setStyle("-fx-background-color: #3289C6; -fx-background-radius: 10;"));
+        cbtPracticePanel.setOnMouseExited(e -> cbtPracticePanel.setStyle("-fx-background-color: #1B68AF; -fx-background-radius: 10;"));
 
-        novelsPanel.setOnMouseEntered(e -> novelsPanel.setStyle("-fx-background-color: #3289C6; -fx-background-radius: 10;"));
-        novelsPanel.setOnMouseExited(e -> novelsPanel.setStyle("-fx-background-color: #1B68AF; -fx-background-radius: 10;"));
+        novelsPanel.setOnMouseEntered(e -> novelsPanel.setStyle("-fx-background-color: #0EA362; -fx-background-radius: 10;"));
+        novelsPanel.setOnMouseExited(e -> novelsPanel.setStyle("-fx-background-color: #1CA687; -fx-background-radius: 10;"));
 
-        studyNotesPanel.setOnMouseEntered(e -> studyNotesPanel.setStyle("-fx-background-color: #0EA362; -fx-background-radius: 10;"));
-        studyNotesPanel.setOnMouseExited(e -> studyNotesPanel.setStyle("-fx-background-color: #1CA687; -fx-background-radius: 10;"));
+        studyNotesPanel.setOnMouseEntered(e -> studyNotesPanel.setStyle("-fx-background-color: #F5A100; -fx-background-radius: 10;"));
+        studyNotesPanel.setOnMouseExited(e -> studyNotesPanel.setStyle("-fx-background-color: #E18400; -fx-background-radius: 10;"));
 
         syllabusPanel.setOnMouseEntered(e -> syllabusPanel.setStyle("-fx-background-color: #FF29A3; -fx-background-radius: 10;"));
         syllabusPanel.setOnMouseExited(e -> syllabusPanel.setStyle("-fx-background-color: #D4107A; -fx-background-radius: 10;"));

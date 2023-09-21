@@ -11,6 +11,7 @@ import com.scholarly.utme.ui.cellFactories.UnorderedListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.NoSelectionModel;
 import com.scholarly.utme.viewmodels.note_screens.NotesScreenVM;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingNode;
@@ -84,7 +85,6 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-
 //            System.out.println(TAG + "Got Section -> " + Helper.toString(item));
             Parent node = renderNote(item);
 //            System.out.println(TAG + "Before setGraphic -> " + node);
@@ -431,19 +431,26 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 //            }
 //        });
 
-        HTMLEditorKit kit = new HTMLEditorKit();
-        JTextPane chatPane = new JTextPane();
-        chatPane.setEditable(false);
-        chatPane.setContentType("text/html");
-        chatPane.setEditorKit(kit);
-        chatPane.setText(html);
 
         SwingNode swingNode = new SwingNode();
-//        try {
-//            SwingUtilities.invokeAndWait(() -> swingNode.setContent(chatPane));
-//        } catch (InterruptedException | InvocationTargetException e) {
-//            throw new RuntimeException(e);
-//        }
+//        SwingUtilities.invokeLater(() -> swingNode.setContent(chatPane));
+
+
+        SwingUtilities.invokeLater(() -> {
+            HTMLEditorKit kit = new HTMLEditorKit();
+            JTextPane chatPane = new JTextPane();
+            chatPane.setEditable(false);
+            chatPane.setContentType("text/html");
+            chatPane.setEditorKit(kit);
+            chatPane.setText(html);
+//            // Create and add Swing components here
+            JFrame frame = new JFrame("Swing UI");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(300, 150);
+            frame.add(chatPane);
+            frame.setVisible(true);
+        });
+
 
         StackPane pane = new StackPane();
         pane.getChildren().add(swingNode);

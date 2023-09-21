@@ -96,48 +96,48 @@
                             <GridPane prefHeight="200" prefWidth="350" alignment="CENTER_LEFT" hgap="15.0" vgap="15.0">
 
                                 <children>
-                                    <Panel fx:id="cbtPracticePanel" GridPane.columnIndex="0" GridPane.rowIndex="0"
-                                           prefWidth="200.0" style="-fx-background-color: #E18400; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                                        <top>
-                                            <ImageView fx:id="cbtPracticeIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true"/>
-                                        </top>
-                                        <bottom>
-                                            <Label fx:id="cbtPracticeText" text="CBT Practice" textFill="white">
-                                                <!--<font>
-                                                    <Font name="SansSerif" size="18"/>
-                                                </font>-->
-                                            </Label>
-                                        </bottom>
-
-                                        <padding>
-                                            <Insets left="30" bottom="20" top="20"/>
-                                        </padding>
-                                    </Panel>
-
-                                    <Panel fx:id="novelsPanel" GridPane.columnIndex="1" GridPane.rowIndex="0" minHeight="120.0"
-                                           prefWidth="250.0" style="-fx-background-color: #1B68AF; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                                        <top>
-                                            <ImageView fx:id="novelsIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
-                                        </top>
-                                        <bottom>
-                                            <Label fx:id="novelsText" text="Novels" textFill="white">
-                                                <!--<font>
-                                                    <Font name="SansSerif" size="18"/>
-                                                </font>-->
-                                            </Label>
-                                        </bottom>
-                                        <padding>
-                                            <Insets left="30" bottom="20" top="20"/>
-                                        </padding>
-                                    </Panel>
-
-                                    <Panel fx:id="studyNotesPanel" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                    <Panel fx:id="studyNotesPanel" GridPane.columnIndex="0" GridPane.rowIndex="0"
                                            prefWidth="250.0" style="-fx-background-color: #0EA362; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
                                             <ImageView fx:id="studyNotesIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
                                         </top>
                                         <bottom>
                                             <Label fx:id="studyNotesText" text="Study Notes" textFill="white">
+                                                <!--<font>
+                                                    <Font name="SansSerif" size="18"/>
+                                                </font>-->
+                                            </Label>
+                                        </bottom>
+                                        <padding>
+                                            <Insets left="30" bottom="20" top="20"/>
+                                        </padding>
+                                    </Panel>
+
+                                    <Panel fx:id="cbtPracticePanel" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                           prefWidth="200.0" style="-fx-background-color: #E18400; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                        <top>
+                                            <ImageView fx:id="cbtPracticeIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true"/>
+                                        </top>
+                                        <bottom>
+                                            <Label fx:id="cbtPracticeText" text="Practice Questions" textFill="white">
+                                                <!--<font>
+                                                    <Font name="SansSerif" size="18"/>
+                                                </font>-->
+                                            </Label>
+                                        </bottom>
+
+                                        <padding>
+                                            <Insets left="30" bottom="20" top="20"/>
+                                        </padding>
+                                    </Panel>
+
+                                    <Panel fx:id="novelsPanel" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="120.0"
+                                           prefWidth="250.0" style="-fx-background-color: #1B68AF; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                        <top>
+                                            <ImageView fx:id="novelsIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                                        </top>
+                                        <bottom>
+                                            <Label fx:id="novelsText" text="Novels" textFill="white">
                                                 <!--<font>
                                                     <Font name="SansSerif" size="18"/>
                                                 </font>-->

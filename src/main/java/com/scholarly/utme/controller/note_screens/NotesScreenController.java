@@ -503,7 +503,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             }
         });
 
-
         ToggleGroup fontSizeToggleGroup = new ToggleGroup();
         fontSizeToggleGroup.getToggles().addAll(fontSmallButton, fontMediumButton, fontLargeButton);
         fontSizeToggleGroup.selectedToggleProperty().addListener((observer, oldValue, newValue) -> {
@@ -701,8 +700,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         setupQuizQuestion();
 
 
-
-
         highlightColors.getChildren().clear();
         highlightColors.getChildren().addAll(
                 highlightColorsList
@@ -774,7 +771,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });*/
 
         addNoteButton.setOnMouseClicked(event -> {
-
             List<Note> notes = viewModel.getSubjectNotes();
 
             String currentNote = null;
@@ -2182,13 +2178,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             fontSmallButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 5 0 0 5; -fx-border-radius: 5 0 0 5; -fx-text-fill: #FFFFFF;");
             fontMediumButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 0 0 0; -fx-text-fill: #000000;");
             fontLargeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 5 5 0; -fx-text-fill: #000000;");
-        }else if (newValue == fontMediumButton) {
+        } else if (newValue == fontMediumButton) {
             setFontSizesToMedium();
 
             fontSmallButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5 0 0 5; -fx-text-fill: #000000;");
             fontMediumButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 0 0 0 0; -fx-border-radius: 0 0 0 0; -fx-text-fill: #FFFFFF;");
             fontLargeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 5 5 0; -fx-text-fill: #000000;");
-        }else if (newValue == fontLargeButton) {
+        } else if (newValue == fontLargeButton) {
             setFontSizesToLarge();
 
             fontSmallButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5 0 0 5; -fx-text-fill: #000000;");
