@@ -14,7 +14,7 @@
                 <left>
                     <HBox spacing="20" alignment="CENTER">
                         <ImageView fx:id="activateInfoIcon" fitHeight="20" fitWidth="20" preserveRatio="true" pickOnBounds="true"/>
-                        <Label text="Your app is not activated, Activate your App to access all locked Years and Novels" textFill="#5B4617">
+                        <Label text="Your device is not activated." textFill="#5B4617">
                             <font>
                                 <Font size="13"/>
                             </font>

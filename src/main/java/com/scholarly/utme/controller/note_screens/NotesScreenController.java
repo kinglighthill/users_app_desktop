@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller.note_screens;
 
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
@@ -358,7 +359,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         activateNowButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
         notesBackButton.setOnAction(event -> {

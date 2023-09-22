@@ -2,14 +2,13 @@ package com.scholarly.utme.controller.novel_screens;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.data.model.novels.*;
 import com.scholarly.utme.ui.cellFactories.NovelChapterQuestionListCellFactory;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.novel_screens.NovelContentScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -183,7 +182,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         });
 
         activateNowButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
 
@@ -670,7 +670,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
                         });
                         contentPane.getChildren().clear();
                         contentPane.getChildren().addAll(swingNode);
-                    } catch (JsonProcessingException ignored) { }
+                    } catch (Exception e) {
+                        System.out.println(TAG + "Swing error -> " + e.getMessage());
+//                        e.printStackTrace();
+                    }
                 });
     }
 
