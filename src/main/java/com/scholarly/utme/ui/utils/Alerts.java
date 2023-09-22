@@ -1,6 +1,7 @@
 package com.scholarly.utme.ui.utils;
 
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -142,7 +143,8 @@ public class Alerts {
         activateNowButton.setFont(new Font(16));
         activateNowButton.setOnAction(event -> {
             dialog.close();
-            ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
         activateDialog.getChildren().addAll(activateHeaderText, innerVBox, activateNowButton);

@@ -231,7 +231,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         });*/
 
         topActivateButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
         if (viewModel.isActivated()) {

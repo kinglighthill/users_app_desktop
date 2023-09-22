@@ -444,8 +444,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     private boolean populateLastSession() {
         NoteLastSession noteLastSession = viewModel.getNoteLastSession();
         NovelLastSession novelLastSession = viewModel.getNovelLastSession();
-        previousSessionHBox.getChildren().remove(noteLastSessionPanel);
-        previousSessionHBox.getChildren().remove(novelLastSessionPanel);
+        previousSessionHBox.getChildren().removeAll(noteLastSessionPanel, novelLastSessionPanel);
 
         if (noteLastSession != null) {
             previousSessionHBox.getChildren().add(noteLastSessionPanel);

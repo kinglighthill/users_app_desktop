@@ -377,11 +377,14 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
             panel.setBottom(appName);
 
             panel.setStyle("-fx-border-color: #F1F1F1; -fx-border-radius: 5;");
+
             panel.setPadding(new Insets(10, 0, 10, 10));
 
             panel.setOnMouseClicked(event -> {
                 application.openBrowser(appItem.getDownloadLink());
             });
+            panel.setOnMouseEntered(e -> panel.setStyle("-fx-border-color: #A2CAA6; -fx-border-radius: 5;"));
+            panel.setOnMouseExited(e -> panel.setStyle("-fx-border-color: #F1F1F1; -fx-border-radius: 5;"));
 
             Platform.runLater(() -> mobileAppsTile.getChildren().add(panel));
         });
@@ -413,6 +416,9 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
             panel.setOnMouseClicked(event -> {
                 application.openBrowser(appItem.getDownloadLink());
             });
+
+            panel.setOnMouseEntered(e -> panel.setStyle("-fx-border-color: #A2CAA6; -fx-border-radius: 5;"));
+            panel.setOnMouseExited(e -> panel.setStyle("-fx-border-color: #F1F1F1; -fx-border-radius: 5;"));
 
             Platform.runLater(() -> {
                 desktopAppsTile.getChildren().add(panel);
