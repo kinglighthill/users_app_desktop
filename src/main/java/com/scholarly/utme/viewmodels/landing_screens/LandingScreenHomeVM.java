@@ -11,14 +11,13 @@ import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.network.model.UserData;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_DATA;
@@ -26,7 +25,6 @@ import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class LandingScreenHomeVM implements ViewModel {
     private static final String TAG = "LandingScreenHomeVM: ";
-    private final Preferences preferences = AppPreferences.getPreferences();
     private final NoteLastSession noteLastSession;
     private NoteSection noteLastSection;
     private NoteSubject lastSectionSubject;
@@ -52,9 +50,9 @@ public class LandingScreenHomeVM implements ViewModel {
 
     public LandingScreenHomeVM() {
         NovelChapterDao novelChapterDao = new NovelChapterDao();
-        userId = preferences.get(PREF_KEY_USER_ID, "");
+        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
 
-        String userDataString = preferences.get(PREF_KEY_USER_DATA+userId, "");
+        String userDataString = PreferencesManager.get(PREF_KEY_USER_DATA+userId, "");
         userData = gson.fromJson(userDataString, UserData.class);
 
         favoriteSubjects = FXCollections.observableArrayList();

@@ -12,7 +12,7 @@ import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.newDb.*;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -20,7 +20,6 @@ import javafx.collections.ObservableList;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_DATA;
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
@@ -44,7 +43,6 @@ public class NotesScreenVM implements ViewModel {
     ObservableList<Note> subjectNotes = FXCollections.observableArrayList();
     ObservableList<ObjectiveQuestion> noteSubjectQuestions = FXCollections.observableArrayList();
 
-    Preferences preferences = AppPreferences.getPreferences();
 
     Gson gson = new Gson();
 
@@ -52,8 +50,8 @@ public class NotesScreenVM implements ViewModel {
     private final String userId;
 
     public NotesScreenVM() {
-        userId = preferences.get(PREF_KEY_USER_ID, "");
-        String userDataString = preferences.get(PREF_KEY_USER_DATA+userId, "");
+        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+        String userDataString = PreferencesManager.get(PREF_KEY_USER_DATA+userId, "");
 
         userData = gson.fromJson(userDataString, UserData.class);
     }

@@ -8,12 +8,11 @@ import com.scholarly.utme.network.model.RefreshRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.network.model.DeviceInfo;
 import com.scholarly.utme.ui.utils.*;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenActivateVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.ViewModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,15 +23,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import okhttp3.*;
-import org.unbrokendome.base62.Base62;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ResourceBundle;
-import java.util.UUID;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
 import static com.scholarly.utme.util.Constants.*;
@@ -62,7 +58,6 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
     @FXML
     private Button activateButton, buyPinButton, continueButton;
 
-    private final Preferences preferences = AppPreferences.getPreferences();
     private final OkHttpClient httpClient = NetworkService.getHttpClient();
 
     MainApplication application = new MainApplication();
@@ -127,7 +122,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                 String END_POINT = "activations";
                 String userId = viewModel.getUserId();
 
-                String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+                String ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
 
 //                String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
                 String encodedDeviceId = DeviceInfo.getSystemProperties().getDeviceId();
@@ -150,7 +145,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                     @Override
                     public void refreshToken() {
                         System.out.println(TAG + "Refreshing token...");
-                        String REFRESH_TOKEN = preferences.get(PREF_KEY_REFRESH_TOKEN+userId, "");
+                        String REFRESH_TOKEN = PreferencesManager.get(PREF_KEY_REFRESH_TOKEN+userId, "");
                         RefreshRequest refreshTokenRequest = new RefreshRequest(REFRESH_TOKEN);
 
                         String refreshJson = gson.toJson(refreshTokenRequest);
@@ -172,10 +167,10 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                                     if (refreshResponse.getStatus().equalsIgnoreCase("success")) {
                                         System.out.println(TAG + "Refreshed Token for user with id -> " + refreshResponse.getData().getUserId());
 
-                                        preferences.put(PREF_KEY_ACCESS_TOKEN+userId, refreshResponse.getData().getAccessToken());
-                                        preferences.put(PREF_KEY_REFRESH_TOKEN+userId, refreshResponse.getData().getRefreshToken());
+                                        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, refreshResponse.getData().getAccessToken());
+                                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, refreshResponse.getData().getRefreshToken());
 
-                                        System.out.println(TAG + "Refreshed Token New Access Token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN+userId, ""));
+                                        System.out.println(TAG + "Refreshed Token New Access Token -> " + PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, ""));
 
                                     } else if (refreshResponse.getStatus().equalsIgnoreCase("error")) {
                                         Platform.runLater(() -> {
@@ -202,7 +197,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                     public void resendRequest() {
                         System.out.println(TAG + "Resending request...");
 
-                        String NEW_ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+                        String NEW_ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
 
                         RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
 
@@ -223,9 +218,9 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                                     BaseResponse activationResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
                                     if (activationResponse.getStatus().equalsIgnoreCase("success")) {
-                                        // TODO: Encrypt and Save token with Java Keystore
-                                        preferences.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
-                                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
+
+                                        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
+                                        PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
 
                                         Platform.runLater(() -> {
                                             progressBar.setVisible(false);
@@ -305,9 +300,9 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                         BaseResponse activationResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
                         if (activationResponse.getStatus().equalsIgnoreCase("success")) {
-                            // TODO: Encrypt and Save token with Java Keystore
-                            preferences.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
-                            preferences.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
+
+                            PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
+                            PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
 
                             Platform.runLater(() -> {
                                 progressBar.setVisible(false);

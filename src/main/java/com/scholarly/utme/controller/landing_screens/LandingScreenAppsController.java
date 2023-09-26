@@ -8,14 +8,13 @@ import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.RefreshRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.ui.utils.*;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAppsVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -24,23 +23,14 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.TextAlignment;
 import okhttp3.*;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
 import java.net.*;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
 import static com.scholarly.utme.util.Constants.*;
@@ -70,8 +60,7 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
     private TextField searchTextField;
 
 
-    private OkHttpClient httpClient;
-    private Preferences preferences;
+    private final OkHttpClient httpClient = NetworkService.getHttpClient();
 
     MainApplication application = new MainApplication();
 
@@ -85,8 +74,6 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        preferences = AppPreferences.getPreferences();
-        httpClient = NetworkService.getHttpClient();
 
         initializeViews();
         initializeFonts();
@@ -104,8 +91,8 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                 String MOBILE_APPS_END_POINT = "exam-apps";
                 String userId = viewModel.getUserId();
 
-                String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
-                String REFRESH_TOKEN = preferences.get(PREF_KEY_REFRESH_TOKEN+userId, "");
+                String ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+                String REFRESH_TOKEN = PreferencesManager.get(PREF_KEY_REFRESH_TOKEN+userId, "");
 
                 Gson gson = new Gson();
 
@@ -140,10 +127,10 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                                     if (refreshResponse.getStatus().equalsIgnoreCase("success")) {
                                         System.out.println(TAG + "Refreshed Token for User with Id -> " + refreshResponse.getData().getUserId());
 
-                                        preferences.put(PREF_KEY_ACCESS_TOKEN+userId, refreshResponse.getData().getAccessToken());
-                                        preferences.put(PREF_KEY_REFRESH_TOKEN+userId, refreshResponse.getData().getRefreshToken());
+                                        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, refreshResponse.getData().getAccessToken());
+                                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, refreshResponse.getData().getRefreshToken());
 
-                                        System.out.println(TAG + "Refreshed Token New Access Token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN+userId, ""));
+                                        System.out.println(TAG + "Refreshed Token New Access Token -> " + PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, ""));
 
                                     } else if (refreshResponse.getStatus().equalsIgnoreCase("error")) {
                                         Platform.runLater(() -> {
@@ -167,7 +154,7 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                     public void resendRequest() {
                         System.out.println(TAG + "Resending request...");
 
-                        String NEW_ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+                        String NEW_ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
 
                         Request request = new Request.Builder()
                                 .url(BASE_URL + MOBILE_APPS_END_POINT)
@@ -326,7 +313,7 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
     private void loadDesktopApps() {
         String DESKTOP_APPS_END_POINT = "exam-apps/desktop";
         String userId = viewModel.getUserId();
-        String ACCESS_TOKEN = preferences.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+        String ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
 
         Gson gson = new Gson();
 

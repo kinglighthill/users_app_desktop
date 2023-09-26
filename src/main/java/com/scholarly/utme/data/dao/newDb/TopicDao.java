@@ -3,31 +3,18 @@ package com.scholarly.utme.data.dao.newDb;
 
 import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.FreeContent;
-import com.scholarly.utme.data.model.newDb.NoteSubject;
 import com.scholarly.utme.data.model.newDb.NoteTopic;
 import com.scholarly.utme.data.model.newDb.PQTopic;
-import com.scholarly.utme.data.model.newDb.Topic;
-import com.scholarly.utme.data.model.novels.NovelChapter;
-import com.scholarly.utme.data.util.DbConnection;
-import com.scholarly.utme.data.util.NewDatabase;
-import com.scholarly.utme.data.util.SyllabusDatabase;
 import com.scholarly.utme.data.util.Tables;
-import com.scholarly.utme.network.model.Data;
-import com.scholarly.utme.util.AppPreferences;
-import com.scholarly.utme.util.Constants;
+import com.scholarly.utme.util.PreferencesManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
@@ -37,7 +24,6 @@ public class TopicDao {
     private static final String TAG = "TopicDao: ";
 
     private static final DatabaseService databaseService = new DatabaseService();
-    private static Preferences preferences = AppPreferences.getPreferences();
 
     private static final String idColumn = "_id";
     private static final String titleColumn = "title";
@@ -52,7 +38,7 @@ public class TopicDao {
     private static final String userId;
 
     static {
-        userId = preferences.get(PREF_KEY_USER_ID, "");
+        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
         pqTopics = FXCollections.observableArrayList();
         noteTopics = FXCollections.observableArrayList();
         freeContents = FXCollections.observableArrayList();
@@ -177,7 +163,7 @@ public class TopicDao {
 
         }
 
-        if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
+        if (PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
             for (NoteTopic topic : noteTopics) {
                 topic.setFree(true);
             }
