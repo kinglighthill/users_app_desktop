@@ -2,6 +2,7 @@ package com.scholarly.utme.controller.landing_screens;
 
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenSettingsVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -17,7 +18,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_SOUND;
-import static com.scholarly.utme.util.Constants.PREF_KEY_VIBRATION;
 
 @FxmlPath("/layouts/landing_screens/landing_screen_settings.fxml")
 public class LandingScreenSettingsController implements FxmlView<LandingScreenSettingsVM>, Initializable {
@@ -45,13 +45,13 @@ public class LandingScreenSettingsController implements FxmlView<LandingScreenSe
         soundSwitch.selectedProperty().bindBidirectional(viewModel.soundProperty());
 
 
-//        vibrationSwitch.selectedProperty().addListener(((observable, oldValue, newValue) -> {
-//            viewModel.getPreferences().putBoolean(PREF_KEY_VIBRATION+viewModel.getUser().getId(), newValue);
-//        }));
-
         soundSwitch.selectedProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.getPreferences().putBoolean(PREF_KEY_SOUND+viewModel.getUser().getId(), newValue);
+            PreferencesManager.putBoolean(PREF_KEY_SOUND+viewModel.getUser().getId(), newValue);
         }));
+
+//        vibrationSwitch.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+//            PreferenceManager.putBoolean(PREF_KEY_VIBRATION+viewModel.getUser().getId(), newValue);
+//        }));
 
         aboutPanel.setOnMouseClicked(event -> {
             ViewSwitcher.showScreen(View.SETTINGS_ABOUT_US_SCREEN);

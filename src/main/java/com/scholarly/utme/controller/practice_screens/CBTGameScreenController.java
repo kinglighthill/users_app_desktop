@@ -49,8 +49,6 @@ import java.util.stream.Collectors;
 public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initializable, SceneLifecycle {
     private static final String TAG = "CBTGameScreenController: ";
 
-    private final Preferences preferences = AppPreferences.getPreferences();
-
 
     @InjectViewModel
     private CBTGameScreenVM viewModel;

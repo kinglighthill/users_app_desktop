@@ -1,13 +1,12 @@
 package com.scholarly.utme;
 
 import com.github.sarxos.webcam.Webcam;
-import com.scholarly.utme.controller.AuthenticationController;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import javafx.application.Application;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -20,15 +19,11 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.Constants.*;
 
 public class MainApplication extends Application {
     private static final String TAG = "MainApplication: ";
-
-    private final Preferences preferences = AppPreferences.getPreferences();
-
 
     private Webcam webcam;
 
@@ -64,16 +59,17 @@ public class MainApplication extends Application {
             dialog.showAndWait().filter(buttonType -> buttonType != ButtonType.YES).ifPresentOrElse(
                     buttonType -> event.consume(), () -> {
                         System.out.println(TAG + "Screen showing before exit -> " + ViewSwitcher.getCurrentView());
-                        preferences.putBoolean(PREF_KEY_LOGGED_USER_OUT, ViewSwitcher.getCurrentView() == View.AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.PRE_AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.WELCOME_SCREEN);
+                        PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, ViewSwitcher.getCurrentView() == View.AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.PRE_AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.WELCOME_SCREEN);
                     }
             );
         });
 
-        boolean firstTimeUser = preferences.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
+        boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
         if (firstTimeUser) {
             ViewSwitcher.showScreen(View.WELCOME_SCREEN);
         } else {
-            boolean userLoggedOut = preferences.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
+            boolean userLoggedOut = PreferencesManager.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
+            System.out.println(TAG + "Logged Out User -> " + userLoggedOut);
             if (userLoggedOut) {
 //                ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                 ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);

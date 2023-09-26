@@ -8,7 +8,7 @@ import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.network.model.request.UserRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.ui.utils.*;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.*;
 import java.util.*;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
 import static com.scholarly.utme.network.model.DeviceInfo.getSystemProperties;
@@ -65,8 +64,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private CustomNumberField signUpPhoneField;
 
 
-    private Preferences preferences;
-    private OkHttpClient httpClient;
+    private final OkHttpClient httpClient = NetworkService.getHttpClient();
 
     interface ServerCallback {
         void stopServer();
@@ -75,8 +73,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        preferences = AppPreferences.getPreferences();
-        httpClient = NetworkService.getHttpClient();
 
         boolean showSignUpScreen = getInitialData().showSignUpScreen;
         if (showSignUpScreen) {
@@ -84,6 +80,9 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         } else {
             Animations.fadeIn(loginSection, 300);
         }
+
+        boolean internetEnabled = checkNetworkConnectivity();
+        System.out.println(TAG + "Internet Enabled -> " + internetEnabled);
 
         initializeViews();
         initializeFonts();
@@ -173,12 +172,8 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             ReferrerInfo referrerInfo = new ReferrerInfo();
             UserRequest signupRequest = new UserRequest(fullName, email, phoneNumber, password, "nigeria", "fcm-token", "utme", false, null, getSystemProperties(), referrerInfo);
 
-            // Check for internet connectivity
-            try {
-                URL url = new URL(BASE_URL);
-                URLConnection connection = url.openConnection();
-                connection.connect();
-
+            System.out.println(TAG + "Internet enabled -> " + internetEnabled);
+            if (internetEnabled) {
                 Task<Void> signupTask = new Task<>() {
                     @Override
                     protected Void call() {
@@ -188,12 +183,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 };
                 Thread signupThread = new Thread(signupTask);
                 signupThread.start();
-
-            } catch (Exception e) {
-                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
-                alertDialog.show();
-                hideProgressBar();
-                System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
             }
 
         });
@@ -385,18 +374,18 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     BaseResponse signupResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
                     if (signupResponse.getStatus().equalsIgnoreCase("success")) {
-                        // TODO: Encrypt and Save token with Java Keystore
+
                         String userId = signupResponse.getData().getUserData().getId();
                         String userData = gson.toJson(signupResponse.getData().getUserData());
 
-                        preferences.put(PREF_KEY_USER_ID, userId);
-                        preferences.put(PREF_KEY_USER_DATA+userId, userData);
-                        preferences.put(PREF_KEY_ACCESS_TOKEN+userId, signupResponse.getData().getAccessToken());
-                        preferences.put(PREF_KEY_REFRESH_TOKEN+userId, signupResponse.getData().getRefreshToken());
-                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, signupResponse.getData().getActivationState().isActivationActive());
+                        PreferencesManager.put(PREF_KEY_USER_ID, userId);
+                        PreferencesManager.put(PREF_KEY_USER_DATA+userId, userData);
+                        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, signupResponse.getData().getAccessToken());
+                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, signupResponse.getData().getRefreshToken());
+                        PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, signupResponse.getData().getActivationState().isActivationActive());
 
                         System.out.println(TAG + "Signed up user with id -> " + userId);
-                        System.out.println(TAG + "Signed up user with User Activation State -> " + preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
+                        System.out.println(TAG + "Signed up user with User Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
 
                         Platform.runLater(() -> {
                             hideProgressBar();
@@ -459,15 +448,14 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         String userId = signupResponse.getData().getUserData().getId();
                         String userData = gson.toJson(signupResponse.getData().getUserData());
 
-                        // TODO: Encrypt and Save token with Java Keystore
-                        preferences.put(PREF_KEY_USER_ID, userId);
-                        preferences.put(PREF_KEY_USER_DATA+userId, userData);
-                        preferences.put(PREF_KEY_ACCESS_TOKEN+userId, signupResponse.getData().getAccessToken());
-                        preferences.put(PREF_KEY_REFRESH_TOKEN+userId, signupResponse.getData().getRefreshToken());
-                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, signupResponse.getData().getActivationState().isActivationActive());
+                        PreferencesManager.put(PREF_KEY_USER_ID, userId);
+                        PreferencesManager.put(PREF_KEY_USER_DATA+userId, userData);
+                        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, signupResponse.getData().getAccessToken());
+                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, signupResponse.getData().getRefreshToken());
+                        PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, signupResponse.getData().getActivationState().isActivationActive());
 
                         System.out.println(TAG + "Google signup user with id -> " + userId);
-                        System.out.println(TAG + "Google signup user with Activation State -> " + preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
+                        System.out.println(TAG + "Google signup user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
 
                         callback.redirect();
 
@@ -529,18 +517,18 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     BaseResponse loginResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
                     if (loginResponse.getStatus().equalsIgnoreCase("success")) {
-                        // TODO: Encrypt and Save token with Java Keystore
+
                         String userId = loginResponse.getData().getUserData().getId();
                         String userData = gson.toJson(loginResponse.getData().getUserData());
 
-                        preferences.put(PREF_KEY_USER_ID, userId);
-                        preferences.put(PREF_KEY_USER_DATA+userId, userData);
-                        preferences.put(PREF_KEY_ACCESS_TOKEN+userId, loginResponse.getData().getAccessToken());
-                        preferences.put(PREF_KEY_REFRESH_TOKEN+userId, loginResponse.getData().getRefreshToken());
-                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, loginResponse.getData().getActivationState().isActivationActive());
+                        PreferencesManager.put(PREF_KEY_USER_ID, userId);
+                        PreferencesManager.put(PREF_KEY_USER_DATA+userId, userData);
+                        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, loginResponse.getData().getAccessToken());
+                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, loginResponse.getData().getRefreshToken());
+                        PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, loginResponse.getData().getActivationState().isActivationActive());
 
                         System.out.println(TAG + "Logged in user with id -> " + userId);
-                        System.out.println(TAG + "Logged in user with Activation State -> " + preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
+                        System.out.println(TAG + "Logged in user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
 
                         Platform.runLater(() -> {
                             hideProgressBar();
@@ -818,6 +806,17 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         recoverLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverEmailPrompt.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+    }
+
+    private boolean checkNetworkConnectivity() {
+        try {
+            URL url = new URL(BASE_URL);
+            URLConnection connection = url.openConnection();
+            connection.connect();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     private InitialData getInitialData() {

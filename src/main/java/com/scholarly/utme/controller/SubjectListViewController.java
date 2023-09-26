@@ -6,7 +6,7 @@ import com.scholarly.utme.controller.practice_screens.PracticeScreenController;
 import com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.*;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
@@ -26,7 +26,6 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.Constants.*;
 
@@ -62,13 +61,11 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     private ObservableList<SubjectState> selectedObjectiveSubjects = FXCollections.observableArrayList();
     private ObservableList<SubjectState> selectedTheorySubjects = FXCollections.observableArrayList();
 
-    private Preferences preferences;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        preferences = AppPreferences.getPreferences();
 
-        String lastSelectedTab = preferences.get(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
+        String lastSelectedTab = PreferencesManager.get(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
 
         if (lastSelectedTab.equalsIgnoreCase(PREF_VALUE_OBJECTIVE_TAB)){
             tabMenu.getSelectionModel().select(objectiveTab);
@@ -146,12 +143,12 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         tabMenu.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue.getText().equalsIgnoreCase(PREF_VALUE_OBJECTIVE_TAB)) {
                 tabMenu.getSelectionModel().select(objectiveTab);
-                preferences.put(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
+                PreferencesManager.put(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
                 Animations.animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedObjectiveSubjects);
             } else {
                 tabMenu.getSelectionModel().select(theoryTab);
-                preferences.put(PREF_KEY_SELECTED_TAB, PREF_VALUE_THEORY_TAB);
+                PreferencesManager.put(PREF_KEY_SELECTED_TAB, PREF_VALUE_THEORY_TAB);
                 Animations.animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedTheorySubjects);
             }

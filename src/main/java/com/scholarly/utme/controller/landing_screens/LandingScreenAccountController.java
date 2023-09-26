@@ -6,6 +6,7 @@ import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAccountVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -30,10 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Base64;
 import java.util.ResourceBundle;
-import java.util.UUID;
-import org.unbrokendome.base62.Base62;
 
 import static com.scholarly.utme.util.Constants.*;
 
@@ -140,8 +138,8 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
-                    viewModel.getPreferences().putBoolean(PREF_KEY_LOGGED_USER_OUT, true);
-                    viewModel.getPreferences().putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
+                    PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, true);
+                    PreferencesManager.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
                     dialogDimmer.setVisible(true);
                     ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);

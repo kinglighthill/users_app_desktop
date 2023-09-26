@@ -6,13 +6,10 @@ import com.scholarly.utme.data.dao.NovelChapterDao;
 import com.scholarly.utme.data.dao.NovelObjectiveBookmarkDao;
 import com.scholarly.utme.data.dao.NovelSectionDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
-import com.scholarly.utme.data.dao.newDb.SectionDao;
-import com.scholarly.utme.data.model.User;
-import com.scholarly.utme.data.model.newDb.NoteLastSession;
 import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.data.model.novels.*;
 import com.scholarly.utme.network.model.UserData;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -22,7 +19,6 @@ import javafx.collections.ObservableList;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_DATA;
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
@@ -48,14 +44,13 @@ public class NovelContentScreenVM implements ViewModel {
 
     private double correctAnswers, totalGuesses;
 
-    private Preferences preferences = AppPreferences.getPreferences();
 
     private UserData user;
 
     public NovelContentScreenVM() {
         Gson gson = new Gson();
-        String userId = preferences.get(PREF_KEY_USER_ID, "");
-        String userData = preferences.get(PREF_KEY_USER_DATA+userId, "");
+        String userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+        String userData = PreferencesManager.get(PREF_KEY_USER_DATA+userId, "");
         user = gson.fromJson(userData, UserData.class);
     }
 

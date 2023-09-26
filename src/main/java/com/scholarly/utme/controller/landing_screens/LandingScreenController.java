@@ -5,7 +5,7 @@ import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenVM;
 import de.saxsys.mvvmfx.*;
 import javafx.fxml.FXML;
@@ -21,7 +21,6 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED;
 
@@ -55,7 +54,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
     private static final String HOVER_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FFFFFF; -fx-border-width: 0 0 0 0;";
 
-    private Preferences preferences;
 
     private static Parent homeView;
     private static Parent accountView;
@@ -65,8 +63,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        String userId = viewModel.getUserId();
-        preferences = AppPreferences.getPreferences();
 
         long start = System.currentTimeMillis();
 
@@ -243,11 +239,11 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             }
         }
 
-        if (preferences.getBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false)) {
+        if (PreferencesManager.getBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+viewModel.getUserId(), false)) {
             activateVBox.getChildren().remove(activatePanel);
         }
         activateCloseIcon.setOnMouseClicked(event -> {
-            preferences.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, activateVBox.getChildren().remove(activatePanel));
+            PreferencesManager.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+viewModel.getUserId(), activateVBox.getChildren().remove(activatePanel));
         });
 
     }

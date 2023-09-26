@@ -2,12 +2,11 @@ package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.FreeContent;
-import com.scholarly.utme.data.model.newDb.NoteLastSession;
 import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.data.util.CRUDHelper;
 import com.scholarly.utme.data.util.Tables;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -17,8 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
@@ -26,7 +23,6 @@ import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 public class NovelChapterDao {
     private static final String TAG = "NovelChapterDao: ";
     private static final DatabaseService databaseService = new DatabaseService();
-    private static final Preferences preferences = AppPreferences.getPreferences();
 
     private static final String idColumn = "_id";
     private static final String positionColumn = "position";
@@ -49,7 +45,7 @@ public class NovelChapterDao {
     private static final String userId;
 
     static {
-        userId = preferences.get(PREF_KEY_USER_ID, "");
+        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
         freeContents = FXCollections.observableArrayList();
         updateFreeChaptersColumn();
     }
@@ -137,7 +133,7 @@ public class NovelChapterDao {
 
     public ObservableList<NovelChapter> getNovelChapters() {
         updateNovelChaptersFromDb();
-        if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
+        if (PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
             for (NovelChapter chapter : novelChapters) {
                 chapter.setFree(true);
             }
