@@ -10,6 +10,7 @@ import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.ui.cellFactories.SubjectGridCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
+import com.twelvemonkeys.imageio.metadata.tiff.IFD;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -136,7 +137,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             }
         };
         Thread imageThread = new Thread(imageTask);
-        imageThread.setDaemon(true);
         imageThread.start();
 
         System.out.println(TAG + "Time taken to load image -> " + (System.currentTimeMillis() - start) + "ms");
@@ -144,7 +144,12 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         selectSubjectsGrid.setCellFactory(new SubjectGridCellFactory());
         selectSubjectsGrid.setItems(viewModel.getSubjects());
 
-        displayFavoriteSubjects(viewModel.getFavoriteSubjects());
+        if (viewModel.getFavoriteSubjects().isEmpty()) {
+            Animations.fadeIn(selectSubjectPane, 300);
+            Animations.fadeIn(dimmer, 250);
+        } else {
+            displayFavoriteSubjects(viewModel.getFavoriteSubjects());
+        }
 
         continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionHBox);
         if (populateLastSession()) {
@@ -283,18 +288,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        });
 //        System.out.println(TAG + "Time taken to load font names -> " + (System.currentTimeMillis() - nameStartTime) + "ms");
 
-    }
-
-    private void createSwingContent(final SwingNode swingNode) {
-        SwingUtilities.invokeLater(() -> {
-            JEditorPane editorPane = new JEditorPane();
-            editorPane.setEditorKit(new HTMLEditorKit());
-            editorPane.setContentType("text/html");
-            editorPane.setText("<html><body><h1>Hello, <em>World</em>!</h1></body></html>");
-
-            JScrollPane scrollPane = new JScrollPane(editorPane);
-            swingNode.setContent(editorPane);
-        });
     }
 
     private void initializeViews() {
@@ -486,5 +479,17 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         } catch (IOException e) {
             return false;
         }
+    }
+
+    private void createSwingContent(final SwingNode swingNode) {
+        SwingUtilities.invokeLater(() -> {
+            JEditorPane editorPane = new JEditorPane();
+            editorPane.setEditorKit(new HTMLEditorKit());
+            editorPane.setContentType("text/html");
+            editorPane.setText("<html><body><h1>Hello, <em>World</em>!</h1></body></html>");
+
+            JScrollPane scrollPane = new JScrollPane(editorPane);
+            swingNode.setContent(editorPane);
+        });
     }
 }

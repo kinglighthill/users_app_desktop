@@ -13,8 +13,12 @@ import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAppsVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -27,10 +31,13 @@ import javafx.scene.text.TextAlignment;
 import okhttp3.*;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
+import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
 import static com.scholarly.utme.util.Constants.*;
@@ -72,6 +79,11 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
         void refreshToken();
     }
 
+    interface RxNetworkCallback {
+        List<AppItem> resendRequest();
+        void refreshToken();
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -92,7 +104,6 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                 String userId = viewModel.getUserId();
 
                 String ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
-                String REFRESH_TOKEN = PreferencesManager.get(PREF_KEY_REFRESH_TOKEN+userId, "");
 
                 Gson gson = new Gson();
 
@@ -101,90 +112,100 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                         .header("Authorization", "Bearer " + ACCESS_TOKEN)
                         .get().build();
 
-                loadMobileApps(request, new NetworkCallback() {
+                Task<Void> loadAppsTask = new Task<>() {
                     @Override
-                    public void refreshToken() {
-                        System.out.println(TAG + "Refreshing token...");
+                    protected Void call() {
+                        loadMobileApps(request, new NetworkCallback() {
+                            @Override
+                            public void refreshToken() {
+                                System.out.println(TAG + "Refreshing token...");
+                                String REFRESH_TOKEN = PreferencesManager.get(PREF_KEY_REFRESH_TOKEN+userId, "");
 
-                        RefreshRequest refreshTokenRequest = new RefreshRequest(REFRESH_TOKEN);
+                                RefreshRequest refreshTokenRequest = new RefreshRequest(REFRESH_TOKEN);
 
-                        String json = gson.toJson(refreshTokenRequest);
+                                String json = gson.toJson(refreshTokenRequest);
 
-                        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+                                RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
 
-                        Request refreshRequest = new Request.Builder()
-                                .url(REFRESH_URL)
-                                .post(requestBody)
-                                .build();
+                                Request refreshRequest = new Request.Builder()
+                                        .url(REFRESH_URL)
+                                        .post(requestBody)
+                                        .build();
 
-                        Call call = httpClient.newCall(refreshRequest);
+                                Call call = httpClient.newCall(refreshRequest);
 
-                        try(Response response = call.execute()) {
-                            if (response.code() == 200) {
-                                try(ResponseBody responseBody = response.body()) {
-                                    assert responseBody != null;
-                                    BaseResponse refreshResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
-                                    if (refreshResponse.getStatus().equalsIgnoreCase("success")) {
-                                        System.out.println(TAG + "Refreshed Token for User with Id -> " + refreshResponse.getData().getUserId());
+                                try(Response response = call.execute()) {
+                                    if (response.code() == 200) {
+                                        try(ResponseBody responseBody = response.body()) {
+                                            assert responseBody != null;
+                                            BaseResponse refreshResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+                                            if (refreshResponse.getStatus().equalsIgnoreCase("success")) {
+                                                System.out.println(TAG + "Refreshed Token for User with Id -> " + refreshResponse.getData().getUserId());
 
-                                        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, refreshResponse.getData().getAccessToken());
-                                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, refreshResponse.getData().getRefreshToken());
+                                                PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, refreshResponse.getData().getAccessToken());
+                                                PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, refreshResponse.getData().getRefreshToken());
 
-                                        System.out.println(TAG + "Refreshed Token New Access Token -> " + PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, ""));
+                                                System.out.println(TAG + "Refreshed Token New Access Token -> " + PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, ""));
 
-                                    } else if (refreshResponse.getStatus().equalsIgnoreCase("error")) {
-                                        Platform.runLater(() -> {
-                                            Alert alertDialog = Alerts.info(getClass(), "Error", refreshResponse.getMessage(), "");
-                                            alertDialog.show();
-                                        });
+                                            } else if (refreshResponse.getStatus().equalsIgnoreCase("error")) {
+                                                Platform.runLater(() -> {
+                                                    Alert alertDialog = Alerts.info(getClass(), "Error", refreshResponse.getMessage(), "");
+                                                    alertDialog.show();
+                                                });
+                                            }
+                                        } catch (Exception e) {
+                                            System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                                        }
+                                        response.close();
                                     }
                                 } catch (Exception e) {
-                                    System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                                    Platform.runLater(() -> {
+                                        Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                                        alertDialog.show();
+                                    });
                                 }
-                                response.close();
                             }
-                        } catch (Exception e) {
-                            Platform.runLater(() -> {
-                                Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
-                                alertDialog.show();
-                            });
-                        }
-                    }
-                    @Override
-                    public void resendRequest() {
-                        System.out.println(TAG + "Resending request...");
+                            @Override
+                            public void resendRequest() {
+                                System.out.println(TAG + "Resending request...");
 
-                        String NEW_ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+                                String NEW_ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
 
-                        Request request = new Request.Builder()
-                                .url(BASE_URL + MOBILE_APPS_END_POINT)
-                                .header("Authorization", "Bearer " + NEW_ACCESS_TOKEN)
-                                .get().build();
+                                Request request = new Request.Builder()
+                                        .url(BASE_URL + MOBILE_APPS_END_POINT)
+                                        .header("Authorization", "Bearer " + NEW_ACCESS_TOKEN)
+                                        .get().build();
 
-                        Call call = httpClient.newCall(request);
+                                Call call = httpClient.newCall(request);
 
-                        try(Response response = call.execute()) {
-                            try (ResponseBody responseBody = response.body()) {
-                                assert responseBody != null;
-                                BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+                                try(Response response = call.execute()) {
+                                    try (ResponseBody responseBody = response.body()) {
+                                        assert responseBody != null;
+                                        BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
-                                if (baseResponse.getStatus().equalsIgnoreCase("success"))
-                                    mobileApps.addAll(baseResponse.getData().getApps());
-                                else
+                                        if (baseResponse.getStatus().equalsIgnoreCase("success")) {
+                                            mobileApps.addAll(baseResponse.getData().getApps());
+                                            Platform.runLater(() -> displayMobileApps(mobileApps));
+                                        } else {
+                                            Platform.runLater(LandingScreenAppsController.this::showEmptyAppsScreen);
+                                        }
+
+                                    } catch (Exception e) {
+                                        System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                                    }
+
+                                } catch (Exception e) {
                                     Platform.runLater(LandingScreenAppsController.this::showEmptyAppsScreen);
+                                }
 
-                            } catch (Exception e) {
-                                System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                             }
-
-                        } catch (Exception e) {
-                            Platform.runLater(LandingScreenAppsController.this::showEmptyAppsScreen);
-                        }
-
+                        });
+                        loadDesktopApps();
+                        return null;
                     }
-                });
-
-                loadDesktopApps();
+                };
+                Thread loadAppsThread = new Thread(loadAppsTask);
+                loadAppsThread.start();
 
             } catch (Exception e) {
                 Platform.runLater(this::showEmptyAppsScreen);
@@ -192,18 +213,14 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
             }
         }
 
-        long end = System.currentTimeMillis();
-
-        System.out.println(TAG + "Time taken to load Apps -> " + (end - start)+"ms");
+        System.out.println(TAG + "Time taken to load Apps -> " + (System.currentTimeMillis() - start)+"ms");
 
         displayMobileApps(mobileApps);
         displayDesktopApps(desktopApps);
 
-
         searchTextField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             searchIcon.setVisible(!newValue);
         }));
-
 
         TextFormatter<String> textFormatter = new TextFormatter<>(change -> {
             if (!change.isContentChange()) {
@@ -235,10 +252,10 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
 
             long mobileStart = System.currentTimeMillis();
             displayMobileApps(searchedMobileApps);
-            System.out.println(TAG + "Time taken to load Mobile Apps -> " + (System.currentTimeMillis() - mobileStart) + "ms");
+            System.out.println(TAG + "Time taken to search Mobile Apps -> " + (System.currentTimeMillis() - mobileStart) + "ms");
             long desktopStart = System.currentTimeMillis();
             displayDesktopApps(searchedDesktopApps);
-            System.out.println(TAG + "Time taken to load Desktop Apps -> " + (System.currentTimeMillis() - desktopStart) + "ms");
+            System.out.println(TAG + "Time taken to search Desktop Apps -> " + (System.currentTimeMillis() - desktopStart) + "ms");
 
             return change;
         });
@@ -295,25 +312,29 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                     assert responseBody != null;
                     BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
-                    if (baseResponse.getStatus().equalsIgnoreCase("success"))
+                    if (baseResponse.getStatus().equalsIgnoreCase("success")) {
                         mobileApps.addAll(baseResponse.getData().getApps());
-                    else
+                        Platform.runLater(() -> displayMobileApps(mobileApps));
+                    } else {
                         Platform.runLater(this::showEmptyAppsScreen);
+                    }
 
                 } catch (Exception e) {
                     System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                    Platform.runLater(this::showEmptyAppsScreen);
                 }
             }
         } catch (Exception e) {
             System.out.println("Request failed with exception -> " + e.getMessage());
+            Platform.runLater(this::showEmptyAppsScreen);
         }
 
     }
 
     private void loadDesktopApps() {
         String DESKTOP_APPS_END_POINT = "exam-apps/desktop";
-        String userId = viewModel.getUserId();
-        String ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+
+        String ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+viewModel.getUserId(), "");
 
         Gson gson = new Gson();
 
@@ -329,18 +350,21 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                 assert responseBody != null;
                 BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
-                if (baseResponse.getStatus().equalsIgnoreCase("success"))
+                if (baseResponse.getStatus().equalsIgnoreCase("success")) {
                     desktopApps.addAll(baseResponse.getData().getApps());
-                else
+                    Platform.runLater(() -> displayDesktopApps(desktopApps));
+                } else {
                     Platform.runLater(this::showEmptyAppsScreen);
+                }
 
             } catch (Exception e) {
                 System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                Platform.runLater(this::showEmptyAppsScreen);
             }
         } catch (Exception e) {
             System.out.println(TAG + "Request failed with exception -> " + e.getMessage());
+            Platform.runLater(this::showEmptyAppsScreen);
         }
-
     }
 
     private void displayMobileApps(List<AppItem> mobileApps) {

@@ -1,6 +1,7 @@
 package com.scholarly.utme;
 
 import com.github.sarxos.webcam.Webcam;
+import com.scholarly.utme.controller.AuthenticationController;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
@@ -71,8 +72,8 @@ public class MainApplication extends Application {
             boolean userLoggedOut = PreferencesManager.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
             System.out.println(TAG + "Logged Out User -> " + userLoggedOut);
             if (userLoggedOut) {
-//                ViewSwitcher.passData(new AuthenticationController.InitialData(false));
-                ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
+                ViewSwitcher.passData(new AuthenticationController.InitialData(false));
+                ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
             } else {
                 ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
                 ViewSwitcher.showScreen(View.LANDING_SCREEN);
