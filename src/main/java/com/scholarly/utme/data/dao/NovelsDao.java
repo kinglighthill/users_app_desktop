@@ -189,7 +189,7 @@ public class NovelsDao {
                 genresCategories.put(novelCategoryGenre, novelModels);
             }
 
-            System.out.println(TAG + "Got categories of size -> " + genresCategories.size());
+            System.out.println(TAG + "Got Category Genres of size -> " + genresCategories.size());
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
@@ -233,12 +233,9 @@ public class NovelsDao {
                         LocalDateTime.now() + ": Could not find Novel Division from database because " + e.getMessage());
             }
 
+            //            System.out.println(TAG + "Got NovelModel -> " + Helper.toString(novelModel));
 
-            NovelModel novelModel = new NovelModel(novel, division);
-
-//            System.out.println(TAG + "Got NovelModel -> " + Helper.toString(novelModel));
-
-            return novelModel;
+            return new NovelModel(novel, division);
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(

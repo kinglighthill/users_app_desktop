@@ -508,59 +508,52 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 .build();
 
         Call call = httpClient.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) {
 
-                try (ResponseBody responseBody = response.body()) {
-                    assert responseBody != null;
-                    BaseResponse loginResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+        try(Response response = call.execute()) {
+            try (ResponseBody responseBody = response.body()) {
+                assert responseBody != null;
+                BaseResponse loginResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
-                    if (loginResponse.getStatus().equalsIgnoreCase("success")) {
+                if (loginResponse.getStatus().equalsIgnoreCase("success")) {
 
-                        String userId = loginResponse.getData().getUserData().getId();
-                        String userData = gson.toJson(loginResponse.getData().getUserData());
+                    String userId = loginResponse.getData().getUserData().getId();
+                    String userData = gson.toJson(loginResponse.getData().getUserData());
 
-                        PreferencesManager.put(PREF_KEY_USER_ID, userId);
-                        PreferencesManager.put(PREF_KEY_USER_DATA+userId, userData);
-                        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, loginResponse.getData().getAccessToken());
-                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, loginResponse.getData().getRefreshToken());
-                        PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, loginResponse.getData().getActivationState().isActivationActive());
+                    PreferencesManager.put(PREF_KEY_USER_ID, userId);
+                    PreferencesManager.put(PREF_KEY_USER_DATA+userId, userData);
+                    PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, loginResponse.getData().getAccessToken());
+                    PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, loginResponse.getData().getRefreshToken());
+                    PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, loginResponse.getData().getActivationState().isActivationActive());
 
-                        System.out.println(TAG + "Logged in user with id -> " + userId);
-                        System.out.println(TAG + "Logged in user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
+                    System.out.println(TAG + "Logged in user with id -> " + userId);
+                    System.out.println(TAG + "Logged in user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
 
-                        Platform.runLater(() -> {
-                            hideProgressBar();
-                            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                        });
+                    Platform.runLater(() -> {
+                        ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
+                        ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                        hideProgressBar();
+                    });
 
-                    } else if (loginResponse.getStatus().equalsIgnoreCase("error")) {
-                        Platform.runLater(() -> {
-                            Alert alertDialog = Alerts.info(getClass(), "Error", loginResponse.getMessage(), "");
-                            alertDialog.show();
-                            hideProgressBar();
-                        });
+                } else if (loginResponse.getStatus().equalsIgnoreCase("error")) {
+                    Platform.runLater(() -> {
+                        Alert alertDialog = Alerts.info(getClass(), "Error", loginResponse.getMessage(), "");
+                        alertDialog.show();
+                        hideProgressBar();
+                    });
 
-                    }
-
-                } catch (Exception e) {
-                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                 }
 
+            } catch (Exception e) {
+                System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
             }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Platform.runLater(() -> {
-                    Alert alertDialog = Alerts.info(getClass(), "Error", "Could not connect because " + e.getMessage(), "");
-                    alertDialog.show();
-                    hideProgressBar();
-                });
-                System.out.println("Request failed with exception -> " + e.getMessage());
-            }
-        });
+        } catch (Exception e) {
+            Platform.runLater(() -> {
+                Alert alertDialog = Alerts.info(getClass(), "Error", "Could not connect because " + e.getMessage(), "");
+                alertDialog.show();
+                hideProgressBar();
+            });
+            System.out.println("Request failed with exception -> " + e.getMessage());
+        }
 
     }
 

@@ -22,7 +22,7 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static com.scholarly.utme.util.Constants.PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED;
+import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/landing_screens/landing_screen.fxml")
 public class LandingScreenController implements FxmlView<LandingScreenVM>, Initializable {
@@ -68,12 +68,15 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
         Parent homeView = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView();
 //        homeView = homeView == null ? FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView() : homeView;
+        System.out.println(TAG + "Time taken to load Home Screen -> " + (System.currentTimeMillis() - start)+"ms");
 
         Parent accountView = FluentViewLoader.fxmlView(LandingScreenAccountController.class).load().getView();
 //        accountView = accountView == null ? FluentViewLoader.fxmlView(LandingScreenAccountController.class).load().getView() : accountView;
+        System.out.println(TAG + "Time taken to load Account Screen -> " + (System.currentTimeMillis() - start)+"ms");
 
         Parent activateView = FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView();
 //        activateView = activateView == null ? FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView() : activateView;
+        System.out.println(TAG + "Time taken to load Activate Screen -> " + (System.currentTimeMillis() - start)+"ms");
 
 //        Parent appsView = FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView();
         appsView = appsView == null ? FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView() : appsView;
@@ -81,8 +84,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 //        Parent settingsView = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView();
         settingsView = settingsView == null ? FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView() : settingsView;
 
-        long end = System.currentTimeMillis();
-        System.out.println(TAG + "Time taken to load Views -> " + (end - start)+"ms");
+        System.out.println(TAG + "Time taken to load Views -> " + (System.currentTimeMillis() - start)+"ms");
 
         homeContentPane.getChildren().add(homeView);
 

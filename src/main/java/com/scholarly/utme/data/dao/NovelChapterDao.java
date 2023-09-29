@@ -9,6 +9,7 @@ import com.scholarly.utme.data.util.Tables;
 import com.scholarly.utme.util.PreferencesManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -83,24 +84,32 @@ public class NovelChapterDao {
     private static void updateFreeChaptersColumn() {
         String query = "SELECT * FROM " + Tables.FREE_CONTENTS;
 
-        try(ResultSet rs = databaseService.executeQuery(query)) {
-            freeContents.clear();
-            while (rs.next()) {
-                freeContents.add(new FreeContent(
-                        rs.getInt(idColumn),
-                        rs.getInt("objective_subject_id"),
-                        rs.getInt("theory_subject_id"),
-                        rs.getInt("year_id"),
-                        rs.getInt("topic_id"),
-                        rs.getInt("chapter_id")));
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                try (ResultSet rs = databaseService.executeQuery(query)) {
+                    freeContents.clear();
+                    while (rs.next()) {
+                        freeContents.add(new FreeContent(
+                                rs.getInt(idColumn),
+                                rs.getInt("objective_subject_id"),
+                                rs.getInt("theory_subject_id"),
+                                rs.getInt("year_id"),
+                                rs.getInt("topic_id"),
+                                rs.getInt("chapter_id")));
 
+                    }
+                } catch (Exception e) {
+                    Logger.getAnonymousLogger().log(
+                            Level.SEVERE,
+                            LocalDateTime.now() + ": Could not load Free Contents from database because " + e.getMessage());
+                    freeContents.clear();
+                }
+                return null;
             }
-        } catch (Exception e) {
-            Logger.getAnonymousLogger().log(
-                    Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Free Contents from database because " + e.getMessage());
-            freeContents.clear();
-        }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
     }
 
     private String getNovelDivision(int novelId) {

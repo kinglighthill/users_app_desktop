@@ -11,6 +11,7 @@ import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAccountVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -138,9 +139,9 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
+                    dialogDimmer.setVisible(true);
                     PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, true);
                     PreferencesManager.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
-                    dialogDimmer.setVisible(true);
                     ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                 } else {
@@ -186,15 +187,25 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
     }
 
     private void renderProfileImage(Image image) {
-        Circle clip = new Circle(40, 40, 40);
-        profileImage.setClip(clip);
-        Rectangle2D imageBounds = new Rectangle2D(0, 0, image.getWidth(), image.getHeight());
-        profileImage.setFitWidth(80);
-        profileImage.setFitHeight(80);
-        profileImage.setViewport(imageBounds);
-        profileImage.setSmooth(true);
-        profileImage.setCache(true);
-        profileImage.setImage(image);
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                Circle clip = new Circle(40, 40, 40);
+                profileImage.setClip(clip);
+                Rectangle2D imageBounds = new Rectangle2D(0, 0, image.getWidth(), image.getHeight());
+                profileImage.setFitWidth(80);
+                profileImage.setFitHeight(80);
+                profileImage.setViewport(imageBounds);
+                profileImage.setSmooth(true);
+                profileImage.setCache(true);
+                Platform.runLater(() -> {
+                    profileImage.setImage(image);
+                });
+                return null;
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
     }
 
     private void initializeFonts() {
