@@ -92,7 +92,7 @@ public class LandingScreenPerformanceController implements FxmlView<LandingScree
         List<PracticeScreenVM.Result> results = new ArrayList<>();
         results.add(result);
 
-        PQSubject subject = new PQSubject(3, 445, 30, 1, "English Language", "Eng", null);
+        PQSubject subject = new PQSubject(3, 445, 30, 1, "English Language", "Eng", null, false);
         List<PQSubject> subjects = new ArrayList<>();
         subjects.add(subject);
 

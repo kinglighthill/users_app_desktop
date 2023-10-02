@@ -4,12 +4,8 @@ import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.TheoryQuestionDao;
 import com.scholarly.utme.data.dao.YearsDao;
 import com.scholarly.utme.data.dao.newDb.TopicDao;
-import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Year;
-import com.scholarly.utme.data.model.newDb.ObjectiveSubject;
-import com.scholarly.utme.data.model.newDb.PQSubject;
-import com.scholarly.utme.data.model.newDb.PQTopic;
-import com.scholarly.utme.data.model.newDb.Subject;
+import com.scholarly.utme.data.model.newDb.*;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -58,6 +54,10 @@ public class SubjectListItemVM implements ViewModel {
         this.shuffleQuestions.set(shuffleQuestions);
     }
 
+    public boolean isFavoriteSubject() {
+        return favoriteSubject.get();
+    }
+
     public enum Type {
         OBJECTIVE,
         THEORY
@@ -80,6 +80,7 @@ public class SubjectListItemVM implements ViewModel {
     private ObjectProperty<List<Integer>> selectedTopicsProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Year> selectedYearProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Integer> selectedNumberOfQuestions = new SimpleObjectProperty<>();
+    private SimpleBooleanProperty favoriteSubject = new SimpleBooleanProperty(false);
 
     private PQSubject subject;
     private BehaviorSubject<SubjectState> subjectState = BehaviorSubject.create();
@@ -89,6 +90,7 @@ public class SubjectListItemVM implements ViewModel {
         subjectName.set(subject.getTitle());
         subjectShortTitle.set(subject.getShortTitle());
         subjectColorName.set(getColorName(subject.getShortTitle()));
+        favoriteSubject.set(subject.isFavorite());
 
 //        years = YearsDao.getAvailableYearsForSubject(type, subject.getId());
         topics = TopicDao.getTopicsForSubject(subject.getSubjectId());

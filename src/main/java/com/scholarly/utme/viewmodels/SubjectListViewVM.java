@@ -49,7 +49,7 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
 
     public SubjectListViewVM() {
 
-        objectiveSubjects.addAll(SubjectDao.getObjectiveSubjects().stream().map(SubjectListItemVM::new).toList());
+        objectiveSubjects.addAll(SubjectDao.getFavoriteSubjects().stream().map(favoriteSubject -> new SubjectListItemVM(new PQSubject(favoriteSubject.getId(), favoriteSubject.getSubjectId(), favoriteSubject.getMinutesAllotted(), favoriteSubject.getOrder(), favoriteSubject.getTitle(), favoriteSubject.getShortTitle(), favoriteSubject.getColorCode(), favoriteSubject.isSelected()))).toList());
 
         theorySubjects.addAll(SubjectDao.getTheorySubjects().stream().map(SubjectListItemVM::new).toList());
 
