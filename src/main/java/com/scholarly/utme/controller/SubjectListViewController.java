@@ -26,6 +26,7 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.*;
 
@@ -37,11 +38,11 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     private SubjectListViewVM viewModel;
 
     @FXML
-    private ListView<SubjectListItemVM> objectiveList, theoryList;
+    private ListView<SubjectListItemVM> mySubjectsObjectiveList, otherSubjectsObjectiveList, theoryList;
     @FXML
-    private Label timeSettingsLabel;
+    private Label timeSettingsLabel, mySubjectsLabel, otherSubjectsLabel;
     @FXML
-    private VBox hoursSelector, minutesSelector, activateNowDialog, dimmer;
+    private VBox hoursSelector, minutesSelector, activateNowDialog, dimmer, subjectListVBox;
     @FXML
     ChoiceBox<Integer> hoursChoiceBox, minutesChoiceBox;
     @FXML
@@ -77,7 +78,14 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         initializeViews();
         initializeFonts();
 
-        objectiveList.setItems(viewModel.getObjectiveSubjects());
+        ObservableList<SubjectListItemVM> mySubjects = viewModel.getObjectiveSubjects().stream().filter(SubjectListItemVM::isFavoriteSubject).collect(Collectors.toCollection(FXCollections::observableArrayList));
+        ObservableList<SubjectListItemVM> otherSubjects = viewModel.getObjectiveSubjects().stream().filter(subjectListItemVM -> !subjectListItemVM.isFavoriteSubject()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+
+        if (mySubjects.isEmpty()) {
+            subjectListVBox.getChildren().removeAll(mySubjectsLabel, mySubjectsObjectiveList);
+        }
+        mySubjectsObjectiveList.setItems(mySubjects);
+        otherSubjectsObjectiveList.setItems(otherSubjects);
 //        theoryList.setItems(viewModel.getTheorySubjects());
 
         ViewListCellFactory<SubjectListItemVM> objectiveCellFactory = CachedViewModelCellFactory.create(vm -> {
@@ -92,11 +100,15 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
         });
 
-        objectiveList.setCellFactory(objectiveCellFactory);
+        mySubjectsObjectiveList.setCellFactory(objectiveCellFactory);
+        otherSubjectsObjectiveList.setCellFactory(objectiveCellFactory);
 //        theoryList.setCellFactory(theoryCellFactory);
 
-        objectiveList.setSelectionModel(new NoSelectionModel<>());
-        objectiveList.setFocusTraversable(false);
+        mySubjectsObjectiveList.setSelectionModel(new NoSelectionModel<>());
+        mySubjectsObjectiveList.setFocusTraversable(false);
+
+        otherSubjectsObjectiveList.setSelectionModel(new NoSelectionModel<>());
+        otherSubjectsObjectiveList.setFocusTraversable(false);
 
 //        theoryList.setSelectionModel(new NoSelectionModel<>());
 //        theoryList.setFocusTraversable(false);
@@ -252,6 +264,8 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
     private void initializeFonts() {
 //        startButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+        mySubjectsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
+        otherSubjectsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
     }
 
     public void setOption(SubjectListOption option) {
@@ -280,7 +294,10 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         if (subject != null) {
             viewModel.getObjectiveSubjects().forEach(vm -> {
                 if (vm.getSubject().getSubjectId() == subject.getSubjectId()) {
-                    objectiveList.scrollTo(vm);
+                    if (vm.getSubject().isFavorite())
+                        mySubjectsObjectiveList.scrollTo(vm);
+                    else
+                        otherSubjectsObjectiveList.scrollTo(vm);
                 }
             });
 

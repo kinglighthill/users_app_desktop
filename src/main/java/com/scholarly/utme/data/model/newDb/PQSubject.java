@@ -9,9 +9,10 @@ public class PQSubject {
     private String title;
     private String shortTitle;
     private String colorCode;
+    private boolean favorite;
 
 
-    public PQSubject(int id, int subjectId, int minutesAllotted, int order, String title, String shortTitle, String colorCode) {
+    public PQSubject(int id, int subjectId, int minutesAllotted, int order, String title, String shortTitle, String colorCode, boolean favorite) {
         this.id = id;
         this.subjectId = subjectId;
         this.minutesAllotted = minutesAllotted;
@@ -19,6 +20,7 @@ public class PQSubject {
         this.title = title;
         this.shortTitle = shortTitle;
         this.colorCode = colorCode;
+        this.favorite = favorite;
     }
 
     public PQSubject() {
@@ -55,6 +57,10 @@ public class PQSubject {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
     }
 
     @Override
