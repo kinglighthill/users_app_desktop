@@ -10,7 +10,6 @@ import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.ui.cellFactories.SubjectGridCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
-import com.twelvemonkeys.imageio.metadata.tiff.IFD;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -22,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -86,7 +86,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private Panel noteLastSessionPanel, novelLastSessionPanel, thirdSession, fourthSession, actionCbtPracticePanel;
     @FXML
-    private Label helloText, startLearningText, editSubjectsText, topSubjectsText, biologyText, englishText, physicsText, chemistryText, mathematicsText, geographyText, activitiesText, continueSessionsText;
+    private Label helloText, startLearningText, editSubjectsText, topSubjectsText, biologyText, englishText, physicsText, chemistryText, mathematicsText, geographyText, libraryText, continueSessionsText;
     @FXML
     private Label cbtPracticeText, videosText, novelsText, pastQuestionsLabel, audioText, syllabusText, studyNotesText, cbtCentresText, syllabusLabel, noteSessionSubjectName, firstSessionTimeText, firstSessionRatingNumber, noteLastSessionText;
     @FXML
@@ -94,7 +94,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private Label newsFeedText, seeAllText, performanceChartText, firstPerformanceCBTText, firstPerformanceCBTDate, firstPerformancePercentText, secondPerformanceCBTText, secondPerformanceCBTDate, secondPerformancePercentText;
     @FXML
-    private Label selectFavoriteText, moreThanOneText, actionCbtPracticeText, actionVideosPracticeText, actionNovelsPracticeText, actionAudioPracticeText, viewDesktopAppText;
+    private Label selectFavoriteText, moreThanOneText, actionCbtPracticeText, actionVideosPracticeText, actionNovelsPracticeText, actionAudioPracticeText, otherAppsTitleDesc, otherAppsShortDesc;
 
 
     @Override
@@ -293,7 +293,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     private void initializeViews() {
         rootPane.setPadding(new Insets(0,15, 0, 0));
 //        notificationIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/bell_without_notification.png").toString()));
-        handImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/hand_image2.png").toString()));
+        handImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/hand_image.png").toString()));
         selectSubjectCloseIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/action_close_icon.png").toString()));
         boyWithLaptop.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/boy_with_laptop.png").toString()));
 
@@ -342,7 +342,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         topSubjectsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
         editSubjectsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
 
-        activitiesText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        libraryText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 
         cbtPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 //        videosText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
@@ -379,7 +379,8 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        actionNovelsPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 //        actionAudioPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 
-        viewDesktopAppText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
+        otherAppsTitleDesc.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
+        otherAppsShortDesc.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
         viewDesktopAppButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         completeEditSubjectsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
 
@@ -389,22 +390,22 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         editSubjectsText.setOnMouseEntered(e -> editSubjectsText.setUnderline(true));
         editSubjectsText.setOnMouseExited(e -> editSubjectsText.setUnderline(false));
 
-        cbtPracticePanel.setOnMouseEntered(e -> cbtPracticePanel.setStyle("-fx-background-color: #3289C6; -fx-background-radius: 10;"));
+        cbtPracticePanel.setOnMouseEntered(e -> cbtPracticePanel.setStyle("-fx-background-color: #3289C6; -fx-background-radius: 10; -fx-cursor: hand;"));
         cbtPracticePanel.setOnMouseExited(e -> cbtPracticePanel.setStyle("-fx-background-color: #1B68AF; -fx-background-radius: 10;"));
 
-        novelsPanel.setOnMouseEntered(e -> novelsPanel.setStyle("-fx-background-color: #0EA362; -fx-background-radius: 10;"));
-        novelsPanel.setOnMouseExited(e -> novelsPanel.setStyle("-fx-background-color: #1CA687; -fx-background-radius: 10;"));
+        novelsPanel.setOnMouseEntered(e -> novelsPanel.setStyle("-fx-background-color: #0EA362; -fx-background-radius: 10; -fx-cursor: hand;"));
+        novelsPanel.setOnMouseExited(e -> novelsPanel.setStyle("-fx-background-color: #AD4518; -fx-background-radius: 10;"));
 
-        studyNotesPanel.setOnMouseEntered(e -> studyNotesPanel.setStyle("-fx-background-color: #F5A100; -fx-background-radius: 10;"));
+        studyNotesPanel.setOnMouseEntered(e -> studyNotesPanel.setStyle("-fx-background-color: #F5A100; -fx-background-radius: 10; -fx-cursor: hand;"));
         studyNotesPanel.setOnMouseExited(e -> studyNotesPanel.setStyle("-fx-background-color: #E18400; -fx-background-radius: 10;"));
 
-        syllabusPanel.setOnMouseEntered(e -> syllabusPanel.setStyle("-fx-background-color: #FF29A3; -fx-background-radius: 10;"));
+        syllabusPanel.setOnMouseEntered(e -> syllabusPanel.setStyle("-fx-background-color: #FF29A3; -fx-background-radius: 10; -fx-cursor: hand;"));
         syllabusPanel.setOnMouseExited(e -> syllabusPanel.setStyle("-fx-background-color: #D4107A; -fx-background-radius: 10;"));
 
-        noteLastSessionPanel.setOnMouseEntered(e -> noteLastSessionPanel.setStyle("-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10; -fx-border-color: #A2CAA6; -fx-border-radius: 10;"));
+        noteLastSessionPanel.setOnMouseEntered(e -> noteLastSessionPanel.setStyle("-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10; -fx-border-color: #A2CAA6; -fx-border-radius: 10; -fx-cursor: hand;"));
         noteLastSessionPanel.setOnMouseExited(e -> noteLastSessionPanel.setStyle("-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;"));
 
-        novelLastSessionPanel.setOnMouseEntered(e -> novelLastSessionPanel.setStyle("-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10; -fx-border-color: #A2CAA6; -fx-border-radius: 10;"));
+        novelLastSessionPanel.setOnMouseEntered(e -> novelLastSessionPanel.setStyle("-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10; -fx-border-color: #A2CAA6; -fx-border-radius: 10; -fx-cursor: hand;"));
         novelLastSessionPanel.setOnMouseExited(e -> novelLastSessionPanel.setStyle("-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;"));
     }
 
@@ -422,8 +423,16 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             subjectLabel.setPadding(new Insets(5, 0, 0, 0));
             panel.setBottom(subjectLabel);
 
+//            panel.setStyle("-fx-background-color: " + subject.getColorCode() + "; -fx-background-radius: 7");
             panel.setStyle("-fx-background-color: rgba(143, 152, 255, 0.10); -fx-background-radius: 7");
             panel.setPadding(new Insets(10, 0, 10, 15));
+
+            panel.setOnMouseEntered(event -> {
+                ViewSwitcher.getRootScene().setCursor(Cursor.HAND);
+            });
+            panel.setOnMouseExited(event -> {
+                ViewSwitcher.getRootScene().setCursor(Cursor.DEFAULT);
+            });
 
             panel.setOnMouseClicked(event -> {
                 ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, subject));
