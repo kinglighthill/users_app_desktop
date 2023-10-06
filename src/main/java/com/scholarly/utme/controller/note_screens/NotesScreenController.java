@@ -719,8 +719,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                             });
 
                             return circle;
-                        })
-                        .collect(Collectors.toList())
+                        }).toList()
         );
 
 

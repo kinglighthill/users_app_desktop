@@ -38,7 +38,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     private SubjectListViewVM viewModel;
 
     @FXML
-    private ListView<SubjectListItemVM> mySubjectsObjectiveList, otherSubjectsObjectiveList, theoryList;
+    private ListView<SubjectListItemVM> mySubjectsObjectiveList, objectiveList, theoryList;
     @FXML
     private Label timeSettingsLabel, mySubjectsLabel, otherSubjectsLabel;
     @FXML
@@ -78,14 +78,14 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         initializeViews();
         initializeFonts();
 
-        ObservableList<SubjectListItemVM> mySubjects = viewModel.getObjectiveSubjects().stream().filter(SubjectListItemVM::isFavoriteSubject).collect(Collectors.toCollection(FXCollections::observableArrayList));
-        ObservableList<SubjectListItemVM> otherSubjects = viewModel.getObjectiveSubjects().stream().filter(subjectListItemVM -> !subjectListItemVM.isFavoriteSubject()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+//        ObservableList<SubjectListItemVM> mySubjects = viewModel.getObjectiveSubjects().stream().filter(SubjectListItemVM::isFavoriteSubject).collect(Collectors.toCollection(FXCollections::observableArrayList));
+//        ObservableList<SubjectListItemVM> otherSubjects = viewModel.getObjectiveSubjects().stream().filter(subjectListItemVM -> !subjectListItemVM.isFavoriteSubject()).collect(Collectors.toCollection(FXCollections::observableArrayList));
 
-        if (mySubjects.isEmpty()) {
-            subjectListVBox.getChildren().removeAll(mySubjectsLabel, mySubjectsObjectiveList);
-        }
-        mySubjectsObjectiveList.setItems(mySubjects);
-        otherSubjectsObjectiveList.setItems(otherSubjects);
+//        if (mySubjects.isEmpty()) {
+//            subjectListVBox.getChildren().removeAll(mySubjectsLabel, mySubjectsObjectiveList);
+//        }
+//        mySubjectsObjectiveList.setItems(mySubjects);
+        objectiveList.setItems(viewModel.getObjectiveSubjects());
 //        theoryList.setItems(viewModel.getTheorySubjects());
 
         ViewListCellFactory<SubjectListItemVM> objectiveCellFactory = CachedViewModelCellFactory.create(vm -> {
@@ -100,15 +100,15 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
         });
 
-        mySubjectsObjectiveList.setCellFactory(objectiveCellFactory);
-        otherSubjectsObjectiveList.setCellFactory(objectiveCellFactory);
+//        mySubjectsObjectiveList.setCellFactory(objectiveCellFactory);
+        objectiveList.setCellFactory(objectiveCellFactory);
 //        theoryList.setCellFactory(theoryCellFactory);
 
-        mySubjectsObjectiveList.setSelectionModel(new NoSelectionModel<>());
-        mySubjectsObjectiveList.setFocusTraversable(false);
+//        mySubjectsObjectiveList.setSelectionModel(new NoSelectionModel<>());
+//        mySubjectsObjectiveList.setFocusTraversable(false);
 
-        otherSubjectsObjectiveList.setSelectionModel(new NoSelectionModel<>());
-        otherSubjectsObjectiveList.setFocusTraversable(false);
+        objectiveList.setSelectionModel(new NoSelectionModel<>());
+        objectiveList.setFocusTraversable(false);
 
 //        theoryList.setSelectionModel(new NoSelectionModel<>());
 //        theoryList.setFocusTraversable(false);
@@ -264,8 +264,8 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
     private void initializeFonts() {
 //        startButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-        mySubjectsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
-        otherSubjectsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
+//        mySubjectsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
+//        otherSubjectsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
     }
 
     public void setOption(SubjectListOption option) {
@@ -294,10 +294,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         if (subject != null) {
             viewModel.getObjectiveSubjects().forEach(vm -> {
                 if (vm.getSubject().getSubjectId() == subject.getSubjectId()) {
-                    if (vm.getSubject().isFavorite())
-                        mySubjectsObjectiveList.scrollTo(vm);
-                    else
-                        otherSubjectsObjectiveList.scrollTo(vm);
+                    objectiveList.scrollTo(vm);
                 }
             });
 

@@ -428,19 +428,19 @@
 
         <right>
             <HBox fx:id="rightPane" prefWidth="290" style="-fx-background-color: white; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
-                <!--            <VBox spacing="5">-->
-                <!--                <Panel>-->
-                <!--                    <left>-->
-                <!--                        <Label fx:id="newsFeedText" text="News Feed" textFill="#053500"/>-->
-                <!--                    </left>-->
+                <!--<VBox spacing="5">
+                    <Panel>
+                        <left>
+                            <Label fx:id="newsFeedText" text="News Feed" textFill="#053500"/>
+                        </left>
 
-                <!--                    <right>-->
-                <!--                        <Label fx:id="seeAllText" text="See all" textFill="#12AF20"/>-->
-                <!--                    </right>-->
-                <!--                </Panel>-->
+                        <right>
+                            <Label fx:id="seeAllText" text="See all" textFill="#12AF20"/>
+                        </right>
+                    </Panel>
 
-                <!--                <ListView fx:id="newsList" prefWidth="390" prefHeight="600" style="-fx-background-color: white;"/>-->
-                <!--            </VBox>-->
+                    <ListView fx:id="newsList" prefWidth="390" prefHeight="600" style="-fx-background-color: white;"/>
+                </VBox>-->
 
                 <padding>
                     <Insets left="10" right="5"/>

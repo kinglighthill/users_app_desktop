@@ -101,7 +101,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
             setOnMouseClicked(event -> {
                 if (node instanceof Label) {
-                    ((Label) node).setUnderline(!((Label) node).isUnderline());
+//                    ((Label) node).setUnderline(!((Label) node).isUnderline());
                 }
             });
 
@@ -307,9 +307,9 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 label2.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                 label2.setWrapText(true);
 
-//                contentElement = label;
+                contentElement = label2;
                 MarkdownView mdfx = new MarkdownView(latexMathViewType.getKatex());
-                contentElement = formatMarkdown(latexMathViewType.getKatex());
+//                contentElement = formatMarkdown(latexMathViewType.getKatex());
             }
         } else if (contentViewType instanceof ListViewType listViewType) {
 //            System.out.println(TAG + "ContentViewType -> ListViewType");

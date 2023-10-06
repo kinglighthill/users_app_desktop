@@ -423,7 +423,8 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             subjectLabel.setPadding(new Insets(5, 0, 0, 0));
             panel.setBottom(subjectLabel);
 
-//            panel.setStyle("-fx-background-color: " + subject.getColorCode() + "; -fx-background-radius: 7");
+//            panel.setStyle("-fx-background-color: " + subject.getColorCode() + "; -fx-background-radius: 7; -fx-opacity: 0.3;");
+//            panel.setOpacity(0.3);
             panel.setStyle("-fx-background-color: rgba(143, 152, 255, 0.10); -fx-background-radius: 7");
             panel.setPadding(new Insets(10, 0, 10, 15));
 
