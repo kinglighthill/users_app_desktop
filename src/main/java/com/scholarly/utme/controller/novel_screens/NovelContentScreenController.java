@@ -18,9 +18,10 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -152,9 +153,34 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         backButton.setOnAction(event -> {
             exitDialogDimmer.setVisible(true);
-            Animations.translateIn(exitNovelDialog, 300);
+
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm", null, "Are you sure you want to exit?");
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    NovelLastSession novelLastSession = new NovelLastSession(
+                            viewModel.getUser().getId().hashCode(),
+                            viewModel.getSelectedChapter().getId(),
+                            viewModel.getSelectedChapter().getChapterHeading(),
+                            viewModel.getUser().getId()
+                    );
+
+                    viewModel.putLastSession(novelLastSession);
+
+                    ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovelModel()));
+                    ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
+                } else {
+                    exitDialogDimmer.setVisible(false);
+                }
+
+                return buttonType;
+            });
+            dialog.show();
         });
 
+        /*backButton.setOnAction(event -> {
+            exitDialogDimmer.setVisible(true);
+            Animations.translateIn(exitNovelDialog, 300);
+        });
         exitDialogExitButton.setOnAction(event -> {
             exitDialogDimmer.setVisible(false);
             NovelLastSession novelLastSession = new NovelLastSession(
@@ -169,11 +195,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovelModel()));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
-
         exitDialogCancelButton.setOnAction(event -> {
             exitDialogDimmer.setVisible(false);
             Animations.translateOut(exitNovelDialog, 300);
-        });
+        });*/
 
         activateNowCloseIcon.setOnMouseClicked(event -> {
             chaptersList.getSelectionModel().select(0);

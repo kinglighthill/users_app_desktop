@@ -48,8 +48,15 @@ public class Alerts {
         dialog.setTitle(windowTitle);
         dialog.setHeaderText(header);
 
+        VBox content = new VBox();
+        Label contentText = new Label(description);
+        contentText.setFont(Font.font(13));
+
+        content.getChildren().add(contentText);
+
         DialogPane dialogPane = new DialogPane();
-        dialogPane.setContentText(description);
+//        dialogPane.setContentText(description);
+        dialogPane.setContent(content);
         dialogPane.setStyle("-fx-background-color: white; -fx-background-radius: 10;");
         dialogPane.setMinSize(350, 120);
         dialogPane.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
@@ -67,7 +74,7 @@ public class Alerts {
         dialog.setTitle(windowTitle);
         dialog.setHeaderText(header);
 
-        VBox activateDialog =new VBox(25);
+        VBox activateDialog = new VBox(25);
         activateDialog.setMaxSize(380, 450);
         activateDialog.setPrefSize(250, 400);
         activateDialog.setStyle("fx-background-color: white; -fx-background-radius: 8;");

@@ -364,6 +364,87 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         notesBackButton.setOnAction(event -> {
+            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
+
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm", null, "Are you sure you want to exit?");
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    if (noteContentList.getSkin() != null) {
+                        VirtualFlow<?> vf = (VirtualFlow<?>) ((ListViewSkin<?>) noteContentList.getSkin()).getChildren().get(0);
+
+//                System.out.println(TAG + "Position -> " + vf.getPosition());
+//                System.out.println(TAG + "Cell count -> " + vf.getCellCount());
+
+                        double lastSectionIndex = vf.getPosition() * vf.getCellCount();
+                        System.out.println(TAG + "Last Section Index -> " + lastSectionIndex);
+
+                        if ((int)lastSectionIndex == noteContentList.getItems().size()) {
+                            lastSectionIndex = (int) lastSectionIndex - 1;
+                        }
+
+                        NoteSection lastSection = noteContentList.getItems().get((int) lastSectionIndex);
+
+                        StringBuilder sectionTitle = new StringBuilder();
+                        ContentViewType contentViewType = ContentViewTypes.convert(lastSection);
+                        if (contentViewType instanceof HeaderViewType headerViewType) {
+                            if (headerViewType.getText() != null) {
+                                sectionTitle = new StringBuilder(headerViewType.getText());
+                            }
+                        } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
+                            if (paragraphViewType.getText() != null) {
+                                sectionTitle = new StringBuilder(paragraphViewType.getText());
+                            }
+                        } else if (contentViewType instanceof CBTViewType cbtViewType) {
+                            int yearId = cbtViewType.getYearId();
+                            int questionId = cbtViewType.getQuestionId();
+                            ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
+
+                            sectionTitle = new StringBuilder(question.getQuestion());
+                        } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
+                            if (latexMathViewType.getKatex() != null) {
+                                sectionTitle = new StringBuilder(latexMathViewType.getKatex());
+                            }
+                        } else if (contentViewType instanceof ListViewType listViewType) {
+                            sectionTitle = new StringBuilder(listViewType.getItems().get(0));
+                        } else if (contentViewType instanceof ReferenceViewType referenceViewType) {
+                            sectionTitle = new StringBuilder(referenceViewType.getText());
+                        } else if (contentViewType instanceof TableViewType tableViewType) {
+
+                            List<List<String>> content = tableViewType.getContent();
+
+                            for (int row = 0; row < 1; row++) {
+
+                                System.out.println("Row Content -> " + content.get(row));
+                                for (int col = 0; col < content.get(row).size(); col++) {
+                                    System.out.println("Column content -> " + content.get(row).get(col));
+                                    sectionTitle.append(" | ").append(content.get(row).get(col));
+                                }
+                            }
+                        }
+                        System.out.println(TAG + "Got Section title -> " + sectionTitle);
+
+
+                        NoteLastSession noteLastSession = new NoteLastSession(
+                                viewModel.getUser().getId().hashCode(),
+                                lastSection.getId(),
+                                sectionTitle.toString(),
+                                viewModel.getUser().getId()
+                        );
+
+                        viewModel.putLastSession(noteLastSession);
+                    }
+
+                    ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
+
+                } else {
+                    Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
+                }
+                return buttonType;
+            });
+            dialog.show();
+        });
+
+        /*notesBackButton.setOnAction(event -> {
             Animations.translateIn(exitNotesDialog, 300);
             Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
         });
@@ -439,7 +520,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         exitDialogCancelButton.setOnAction(event -> {
             Animations.translateOut(exitNotesDialog, 300);
             Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
-        });
+        });*/
 
 
         /***************** Refresh Notes Section *******************/

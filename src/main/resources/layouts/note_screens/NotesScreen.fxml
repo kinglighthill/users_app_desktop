@@ -390,9 +390,9 @@
          </right>-->
 
          <top>
-            <ToolBar fx:id="noteTopBar"  prefHeight="75" prefWidth="800.0" style="-fx-effect: dropshadow(gaussian, gray, 10.0, 0.5, 0.0,  5.0); -fx-background-color: #E7F7E9;">
+            <ToolBar fx:id="noteTopBar"  prefHeight="75" prefWidth="800.0" style="-fx-effect: dropshadow(gaussian, gray, 10.0, 0.5, 0.0, 5.0); -fx-background-color: #E7F7E9;">
                <items>
-                  <Button fx:id="notesBackButton" >
+                  <Button fx:id="notesBackButton" style="-fx-cursor: hand;">
                      <HBox.margin>
                         <Insets left="20.0" />
                      </HBox.margin>
