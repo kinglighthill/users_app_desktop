@@ -10,6 +10,7 @@ public class Constants {
     // Network Preference Constants
     public static final String PREF_KEY_USER_ID = "USER_ID";
     public static final String PREF_KEY_ACTIVATION_STATE = "ACTIVATION_STATE";
+    public static final String PREF_KEY_ACTIVATE_MESSAGE = "ACTIVATION_MESSAGE";
     public static final String PREF_KEY_USER_DATA = "USER_DATA";
     public static final String PREF_KEY_REFRESH_TOKEN = "REFRESH_TOKEN";
     public static final String PREF_KEY_ACCESS_TOKEN = "ACCESS_TOKEN";

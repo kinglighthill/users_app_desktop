@@ -47,12 +47,12 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     @FXML
     private VBox activateVBox;
     @FXML
-    private Label scholarlyText, helloText, startLearningText;
+    private Label scholarlyText, helloText, startLearningText, activateBarLabel;
 
     private final ToggleGroup toggleGroup = new ToggleGroup();
 
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
-    private static final String HOVER_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FFFFFF; -fx-border-width: 0 0 0 0;";
+    private static final String HOVER_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FFFFFF; -fx-border-width: 0 0 0 0; -fx-cursor: hand;";
 
 
     private static Parent homeView;
@@ -240,6 +240,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
                 activateVBox.getChildren().add(activatePanel);
             }
         }
+
+        activateBarLabel.setText(PreferencesManager.get(PREF_KEY_ACTIVATE_MESSAGE, "Your device is not activated."));
 
         if (PreferencesManager.getBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+viewModel.getUserId(), false)) {
             activateVBox.getChildren().remove(activatePanel);

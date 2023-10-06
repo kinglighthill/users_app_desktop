@@ -87,7 +87,7 @@
 
                     <VBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="150.0">
                         <children>
-                            <Label fx:id="activitiesText" text="Activities for you" textFill="#034801">
+                            <Label fx:id="libraryText" text="Activities for you" textFill="#034801">
                                 <padding>
                                     <Insets left="10.0" top="20.0" bottom="20.0" />
                                 </padding>
@@ -377,7 +377,7 @@
                     <Panel style="-fx-background-color: #F3FBF4; -fx-background-radius: 5;">
                         <left>
                             <VBox alignment="CENTER" spacing="20">
-                                <Label fx:id="viewDesktopAppText" text="View All Desktop Apps" textFill="#034801"/>
+                                <Label fx:id="otherAppsTitleDesc" text="View All Desktop Apps" textFill="#034801"/>
                                 <Button fx:id="viewDesktopAppButton" text="Here" textFill="#FFFFFF" prefWidth="120" style="-fx-background-color: #12AF20; -fx-background-radius: 8;"/>
 
                                 <padding>

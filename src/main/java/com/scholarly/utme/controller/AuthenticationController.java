@@ -383,6 +383,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, signupResponse.getData().getAccessToken());
                         PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, signupResponse.getData().getRefreshToken());
                         PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, signupResponse.getData().getActivationState().isActivationActive());
+                        PreferencesManager.put(PREF_KEY_ACTIVATE_MESSAGE, signupResponse.getData().getActivationState().getMessage());
 
                         System.out.println(TAG + "Signed up user with id -> " + userId);
                         System.out.println(TAG + "Signed up user with User Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
@@ -453,6 +454,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, signupResponse.getData().getAccessToken());
                         PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, signupResponse.getData().getRefreshToken());
                         PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, signupResponse.getData().getActivationState().isActivationActive());
+                        PreferencesManager.put(PREF_KEY_ACTIVATE_MESSAGE, signupResponse.getData().getActivationState().getMessage());
 
                         System.out.println(TAG + "Google signup user with id -> " + userId);
                         System.out.println(TAG + "Google signup user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
@@ -524,6 +526,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, loginResponse.getData().getAccessToken());
                     PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, loginResponse.getData().getRefreshToken());
                     PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, loginResponse.getData().getActivationState().isActivationActive());
+                    PreferencesManager.put(PREF_KEY_ACTIVATE_MESSAGE, loginResponse.getData().getActivationState().getMessage());
 
                     System.out.println(TAG + "Logged in user with id -> " + userId);
                     System.out.println(TAG + "Logged in user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));

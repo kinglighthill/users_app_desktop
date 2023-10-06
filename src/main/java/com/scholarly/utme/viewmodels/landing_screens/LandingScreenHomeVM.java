@@ -15,6 +15,7 @@ import com.scholarly.utme.util.PreferencesManager;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -104,33 +105,35 @@ public class LandingScreenHomeVM implements ViewModel {
 
         novelLastSession = NovelChapterDao.retrieveLastSession(userData.getId());
 
-//        if (novelLastSession != null) {
-//            lastSessionChapter = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
-//                    novelChapter.getId() == novelLastSession.getChapterId()).toList().get(0);
-//            assert lastSessionChapter != null;
-//            System.out.println(TAG + "NovelLastSessionChapter -> " + lastSessionChapter);
-//            lastSessionNovel = NovelsDao.getNovel(lastSessionChapter.getNovelId());
-//            System.out.println(TAG + "NovelLastSessionNovel -> " + lastSessionNovel);
-//            lastSessionChapters = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
-//                    novelChapter.getNovelId() == lastSessionNovel.getNovel().getId()).collect(Collectors.toCollection(FXCollections::observableArrayList));
-//        }
+        if (novelLastSession != null) {
+            lastSessionChapter = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+                    novelChapter.getId() == novelLastSession.getChapterId()).toList().get(0);
+            assert lastSessionChapter != null;
+            System.out.println(TAG + "NovelLastSessionChapter -> " + lastSessionChapter);
+            lastSessionNovel = NovelsDao.getNovel(lastSessionChapter.getNovelId());
+            System.out.println(TAG + "NovelLastSessionNovel -> " + lastSessionNovel);
+            lastSessionChapters = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+                    novelChapter.getNovelId() == lastSessionNovel.getNovel().getId()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
 
-        Task<Void> novelLastSessionTask = new Task<>() {
-            @Override
-            protected Void call() {
-                if (novelLastSession != null) {
-                    lastSessionChapter = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
-                            novelChapter.getId() == novelLastSession.getChapterId()).toList().get(0);
-                    assert lastSessionChapter != null;
-                    lastSessionNovel = NovelsDao.getNovel(lastSessionChapter.getNovelId());
-                    lastSessionChapters = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
-                            novelChapter.getNovelId() == lastSessionNovel.getNovel().getId()).collect(Collectors.toCollection(FXCollections::observableArrayList));
-                }
-                return null;
-            }
-        };
-        Thread novelLastSessionThread = new Thread(novelLastSessionTask);
-        novelLastSessionThread.start();
+//        Task<Void> novelLastSessionTask = new Task<>() {
+//            @Override
+//            protected Void call() {
+//                if (novelLastSession != null) {
+//                    lastSessionChapter = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+//                            novelChapter.getId() == novelLastSession.getChapterId()).toList().get(0);
+//                    assert lastSessionChapter != null;
+//                    Platform.runLater(() -> {
+//                        lastSessionNovel = NovelsDao.getNovel(lastSessionChapter.getNovelId());
+//                        lastSessionChapters = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+//                                novelChapter.getNovelId() == lastSessionNovel.getNovel().getId()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+//                    });
+//                }
+//                return null;
+//            }
+//        };
+//        Thread novelLastSessionThread = new Thread(novelLastSessionTask);
+//        novelLastSessionThread.start();
         System.out.println(TAG + "Time taken to load Novel Last Session -> " + (System.currentTimeMillis() - startDisplay) + "ms");
     }
 

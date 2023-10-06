@@ -113,7 +113,11 @@
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="371.0" prefWidth="496.0" style="-fx-background-color: #FFFFFF;">
                                 <children>
-                                    <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+                                    <ListView fx:id="objectiveList" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="200.0"
+                                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+
+                                    <!--<ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                         <VBox fx:id="subjectListVBox" spacing="10" style="-fx-background-color: #FFFFFF;">
                                             <Label fx:id="mySubjectsLabel" text="My Subjects">
                                                 <VBox.margin>
@@ -128,7 +132,7 @@
                                             </Label>
                                             <ListView fx:id="otherSubjectsObjectiveList" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="200.0"/>
                                         </VBox>
-                                    </ScrollPane>
+                                    </ScrollPane>-->
                                 </children>
                             </AnchorPane>
                         </content>

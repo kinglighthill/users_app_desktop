@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
@@ -37,25 +38,25 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
     @FXML
     private Panel startAllPanel;
     @FXML
-    private VBox subjectListVBox, topicListVBox, dimmer, subtopicsVBox;
+    private VBox subjectListVBox, topicListVBox, dimmer, subtopicsVBox, activateNowDialog;
     @FXML
     private ScrollPane subjectListScrollPane, topicListScrollPane, subtopicScrollPane;
     @FXML
     private ListView<Topic> topicList;
     @FXML
-    private Label emptyTopicListLabel, subjectsTitle, topicsTitle, pageTitle, subtopicsLabel, subtopicsStartAllText;
+    private Label emptyTopicListLabel, subjectsTitle, topicsTitle, pageTitle, subtopicsLabel, subtopicsStartAllText, activateHeaderText;
     @FXML
-    private Button commenceButton, backButton, subtopicsCommenceButton;
+    private Button commenceButton, backButton, subtopicsCommenceButton, activateNowButton;
     @FXML
-    private ImageView startAllExpandIcon, subtopicCloseDialog;
+    private ImageView startAllExpandIcon, subtopicCloseDialog, activateNowPadlockIcon, activateNowCloseIcon, greenTickIcon1, greenTickIcon2, greenTickIcon3, greenTickIcon4, greenTickIcon5;
 
 
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
-    final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
-    final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
+    final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0; -fx-cursor: hand;";
+    final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0; -fx-cursor: hand;";
 
-    final String PRESSED_STYLE2 = "-fx-background-color: #EDEDED; -fx-background-radius: 10; -fx-border-radius: 10;";
-    final String HOVERED_BUTTON_STYLE2 = "-fx-background-color: #F7F7F7; -fx-background-radius: 10; -fx-border-radius: 10;";
+    final String PRESSED_STYLE2 = "-fx-background-color: #EDEDED; -fx-background-radius: 10; -fx-border-radius: 10; -fx-cursor: hand;";
+    final String HOVERED_BUTTON_STYLE2 = "-fx-background-color: #F7F7F7; -fx-background-radius: 10; -fx-border-radius: 10; -fx-cursor: hand;";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -131,55 +132,63 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 //                viewModel.setSelectedNoteSubTopic(selectedTopic.getValue());
 
                 NoteTopic selectedTopic = (NoteTopic) newValue.getUserData();
-                viewModel.setSelectedNoteTopic(selectedTopic);
 
-                if (viewModel.getNoteSubTopics().get(selectedTopic.getId()).isEmpty()) {
-                    if (!commenceButton.isVisible())
-                        Animations.translateIn(commenceButton, 300);
-                } else {
-                    subtopicsVBox.getChildren().clear();
-                    viewModel.getNoteSubTopics().get(selectedTopic.getId()).forEach(subTopic -> {
-                        ToggleButton button = new ToggleButton();
-                        button.setText(subTopic.getTitle());
-                        button.setUserData(subTopic);
-                        subtopicsVBox.getChildren().add(button);
-                        subtopicsListToggleGroup.getToggles().add(button);
-
-                        button.setMinHeight(48);
-                        button.setMaxHeight(48);
-                        button.setPadding(new Insets(0, 15, 0, 15));
-                        button.setAlignment(Pos.BASELINE_LEFT);
-                        button.setMaxWidth(Integer.MAX_VALUE);
-                        button.setText(subTopic.getTitle());
-
-                        button.setStyle(IDLE_BUTTON_STYLE);
-                        button.setOnMouseEntered(e -> {
-                            if (!button.isSelected()) {
-                                button.setStyle(HOVERED_BUTTON_STYLE);
-                            }
-                        });
-                        button.setOnMouseExited(e -> {
-                            if (!button.isSelected()) {
-                                button.setStyle(IDLE_BUTTON_STYLE);
-                            }
-                        });
-
-                        button.selectedProperty().addListener((observe, old, newVal) -> {
-                            if (newVal) {
-                                button.setStyle(PRESSED_STYLE);
-                                button.setTextFill(Color.WHITE);
-                            } else {
-                                button.setStyle(IDLE_BUTTON_STYLE);
-                                button.setTextFill(Color.BLACK);
-                            }
-                        });
-
-                        button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
-                    });
-                    if (commenceButton.isVisible())
-                        Animations.translateOut(commenceButton, 300);
+                if(!selectedTopic.isFree()) {
                     dimmer.setVisible(true);
-                    Animations.translateIn(subtopicsDialog, 300);
+                    Animations.translateIn(activateNowDialog, 300);
+                } else {
+                    viewModel.setSelectedNoteTopic(selectedTopic);
+
+                    if (viewModel.getNoteSubTopics().get(selectedTopic.getId()).isEmpty()) {
+                        if (!commenceButton.isVisible())
+                            Animations.translateIn(commenceButton, 300);
+                    } else {
+                        subtopicsVBox.getChildren().clear();
+                        viewModel.getNoteSubTopics().get(selectedTopic.getId()).forEach(subTopic -> {
+                            ToggleButton button = new ToggleButton();
+                            button.setText(subTopic.getTitle());
+                            if (subTopic.getTitle().length() > 50)
+                                button.setTooltip(new Tooltip(subTopic.getTitle()));
+                            button.setUserData(subTopic);
+                            subtopicsVBox.getChildren().add(button);
+                            subtopicsListToggleGroup.getToggles().add(button);
+
+                            button.setMinHeight(48);
+                            button.setMaxHeight(48);
+                            button.setPadding(new Insets(0, 15, 0, 15));
+                            button.setAlignment(Pos.BASELINE_LEFT);
+                            button.setMaxWidth(Integer.MAX_VALUE);
+                            button.setText(subTopic.getTitle());
+
+                            button.setStyle(IDLE_BUTTON_STYLE);
+                            button.setOnMouseEntered(e -> {
+                                if (!button.isSelected()) {
+                                    button.setStyle(HOVERED_BUTTON_STYLE);
+                                }
+                            });
+                            button.setOnMouseExited(e -> {
+                                if (!button.isSelected()) {
+                                    button.setStyle(IDLE_BUTTON_STYLE);
+                                }
+                            });
+
+                            button.selectedProperty().addListener((observe, old, newVal) -> {
+                                if (newVal) {
+                                    button.setStyle(PRESSED_STYLE2);
+//                                    button.setTextFill(Color.WHITE);
+                                } else {
+                                    button.setStyle(IDLE_BUTTON_STYLE);
+                                    button.setTextFill(Color.BLACK);
+                                }
+                            });
+
+                            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 13));
+                        });
+                        if (commenceButton.isVisible())
+                            Animations.translateOut(commenceButton, 300);
+                        dimmer.setVisible(true);
+                        Animations.translateIn(subtopicsDialog, 300);
+                    }
                 }
             } else {
                 if (commenceButton.isVisible())
@@ -242,8 +251,8 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
                     button.selectedProperty().addListener((observe, old, newVal) -> {
                         if (newVal) {
-                            button.setStyle(PRESSED_STYLE);
-                            button.setTextFill(Color.WHITE);
+                            button.setStyle(PRESSED_STYLE2);
+//                            button.setTextFill(Color.WHITE);
                         } else {
                             button.setStyle(IDLE_BUTTON_STYLE);
                             button.setTextFill(Color.BLACK);
@@ -255,7 +264,7 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                     if (topic.isFree()) {
                         pane.getChildren().add(button);
                     } else {
-                        button.setDisable(true);
+//                        button.setDisable(true);
                         pane.getChildren().addAll(button, padlockIcon);
                     }
                     topicListVBox.getChildren().add(pane);
@@ -346,6 +355,18 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
             Animations.translateOut(subtopicsDialog, 300);
         });
 
+        activateNowCloseIcon.setOnMouseClicked(event -> {
+            if (topicListToggleGroup.getSelectedToggle() != null)
+                topicListToggleGroup.getSelectedToggle().setSelected(false);
+            dimmer.setVisible(false);
+            Animations.translateOut(activateNowDialog, 300);
+        });
+
+        activateNowButton.setOnAction(event -> {
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+        });
+
     }
 
     private void initializeViews() {
@@ -355,8 +376,18 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         backButton.setBackground(Background.EMPTY);
         backButton.setGraphic(backButtonImage);
 
+        activateHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
+
         startAllExpandIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
         subtopicCloseDialog.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+
+        activateNowCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+        activateNowPadlockIcon.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/padlock_icon.png").toString()));
+        greenTickIcon1.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon2.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon3.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon4.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon5.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
     }
 
     private void initializeFonts() {
@@ -365,7 +396,7 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         topicsTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
         emptyTopicListLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
         commenceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
-        subtopicsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+        subtopicsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 17));
         subtopicsStartAllText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
     }
 
