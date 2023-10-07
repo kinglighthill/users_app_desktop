@@ -2,6 +2,7 @@ package com.scholarly.utme.controller.note_screens;
 
 
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
@@ -172,12 +173,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         subjectLabel.setText(viewModel.getSubject().getTitle());
         noteTopicLabel.setText(viewModel.getTopic().getTitle());
+        noteTopicLabel.setTextFill(Paint.valueOf(SubjectDao.getNoteSubjectColor(viewModel.getSubject().getId())));
 
         ObservableList<NoteSection> noteSections = viewModel.getNoteSections().get(viewModel.getTopic().getId());
         noteContentList.setCellFactory(new NoteContentListCellFactory());
         noteContentList.setItems(noteSections);
         noteContentList.setSelectionModel(new NoSelectionModel<>());
-        noteContentList.setPadding(new Insets(10, 20, 10, 15));
+        noteContentList.setPadding(new Insets(10, 20, 30, 15));
 
         if (viewModel.getSelectedSubtopicSection() != null) {
             noteContentList.scrollTo(viewModel.getSelectedSubtopicSection());
@@ -960,7 +962,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         settingsCloseText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
     }
     private void setFontSizesToMedium() {
-        subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
+        subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 20));
 //        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
         noteTopicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
         // Quiz Section Texts
@@ -2149,7 +2151,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                             ListView<UnorderedListItem> contentList = new ListView<>();
                             contentList.setItems(items);
                             contentList.setBackground(Background.EMPTY);
-                            contentList.setCellFactory(new UnorderedListCellFactory());
+                            contentList.setCellFactory(new UnorderedListCellFactory(null));
                             contentList.setSelectionModel(new NoSelectionModel<>());
                             contentList.setPadding(new Insets(0, 0, 0, 10));
 

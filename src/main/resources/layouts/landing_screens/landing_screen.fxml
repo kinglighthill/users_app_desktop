@@ -23,12 +23,12 @@
                 </left>
                 <right>
                     <HBox spacing="25" alignment="CENTER">
-                        <Button fx:id="topActivateButton" text="Activate now" textFill="#5B4617" style="-fx-border-color: #5B4617; -fx-border-radius: 5;">
+                        <Button fx:id="topActivateButton" text="Activate now" textFill="#5B4617" style="-fx-border-color: #5B4617; -fx-border-radius: 5; -fx-cursor: hand;">
                             <font>
                                 <Font size="10"/>
                             </font>
                         </Button>
-                        <ImageView fx:id="activateCloseIcon" fitHeight="15" fitWidth="15" preserveRatio="true" pickOnBounds="true"/>
+                        <ImageView fx:id="activateCloseIcon" fitHeight="15" fitWidth="15" preserveRatio="true" pickOnBounds="true" style="-fx-cursor: hand;"/>
                     </HBox>
                 </right>
                 <padding>

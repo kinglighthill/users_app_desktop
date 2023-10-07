@@ -1,6 +1,7 @@
 package com.scholarly.utme.ui.listcells;
 
 import com.sandec.mdfx.MarkdownView;
+import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.listItems.UnorderedListItem;
 import com.scholarly.utme.data.model.newDb.ContentViewTypes;
@@ -11,7 +12,6 @@ import com.scholarly.utme.ui.cellFactories.UnorderedListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.NoSelectionModel;
 import com.scholarly.utme.viewmodels.note_screens.NotesScreenVM;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingNode;
@@ -28,8 +28,8 @@ import javafx.scene.paint.Paint;
 //import org.commonmark.parser.Parser;
 //import org.commonmark.renderer.html.HtmlRenderer;
 //import org.commonmark.Extension;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.web.HTMLEditor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -41,10 +41,8 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class NoteContentListItemCell extends ListCell<NoteSection> {
@@ -90,12 +88,12 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 //            System.out.println(TAG + "Before setGraphic -> " + node);
             if (node instanceof VBox) {
                 System.out.println(TAG + "Node is instance of VBox");
-                ((VBox) node).setPadding(new Insets(0, 130, 0, 130));
+                ((VBox) node).setPadding(new Insets(0, 180, 0, 180));
             }
 
             if (node instanceof Label) {
                 ((Label) node).setLineSpacing(10);
-                ((Label) node).setPadding(new Insets(5, 130, 5, 130));
+                ((Label) node).setPadding(new Insets(5, 180, 5, 180));
                 ((Label) node).setTextAlignment(TextAlignment.JUSTIFY);
             }
 
@@ -122,11 +120,20 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 String formattedText = doc.body().text();
                 Label label = new Label(formattedText);
                 label.setWrapText(true);
-                label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-                if (section.getSubtopicId() != 0 || section.getMainSectionOrder() != 0) {
-                    label.setPadding(new Insets(10, 0, 0, 0));
+                label.setTextFill(Paint.valueOf(SubjectDao.getNoteSubjectColor(section.getSubjectId())));
+
+                if (headerViewType.getLevel() == 1) {
+                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 22));
+                } else if (headerViewType.getLevel() == 2) {
                     label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+                } else {
+                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                 }
+
+//                if (section.getSubtopicId() != 0 || section.getMainSectionOrder() != 0) {
+//                    label.setPadding(new Insets(10, 0, 0, 0));
+//                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+//                }
 
                 contentElement = label;
 //                System.out.println(TAG + "HeaderViewType text -> " + label.getText());
@@ -135,8 +142,8 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
         } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
 //            System.out.println(TAG + "ContentViewType -> ParagraphViewType");
             if (paragraphViewType.getText() != null) {
-                Document doc = Jsoup.parse(paragraphViewType.getText());
-                String formattedText = doc.body().text();
+                Document doc = Jsoup.parse(paragraphViewType.getText().replaceAll("<br>", System.lineSeparator()));
+                String formattedText = paragraphViewType.getText().replaceAll("<br>", System.lineSeparator());
                 Label label = new Label(formattedText);
                 label.setWrapText(true);
                 label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
@@ -318,21 +325,34 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
                 ArrayList<UnorderedListItem> contentItems = new ArrayList<>();
 
+                VBox vBox = new VBox(10);
                 for (int i = 0; i < listViewType.getItems().size(); i++) {
                     UnorderedListItem unorderedListItem = new UnorderedListItem(listViewType.getItems().get(i));
                     contentItems.add(unorderedListItem);
+
+                    Circle dot = new Circle(3.5, Paint.valueOf(SubjectDao.getNoteSubjectColor(section.getSubjectId())));
+                    HBox.setMargin(dot, new Insets(5, 0, 0, 0));
+                    Label label = new Label(unorderedListItem.getText());
+                    label.setWrapText(true);
+                    label.setTextAlignment(TextAlignment.JUSTIFY);
+                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+                    HBox hBox = new HBox(dot, label);
+                    hBox.setAlignment(Pos.TOP_LEFT);
+                    hBox.setSpacing(13);
+                    vBox.getChildren().addAll(hBox);
                 }
 
                 ObservableList<UnorderedListItem> items = FXCollections.observableArrayList(contentItems);
 
+
                 ListView<UnorderedListItem> contentList = new ListView<>();
                 contentList.setItems(items);
                 contentList.setBackground(Background.EMPTY);
-                contentList.setCellFactory(new UnorderedListCellFactory());
+                contentList.setCellFactory(new UnorderedListCellFactory(SubjectDao.getNoteSubjectColor(section.getSubjectId())));
                 contentList.setSelectionModel(new NoSelectionModel<>());
                 contentList.setPadding(new Insets(0, 120, 0, 120));
 
-                contentElement = contentList;
+                contentElement = vBox;
             }
 
         } else if (contentViewType instanceof ReferenceViewType referenceViewType) {
@@ -340,7 +360,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
             if (referenceViewType.getText() != null) {
                 Document doc = Jsoup.parse(referenceViewType.getText());
-                String formattedText = doc.body().text();
+                String formattedText = referenceViewType.getText().replaceAll("<br>", System.lineSeparator());
 
                 Label label = new Label(formattedText);
                 label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
