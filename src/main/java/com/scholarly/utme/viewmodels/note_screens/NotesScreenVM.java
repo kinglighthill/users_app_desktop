@@ -246,8 +246,8 @@ public class NotesScreenVM implements ViewModel {
         return noteSections.get(selectedTopic.get().getId()).stream().filter(section -> section.getSubtopicId() == subTopic.getId()).toList().get(0);
     }
 
-    public ObjectiveQuestion getQuestion(int yearId, int questionNum) {
-        return ObjectiveQuestionDao.getQuestionWithYearAndQuestionNum(yearId, questionNum);
+    public ObjectiveQuestion getQuestion(int subjectId, int yearId, int questionNum) {
+        return ObjectiveQuestionDao.getNoteCBTQuestion(subjectId, yearId, questionNum);
 //        return noteSubjectQuestions.stream().filter(objectiveQuestion ->
 //                objectiveQuestion.getYearId() == yearId && objectiveQuestion.getQuestionNumber() == questionNum
 //        ).toList().get(0);

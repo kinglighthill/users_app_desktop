@@ -336,6 +336,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         if (viewModel.getSelectedTopicIndex() == 0) {
             prevButton.setDisable(true);
         }
+        if (viewModel.getSelectedTopicIndex() == viewModel.getNoteTopics().size()-1) {
+            nextButton.setDisable(true);
+        }
         viewModel.selectedTopicIndexProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue < viewModel.getNoteTopics().size()) {
                 viewModel.setSelectedTopic(viewModel.getNoteTopics().get(newValue));
@@ -399,7 +402,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         } else if (contentViewType instanceof CBTViewType cbtViewType) {
                             int yearId = cbtViewType.getYearId();
                             int questionId = cbtViewType.getQuestionId();
-                            ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
+                            int subjectId = cbtViewType.getSubjectId();
+                            ObjectiveQuestion question = viewModel.getQuestion(subjectId, yearId, questionId);
 
                             sectionTitle = new StringBuilder(question.getQuestion());
                         } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
@@ -1978,8 +1982,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                         int yearId = cbtViewType.getYearId();
                         int questionId = cbtViewType.getQuestionId();
+                        int subjectId = cbtViewType.getSubjectId();
 
-                        ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
+                        ObjectiveQuestion question = viewModel.getQuestion(subjectId, yearId, questionId);
 
                         VBox cbtVBox = new VBox();
                         cbtVBox.setPadding(new Insets(20, 20, 30, 20));

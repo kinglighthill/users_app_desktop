@@ -51,6 +51,10 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
     Parser markdownParser = Parser.builder().build();
     HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
 
+    public static final String NORMAL_OPTION_STYLE = "-fx-border-color: #233D2C; -fx-border-radius: 50; -fx-cursor: hand;";
+    private static final String CORRECT_OPTION_STYLE = "-fx-border-color: #51C42B; -fx-border-radius: 50; -fx-cursor: hand;";
+    private static final String INCORRECT_OPTION_STYLE = "-fx-border-color: #E90000; -fx-border-radius: 50; -fx-cursor: hand;";
+
     private final NotesScreenVM viewModel;
     public NoteContentListItemCell() {
         loadFxml();
@@ -87,7 +91,6 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             Parent node = renderNote(item);
 //            System.out.println(TAG + "Before setGraphic -> " + node);
             if (node instanceof VBox) {
-                System.out.println(TAG + "Node is instance of VBox");
                 ((VBox) node).setPadding(new Insets(0, 180, 0, 180));
             }
 
@@ -95,6 +98,10 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 ((Label) node).setLineSpacing(10);
                 ((Label) node).setPadding(new Insets(5, 180, 5, 180));
                 ((Label) node).setTextAlignment(TextAlignment.JUSTIFY);
+
+                if (node.getUserData() != null && node.getUserData().equals("Level 1")) {
+                    ((Label) node).setPadding(new Insets(20, 180, 5, 180));
+                }
             }
 
             setOnMouseClicked(event -> {
@@ -124,6 +131,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
                 if (headerViewType.getLevel() == 1) {
                     label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 22));
+                    label.setUserData("Level 1");
                 } else if (headerViewType.getLevel() == 2) {
                     label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
                 } else {
@@ -159,14 +167,15 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
         } else if (contentViewType instanceof CBTViewType cbtViewType) {
 //            System.out.println(TAG + "ContentViewType -> CBTViewType");
 
+            int subjectId = cbtViewType.getSubjectId();
             int yearId = cbtViewType.getYearId();
             int questionNum = cbtViewType.getQuestionId();
 
-            ObjectiveQuestion question = viewModel.getQuestion(yearId, questionNum);
+            ObjectiveQuestion question = viewModel.getQuestion(subjectId, yearId, questionNum);
 
             VBox cbtVBox = new VBox();
             cbtVBox.setPadding(new Insets(20, 50, 30, 50));
-            cbtVBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #51C46B; -fx-border-radius: 10;");
+            cbtVBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 10;");
             cbtVBox.setSpacing(10);
             VBox.setMargin(cbtVBox, new Insets(0, 130, 0, 130));
 
@@ -182,28 +191,28 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             optionAButton.setText(question.getOptionA().getText());
             optionAButton.setAlignment(Pos.CENTER);
             optionAButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-            optionAButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+            optionAButton.setStyle(NORMAL_OPTION_STYLE);
             optionAButton.setPadding(new Insets(10));
 
             RadioButton optionBButton = new RadioButton();
             optionBButton.setText(question.getOptionB().getText());
             optionBButton.setAlignment(Pos.CENTER);
             optionBButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-            optionBButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+            optionBButton.setStyle(NORMAL_OPTION_STYLE);
             optionBButton.setPadding(new Insets(10));
 
             RadioButton optionCButton = new RadioButton();
             optionCButton.setText(question.getOptionC().getText());
             optionCButton.setAlignment(Pos.CENTER);
             optionCButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-            optionCButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+            optionCButton.setStyle(NORMAL_OPTION_STYLE);
             optionCButton.setPadding(new Insets(10));
 
             RadioButton optionDButton = new RadioButton();
             optionDButton.setText(question.getOptionD().getText());
             optionDButton.setAlignment(Pos.CENTER);
             optionDButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-            optionDButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+            optionDButton.setStyle(NORMAL_OPTION_STYLE);
             optionDButton.setPadding(new Insets(10));
 
 
@@ -212,60 +221,60 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
             optionAButton.setOnAction(event -> {
                 if (question.getQuestionAnswer().getId() == 0) {
-                    optionAButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                    optionAButton.setStyle(CORRECT_OPTION_STYLE);
                 } else {
-                    optionAButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+                    optionAButton.setStyle(INCORRECT_OPTION_STYLE);
 
                 }
             });
             optionBButton.setOnAction(event -> {
                 if (question.getQuestionAnswer().getId() == 1) {
-                    optionBButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                    optionBButton.setStyle(CORRECT_OPTION_STYLE);
                 } else {
-                    optionBButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+                    optionBButton.setStyle(INCORRECT_OPTION_STYLE);
                 }
             });
             optionCButton.setOnAction(event -> {
                 if (question.getQuestionAnswer().getId() == 2) {
-                    optionCButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                    optionCButton.setStyle(CORRECT_OPTION_STYLE);
                 } else {
-                    optionCButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+                    optionCButton.setStyle(INCORRECT_OPTION_STYLE);
                 }
             });
             optionDButton.setOnAction(event -> {
                 if (question.getQuestionAnswer().getId() == 3) {
-                    optionDButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                    optionDButton.setStyle(CORRECT_OPTION_STYLE);
                 } else {
-                    optionDButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+                    optionDButton.setStyle(INCORRECT_OPTION_STYLE);
                 }
             });
 
-            HBox hBox = new HBox();
-            VBox.setMargin(hBox, new Insets(15, 0, 0, 5));
-            Label seeExplanation = new Label("See explanation");
-            seeExplanation.setAlignment(Pos.CENTER_LEFT);
-            seeExplanation.setTextFill(Paint.valueOf("#51C46B"));
-            seeExplanation.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-            ImageView showExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_show_explanation_icon_1x.png").toString()));
-            showExplanation.setFitWidth(15);
-            showExplanation.setFitHeight(15);
-            showExplanation.setPreserveRatio(true);
-            showExplanation.setPickOnBounds(true);
-            ImageView hideExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_hide_explanation_icon_1x.png").toString()));
-            hideExplanation.setFitWidth(15);
-            hideExplanation.setFitHeight(15);
-            hideExplanation.setPreserveRatio(true);
-            hideExplanation.setPickOnBounds(true);
-            Button showHideExplanation = new Button();
-            showHideExplanation.setBackground(Background.EMPTY);
-            showHideExplanation.setGraphic(showExplanation);
-            HBox.setMargin(showHideExplanation, new Insets(0, 0, 0, 10));
 
-            hBox.getChildren().addAll(seeExplanation, showHideExplanation);
+            ImageView showExplanationIcon = new ImageView(new Image(getClass().getResource("/drawable/cbtview_show_explanation_icon_1x.png").toString()));
+            showExplanationIcon.setFitWidth(15);
+            showExplanationIcon.setFitHeight(15);
+            showExplanationIcon.setPreserveRatio(true);
+            showExplanationIcon.setPickOnBounds(true);
+
+            ImageView hideExplanationIcon = new ImageView(new Image(getClass().getResource("/drawable/cbtview_hide_explanation_icon_1x.png").toString()));
+            hideExplanationIcon.setFitWidth(15);
+            hideExplanationIcon.setFitHeight(15);
+            hideExplanationIcon.setPreserveRatio(true);
+            hideExplanationIcon.setPickOnBounds(true);
+
+            ToggleButton showHideExplanationButton = new ToggleButton("See Explanation");
+            showHideExplanationButton.setTextFill(Paint.valueOf("#51C46B"));
+            showHideExplanationButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+            showHideExplanationButton.setGraphic(showExplanationIcon);
+            showHideExplanationButton.setGraphicTextGap(10);
+            showHideExplanationButton.setContentDisplay(ContentDisplay.RIGHT);
+            showHideExplanationButton.setBackground(Background.EMPTY);
+            showHideExplanationButton.setStyle("-fx-cursor: hand;");
+            HBox.setMargin(showHideExplanationButton, new Insets(0, 0, 0, 10));
 
             Label explanationText = new Label();
             explanationText.setText(question.getQuestionAnswer().getExplanation());
-            explanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+            explanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
             explanationText.setWrapText(true);
             explanationText.setPadding(new Insets(10));
             explanationText.setStyle("-fx-border-color: #034801; -fx-border-radius: 5; ");
@@ -279,19 +288,22 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 explanationText.setPrefWidth((Double) newValue);
             }));
 
-            cbtVBox.getChildren().addAll(questionBox, optionAButton, optionBButton, optionCButton, optionDButton, hBox);
+            cbtVBox.getChildren().addAll(questionBox, optionAButton, optionBButton, optionCButton, optionDButton, showHideExplanationButton);
 
-            showHideExplanation.setOnAction(event -> {
-                if (showHideExplanation.getGraphic() == showExplanation){
-                    showHideExplanation.setGraphic(hideExplanation);
-                    seeExplanation.setText("Hide explanation");
+            showHideExplanationButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    showHideExplanationButton.setGraphic(hideExplanationIcon);
+                    showHideExplanationButton.setText("Hide explanation");
                     cbtVBox.getChildren().add(explanationText);
-                }else {
-                    showHideExplanation.setGraphic(showExplanation);
-                    seeExplanation.setText("See explanation");
+                } else {
+                    showHideExplanationButton.setGraphic(showExplanationIcon);
+                    showHideExplanationButton.setText("See explanation");
                     cbtVBox.getChildren().remove(explanationText);
                 }
-            });
+            }));
+
+            showHideExplanationButton.setOnMouseEntered(e -> showHideExplanationButton.setUnderline(true));
+            showHideExplanationButton.setOnMouseExited(e -> showHideExplanationButton.setUnderline(false));
 
             contentElement = cbtVBox;
 
