@@ -363,8 +363,11 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 String formattedText = referenceViewType.getText().replaceAll("<br>", System.lineSeparator());
 
                 Label label = new Label(formattedText);
-                label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                 label.setWrapText(true);
+                label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+                if (formattedText.contains("www") || formattedText.contains(".com")) {
+                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM_ITALIC, 14));
+                }
 
                 contentElement = label;
             }
@@ -400,7 +403,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             builder.insert(0, "/assets/images/");
             URL url = getClass().getResource(builder.toString());
             if (url != null) {
-                System.out.println(TAG + "Url -> " + url);
+                System.out.println(TAG + "Note Image Url -> " + url);
                 ImageView imageView = new ImageView(new Image(url.toString()));
 
                 contentElement = new StackPane(imageView);
