@@ -49,10 +49,10 @@ public class YearsDao {
         String query = "";
 
         if (type == SubjectListItemVM.Type.OBJECTIVE) {
-            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_OBJECTIVE_QUESTIONS + " ON " + Tables.PQ_OBJECTIVE_QUESTIONS + "." + yearIdColumn + " = " + Tables.YEARS + "." + idColumn + " WHERE " + subjectIdColumn + " = " + subjectId + " ORDER BY " + yearIdColumn + " DESC";
+            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_OBJECTIVE_QUESTIONS + " ON " + Tables.PQ_OBJECTIVE_QUESTIONS + "." + yearIdColumn + " = " + Tables.YEARS + "." + idColumn + " WHERE " + subjectIdColumn + " = " + subjectId + " ORDER BY " + yearIdColumn + " ASC";
 
         } else if (type == SubjectListItemVM.Type.THEORY){
-            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_THEORY_QUESTIONS + " ON " + Tables.PQ_THEORY_QUESTIONS + "." + yearIdColumn + " = " + Tables.YEARS + "." + idColumn + " WHERE " + subjectIdColumn + " = " + subjectId + " ORDER BY " + yearIdColumn + " DESC";
+            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_THEORY_QUESTIONS + " ON " + Tables.PQ_THEORY_QUESTIONS + "." + yearIdColumn + " = " + Tables.YEARS + "." + idColumn + " WHERE " + subjectIdColumn + " = " + subjectId + " ORDER BY " + yearIdColumn + " ASC";
 
         }
 

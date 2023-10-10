@@ -143,7 +143,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ProgressIndicator refreshNoteProgressIndicator;
 
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
-    final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
+    final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0; -fx-cursor: hand;";
     final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
 
     private Section selectedSection;
@@ -218,6 +218,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             button.setAlignment(Pos.BASELINE_LEFT);
             button.setMaxWidth(Double.MAX_VALUE);
             button.setText(subTopic.getTitle());
+            if (subTopic.getTitle().length() > 40) {
+                button.setTooltip(new Tooltip(subTopic.getTitle()));
+            }
 
             button.setStyle(IDLE_BUTTON_STYLE);
             button.setOnMouseEntered(e -> {

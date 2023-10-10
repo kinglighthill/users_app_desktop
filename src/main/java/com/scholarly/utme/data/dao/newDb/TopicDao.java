@@ -161,7 +161,6 @@ public class TopicDao {
         }
 
         String userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
-        System.out.println(TAG + "User id -> " + userId);
         if (PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
             for (NoteTopic topic : noteTopics) {
                 topic.setFree(true);
