@@ -76,7 +76,7 @@ public class NotesScreenVM implements ViewModel {
 
         if (selectedSubTopic.get() != null) {
             List<NoteSection> selectedNoteSection = noteSections.get(selectedTopic.get().getId()).stream().filter(section -> section.getSubtopicId() == selectedSubTopic.get().getId()).toList();
-            System.out.println(TAG + "SelectedSubtopic Section -> " + selectedNoteSection);
+//            System.out.println(TAG + "SelectedSubtopic Section -> " + selectedNoteSection);
             selectedSubtopicSection.set(selectedNoteSection.get(0));
         }
     }
@@ -241,13 +241,13 @@ public class NotesScreenVM implements ViewModel {
     }
 
     public NoteSection getNoteSubtopicSection(NoteSubTopic subTopic) {
-        System.out.println(TAG + "getNoteSubtopicSection Subtopic Id -> " + subTopic.getId());
-        System.out.println(TAG + "getNoteSubtopicSection selectedTopic Id -> " + selectedTopic.get().getId());
+//        System.out.println(TAG + "getNoteSubtopicSection Subtopic Id -> " + subTopic.getId());
+//        System.out.println(TAG + "getNoteSubtopicSection selectedTopic Id -> " + selectedTopic.get().getId());
         return noteSections.get(selectedTopic.get().getId()).stream().filter(section -> section.getSubtopicId() == subTopic.getId()).toList().get(0);
     }
 
-    public ObjectiveQuestion getQuestion(int yearId, int questionNum) {
-        return ObjectiveQuestionDao.getQuestionWithYearAndQuestionNum(yearId, questionNum);
+    public ObjectiveQuestion getQuestion(int subjectId, int yearId, int questionNum) {
+        return ObjectiveQuestionDao.getNoteCBTQuestion(subjectId, yearId, questionNum);
 //        return noteSubjectQuestions.stream().filter(objectiveQuestion ->
 //                objectiveQuestion.getYearId() == yearId && objectiveQuestion.getQuestionNumber() == questionNum
 //        ).toList().get(0);

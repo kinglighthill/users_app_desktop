@@ -107,7 +107,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         yearChoiceBox.setValue(freeYears.get(0));
 
         PQTopic allTopics = new PQTopic(-1, "All topics", -1);
-        topicsComboBox.getItems().add(allTopics);
+//        topicsComboBox.getItems().add(allTopics);
         topicsComboBox.getItems().addAll(viewModel.getTopics());
 
         List<PQTopic> topics = viewModel.getTopics();
@@ -117,7 +117,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         }
         topicsComboBox.getCheckModel().checkAll();
         List<Integer> topicsIdList = topicsComboBox.getCheckModel().getCheckedItems().stream().map(PQTopic::getId).collect(Collectors.toList());
-        viewModel. setSelectedTopics(topicsIdList);
+        viewModel.setSelectedTopics(topicsIdList);
 
         topicsComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<PQTopic>) changeList -> {
             if (topicsComboBox.getCheckModel().getCheckedItems().size() == 0) {

@@ -25,8 +25,8 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.*;
 
@@ -221,24 +221,39 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                     ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
                 }
 
-                // Ensure time(hours and minutes) selected is greater than for CBT Practice
-                if (hoursChoiceBox.getValue() != 0 || minutesChoiceBox.getValue() != 0){
+                // Ensure that selected number of questions are greater than 0
+                 if (!viewModel.getSelectedSubjectNumberOfQuestions().containsValue(0)) {
 
-                    if (selectedOption == SubjectListOption.PRACTICE) {
-                        initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
-                        ViewSwitcher.passData(initialData);
-                        ViewSwitcher.showScreen(View.PRACTICE_SCREEN);
-                    }
+                     // Ensure time(hours and minutes) selected is greater than for CBT Practice
+                     if (hoursChoiceBox.getValue() != 0 || minutesChoiceBox.getValue() != 0){
 
-                } else {
-                    Alerts.info(
-                            this.getClass(),
-                                    "Message",
-                                    null,
-                                    "Select a time greater than 0"
-                            ).show();
-                }
+                         if (selectedOption == SubjectListOption.PRACTICE) {
+                             initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
+                             ViewSwitcher.passData(initialData);
+                             ViewSwitcher. showScreen(View.PRACTICE_SCREEN);
+                         }
 
+                     } else {
+                         Alerts.info(
+                                 this.getClass(),
+                                 "Message",
+                                 null,
+                                 "Select a time greater than 0"
+                         ).show();
+                     }
+
+                 } else {
+                     Integer value = 0;
+                     List<String> subjects = viewModel.getSelectedSubjectNumberOfQuestions().entrySet().stream().filter(entry -> value.equals(entry.getValue())).map(Map.Entry::getKey).toList();
+
+                     Alerts.info(
+                             this.getClass(),
+                             "Message",
+                             null,
+                             "Selected number of questions selected for Subject(s):" + subjects.toString().replace("[", "").replace("]", "") + " must be greater than 0"
+                     ).show();
+
+                 }
 
             } else {
                 Alerts.info(

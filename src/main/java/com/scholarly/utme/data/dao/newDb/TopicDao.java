@@ -35,10 +35,7 @@ public class TopicDao {
     private static final ObservableList<NoteTopic> noteTopics;
     private static final ObservableList<FreeContent> freeContents;
 
-    private static final String userId;
-
     static {
-        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
         pqTopics = FXCollections.observableArrayList();
         noteTopics = FXCollections.observableArrayList();
         freeContents = FXCollections.observableArrayList();
@@ -153,7 +150,7 @@ public class TopicDao {
                         false));
             }
 
-//            System.out.println(TAG + "Got Note topics of size -> " + noteTopics.size());
+            System.out.println(TAG + "Got Note topics of size -> " + noteTopics.size());
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
@@ -163,6 +160,7 @@ public class TopicDao {
 
         }
 
+        String userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
         if (PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
             for (NoteTopic topic : noteTopics) {
                 topic.setFree(true);

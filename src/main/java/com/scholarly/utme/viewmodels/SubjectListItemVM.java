@@ -89,7 +89,7 @@ public class SubjectListItemVM implements ViewModel {
         this.subject = subject;
         subjectName.set(subject.getTitle());
         subjectShortTitle.set(subject.getShortTitle());
-        subjectColorName.set(getColorName(subject.getShortTitle()));
+        subjectColorName.set(subject.getColorCode());
         favoriteSubject.set(subject.isFavorite());
 
 //        years = YearsDao.getAvailableYearsForSubject(type, subject.getId());
@@ -227,6 +227,9 @@ public class SubjectListItemVM implements ViewModel {
                     })
                     .blockingSubscribe(
                             numberList -> {
+                                if (numberList.size() == 0) {
+                                    questionNumbers.add(0);
+                                }
                                 questionNumbers.addAll(numberList);
                             },
                             error -> {}
@@ -245,6 +248,9 @@ public class SubjectListItemVM implements ViewModel {
                     })
                     .blockingSubscribe(
                             numberList -> {
+                                if (numberList.size() == 0) {
+                                    questionNumbers.add(0);
+                                }
                                 questionNumbers.addAll(numberList);
                             },
                             error -> {}
@@ -267,6 +273,9 @@ public class SubjectListItemVM implements ViewModel {
                     })
                     .blockingSubscribe(
                             numberList -> {
+                                if (numberList.size() == 0) {
+                                    questionNumbers.add(0);
+                                }
                                 questionNumbers.addAll(numberList);
                             },
                             error -> {}
@@ -284,6 +293,9 @@ public class SubjectListItemVM implements ViewModel {
                     })
                     .blockingSubscribe(
                             numberList -> {
+                                if (numberList.size() == 0) {
+                                    questionNumbers.add(0);
+                                }
                                 questionNumbers.addAll(numberList);
                             },
                             error -> {}

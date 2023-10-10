@@ -72,7 +72,7 @@
                             </Label>
                         </left>
                         <right>
-                            <Label fx:id="editSubjectsText" text="Edit subjects" textFill="#12AF20">
+                            <Label fx:id="editSubjectsText" text="Edit subjects" textFill="#12AF20" style="-fx-cursor: hand;">
                                 <padding>
                                     <Insets right="20.0" top="10.0" bottom="20.0" />
                                 </padding>

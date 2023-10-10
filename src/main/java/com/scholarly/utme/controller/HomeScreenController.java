@@ -46,6 +46,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
     private StackPane contentPane;
 
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
+    private static final String IDLE_BUTTON_STYLE = "-fx-cursor: hand;";
 
     private static SubjectListViewController subjectListController;
 
@@ -198,9 +199,9 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
     }
 
     private void changeButtonStyle(ToggleButton pressedButton) {
-        practiceButton.setStyle(null);
-        pastQuestionButton.setStyle(null);
-        cbtGameButton.setStyle(null);
+        practiceButton.setStyle(IDLE_BUTTON_STYLE);
+        pastQuestionButton.setStyle(IDLE_BUTTON_STYLE);
+        cbtGameButton.setStyle(IDLE_BUTTON_STYLE);
 //        videosButton.setStyle(null);
 //        audiosButton.setStyle(null);
 //        learningCenterButton.setStyle(null);

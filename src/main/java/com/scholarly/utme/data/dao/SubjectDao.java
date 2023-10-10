@@ -1,6 +1,7 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.DatabaseService;
+import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.data.util.CRUDHelper;
@@ -253,6 +254,13 @@ public class SubjectDao {
             if (subject.getId() == id) return subject;
         }
         return null;
+    }
+
+    public static String getNoteSubjectColor(int subjectId) {
+        for (NoteSubject subject : noteSubjects) {
+            if (subject.getId() == subjectId) return subject.getColorCode();
+        }
+        return "#000000";
     }
 
     public static Optional<Subject> getSubject(int id) {

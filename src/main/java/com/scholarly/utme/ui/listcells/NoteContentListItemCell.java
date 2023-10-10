@@ -1,6 +1,7 @@
 package com.scholarly.utme.ui.listcells;
 
 import com.sandec.mdfx.MarkdownView;
+import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.listItems.UnorderedListItem;
 import com.scholarly.utme.data.model.newDb.ContentViewTypes;
@@ -11,7 +12,6 @@ import com.scholarly.utme.ui.cellFactories.UnorderedListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.NoSelectionModel;
 import com.scholarly.utme.viewmodels.note_screens.NotesScreenVM;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingNode;
@@ -28,8 +28,8 @@ import javafx.scene.paint.Paint;
 //import org.commonmark.parser.Parser;
 //import org.commonmark.renderer.html.HtmlRenderer;
 //import org.commonmark.Extension;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.web.HTMLEditor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -41,10 +41,8 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class NoteContentListItemCell extends ListCell<NoteSection> {
@@ -52,6 +50,10 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
     Parser markdownParser = Parser.builder().build();
     HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
+
+    public static final String NORMAL_OPTION_STYLE = "-fx-border-color: #233D2C; -fx-border-radius: 50; -fx-cursor: hand;";
+    private static final String CORRECT_OPTION_STYLE = "-fx-border-color: #51C42B; -fx-border-radius: 50; -fx-cursor: hand;";
+    private static final String INCORRECT_OPTION_STYLE = "-fx-border-color: #E90000; -fx-border-radius: 50; -fx-cursor: hand;";
 
     private final NotesScreenVM viewModel;
     public NoteContentListItemCell() {
@@ -89,14 +91,17 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             Parent node = renderNote(item);
 //            System.out.println(TAG + "Before setGraphic -> " + node);
             if (node instanceof VBox) {
-                System.out.println(TAG + "Node is instance of VBox");
-                ((VBox) node).setPadding(new Insets(0, 130, 0, 130));
+                ((VBox) node).setPadding(new Insets(0, 180, 0, 180));
             }
 
             if (node instanceof Label) {
                 ((Label) node).setLineSpacing(10);
-                ((Label) node).setPadding(new Insets(5, 130, 5, 130));
+                ((Label) node).setPadding(new Insets(5, 180, 5, 180));
                 ((Label) node).setTextAlignment(TextAlignment.JUSTIFY);
+
+                if (node.getUserData() != null && node.getUserData().equals("Level 1")) {
+                    ((Label) node).setPadding(new Insets(20, 180, 5, 180));
+                }
             }
 
             setOnMouseClicked(event -> {
@@ -122,11 +127,21 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 String formattedText = doc.body().text();
                 Label label = new Label(formattedText);
                 label.setWrapText(true);
-                label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-                if (section.getSubtopicId() != 0 || section.getMainSectionOrder() != 0) {
-                    label.setPadding(new Insets(10, 0, 0, 0));
+                label.setTextFill(Paint.valueOf(SubjectDao.getNoteSubjectColor(section.getSubjectId())));
+
+                if (headerViewType.getLevel() == 1) {
+                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 22));
+                    label.setUserData("Level 1");
+                } else if (headerViewType.getLevel() == 2) {
                     label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+                } else {
+                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                 }
+
+//                if (section.getSubtopicId() != 0 || section.getMainSectionOrder() != 0) {
+//                    label.setPadding(new Insets(10, 0, 0, 0));
+//                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+//                }
 
                 contentElement = label;
 //                System.out.println(TAG + "HeaderViewType text -> " + label.getText());
@@ -135,8 +150,8 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
         } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
 //            System.out.println(TAG + "ContentViewType -> ParagraphViewType");
             if (paragraphViewType.getText() != null) {
-                Document doc = Jsoup.parse(paragraphViewType.getText());
-                String formattedText = doc.body().text();
+                Document doc = Jsoup.parse(paragraphViewType.getText().replaceAll("<br>", System.lineSeparator()));
+                String formattedText = paragraphViewType.getText().replaceAll("<br>", System.lineSeparator());
                 Label label = new Label(formattedText);
                 label.setWrapText(true);
                 label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
@@ -152,14 +167,15 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
         } else if (contentViewType instanceof CBTViewType cbtViewType) {
 //            System.out.println(TAG + "ContentViewType -> CBTViewType");
 
+            int subjectId = cbtViewType.getSubjectId();
             int yearId = cbtViewType.getYearId();
             int questionNum = cbtViewType.getQuestionId();
 
-            ObjectiveQuestion question = viewModel.getQuestion(yearId, questionNum);
+            ObjectiveQuestion question = viewModel.getQuestion(subjectId, yearId, questionNum);
 
             VBox cbtVBox = new VBox();
             cbtVBox.setPadding(new Insets(20, 50, 30, 50));
-            cbtVBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #51C46B; -fx-border-radius: 10;");
+            cbtVBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 10;");
             cbtVBox.setSpacing(10);
             VBox.setMargin(cbtVBox, new Insets(0, 130, 0, 130));
 
@@ -175,28 +191,28 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             optionAButton.setText(question.getOptionA().getText());
             optionAButton.setAlignment(Pos.CENTER);
             optionAButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-            optionAButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+            optionAButton.setStyle(NORMAL_OPTION_STYLE);
             optionAButton.setPadding(new Insets(10));
 
             RadioButton optionBButton = new RadioButton();
             optionBButton.setText(question.getOptionB().getText());
             optionBButton.setAlignment(Pos.CENTER);
             optionBButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-            optionBButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+            optionBButton.setStyle(NORMAL_OPTION_STYLE);
             optionBButton.setPadding(new Insets(10));
 
             RadioButton optionCButton = new RadioButton();
             optionCButton.setText(question.getOptionC().getText());
             optionCButton.setAlignment(Pos.CENTER);
             optionCButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-            optionCButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+            optionCButton.setStyle(NORMAL_OPTION_STYLE);
             optionCButton.setPadding(new Insets(10));
 
             RadioButton optionDButton = new RadioButton();
             optionDButton.setText(question.getOptionD().getText());
             optionDButton.setAlignment(Pos.CENTER);
             optionDButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-            optionDButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+            optionDButton.setStyle(NORMAL_OPTION_STYLE);
             optionDButton.setPadding(new Insets(10));
 
 
@@ -205,60 +221,60 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
             optionAButton.setOnAction(event -> {
                 if (question.getQuestionAnswer().getId() == 0) {
-                    optionAButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                    optionAButton.setStyle(CORRECT_OPTION_STYLE);
                 } else {
-                    optionAButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+                    optionAButton.setStyle(INCORRECT_OPTION_STYLE);
 
                 }
             });
             optionBButton.setOnAction(event -> {
                 if (question.getQuestionAnswer().getId() == 1) {
-                    optionBButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                    optionBButton.setStyle(CORRECT_OPTION_STYLE);
                 } else {
-                    optionBButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+                    optionBButton.setStyle(INCORRECT_OPTION_STYLE);
                 }
             });
             optionCButton.setOnAction(event -> {
                 if (question.getQuestionAnswer().getId() == 2) {
-                    optionCButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                    optionCButton.setStyle(CORRECT_OPTION_STYLE);
                 } else {
-                    optionCButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+                    optionCButton.setStyle(INCORRECT_OPTION_STYLE);
                 }
             });
             optionDButton.setOnAction(event -> {
                 if (question.getQuestionAnswer().getId() == 3) {
-                    optionDButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                    optionDButton.setStyle(CORRECT_OPTION_STYLE);
                 } else {
-                    optionDButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+                    optionDButton.setStyle(INCORRECT_OPTION_STYLE);
                 }
             });
 
-            HBox hBox = new HBox();
-            VBox.setMargin(hBox, new Insets(15, 0, 0, 5));
-            Label seeExplanation = new Label("See explanation");
-            seeExplanation.setAlignment(Pos.CENTER_LEFT);
-            seeExplanation.setTextFill(Paint.valueOf("#51C46B"));
-            seeExplanation.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-            ImageView showExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_show_explanation_icon_1x.png").toString()));
-            showExplanation.setFitWidth(15);
-            showExplanation.setFitHeight(15);
-            showExplanation.setPreserveRatio(true);
-            showExplanation.setPickOnBounds(true);
-            ImageView hideExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_hide_explanation_icon_1x.png").toString()));
-            hideExplanation.setFitWidth(15);
-            hideExplanation.setFitHeight(15);
-            hideExplanation.setPreserveRatio(true);
-            hideExplanation.setPickOnBounds(true);
-            Button showHideExplanation = new Button();
-            showHideExplanation.setBackground(Background.EMPTY);
-            showHideExplanation.setGraphic(showExplanation);
-            HBox.setMargin(showHideExplanation, new Insets(0, 0, 0, 10));
 
-            hBox.getChildren().addAll(seeExplanation, showHideExplanation);
+            ImageView showExplanationIcon = new ImageView(new Image(getClass().getResource("/drawable/cbtview_show_explanation_icon_1x.png").toString()));
+            showExplanationIcon.setFitWidth(15);
+            showExplanationIcon.setFitHeight(15);
+            showExplanationIcon.setPreserveRatio(true);
+            showExplanationIcon.setPickOnBounds(true);
+
+            ImageView hideExplanationIcon = new ImageView(new Image(getClass().getResource("/drawable/cbtview_hide_explanation_icon_1x.png").toString()));
+            hideExplanationIcon.setFitWidth(15);
+            hideExplanationIcon.setFitHeight(15);
+            hideExplanationIcon.setPreserveRatio(true);
+            hideExplanationIcon.setPickOnBounds(true);
+
+            ToggleButton showHideExplanationButton = new ToggleButton("See Explanation");
+            showHideExplanationButton.setTextFill(Paint.valueOf("#51C46B"));
+            showHideExplanationButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+            showHideExplanationButton.setGraphic(showExplanationIcon);
+            showHideExplanationButton.setGraphicTextGap(10);
+            showHideExplanationButton.setContentDisplay(ContentDisplay.RIGHT);
+            showHideExplanationButton.setBackground(Background.EMPTY);
+            showHideExplanationButton.setStyle("-fx-cursor: hand;");
+            HBox.setMargin(showHideExplanationButton, new Insets(0, 0, 0, 10));
 
             Label explanationText = new Label();
             explanationText.setText(question.getQuestionAnswer().getExplanation());
-            explanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+            explanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
             explanationText.setWrapText(true);
             explanationText.setPadding(new Insets(10));
             explanationText.setStyle("-fx-border-color: #034801; -fx-border-radius: 5; ");
@@ -272,19 +288,22 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 explanationText.setPrefWidth((Double) newValue);
             }));
 
-            cbtVBox.getChildren().addAll(questionBox, optionAButton, optionBButton, optionCButton, optionDButton, hBox);
+            cbtVBox.getChildren().addAll(questionBox, optionAButton, optionBButton, optionCButton, optionDButton, showHideExplanationButton);
 
-            showHideExplanation.setOnAction(event -> {
-                if (showHideExplanation.getGraphic() == showExplanation){
-                    showHideExplanation.setGraphic(hideExplanation);
-                    seeExplanation.setText("Hide explanation");
+            showHideExplanationButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    showHideExplanationButton.setGraphic(hideExplanationIcon);
+                    showHideExplanationButton.setText("Hide explanation");
                     cbtVBox.getChildren().add(explanationText);
-                }else {
-                    showHideExplanation.setGraphic(showExplanation);
-                    seeExplanation.setText("See explanation");
+                } else {
+                    showHideExplanationButton.setGraphic(showExplanationIcon);
+                    showHideExplanationButton.setText("See explanation");
                     cbtVBox.getChildren().remove(explanationText);
                 }
-            });
+            }));
+
+            showHideExplanationButton.setOnMouseEntered(e -> showHideExplanationButton.setUnderline(true));
+            showHideExplanationButton.setOnMouseExited(e -> showHideExplanationButton.setUnderline(false));
 
             contentElement = cbtVBox;
 
@@ -318,21 +337,34 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
                 ArrayList<UnorderedListItem> contentItems = new ArrayList<>();
 
+                VBox vBox = new VBox(10);
                 for (int i = 0; i < listViewType.getItems().size(); i++) {
                     UnorderedListItem unorderedListItem = new UnorderedListItem(listViewType.getItems().get(i));
                     contentItems.add(unorderedListItem);
+
+                    Circle dot = new Circle(3.5, Paint.valueOf(SubjectDao.getNoteSubjectColor(section.getSubjectId())));
+                    HBox.setMargin(dot, new Insets(5, 0, 0, 0));
+                    Label label = new Label(unorderedListItem.getText());
+                    label.setWrapText(true);
+                    label.setTextAlignment(TextAlignment.JUSTIFY);
+                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+                    HBox hBox = new HBox(dot, label);
+                    hBox.setAlignment(Pos.TOP_LEFT);
+                    hBox.setSpacing(13);
+                    vBox.getChildren().addAll(hBox);
                 }
 
                 ObservableList<UnorderedListItem> items = FXCollections.observableArrayList(contentItems);
 
+
                 ListView<UnorderedListItem> contentList = new ListView<>();
                 contentList.setItems(items);
                 contentList.setBackground(Background.EMPTY);
-                contentList.setCellFactory(new UnorderedListCellFactory());
+                contentList.setCellFactory(new UnorderedListCellFactory(SubjectDao.getNoteSubjectColor(section.getSubjectId())));
                 contentList.setSelectionModel(new NoSelectionModel<>());
                 contentList.setPadding(new Insets(0, 120, 0, 120));
 
-                contentElement = contentList;
+                contentElement = vBox;
             }
 
         } else if (contentViewType instanceof ReferenceViewType referenceViewType) {
@@ -340,11 +372,14 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
             if (referenceViewType.getText() != null) {
                 Document doc = Jsoup.parse(referenceViewType.getText());
-                String formattedText = doc.body().text();
+                String formattedText = referenceViewType.getText().replaceAll("<br>", System.lineSeparator());
 
                 Label label = new Label(formattedText);
-                label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                 label.setWrapText(true);
+                label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+                if (formattedText.contains("www") || formattedText.contains(".com")) {
+                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM_ITALIC, 14));
+                }
 
                 contentElement = label;
             }
@@ -380,7 +415,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             builder.insert(0, "/assets/images/");
             URL url = getClass().getResource(builder.toString());
             if (url != null) {
-                System.out.println(TAG + "Url -> " + url);
+                System.out.println(TAG + "Note Image Url -> " + url);
                 ImageView imageView = new ImageView(new Image(url.toString()));
 
                 contentElement = new StackPane(imageView);
