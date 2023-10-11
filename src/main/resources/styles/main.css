@@ -12,7 +12,7 @@
     -fx-padding: 10 0 10 0;
 }
 .table-view .table-cell {
-    -fx-alignment: center;
+    -fx-alignment: center-left;
 }
 .table-row-cell {
     -fx-background-color: transparent;
