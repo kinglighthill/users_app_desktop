@@ -19,9 +19,9 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="389.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Label text="CBT PRACTICE" textFill="#053500">
+                        <Label fx:id="appBarTitle" text="CBT PRACTICE" textFill="#053500">
                            <HBox.margin>
-                              <Insets left="45.0" />
+                              <Insets left="30.0" />
                            </HBox.margin>
                            <font>
                               <Font name="Gill Sans MT Bold" size="18.0" />
@@ -185,7 +185,7 @@
                                  <HBox fx:id="questionDescriptionHBox">
                                     <Label fx:id="questionDescriptionHeader" wrapText="true" text="COMPREHENSION: Read the passage...">
                                        <font>
-                                          <Font size="18.0"/>
+                                          <Font size="16.0"/>
                                        </font>
                                     </Label>
                                  </HBox>
@@ -193,7 +193,7 @@
                                  <HBox fx:id="questionLabelHBox">
                                     <Label fx:id="questionLabel" wrapText="true">
                                        <font>
-                                          <Font size="18.0"/>
+                                          <Font size="16.0"/>
                                        </font>
                                        <VBox.margin>
                                           <Insets bottom="20"/>
@@ -303,6 +303,11 @@
                                  </VBox.margin>
                               </Panel>
                               <Separator prefWidth="200.0" />
+                              <Label fx:id="attemptedLabel" text="Attempted 3 of 20">
+                                 <font>
+                                    <Font name="Gill Sans MT Bold" size="15"/>
+                                 </font>
+                              </Label>
                               <TilePane fx:id="tilePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
                                  <VBox.margin>
                                     <Insets bottom="10"/>
@@ -331,10 +336,10 @@
                      <children>
                         <Label text="Subjects" textFill="#FFFFFF">
                            <font>
-                              <Font name="Gill Sans MT" size="16"/>
+                              <Font name="System Bold" size="16"/>
                            </font>
                            <padding>
-                              <Insets left="20" bottom="10" top="20"/>
+                              <Insets left="10" top="20"/>
                            </padding>
                         </Label>
                         <ListView fx:id="subjectList" prefHeight="396.0" prefWidth="200.0" style="-fx-cursor: hand;"/>

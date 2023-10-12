@@ -66,7 +66,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @FXML
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
     @FXML
-    private Label questionOverviewLabel, timeLabel, scoreText, questionDescriptionHeader, readQuestionDesc, questionDescriptionText, questionLabel;
+    private Label questionOverviewLabel, timeLabel, scoreText, questionDescriptionHeader, readQuestionDesc, questionDescriptionText, questionLabel, appBarTitle, attemptedLabel;
     @FXML
     private TextField enterCorrectAnswerField;
     @FXML
@@ -108,6 +108,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 PQSubject subject = change.getList().get(0);
                 System.out.println(TAG + "Content of change -> " + change);
                 viewModel.setSelectedSubject(subject);
+                appBarTitle.setText("CBT PRACTICE");
+                appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
             } else {
                 viewModel.setSelectedSubject(null);
             }
@@ -116,6 +118,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         viewModel.setSelectedSubject(subjectList.getSelectionModel().getSelectedItem());
         setupQuestionView(viewModel.getSelectedSubject());
         setupTilePane(viewModel.getSelectedSubject());
+
+        appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
 
         viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -605,6 +609,19 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         selectedQuestionRectangle.setFill(rectangleSelectedColor);
         selectedQuestionText.setTextFill(Color.WHITE);
 
+        updateAttemptedQuestions(optionAButton, optionBButton, optionCButton, optionDButton);
+
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        attemptedLabel.setText("Attempted " + subjectQuestionsState.getNumOfAttempts() + " of " + questions.size());
+
+    }
+
+    private void updateAttemptedQuestions(RadioButton optionAButton, RadioButton optionBButton, RadioButton optionCButton, RadioButton optionDButton) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        if (optionAButton.isSelected() || optionBButton.isSelected() || optionCButton.isSelected() || optionDButton.isSelected()) {
+            subjectQuestionsState.setNumOfAttempts(subjectQuestionsState.getNumOfAttempts() + 1);
+        }
     }
 
     private void setupQuestionView(PQSubject selectedSubject) {
@@ -613,6 +630,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         int selectedQuestionIndex = subjectQuestionsState.getSelectedQuestion();
 
         questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
+        attemptedLabel.setText("Attempted " + subjectQuestionsState.getNumOfAttempts() + " of " + questions.size());
 
         prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && selectedQuestionIndex == 1);
 
@@ -630,6 +648,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
 
             if (!quesDescriptionInList.isEmpty()) {
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                }
                 questionVBox.getChildren().add(0, questionDescriptionHBox);
                 questionVBox.getChildren().add(1, questionLine);
 //                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
