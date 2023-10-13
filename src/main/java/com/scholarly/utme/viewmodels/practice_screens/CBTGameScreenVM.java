@@ -88,7 +88,7 @@ public class CBTGameScreenVM implements ViewModel {
 
             questions.addAll(questionStates);
 
-            subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new PracticeScreenVM.SubjectQuestionsState(1, practiceQuestionState));
+            subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new PracticeScreenVM.SubjectQuestionsState(1, 0, practiceQuestionState));
 
             List<ObjectiveQuestionDescription> questionDescriptionsList = QuestionDescriptionDao
                     .getObjectiveQuestionDescriptions(

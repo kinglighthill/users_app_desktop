@@ -45,6 +45,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.web.WebView;
@@ -65,9 +66,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable, SceneLifecycle {
     private static final String TAG = "PracticeScreenController: ";
 
-    private final static double rectangleSelectedBorderWidth = 2.0;
+    private final static double rectangleSelectedBorderWidth = 1.0;
     private final static Color rectangleBorderSelectedColor = Color.ORANGE;
-    private final static Paint rectangleSelectedColor = Paint.valueOf("#12AF20");
+    private final static Paint rectangleSelectedColor = Paint.valueOf("#F3FBF4");
 
     @InjectViewModel
     private PracticeScreenVM viewModel;
@@ -77,21 +78,23 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @FXML
     private StackPane questionStackPane;
     @FXML
-    private ScrollPane tileScrollPane;
+    private ScrollPane tileScrollPane, questionScrollPane;
     @FXML
     private ListView<PQSubject> subjectList;
     @FXML
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
     @FXML
-    private Label questionOverviewLabel, timeLabel, scoreText, questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
+    private Label questionOverviewLabel, timeLabel, scoreText, questionDescriptionHeader, readQuestionDesc, questionDescriptionText, questionLabel, appBarTitle, attemptedLabel;
     @FXML
     private TextField enterCorrectAnswerField;
     @FXML
+    private Line questionLine;
+    @FXML
     private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
     @FXML
-    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog, centerVBox, questionDescriptionDialog, questionCenterVBox;
+    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog, centerVBox, questionDescriptionDialog, questionCenterVBox, questionVBox;
     @FXML
-    private HBox quesDescriptionHBox, questionWithImageHBox;
+    private HBox quesDescriptionHBox, questionWithImageHBox, questionDescriptionHBox, questionLabelHBox;
     @FXML
     private Button prevButton, nextButton, exitButton, submitButton, submitReport, homePageButton, resultAnalysisButton, viewImageButton;
     @FXML
@@ -123,6 +126,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 PQSubject subject = change.getList().get(0);
                 System.out.println(TAG + "Content of change -> " + change);
                 viewModel.setSelectedSubject(subject);
+                appBarTitle.setText("CBT PRACTICE");
+                appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
             } else {
                 viewModel.setSelectedSubject(null);
             }
@@ -131,6 +136,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         viewModel.setSelectedSubject(subjectList.getSelectionModel().getSelectedItem());
         setupQuestionView(viewModel.getSelectedSubject());
         setupTilePane(viewModel.getSelectedSubject());
+
+        appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
 
         viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -408,9 +415,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             long secs = newValue.longValue() % 60;
 
             if (hours > 0) {
-                timeText = String.format(Locale.getDefault(), "%d:%02d:%02d", hours, minutes, secs);
+                timeText = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, secs);
             } else {
-                timeText = String.format(Locale.getDefault(), "%d:%02d", minutes, secs);
+                timeText = String.format(Locale.getDefault(), "%02d:%02d", minutes, secs);
             }
 
             timeLabel.setText(timeText);
@@ -493,21 +500,26 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                // System.out.println("Question: " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
-                TextToSpeech.play(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
+                StringBuilder textToRead = new StringBuilder(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
+                textToRead.append(" Option A ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionA().getText());
+                textToRead.append(" Option B ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionB().getText());
+                textToRead.append(" Option C ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionC().getText());
+                textToRead.append(" Option D ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionD().getText());
+                TextToSpeech.play(textToRead.toString());
             } else {
                 TextToSpeech.play(((TheoryQuestion) questionState.getQuestion()).getQuestion());
             }
         });
 
-        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
-            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
-        });
-        readQuestionDesc.setOnMouseEntered(event -> {
-            readQuestionDesc.setUnderline(true);
-        });
-        readQuestionDesc.setOnMouseExited(event -> {
-            readQuestionDesc.setUnderline(false);
-        });
+//        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
+//            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
+//        });
+//        readQuestionDesc.setOnMouseEntered(event -> {
+//            readQuestionDesc.setUnderline(true);
+//        });
+//        readQuestionDesc.setOnMouseExited(event -> {
+//            readQuestionDesc.setUnderline(false);
+//        });
 
         quesDescriptionCloseIcon.setOnMouseClicked(mouseEvent -> {
             Animations.hideDialog(questionDescriptionDialog, dialogDimmer);
@@ -609,7 +621,249 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
 
         selectedQuestionRectangle.setFill(rectangleSelectedColor);
-        selectedQuestionText.setTextFill(Color.WHITE);
+//        selectedQuestionText.setTextFill(Color.WHITE);
+
+        updateAttemptedQuestions(optionAButton, optionBButton, optionCButton, optionDButton);
+
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        attemptedLabel.setText("Attempted " + subjectQuestionsState.getNumOfAttempts() + " of " + questions.size());
+
+    }
+
+    private void updateAttemptedQuestions(RadioButton optionAButton, RadioButton optionBButton, RadioButton optionCButton, RadioButton optionDButton) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        if (optionAButton.isSelected() || optionBButton.isSelected() || optionCButton.isSelected() || optionDButton.isSelected()) {
+            subjectQuestionsState.setNumOfAttempts(subjectQuestionsState.getNumOfAttempts() + 1);
+        }
+    }
+
+    private void setupQuestionView(PQSubject selectedSubject) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        int selectedQuestionIndex = subjectQuestionsState.getSelectedQuestion();
+
+        questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
+        attemptedLabel.setText("Attempted " + subjectQuestionsState.getNumOfAttempts() + " of " + questions.size());
+
+        prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && selectedQuestionIndex == 1);
+
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestionIndex - 1).getQuestion();
+
+            List<ObjectiveQuestionDescription> quesDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).toList();
+
+            String questionText = question.getQuestion().replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(questionText);
+
+            questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+
+            if (!quesDescriptionInList.isEmpty()) {
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                }
+                questionVBox.getChildren().add(0, questionDescriptionHBox);
+                questionVBox.getChildren().add(1, questionLine);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            } else {
+                questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                }
+            }
+
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
+
+            if (questionText.contains("<sub>") || questionText.contains("<table") || questionText.contains("$")) {
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWithImageHBox);
+                if (!questionCenterVBox.getChildren().contains(questionWebView))
+                    questionCenterVBox.getChildren().add(questionWebView);
+
+                questionWebView.getEngine().loadContent(questionText);
+            }
+
+            if (questionText.contains("<img")) {
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
+                if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
+                    questionCenterVBox.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText);
+            }
+
+            optionAButton.setText(" (A) " + question.getOptionA().getText());
+            optionBButton.setText(" (B) " + question.getOptionB().getText());
+            optionCButton.setText(" (C) " + question.getOptionC().getText());
+            optionDButton.setText(" (D) " + question.getOptionD().getText());
+
+            int selectedOptionId = questions.get(selectedQuestionIndex - 1).getSelectedOptionId();
+            if (selectedOptionId != -1) {
+                if (selectedOptionId == question.getOptionA().getId()) {
+                    toggleGroup.selectToggle(optionAButton);
+                } else if (selectedOptionId == question.getOptionB().getId()) {
+                    toggleGroup.selectToggle(optionBButton);
+                } else if (selectedOptionId == question.getOptionC().getId()) {
+                    toggleGroup.selectToggle(optionCButton);
+                } else if (selectedOptionId == question.getOptionD().getId()) {
+                    toggleGroup.selectToggle(optionDButton);
+                }
+            } else {
+                toggleGroup.selectToggle(null);
+            }
+        } else {
+            TheoryQuestion question = (TheoryQuestion) questions.get(selectedQuestionIndex - 1).getQuestion();
+            List<TheoryQuestionDescription> quesDescriptionInList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).toList();
+
+            questionDescriptionHeader.setText("");
+
+            if (!quesDescriptionInList.isEmpty()) {
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
+            questionWebView.getEngine().loadContent(question.getQuestion());
+        }
+    }
+
+    private void changeSelectedQuestion(int newValue) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+
+        prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && newValue == 1);
+
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
+            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            List<ObjectiveQuestionDescription> quesDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).toList();
+
+//            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+
+            String questionText = question.getQuestion().replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(questionText);
+
+            questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+
+            if (!quesDescriptionInList.isEmpty()) {
+                questionVBox.getChildren().add(0, questionDescriptionHBox);
+                questionVBox.getChildren().add(1, questionLine);
+//                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+//                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            } else {
+                questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                }
+            }
+
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
+            if (questionText.contains("<sub>") || questionText.contains("<table") || questionText.contains("$")) {
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWithImageHBox);
+                if (!questionCenterVBox.getChildren().contains(questionWebView))
+                    questionCenterVBox.getChildren().add(questionWebView);
+
+                questionWebView.getEngine().loadContent(questionText);
+            }
+
+            if (questionText.contains("<img")) {
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
+                if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
+                    questionCenterVBox.getChildren().add(questionWithImageHBox);
+
+                showQuestionWithImage(questionText);
+
+            }
+
+            optionAButton.setText(" (A) " + question.getOptionA().getText());
+            optionBButton.setText(" (B) " + question.getOptionB().getText());
+            optionCButton.setText(" (C) " + question.getOptionC().getText());
+            optionDButton.setText(" (D) " + question.getOptionD().getText());
+
+            int selectedOptionId = questions.get(newValue - 1).getSelectedOptionId();
+            if (selectedOptionId != -1) {
+                if (selectedOptionId == question.getOptionA().getId()) {
+                    toggleGroup.selectToggle(optionAButton);
+                } else if (selectedOptionId == question.getOptionB().getId()) {
+                    toggleGroup.selectToggle(optionBButton);
+                } else if (selectedOptionId == question.getOptionC().getId()) {
+                    toggleGroup.selectToggle(optionCButton);
+                } else if (selectedOptionId == question.getOptionD().getId()) {
+                    toggleGroup.selectToggle(optionDButton);
+                }
+            } else {
+                toggleGroup.selectToggle(null);
+            }
+        } else {
+            TheoryQuestion question = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
+            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            List<TheoryQuestionDescription> quesDescriptionInList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getQuestionDescriptionId()).toList();
+
+//            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+            questionDescriptionHeader.setText("");
+
+            if (!quesDescriptionInList.isEmpty()) {
+//                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+//                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
+
+//            questionLabel.setText(question.getQuestion());
+            questionWebView.getEngine().loadContent(question.getQuestion());
+        }
+    }
+
+    private void setupTilePane(PQSubject selectedSubject) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+
+        tilePane.getChildren().clear();
+
+        for (int i=1; i <= questions.size(); i++) {
+            Rectangle r = new Rectangle(35, 35);
+            r.setFill(Color.web("#FFFFFF"));
+            r.setStroke(Color.GRAY);
+            r.setStrokeType(StrokeType.OUTSIDE);
+
+            Label l = new Label(Integer.toString(i));
+
+            if (questions.get(i-1).getSelectedOptionId() != -1) {
+                r.setFill(Paint.valueOf("#12AF20"));
+                l.setTextFill(Color.WHITE);
+            }
+
+            if (subjectQuestionsState.getSelectedQuestion() == i) {
+                r.setStroke(Color.ORANGE);
+                r.setStrokeWidth(1.0);
+            }
+            StackPane s = new StackPane(r, l);
+            s.setStyle("-fx-cursor: hand;");
+            tilePane.getChildren().add(s);
+
+            int finalI = i;
+            s.setOnMouseClicked(event -> {
+                subjectQuestionsState.setSelectedQuestion(finalI);
+            });
+        }
+    }
+
+    private void changeSelectedTile(int oldSelectedQuestionIndex, int newSelectedQuestionIndex) {
+        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestionIndex - 1);
+        StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestionIndex - 1);
+
+        Rectangle selectedQuestionRectangle = (Rectangle) selectedQuestionPane.getChildren().get(0);
+        Rectangle oldQuestionRectangle = (Rectangle) oldQuestionPane.getChildren().get(0);
+
+        selectedQuestionRectangle.setStroke(rectangleBorderSelectedColor);
+        selectedQuestionRectangle.setStrokeWidth(rectangleSelectedBorderWidth);
+
+        oldQuestionRectangle.setStroke(Color.GRAY);
+        oldQuestionRectangle.setStrokeWidth(1.0);
 
     }
 
@@ -645,7 +899,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         }
     }
 
-    private void setupQuestionView(PQSubject selectedSubject) {
+    private void setupQuestionViewOld(PQSubject selectedSubject) {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestionIndex = subjectQuestionsState.getSelectedQuestion();
@@ -727,7 +981,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         }
     }
 
-    private void changeSelectedQuestion(int newValue) {
+    private void changeSelectedQuestionOld(int newValue) {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
@@ -807,7 +1061,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         }
     }
 
-    private void setupTilePane(PQSubject selectedSubject) {
+    private void setupTilePaneOld(PQSubject selectedSubject) {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
@@ -848,7 +1102,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         }
     }
 
-    private void changeSelectedTile(int oldSelectedQuestionIndex, int newSelectedQuestionIndex) {
+    private void changeSelectedTileOld(int oldSelectedQuestionIndex, int newSelectedQuestionIndex) {
 
         StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestionIndex - 1);
         StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestionIndex - 1);
@@ -993,12 +1247,17 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             toggleGroup.selectToggle(optionCButton);
         } else if (keyEvent.getCode().toString().equalsIgnoreCase("D")) {
             toggleGroup.selectToggle(optionDButton);
+        } else if (keyEvent.getCode().toString().equalsIgnoreCase("N")) {
+            nextButton.fire();
+        } else if (keyEvent.getCode().toString().equalsIgnoreCase("P")) {
+            prevButton.fire();
+        } else if (keyEvent.getCode().toString().equalsIgnoreCase("S")) {
+            submitButton.fire();
         }
     }
 
     @Override
     public void onViewAdded() {
-
     }
 
     @Override

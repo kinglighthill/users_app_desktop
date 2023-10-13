@@ -101,7 +101,7 @@ public class LandingScreenPerformanceController implements FxmlView<LandingScree
         questionStates.add(questionState);
 
         HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectQuestions = new HashMap<>();
-        subjectQuestions.put("Eng", new PracticeScreenVM.SubjectQuestionsState(4, questionStates));
+        subjectQuestions.put("Eng", new PracticeScreenVM.SubjectQuestionsState(4, 0, questionStates));
 
         ResultScreenController.InitialData performance1 = new ResultScreenController.InitialData(results, subjects, null, subjectQuestions, View.LANDING_SCREEN);
 
