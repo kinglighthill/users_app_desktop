@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller.practice_screens;
 
+import com.nfbsoftware.latex.LaTeXConverter;
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.*;
 //import com.gtranslate.Audio;
@@ -16,17 +17,27 @@ import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.QuestionS
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.collections.ListChangeListener;
+import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -38,9 +49,16 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import org.codehaus.mojo.latex.LaTeXMojo;
+import org.commonmark.Extension;
 
+import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
+import java.awt.*;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @FxmlPath("/layouts/practice_screens/PracticeScreen.fxml")
@@ -134,15 +152,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             });
         });
 
-        /*viewModel.getSubjectBookmarks().forEach((s, bookmarks) -> {
-            bookmarks.addListener((ListChangeListener<? super ObjectiveBookmark>) change -> {
-                System.out.println(TAG + "Bookmark List changed ");
-                if (viewModel.getSelectedSubject().getShortTitle()().equalsIgnoreCase(s)) {
-                    updateBookmarkIcon();
-                }
-            });
-        });*/
-
         // Integer value to track subjectList subject selection
         AtomicInteger subjectListSelectionAtomicIndex = new AtomicInteger(0);
 
@@ -169,10 +178,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     prevButton.setDisable(true);
                 }
 
-            }else {
+            } else {
                 if (selectedQuestionIndex == 1) {
                     subjectList.getSelectionModel().select(subjectListSelectionAtomicIndex.decrementAndGet());
-                }else {
+                } else {
                     viewModel.getSubjectsQuestions()
                             .get(viewModel.getSelectedSubject().getShortTitle())
                             .setSelectedQuestion(selectedQuestionIndex - 1);
@@ -667,14 +676,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
 
             if (questionText.contains("<img")) {
-
                 questionStackPane.getChildren().add(questionWithImageHBox);
-
                 showQuestionWithImage(questionText);
-
             } else {
-                questionStackPane.getChildren().add(questionWebView);
-                questionWebView.getEngine().loadContent(questionText);
+                loadQuestion(questionText, question.getIsQuestionWebView() == 1);
             }
 
             optionAButton.setText(" (A) " + question.getOptionA().getText());
@@ -712,8 +717,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
 
-//            questionLabel.setText(question.getQuestion());
-            questionWebView.getEngine().loadContent(question.getQuestion());
+            String questionText = question.getQuestion();
+            if (questionText.contains("<img")) {
+                questionStackPane.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText);
+            } else {
+                loadQuestion(questionText, question.getIsQuestionWebView() == 1);
+            }
         }
     }
 
@@ -747,12 +757,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             if (questionText.contains("<img")) {
                 questionStackPane.getChildren().add(questionWithImageHBox);
                 showQuestionWithImage(questionText);
-
             } else {
-                questionStackPane.getChildren().add(questionWebView);
-                questionWebView.getEngine().loadContent(questionText);
-
-//                questionWebView.setMinHeight(questionWithImageHBox.heightProperty().get());
+                loadQuestion(questionText, question.getIsQuestionWebView() == 1);
             }
 
             optionAButton.setText(" (A) " + question.getOptionA().getText());
@@ -791,8 +797,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
 
-//            questionLabel.setText(question.getQuestion());
-            questionWebView.getEngine().loadContent(question.getQuestion());
+            String questionText = question.getQuestion();
+            if (questionText.contains("<img")) {
+                questionStackPane.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText);
+            } else {
+                loadQuestion(questionText, question.getIsQuestionWebView() == 1);
+            }
         }
     }
 
@@ -824,6 +835,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             int finalI = i;
             s.setOnMouseClicked(event -> {
+                if (finalI < subjectQuestionsState.getSelectedQuestion() && nextButton.isDisable()) {
+                    nextButton.setDisable(false);
+                }
+
+                if (finalI == questions.size() && subjectList.getItems().size() - 1 == subjectList.getSelectionModel().getSelectedIndex()) {
+                    nextButton.setDisable(true);
+                }
+
                 subjectQuestionsState.setSelectedQuestion(finalI);
             });
         }
@@ -847,6 +866,16 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     private void showQuestionWithImage(String questionWithImageText) {
         questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText);
+    }
+
+    private void loadQuestion(String questionText, boolean isWebView) {
+        String content = questionText;
+        if (isWebView) {
+            content = Helper.loadLatex(getClass(), questionText);
+        }
+        questionStackPane.getChildren().add(questionWebView);
+        questionWebView.getEngine().loadContent(content);
+        questionWebView.setMinHeight(200);
     }
 
     private void showSubmitDialog() {

@@ -11,9 +11,11 @@ import com.scholarly.utme.data.model.newDb.contentViewType.*;
 import com.scholarly.utme.ui.cellFactories.UnorderedListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.NoSelectionModel;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.note_screens.NotesScreenVM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Worker;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -30,6 +32,8 @@ import javafx.scene.paint.Paint;
 //import org.commonmark.Extension;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -309,30 +313,29 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
 
         } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
             if (latexMathViewType.getKatex() != null) {
-//                org.commonmark.node.Node document = markdownParser.parse(latexMathViewType.getKatex());
-//                String htmlKatex = htmlRenderer.render(document);
-//
-//                Document doc = Jsoup.parse(htmlKatex);
-//                String formattedText = doc.body().text();
+                String content = Helper.loadLatex(getClass(), latexMathViewType.getKatex());
+                WebView webView = new WebView();
+                webView.setPrefHeight(200);
+                WebEngine webEngine = webView.getEngine();
+                webEngine.loadContent(content);
 
-//                Label label = new Label(formattedText);
-//                label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-//                label.setWrapText(true);
+                webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
+                    if (newState == Worker.State.SUCCEEDED) {
+                        Integer height = (Integer) webEngine.executeScript(
+//                                "document.body.scrollHeight;"
+//                                "document.body.clientHeight;"
+//                                "document.querySelector('div').clientHeight;"
+                                "document.querySelector('div').scrollHeight;"
+                        );
+                        webView.setPrefHeight(height);
+                    }
+                });
 
-                Label label1 = new Label(section.getContent());
-                Label label2 = new Label(latexMathViewType.getKatex());
-                label1.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-                label1.setWrapText(true);
-                label2.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-                label2.setWrapText(true);
-
-                contentElement = label2;
-                MarkdownView mdfx = new MarkdownView(latexMathViewType.getKatex());
-//                contentElement = formatMarkdown(latexMathViewType.getKatex());
+                VBox vBox = new VBox();
+                vBox.getChildren().addAll(webView);
+                contentElement = vBox;
             }
         } else if (contentViewType instanceof ListViewType listViewType) {
-//            System.out.println(TAG + "ContentViewType -> ListViewType");
-
             if (listViewType.getStyle().equalsIgnoreCase("unordered")) {
 
                 ArrayList<UnorderedListItem> contentItems = new ArrayList<>();

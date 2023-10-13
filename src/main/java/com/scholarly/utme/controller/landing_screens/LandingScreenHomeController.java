@@ -490,16 +490,4 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             return false;
         }
     }
-
-    private void createSwingContent(final SwingNode swingNode) {
-        SwingUtilities.invokeLater(() -> {
-            JEditorPane editorPane = new JEditorPane();
-            editorPane.setEditorKit(new HTMLEditorKit());
-            editorPane.setContentType("text/html");
-            editorPane.setText("<html><body><h1>Hello, <em>World</em>!</h1></body></html>");
-
-            JScrollPane scrollPane = new JScrollPane(editorPane);
-            swingNode.setContent(editorPane);
-        });
-    }
 }

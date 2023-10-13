@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -92,5 +93,37 @@ public class Helper {
 
         builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
         return builder.toString();
+    }
+
+    public static String loadLatex(Class mClass, String content)
+    {
+        String cssPath = Objects.requireNonNull(mClass.getResource("/assets/katex/katex.min.css")).toExternalForm();
+        String jsPath = Objects.requireNonNull(mClass.getResource("/assets/katex/katex.min.js")).toExternalForm();
+        String autoRenderJsPath = Objects.requireNonNull(mClass.getResource("/assets/katex/contrib/auto-render.min.js")).toExternalForm();
+
+        String latexContent = """
+                <!DOCTYPE html>
+                <html>
+                    <head>
+                       <link rel="stylesheet" href="{cssPath}">
+                       <script defer src="{jsPath}"></script>
+                       <script defer src="{autoRenderJsPath}"
+                           onload="renderMathInElement(document.body, {
+                                delimiters: [
+                                     {left: '$$', right: '$$', display: false},
+                                     {left: '$', right: '$', display: false},
+                                ],
+                                throwOnError : false
+                           });"></script>
+                       <style type='text/css'>body {margin: 0px;padding: 0px;font-size:16px; } </style>
+                     </head>
+                    <body>
+                        <div>{formula}</div>
+                    </body>
+                </html>""";
+        latexContent = latexContent.replace("{cssPath}", cssPath)
+                .replace("{jsPath}", jsPath)
+                .replace("{autoRenderJsPath}", autoRenderJsPath);
+        return latexContent.replace("{formula}", content);
     }
 }

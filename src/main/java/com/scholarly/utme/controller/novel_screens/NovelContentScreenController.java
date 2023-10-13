@@ -697,7 +697,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
                         contentPane.getChildren().addAll(swingNode);
                     } catch (Exception e) {
                         System.out.println(TAG + "Swing error -> " + e.getMessage());
-//                        e.printStackTrace();
                     }
                 });
     }

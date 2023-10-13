@@ -15,7 +15,7 @@ public class PreferencesManager {
             String encryptedInput = encrypt(value);
             preferences.put(key, encryptedInput);
         } catch (Exception ignored) {
-
+            preferences.put(key, value);
         }
     }
 
@@ -25,7 +25,7 @@ public class PreferencesManager {
             String encryptedOutput = preferences.get(key, defaultValue);
             decryptedOutput = decrypt(encryptedOutput);
         } catch (Exception ignored) {
-
+            decryptedOutput = preferences.get(key, defaultValue);
         }
         return decryptedOutput;
     }

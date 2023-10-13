@@ -10,6 +10,9 @@ public class LatexMathViewType extends ContentViewType {
     }
 
     public String getKatex() {
-        return katex;
+        if (katex == null) {
+            return null;
+        }
+        return "$$" + katex + "$$";
     }
 }
