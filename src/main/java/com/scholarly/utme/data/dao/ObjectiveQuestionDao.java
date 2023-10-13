@@ -65,7 +65,7 @@ public class ObjectiveQuestionDao {
             query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause + " ORDER BY RANDOM()";
         }
 
-//        System.out.println(TAG + "Query = " + query);
+//        System.out.println(TAG + "ObjectiveQuestion Query with topic ids query = " + query);
 
         try (ResultSet rs = databaseService.executeQuery(query)){
             questions.clear();

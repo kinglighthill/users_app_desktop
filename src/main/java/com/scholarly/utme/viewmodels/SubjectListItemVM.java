@@ -68,7 +68,7 @@ public class SubjectListItemVM implements ViewModel {
     private SimpleStringProperty subjectShortTitle = new SimpleStringProperty("");
     private SimpleStringProperty subjectColorName = new SimpleStringProperty("");
     private ObservableList<Year> years;
-    private ObservableList<PQTopic> topics;
+    private ObservableList<PQTopic> topics = FXCollections.observableArrayList();
 
     private ObservableList<Integer> questionNumbers = FXCollections.observableArrayList();
 
@@ -93,7 +93,7 @@ public class SubjectListItemVM implements ViewModel {
         favoriteSubject.set(subject.isFavorite());
 
 //        years = YearsDao.getAvailableYearsForSubject(type, subject.getId());
-        topics = TopicDao.getTopicsForSubject(subject.getSubjectId());
+//        topics = TopicDao.getTopicsForSubject(subject.getSubjectId());
 
         subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedTopicsProperty.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
 
@@ -258,6 +258,13 @@ public class SubjectListItemVM implements ViewModel {
         }
     }
 
+    public void loadTopicsForYear(Year year) {
+        topics.clear();
+        System.out.println(TAG + "Got Year -> " + year.getYear());
+        topics.addAll(Objects.requireNonNull(TopicDao.getPQTopicsForSubjectAndYear(subject.getId(), year.getId())));
+        System.out.println(TAG + "Got Topics -> " + topics);
+    }
+
     public void loadQuestionNumbersList(List<Integer> topicIdsList) {
         questionNumbers.clear();
 
@@ -266,8 +273,18 @@ public class SubjectListItemVM implements ViewModel {
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();
-                        for ( int i = 10; i <= it.size(); i+=10) {
-                            numberList.add(i);
+                        if (it.size() > 50) {
+                            for ( int i = 10; i <= it.size(); i+=10) {
+                                numberList.add(i);
+                            }
+                        } else if (it.size() < 50 && it.size() > 10){
+                            for ( int i = 5; i <= it.size(); i+=5) {
+                                numberList.add(i);
+                            }
+                        } else {
+                            for ( int i = 0; i <= it.size(); i++) {
+                                numberList.add(i);
+                            }
                         }
                         return numberList;
                     })
