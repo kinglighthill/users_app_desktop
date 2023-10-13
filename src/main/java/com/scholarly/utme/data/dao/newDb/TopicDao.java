@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -126,6 +127,35 @@ public class TopicDao {
                         pqTopic -> pqTopic.getSubjectId() == subjectId).collect(Collectors.toList()
                 )
         );
+
+    }
+
+    public static ObservableList<PQTopic> getPQTopicsForSubjectAndYear(int subjectId, int yearId) {
+        String query = "SELECT DISTINCT topic_id, topics.title, pq_objective_questions.subject_id FROM pq_objective_questions JOIN topics ON topics._id = pq_objective_questions.topic_id WHERE pq_objective_questions.subject_id = " + subjectId + " AND year_id = " + yearId;
+        System.out.println(TAG + "Get Topics with Subject and Year Query -> " + query);
+        ObservableList<PQTopic> topics = FXCollections.observableArrayList();
+
+        try (ResultSet rs = databaseService.executeQuery(query)) {
+
+            while (rs.next()) {
+                topics.add(new PQTopic(
+                        rs.getInt(topicIdColumn),
+                        rs.getString(titleColumn),
+                        rs.getInt(subjectIdColumn)));
+            }
+
+            long end = System.currentTimeMillis();
+
+            return topics;
+
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not get topics for subject and year from database because " + e.getMessage());
+
+            return null;
+
+        }
 
     }
 

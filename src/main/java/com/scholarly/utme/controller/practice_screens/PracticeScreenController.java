@@ -48,9 +48,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable, SceneLifecycle {
     private static final String TAG = "PracticeScreenController: ";
 
-    private final static double rectangleSelectedBorderWidth = 2.0;
+    private final static double rectangleSelectedBorderWidth = 1.0;
     private final static Color rectangleBorderSelectedColor = Color.ORANGE;
-    private final static Paint rectangleSelectedColor = Paint.valueOf("#12AF20");
+    private final static Paint rectangleSelectedColor = Paint.valueOf("#F3FBF4");
 
     @InjectViewModel
     private PracticeScreenVM viewModel;
@@ -491,7 +491,12 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                // System.out.println("Question: " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
-                TextToSpeech.play(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
+                StringBuilder textToRead = new StringBuilder(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
+                textToRead.append(" Option A ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionA().getText());
+                textToRead.append(" Option B ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionB().getText());
+                textToRead.append(" Option C ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionC().getText());
+                textToRead.append(" Option D ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionD().getText());
+                TextToSpeech.play(textToRead.toString());
             } else {
                 TextToSpeech.play(((TheoryQuestion) questionState.getQuestion()).getQuestion());
             }
@@ -607,7 +612,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
 
         selectedQuestionRectangle.setFill(rectangleSelectedColor);
-        selectedQuestionText.setTextFill(Color.WHITE);
+//        selectedQuestionText.setTextFill(Color.WHITE);
 
         updateAttemptedQuestions(optionAButton, optionBButton, optionCButton, optionDButton);
 
@@ -825,7 +830,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         for (int i=1; i <= questions.size(); i++) {
             Rectangle r = new Rectangle(35, 35);
             r.setFill(Color.web("#FFFFFF"));
-            r.setStroke(Paint.valueOf("#12AF20"));
+            r.setStroke(Color.GRAY);
             r.setStrokeType(StrokeType.OUTSIDE);
 
             Label l = new Label(Integer.toString(i));
@@ -837,7 +842,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             if (subjectQuestionsState.getSelectedQuestion() == i) {
                 r.setStroke(Color.ORANGE);
-                r.setStrokeWidth(2);
+                r.setStrokeWidth(1.0);
             }
             StackPane s = new StackPane(r, l);
             s.setStyle("-fx-cursor: hand;");
@@ -861,7 +866,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         selectedQuestionRectangle.setStroke(rectangleBorderSelectedColor);
         selectedQuestionRectangle.setStrokeWidth(rectangleSelectedBorderWidth);
 
-        oldQuestionRectangle.setStroke(rectangleSelectedColor);
+        oldQuestionRectangle.setStroke(Color.GRAY);
         oldQuestionRectangle.setStrokeWidth(1.0);
 
     }
