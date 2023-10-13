@@ -82,13 +82,14 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
         PQSubject subject = new PQSubject();
         subject.setTitle("All");
-        items.add(subject);
+//        items.add(subject);
         items.addAll(viewModel.getSubjectList());
 
         subjectListView.setCellFactory(new PracticeSubjectListCellFactory());
         subjectListView.setItems(items);
 
         subjectListView.getSelectionModel().select(0);
+        subjectListView.setSelectionModel(new NoSelectionModel<>());
 
 
         barChart.getXAxis().setLabel("Subject");
@@ -196,7 +197,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
     }
 
     private void initializeFont() {
-        showExplanationButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        showExplanationButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
     }
 
     private void showExitDialog() {

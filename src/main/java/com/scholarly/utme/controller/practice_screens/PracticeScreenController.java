@@ -406,9 +406,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             long secs = newValue.longValue() % 60;
 
             if (hours > 0) {
-                timeText = String.format(Locale.getDefault(), "%d:%02d:%02d", hours, minutes, secs);
+                timeText = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, secs);
             } else {
-                timeText = String.format(Locale.getDefault(), "%d:%02d", minutes, secs);
+                timeText = String.format(Locale.getDefault(), "%02d:%02d", minutes, secs);
             }
 
             timeLabel.setText(timeText);
