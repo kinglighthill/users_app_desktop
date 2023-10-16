@@ -189,7 +189,7 @@
                                        </font>
                                     </Label>
                                  </HBox>
-                                 <Line fx:id="questionLine" stroke="black" endX="800"/>
+                                 <Line fx:id="questionLine" stroke="black" startX="100" endX="700"/>
                                  <HBox fx:id="questionLabelHBox">
                                     <Label fx:id="questionLabel" wrapText="true">
                                        <font>

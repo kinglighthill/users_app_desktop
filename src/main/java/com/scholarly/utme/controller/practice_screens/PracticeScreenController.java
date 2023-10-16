@@ -657,6 +657,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     questionDescription.getId() == question.getQuestionDescriptionId()).toList();
 
             String questionText = question.getQuestion().replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(questionText);
 
             questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
 
@@ -670,13 +671,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             } else {
                 questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
-                questionCenterVBox.getChildren().removeAll(questionWithImageHBox);
-                /*if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+//                questionCenterVBox.getChildren().removeAll(questionWithImageHBox);
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
                     questionCenterVBox.getChildren().add(questionScrollPane);
-                }*/
+                }
             }
 
-            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox, questionLabel);
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
 
             if (questionText.contains("<img")) {
                 questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
@@ -745,6 +746,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 //            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
 
             String questionText = question.getQuestion().replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(questionText);
             questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
 
             if (!quesDescriptionInList.isEmpty()) {
@@ -754,10 +756,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             } else {
                 questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
-                questionCenterVBox.getChildren().removeAll(questionWithImageHBox);
-//                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
-//                    questionCenterVBox.getChildren().add(questionScrollPane);
-//                }
+//                questionCenterVBox.getChildren().removeAll(questionWithImageHBox);
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                }
             }
 
             questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox, questionLabel);
