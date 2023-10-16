@@ -319,17 +319,17 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 WebEngine webEngine = webView.getEngine();
                 webEngine.loadContent(content);
 
-                webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
-                    if (newState == Worker.State.SUCCEEDED) {
-                        Integer height = (Integer) webEngine.executeScript(
-//                                "document.body.scrollHeight;"
-//                                "document.body.clientHeight;"
-//                                "document.querySelector('div').clientHeight;"
-                                "document.querySelector('div').scrollHeight;"
-                        );
-                        webView.setPrefHeight(height);
-                    }
-                });
+//                webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
+//                    if (newState == Worker.State.SUCCEEDED) {
+//                        Integer height = (Integer) webEngine.executeScript(
+////                                "document.body.scrollHeight;"
+////                                "document.body.clientHeight;"
+////                                "document.querySelector('div').clientHeight;"
+//                                "document.querySelector('div').scrollHeight;"
+//                        );
+//                        webView.setPrefHeight(height);
+//                    }
+//                });
 
                 VBox vBox = new VBox();
                 vBox.getChildren().addAll(webView);

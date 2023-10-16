@@ -68,7 +68,9 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     @FXML
     private DialogPane exitDialogPane;
 
+    private final String optionWebViewBC = "#FFFFFF";
     @Override
+
     public void initialize(URL location, ResourceBundle resources) {
         viewModel.processInitialData(getInitialData());
 
@@ -347,10 +349,15 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
                 questionWebView.getEngine().loadContent(questionText);
             }
 
-            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
-            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
-            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
-            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
+            Helper.loadOption(getClass(), optionA, currentQuestion.getOptionA().getText(), " (A) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionB, currentQuestion.getOptionB().getText(), " (B) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionC, currentQuestion.getOptionC().getText(), " (C) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionD, currentQuestion.getOptionD().getText(), " (D) ", optionWebViewBC);
+
+//            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
+//            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
+//            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
+//            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
 
             correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
             String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
@@ -421,10 +428,15 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
                 questionWebView.getEngine().loadContent(questionText);
             }
 
-            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
+            Helper.loadOption(getClass(), optionA, currentQuestion.getOptionA().getText(), " (A) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionB, currentQuestion.getOptionB().getText(), " (B) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionC, currentQuestion.getOptionC().getText(), " (C) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionD, currentQuestion.getOptionD().getText(), " (D) ", optionWebViewBC);
+
+            /*optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
             optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
             optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
-            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
+            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());*/
 
             correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
 

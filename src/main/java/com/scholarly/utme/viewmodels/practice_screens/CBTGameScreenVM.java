@@ -197,7 +197,7 @@ public class CBTGameScreenVM implements ViewModel {
 
     public void handleBookmarkClicked() {
 
-        ObjectiveQuestion question = questions.get(selectedQuestion.get() - 1).getQuestion();
+        ObjectiveQuestion question = questions.get(selectedQuestion.get() - 1).question();
 
         ObservableList<ObjectiveBookmark> oldBookmarks = ObjectiveBookmarkDao.getBookmarks();
         System.out.println(TAG + "oldBookmarks -> " + oldBookmarks);
@@ -227,21 +227,5 @@ public class CBTGameScreenVM implements ViewModel {
 
     }
 
-    public static class QuestionState {
-        private ObjectiveQuestion question;
-        private List<String> selectedOptions;
-
-        public QuestionState(ObjectiveQuestion question, List<String> selectedOptions) {
-            this.question = question;
-            this.selectedOptions = selectedOptions;
-        }
-
-        public ObjectiveQuestion getQuestion() {
-            return question;
-        }
-
-        public List<String> getSelectedOptions() {
-            return selectedOptions;
-        }
-    }
+    public record QuestionState(ObjectiveQuestion question, List<String> selectedOptions) { }
 }

@@ -98,16 +98,18 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @FXML
     private Button prevButton, nextButton, exitButton, submitButton, submitReport, homePageButton, resultAnalysisButton, viewImageButton;
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon, quesDescriptionCloseIcon, timeImage, summaryBookImage, testSummaryCloseIcon, questionImage;
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, reportDialogCloseIcon, quesDescriptionCloseIcon, timeImage, summaryBookImage, testSummaryCloseIcon, questionImage, optionAImage;
     @FXML
     private Pane dialogDimmer, exitDialogDimmer, summaryDialogDimmer;
     @FXML
-    private WebView questionWebView, questionWithImageWebView;
+    private WebView questionWebView, questionWithImageWebView, optionAWebView;
 
     private ToggleGroup toggleGroup = new ToggleGroup();
 
     double totalScore = 0;
     double totalQuestions = 0;
+
+    private final String optionWebViewBC = "#F3FBF4;";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -655,7 +657,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     questionDescription.getId() == question.getQuestionDescriptionId()).toList();
 
             String questionText = question.getQuestion().replaceAll("<br>", System.lineSeparator());
-            questionLabel.setText(questionText);
 
             questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
 
@@ -669,32 +670,27 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             } else {
                 questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
-                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                questionCenterVBox.getChildren().removeAll(questionWithImageHBox);
+                /*if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
                     questionCenterVBox.getChildren().add(questionScrollPane);
-                }
+                }*/
             }
 
-            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
-
-            if (questionText.contains("<sub>") || questionText.contains("<table") || questionText.contains("$")) {
-                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWithImageHBox);
-                if (!questionCenterVBox.getChildren().contains(questionWebView))
-                    questionCenterVBox.getChildren().add(questionWebView);
-
-                questionWebView.getEngine().loadContent(questionText);
-            }
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox, questionLabel);
 
             if (questionText.contains("<img")) {
                 questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
                 if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
                     questionCenterVBox.getChildren().add(questionWithImageHBox);
-                showQuestionWithImage(questionText);
+                showQuestionWithImage(questionText, Helper.isWebView(question, true));
+            } else {
+                loadQuestion(questionText, Helper.isWebView(question, true));
             }
 
-            optionAButton.setText(" (A) " + question.getOptionA().getText());
-            optionBButton.setText(" (B) " + question.getOptionB().getText());
-            optionCButton.setText(" (C) " + question.getOptionC().getText());
-            optionDButton.setText(" (D) " + question.getOptionD().getText());
+            Helper.loadOption(getClass(), optionAButton, question.getOptionA().getText(), " (A) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionBButton, question.getOptionB().getText(), " (B) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionCButton, question.getOptionC().getText(), " (C) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionDButton, question.getOptionD().getText(), " (D) ", optionWebViewBC);
 
             int selectedOptionId = questions.get(selectedQuestionIndex - 1).getSelectedOptionId();
             if (selectedOptionId != -1) {
@@ -722,6 +718,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
             questionWebView.getEngine().loadContent(question.getQuestion());
+
+            String questionText = question.getQuestion();
+            if (questionText.contains("<img")) {
+                questionStackPane.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText, Helper.isWebView(question));
+            } else {
+                loadQuestion(questionText, Helper.isWebView(question));
+            }
         }
     }
 
@@ -741,46 +745,36 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 //            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
 
             String questionText = question.getQuestion().replaceAll("<br>", System.lineSeparator());
-            questionLabel.setText(questionText);
-
             questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
 
             if (!quesDescriptionInList.isEmpty()) {
                 questionVBox.getChildren().add(0, questionDescriptionHBox);
                 questionVBox.getChildren().add(1, questionLine);
-//                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-//                readQuestionDesc.setVisible(true);
                 questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             } else {
                 questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
-                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
-                    questionCenterVBox.getChildren().add(questionScrollPane);
-                }
+                questionCenterVBox.getChildren().removeAll(questionWithImageHBox);
+//                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+//                    questionCenterVBox.getChildren().add(questionScrollPane);
+//                }
             }
 
-            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
-            if (questionText.contains("<sub>") || questionText.contains("<table") || questionText.contains("$")) {
-                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWithImageHBox);
-                if (!questionCenterVBox.getChildren().contains(questionWebView))
-                    questionCenterVBox.getChildren().add(questionWebView);
-
-                questionWebView.getEngine().loadContent(questionText);
-            }
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox, questionLabel);
 
             if (questionText.contains("<img")) {
                 questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
                 if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
                     questionCenterVBox.getChildren().add(questionWithImageHBox);
-
-                showQuestionWithImage(questionText);
-
+                showQuestionWithImage(questionText, Helper.isWebView(question, true));
+            } else {
+                loadQuestion(questionText, Helper.isWebView(question, true));
             }
 
-            optionAButton.setText(" (A) " + question.getOptionA().getText());
-            optionBButton.setText(" (B) " + question.getOptionB().getText());
-            optionCButton.setText(" (C) " + question.getOptionC().getText());
-            optionDButton.setText(" (D) " + question.getOptionD().getText());
+            Helper.loadOption(getClass(), optionAButton, question.getOptionA().getText(), " (A) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionBButton, question.getOptionB().getText(), " (B) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionCButton, question.getOptionC().getText(), " (C) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionDButton, question.getOptionD().getText(), " (D) ", optionWebViewBC);
 
             int selectedOptionId = questions.get(newValue - 1).getSelectedOptionId();
             if (selectedOptionId != -1) {
@@ -815,6 +809,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
 //            questionLabel.setText(question.getQuestion());
             questionWebView.getEngine().loadContent(question.getQuestion());
+
+            String questionText = question.getQuestion();
+            if (questionText.contains("<img")) {
+                questionStackPane.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText, Helper.isWebView(question));
+            } else {
+                loadQuestion(questionText, question.getIsQuestionWebView() == 1);
+            }
         }
     }
 
@@ -847,6 +849,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             int finalI = i;
             s.setOnMouseClicked(event -> {
+                if (finalI < subjectQuestionsState.getSelectedQuestion() && nextButton.isDisable()) {
+                    nextButton.setDisable(false);
+                }
+
+                if (finalI == questions.size() && subjectList.getItems().size() - 1 == subjectList.getSelectionModel().getSelectedIndex()) {
+                    nextButton.setDisable(true);
+                }
+
                 subjectQuestionsState.setSelectedQuestion(finalI);
             });
         }
@@ -899,237 +909,33 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         }
     }
 
-    private void setupQuestionViewOld(PQSubject selectedSubject) {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
-        List<QuestionState> questions = subjectQuestionsState.getQuestions();
-        int selectedQuestionIndex = subjectQuestionsState.getSelectedQuestion();
-
-        questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
-
-        // prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
-        // nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
-
-        prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && selectedQuestionIndex == 1);
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(selectedQuestionIndex - 1).getQuestion();
-
-            List<ObjectiveQuestionDescription> quesDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
-                    questionDescription.getId() == question.getQuestionDescriptionId()).toList();
-
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
-            if (!quesDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
-                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-            }
-
-            String questionText = question.getQuestion();
-
-            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
-
-            if (questionText.contains("<img")) {
-                questionStackPane.getChildren().add(questionWithImageHBox);
-                showQuestionWithImage(questionText);
-            } else {
-                loadQuestion(questionText, question.getIsQuestionWebView() == 1);
-            }
-
-            optionAButton.setText(" (A) " + question.getOptionA().getText());
-            optionBButton.setText(" (B) " + question.getOptionB().getText());
-            optionCButton.setText(" (C) " + question.getOptionC().getText());
-            optionDButton.setText(" (D) " + question.getOptionD().getText());
-
-            int selectedOptionId = questions.get(selectedQuestionIndex - 1).getSelectedOptionId();
-            if (selectedOptionId != -1) {
-                if (selectedOptionId == question.getOptionA().getId()) {
-                    toggleGroup.selectToggle(optionAButton);
-                } else if (selectedOptionId == question.getOptionB().getId()) {
-                    toggleGroup.selectToggle(optionBButton);
-                } else if (selectedOptionId == question.getOptionC().getId()) {
-                    toggleGroup.selectToggle(optionCButton);
-                } else if (selectedOptionId == question.getOptionD().getId()) {
-                    toggleGroup.selectToggle(optionDButton);
-                }
-            } else {
-                toggleGroup.selectToggle(null);
-            }
-        } else {
-            TheoryQuestion question = (TheoryQuestion) questions.get(selectedQuestionIndex - 1).getQuestion();
-
-            List<TheoryQuestionDescription> quesDescriptionInList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
-                    questionDescription.getId() == question.getQuestionDescriptionId()).toList();
-
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
-            questionDescriptionHeader.setText("");
-
-            if (!quesDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
-                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-            }
-
-            String questionText = question.getQuestion();
-            if (questionText.contains("<img")) {
-                questionStackPane.getChildren().add(questionWithImageHBox);
-                showQuestionWithImage(questionText);
-            } else {
-                loadQuestion(questionText, question.getIsQuestionWebView() == 1);
-            }
-        }
-    }
-
-    private void changeSelectedQuestionOld(int newValue) {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
-        List<QuestionState> questions = subjectQuestionsState.getQuestions();
-
-        prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && newValue == 1);
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            ObjectiveQuestion question = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
-
-            List<ObjectiveQuestionDescription> quesDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
-                    questionDescription.getId() == question.getQuestionDescriptionId()).toList();
-
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
-            questionDescriptionHeader.setText("");
-
-            if (!quesDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
-                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-            }
-
-            String questionText = question.getQuestion();
-
-            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
-
-            if (questionText.contains("<img")) {
-                questionStackPane.getChildren().add(questionWithImageHBox);
-                showQuestionWithImage(questionText);
-            } else {
-                loadQuestion(questionText, question.getIsQuestionWebView() == 1);
-            }
-
-            optionAButton.setText(" (A) " + question.getOptionA().getText());
-            optionBButton.setText(" (B) " + question.getOptionB().getText());
-            optionCButton.setText(" (C) " + question.getOptionC().getText());
-            optionDButton.setText(" (D) " + question.getOptionD().getText());
-
-            int selectedOptionId = questions.get(newValue - 1).getSelectedOptionId();
-            if (selectedOptionId != -1) {
-                if (selectedOptionId == question.getOptionA().getId()) {
-                    toggleGroup.selectToggle(optionAButton);
-                } else if (selectedOptionId == question.getOptionB().getId()) {
-                    toggleGroup.selectToggle(optionBButton);
-                } else if (selectedOptionId == question.getOptionC().getId()) {
-                    toggleGroup.selectToggle(optionCButton);
-                } else if (selectedOptionId == question.getOptionD().getId()) {
-                    toggleGroup.selectToggle(optionDButton);
-                }
-            } else {
-                toggleGroup.selectToggle(null);
-            }
-        } else {
-            TheoryQuestion question = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
-            questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
-
-            List<TheoryQuestionDescription> quesDescriptionInList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
-                    questionDescription.getId() == question.getQuestionDescriptionId()).toList();
-
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
-            questionDescriptionHeader.setText("");
-
-            if (!quesDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
-                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-            }
-
-            String questionText = question.getQuestion();
-            if (questionText.contains("<img")) {
-                questionStackPane.getChildren().add(questionWithImageHBox);
-                showQuestionWithImage(questionText);
-            } else {
-                loadQuestion(questionText, question.getIsQuestionWebView() == 1);
-            }
-        }
-    }
-
-    private void setupTilePaneOld(PQSubject selectedSubject) {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
-        List<QuestionState> questions = subjectQuestionsState.getQuestions();
-
-        tilePane.getChildren().clear();
-
-        for (int i=1; i <= questions.size(); i++) {
-            Rectangle r = new Rectangle(35, 35);
-            r.setFill(Color.web("#FFFFFF"));
-            r.setStroke(Paint.valueOf("#12AF20"));
-            r.setStrokeType(StrokeType.OUTSIDE);
-
-            Label l = new Label(Integer.toString(i));
-
-            if (questions.get(i-1).getSelectedOptionId() != -1) {
-                r.setFill(Paint.valueOf("#12AF20"));
-                l.setTextFill(Color.WHITE);
-            }
-
-            if (subjectQuestionsState.getSelectedQuestion() == i) {
-                r.setStroke(Color.ORANGE);
-                r.setStrokeWidth(2);
-            }
-            StackPane s = new StackPane(r, l);
-            tilePane.getChildren().add(s);
-
-            int finalI = i;
-            s.setOnMouseClicked(event -> {
-                if (finalI < subjectQuestionsState.getSelectedQuestion() && nextButton.isDisable()) {
-                    nextButton.setDisable(false);
-                }
-
-                if (finalI == questions.size() && subjectList.getItems().size() - 1 == subjectList.getSelectionModel().getSelectedIndex()) {
-                    nextButton.setDisable(true);
-                }
-
-                subjectQuestionsState.setSelectedQuestion(finalI);
-            });
-        }
-    }
-
-    private void changeSelectedTileOld(int oldSelectedQuestionIndex, int newSelectedQuestionIndex) {
-
-        StackPane selectedQuestionPane = (StackPane) tilePane.getChildren().get(newSelectedQuestionIndex - 1);
-        StackPane oldQuestionPane = (StackPane) tilePane.getChildren().get(oldSelectedQuestionIndex - 1);
-
-        Rectangle selectedQuestionRectangle = (Rectangle) selectedQuestionPane.getChildren().get(0);
-        Rectangle oldQuestionRectangle = (Rectangle) oldQuestionPane.getChildren().get(0);
-
-        selectedQuestionRectangle.setStroke(rectangleBorderSelectedColor);
-        selectedQuestionRectangle.setStrokeWidth(rectangleSelectedBorderWidth);
-
-        oldQuestionRectangle.setStroke(rectangleSelectedColor);
-        oldQuestionRectangle.setStrokeWidth(1.0);
-
-    }
-
-    private void showQuestionWithImage(String questionWithImageText) {
-        questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText);
+    private void showQuestionWithImage(String questionWithImageText, boolean isWebView) {
+        questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText, isWebView);
     }
 
     private void loadQuestion(String questionText, boolean isWebView) {
-        String content = questionText;
         if (isWebView) {
-            content = Helper.loadLatex(getClass(), questionText);
+            String content = Helper.loadLatex(getClass(), questionText);
+            questionWebView.getEngine().loadContent(content);
+            questionWebView.setMinHeight(200);
+
+            questionVBox.getChildren().removeAll(questionScrollPane, questionLabelHBox, questionLabel);
+
+            if (!questionCenterVBox.getChildren().contains(questionWebView)) {
+                questionCenterVBox.getChildren().add(questionWebView);
+            }
+        } else {
+            questionVBox.getChildren().removeAll(questionWebView);
+
+            if (!questionCenterVBox.getChildren().contains(questionLabelHBox)) {
+                questionCenterVBox.getChildren().add(questionLabelHBox);
+            }
+
+            if (!questionCenterVBox.getChildren().contains(questionLabel)) {
+                questionCenterVBox.getChildren().add(questionLabel);
+            }
+            questionLabel.setText(questionText);
         }
-        questionStackPane.getChildren().add(questionWebView);
-        questionWebView.getEngine().loadContent(content);
-        questionWebView.setMinHeight(200);
     }
 
     private void showSubmitDialog() {
@@ -1257,8 +1063,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     }
 
     @Override
-    public void onViewAdded() {
-    }
+    public void onViewAdded() {}
 
     @Override
     public void onViewRemoved() {

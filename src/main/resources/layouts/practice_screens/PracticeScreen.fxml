@@ -189,7 +189,7 @@
                                        </font>
                                     </Label>
                                  </HBox>
-                                 <Line fx:id="questionLine" stroke="black" startX="100" endX="700"/>
+                                 <Line fx:id="questionLine" stroke="black" endX="800"/>
                                  <HBox fx:id="questionLabelHBox">
                                     <Label fx:id="questionLabel" wrapText="true">
                                        <font>
@@ -233,7 +233,7 @@
                            </padding>
                         </VBox>
 
-                        <RadioButton fx:id="optionAButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8; -fx-cursor: hand;">
+                        <RadioButton fx:id="optionAButton" mnemonicParsing="false" prefHeight="24.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8; -fx-cursor: hand;">
                            <VBox.margin>
                               <Insets top="15.0" />
                            </VBox.margin>

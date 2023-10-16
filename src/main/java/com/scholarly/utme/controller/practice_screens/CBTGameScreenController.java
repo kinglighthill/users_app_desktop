@@ -6,7 +6,6 @@ import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
-import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.practice_screens.CBTGameScreenVM;
@@ -42,7 +41,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/practice_screens/CBTGameScreen.fxml")
@@ -87,6 +85,13 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
                     "-fx-background-radius: 10";
 
 
+    private final String optionWebViewBC = "#FF8D19;";
+    private final String hoverOptionWebViewBC = "#FFA347;";
+
+    private QuestionState selectedQuestion;
+    private Integer enteredBtn = null;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -119,7 +124,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         fiftyFiftyButton.setOnAction(event -> {
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
 
-            int optionAnswerId = questionState.getQuestion().getQuestionAnswer().getId();
+            int optionAnswerId = questionState.question().getQuestionAnswer().getId();
 
             int enabledButtons = 0;
 
@@ -148,7 +153,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
 //            questionState.getSelectedOptions().add(optionAButton.getText());
 
-            if (questionState.getQuestion().getQuestionAnswer().getId() == 0) {
+            if (questionState.question().getQuestionAnswer().getId() == 0) {
                 if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
                     showResult();
                 } else {
@@ -177,7 +182,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
 //            questionState.getSelectedOptions().add(optionBButton.getText());
 
-            if (questionState.getQuestion().getQuestionAnswer().getId() == 1) {
+            if (questionState.question().getQuestionAnswer().getId() == 1) {
                 if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
                     showResult();
                 } else {
@@ -206,7 +211,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
 //            questionState.getSelectedOptions().add(optionCButton.getText());
 
-            if (questionState.getQuestion().getQuestionAnswer().getId() == 2) {
+            if (questionState.question().getQuestionAnswer().getId() == 2) {
                 if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
                     showResult();
                 } else {
@@ -235,7 +240,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
 //            questionState.getSelectedOptions().add(optionDButton.getText());
 
-            if (questionState.getQuestion().getQuestionAnswer().getId() == 3) {
+            if (questionState.question().getQuestionAnswer().getId() == 3) {
                 if (viewModel.getSelectedQuestion() == viewModel.getQuestions().size()) {
                     showResult();
                 } else {
@@ -260,8 +265,14 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         options.forEach(button -> {
             button.setStyle(idleButtonStyle);
-            button.setOnMouseEntered(e -> button.setStyle(hoveredButtonStyle));
-            button.setOnMouseExited(e -> button.setStyle(idleButtonStyle));
+            button.setOnMouseEntered(e -> {
+                button.setStyle(hoveredButtonStyle);
+                refreshOption(button, true);
+            });
+            button.setOnMouseExited(e -> {
+                button.setStyle(idleButtonStyle);
+                refreshOption(button, false);
+            });
             button.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 16));
             button.setWrapText(true);
             button.setTextFill(Color.WHITE);
@@ -438,7 +449,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
     private void updateBookmarkIcon() {
         List<QuestionState> questions = viewModel.getQuestions();
-        ObjectiveQuestion selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1).getQuestion();
+        ObjectiveQuestion selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1).question();
 
         List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks();
 
@@ -464,7 +475,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     public void onSpeakerImageClicked() {
         List<QuestionState> questions = viewModel.getQuestions();
         QuestionState selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1);
-        String question = selectedQuestion.getQuestion().getQuestion();
+        String question = selectedQuestion.question().getQuestion();
 
         TextToSpeech.play(question);
     }
@@ -610,13 +621,13 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
     private void setupQuestionView() {
         List<QuestionState> questions = viewModel.getQuestions();
-        QuestionState selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1);
-        int selectedQuestionNumber = selectedQuestion.getQuestion().getQuestionNumber();
+        selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1);
+        int selectedQuestionNumber = selectedQuestion.question().getQuestionNumber();
 
         questionNumberLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
         
         List<ObjectiveQuestionDescription> questionDescriptionList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
-                questionDescription.getId() == selectedQuestion.getQuestion().getQuestionDescriptionId()).collect(Collectors.toList());
+                questionDescription.getId() == selectedQuestion.question().getQuestionDescriptionId()).collect(Collectors.toList());
         
         if (questionDescriptionList.isEmpty()) {
             readQuestionDesc.setVisible(false);
@@ -626,7 +637,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             questionDescriptionText.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
         }
 
-        String questionText = selectedQuestion.getQuestion().getQuestion();
+        String questionText = selectedQuestion.question().getQuestion();
 
         questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
         if (questionText.contains("<img")) {
@@ -639,14 +650,15 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         }
 //        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-        optionAButton.setText(selectedQuestion.getQuestion().getOptionA().getText());
         optionAButton.setUserData(0);
-        optionBButton.setText(selectedQuestion.getQuestion().getOptionB().getText());
         optionBButton.setUserData(1);
-        optionCButton.setText(selectedQuestion.getQuestion().getOptionC().getText());
         optionCButton.setUserData(2);
-        optionDButton.setText(selectedQuestion.getQuestion().getOptionD().getText());
         optionDButton.setUserData(3);
+
+        loadOption(optionAButton, selectedQuestion.question().getOptionA().getText(), " (A) ");
+        loadOption(optionBButton, selectedQuestion.question().getOptionB().getText(), " (B) ");
+        loadOption(optionCButton, selectedQuestion.question().getOptionC().getText(), " (C) ");
+        loadOption(optionDButton, selectedQuestion.question().getOptionD().getText(), " (D) ");
 
         optionAButton.setDisable(false);
         optionBButton.setDisable(false);
@@ -656,12 +668,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
     private void changeSelectedQuestion(int newValue) {
         List<QuestionState> questions = viewModel.getQuestions();
-        QuestionState selectedQuestion = questions.get(newValue - 1);
+        selectedQuestion = questions.get(newValue - 1);
 
         questionNumberLabel.setText("Question " + newValue + " of " + questions.size());
 
         List<ObjectiveQuestionDescription> questionDescriptionList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
-                questionDescription.getId() == selectedQuestion.getQuestion().getQuestionDescriptionId()).collect(Collectors.toList());
+                questionDescription.getId() == selectedQuestion.question().getQuestionDescriptionId()).collect(Collectors.toList());
 
         if (questionDescriptionList.isEmpty()) {
             readQuestionDesc.setVisible(false);
@@ -671,7 +683,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             questionDescriptionText.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
         }
 
-        String questionText = selectedQuestion.getQuestion().getQuestion();
+        String questionText = selectedQuestion.question().getQuestion();
         questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
         if (questionText.contains("<img")) {
             questionVBox.getChildren().add(questionWithImageVBox);
@@ -684,14 +696,15 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
 //        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-        optionAButton.setText(selectedQuestion.getQuestion().getOptionA().getText());
         optionAButton.setUserData(0);
-        optionBButton.setText(selectedQuestion.getQuestion().getOptionB().getText());
         optionBButton.setUserData(1);
-        optionCButton.setText(selectedQuestion.getQuestion().getOptionC().getText());
         optionCButton.setUserData(2);
-        optionDButton.setText(selectedQuestion.getQuestion().getOptionD().getText());
         optionDButton.setUserData(3);
+
+        loadOption(optionAButton, selectedQuestion.question().getOptionA().getText(), " (A) ");
+        loadOption(optionBButton, selectedQuestion.question().getOptionB().getText(), " (B) ");
+        loadOption(optionCButton, selectedQuestion.question().getOptionC().getText(), " (C) ");
+        loadOption(optionDButton, selectedQuestion.question().getOptionD().getText(), " (D) ");
 
         optionAButton.setDisable(false);
         optionBButton.setDisable(false);
@@ -699,6 +712,70 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         optionDButton.setDisable(false);
 
         updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
+    }
+
+    public void loadOption(Button optionButton, String option, String optionLabel) {
+        if (option.contains("<img")) {
+            optionButton.setText(optionLabel);
+            ImageView imageView = Helper.getImageFromText(getClass(), option);
+            optionButton.setGraphic(imageView);
+            optionButton.setContentDisplay(ContentDisplay.RIGHT);
+        } else {
+            String backgroundColor =
+                    enteredBtn != null && enteredBtn == (int) optionButton.getUserData()
+                            ? hoverOptionWebViewBC
+                            : optionWebViewBC;
+
+            if (Helper.isWebView(option)) {
+                WebView webView = new WebView();
+                String content = "<html><body style='background-color: " + backgroundColor +" color: #FFFFFF;'>"
+                        + option + "</body></html>";
+                webView.getEngine().loadContent(content);
+                webView.setPrefWidth(512.0);
+                webView.setPrefHeight(44.0);
+                webView.setContextMenuEnabled(false);
+                webView.setOnMouseClicked(e -> optionButton.fire());
+
+                optionButton.setText(optionLabel);
+                optionButton.setGraphic(webView);
+                optionButton.setContentDisplay(ContentDisplay.RIGHT);
+            } else {
+                optionButton.setGraphic(null);
+                optionButton.setText(optionLabel + option);
+            }
+        }
+    }
+    public void refreshOption(Button button, boolean entered) {
+        String option;
+        String optionLabel;
+
+        switch ((int) button.getUserData()) {
+            case 0 -> {
+                option = selectedQuestion.question().getOptionA().getText();
+                optionLabel = " (A) ";
+                enteredBtn = entered ? 0 : null;
+            }
+            case 1 -> {
+                option = selectedQuestion.question().getOptionB().getText();
+                optionLabel = " (B) ";
+                enteredBtn = entered ? 1 : null;
+            }
+            case 2 -> {
+                option = selectedQuestion.question().getOptionC().getText();
+                optionLabel = " (C) ";
+                enteredBtn = entered ? 2 : null;
+            }
+            case 3 -> {
+                option = selectedQuestion.question().getOptionD().getText();
+                optionLabel = " (D) ";
+                enteredBtn = entered ? 3 : null;
+            }
+            default -> {
+                option = "";
+                optionLabel = "";
+            }
+        }
+        loadOption(button, option, optionLabel);
     }
 
     private void setupReportSection() {
