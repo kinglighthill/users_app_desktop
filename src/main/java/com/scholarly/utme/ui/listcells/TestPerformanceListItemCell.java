@@ -33,7 +33,7 @@ public class TestPerformanceListItemCell extends ListCell<ResultScreenController
         loadFxml();
 
         setOnMouseClicked(mouseEvent -> {
-            ResultScreenController.InitialData data = new ResultScreenController.InitialData(results, subjects, null, subjectsQuestions, view);
+            ResultScreenController.InitialData data = new ResultScreenController.InitialData(results, subjects, null, subjectsQuestions, null, view);
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.RESULT_SCREEN);
         });

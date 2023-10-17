@@ -2,6 +2,7 @@ package com.scholarly.utme.viewmodels.practice_screens;
 
 import com.scholarly.utme.controller.practice_screens.ExplanationScreenController.InitialData;
 import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
@@ -24,6 +25,8 @@ public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
 
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
+    private HashMap<String, Year> selectedSubjectYear = new HashMap<>();
+
     private SubjectListItemVM.Type questionType;
 
     public ExplanationScreenVM() {
@@ -40,6 +43,8 @@ public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
         questionDescriptions = data.getQuestionDescriptions();
 
         subjectsQuestions = data.getSubjectsQuestions();
+
+        selectedSubjectYear = data.getSelectedSubjectYear();
 
         questionType = data.getQuestionType();
     }
@@ -85,6 +90,10 @@ public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
 
     public void setSubjectsQuestions(HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions) {
         this.subjectsQuestions = subjectsQuestions;
+    }
+
+    public HashMap<String, Year> getSelectedSubjectYear() {
+        return selectedSubjectYear;
     }
 
     public SubjectListItemVM.Type getQuestionType() {

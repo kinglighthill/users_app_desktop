@@ -8,6 +8,7 @@ import com.scholarly.utme.data.dao.QuestionDescriptionDao;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.network.model.UserData;
@@ -39,6 +40,8 @@ public class CBTGameScreenVM implements ViewModel {
     private List<PQSubject> subjectList = FXCollections.observableArrayList();
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
+    private HashMap<String, Year> selectedSubjectYear = new HashMap<>();
+
     private ObservableList<QuestionDescription> questionDescriptions = FXCollections.observableArrayList();
 
     private ObservableList<ObjectiveQuestionDescription> objectiveQuestionDescriptions = FXCollections.observableArrayList();
@@ -68,6 +71,8 @@ public class CBTGameScreenVM implements ViewModel {
 
         subjectList.addAll(data.questionData.stream().map(SubjectListItemVM.SubjectState::getSubject).collect(Collectors.toList()));
         data.questionData.forEach(subjectState -> {
+
+            selectedSubjectYear.put(subjectState.getSubject().getTitle(), subjectState.getSelectedYear());
 
             List<QuestionState> questionStates = ObjectiveQuestionDao
                     .getQuestions(
@@ -133,6 +138,10 @@ public class CBTGameScreenVM implements ViewModel {
 
     public ObservableList<ObjectiveQuestionDescription> getObjectiveQuestionDescriptions() {
         return objectiveQuestionDescriptions;
+    }
+
+    public HashMap<String, Year> getSelectedSubjectYear() {
+        return selectedSubjectYear;
     }
 
     public int getFiftyFiftyCount() {

@@ -91,3 +91,16 @@
 .check-box:selected .mark {
     -fx-background-color: white;
 }
+
+
+/* -------- RadioButton Styling ------- */
+.radio-button:selected .radio .dot {
+    -fx-background-color: #12AF20;
+    /*-fx-border-color: #12AF20;*/
+    -fx-background-insets: 0;
+}
+
+.radio-button .dot {
+  -fx-mark-highlight-color: #12AF20;
+  -fx-mark-color: #12AF20;
+}

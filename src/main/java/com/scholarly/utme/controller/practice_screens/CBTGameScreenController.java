@@ -3,6 +3,7 @@ package com.scholarly.utme.controller.practice_screens;
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
+import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
@@ -39,6 +40,7 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -319,7 +321,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         showAnswersButton.setOnAction(event -> {
-            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), SubjectListItemVM.Type.OBJECTIVE);
+            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getSelectedSubjectYear(), SubjectListItemVM.Type.OBJECTIVE);
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });

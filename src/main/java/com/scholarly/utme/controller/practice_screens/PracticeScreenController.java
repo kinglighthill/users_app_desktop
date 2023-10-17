@@ -460,7 +460,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         resultAnalysisButton.setOnAction(event -> {
             ResultScreenController.InitialData initialData =
-                    new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), View.HOME_SCREEN);
+                    new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getSelectedSubjectYear(), View.HOME_SCREEN);
 
             ViewSwitcher.passData(initialData);
             ViewSwitcher.showScreen(View.RESULT_SCREEN);
@@ -503,10 +503,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                // System.out.println("Question: " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
                 StringBuilder textToRead = new StringBuilder(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
-                textToRead.append(" Option A ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionA().getText());
-                textToRead.append(" Option B ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionB().getText());
-                textToRead.append(" Option C ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionC().getText());
-                textToRead.append(" Option D ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionD().getText());
+                textToRead.append(". Option A, ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionA().getText());
+                textToRead.append(". Option B, ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionB().getText());
+                textToRead.append(". Option C, ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionC().getText());
+                textToRead.append(". Option D, ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionD().getText());
                 TextToSpeech.play(textToRead.toString());
             } else {
                 TextToSpeech.play(((TheoryQuestion) questionState.getQuestion()).getQuestion());
@@ -954,7 +954,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     Animations.showDialog(testSummaryDialog, summaryDialogDimmer);
 
                 } else {
-                    ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getQuestionType());
+                    ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getSelectedSubjectYear(), viewModel.getQuestionType());
                     ViewSwitcher.passData(data);
                     ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
                     //TODO: Implement Theory result screen
@@ -995,7 +995,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
                 ResultScreenController.InitialData initialData =
-                        new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), View.HOME_SCREEN);
+                        new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getSelectedSubjectYear(), View.HOME_SCREEN);
                 ViewSwitcher.passData(initialData);
                 ViewSwitcher.showScreen(View.RESULT_SCREEN);
 
