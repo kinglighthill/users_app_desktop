@@ -9,6 +9,5 @@ public class AppPreferences {
 
     public static Preferences getPreferences(){
         return userPreferences;
-
     }
 }

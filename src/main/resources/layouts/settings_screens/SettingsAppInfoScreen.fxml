@@ -32,63 +32,46 @@
         <AnchorPane style="-fx-background-color: white;">
             <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.leftAnchor="50" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="150" AnchorPane.bottomAnchor="30">
                 <VBox spacing="15">
-                    <VBox fx:id="privacyVBox" spacing="10">
-                        <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                            <left>
-                                <HBox spacing="30" alignment="CENTER">
-                                    <ImageView fx:id="privacyImage" preserveRatio="true" pickOnBounds="true"/>
-                                    <Label text="Privacy Policy" textFill="#053500">
-                                        <font>
-                                            <Font size="16"/>
-                                        </font>
-                                    </Label>
-                                </HBox>
-                            </left>
-                            <right>
-                                <ToggleButton fx:id="privacyDropdown"/>
-                            </right>
-                            <padding>
-                                <Insets top="20" bottom="20" left="30" right="30"/>
-                            </padding>
-                        </Panel>
-                        <VBox fx:id="privacyDetails" spacing="30">
-                            <Label wrapText="true" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac">
-                                <font>
-                                    <Font size="16"/>
-                                </font>
-                            </Label>
-                            <Label wrapText="true" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac ">
-                                <font>
-                                    <Font size="16"/>
-                                </font>
-                            </Label>
-                            <padding>
-                                <Insets left="10" right="10"/>
-                            </padding>
-                        </VBox>
-                    </VBox>
-                    <VBox fx:id="termsVBox" spacing="10">
-                        <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                            <left>
-                                <HBox spacing="30" alignment="CENTER">
-                                    <ImageView fx:id="termsImage" preserveRatio="true" pickOnBounds="true"/>
-                                    <Label text="Terms of use" textFill="#053500">
-                                        <font>
-                                            <Font size="16"/>
-                                        </font>
-                                    </Label>
-                                </HBox>
-                            </left>
-                            <right>
-                                <ToggleButton fx:id="termsDropdown"/>
-                            </right>
-                            <padding>
-                                <Insets top="20" bottom="20" left="30" right="30"/>
-                            </padding>
-                        </Panel>
-                    </VBox>
+                    <Panel fx:id="privacyPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                        <left>
+                            <HBox spacing="30" alignment="CENTER">
+                                <ImageView fx:id="privacyImage" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="Privacy Policy" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                            </HBox>
+                        </left>
+                        <right>
+                            <ToggleButton fx:id="privacyDropdown"/>
+                        </right>
+                        <padding>
+                            <Insets top="20" bottom="20" left="30" right="30"/>
+                        </padding>
+                    </Panel>
+
+                    <Panel fx:id="termsPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                        <left>
+                            <HBox spacing="30" alignment="CENTER">
+                                <ImageView fx:id="termsImage" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="Terms of use" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                            </HBox>
+                        </left>
+                        <right>
+                            <ToggleButton fx:id="termsDropdown"/>
+                        </right>
+                        <padding>
+                            <Insets top="20" bottom="20" left="30" right="30"/>
+                        </padding>
+                    </Panel>
+
                     <VBox fx:id="thirdPartyVBox" spacing="10">
-                        <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                        <Panel fx:id="thirdPartyPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
                             <left>
                                 <HBox spacing="30" alignment="CENTER">
                                     <ImageView fx:id="thirdPartyImage" preserveRatio="true" pickOnBounds="true"/>
@@ -106,6 +89,122 @@
                                 <Insets top="20" bottom="20" left="30" right="30"/>
                             </padding>
                         </Panel>
+                        <VBox fx:id="thirdPartyDetails" spacing="20">
+                            <Label text="Libraries we use">
+                                <font>
+                                    <Font size="18" name="Segoe UI Bold"/>
+                                </font>
+                                <padding>
+                                    <Insets top="10"/>
+                                </padding>
+                            </Label>
+
+                            <Label text="The following sets forth attribution notices for the third party software that may be contained in some parts of the Scholarly App. We thank the Open Source community for all of their contributions." wrapText="true">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+
+                            <TitledPane text="BootstrapFX" textFill="#053500" expanded="false">
+                                <HBox alignment="CENTER_LEFT">
+                                    <Label fx:id="bootstrapFxText" wrapText="true">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                        <padding>
+                                            <Insets top="5"/>
+                                        </padding>
+                                    </Label>
+                                </HBox>
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </TitledPane>
+
+                            <TitledPane text="ControlsFX" textFill="#053500" expanded="false">
+                                <HBox alignment="CENTER_LEFT">
+                                    <Label fx:id="controlsFxText" wrapText="true">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                        <padding>
+                                            <Insets top="5"/>
+                                        </padding>
+                                    </Label>
+                                </HBox>
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </TitledPane>
+
+                            <TitledPane text="MVVMFx" textFill="#053500" expanded="false">
+                                <HBox alignment="CENTER_LEFT">
+                                    <Label fx:id="mvvmFxText" wrapText="true">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                        <padding>
+                                            <Insets top="5"/>
+                                        </padding>
+                                    </Label>
+                                </HBox>
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </TitledPane>
+
+                            <TitledPane text="RXJava" textFill="#053500" expanded="false">
+                                <HBox alignment="CENTER_LEFT">
+                                    <Label fx:id="rxJavaText" wrapText="true">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                        <padding>
+                                            <Insets top="5"/>
+                                        </padding>
+                                    </Label>
+                                </HBox>
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </TitledPane>
+
+                            <TitledPane text="Gson" textFill="#053500" expanded="false">
+                                <HBox alignment="CENTER_LEFT">
+                                    <Label fx:id="gsonText" wrapText="true">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                        <padding>
+                                            <Insets top="5"/>
+                                        </padding>
+                                    </Label>
+                                </HBox>
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </TitledPane>
+
+                            <TitledPane text="OKHttp" textFill="#053500" expanded="false">
+                                <HBox alignment="CENTER_LEFT">
+                                    <Label fx:id="okHttpText" wrapText="true">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                        <padding>
+                                            <Insets top="5"/>
+                                        </padding>
+                                    </Label>
+                                </HBox>
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </TitledPane>
+
+                            <padding>
+                                <Insets left="10" right="10"/>
+                            </padding>
+                        </VBox>
                     </VBox>
 
                 </VBox>

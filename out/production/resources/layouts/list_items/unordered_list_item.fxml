@@ -11,7 +11,7 @@
 <fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
     <graphic>
         <HBox spacing="10">
-            <Circle fx:id="dot" radius="2.5" fill="#202020">
+            <Circle fx:id="dot" radius="3.0">
                 <HBox.margin>
                     <Insets top="7.0"/>
                 </HBox.margin>

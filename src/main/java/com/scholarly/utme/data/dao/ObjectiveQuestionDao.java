@@ -44,7 +44,7 @@ public class ObjectiveQuestionDao {
 
     static {
         novelQuestions = FXCollections.observableArrayList();
-        updateNovelQuestions();
+//        updateNovelQuestions();
     }
 
 
@@ -65,7 +65,7 @@ public class ObjectiveQuestionDao {
             query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause + " ORDER BY RANDOM()";
         }
 
-//        System.out.println(TAG + "Query = " + query);
+//        System.out.println(TAG + "ObjectiveQuestion Query with topic ids query = " + query);
 
         try (ResultSet rs = databaseService.executeQuery(query)){
             questions.clear();
@@ -109,7 +109,7 @@ public class ObjectiveQuestionDao {
 
         String query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE subject_id = " + subjectId;
 
-        System.out.println(TAG + "Objective Question Query -> " + query);
+        System.out.println(TAG + "Objective Question Query getQuestionsWithNoteSubjectId -> " + query);
 
         try (ResultSet rs = databaseService.executeQuery(query)){
             questions.clear();
@@ -145,6 +145,50 @@ public class ObjectiveQuestionDao {
             questions.clear();
 
             return FXCollections.emptyObservableList();
+        }
+    }
+
+    public static ObjectiveQuestion getNoteCBTQuestion(int subjectId, int yearId, int questionNum) {
+        ObservableList<ObjectiveQuestion> questions = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE " + yearIdColumn + " = " + yearId + " AND " + questionNumberColumn + " = " + questionNum + " AND " + subjectIdColumn + " = " + subjectId;
+
+        System.out.println(TAG + "Objective Question Query getQuestionWithNoteSubjectId -> " + query);
+
+        try (ResultSet rs = databaseService.executeQuery(query)){
+            questions.clear();
+            while (rs.next()) {
+                questions.add(new ObjectiveQuestion(
+                        rs.getInt(idColumn),
+                        rs.getInt(subjectIdColumn),
+                        rs.getInt(yearIdColumn),
+                        rs.getInt(topicIdColumn),
+                        rs.getInt(questionNumberColumn),
+                        rs.getInt(questionDescriptionIdColumn),
+                        rs.getString(questionColumn),
+                        new QuestionOption(0, rs.getString(optionAColumn)),
+                        new QuestionOption(1, rs.getString(optionBColumn)),
+                        new QuestionOption(2, rs.getString(optionCColumn)),
+                        new QuestionOption(3, rs.getString(optionDColumn)),
+                        new QuestionOption(4, rs.getString(optionEColumn)),
+                        new QuestionAnswer(rs.getInt(optionAnswerIdColumn), rs.getString(optionAnswerColumn), rs.getString(answerExplanationColumn)),
+                        rs.getInt(isExplanationWebViewColumn),
+                        rs.getInt(isQuestionWebViewColumn),
+                        rs.getInt(isGameAbleColumn)));
+
+            }
+
+            System.out.println(TAG + "Got Objective questions with size -> " + questions.size());
+
+            return questions.get(0);
+
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Objective questions from database because " + e.getMessage());
+            questions.clear();
+
+            return null;
         }
     }
 

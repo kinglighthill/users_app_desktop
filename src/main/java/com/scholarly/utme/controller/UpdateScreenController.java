@@ -2,6 +2,7 @@ package com.scholarly.utme.controller;
 
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.UpdateScreenVM;
@@ -37,7 +38,7 @@ public class UpdateScreenController implements FxmlView<UpdateScreenVM>, Initial
         initializeFonts();
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData(new LandingScreenController.InitialData("accountScreen"));
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACCOUNT_SCREEN));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 

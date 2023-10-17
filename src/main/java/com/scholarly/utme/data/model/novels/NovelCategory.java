@@ -23,3 +23,4 @@ public class NovelCategory {
         return order;
     }
 }
+

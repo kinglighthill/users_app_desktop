@@ -1,6 +1,8 @@
 package com.scholarly.utme.ui.listcells;
 
+import com.scholarly.utme.controller.novel_screens.NovelChapterListController;
 import com.scholarly.utme.data.model.novels.Novel;
+import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
@@ -17,9 +19,9 @@ import org.controlsfx.control.GridCell;
 import java.io.IOException;
 import java.util.Objects;
 
-public class NovelGridItemCell extends GridCell<Novel> {
+public class NovelGridItemCell extends GridCell<NovelModel> {
 
-    private Novel novel;
+    private NovelModel novelModel;
 
     public VBox novelBox;
     public ImageView novelImage;
@@ -30,7 +32,7 @@ public class NovelGridItemCell extends GridCell<Novel> {
         loadFxml();
 
         setOnMouseClicked(event -> {
-            ViewSwitcher.passData(novel);
+            ViewSwitcher.passData(new NovelChapterListController.InitialData(novelModel));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
     }
@@ -49,21 +51,21 @@ public class NovelGridItemCell extends GridCell<Novel> {
     }
 
     @Override
-    protected void updateItem(Novel item, boolean empty) {
+    protected void updateItem(NovelModel item, boolean empty) {
         super.updateItem(item, empty);
-        this.novel = item;
+        this.novelModel = item;
 
         if (empty || item == null) {
             setText(null);
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }else {
-            novelImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/drawable/novel_images/" + item.getImagePath())).toString()));
-            name.setText(item.getName());
+            novelImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/drawable/novel_images/" + item.getNovel().getImagePath())).toString()));
+            name.setText(item.getNovel().getName());
             name.setTextFill(Paint.valueOf("#000000"));
             name.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.TWELVE.size));
 
-            chapters.setText(item.getChaptersCount() + " chapters");
+            chapters.setText(item.getChapterText());
             chapters.setTextFill(Paint.valueOf("#12AF20"));
 
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);

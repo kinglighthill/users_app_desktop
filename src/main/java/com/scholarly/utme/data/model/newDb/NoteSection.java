@@ -1,5 +1,7 @@
 package com.scholarly.utme.data.model.newDb;
 
+import org.json.JSONObject;
+
 public class NoteSection {
     private int id;
     private int subjectId;
@@ -11,7 +13,9 @@ public class NoteSection {
     private int childSectionOrder;
     private int contentViewTypeId;
 
-    public NoteSection(int id, int subjectId, int topicId, int subtopicId, String content, int parentSectionId, int mainSectionOrder, int childSectionOrder, int contentViewTypeId) {
+    private JSONObject contentJson;
+
+    public NoteSection(int id, int subjectId, int topicId, int subtopicId, String content, int parentSectionId, int mainSectionOrder, int childSectionOrder, int contentViewTypeId, JSONObject contentJson) {
         this.id = id;
         this.subjectId = subjectId;
         this.topicId = topicId;
@@ -21,6 +25,7 @@ public class NoteSection {
         this.mainSectionOrder = mainSectionOrder;
         this.childSectionOrder = childSectionOrder;
         this.contentViewTypeId = contentViewTypeId;
+        this.contentJson = contentJson;
     }
 
     public int getId() {
@@ -57,5 +62,9 @@ public class NoteSection {
 
     public int getContentViewTypeId() {
         return contentViewTypeId;
+    }
+
+    public JSONObject getContentJson() {
+        return contentJson;
     }
 }

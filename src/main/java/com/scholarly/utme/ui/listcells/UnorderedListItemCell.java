@@ -7,14 +7,20 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.Background;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 
 import java.io.IOException;
 
 public class UnorderedListItemCell extends ListCell<UnorderedListItem> {
     public Label itemText;
+    public Circle dot;
+    private String subjectColor;
 
-    public UnorderedListItemCell() {
+    public UnorderedListItemCell(String subjectColor) {
         loadFXML();
+        setPrefWidth(300);
+        this.subjectColor = subjectColor;
     }
 
     private void loadFXML() {
@@ -39,6 +45,7 @@ public class UnorderedListItemCell extends ListCell<UnorderedListItem> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }
         else {
+            dot.setFill(Paint.valueOf(subjectColor));
             itemText.setText(item.getText());
             itemText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
             setBackground(Background.EMPTY);

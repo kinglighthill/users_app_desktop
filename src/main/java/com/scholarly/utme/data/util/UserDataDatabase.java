@@ -1,6 +1,6 @@
 package com.scholarly.utme.data.util;
 
-import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.MainApplication;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ public class UserDataDatabase {
     /**
      * Location of database
      */
-    private static final String location = HelloApplication.class.getResource("/assets/localDB.db").toExternalForm();
+    private static final String location = MainApplication.class.getResource("/assets/localDB.db").toExternalForm();
 
 
     /**

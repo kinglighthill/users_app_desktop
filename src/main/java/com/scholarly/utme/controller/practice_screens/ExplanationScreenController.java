@@ -2,21 +2,17 @@ package com.scholarly.utme.controller.practice_screens;
 
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
+import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
-import com.scholarly.utme.ui.utils.Alerts;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.practice_screens.ExplanationScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -32,66 +28,55 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.web.WebView;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.scholarly.utme.ui.utils.Screens.PRACTICE_SCREEN;
 import static com.scholarly.utme.viewmodels.SubjectListItemVM.*;
 
 
 @FxmlPath("/layouts/practice_screens/ExplanationScreen.fxml")
 public class ExplanationScreenController implements FxmlView<ExplanationScreenVM>, Initializable {
-
     private static final String TAG = "ExplanationScreenController: ";
 
     @InjectViewModel
     private ExplanationScreenVM viewModel;
 
     @FXML
+    private WebView questionWebView, explanationWebView, questionWithImageWebView;
+    @FXML
     private TilePane tilePane;
-
     @FXML
     private ScrollPane tileScrollPane;
-
     @FXML
-    private StackPane explanationPane, explanationVideo;
-
+    private StackPane explanationPane, explanationVideo, questionStackPane;
     @FXML
     private AnchorPane explanationAnchor;
-
     @FXML
     private Pane dialogDimmer;
-
     @FXML
-    private VBox centerVBox;
-
+    private VBox centerVBox, questionDescriptionDialog, explanationVBox;
     @FXML
-    private HBox toggleBox;
-
+    private HBox toggleBox, quesDescriptionHBox, questionWithImageHBox;
     @FXML
     private ListView<PQSubject> subjectList;
-
     @FXML
     private Panel optionAPanel, optionBPanel, optionCPanel, optionDPanel;
-
     @FXML
-    private Label questionOverviewLabel, questionLabel, optionA, optionB, optionC, optionD, noOptionSelected, explanationLabel;
-
+    private Label questionOverviewLabel, questionLabel, optionA, optionB, optionC, optionD, noOptionSelected, questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
     @FXML
     private Button prevButton, nextButton, exitButton;
-
     @FXML
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
-
     @FXML
     private ToggleButton textExplanation, videoExplanation;
-
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, optionAIcon, optionBIcon, optionCIcon, optionDIcon;
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, optionAIcon, optionBIcon, optionCIcon, optionDIcon, questionImage, quesDescriptionCloseIcon;
 
     private Image correctImage, incorrectImage;
 
@@ -105,24 +90,11 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         initializeFont();
 
-        setupVideoPlayer();
-
-        viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                setupQuestionView();
-                setupTilePane();
-            }
-        });
-
-        ObservableList<PQSubject> items = FXCollections.observableArrayList();
-
-        PQSubject all = new PQSubject();
-        all.setTitle("All");
-        items.add(all);
-        items.addAll(viewModel.getSubjects());
+//        setupVideoPlayer();
 
         subjectList.setCellFactory(new PracticeSubjectListCellFactory());
-        subjectList.setItems(items);
+        subjectList.setItems(viewModel.getSubjects());
+        subjectList.getSelectionModel().selectFirst();
         subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) c -> {
             if (c.getList().size() == 1) {
                 PQSubject subject = c.getList().get(0);
@@ -132,47 +104,112 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             }
         });
 
-        subjectList.getSelectionModel().select(1);
+        viewModel.setSelectedSubject(subjectList.getSelectionModel().getSelectedItem());
+        setupQuestionView(viewModel.getSelectedSubject());
+        setupTilePane(viewModel.getSelectedSubject());
+
+        viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                setupQuestionView(newValue);
+                setupTilePane(newValue);
+            }
+        });
 
         viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
             subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
                 if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
-                    changeSelectedTile(oldValue.intValue(), newValue.intValue());
-                    changeSelectedQuestion(newValue.intValue());
+                    if (newValue.intValue() <= subjectQuestionsState.getQuestions().size()) {
+                        changeSelectedTile(oldValue.intValue(), newValue.intValue());
+                        changeSelectedQuestion(newValue.intValue());
+                    }
                 }
             });
         });
 
+        // Integer value to track subjectList subject selection
+        AtomicInteger subjectListSelectionAtomicIndex = new AtomicInteger(0);
+
+        subjectList.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<? super Integer>) observable -> {
+            if (observable.getList().size() == 1) {
+                subjectListSelectionAtomicIndex.set(observable.getList().get(0));
+            }
+        });
+
         prevButton.setOnAction(event -> {
+            nextButton.setDisable(false);
+
             int selectedQuestion = viewModel.getSubjectsQuestions()
                     .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
-            viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getShortTitle())
-                    .setSelectedQuestion(selectedQuestion - 1);
+            if (subjectList.getSelectionModel().getSelectedIndex() == 0) {
+                viewModel.getSubjectsQuestions()
+                        .get(viewModel.getSelectedSubject().getShortTitle())
+                        .setSelectedQuestion(selectedQuestion - 1);
+
+                if (selectedQuestion == 2) {
+                    prevButton.setDisable(true);
+                }
+            } else {
+                if (selectedQuestion == 1) {
+                    subjectList.getSelectionModel().select(subjectListSelectionAtomicIndex.decrementAndGet());
+                } else {
+                    viewModel.getSubjectsQuestions()
+                            .get(viewModel.getSelectedSubject().getShortTitle())
+                            .setSelectedQuestion(selectedQuestion - 1);
+                }
+            }
         });
 
         nextButton.setOnAction(event -> {
-            int selectedQuestion = viewModel.getSubjectsQuestions()
+            prevButton.setDisable(false);
+
+            PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+            List<PracticeScreenVM.QuestionState> questionStates = subjectQuestionsState.getQuestions();
+
+            int selectedQuestionIndex = viewModel.getSubjectsQuestions()
                     .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
-            viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getShortTitle())
-                    .setSelectedQuestion(selectedQuestion + 1);
+            if (selectedQuestionIndex == questionStates.size()) {
+                subjectList.getSelectionModel().select(subjectListSelectionAtomicIndex.incrementAndGet());
+                prevButton.setDisable(false);
+
+            } else {
+                viewModel.getSubjectsQuestions()
+                        .get(viewModel.getSelectedSubject().getShortTitle())
+                        .setSelectedQuestion(selectedQuestionIndex + 1);
+
+                int newSelectedQuestionIndex = viewModel.getSubjectsQuestions()
+                        .get(viewModel.getSelectedSubject().getShortTitle())
+                        .getSelectedQuestion();
+
+                if (newSelectedQuestionIndex == questionStates.size() && subjectList.getItems().size()-1 == subjectListSelectionAtomicIndex.get())
+                    nextButton.setDisable(true);
+            }
+
         });
 
 
-        toggleBox.getChildren().remove(videoExplanation);
+        textExplanation.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue) {
+                textExplanation.setText("Hide Explanation");
+                explanationWebView.setVisible(true);
+            } else {
+                textExplanation.setText("Show Explanation");
+                explanationWebView.setVisible(false);
+            }
+        }));
+
+//        toggleBox.getChildren().remove(videoExplanation);
         ToggleGroup explanationGroup = new ToggleGroup();
-        explanationGroup.getToggles().addAll(textExplanation, videoExplanation);
-        explanationGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
+        explanationGroup.getToggles().addAll(textExplanation);
+        /*explanationGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue == textExplanation) {
                 textExplanation.setStyle("-fx-background-color: #12AF20; -fx-border-color: #12AF20;");
                 textExplanation.setTextFill(Paint.valueOf("#FFFFFF"));
-                videoExplanation.setStyle("-fx-border-color: #12AF20;");
-                videoExplanation.setTextFill(Paint.valueOf("#12AF20"));
+//                videoExplanation.setStyle("-fx-border-color: #12AF20;");
+//                videoExplanation.setTextFill(Paint.valueOf("#12AF20"));
 
                 explanationPane.getChildren().remove(explanationVideo);
                 if (!explanationPane.getChildren().contains(explanationLabel)) {
@@ -192,7 +229,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                 }
 
             }
-        }));
+        }));*/
 
         exitButton.setOnAction(event -> {
             dialogDimmer.setVisible(true);
@@ -200,7 +237,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
                     dialogDimmer.setVisible(false);
-                    ViewSwitcher.passData(new HomeScreenController.InitialData(PRACTICE_SCREEN));
+                    ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
                     ViewSwitcher.showScreen(View.HOME_SCREEN);
                 } else {
                     dialogDimmer.setVisible(false);
@@ -210,20 +247,32 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             dialog.show();
         });
 
+        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
+            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
+        });
+        readQuestionDesc.setOnMouseEntered(event -> readQuestionDesc.setUnderline(true));
+        readQuestionDesc.setOnMouseExited(event -> readQuestionDesc.setUnderline(false));
+
+        quesDescriptionCloseIcon.setOnMouseClicked(mouseEvent -> {
+            Animations.hideDialog(questionDescriptionDialog, dialogDimmer);
+        });
+
     }
 
     private void initializeViews() {
         subjectList.setBackground(Background.EMPTY);
         exitButton.setBackground(Background.EMPTY);
         prevButton.setBackground(Background.EMPTY);
-        tileScrollPane.setBackground(Background.EMPTY);
+//        tileScrollPane.setBackground(Background.EMPTY);
         textExplanation.setBackground(Background.EMPTY);
-        videoExplanation.setBackground(Background.EMPTY);
+//        videoExplanation.setBackground(Background.EMPTY);
 
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-        calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
-        speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
-        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
+//        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+//        calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
+//        speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
+//        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
+
+        quesDescriptionCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
 
         correctImage = new Image(getClass().getResource("/drawable/practice_screen_images/correct_icon.png").toString());
         incorrectImage = new Image(getClass().getResource("/drawable/practice_screen_images/incorrect_icon.png").toString());
@@ -294,20 +343,41 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     /**
      * Initializes question layout
      */
-    private void setupQuestionView() {
-        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+    private void setupQuestionView(PQSubject selectedSubject) {
+        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
         List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
         PracticeScreenVM.QuestionState question = questions.get(subjectQuestionsState.getSelectedQuestion() - 1);
 
-        prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
-        nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
+        int selectedQuestionIndex = subjectQuestionsState.getSelectedQuestion();
 
-        questionOverviewLabel.setText("Question " + subjectQuestionsState.getSelectedQuestion() + " of " + questions.size());
+        questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
+
+        prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && selectedQuestionIndex == 1);
 
         if (viewModel.getQuestionType() == Type.OBJECTIVE) {
+            List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == question.getObjectiveQuestion().getQuestionDescriptionId()).toList();
+
+            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+            if (!questionDescriptionInList.isEmpty()) {
+                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
 
             String questionText = question.getObjectiveQuestion().getQuestion();
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+
+            if (questionText.contains("<img")) {
+                questionStackPane.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText);
+
+            } else {
+                questionStackPane.getChildren().add(questionWebView);
+                questionWebView.getEngine().loadContent(questionText);
+            }
 
             optionA.setText(" (A) " + question.getObjectiveQuestion().getOptionA().getText());
             optionB.setText(" (B) " + question.getObjectiveQuestion().getOptionB().getText());
@@ -318,6 +388,16 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             optionB.setTextFill(Color.BLACK);
             optionC.setTextFill(Color.BLACK);
             optionD.setTextFill(Color.BLACK);
+
+            optionAIcon.setImage(null);
+            optionBIcon.setImage(null);
+            optionCIcon.setImage(null);
+            optionDIcon.setImage(null);
+
+            optionAButton.setSelected(false);
+            optionBButton.setSelected(false);
+            optionCButton.setSelected(false);
+            optionDButton.setSelected(false);
 
 //            String selectedOption = question.getSelectedOption();
 //            String questionAnswer = question.getObjectiveQuestion().getQuestionAnswer().getAnswer();
@@ -342,7 +422,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                     optionDButton.setSelected(true);
                 }
 
-                if (questionAnswerId == optionAId) {
+                if (questionAnswerId == optionAId) { // correct option was selected
                     optionA.setTextFill(Color.GREEN);
                     optionAIcon.setImage(correctImage);
 
@@ -386,6 +466,9 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
             } else { // no option was selected
 
+                noOptionSelected.setText("No option was selected");
+                noOptionSelected.setTextFill(Paint.valueOf("#FF0000"));
+
                 if (questionAnswerId == optionAId) {
                     optionA.setTextFill(Color.GREEN);
                     optionAIcon.setImage(correctImage);
@@ -402,20 +485,36 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                     optionD.setTextFill(Color.GREEN);
                     optionDIcon.setImage(correctImage);
 
+                } else if (questionAnswerId == -1) {
+                    noOptionSelected.setText("No correct answer for this question (Bonus)");
+                    noOptionSelected.setTextFill(Paint.valueOf("#12AF20"));
                 }
 
                 noOptionSelected.setVisible(true);
             }
 
-            explanationLabel.setText(question.getObjectiveQuestion().getQuestionAnswer().getExplanation().replaceAll("<br>", System.lineSeparator()));
+            String explanationText = question.getObjectiveQuestion().getQuestionAnswer().getExplanation();
+
+            if (explanationText.contains("<img")) {
+                explanationText = formatExplanationTextWithImage(explanationText);
+                explanationWebView.getEngine().loadContent(explanationText);
+            } else {
+                explanationWebView.getEngine().loadContent(explanationText);
+            }
 
         } else if (viewModel.getQuestionType() == Type.THEORY){
 
             String questionText = question.getTheoryQuestion().getQuestion();
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+//            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
             String explanationText = question.getTheoryQuestion().getQuestionAnswer().getExplanation();
-            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+
+            if (explanationText.contains("<img")) {
+                explanationText = formatExplanationTextWithImage(explanationText);
+                explanationWebView.getEngine().loadContent(explanationText);
+            } else {
+                explanationWebView.getEngine().loadContent(explanationText);
+            }
 
             centerVBox.getChildren().removeAll(optionAPanel, optionBPanel, optionCPanel, optionDPanel, noOptionSelected);
         }
@@ -438,7 +537,30 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
             ObjectiveQuestion objectiveQuestion = questions.get(questionNumber - 1).getObjectiveQuestion();
 
-            questionLabel.setText(objectiveQuestion.getQuestion().replaceAll("<br>", System.lineSeparator()));
+            List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == objectiveQuestion.getQuestionDescriptionId()).toList();
+
+            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+            if (!questionDescriptionInList.isEmpty()) {
+                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            }
+
+            String questionText = objectiveQuestion.getQuestion();
+
+            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+
+            if (questionText.contains("<img")) {
+                questionStackPane.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText);
+
+            } else {
+                questionStackPane.getChildren().add(questionWebView);
+                questionWebView.getEngine().loadContent(questionText);
+            }
+
 
             optionA.setText(" (A) " + objectiveQuestion.getOptionA().getText());
             optionB.setText(" (B) " + objectiveQuestion.getOptionB().getText());
@@ -483,7 +605,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                     optionDButton.setSelected(true);
                 }
 
-                if (questionAnswerId == optionAId) {
+                if (questionAnswerId == optionAId) { // correct option was selected
                     optionA.setTextFill(Color.GREEN);
                     optionAIcon.setImage(correctImage);
 
@@ -496,13 +618,13 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                     optionCIcon.setImage(correctImage);
 
                 } else if (questionAnswerId == optionDId) {
-                    optionD.setTextFill(Color.RED);
-                    optionDIcon.setImage(incorrectImage);
+                    optionD.setTextFill(Color.GREEN);
+                    optionDIcon.setImage(correctImage);
 
                 }
 
 
-                if (selectedOptionId != questionAnswerId) { // wrong answer was selected
+                if (selectedOptionId != questionAnswerId) { // wrong option was selected
 
                     if (selectedOptionId == optionAId) {
                         optionA.setTextFill(Color.RED);
@@ -528,6 +650,9 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
             } else { // no option was selected
 
+                noOptionSelected.setText("No option was selected");
+                noOptionSelected.setTextFill(Paint.valueOf("#FF0000"));
+
                 if (questionAnswerId == optionAId) {
                     optionA.setTextFill(Color.GREEN);
                     optionAIcon.setImage(correctImage);
@@ -544,20 +669,36 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                     optionD.setTextFill(Color.GREEN);
                     optionDIcon.setImage(correctImage);
 
+                } else if (questionAnswerId == -1) {
+                    noOptionSelected.setText("No correct answer for this question (Bonus)");
+                    noOptionSelected.setTextFill(Paint.valueOf("#12AF20"));
                 }
 
                 noOptionSelected.setVisible(true);
             }
 
-            explanationLabel.setText(questions.get(questionNumber - 1).getObjectiveQuestion().getQuestionAnswer().getExplanation());
+            String explanationText = objectiveQuestion.getQuestionAnswer().getExplanation();
+
+            if (explanationText.contains("<img")) {
+                explanationText = formatExplanationTextWithImage(explanationText);
+                explanationWebView.getEngine().loadContent(explanationText);
+            } else {
+                explanationWebView.getEngine().loadContent(explanationText);
+            }
 
         } else if (viewModel.getQuestionType() == Type.THEORY) {
 
             String questionText = questions.get(questionNumber - 1).getTheoryQuestion().getQuestion();
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+//            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
             String explanationText = questions.get(questionNumber - 1).getTheoryQuestion().getQuestionAnswer().getExplanation();
-            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+
+            if (explanationText.contains("<img")) {
+                explanationText = formatExplanationTextWithImage(explanationText);
+                explanationWebView.getEngine().loadContent(explanationText);
+            } else {
+                explanationWebView.getEngine().loadContent(explanationText);
+            }
 
         }
 
@@ -566,8 +707,8 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     /**
      * Initializes question tiles at bottom of the screen
      */
-    private void setupTilePane() {
-        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+    private void setupTilePane(PQSubject selectedSubject) {
+        PracticeScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
         List<PracticeScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
 
         tilePane.getChildren().clear();
@@ -627,6 +768,14 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
     }
 
+    private void showQuestionWithImage(String questionWithImageText) {
+        questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText);
+    }
+
+    private String formatExplanationTextWithImage(String explanationText) {
+        return Helper.parsePQImageUrl(getClass(), explanationText);
+    }
+
 
     public InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
@@ -636,17 +785,23 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
     public static class InitialData {
         private List<PQSubject> subjects;
+        private List<QuestionDescription> questionDescriptions;
         private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions;
         private Type questionType;
 
-        public InitialData(List<PQSubject> subjects, HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions, Type questionType) {
+        public InitialData(List<PQSubject> subjects, List<QuestionDescription> questionDescriptions, HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions, Type questionType) {
             this.subjects = subjects;
+            this.questionDescriptions = questionDescriptions;
             this.subjectsQuestions = subjectsQuestions;
             this.questionType = questionType;
         }
 
         public List<PQSubject> getSubjects() {
             return subjects;
+        }
+
+        public List<QuestionDescription> getQuestionDescriptions() {
+            return questionDescriptions;
         }
 
         public HashMap<String, PracticeScreenVM.SubjectQuestionsState> getSubjectsQuestions() {

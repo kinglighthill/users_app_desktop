@@ -1,7 +1,6 @@
 package com.scholarly.utme.data.model.novels;
 
 public class NovelChapter {
-
     private int id;
     private int position;
     private String title;
@@ -10,6 +9,8 @@ public class NovelChapter {
     private int novelId;
     private int order;
     private boolean free;
+
+    private String chapterHeading;
 
     public NovelChapter(int id, int position, String title, String description, int chapterCategoryId, int novelId, int order, boolean free) {
         this.id = id;
@@ -56,5 +57,13 @@ public class NovelChapter {
 
     public void setFree(boolean free) {
         this.free = free;
+    }
+
+    public String getChapterHeading() {
+        return chapterHeading;
+    }
+
+    public void setChapterHeading(String chapterHeading) {
+        this.chapterHeading = chapterHeading;
     }
 }

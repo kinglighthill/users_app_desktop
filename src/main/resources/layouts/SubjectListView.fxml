@@ -5,129 +5,218 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.SubjectListViewController">
-   <right>
-      <HBox prefHeight="448.0" prefWidth="275.0" BorderPane.alignment="TOP_CENTER">
-         <children>
-            <Separator orientation="VERTICAL" prefHeight="200.0" />
-             <BorderPane prefHeight="448.0" prefWidth="289.0" BorderPane.alignment="TOP_CENTER">
-                 <bottom>
-                     <Button fx:id="startButton" mnemonicParsing="false" prefHeight="37.0" prefWidth="265.0" text="Start" textFill="#FFFFFF" BorderPane.alignment="CENTER" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
-                         <font>
-                             <Font name="Gill Sans MT" size="16.0" />
-                         </font>
-                         <BorderPane.margin>
-                             <Insets bottom="10.0" left="10.0" right="10.0" />
-                         </BorderPane.margin>
-                     </Button>
-                 </bottom>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.image.ImageView?>
+<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.SubjectListViewController">
+    <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" >
+        <right>
+            <HBox prefHeight="448.0" prefWidth="300.0" BorderPane.alignment="TOP_CENTER">
+                <children>
+                    <Separator orientation="VERTICAL" prefHeight="200.0"/>
+                    <BorderPane prefHeight="448.0" prefWidth="289.0" BorderPane.alignment="TOP_CENTER">
+                        <bottom>
+                            <Button fx:id="startButton" mnemonicParsing="false" prefHeight="37.0" prefWidth="265.0" text="Start" textFill="#FFFFFF" BorderPane.alignment="CENTER" style="-fx-background-color: #12AF20; -fx-background-radius: 5; -fx-cursor: hand;">
+                                <font>
+                                    <Font name="Gill Sans MT" size="16.0"/>
+                                </font>
+                                <BorderPane.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0"/>
+                                </BorderPane.margin>
+                            </Button>
+                        </bottom>
+                        <center>
+                            <VBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                <children>
+                                    <Label text="Subjects Selected">
+                                        <font>
+                                            <Font name="Gill Sans MT Bold" size="16.0" />
+                                        </font>
+                                        <HBox.margin>
+                                            <Insets left="15.0" />
+                                        </HBox.margin>
+                                        <VBox.margin>
+                                            <Insets left="15.0" />
+                                        </VBox.margin>
+                                    </Label>
+                                    <TableView fx:id="questionOverviewTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="200.0">
+                                        <columns>
+                                            <TableColumn fx:id="subjectColumn" text="Subject"/>
+                                            <TableColumn fx:id="yearColumn" text="Year"/>
+                                            <TableColumn fx:id="questionsColumn" text="Questions"/>
+                                        </columns>
+                                        <VBox.margin>
+                                            <Insets left="15.0" right="15.0" top="10.0" bottom="20.0" />
+                                        </VBox.margin>
+                                    </TableView>
+                                </children>
+                                <BorderPane.margin>
+                                    <Insets bottom="40.0" top="20.0" />
+                                </BorderPane.margin>
 
-               <center>
-                  <VBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <Label text="Subjects Selected">
-                           <font>
-                              <Font name="Gill Sans MT Bold" size="16.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets left="15.0" />
-                           </HBox.margin>
-                           <VBox.margin>
-                              <Insets left="15.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TableView fx:id="questionOverviewTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="200.0">
-                          <columns>
-                            <TableColumn fx:id="subjectColumn" text="Subject"/>
-                            <TableColumn fx:id="yearColumn" text="Year"/>
-                              <TableColumn fx:id="questionsColumn" text="Questions"/>
-                          </columns>
-                           <VBox.margin>
-                              <Insets left="15.0" right="15.0" top="10.0" bottom="20.0" />
-                           </VBox.margin>
-                        </TableView>
-                     </children>
-                     <BorderPane.margin>
-                        <Insets bottom="40.0" top="20.0" />
-                     </BorderPane.margin>
+                                <Label fx:id="timeSettingsLabel" text="Time Settings">
+                                    <font>
+                                        <Font name="Gill Sans MT Bold" size="14.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="10.0" top="25.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <HBox prefHeight="55.0" prefWidth="194.0" spacing="10.0" BorderPane.alignment="CENTER">
+                                    <padding>
+                                        <Insets left="10.0" right="10.0" top="10.0" />
+                                    </padding>
+                                    <children>
+                                        <VBox fx:id="hoursSelector" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label prefHeight="17.0" prefWidth="149.0" text="Hours">
+                                                    <font>
+                                                        <Font name="Gill Sans MT" size="14.0"/>
+                                                    </font>
+                                                </Label>
+                                                <ChoiceBox fx:id="hoursChoiceBox" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5; -fx-cursor: hand;">
+                                                    <VBox.margin>
+                                                        <Insets top="10.0" />
+                                                    </VBox.margin>
+                                                </ChoiceBox>
+                                            </children>
+                                        </VBox>
+                                        <VBox fx:id="minutesSelector" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label prefHeight="17.0" prefWidth="153.0" text="Minutes" >
+                                                    <font>
+                                                        <Font name="Gill Sans MT" size="14.0" />
+                                                    </font>
+                                                </Label>
+                                                <ChoiceBox fx:id="minutesChoiceBox" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5; -fx-cursor: hand;">
+                                                    <VBox.margin>
+                                                        <Insets top="10.0" />
+                                                    </VBox.margin>
+                                                </ChoiceBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets top="10.0" />
+                                    </VBox.margin>
+                                </HBox>
 
-                      <Label fx:id="timeSettingsLabel" text="Time Settings">
-                          <font>
-                              <Font name="Gill Sans MT Bold" size="14.0" />
-                          </font>
-                          <VBox.margin>
-                              <Insets left="10.0" top="25.0" />
-                          </VBox.margin>
-                      </Label>
-                      <HBox prefHeight="55.0" prefWidth="194.0" spacing="10.0" BorderPane.alignment="CENTER">
-                          <padding>
-                              <Insets left="10.0" right="10.0" top="10.0" />
-                          </padding>
-                          <children>
-                              <VBox fx:id="hoursSelector" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                                  <children>
-                                      <Label alignment="CENTER" prefHeight="17.0" prefWidth="149.0" text="Hours" >
-                                          <font>
-                                              <Font name="Gill Sans MT" size="14.0" />
-                                          </font>
-                                      </Label>
-                                      <ChoiceBox fx:id="hoursChoiceBox" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                          <VBox.margin>
-                                              <Insets top="10.0" />
-                                          </VBox.margin>
-                                      </ChoiceBox>
-                                  </children>
-                              </VBox>
-                              <VBox fx:id="minutesSelector" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                                  <children>
-                                      <Label alignment="CENTER" prefHeight="17.0" prefWidth="153.0" text="Minutes" >
-                                          <font>
-                                              <Font name="Gill Sans MT" size="14.0" />
-                                          </font>
-                                      </Label>
-                                      <ChoiceBox fx:id="minutesChoiceBox" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
-                                          <VBox.margin>
-                                              <Insets top="10.0" />
-                                          </VBox.margin>
-                                      </ChoiceBox>
-                                  </children>
-                              </VBox>
-                          </children>
-                          <VBox.margin>
-                              <Insets top="10.0" />
-                          </VBox.margin>
-                      </HBox>
+                            </VBox>
+                        </center>
+                    </BorderPane>
+                </children>
+            </HBox>
+        </right>
+        <center>
+            <TabPane fx:id="tabMenu" prefHeight="200.0" prefWidth="200.0" tabMinHeight="50" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                <tabs>
+                    <Tab fx:id="objectiveTab"  text="Objective">
+                        <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="371.0" prefWidth="496.0" style="-fx-background-color: #FFFFFF;">
+                                <children>
 
-                  </VBox>
-               </center>
-             </BorderPane>
-         </children>
-      </HBox>
-   </right>
-   <center>
-      <TabPane fx:id="tabMenu" prefHeight="200.0" prefWidth="200.0" tabMinHeight="50" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-        <tabs>
-          <Tab fx:id="objectiveTab" text="Objective">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="371.0" prefWidth="496.0" style="-fx-background-color: #FFFFFF;">
-                     <children>
-                        <ListView fx:id="objectiveList" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0"
-                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children>
-              </AnchorPane>
-            </content>
-          </Tab>
-          <Tab fx:id="theoryTab" text="Theory">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <ListView fx:id="theoryList" prefHeight="200.0" prefWidth="200.0"
-                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children>
-              </AnchorPane>
-            </content>
-          </Tab>
-        </tabs>
-      </TabPane>
-   </center>
-</BorderPane>
+                                    <ListView fx:id="objectiveList" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="200.0"
+                                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+
+                                    <!--<ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <VBox fx:id="subjectListVBox" spacing="10" style="-fx-background-color: #FFFFFF;">
+                                            <Label fx:id="mySubjectsLabel" text="My Subjects">
+                                                <VBox.margin>
+                                                    <Insets top="10" left="10"/>
+                                                </VBox.margin>
+                                            </Label>
+                                            <ListView fx:id="mySubjectsObjectiveList" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="250.0" prefWidth="200.0"/>
+                                            <Label fx:id="otherSubjectsLabel" text="Other Subjects">
+                                                <VBox.margin>
+                                                    <Insets top="10" left="10"/>
+                                                </VBox.margin>
+                                            </Label>
+                                            <ListView fx:id="otherSubjectsObjectiveList" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="200.0"/>
+                                        </VBox>
+                                    </ScrollPane>-->
+                                </children>
+                            </AnchorPane>
+                        </content>
+                    </Tab>
+                    <!--<Tab fx:id="theoryTab" text="Theory">
+                        <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                <children>
+                                    <ListView fx:id="theoryList" prefHeight="200.0" prefWidth="200.0"
+                                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                </children>
+                            </AnchorPane>
+                        </content>
+                    </Tab>-->
+                </tabs>
+            </TabPane>
+        </center>
+    </BorderPane>
+
+    <VBox fx:id="dimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
+    <VBox fx:id="activateNowDialog" spacing="25" maxHeight="450.0" maxWidth="380.0" prefHeight="400.0" prefWidth="250.0" StackPane.alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
+        <Panel>
+            <left>
+                <ImageView fx:id="activateNowPadlockIcon" fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true"/>
+            </left>
+            <right>
+                <ImageView fx:id="activateNowCloseIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+            </right>
+        </Panel>
+        <Label fx:id="activateHeaderText" text="Activate your App for Unlimited Access" textFill="#12AF20" wrapText="true"/>
+        <VBox spacing="15">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon1" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Unlock all Note Topics">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon2" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Unlock all Past Questions Years">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon3" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Unlock all Novel Chapters">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon4" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Use App without internet">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon5" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Activation lasts for One Academic Year">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+        </VBox>
+
+        <HBox alignment="CENTER">
+            <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N2000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8;">
+                <font>
+                    <Font size="16"/>
+                </font>
+            </Button>
+        </HBox>
+
+        <padding>
+            <Insets topRightBottomLeft="25"/>
+        </padding>
+    </VBox>
+    <Button fx:id="activateInvisibleButton" mnemonicParsing="false" prefHeight="37" prefWidth="265" visible="false"/>
+</StackPane>

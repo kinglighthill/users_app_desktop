@@ -5,14 +5,16 @@ import java.sql.DriverManager;
 
 public class DbConnection {
     private static final String TAG = "DbConnection: ";
-    private static final String DATABASE_URL = "jdbc:sqlite:src/main/resources/assets/jamb_utme.db";
+    private static final String DATABASE_URL = "jdbc:sqlite:src/main/resources/assets/databases/jamb_utme.db";
+//    private static final String DATABASE_URL = "jdbc:sqlite:src/main/resources/assets/databases/jamb_utme-en.db";
 
     private static Connection connection;
 
     public static Connection getDbConnection() {
         try {
             if (connection == null) {
-                connection = DriverManager.getConnection(DATABASE_URL);
+                connection = DriverManager.getConnection(DATABASE_URL, "", "KingUrch");
+
                 System.out.println(TAG + "Connection created successfully: " + connection.toString());
 
             } else {

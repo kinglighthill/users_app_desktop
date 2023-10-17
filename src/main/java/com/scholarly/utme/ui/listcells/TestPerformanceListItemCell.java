@@ -33,7 +33,7 @@ public class TestPerformanceListItemCell extends ListCell<ResultScreenController
         loadFxml();
 
         setOnMouseClicked(mouseEvent -> {
-            ResultScreenController.InitialData data = new ResultScreenController.InitialData(results, subjects, subjectsQuestions, view);
+            ResultScreenController.InitialData data = new ResultScreenController.InitialData(results, subjects, null, subjectsQuestions, view);
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.RESULT_SCREEN);
         });
@@ -66,7 +66,7 @@ public class TestPerformanceListItemCell extends ListCell<ResultScreenController
             results = item.getResults();
             subjects = item.getSubjects();
             subjectsQuestions = item.getSubjectsQuestions();
-            view = item.getView();
+            view = item.getPreviousScreen();
 
             int totalScore = 0;
             double totalPercent = 0;

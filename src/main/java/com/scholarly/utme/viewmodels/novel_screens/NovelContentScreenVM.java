@@ -1,10 +1,15 @@
 package com.scholarly.utme.viewmodels.novel_screens;
 
+import com.google.gson.Gson;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
+import com.scholarly.utme.data.dao.NovelChapterDao;
 import com.scholarly.utme.data.dao.NovelObjectiveBookmarkDao;
 import com.scholarly.utme.data.dao.NovelSectionDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
+import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.data.model.novels.*;
+import com.scholarly.utme.network.model.UserData;
+import com.scholarly.utme.util.PreferencesManager;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -12,18 +17,16 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.scholarly.utme.viewmodels.novel_screens.NovelChapterListVM.*;
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_DATA;
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class NovelContentScreenVM implements ViewModel {
     private static final String TAG = "NovelContentScreenVM: ";
 
-    private Novel novel;
-
-    private NovelAuthor author;
+    private NovelModel novelModel;
 
     private ObservableList<NovelChapter> chapters = FXCollections.observableArrayList();
 
@@ -42,10 +45,18 @@ public class NovelContentScreenVM implements ViewModel {
     private double correctAnswers, totalGuesses;
 
 
+    private UserData user;
+
+    public NovelContentScreenVM() {
+        Gson gson = new Gson();
+        String userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+        String userData = PreferencesManager.get(PREF_KEY_USER_DATA+userId, "");
+        user = gson.fromJson(userData, UserData.class);
+    }
+
     public void processInitialData(NovelContentScreenController.InitialData data) {
         chapters.addAll(data.getChapters());
-        novel = data.getNovel();
-        author = data.getAuthor();
+        novelModel = data.getNovelModel();
         selectedChapter.set(data.getSelectedChapter());
 
         selectedQuestionIndex.set(1);
@@ -55,12 +66,17 @@ public class NovelContentScreenVM implements ViewModel {
 
             chapterQuestions.put(novelChapter.getId(), ObjectiveQuestionDao.getNovelQuestions(novelChapter.getId()));
 
-            chapterBookmarks.put(novelChapter.getId(), NovelObjectiveBookmarkDao.getNovelBookmarks(novelChapter.getId()));
+//            chapterBookmarks.put(novelChapter.getId(), NovelObjectiveBookmarkDao.getNovelBookmarks(novelChapter.getId()));
         });
 
         int fiftyFifty = Math.round(chapterQuestions.get(selectedChapter.get().getId()).size()/10f);
 
         fiftyFiftyCount.set(5);
+    }
+
+    public void putLastSession(NovelLastSession lastSession) {
+        int id = NovelChapterDao.insertLastSection(lastSession);
+        System.out.println(TAG + "Inserted Novel last session with id -> " + id);
     }
 
 
@@ -86,23 +102,19 @@ public class NovelContentScreenVM implements ViewModel {
             int response = NovelObjectiveBookmarkDao.deleteBookmark(bookmarkToDelete.getQuestionId());
             System.out.println(TAG + "Bookmark with question ID -> " + bookmarkToDelete.getQuestionId() + " deleted with SQL response " + response);
         } else {
-            NovelObjectiveBookmarkDao.createBookmark(novel.getId(), selectedChapter.get().getId(), currentQuestion.getId());
+            NovelObjectiveBookmarkDao.createBookmark(novelModel.getNovel().getId(), selectedChapter.get().getId(), currentQuestion.getId());
         }
 
-        ObservableList<NovelObjectiveBookmark> newBookmarks = NovelObjectiveBookmarkDao.getNovelBookmarks(
-                selectedChapter.get().getId()
-        );
-
-        chapterBookmarks.get(selectedChapter.get().getId()).clear();
-        chapterBookmarks.put(selectedChapter.get().getId(), newBookmarks);
+//        ObservableList<NovelObjectiveBookmark> newBookmarks = NovelObjectiveBookmarkDao.getNovelBookmarks(
+//                selectedChapter.get().getId()
+//        );
+//
+//        chapterBookmarks.get(selectedChapter.get().getId()).clear();
+//        chapterBookmarks.put(selectedChapter.get().getId(), newBookmarks);
     }
 
-    public Novel getNovel() {
-        return novel;
-    }
-
-    public NovelAuthor getAuthor() {
-        return author;
+    public NovelModel getNovelModel() {
+        return novelModel;
     }
 
     public ObservableList<NovelChapter> getChapters() {
@@ -177,6 +189,9 @@ public class NovelContentScreenVM implements ViewModel {
         return (correctAnswers/totalGuesses) * 100;
     }
 
+    public UserData getUser() {
+        return user;
+    }
 
     public static class QuestionState {
         private NovelObjectiveQuestion question;

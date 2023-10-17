@@ -1,9 +1,8 @@
 package com.scholarly.utme.ui.listcells;
 
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.data.model.listItems.AppItem;
 import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -20,12 +19,13 @@ public class AppListItemCell extends ListCell<AppItem> {
     public ImageView appImage;
     public Label appName;
 
+    MainApplication application = new MainApplication();
+
     public AppListItemCell() {
         loadFxml();
 
         setOnMouseClicked(event -> {
-            ViewSwitcher.passData(app);
-            ViewSwitcher.showScreen(View.APP_DETAILS_SCREEN);
+            application.openBrowser(app.getDownloadLink());
         });
     }
 
@@ -51,17 +51,23 @@ public class AppListItemCell extends ListCell<AppItem> {
             setText(null);
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-        }else {
+        } else {
+            appName.setText(item.getName());
+            appName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+
             try {
-                appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/" + item.getImageUrl()).toString()));
-            }catch (Exception e) {
+                appImage.setImage(item.getImage());
+            } catch (Exception e) {
                 appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/scholarly_logo.png").toString()));
                 System.out.println(e.getMessage());
                 System.out.println("App image not found, using default image (Scholarly logo)");
             }
 
-            appName.setText(item.getName());
-            appName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+//            setOnMouseClicked(event -> {
+//                appName.setText(item.getName());
+//                String url = item.getDownloadLink();
+//                application.openBrowser(url);
+//            });
 
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }

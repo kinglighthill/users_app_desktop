@@ -1,25 +1,28 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.DatabaseService;
+import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.*;
-import com.scholarly.utme.data.util.NewDatabase;
+import com.scholarly.utme.data.util.CRUDHelper;
 import com.scholarly.utme.data.util.Tables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SubjectDao {
-    public static final String TAG = "SUBJECTDAO: ";
+    private static final String TAG = "SubjectDao: ";
 
     private static final DatabaseService databaseService = new DatabaseService();
 
     private static final String idColumn = "_id";
+    private static final String userIdColumn = "uid";
     private static final String tableNameColumn = "table_name";
     private static final String subjectNameColumn = "subject_name";
     private static final String timeAllottedColumn = "time_alloted";
@@ -41,15 +44,19 @@ public class SubjectDao {
     private static final ObservableList<TheorySubject> theorySubjects;
     private static final ObservableList<NoteSubject> noteSubjects;
 
+    private static final ObservableList<FavoriteSubject> favoriteSubjects;
+
     static {
         subjects = FXCollections.observableArrayList();
         objectiveSubjects = FXCollections.observableArrayList();
         theorySubjects = FXCollections.observableArrayList();
         noteSubjects = FXCollections.observableArrayList();
+        favoriteSubjects = FXCollections.observableArrayList();
 //        updateSubjectsFromDB();
         updateObjectiveSubjectsFromDb();
         updateTheorySubjectsFromDb();
         updateNoteSubjectsFromDb();
+        updateFavoriteSubjectsFromDb();
     }
 
     public static String getSubjectName(String subjectShortTitle) {
@@ -71,6 +78,7 @@ public class SubjectDao {
 
     private static void updateObjectiveSubjectsFromDb() {
         String query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_SUBJECTS + " JOIN " + Tables.SUBJECTS + " ON " + Tables.PQ_OBJECTIVE_SUBJECTS + ".subject_id = " + Tables.SUBJECTS + "._id ORDER BY 'order'";
+        System.out.println(TAG + "Objective Subjects Query -> " + query);
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
             objectiveSubjects.clear();
@@ -83,8 +91,8 @@ public class SubjectDao {
                         rs.getInt(orderColumn),
                         rs.getString(titleColumn),
                         rs.getString(shortTitleColumn),
-                        rs.getString(descriptionColumn),
-                        rs.getString(colorCodeColumn)));
+                        rs.getString(colorCodeColumn),
+                        rs.getString(descriptionColumn)));
             }
 
         } catch (Exception e) {
@@ -122,8 +130,8 @@ public class SubjectDao {
     }
 
     private static void updateNoteSubjectsFromDb() {
-        String query = "SELECT " + Tables.NOTE_SUBJECTS + "." + idColumn + "," + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + "," + Tables.SUBJECTS + "." + titleColumn + " FROM " + Tables.SUBJECTS + " JOIN " + Tables.NOTE_SUBJECTS + " WHERE " + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + " = " + Tables.SUBJECTS + "." + idColumn;
-        System.out.println(TAG + "Note Subjects Query -> " + query);
+        String query = "SELECT " + Tables.NOTE_SUBJECTS + "." + idColumn + ", " + Tables.NOTE_SUBJECTS + "." + subjectIdColumn + ", " + Tables.NOTE_SUBJECTS + ".'" + orderColumn + "', " + Tables.SUBJECTS + "." + titleColumn + ", " + Tables.SUBJECTS + "." + shortTitleColumn + ", " + Tables.SUBJECTS + "." + colorCodeColumn + " FROM " + Tables.NOTE_SUBJECTS + " JOIN " + Tables.SUBJECTS + " ON " + Tables.NOTE_SUBJECTS + ".subject_id = " + Tables.SUBJECTS + "._id ORDER BY " + "\"order\"";
+//        System.out.println(TAG + "Note Subjects Query -> " + query);
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
             noteSubjects.clear();
@@ -132,7 +140,9 @@ public class SubjectDao {
                         rs.getInt(idColumn),
                         rs.getString(titleColumn),
                         rs.getInt(subjectIdColumn),
-                        -1));
+                        rs.getInt(orderColumn),
+                        rs.getString(shortTitleColumn),
+                        rs.getString(colorCodeColumn)));
             }
 
         } catch (Exception e) {
@@ -143,42 +153,73 @@ public class SubjectDao {
         }
     }
 
-    private static void updateSubjectsFromDB() {
-        String query = "SELECT * FROM " + Tables.SUBJECTS;
+    private static void updateFavoriteSubjectsFromDb() {
+        for (ObjectiveSubject objectiveSubject : objectiveSubjects) {
+            favoriteSubjects.add(new FavoriteSubject(
+                    objectiveSubject.getId(),
+                    objectiveSubject.getSubjectId(),
+                    objectiveSubject.getMinutesAllotted(),
+                    objectiveSubject.getOrder(),
+                    objectiveSubject.getTitle(),
+                    objectiveSubject.getShortTitle(),
+                    objectiveSubject.getColorCode(),
+                    objectiveSubject.getDescription(),
+                    false
+            ));
+        }
+    }
+
+    public static void insertSubjectCombination(SubjectCombination subjectCombination) {
+        String query = CRUDHelper.insertQuery(
+                Tables.SUBJECTS_COMBINATION,
+                new String[]{"subject_id", "uid"},
+                new Object[]{subjectCombination.getSubjectId(), subjectCombination.getUserId()},
+                new int[]{Types.INTEGER, Types.VARCHAR});
 
         try {
-            Connection connection = NewDatabase.connect();
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-            subjects.clear();
-            while (rs.next()) {
-                subjects.add(new Subject(
-                        rs.getInt(idColumn),
-                        rs.getString(tableNameColumn),
-                        rs.getString(subjectNameColumn),
-                        rs.getInt(timeAllottedColumn),
-                        rs.getString(subjectDescriptionColumn),
-                        rs.getString(shortDescriptionColumn),
-                        rs.getString(subjectColorColumn),
-                        rs.getString(colorNameColumn)));
-            }
-        } catch (SQLException e) {
+            databaseService.executeUpdate(query);
+        } catch (Exception ex) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load Subjects from database because " + e.getMessage());
-            subjects.clear();
+                    LocalDateTime.now() + ": Could not insert item to database because " + ex.getMessage());
         }
+
     }
 
-    public static int getPQSubjectId(int subjectId) {
-        for (ObjectiveSubject subject : objectiveSubjects) {
-            if (subject.getSubjectId() == subjectId) return subject.getId();
+    public static ObservableList<SubjectCombination> retrieveSubjectCombination(String userId) {
+        String query = "SELECT * FROM " + Tables.SUBJECTS_COMBINATION + " WHERE " + userIdColumn + " = '" + userId + "'";
+
+        ObservableList<SubjectCombination> subjectCombinations = FXCollections.observableArrayList();
+
+        try (ResultSet rs = databaseService.executeQuery(query)) {
+            while (rs.next()) {
+                subjectCombinations.add(new SubjectCombination(
+                        rs.getInt(idColumn),
+                        rs.getInt(subjectIdColumn),
+                        rs.getString(userIdColumn)));
+            }
+
+            return subjectCombinations;
+
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Favorite Subjects from database because " + e.getMessage());
+            return subjectCombinations;
         }
-        return 0;
+
     }
 
-    public static ObservableList<Subject> getSubjects() {
-        return FXCollections.unmodifiableObservableList(subjects);
+    public static void deletePreviousSubjectCombination(String userId) {
+        String query = CRUDHelper.deleteQuery(Tables.SUBJECTS_COMBINATION, userId);
+
+        try {
+            databaseService.delete(query);
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not delete from database because " + ex.getMessage());
+        }
     }
 
     public static ObservableList<NoteSubject> getNoteSubjects() {
@@ -189,8 +230,37 @@ public class SubjectDao {
         return FXCollections.unmodifiableObservableList(objectiveSubjects);
     }
 
+    public static ObservableList<FavoriteSubject> getFavoriteSubjects() {
+        return FXCollections.unmodifiableObservableList(favoriteSubjects);
+    }
+
     public static ObservableList<TheorySubject> getTheorySubjects() {
         return FXCollections.unmodifiableObservableList(theorySubjects);
+    }
+
+    public static ObservableList<Subject> getSubjects() {
+        return FXCollections.unmodifiableObservableList(subjects);
+    }
+
+    public static int getPQSubjectId(int subjectId) {
+        for (ObjectiveSubject subject : objectiveSubjects) {
+            if (subject.getSubjectId() == subjectId) return subject.getId();
+        }
+        return 0;
+    }
+
+    public static NoteSubject getNoteSubject(int id) {
+        for (NoteSubject subject : noteSubjects) {
+            if (subject.getId() == id) return subject;
+        }
+        return null;
+    }
+
+    public static String getNoteSubjectColor(int subjectId) {
+        for (NoteSubject subject : noteSubjects) {
+            if (subject.getId() == subjectId) return subject.getColorCode();
+        }
+        return "#000000";
     }
 
     public static Optional<Subject> getSubject(int id) {

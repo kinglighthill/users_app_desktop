@@ -9,11 +9,9 @@
 <fx:root type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
 
     <graphic>
-        <VBox spacing="20" alignment="CENTER" maxWidth="180" minWidth="180" minHeight="180" maxHeight="180" style="-fx-border-color: #F1F1F1; -fx-border-radius: 5;">
-            <ImageView fx:id="appImage" fitWidth="120" fitHeight="120" preserveRatio="true" pickOnBounds="true"/>
-            <HBox alignment="CENTER">
-                <Label fx:id="appName" wrapText="true" prefWidth="150" alignment="CENTER" textAlignment="CENTER"/>
-            </HBox>
+        <VBox spacing="20" alignment="CENTER" prefWidth="250" prefHeight="200" style="-fx-border-color: #F1F1F1; -fx-border-radius: 5;">
+            <ImageView fx:id="appImage" fitWidth="100" fitHeight="100" preserveRatio="true" pickOnBounds="true"/>
+            <Label fx:id="appName" wrapText="true" textAlignment="CENTER"/>
             <padding>
                 <Insets topRightBottomLeft="15"/>
             </padding>

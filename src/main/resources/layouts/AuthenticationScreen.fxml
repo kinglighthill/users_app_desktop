@@ -58,7 +58,7 @@
                             </VBox.margin>
                         </Label>
 
-                        <TextField fx:id="signUpNameField" promptText="Enter your First Name and Last Name" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                        <TextField fx:id="signUpNameField" promptText="Enter your First Name and Last Name" prefWidth="80" focusTraversable="false" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
                             <padding>
                                 <Insets left="7" top="10" bottom="10"/>
                             </padding>
@@ -73,7 +73,7 @@
                             </VBox.margin>
                         </Label>
 
-                        <TextField fx:id="signUpEmailField" promptText="Enter your email address" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                        <TextField fx:id="signUpEmailField" promptText="Enter your email address" prefWidth="80" focusTraversable="false" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
                             <padding>
                                 <Insets left="7" top="10" bottom="10"/>
                             </padding>
@@ -88,7 +88,7 @@
                             </VBox.margin>
                         </Label>
 
-                        <PasswordField fx:id="signUpPasswordField" promptText="Enter your desired password" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                        <PasswordField fx:id="signUpPasswordField" promptText="Enter your desired password" prefWidth="80" focusTraversable="false" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
                             <padding>
                                 <Insets left="7" top="10" bottom="10"/>
                             </padding>
@@ -102,7 +102,7 @@
                             </VBox.margin>
                         </Label>
 
-                        <CustomNumberField fx:id="signUpPhoneField"  promptText="Enter your phone number" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                        <CustomNumberField fx:id="signUpPhoneField"  promptText="Enter your phone number" prefWidth="80" focusTraversable="false" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
                             <padding>
                                 <Insets left="7" top="10" bottom="10"/>
                             </padding>
@@ -162,7 +162,7 @@
                                 </VBox.margin>
                             </Label>
 
-                            <TextField fx:id="loginEmailField" promptText="Enter your email address" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                            <TextField fx:id="loginEmailField" promptText="Enter your email address" prefWidth="80" focusTraversable="false" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
                                 <padding>
                                     <Insets left="7" top="10" bottom="10"/>
                                 </padding>
@@ -176,7 +176,7 @@
                                 </VBox.margin>
                             </Label>
 
-                            <PasswordField fx:id="loginPasswordField" promptText="Enter your desired password" prefWidth="80" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                            <PasswordField fx:id="loginPasswordField" promptText="Enter your desired password" prefWidth="80" focusTraversable="false" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
                                 <padding>
                                     <Insets left="7" top="10" bottom="10"/>
                                 </padding>
@@ -214,7 +214,7 @@
 
                         <HBox alignment="CENTER" spacing="5">
                             <Label fx:id="forgotPasswordText" text="Forgot Password?"/>
-                            <Label fx:id="resetText" text="Reset Password" textFill="#12AF20"/>
+                            <Label fx:id="resetPasswordText" text="Reset Password" textFill="#12AF20"/>
 
                             <VBox.margin>
                                 <Insets top="15"/>

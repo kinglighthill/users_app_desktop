@@ -7,15 +7,19 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
-<AnchorPane maxWidth="1.7976931348623157E308" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.SubjectListItemController">
-   <children>
-      <VBox fx:id="subRoot" prefWidth="600.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-border-color: #e5e5e5; -fx-border-width: 1; -fx-border-radius: 8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <BorderPane  minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="490.0">
+<?import org.controlsfx.control.CheckComboBox?>
+<AnchorPane maxWidth="1.7976931348623157E308" style="-fx-background-color: #FFFFFF;"
+            xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.scholarly.utme.controller.SubjectListItemController">
 
-               <left>
-                  <StackPane fx:id="subjectImageBackground" minWidth="100" >
-                     <ImageView fx:id="subjectImage"  preserveRatio="true" pickOnBounds="true">
+   <VBox fx:id="subRoot" prefWidth="600.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-border-color: #e5e5e5; -fx-border-width: 1; -fx-border-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(241, 241, 241, 1), 10.0, 0.5, 0.0, 5.0);"
+         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+         <BorderPane fx:id="subjectPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="490.0">
+            <left>
+               <HBox spacing="20">
+                  <StackPane fx:id="subjectImageBackground" minWidth="80" maxWidth="80">
+                     <ImageView fx:id="subjectImage" preserveRatio="true" pickOnBounds="true">
                         <HBox.margin>
                            <Insets left="20"/>
                         </HBox.margin>
@@ -24,91 +28,105 @@
                         <Insets left="30" right="30"/>
                      </padding>
                   </StackPane>
-               </left>
-               <center>
-                  <HBox alignment="CENTER_LEFT">
-                     <Label fx:id="subjectText" textFill="#034801" >
-                        <font>
-                           <Font name="Gill Sans MT Bold" size="18.0" />
-                        </font>
-                        <HBox.margin>
-                           <Insets left="250"/>
-                        </HBox.margin>
-                     </Label>
-                  </HBox>
+               </HBox>
+            </left>
 
-               </center>
-               <right>
-                  <CheckBox fx:id="subjectCheckBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="40.0"  HBox.hgrow="ALWAYS">
+            <center>
+               <HBox alignment="CENTER_LEFT">
+                  <Label fx:id="subjectText" textFill="#034801">
                      <font>
-                        <Font size="18"/>
+                        <Font name="Gill Sans MT Bold" size="18.0"/>
                      </font>
-                  </CheckBox>
-
-               </right>
-               <padding>
-                  <Insets right="30"/>
-               </padding>
-
-            </BorderPane>
-            <Separator fx:id="divider" opacity="0.5" prefWidth="200.0" />
-            <HBox fx:id="optionPanel" prefWidth="200.0">
-               <children>
-                  <VBox>
-                     <children>
-                        <Label text="Year">
-                           <font>
-                              <Font name="Gill Sans MT" size="14"/>
-                           </font>
-                        </Label>
-                        <ChoiceBox fx:id="yearChoiceBox" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
-                           <VBox.margin>
-                              <Insets top="8.0" />
-                           </VBox.margin>
-                        </ChoiceBox>
-                        <CheckBox fx:id="shuffleQuestionsCheckBox" mnemonicParsing="false" prefHeight="17.0" prefWidth="150.0" text="Shuffle Questions" >
-                           <font>
-                              <Font name="Gill Sans MT" size="13"/>
-                           </font>
-                           <VBox.margin>
-                              <Insets top="20.0" />
-                           </VBox.margin>
-                        </CheckBox>
-                     </children></VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Number of Questions">
-                           <font>
-                              <Font name="Gill Sans MT" size="14"/>
-                           </font>
-                        </Label>
-                        <ChoiceBox fx:id="questionNoChoiceBox" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
-                           <VBox.margin>
-                              <Insets top="8.0" />
-                           </VBox.margin>
-                        </ChoiceBox>
-                        <CheckBox fx:id="shuffleOptionsCheckBox" mnemonicParsing="false" prefHeight="17.0" prefWidth="139.0" text="Shuffle Options">
-                           <font>
-                              <Font name="Gill Sans MT" size="13"/>
-                           </font>
-                           <VBox.margin>
-                              <Insets top="20.0" />
-                           </VBox.margin>
-                        </CheckBox>
-                     </children>
                      <HBox.margin>
-                        <Insets left="40.0" />
+                        <Insets left="50"/>
                      </HBox.margin>
-                  </VBox>
-               </children>
-               <VBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="10.0" top="15.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
-      </VBox>
-   </children>
+                  </Label>
+               </HBox>
+            </center>
+
+            <right>
+               <CheckBox fx:id="subjectCheckBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                         mnemonicParsing="false" prefHeight="17.0" prefWidth="40.0" HBox.hgrow="ALWAYS">
+                  <font>
+                     <Font size="18"/>
+                  </font>
+               </CheckBox>
+            </right>
+            <padding>
+               <Insets right="30"/>
+            </padding>
+         </BorderPane>
+
+         <Separator fx:id="divider" opacity="0.5" prefWidth="200.0"/>
+
+         <HBox fx:id="optionPanel" spacing="20" prefWidth="200.0">
+            <VBox>
+               <Label text="Year">
+                  <font>
+                     <Font name="Gill Sans MT" size="14"/>
+                  </font>
+               </Label>
+               <ChoiceBox fx:id="yearChoiceBox" prefWidth="150.0"
+                          style="-fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
+                  <VBox.margin>
+                     <Insets top="8.0"/>
+                  </VBox.margin>
+               </ChoiceBox>
+               <CheckBox fx:id="shuffleQuestionsCheckBox" mnemonicParsing="false" prefHeight="17.0"
+                         prefWidth="150.0" text="Shuffle Questions">
+                  <font>
+                     <Font name="Gill Sans MT" size="13"/>
+                  </font>
+                  <VBox.margin>
+                     <Insets top="20.0"/>
+                  </VBox.margin>
+               </CheckBox>
+            </VBox>
+
+            <VBox>
+               <Label text="Topics">
+                  <font>
+                     <Font name="Gill Sans MT" size="14"/>
+                  </font>
+               </Label>
+               <CheckComboBox fx:id="topicsComboBox" prefWidth="150.0"
+                          style="-fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
+                  <VBox.margin>
+                     <Insets top="8.0"/>
+                  </VBox.margin>
+               </CheckComboBox>
+
+               <CheckBox fx:id="shuffleOptionsCheckBox" mnemonicParsing="false" prefHeight="17.0"
+                         prefWidth="139.0" text="Shuffle Options">
+                  <font>
+                     <Font name="Gill Sans MT" size="13"/>
+                  </font>
+                  <VBox.margin>
+                     <Insets top="20.0"/>
+                  </VBox.margin>
+               </CheckBox>
+            </VBox>
+
+            <VBox>
+               <Label text="Number of Questions">
+                  <font>
+                     <Font name="Gill Sans MT" size="14"/>
+                  </font>
+               </Label>
+               <ChoiceBox fx:id="questionNoChoiceBox" prefWidth="150.0"
+                          style="-fx-background-color: #FFFFFF; -fx-border-color: #12AF20; -fx-border-radius: 5;">
+                  <VBox.margin>
+                     <Insets top="8.0"/>
+                  </VBox.margin>
+               </ChoiceBox>
+            </VBox>
+            <VBox.margin>
+               <Insets bottom="20.0" left="20.0" right="10.0" top="15.0"/>
+            </VBox.margin>
+         </HBox>
+      </children>
+   </VBox>
    <padding>
-      <Insets bottom="1.5" top="1.5" />
+      <Insets bottom="1.5" top="1.5"/>
    </padding>
 </AnchorPane>

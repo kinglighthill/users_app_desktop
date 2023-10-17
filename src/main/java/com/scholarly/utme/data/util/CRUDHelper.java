@@ -162,6 +162,65 @@ public class CRUDHelper {
         }
     }
 
+    public static String deleteQuery(String tableName, String userid) {
+        return  "DELETE FROM " + tableName + " WHERE uid = '" + userid + "'";
+
+    }
+
+    public static String insertQuery(String tableName, String[] columns, Object[] values, int[] types) {
+        int number = Math.min(Math.min(columns.length, values.length), types.length);
+
+        StringBuilder queryBuilder = new StringBuilder("INSERT INTO " + tableName + " (");
+        for (int i = 0; i < number; i++) {
+            queryBuilder.append(columns[i]);
+            if (i < number - 1) queryBuilder.append(", ");
+        }
+        queryBuilder.append(") ");
+        queryBuilder.append(" VALUES (");
+        for (int i = 0; i < number; i++) {
+            switch (types[i]) {
+                case Types.VARCHAR:
+                    queryBuilder.append("'");
+                    queryBuilder.append((String) values[i]);
+                    queryBuilder.append("'");
+                    break;
+                case Types.INTEGER:
+                    queryBuilder.append((int) values[i]);
+            }
+            if (i < number - 1) queryBuilder.append(", ");
+        }
+        queryBuilder.append(");");
+
+        return queryBuilder.toString();
+    }
+
+    public static String insertOrReplaceQuery(String tableName, String[] columns, Object[] values, int[] types) {
+        int number = Math.min(Math.min(columns.length, values.length), types.length);
+
+        StringBuilder queryBuilder = new StringBuilder("INSERT OR REPLACE INTO " + tableName + " (");
+        for (int i = 0; i < number; i++) {
+            queryBuilder.append(columns[i]);
+            if (i < number - 1) queryBuilder.append(", ");
+        }
+        queryBuilder.append(") ");
+        queryBuilder.append(" VALUES (");
+        for (int i = 0; i < number; i++) {
+            switch (types[i]) {
+                case Types.VARCHAR:
+                    queryBuilder.append("'");
+                    queryBuilder.append((String) values[i]);
+                    queryBuilder.append("'");
+                    break;
+                case Types.INTEGER:
+                    queryBuilder.append((int) values[i]);
+            }
+            if (i < number - 1) queryBuilder.append(", ");
+        }
+        queryBuilder.append(");");
+
+        return queryBuilder.toString();
+    }
+
     private static String convertObjectToSQLField(Object value, int type) {
         StringBuilder queryBuilder = new StringBuilder();
         switch (type) {

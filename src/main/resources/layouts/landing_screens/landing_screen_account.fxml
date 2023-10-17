@@ -36,14 +36,14 @@
                         <Panel fx:id="profilePanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="15" alignment="CENTER">
-                                    <ImageView fx:id="profileImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <ImageView fx:id="profileImage"  pickOnBounds="true"/>
                                     <VBox spacing="5" alignment="CENTER_LEFT">
-                                        <Label text="ogbonnalucy@gmail.com">
+                                        <Label fx:id="emailText" text="ogbonnalucy@gmail.com">
                                             <font>
                                                 <Font size="16"/>
                                             </font>
                                         </Label>
-                                        <Label text="ASDWERTY1234HRTSN" textFill="#12AF20">
+                                        <Label fx:id="deviceIdLabel" textFill="#12AF20">
                                             <font>
                                                 <Font size="16"/>
                                             </font>
@@ -54,6 +54,36 @@
                             <right>
                                 <HBox alignment="CENTER">
                                     <ImageView fx:id="accountExpandIcon"/>
+                                </HBox>
+                            </right>
+                            <padding>
+                                <Insets top="20" left="20" bottom="20" right="30"/>
+                            </padding>
+                        </Panel>
+                        <Panel fx:id="settingsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                            <left>
+                                <HBox spacing="40" alignment="CENTER">
+                                    <ImageView fx:id="settingsImage" fitHeight="25" fitWidth="25" preserveRatio="true" pickOnBounds="true"/>
+                                    <VBox>
+                                        <Label text="Settings" textFill="#053500">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Choose your app preferences">
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <padding>
+                                        <Insets left="20"/>
+                                    </padding>
+                                </HBox>
+                            </left>
+                            <right>
+                                <HBox alignment="CENTER">
+                                    <ImageView fx:id="settingsExpandIcon" preserveRatio="true" pickOnBounds="true"/>
                                 </HBox>
                             </right>
                             <padding>
@@ -180,7 +210,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>-->
-                        <Panel fx:id="bookmarksPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                        <!--<Panel fx:id="bookmarksPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="bookmarkImage" preserveRatio="true" pickOnBounds="true"/>
@@ -203,14 +233,14 @@
                             </left>
                             <right>
                                 <HBox alignment="CENTER">
-                                    <ImageView fx:id="bookmarkExpandIcon"/>
+                                    <ImageView fx:id="bookmarkExpandIcon" preserveRatio="true" pickOnBounds="true"/>
                                 </HBox>
                             </right>
                             <padding>
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
-                        </Panel>
-                        <Panel fx:id="notificationsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                        </Panel>-->
+                        <!--<Panel fx:id="notificationsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="notificationImage" preserveRatio="true" pickOnBounds="true"/>
@@ -233,13 +263,13 @@
                             </left>
                             <right>
                                 <HBox alignment="CENTER">
-                                    <ImageView fx:id="notificationExpandIcon"/>
+                                    <ImageView fx:id="notificationExpandIcon" preserveRatio="true" pickOnBounds="true"/>
                                 </HBox>
                             </right>
                             <padding>
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
-                        </Panel>
+                        </Panel>-->
                         <!--<Panel fx:id="rewardsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">

@@ -30,7 +30,7 @@ public class ObjectiveBookmarkDao {
 
         try {
             Connection connection = DbConnection.getDbConnection();
-            System.out.println(TAG + "Connection object -> " + connection);
+
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             bookmarks.clear();
@@ -63,7 +63,7 @@ public class ObjectiveBookmarkDao {
 
         try {
             Connection connection = DbConnection.getDbConnection();
-            System.out.println(TAG + "Connection object -> " + connection);
+
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             bookmarks.clear();

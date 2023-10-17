@@ -1,5 +1,6 @@
 package com.scholarly.utme.viewmodels.practice_screens;
 
+import com.google.gson.Gson;
 import com.scholarly.utme.controller.practice_screens.CBTGameScreenController.InitialData;
 import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
@@ -9,6 +10,9 @@ import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.network.model.UserData;
+import com.scholarly.utme.util.Constants;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -20,8 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_DATA;
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
+
 public class CBTGameScreenVM implements ViewModel {
     private static final String TAG = "CBTGameScreenVM: ";
+
 
     private SimpleIntegerProperty selectedQuestion = new SimpleIntegerProperty();
     private List<QuestionState> questions = new ArrayList<>();
@@ -39,7 +47,20 @@ public class CBTGameScreenVM implements ViewModel {
 
     private int correctAnswers, incorrectAnswers, questionAttempts;
 
+    private final UserData userData;
+
+    private final Boolean vibrationPreference;
+    private final Boolean soundPreference;
+
     public CBTGameScreenVM() {
+        String userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+        String userDataString = PreferencesManager.get(PREF_KEY_USER_DATA+userId, "");
+        Gson gson = new Gson();
+        userData = gson.fromJson(userDataString, UserData.class);
+
+        vibrationPreference = PreferencesManager.getBoolean(Constants.PREF_KEY_VIBRATION+userId, false);
+        soundPreference = PreferencesManager.getBoolean(Constants.PREF_KEY_SOUND+userId, false);
+
         selectedQuestion.set(1);
     }
 
@@ -67,7 +88,7 @@ public class CBTGameScreenVM implements ViewModel {
 
             questions.addAll(questionStates);
 
-            subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new PracticeScreenVM.SubjectQuestionsState(1, practiceQuestionState));
+            subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new PracticeScreenVM.SubjectQuestionsState(1, 0, practiceQuestionState));
 
             List<ObjectiveQuestionDescription> questionDescriptionsList = QuestionDescriptionDao
                     .getObjectiveQuestionDescriptions(
@@ -77,7 +98,7 @@ public class CBTGameScreenVM implements ViewModel {
 
             objectiveQuestionDescriptions.addAll(questionDescriptionsList);
 
-            objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks());
+//            objectiveBookmarks.addAll(ObjectiveBookmarkDao.getBookmarks());
 
         });
 
@@ -162,9 +183,21 @@ public class CBTGameScreenVM implements ViewModel {
         return objectiveBookmarks;
     }
 
+    public UserData getUser() {
+        return userData;
+    }
+
+    public Boolean getVibrationPreference() {
+        return vibrationPreference;
+    }
+
+    public Boolean getSoundPreference() {
+        return soundPreference;
+    }
+
     public void handleBookmarkClicked() {
 
-        ObjectiveQuestion question = questions.get(selectedQuestion.get() - 1).getQuestion();
+        ObjectiveQuestion question = questions.get(selectedQuestion.get() - 1).question();
 
         ObservableList<ObjectiveBookmark> oldBookmarks = ObjectiveBookmarkDao.getBookmarks();
         System.out.println(TAG + "oldBookmarks -> " + oldBookmarks);
@@ -194,21 +227,5 @@ public class CBTGameScreenVM implements ViewModel {
 
     }
 
-    public static class QuestionState {
-        private ObjectiveQuestion question;
-        private List<String> selectedOptions;
-
-        public QuestionState(ObjectiveQuestion question, List<String> selectedOptions) {
-            this.question = question;
-            this.selectedOptions = selectedOptions;
-        }
-
-        public ObjectiveQuestion getQuestion() {
-            return question;
-        }
-
-        public List<String> getSelectedOptions() {
-            return selectedOptions;
-        }
-    }
+    public record QuestionState(ObjectiveQuestion question, List<String> selectedOptions) { }
 }

@@ -10,6 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.image.ImageView?>
+<?import com.scholarly.utme.ui.utils.CustomTitledPane?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.scholarly.utme.controller.settings_screens.SettingsHelpScreenController"
             prefHeight="400.0" prefWidth="600.0">
@@ -30,105 +31,457 @@
 
     <center>
         <AnchorPane style="-fx-background-color: white;">
-            <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.leftAnchor="50" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="150" AnchorPane.bottomAnchor="30">
-                <StackPane prefHeight="572" style="-fx-background-color: white;">
-                    <VBox spacing="15">
-                        <VBox fx:id="faqVBox" spacing="15">
-                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                <left>
-                                    <HBox spacing="30" alignment="CENTER">
-                                        <ImageView fx:id="faqImage" preserveRatio="true" pickOnBounds="true"/>
-                                        <Label text="Frequently Asked Questions (FAQ)" textFill="#053500">
+            <ScrollPane fitToWidth="true" style="-fx-background-color: white;"
+                        AnchorPane.leftAnchor="50" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="150"  AnchorPane.bottomAnchor="150">
+                <VBox spacing="15">
+                    <VBox fx:id="faqVBox" spacing="15">
+                        <Panel fx:id="faqPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <left>
+                                <HBox spacing="30" alignment="CENTER">
+                                    <ImageView fx:id="faqImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <Label text="Frequently Asked Questions (FAQ)" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </HBox>
+                            </left>
+                            <right>
+                                <ToggleButton fx:id="faqDropdown"/>
+                            </right>
+                            <padding>
+                                <Insets top="20" bottom="20" left="30" right="30"/>
+                            </padding>
+                        </Panel>
+                        <VBox fx:id="faqDetails" spacing="10">
+                            <VBox spacing="10">
+                                <Label text="About Scholarly UTME App" textFill="#053500">
+                                    <font>
+                                        <Font size="18"/>
+                                    </font>
+                                    <padding>
+                                        <Insets top="5" bottom="5"/>
+                                    </padding>
+                                </Label>
+                                <TitledPane fx:id="whatIsScholarlyPane" text="What is Scholarly UTME App?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Scholarly UTME app is a Desktop application that is designed to help students learn, pass exams and gain admission into higher institutions.">
                                             <font>
                                                 <Font size="16"/>
                                             </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
                                         </Label>
                                     </HBox>
-                                </left>
-                                <right>
-                                    <ToggleButton fx:id="faqDropdown"/>
-                                </right>
-                                <padding>
-                                    <Insets top="20" bottom="20" left="30" right="30"/>
-                                </padding>
-                            </Panel>
-                        </VBox>
-                        <VBox fx:id="contactVBox" spacing="10">
-                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                <left>
-                                    <HBox spacing="30" alignment="CENTER">
-                                        <ImageView fx:id="contactImage" preserveRatio="true" pickOnBounds="true"/>
-                                        <Label text="Contact Us" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane fx:id="getScholarlyPane" text="How can I get Scholarly UTME App?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="You can download the app from our website or from Microsoft Store for Windows users">
                                             <font>
                                                 <Font size="16"/>
                                             </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
                                         </Label>
                                     </HBox>
-                                </left>
-                                <right>
-                                    <ToggleButton fx:id="contactDropdown"/>
-                                </right>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane fx:id="firstDifferencePane" text="What is the difference between Scholarly UTME App and Past Question booklets?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label fx:id="firstDifferenceText">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane fx:id="secondDifferencePane" text="What is the difference between Scholarly UTME App and Other Apps?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label fx:id="secondDifferenceText">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="Who is Scholarly UTME App for?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label fx:id="whoIsScholarlyForText">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
                                 <padding>
-                                    <Insets top="20" bottom="20" left="30" right="30"/>
-                                </padding>
-                            </Panel>
-                            <VBox fx:id="contactDetails" spacing="10">
-                                <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                    <ImageView fx:id="phoneImage" preserveRatio="true" pickOnBounds="true"/>
-                                    <Label text="+234 813 694 1462" textFill="#053500">
-                                        <font>
-                                            <Font size="16"/>
-                                        </font>
-                                    </Label>
-                                    <padding>
-                                        <Insets top="20" bottom="20" left="30" right="30"/>
-                                    </padding>
-                                </HBox>
-                                <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                    <ImageView fx:id="whatsAppImage" preserveRatio="true" pickOnBounds="true"/>
-                                    <Label text="+234 813 694 1462" textFill="#053500">
-                                        <font>
-                                            <Font size="16"/>
-                                        </font>
-                                    </Label>
-                                    <padding>
-                                        <Insets top="20" bottom="20" left="30" right="30"/>
-                                    </padding>
-                                </HBox>
-                                <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                    <ImageView fx:id="mailImage" preserveRatio="true" pickOnBounds="true"/>
-                                    <Label text="scholarlyapp@gmail.com" textFill="#053500">
-                                        <font>
-                                            <Font size="16"/>
-                                        </font>
-                                    </Label>
-                                    <padding>
-                                        <Insets top="20" bottom="20" left="30" right="30"/>
-                                    </padding>
-                                </HBox>
-                                <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
-                                    <ImageView fx:id="websiteImage" preserveRatio="true" pickOnBounds="true"/>
-                                    <Label text="www.scholarlyng.com" textFill="#053500">
-                                        <font>
-                                            <Font size="16"/>
-                                        </font>
-                                    </Label>
-                                    <padding>
-                                        <Insets top="20" bottom="20" left="30" right="30"/>
-                                    </padding>
-                                </HBox>
-                                <padding>
-                                    <Insets left="10" right="10"/>
+                                    <Insets left="20" right="20"/>
                                 </padding>
                             </VBox>
-                        </VBox>
 
+                            <VBox spacing="10">
+                                <Label text="Activation" textFill="#053500">
+                                    <font>
+                                        <Font size="18"/>
+                                    </font>
+                                    <padding>
+                                        <Insets top="5" bottom="5"/>
+                                    </padding>
+                                </Label>
+                                <TitledPane text="What is meant by the term 'Activate App'?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="To activate your app means to unlock and gain full access to all the app's features and contents.">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="How can I activate my App?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="To activate your app, you will need to pay a sum of #2000 using the payment methods provided">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="How do I make payment?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label fx:id="makePaymentText">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="How long does the activation lasts?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Your activation will last for one academic year. No recurrent subscription fee or hidden charges.">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="I cannot afford the activation fee. What do I do?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="There is a limited opportunity for people to activate with just #1500 when they refer 5 friends to the app. Visit Profile > Invite Friends Promo to learn more about this offer.">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="Can activation be used on multiple devices?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="No. only one device per activation.">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="What is a Product Key?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="A Product Key is a 16 digit alphanumeric key that is used to identify a device">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <padding>
+                                    <Insets left="20" right="20"/>
+                                </padding>
+                            </VBox>
+
+                            <VBox spacing="10">
+                                <Label text="How to use Scholarly UTME App" textFill="#053500">
+                                    <font>
+                                        <Font size="18"/>
+                                    </font>
+                                    <padding>
+                                        <Insets top="5" bottom="5"/>
+                                    </padding>
+                                </Label>
+                                <TitledPane text="How do I check my performance?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Go to 'Account' screen and click on 'My Performance'.">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="How do I check my bookmarked questions?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Go to 'Account' screen and click on 'My Saved Questions'">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="How do I update my profile?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Go to 'Account' screen and click on the card displaying your email and Product Key. Click 'Save' button after making changes to your profile.">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="How do I report wrong questions, answers and explanation?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Click on the Report icon (the second item) at the top right corner on the CBT Practice Screen, a dialog will appear, tick and fill in the necessary fields and click the 'Submit' button.">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="How do I refer a friend?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Go to 'Account' Screen and click on 'Invite Friends Promo'. Click on the 'Share my referral link now' button to share your link via any social media platform or 'Copy link' button to copy your referral link.">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <TitledPane text="How do I turn off sound in the app?" textFill="#053500" expanded="false">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Go to 'Settings' screen, under the 'Preference' category, toggle off the 'Enable in app sound' switches. Also, within the Exam Screens, sound can be turned off by clicking on the 'Speaker' icon at the top right corner of the screen.">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                            <padding>
+                                                <Insets top="5"/>
+                                            </padding>
+                                        </Label>
+                                    </HBox>
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </TitledPane>
+
+                                <padding>
+                                    <Insets left="20" right="20"/>
+                                </padding>
+                            </VBox>
+
+                        </VBox>
                     </VBox>
-                    <padding>
-                        <Insets right="15"/>
-                    </padding>
-                </StackPane>
+
+                    <VBox fx:id="contactVBox" spacing="10">
+                        <Panel fx:id="contactPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <left>
+                                <HBox spacing="30" alignment="CENTER">
+                                    <ImageView fx:id="contactImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <Label text="Contact Us" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </HBox>
+                            </left>
+                            <right>
+                                <ToggleButton fx:id="contactDropdown"/>
+                            </right>
+                            <padding>
+                                <Insets top="20" bottom="20" left="30" right="30"/>
+                            </padding>
+                        </Panel>
+                        <VBox fx:id="contactDetails" spacing="10">
+                            <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1); -fx-background-radius: 5;">
+                                <ImageView fx:id="phoneImage" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="+234 816 734 8170" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="30"/>
+                                </padding>
+                            </HBox>
+
+                            <HBox fx:id="whatsAppPane" spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1); -fx-background-radius: 5;">
+                                <ImageView fx:id="whatsAppImage" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="+234 813 694 1462" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="30"/>
+                                </padding>
+                            </HBox>
+
+                            <HBox fx:id="gmailPane" spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1); -fx-background-radius: 5;">
+                                <ImageView fx:id="mailImage" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="info@scholarly.africa" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="30"/>
+                                </padding>
+                            </HBox>
+
+                            <HBox fx:id="websitePane" spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1);">
+                                <ImageView fx:id="websiteImage" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="www.scholarly.africa" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="30"/>
+                                </padding>
+                            </HBox>
+                            <padding>
+                                <Insets left="20" right="20"/>
+                            </padding>
+                        </VBox>
+                    </VBox>
+
+                </VBox>
+                <padding>
+                    <Insets right="15"/>
+                </padding>
             </ScrollPane>
+
+            <HBox alignment="TOP_CENTER" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50" AnchorPane.bottomAnchor="30">
+                <VBox spacing="25">
+                    <Label text="You can also reach us via our social handles">
+                        <font>
+                            <Font size="18"/>
+                        </font>
+                    </Label>
+
+                    <HBox spacing="20" alignment="TOP_CENTER">
+                        <ImageView fx:id="linkedInImage" preserveRatio="true" pickOnBounds="true"/>
+                        <ImageView fx:id="facebookImage" preserveRatio="true" pickOnBounds="true"/>
+                        <ImageView fx:id="twitterImage" preserveRatio="true" pickOnBounds="true"/>
+                        <ImageView fx:id="instagramImage" preserveRatio="true" pickOnBounds="true"/>
+                    </HBox>
+                </VBox>
+            </HBox>
         </AnchorPane>
     </center>
 

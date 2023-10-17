@@ -10,7 +10,7 @@
 <?import javafx.geometry.Insets?>
 <fx:root type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <graphic>
-        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
             <ImageView fx:id="bookmarkImage" fitHeight="100" fitWidth="50" preserveRatio="true" pickOnBounds="true"/>
             <VBox spacing="10">
                 <Label fx:id="bookmarkTitle" text="CBT Practice Test" textFill="#053500"/>

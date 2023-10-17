@@ -2,14 +2,16 @@ package com.scholarly.utme.data.model;
 
 public class FreeContent {
     private int id;
-    private int subjectId;
+    private int objectiveSubjectId;
+    private int theorySubjectId;
     private int yearId;
     private int topicId;
     private int chapterId;
 
-    public FreeContent(int id, int subjectId, int yearId, int topicId, int chapterId) {
+    public FreeContent(int id, int objectiveSubjectId, int theorySubjectId, int yearId, int topicId, int chapterId) {
         this.id = id;
-        this.subjectId = subjectId;
+        this.objectiveSubjectId = objectiveSubjectId;
+        this.theorySubjectId = theorySubjectId;
         this.yearId = yearId;
         this.topicId = topicId;
         this.chapterId = chapterId;
@@ -19,8 +21,12 @@ public class FreeContent {
         return id;
     }
 
-    public int getSubjectId() {
-        return subjectId;
+    public int getObjectiveSubjectId() {
+        return objectiveSubjectId;
+    }
+
+    public int getTheorySubjectId() {
+        return theorySubjectId;
     }
 
     public int getYearId() {

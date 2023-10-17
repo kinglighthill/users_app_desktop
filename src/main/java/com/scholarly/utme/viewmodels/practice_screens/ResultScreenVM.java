@@ -1,8 +1,9 @@
 package com.scholarly.utme.viewmodels.practice_screens;
 
+import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.Result;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
@@ -16,10 +17,12 @@ import java.util.List;
 import static com.scholarly.utme.controller.practice_screens.ResultScreenController.*;
 
 public class ResultScreenVM implements ViewModel, SceneLifecycle {
+    private static final String TAG = "ResultScreenVM: ";
 
     private SimpleStringProperty averageScore = new SimpleStringProperty("0%");
     private SimpleStringProperty total = new SimpleStringProperty("0");
     private ObservableList<Result> results = FXCollections.observableArrayList();
+    private List<QuestionDescription> questionDescriptions = FXCollections.observableArrayList();
 
     private List<PQSubject> subjectList;
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions;
@@ -38,23 +41,25 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
     }
 
     public void processInitialData(InitialData initialData) {
-        previousScreen = initialData.getView();
+        previousScreen = initialData.getPreviousScreen();
         results.clear();
         results.addAll(initialData.getResults());
 
         subjectList = initialData.getSubjects();
+        questionDescriptions = initialData.getQuestionDescriptions();
         subjectsQuestions = initialData.getSubjectsQuestions();
 
-        int totalScore = 0;
+        double totalScore = 0;
         double totalPercent = 0;
-        int totalQuestions = 0;
+        double totalQuestions = 0;
         for (int i = 0; i < results.size(); i++) {
             totalScore += results.get(i).getCorrectAnswers();
             totalPercent += results.get(i).getPercentage();
             totalQuestions += results.get(i).getTotalQuestions();
         }
 
-        total.set(totalScore + "/" + totalQuestions);
+        double newTotalScore = (totalScore / totalQuestions) * 400;
+        total.set((int)newTotalScore + "/" + 400);
         averageScore.set(String.format("%.1f", (totalPercent/results.size())) + "%");
     }
 
@@ -77,6 +82,10 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
 
     public List<PQSubject> getSubjectList() {
         return subjectList;
+    }
+
+    public List<QuestionDescription> getQuestionDescriptions() {
+        return questionDescriptions;
     }
 
     public HashMap<String, PracticeScreenVM.SubjectQuestionsState> getSubjectsQuestions() {

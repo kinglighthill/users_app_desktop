@@ -9,142 +9,150 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.image.ImageView?>
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.account_screens.AccountProfileScreenController"
-            prefHeight="400.0" prefWidth="600.0">
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.scholarly.utme.controller.account_screens.AccountProfileScreenController"
+           prefHeight="400.0" prefWidth="600.0">
+    <BorderPane>
 
-    <top>
-        <HBox spacing="15" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
-            <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
-            <Label text="Profile" textFill="#053500">
-                <font>
-                    <Font name="Gill Sans MT Bold" size="24"/>
-                </font>
-            </Label>
-            <padding>
-                <Insets left="30"/>
-            </padding>
-        </HBox>
-    </top>
-
-    <center>
-        <AnchorPane style="-fx-background-color: white;">
-            <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.leftAnchor="200" AnchorPane.topAnchor="10" AnchorPane.rightAnchor="200" AnchorPane.bottomAnchor="20">
-                <VBox spacing="20" alignment="TOP_CENTER" style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
-                    <StackPane maxHeight="150" maxWidth="150">
-                        <ImageView fx:id="profileImage" fitHeight="120" fitWidth="120" preserveRatio="true" pickOnBounds="true"/>
-                        <ImageView fx:id="cameraImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="BOTTOM_RIGHT"/>
-                    </StackPane>
-                    <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-border-color: #F1F1F1; -fx-border-radius: 7;">
-                        <ImageView fx:id="keyImage" preserveRatio="true" pickOnBounds="true"/>
-                        <VBox>
-                            <Label text="Product Key" textFill="#12AF20">
-                                <font>
-                                    <Font size="15"/>
-                                </font>
-                            </Label>
-                            <Label text="3YC5NEX8MEBTYZ9Z" textFill="#053500">
-                                <font>
-                                    <Font size="18"/>
-                                </font>
-                            </Label>
-                        </VBox>
-                        <padding>
-                            <Insets topRightBottomLeft="10"/>
-                        </padding>
-                    </HBox>
-                    <VBox spacing="10">
-                        <Label text="Email">
-                            <font>
-                                <Font size="16"/>
-                            </font>
-                        </Label>
-                        <TextField prefHeight="40" text="princejohnc35@gmail.com" editable="false">
-                            <font>
-                                <Font size="15"/>
-                            </font>
-                        </TextField>
-                        <HBox>
-                            <ImageView fx:id="infoImage" preserveRatio="true" pickOnBounds="true"/>
-                            <Label text="To change email, contact support ">
-                                <HBox.margin>
-                                    <Insets left="8"/>
-                                </HBox.margin>
-                            </Label>
-                            <Label text="here" textFill="#12AF20"/>
-                        </HBox>
-                    </VBox>
-                    <VBox spacing="10">
-                        <Label text="Full Name">
-                            <font>
-                                <Font size="16"/>
-                            </font>
-                        </Label>
-                        <StackPane>
-                            <TextField fx:id="profileNameTextField" prefHeight="40" text="John Prince Uzodinma" editable="false">
-                                <font>
-                                    <Font size="15"/>
-                                </font>
-                            </TextField>
-                            <Label fx:id="changeProfileName" text="change" textFill="#12AF20" StackPane.alignment="CENTER_RIGHT">
-                                <padding>
-                                    <Insets right="10"/>
-                                </padding>
-                            </Label>
-                        </StackPane>
-                    </VBox>
-                    <VBox spacing="10">
-                        <Label text="Phone">
-                            <font>
-                                <Font size="16"/>
-                            </font>
-                        </Label>
-                        <StackPane>
-                            <TextField fx:id="phoneTextField" prefHeight="40" text="08109514619" editable="false">
-                                <font>
-                                    <Font size="15"/>
-                                </font>
-                            </TextField>
-                            <Label fx:id="changePhoneNum" text="change" textFill="#12AF20" StackPane.alignment="CENTER_RIGHT">
-                                <padding>
-                                    <Insets right="10"/>
-                                </padding>
-                            </Label>
-                        </StackPane>
-                    </VBox>
-                    <VBox spacing="10">
-                        <Label text="Gender" textFill="#053500">
-                            <font>
-                                <Font size="16"/>
-                            </font>
-                        </Label>
-                        <HBox spacing="20">
-                            <RadioButton text="Male" selected="true">
-                                <font>
-                                    <Font size="15"/>
-                                </font>
-                            </RadioButton>
-                            <RadioButton fx:id="femaleRadioButton" text="Female">
-                                <font>
-                                    <Font size="15"/>
-                                </font>
-                            </RadioButton>
-                        </HBox>
-                    </VBox>
-                    <Button fx:id="saveButton" text="Save" textFill="white" prefWidth="300" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 7;">
-                        <font>
-                            <Font size="16"/>
-                        </font>
-                    </Button>
-                    <padding>
-                        <Insets top="30" bottom="20" left="50" right="50"/>
-                    </padding>
-                </VBox>
+        <top>
+            <HBox spacing="15" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+                <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+                <Label text="Profile" textFill="#053500">
+                    <font>
+                        <Font name="Gill Sans MT Bold" size="24"/>
+                    </font>
+                </Label>
                 <padding>
-                    <Insets top="20" bottom="20"/>
+                    <Insets left="30"/>
                 </padding>
-            </ScrollPane>
-        </AnchorPane>
-    </center>
+            </HBox>
+        </top>
 
-</BorderPane>
+        <center>
+            <AnchorPane style="-fx-background-color: white;">
+                <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.leftAnchor="200" AnchorPane.topAnchor="10" AnchorPane.rightAnchor="200" AnchorPane.bottomAnchor="20">
+                    <VBox spacing="20" alignment="TOP_CENTER" style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                        <StackPane maxHeight="150" maxWidth="150">
+                            <ImageView fx:id="profileImage" pickOnBounds="true"/>
+                            <ImageView fx:id="cameraImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="BOTTOM_RIGHT"/>
+                        </StackPane>
+                        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-border-color: #F1F1F1; -fx-border-radius: 7;">
+                            <ImageView fx:id="keyImage" preserveRatio="true" pickOnBounds="true"/>
+                            <VBox>
+                                <Label text="Product Key" textFill="#12AF20">
+                                    <font>
+                                        <Font size="15"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="deviceIdLabel" textFill="#053500">
+                                    <font>
+                                        <Font size="18"/>
+                                    </font>
+                                </Label>
+                            </VBox>
+                            <padding>
+                                <Insets topRightBottomLeft="10"/>
+                            </padding>
+                        </HBox>
+                        <VBox spacing="10">
+                            <Label text="Email">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="emailTextField" prefHeight="40" editable="false">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </TextField>
+                            <HBox>
+                                <ImageView fx:id="infoImage" preserveRatio="true" pickOnBounds="true"/>
+                                <Label text="To change email, contact support ">
+                                    <font>
+                                        <Font size="13"/>
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets left="8"/>
+                                    </HBox.margin>
+                                </Label>
+                                <Label fx:id="changeMailHereLabel" text="here" textFill="#12AF20">
+                                    <font>
+                                        <Font size="13"/>
+                                    </font>
+                                </Label>
+                            </HBox>
+                        </VBox>
+                        <VBox spacing="10">
+                            <Label text="Full Name">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="profileNameTextField" prefHeight="40">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </TextField>
+                        </VBox>
+                        <VBox spacing="10">
+                            <Label text="Phone">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="phoneTextField" prefHeight="40">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </TextField>
+                        </VBox>
+                        <VBox spacing="10">
+                            <Label text="Gender" textFill="#053500">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+                            <HBox spacing="20">
+                                <RadioButton fx:id="maleRadioButton" text="Male">
+                                    <font>
+                                        <Font size="15"/>
+                                    </font>
+                                </RadioButton>
+                                <RadioButton fx:id="femaleRadioButton" text="Female">
+                                    <font>
+                                        <Font size="15"/>
+                                    </font>
+                                </RadioButton>
+                            </HBox>
+                        </VBox>
+                        <Button fx:id="saveButton" text="Save" textFill="white" prefWidth="300" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 7;">
+                            <font>
+                                <Font size="16"/>
+                            </font>
+                        </Button>
+                        <padding>
+                            <Insets top="30" bottom="20" left="50" right="50"/>
+                        </padding>
+                    </VBox>
+                    <padding>
+                        <Insets top="20" bottom="20"/>
+                    </padding>
+                </ScrollPane>
+            </AnchorPane>
+        </center>
+
+    </BorderPane>
+
+    <Pane fx:id="dialogDimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
+    <ProgressIndicator fx:id="progressBar" maxWidth="150" maxHeight="50" StackPane.alignment="CENTER" visible="false"/>
+    <HBox fx:id="toastBar" prefWidth="300" prefHeight="50" maxHeight="50" maxWidth="300" StackPane.alignment="BOTTOM_CENTER"  alignment="CENTER" style="-fx-background-color: #A9A9A9; -fx-background-radius: 7;" visible="false">
+        <Label fx:id="toastLabel" textFill="white">
+            <font>
+                <Font size="16"/>
+            </font>
+        </Label>
+        <StackPane.margin>
+            <Insets bottom="30"/>
+        </StackPane.margin>
+    </HBox>
+</StackPane>

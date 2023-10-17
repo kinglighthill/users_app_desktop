@@ -2,12 +2,11 @@ package com.scholarly.utme.controller.practice_screens;
 
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.*;
+import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM.QuestionState;
@@ -17,7 +16,6 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.SceneLifecycle;
-import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,76 +27,59 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.scene.web.WebView;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
-import static com.scholarly.utme.ui.utils.Screens.PAST_QUESTION_SCREEN;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @FxmlPath("/layouts/practice_screens/StudyPastQuestionsScreen.fxml")
 public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenVM>, Initializable, SceneLifecycle {
-    public static final String TAG = "StudyPastQuestScreenController: ";
+    private static final String TAG = "StudyPastQuestScreenController: ";
 
     @InjectViewModel
     private StudyPastScreenVM viewModel;
 
     @FXML
-    private HBox answerHeaderHBox, rightPane;
-
+    private WebView questionWebView, explanationWebView, questionWithImageWebView;
     @FXML
-    private VBox centerVBox, rightVBox, questionDescriptionDialog;
-
+    private HBox answerHeaderHBox, rightPane, quesDescriptionHBox, questionWithImageHBox;
+    @FXML
+    private VBox centerVBox, rightVBox, questionDescriptionDialog, explanationVBox;
     @FXML
     private TilePane tilePane;
-
     @FXML
     private ScrollPane tileScrollPane, explanationScrollPane;
-
     @FXML
-    private StackPane answerPane, explanationPane;
-
+    private StackPane answerPane, explanationPane, questionStackPane;
     @FXML
     private ListView<PQSubject> subjectList;
-
     @FXML
-    private Label questionOverviewLabel, questionLabel, optionA, optionB, optionC, optionD, explanationLabel, explanationTitle, correctAnswerTitle, correctAnswerLabel, questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
-
+    private Label questionOverviewLabel, optionA, optionB, optionC, optionD, explanationLabel, explanationTitle, correctAnswerTitle, correctAnswerLabel, questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
     @FXML
-    private Button prevButton, nextButton, exitButton, hideAnswerButton;
-
+    private Button prevButton, nextButton, exitButton, hideAnswerButton, viewImageButton;
     @FXML
     private ToggleButton showAnswerButton, showExplanationButton;
-
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, quesDescriptionCloseIcon;
-
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, quesDescriptionCloseIcon, questionImage;
     @FXML
     private Pane dialogDimmer;
-
     @FXML
     private DialogPane exitDialogPane;
 
+    private final String optionWebViewBC = "#FFFFFF";
     @Override
+
     public void initialize(URL location, ResourceBundle resources) {
         viewModel.processInitialData(getInitialData());
 
         initializeViews();
         initializeFont();
 
-        viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                setupQuestionView();
-                setupTilePane();
-                updateBookmarkIcon();
-            }
-        });
-
         subjectList.setCellFactory(new PracticeSubjectListCellFactory());
         subjectList.setItems(viewModel.getSubjects());
+        subjectList.getSelectionModel().selectFirst();
         subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) c -> {
             if (c.getList().size() == 1) {
                 PQSubject subject = c.getList().get(0);
@@ -108,36 +89,90 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             }
         });
 
-        subjectList.getSelectionModel().select(0);
+        viewModel.setSelectedSubject(subjectList.getSelectionModel().getSelectedItem());
+        setupQuestionView(viewModel.getSelectedSubject());
+        setupTilePane(viewModel.getSelectedSubject());
+
+        viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                setupQuestionView(newValue);
+                setupTilePane(newValue);
+//                updateBookmarkIcon();
+            }
+        });
 
         viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
             subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
                 if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
                     changeSelectedTile(oldValue.intValue(), newValue.intValue());
                     changeSelectedQuestion(newValue.intValue());
-                    updateBookmarkIcon();
+//                    updateBookmarkIcon();
                 }
             });
         });
 
+
+        // Integer value to track subjectList subject selection
+        AtomicInteger subjectListSelectionAtomicIndex = new AtomicInteger(0);
+
+        subjectList.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<? super Integer>) observable -> {
+            if (observable.getList().size() == 1) {
+                subjectListSelectionAtomicIndex.set(observable.getList().get(0));
+            }
+        });
+
         prevButton.setOnAction(event -> {
-            int selectedQuestion = viewModel.getSubjectsQuestions()
+            nextButton.setDisable(false);
+
+            int selectedQuestionIndex = viewModel.getSubjectsQuestions()
                     .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
-            viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getShortTitle())
-                    .setSelectedQuestion(selectedQuestion - 1);
+            if (subjectList.getSelectionModel().getSelectedIndex() == 0) {
+                viewModel.getSubjectsQuestions()
+                        .get(viewModel.getSelectedSubject().getShortTitle())
+                        .setSelectedQuestion(selectedQuestionIndex - 1);
+
+                if (selectedQuestionIndex == 2) {
+                    prevButton.setDisable(true);
+                }
+            } else {
+                if (selectedQuestionIndex == 1) {
+                    subjectList.getSelectionModel().select(subjectListSelectionAtomicIndex.decrementAndGet());
+                } else {
+                    viewModel.getSubjectsQuestions()
+                            .get(viewModel.getSelectedSubject().getShortTitle())
+                            .setSelectedQuestion(selectedQuestionIndex - 1);
+                }
+            }
+
         });
 
         nextButton.setOnAction(event -> {
-            int selectedQuestion = viewModel.getSubjectsQuestions()
+            prevButton.setDisable(false);
+            StudyPastScreenVM.SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+            List<StudyPastScreenVM.QuestionState> questions = subjectQuestionsState.getQuestions();
+
+            int selectedQuestionIndex = viewModel.getSubjectsQuestions()
                     .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
-            viewModel.getSubjectsQuestions()
-                    .get(viewModel.getSelectedSubject().getShortTitle())
-                    .setSelectedQuestion(selectedQuestion + 1);
+            if (selectedQuestionIndex == questions.size()) {
+                subjectList.getSelectionModel().select(subjectListSelectionAtomicIndex.incrementAndGet());
+                prevButton.setDisable(false);
+
+            } else {
+                viewModel.getSubjectsQuestions()
+                        .get(viewModel.getSelectedSubject().getShortTitle())
+                        .setSelectedQuestion(selectedQuestionIndex + 1);
+
+                int newSelectedQuestionIndex = viewModel.getSubjectsQuestions()
+                        .get(viewModel.getSelectedSubject().getShortTitle())
+                        .getSelectedQuestion();
+
+                if (newSelectedQuestionIndex == questions.size() && subjectList.getItems().size()-1 == subjectListSelectionAtomicIndex.get())
+                    nextButton.setDisable(true);
+            }
         });
 
         showAnswerButton.setOnAction(event -> {
@@ -189,6 +224,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             explanationTitle.setVisible(false);
             explanationScrollPane.setVisible(false);
             explanationLabel.setVisible(false);
+            explanationWebView.setVisible(false);
             correctAnswerLabel.setVisible(false);
             correctAnswerTitle.setVisible(false);
             hideAnswerButton.setVisible(false);
@@ -216,11 +252,15 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         });
 
-        bookmarkImage.setOnMouseClicked(event -> {
-            viewModel.handleBookmarkClicked();
-            updateBookmarkIcon();
-        });
+//        bookmarkImage.setOnMouseClicked(event -> {
+//            viewModel.handleBookmarkClicked();
+//            updateBookmarkIcon();
+//        });
 
+
+//        questionImageCloseIcon.setOnMouseClicked(event -> {
+//            questionImageBox.setVisible(false);
+//        });
 
         exitButton.setOnAction(event -> {
             showExitDialog();
@@ -229,6 +269,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         readQuestionDesc.setOnMouseClicked(mouseEvent -> {
             Animations.showDialog(questionDescriptionDialog, dialogDimmer);
         });
+        readQuestionDesc.setOnMouseEntered(event -> readQuestionDesc.setUnderline(true));
+        readQuestionDesc.setOnMouseExited(event -> readQuestionDesc.setUnderline(false));
 
         quesDescriptionCloseIcon.setOnMouseClicked(mouseEvent -> {
             Animations.hideDialog(questionDescriptionDialog, dialogDimmer);
@@ -243,10 +285,10 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         showAnswerButton.setBackground(Background.EMPTY);
         showExplanationButton.setBackground(Background.EMPTY);
 
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+//        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
         calculatorImage.setImage(new Image(getClass().getResource("/drawable/calculator.png").toString()));
         speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
-        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
+//        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
         quesDescriptionCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
 
         ImageView prevImage = new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/prev_btn_icon.png").toString()));
@@ -268,86 +310,74 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
     }
 
-    private void updateBookmarkIcon() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
-        List<QuestionState> questions = subjectQuestionsState.getQuestions();
-
-        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            ObjectiveQuestion selectedQuestion = (ObjectiveQuestion) questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion();
-
-            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks().get(viewModel.getSelectedSubject().getId());
-
-            bookmarks.forEach(bookmark -> {
-                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
-                }
-            });
-
-        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
-            TheoryQuestion selectedQuestion = (TheoryQuestion) questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion();
-
-            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks().get(viewModel.getSelectedSubject().getId());
-
-            bookmarks.forEach(bookmark -> {
-                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
-                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
-                }
-            });
-        }
-
-    }
-
-    private void setupQuestionView() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+    private void setupQuestionView(PQSubject selectedSubject) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestionNumber = subjectQuestionsState.getSelectedQuestion();
 
-        prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
-        nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
-
         questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
+
+//        prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
+//        nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
+
+        prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && selectedQuestionNumber == 1);
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
             ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
 
-            questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
+            List<ObjectiveQuestionDescription> questionDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
 
-            List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
-                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).collect(Collectors.toList());
-
-            if (questionDescriptionInList.isEmpty()) {
-                readQuestionDesc.setVisible(false);
-                questionDescriptionHeader.setText("");
-            } else {
+            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+            if (!questionDescriptionInList.isEmpty()) {
+                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
                 readQuestionDesc.setVisible(true);
                 questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
                 questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
 
             String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
-            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
-            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
-            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
+            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+
+            if (questionText.contains("<img")) {
+                questionStackPane.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText);
+
+            } else {
+                questionStackPane.getChildren().add(questionWebView);
+                questionWebView.getEngine().loadContent(questionText);
+            }
+
+            Helper.loadOption(getClass(), optionA, currentQuestion.getOptionA().getText(), " (A) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionB, currentQuestion.getOptionB().getText(), " (B) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionC, currentQuestion.getOptionC().getText(), " (C) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionD, currentQuestion.getOptionD().getText(), " (D) ", optionWebViewBC);
+
+//            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
+//            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
+//            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
+//            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
 
             correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
             String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
-            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+            explanationVBox.getChildren().clear();
+            if (explanationText.contains("<img")) {
+                explanationVBox.getChildren().addAll(explanationTitle, explanationWebView);
+                String questionWithImageText = parseExplanationWithImageView(explanationText);
+                explanationWebView.getEngine().loadContent(questionWithImageText);
+            } else {
+                explanationVBox.getChildren().addAll(explanationTitle, explanationScrollPane);
+                explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+            }
 
 
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
             TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
-
             questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
             String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+//            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
             centerVBox.getChildren().removeAll(optionA, optionB, optionC, optionD);
 
@@ -367,36 +397,59 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
+        prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && newValue == 1);
+
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
             ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
-
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
-            List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
-                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).collect(Collectors.toList());
+            List<ObjectiveQuestionDescription> questionDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
 
-            if (questionDescriptionInList.isEmpty()) {
-                readQuestionDesc.setVisible(false);
-                questionDescriptionHeader.setText("");
-            } else {
+            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+            if (!questionDescriptionInList.isEmpty()) {
+                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
                 readQuestionDesc.setVisible(true);
                 questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
                 questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
 
             String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
-            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
+            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+
+            if (questionText.contains("<img")) {
+                questionStackPane.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText);
+                System.out.println(TAG + "questionWithImageHBox.heightProperty() -> " + questionWithImageHBox.heightProperty().get());
+                questionWebView.setMinHeight(questionWithImageHBox.heightProperty().get());
+            } else {
+                questionStackPane.getChildren().add(questionWebView);
+                questionWebView.getEngine().loadContent(questionText);
+            }
+
+            Helper.loadOption(getClass(), optionA, currentQuestion.getOptionA().getText(), " (A) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionB, currentQuestion.getOptionB().getText(), " (B) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionC, currentQuestion.getOptionC().getText(), " (C) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionD, currentQuestion.getOptionD().getText(), " (D) ", optionWebViewBC);
+
+            /*optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
             optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
             optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
-            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
-
+            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());*/
 
             correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
 
             String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
-            explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+            explanationVBox.getChildren().clear();
+            if (explanationText.contains("<img")) {
+                explanationVBox.getChildren().addAll(explanationTitle, explanationWebView);
+                String questionWithImageText = parseExplanationWithImageView(explanationText);
+                explanationWebView.getEngine().loadContent(questionWithImageText);
+            } else {
+                explanationVBox.getChildren().addAll(explanationTitle, explanationScrollPane);
+                explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+            }
 
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
             TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
@@ -404,7 +457,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
             String questionText = currentQuestion.getQuestion();
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+//            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
             correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
             String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
@@ -413,6 +466,48 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         }
 
         updateExplanationView();
+
+    }
+
+    private void showQuestionWithImage(String questionWithImageText) {
+        questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText);
+    }
+
+    private String parseExplanationWithImageView(String explanationWithImageText) {
+        return Helper.parsePQImageUrl(getClass(), explanationWithImageText);
+    }
+
+    private void updateBookmarkIcon() {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+
+//        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion selectedQuestion = (ObjectiveQuestion) questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion();
+
+            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks().get(viewModel.getSelectedSubject().getId());
+
+            bookmarks.forEach(bookmark -> {
+                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
+//                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
+                }
+            });
+
+        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+            TheoryQuestion selectedQuestion = (TheoryQuestion) questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getQuestion();
+
+            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks().get(viewModel.getSelectedSubject().getId());
+
+            bookmarks.forEach(bookmark -> {
+                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
+//                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+                    System.out.println(TAG + "Bookmark image changed for question with question_id -> " + bookmark.getQuestionId() + " and subject_id -> " + bookmark.getSubjectId());
+                }
+            });
+        }
+
     }
 
     private void  updateExplanationView() {
@@ -422,12 +517,13 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         QuestionState questionState = questionsState.getQuestions().get(questionsState.getSelectedQuestion() - 1);
 
         if (!questionState.isShowExplanation() && !questionState.isShowAnswer()) {
-            System.out.println(TAG + "showing default explanation view");
+//            System.out.println(TAG + "showing default explanation view");
             showAnswerButton.setDisable(false);
             showExplanationButton.setDisable(false);
             explanationTitle.setVisible(false);
             explanationScrollPane.setVisible(false);
             explanationLabel.setVisible(false);
+            explanationWebView.setVisible(false);
             correctAnswerLabel.setVisible(false);
             correctAnswerTitle.setVisible(false);
 
@@ -435,10 +531,11 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         } else if (questionState.isShowExplanation()) {
 
-            System.out.println(TAG + "showing explanation and answer view");
+//            System.out.println(TAG + "showing explanation and answer view");
             explanationTitle.setVisible(true);
             explanationScrollPane.setVisible(true);
             explanationLabel.setVisible(true);
+            explanationWebView.setVisible(true);
             showExplanationButton.setDisable(true);
 
             correctAnswerLabel.setVisible(true);
@@ -451,7 +548,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         } else if (questionState.isShowAnswer()) {
 
-            System.out.println(TAG + "showing show answer view alone");
+//            System.out.println(TAG + "showing show answer view alone");
             correctAnswerLabel.setVisible(true);
             correctAnswerTitle.setVisible(true);
             showAnswerButton.setDisable(true);
@@ -462,8 +559,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         }
     }
 
-    private void setupTilePane() {
-        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+    private void setupTilePane(PQSubject selectedSubject) {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
         tilePane.setVgap(10);
@@ -508,39 +605,22 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     }
 
     private void showExitDialog() {
+        Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to quit?");
 
-        Dialog<ButtonType> dialog = new Dialog<>();
-
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        // Change dialog icon
-        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
-        dialog.setTitle("Confirm Exit");
-
-        exitDialogPane.setVisible(true);
         dialogDimmer.setVisible(true);
 
-        dialog.getDialogPane().setContent(exitDialogPane);
-
-        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-background-radius: 10;");
-
-        dialog.getDialogPane().setMinSize(350, 80);
-
-        //Adding buttons to the dialog pane
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
-
         dialog.setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.YES){
+            if (buttonType == ButtonType.YES) {
                 dialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new HomeScreenController.InitialData(PAST_QUESTION_SCREEN));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PAST_QUESTION_SCREEN, null));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
-            }else if (buttonType == ButtonType.NO){;
-                dialogDimmer.setVisible(false);
             }
-            return null;
+            dialogDimmer.setVisible(false);
+            return buttonType;
         });
 
-        dialog.showAndWait();
+        dialog.show();
+
     }
 
 

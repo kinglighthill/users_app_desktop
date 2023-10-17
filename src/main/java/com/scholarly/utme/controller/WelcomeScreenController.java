@@ -4,7 +4,7 @@ import com.scholarly.utme.ui.utils.Animations;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.WelcomeScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -23,7 +23,6 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_FIRST_TIME_USER;
 
@@ -59,11 +58,9 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
 
     private int currentScreen = 1;
 
-    private final Preferences preferences = AppPreferences.getPreferences();
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        preferences.putBoolean(PREF_KEY_FIRST_TIME_USER, false);
+        PreferencesManager.putBoolean(PREF_KEY_FIRST_TIME_USER, false);
 
         initializeViews();
         initializeFonts();

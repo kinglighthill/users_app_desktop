@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class PracticeScreenVM implements ViewModel, SceneLifecycle {
-
     private static final String TAG = "PracticeScreenViewModel: ";
 
     private ObservableList<PQSubject> subjects = FXCollections.observableArrayList();
@@ -32,6 +31,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
     private ObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty<>();
 
     private SimpleLongProperty time = new SimpleLongProperty();
+    private HashMap<String, Year> selectedSubjectYear = new HashMap<>();
 
     private HashMap<String, SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
@@ -57,9 +57,10 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     public void processInitialData(InitialData data) {
 
-        subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).collect(Collectors.toList()));
+        subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).toList());
 
         data.questionData.forEach(subjectState -> {
+            selectedSubjectYear.put(subjectState.getSubject().getTitle(), subjectState.getSelectedYear());
 
             questionType = subjectState.getType();
 
@@ -77,7 +78,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .map(question -> new QuestionState(question, Type.OBJECTIVE, -1))
                         .collect(Collectors.toList());
 
-                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
+                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, 0, questionStates));
 
                 ObservableList<ObjectiveBookmark> bookmarks = ObjectiveBookmarkDao.getBookmarks(
                         subjectState.getSubject().getId()
@@ -92,6 +93,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         );
 
                 objectiveQuestionDescriptions.addAll(objectiveQuestionDescriptionList);
+                questionDescriptions.addAll(objectiveQuestionDescriptionList);
 
             } else if (subjectState.getType() == Type.THEORY) {
 
@@ -106,7 +108,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .map(question -> new QuestionState(question, Type.THEORY, -1))
                         .collect(Collectors.toList());
 
-                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, questionStates));
+                subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, 0, questionStates));
 
                 ObservableList<TheoryBookmark> bookmarks = TheoryBookmarkDao.getBookmarks(
                         subjectState.getSubject().getId()
@@ -121,6 +123,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         );
 
                 theoryQuestionDescriptions.addAll(theoryQuestionDescriptionList);
+                questionDescriptions.addAll(theoryQuestionDescriptionList);
 
             }
 
@@ -166,6 +169,10 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     public HashMap<String, SubjectQuestionsState> getSubjectsQuestions() {
         return subjectsQuestions;
+    }
+
+    public HashMap<String, Year> getSelectedSubjectYear() {
+        return selectedSubjectYear;
     }
 
     public HashMap<String, ObservableList<ObjectiveBookmark>> getSubjectBookmarks() {
@@ -231,9 +238,9 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         correctAnswers += 1;
                     }*/
                     if (questionState.getSelectedOptionId() == ((ObjectiveQuestion) questionState.getQuestion()).getQuestionAnswer().getId()) {
-//                        System.out.println(TAG + "Selected option ID -> " + questionState.getSelectedOptionId());
-//                        System.out.println(TAG + "Selected option answer ID -> " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestionAnswer().getId());
-                        correctAnswers += 1;
+//                        System.out.println(TAG + "Selected Option ID -> " + questionState.getSelectedOptionId());
+//                        System.out.println(TAG + "Selected Question answer ID -> " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestionAnswer().getId());
+                        correctAnswers ++;
                     }
                 }
 
@@ -339,10 +346,12 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     public static class SubjectQuestionsState {
         private SimpleIntegerProperty selectedQuestion = new SimpleIntegerProperty();
+        private SimpleIntegerProperty numOfAttempts = new SimpleIntegerProperty(0);
         private List<QuestionState> questions = new ArrayList<>();
 
-        public SubjectQuestionsState(int selectedQuestion, List<QuestionState> questions) {
+        public SubjectQuestionsState(int selectedQuestion, int numOfAttempts, List<QuestionState> questions) {
             this.selectedQuestion.set(selectedQuestion);
+            this.numOfAttempts.set(numOfAttempts);
             this.questions.addAll(questions);
         }
 
@@ -353,6 +362,14 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
         public void setSelectedQuestion(int selectedQuestion) {
             this.selectedQuestion.set(selectedQuestion);
+        }
+
+        public int getNumOfAttempts() {
+            return numOfAttempts.get();
+        }
+
+        public void setNumOfAttempts(int numOfAttempts) {
+            this.numOfAttempts.set(numOfAttempts);
         }
 
         public SimpleIntegerProperty selectedQuestionProperty() {
