@@ -217,8 +217,7 @@ public class Helper {
         return builder.toString();
     }
 
-    public static String loadLatex(Class mClass, String content)
-    {
+    public static String loadLatex(Class mClass, String content) {
         String cssPath = Objects.requireNonNull(mClass.getResource("/assets/katex/katex.min.css")).toExternalForm();
         String jsPath = Objects.requireNonNull(mClass.getResource("/assets/katex/katex.min.js")).toExternalForm();
         String autoRenderJsPath = Objects.requireNonNull(mClass.getResource("/assets/katex/contrib/auto-render.min.js")).toExternalForm();
