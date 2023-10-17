@@ -48,8 +48,6 @@ run {
 
 jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
-//    modules = ['java.naming', 'java.xml', 'java.compiler', 'javafx.base']
-//    addModules = ['com.scholarly.utme']
     launcher {
         name = 'Scholarly Jamb CBT'
         jvmArgs = ['-Djdk.gtk.version=2']
@@ -57,6 +55,7 @@ jlink {
     }
 
     jpackage {
+        appVersion = '1.0.0'
         installerOptions = [
                 '--description', "Scholarly Jamb CBT App",
                 '--copyright', 'Copyrigth 2020-2024 Scholarly Educational Software Ltd'
@@ -64,7 +63,7 @@ jlink {
 
         def currentOs = org.gradle.internal.os.OperatingSystem.current()
         def imgType = currentOs.windows ? 'ico' : currentOs.macOsX ? 'icns' : 'png'
-        imageOptions += ['--icon', "src/main/resources/drawable/app_logo.$imgType"]
+        imageOptions += ['--icon', "src/main/resources/drawable/app_icon.$imgType"]
         installerOptions += ['--resource-dir', "src/main/resources"]
         installerOptions += ['--vendor', 'Scholarly Tech']
 
@@ -113,7 +112,7 @@ jlink {
 
 jpackage {
     doFirst {
-        project.getProperty('installerType')
+//        project.getProperty('installerType')
     }
 }
 
