@@ -65,27 +65,27 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         viewModel.processInitialData(getInitialData());
 
-        if (viewModel.getSelectedScreen().equals(Screens.PRACTICE_SCREEN)) {
+        if (viewModel.getSelectedScreen().equals(Screens.PRACTICE_SCREEN.getName())) {
             pageTitle.setText("CBT Practice");
             toggleGroup.selectToggle(practiceButton);
             subjectListController.setOption(SubjectListOption.PRACTICE);
             subjectListController.setSelectedSubject(viewModel.getSelectedSubject());
             selectButton(subjectListView, practiceButton);
-        } else if (viewModel.getSelectedScreen().equals(Screens.PAST_QUESTION_SCREEN)) {
+        } else if (viewModel.getSelectedScreen().equals(Screens.PAST_QUESTION_SCREEN.getName())) {
             pageTitle.setText("Study Past Questions");
             toggleGroup.selectToggle(pastQuestionButton);
             subjectListController.setOption(SubjectListOption.STUDY);
             selectButton(subjectListView, pastQuestionButton);
-        } else if (viewModel.getSelectedScreen().equals(Screens.CBT_GAME_SCREEN)) {
+        } else if (viewModel.getSelectedScreen().equals(Screens.CBT_GAME_SCREEN.getName())) {
             pageTitle.setText("CBT Game");
             toggleGroup.selectToggle(cbtGameButton);
             subjectListController.setOption(SubjectListOption.CBT_GAME);
             selectButton(subjectListView, cbtGameButton);
-        } else if (viewModel.getSelectedScreen().equals(Screens.VIDEOS_SCREEN)) {
+        } else if (viewModel.getSelectedScreen().equals(Screens.VIDEOS_SCREEN.getName())) {
 //            selectButton(audioVideoView, videosButton);
-        } else if (viewModel.getSelectedScreen().equals(Screens.AUDIOS_SCREEN)) {
+        } else if (viewModel.getSelectedScreen().equals(Screens.AUDIOS_SCREEN.getName())) {
 //            selectButton(audioVideoView, audiosButton);
-        } else if (viewModel.getSelectedScreen().equals(Screens.LEARNING_CENTER_SCREEN)) {
+        } else if (viewModel.getSelectedScreen().equals(Screens.LEARNING_CENTER_SCREEN.getName())) {
 //            selectButton(audioVideoView, learningCenterButton);
         }
 
@@ -227,16 +227,16 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
     }
 
     public static class InitialData {
-        private Screens screen;
+        private Screens previousScreen;
         private PQSubject selectedSubject;
 
-        public InitialData(Screens screen, PQSubject selectedSubject) {
-            this.screen = screen;
+        public InitialData(Screens previousScreen, PQSubject selectedSubject) {
+            this.previousScreen = previousScreen;
             this.selectedSubject = selectedSubject;
         }
 
-        public Screens getScreen() {
-            return screen;
+        public Screens getPreviousScreen() {
+            return previousScreen;
         }
 
         public PQSubject getSelectedSubject() {

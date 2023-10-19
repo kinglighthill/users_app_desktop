@@ -21,11 +21,13 @@ import java.util.stream.Collectors;
 import static com.scholarly.utme.viewmodels.SubjectListItemVM.*;
 
 public class StudyPastScreenVM implements ViewModel {
-    public static final String TAG = "StudyPastQuestViewModel: ";
+    private static final String TAG = "StudyPastQuestViewModel: ";
 
     private ObservableList<PQSubject> subjects = FXCollections.observableArrayList();
     private ObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty<>();
     private List<QuestionState> questions = new ArrayList<>();
+
+    private HashMap<String, Year> selectedSubjectYear = new HashMap<>();
 
     private HashMap<String, SubjectQuestionsState> subjectsQuestions = new HashMap<>();
 
@@ -46,6 +48,7 @@ public class StudyPastScreenVM implements ViewModel {
         subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).collect(Collectors.toList()));
 
         data.questionData.forEach(subjectState -> {
+            selectedSubjectYear.put(subjectState.getSubject().getTitle(), subjectState.getSelectedYear());
 
             questionType = subjectState.getType();
 
@@ -137,6 +140,10 @@ public class StudyPastScreenVM implements ViewModel {
 
     public HashMap<String, SubjectQuestionsState> getSubjectsQuestions() {
         return subjectsQuestions;
+    }
+
+    public HashMap<String, Year> getSelectedSubjectYear() {
+        return selectedSubjectYear;
     }
 
     public List<QuestionState> getQuestions() {

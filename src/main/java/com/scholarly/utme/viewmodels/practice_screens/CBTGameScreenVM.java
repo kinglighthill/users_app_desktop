@@ -72,7 +72,7 @@ public class CBTGameScreenVM implements ViewModel {
         subjectList.addAll(data.questionData.stream().map(SubjectListItemVM.SubjectState::getSubject).collect(Collectors.toList()));
         data.questionData.forEach(subjectState -> {
 
-            selectedSubjectYear.put(subjectState.getSubject().getTitle(), subjectState.getSelectedYear());
+            selectedSubjectYear.put(subjectState.getSubject().getShortTitle(), subjectState.getSelectedYear());
 
             List<QuestionState> questionStates = ObjectiveQuestionDao
                     .getQuestions(
@@ -83,8 +83,8 @@ public class CBTGameScreenVM implements ViewModel {
                     )
                     .stream()
                     .limit(subjectState.getNumberOfQuestions())
-                    .map(question -> new QuestionState(question, new ArrayList<>()))
-                    .collect(Collectors.toList());
+                    .filter(question -> question.getQuestionAnswer().getId() != -1 && question.getGammable() != 0)
+                    .map(question -> new QuestionState(subjectState.getSubject().getShortTitle(), question, new ArrayList<>())).toList();
 
             List<PracticeScreenVM.QuestionState> practiceQuestionState = questionStates
                     .stream()
@@ -236,5 +236,5 @@ public class CBTGameScreenVM implements ViewModel {
 
     }
 
-    public record QuestionState(ObjectiveQuestion question, List<String> selectedOptions) { }
+    public record QuestionState(String subject, ObjectiveQuestion question, List<String> selectedOptions) { }
 }

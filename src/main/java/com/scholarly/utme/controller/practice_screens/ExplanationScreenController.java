@@ -33,6 +33,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.web.WebView;
@@ -60,7 +61,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     @FXML
     private TilePane tilePane;
     @FXML
-    private ScrollPane tileScrollPane;
+    private ScrollPane tileScrollPane, questionScrollPane;
     @FXML
     private StackPane explanationPane, explanationVideo, questionStackPane;
     @FXML
@@ -68,9 +69,11 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     @FXML
     private Pane dialogDimmer;
     @FXML
-    private VBox centerVBox, questionDescriptionDialog, explanationVBox;
+    private Line questionLine;
     @FXML
-    private HBox toggleBox, quesDescriptionHBox, questionWithImageHBox;
+    private VBox centerVBox, questionDescriptionDialog, explanationVBox, questionCenterVBox, questionVBox;
+    @FXML
+    private HBox toggleBox, quesDescriptionHBox, questionWithImageHBox, questionDescriptionHBox, questionLabelHBox;
     @FXML
     private ListView<PQSubject> subjectList;
     @FXML
@@ -88,9 +91,12 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
     private Image correctImage, incorrectImage;
 
+    private Screens previousScreen;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        previousScreen = getInitialData().previousScreen;
 
         viewModel.processInitialData(getInitialData());
 
@@ -108,7 +114,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                 PQSubject subject = c.getList().get(0);
                 viewModel.setSelectedSubject(subject);
                 appBarTitle.setText("CBT PRACTICE");
-                appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
+                appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getShortTitle()).getYear());
             } else {
                 viewModel.setSelectedSubject(null);
             }
@@ -118,7 +124,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         setupQuestionView(viewModel.getSelectedSubject());
         setupTilePane(viewModel.getSelectedSubject());
 
-        appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
+        appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getShortTitle()).getYear());
 
         viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -273,7 +279,8 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
                     dialogDimmer.setVisible(false);
-                    ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
+
+                    ViewSwitcher.passData(new HomeScreenController.InitialData(previousScreen, null));
                     ViewSwitcher.showScreen(View.HOME_SCREEN);
                 } else {
                     dialogDimmer.setVisible(false);
@@ -283,11 +290,11 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             dialog.show();
         });
 
-        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
-            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
-        });
-        readQuestionDesc.setOnMouseEntered(event -> readQuestionDesc.setUnderline(true));
-        readQuestionDesc.setOnMouseExited(event -> readQuestionDesc.setUnderline(false));
+//        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
+//            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
+//        });
+//        readQuestionDesc.setOnMouseEntered(event -> readQuestionDesc.setUnderline(true));
+//        readQuestionDesc.setOnMouseExited(event -> readQuestionDesc.setUnderline(false));
 
         quesDescriptionCloseIcon.setOnMouseClicked(mouseEvent -> {
             Animations.hideDialog(questionDescriptionDialog, dialogDimmer);
@@ -416,24 +423,46 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getObjectiveQuestion().getQuestionDescriptionId()).toList();
 
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+            String questionText = question.getObjectiveQuestion().getQuestion().replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(questionText);
+
+            questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+
             if (!questionDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                }
+                questionVBox.getChildren().add(0, questionDescriptionHBox);
+                questionVBox.getChildren().add(1, questionLine);
+                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
                 questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            } else {
+                questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+//                questionCenterVBox.getChildren().removeAll(questionWithImageHBox);
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                }
             }
+//            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+//            if (!questionDescriptionInList.isEmpty()) {
+//                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+//                readQuestionDesc.setVisible(true);
+//                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+//                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+//            }
 
-            String questionText = question.getObjectiveQuestion().getQuestion();
-
-            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+//            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
 
             if (questionText.contains("<img")) {
-                questionStackPane.getChildren().add(questionWithImageHBox);
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
+                if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
+                    questionCenterVBox.getChildren().add(questionWithImageHBox);
+//                questionStackPane.getChildren().add(questionWithImageHBox);
                 showQuestionWithImage(questionText);
 
             } else {
-                questionStackPane.getChildren().add(questionWebView);
+//                questionStackPane.getChildren().add(questionWebView);
                 questionWebView.getEngine().loadContent(questionText);
             }
 
@@ -582,6 +611,10 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             centerVBox.getChildren().removeAll(optionAPanel, optionBPanel, optionCPanel, optionDPanel, noOptionSelected);
         }
 
+        if (previousScreen == Screens.CBT_GAME_SCREEN) {
+            noOptionSelected.setVisible(false);
+        }
+
     }
 
     /**
@@ -603,24 +636,44 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             List<QuestionDescription> questionDescriptionInList = viewModel.getQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == objectiveQuestion.getQuestionDescriptionId()).toList();
 
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+            String questionText = objectiveQuestion.getQuestion().replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(questionText);
+
+            questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+
             if (!questionDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionVBox.getChildren().add(0, questionDescriptionHBox);
+                questionVBox.getChildren().add(1, questionLine);
+                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
                 questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            } else {
+                questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+//                questionCenterVBox.getChildren().removeAll(questionWithImageHBox);
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                }
             }
+//            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+//            if (!questionDescriptionInList.isEmpty()) {
+//                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+//                readQuestionDesc.setVisible(true);
+//                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+//                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+//            }
 
-            String questionText = objectiveQuestion.getQuestion();
+//            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
 
-            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox, questionLabel);
 
             if (questionText.contains("<img")) {
-                questionStackPane.getChildren().add(questionWithImageHBox);
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
+                if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
+                    questionCenterVBox.getChildren().add(questionWithImageHBox);
+//                questionStackPane.getChildren().add(questionWithImageHBox);
                 showQuestionWithImage(questionText);
 
             } else {
-                questionStackPane.getChildren().add(questionWebView);
+//                questionStackPane.getChildren().add(questionWebView);
                 questionWebView.getEngine().loadContent(questionText);
             }
 
@@ -770,6 +823,10 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         }
 
+        if (previousScreen == Screens.CBT_GAME_SCREEN) {
+            noOptionSelected.setVisible(false);
+        }
+
     }
 
     /**
@@ -858,13 +915,16 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions;
         private HashMap<String, Year> selectedSubjectYear;
         private Type questionType;
+        private Screens previousScreen;
 
-        public InitialData(List<PQSubject> subjects, List<QuestionDescription> questionDescriptions, HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions, HashMap<String, Year> selectedSubjectYear, Type questionType) {
+
+        public InitialData(List<PQSubject> subjects, List<QuestionDescription> questionDescriptions, HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions, HashMap<String, Year> selectedSubjectYear, Type questionType, Screens previousScreen) {
             this.subjects = subjects;
             this.questionDescriptions = questionDescriptions;
             this.subjectsQuestions = subjectsQuestions;
             this.selectedSubjectYear = selectedSubjectYear;
             this.questionType = questionType;
+            this.previousScreen = previousScreen;
         }
 
         public List<PQSubject> getSubjects() {
@@ -885,6 +945,10 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         public Type getQuestionType() {
             return questionType;
+        }
+
+        public Screens getPreviousScreen() {
+            return previousScreen;
         }
     }
 }

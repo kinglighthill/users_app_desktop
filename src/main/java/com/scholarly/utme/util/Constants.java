@@ -26,6 +26,7 @@ public class Constants {
 
     // Session Preference Constants
     public static final String PREF_KEY_FIRST_TIME_USER = "FIRST_TIME_USER";
+    public static final String PREF_KEY_LAST_SELECTED_PRACTICE = "LAST_SELECTED_PRACTICE";
 
     // Settings Preference Constants
     public static final String PREF_KEY_VIBRATION = "VIBRATION";

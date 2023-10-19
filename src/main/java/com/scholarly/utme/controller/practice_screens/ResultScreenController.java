@@ -171,7 +171,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
 
         showExplanationButton.setOnAction(event -> {
-            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getSelectedSubjectYear(), SubjectListItemVM.Type.OBJECTIVE);
+            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getSelectedSubjectYear(), SubjectListItemVM.Type.OBJECTIVE, Screens.PRACTICE_SCREEN);
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });

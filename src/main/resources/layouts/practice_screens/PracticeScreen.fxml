@@ -21,7 +21,7 @@
                      <children>
                         <Label fx:id="appBarTitle" text="CBT PRACTICE" textFill="#053500">
                            <HBox.margin>
-                              <Insets left="30.0" />
+                              <Insets left="20.0" />
                            </HBox.margin>
                            <font>
                               <Font name="Gill Sans MT Bold" size="18.0" />
@@ -291,13 +291,6 @@
                                        </padding>
                                     </Button>
                                  </HBox>
-                                 <!--<right>
-                                    <Button fx:id="nextButton" mnemonicParsing="false" text="Next" textFill="#FFFFFF" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
-                                       <padding>
-                                          <Insets left="25" right="25" top="5" bottom="5"/>
-                                       </padding>
-                                    </Button>
-                                 </right>-->
                                  <VBox.margin>
                                     <Insets right="10" top="10"/>
                                  </VBox.margin>
@@ -313,14 +306,12 @@
                                     <Insets bottom="10"/>
                                  </VBox.margin>
                               </TilePane>
-
                            </children>
                            <VBox.margin>
                               <Insets bottom="20.0"/>
                            </VBox.margin>
                         </VBox>
                      </children>
-
                      <padding>
                         <Insets left="20.0" right="20.0"/>
                      </padding>
@@ -339,7 +330,7 @@
                               <Font name="System Bold" size="16"/>
                            </font>
                            <padding>
-                              <Insets left="10" top="20"/>
+                              <Insets left="10" top="20" bottom="10"/>
                            </padding>
                         </Label>
                         <ListView fx:id="subjectList" prefHeight="396.0" prefWidth="200.0" style="-fx-cursor: hand;"/>
