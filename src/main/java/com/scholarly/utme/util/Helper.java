@@ -3,7 +3,9 @@ package com.scholarly.utme.util;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,6 +13,7 @@ import java.util.regex.Pattern;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.TheoryQuestion;
 import io.reactivex.rxjava3.annotations.Nullable;
@@ -22,6 +25,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.web.WebView;
 
 import javax.imageio.ImageIO;
+
+import static com.scholarly.utme.util.Constants.BASE_URL;
 
 public class Helper {
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
@@ -246,5 +251,17 @@ public class Helper {
                 .replace("{jsPath}", jsPath)
                 .replace("{autoRenderJsPath}", autoRenderJsPath);
         return latexContent.replace("{formula}", content);
+    }
+
+    public static boolean checkNetworkConnectivity() {
+        try {
+            URL url = new URL(BASE_URL);
+            URLConnection connection = url.openConnection();
+            connection.connect();
+            return true;
+        } catch (IOException e) {
+            MainApplication.log(e);
+            return false;
+        }
     }
 }

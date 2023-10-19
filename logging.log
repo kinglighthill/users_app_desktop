@@ -1,22 +1,22 @@
-Oct 19, 2023 2:32:10 PM com.scholarly.utme.MainApplication start
+Oct 19, 2023 3:32:42 PM com.scholarly.utme.MainApplication start
 INFO: Welcome to Scholarly.
-Oct 19, 2023 2:32:11 PM com.scholarly.utme.MainApplication start
+Oct 19, 2023 3:32:42 PM com.scholarly.utme.MainApplication start
 INFO: MainApplication: Logged Out User -> false
-Oct 19, 2023 2:32:11 PM com.scholarly.utme.MainApplication start
+Oct 19, 2023 3:32:42 PM com.scholarly.utme.MainApplication start
 INFO: Move to Landing Screen
-Oct 19, 2023 2:32:11 PM com.scholarly.utme.MainApplication logInfo
+Oct 19, 2023 3:32:42 PM com.scholarly.utme.MainApplication logInfo
 INFO: Passing data: InitialData[screenToShow=HOME_SCREEN]
-Oct 19, 2023 2:32:11 PM com.scholarly.utme.MainApplication logInfo
+Oct 19, 2023 3:32:42 PM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Oct 19, 2023 2:32:11 PM com.scholarly.utme.MainApplication logInfo
+Oct 19, 2023 3:32:42 PM com.scholarly.utme.MainApplication logInfo
 INFO: Loading com.scholarly.utme.controller.landing_screens.LandingScreenController
-Oct 19, 2023 2:32:14 PM com.scholarly.utme.MainApplication logInfo
+Oct 19, 2023 3:32:47 PM com.scholarly.utme.MainApplication logInfo
 INFO: Loading css
-Oct 19, 2023 2:32:14 PM com.scholarly.utme.MainApplication logInfo
+Oct 19, 2023 3:32:47 PM com.scholarly.utme.MainApplication logInfo
 INFO: Adding css
-Oct 19, 2023 2:32:14 PM com.scholarly.utme.MainApplication logInfo
+Oct 19, 2023 3:32:47 PM com.scholarly.utme.MainApplication logInfo
 INFO: Setting view
-Oct 19, 2023 2:32:14 PM com.scholarly.utme.MainApplication logInfo
+Oct 19, 2023 3:32:47 PM com.scholarly.utme.MainApplication logInfo
 INFO: Setting root
-Oct 19, 2023 2:32:14 PM com.scholarly.utme.MainApplication logInfo
+Oct 19, 2023 3:32:47 PM com.scholarly.utme.MainApplication logInfo
 INFO: Done

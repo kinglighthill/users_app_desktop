@@ -9,6 +9,7 @@ import com.scholarly.utme.network.model.request.UpdateUserRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.network.model.response.UploadResponse;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.account_screens.AccountProfileScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -85,7 +86,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
     @Override
     public void initialize(URL location, ResourceBundle resourceBundle) {
 
-        boolean internetEnabled = checkNetworkConnectivity();
+        boolean internetEnabled = Helper.checkNetworkConnectivity();
 
         initializeViews();
         initializeFonts();
@@ -794,17 +795,4 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         profileImage.setCache(true);
         profileImage.setImage(image);
     }
-
-    private boolean checkNetworkConnectivity() {
-        try {
-            URL url = new URL(BASE_URL);
-            URLConnection connection = url.openConnection();
-            connection.connect();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-
 }

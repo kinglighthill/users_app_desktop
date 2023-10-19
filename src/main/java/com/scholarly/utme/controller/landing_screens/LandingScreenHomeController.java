@@ -10,6 +10,7 @@ import com.scholarly.utme.data.model.newDb.NoteLastSession;
 import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.ui.cellFactories.SubjectGridCellFactory;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -101,7 +102,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        boolean internetEnabled = checkNetworkConnectivity();
+        boolean internetEnabled = Helper.checkNetworkConnectivity();
 
         initializeViews();
         initializeFonts();
@@ -479,17 +480,5 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         profileImage.setSmooth(true);
         profileImage.setCache(true);
         profileImage.setImage(image);
-    }
-
-    private boolean checkNetworkConnectivity() {
-        try {
-            URL url = new URL(BASE_URL);
-            URLConnection connection = url.openConnection();
-            connection.connect();
-            return true;
-        } catch (IOException e) {
-            MainApplication.log(e);
-            return false;
-        }
     }
 }
