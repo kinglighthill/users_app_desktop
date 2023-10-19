@@ -815,6 +815,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             connection.connect();
             return true;
         } catch (IOException e) {
+            MainApplication.log(e);
             return false;
         }
     }
