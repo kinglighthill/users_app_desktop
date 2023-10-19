@@ -4,6 +4,7 @@ module com.scholarly.utme {
     requires javafx.web;
     requires javafx.media;
     requires javafx.swing;
+    requires javafx.graphics;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;

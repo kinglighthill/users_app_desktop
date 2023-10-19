@@ -28,15 +28,15 @@ import java.util.logging.SimpleFormatter;
 
 import static com.scholarly.utme.util.Constants.*;
 
-public class MainApplication extends Application {
+public class MainApplication extends Application /*implements Thread.UncaughtExceptionHandler*/  {
     private static final String TAG = "MainApplication: ";
-    private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
-
     private Webcam webcam;
+
+    public static final Logger logger = Logger.getLogger(MainApplication.class.getName());
+    public static FileHandler fileHandler = null;
 
     @Override
     public void start(Stage stage) throws IOException {
-        FileHandler fileHandler = null;
         try {
             fileHandler = new FileHandler("logging.log");
             fileHandler.setFormatter(new SimpleFormatter());
@@ -76,33 +76,24 @@ public class MainApplication extends Application {
             } else {
                 boolean userLoggedOut = PreferencesManager.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
                 System.out.println(TAG + "Logged Out User -> " + userLoggedOut);
+                logger.info(TAG + "Logged Out User -> " + userLoggedOut);
 
                 String userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
                 String userDataString = PreferencesManager.get(PREF_KEY_USER_DATA+userId, "");
                 UserData userData = new Gson().fromJson(userDataString, UserData.class);
 
-                if (userLoggedOut || userData == null) {
+                if (userLoggedOut || userData == null) {;
+                    logger.info("Move to Auth Screen");
                     ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
-                } else {
+                } else {;
+                    logger.info("Move to Landing Screen");
                     ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
                     ViewSwitcher.showScreen(View.LANDING_SCREEN);
                 }
             }
         } catch (Exception e) {
-            if (fileHandler != null) {
-                logger.severe(e.getMessage());
-                logger.severe(e.toString());
-
-                for (StackTraceElement element : e.getStackTrace()) {
-                    logger.severe(element.toString());
-                }
-            }
-            System.out.println(e.getMessage());
-        }
-
-        if (fileHandler != null) {
-            fileHandler.close();
+            log(e);
         }
     }
 
@@ -131,7 +122,22 @@ public class MainApplication extends Application {
         getHostServices().showDocument(url);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler());
         launch();
+    }
+
+    public static void log(Exception exception) {
+        if (fileHandler != null) {
+            for (StackTraceElement element : exception.getStackTrace()) {
+                logger.severe(element.toString());
+            }
+        }
+    }
+
+    public static void logInfo(String info) {
+        if (fileHandler != null) {
+            logger.info(info);
+        }
     }
 }

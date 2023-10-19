@@ -73,194 +73,153 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        boolean showSignUpScreen = getInitialData().showSignUpScreen;
-        if (showSignUpScreen) {
-            Animations.fadeIn(signUpSection, 300);
-        } else {
-            Animations.fadeIn(loginSection, 300);
-        }
-
-        boolean internetEnabled = checkNetworkConnectivity();
-        System.out.println(TAG + "Internet Enabled -> " + internetEnabled);
-
-        initializeViews();
-        initializeFonts();
-
-        signUpLoginText.setOnMouseClicked(event -> {
-            Animations.fadeOut(signUpSection, 200);
-            Animations.fadeIn(loginSection, 300);
-        });
-        signUpLoginText.setOnMouseEntered(event -> signUpLoginText.setUnderline(true));
-        signUpLoginText.setOnMouseExited(event -> signUpLoginText.setUnderline(false));
-
-        loginSignUpText.setOnMouseClicked(event -> {
-            Animations.fadeOut(loginSection, 200);
-            Animations.fadeIn(signUpSection, 300);
-        });
-        loginSignUpText.setOnMouseEntered(event -> loginSignUpText.setUnderline(true));
-        loginSignUpText.setOnMouseExited(event -> loginSignUpText.setUnderline(false));
-
-        resetPasswordText.setOnMouseClicked(event -> {
-            recoverEmailPrompt.setVisible(false);
-            recoverEmailPrompt.setText("Please enter a valid email address");
-            recoverEmailPrompt.setTextFill(Paint.valueOf("#FF0000"));
-            recoverEmailField.setText("");
-            recoverProceedButton.setText("Proceed");
-            Animations.fadeOut(loginSection, 300);
-            Animations.fadeIn(recoverPasswordSection, 300);
-
-        });
-        resetPasswordText.setOnMouseEntered(event -> resetPasswordText.setUnderline(true));
-        resetPasswordText.setOnMouseExited(event -> resetPasswordText.setUnderline(false));
-
-        recoverLoginText.setOnMouseClicked(event -> {
-            Animations.fadeOut(recoverPasswordSection, 300);
-            Animations.fadeIn(loginSection, 300);
-        });
-        recoverLoginText.setOnMouseEntered(event -> recoverLoginText.setUnderline(true));
-        recoverLoginText.setOnMouseExited(event -> recoverLoginText.setUnderline(false));
-
-
-        Label signUpNameError = getNameErrorText();
-        Label signUpEmailError = getEmailErrorText();
-        Label signUpPasswordError = getPasswordErrorText();
-        Label signUpPhoneError = getPhoneErrorText();
-
-        signUpProceedButton.setOnAction(event -> {
-
-            String fullName = signUpNameField.getText();
-            signUpNameSection.getChildren().remove(signUpNameError);
-            if (fullName.split(" ").length == 1) {
-                signUpNameSection.getChildren().add(signUpNameError);
-                return;
-            }
-
-            String email = signUpEmailField.getText();
-            signUpEmailSection.getChildren().remove(signUpEmailError);
-            if (!email.contains("@")) {
-                signUpEmailSection.getChildren().add(signUpEmailError);
-                return;
-            }
-
-            String password = signUpPasswordField.getText();
-            signUpPasswordSection.getChildren().remove(signUpPasswordError);
-            if (password.length() < 6) {
-                if (!signUpPasswordSection.getChildren().contains(signUpPasswordError)) {
-                    signUpPasswordSection.getChildren().add(signUpPasswordError);
-                }
-                return;
-            }
-
-            String phoneNumber = signUpPhoneField.getCharacters().toString();
-            signUpPhoneSection.getChildren().remove(signUpPhoneError);
-            if (phoneNumber.length() < 11) {
-                if (!signUpPhoneSection.getChildren().contains(signUpPhoneError)) {
-                    signUpPhoneSection.getChildren().add(signUpPhoneError);
-                }
-                return;
-            }
-
-            signUpProceedButton.setDisable(true);
-            showProgressBar();
-
-            signUpEmailSection.getChildren().remove(signUpNameError);
-            signUpEmailSection.getChildren().remove(signUpEmailError);
-            signUpPasswordSection.getChildren().remove(signUpPasswordError);
-            signUpPhoneSection.getChildren().remove(signUpPhoneError);
-
-            ReferrerInfo referrerInfo = new ReferrerInfo();
-            UserRequest signupRequest = new UserRequest(fullName, email, phoneNumber, password, "nigeria", "fcm-token", "utme", false, null, getSystemProperties(), referrerInfo);
-
-            System.out.println(TAG + "Internet enabled -> " + internetEnabled);
-            if (internetEnabled) {
-                Task<Void> signupTask = new Task<>() {
-                    @Override
-                    protected Void call() {
-                        signupUser(signupRequest);
-                        return null;
-                    }
-                };
-                Thread signupThread = new Thread(signupTask);
-                signupThread.start();
-            }
-
-        });
-
-
-        Label loginEmailError = getEmailErrorText();
-        Label loginPasswordError = getPasswordErrorText();
-
-        loginProceedButton.setOnAction(event -> {
-
-            String email = loginEmailField.getText();
-            loginEmailSection.getChildren().remove(loginEmailError);
-            if (!loginEmailField.getText().contains("@")) {
-                loginEmailSection.getChildren().add(loginEmailError);
-                return;
-            }
-
-            String password = loginPasswordField.getText();
-            loginPasswordSection.getChildren().remove(loginPasswordError);
-            if (loginPasswordField.getCharacters().length() < 6) {
-                if (!loginPasswordSection.getChildren().contains(loginPasswordError)) {
-                    loginPasswordSection.getChildren().add(loginPasswordError);
-                }
-                return;
-            }
-
-            loginProceedButton.setDisable(true);
-            showProgressBar();
-
-            loginEmailSection.getChildren().remove(loginEmailError);
-            loginPasswordSection.getChildren().remove(loginPasswordError);
-
-            UserRequest loginRequest = new UserRequest();
-            loginRequest.setEmail(email);
-            loginRequest.setPassword(password);
-            loginRequest.setAppSlug("utme");
-            loginRequest.setDeviceInfo(getSystemProperties());
-
-            // Check for internet connectivity
-            try {
-                URL url = new URL(BASE_URL);
-                URLConnection connection = url.openConnection();
-                connection.connect();
-
-                Task<Void> loginTask = new Task<>() {
-                    @Override
-                    protected Void call() {
-                        loginUser(loginRequest);
-                        return null;
-                    }
-                };
-                Thread loginThread = new Thread(loginTask);
-                loginThread.start();
-
-            } catch (Exception e) {
-                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
-                alertDialog.show();
-                hideProgressBar();
-                System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
-            }
-
-        });
-
-        recoverProceedButton.setOnAction(event -> {
-
-            if (!recoverEmailField.getText().contains("@")) {
-                recoverEmailPrompt.setVisible(true);
+        try {
+            MainApplication.logInfo("Initializing authentication controller");
+            boolean showSignUpScreen = getInitialData().showSignUpScreen;
+            if (showSignUpScreen) {
+                Animations.fadeIn(signUpSection, 300);
             } else {
+                Animations.fadeIn(loginSection, 300);
+            }
 
-                recoverProceedButton.setDisable(true);
+            boolean internetEnabled = checkNetworkConnectivity();
+            System.out.println(TAG + "Internet Enabled -> " + internetEnabled);
+
+            initializeViews();
+            initializeFonts();
+
+            signUpLoginText.setOnMouseClicked(event -> {
+                Animations.fadeOut(signUpSection, 200);
+                Animations.fadeIn(loginSection, 300);
+            });
+            signUpLoginText.setOnMouseEntered(event -> signUpLoginText.setUnderline(true));
+            signUpLoginText.setOnMouseExited(event -> signUpLoginText.setUnderline(false));
+
+            loginSignUpText.setOnMouseClicked(event -> {
+                Animations.fadeOut(loginSection, 200);
+                Animations.fadeIn(signUpSection, 300);
+            });
+            loginSignUpText.setOnMouseEntered(event -> loginSignUpText.setUnderline(true));
+            loginSignUpText.setOnMouseExited(event -> loginSignUpText.setUnderline(false));
+
+            resetPasswordText.setOnMouseClicked(event -> {
+                recoverEmailPrompt.setVisible(false);
+                recoverEmailPrompt.setText("Please enter a valid email address");
+                recoverEmailPrompt.setTextFill(Paint.valueOf("#FF0000"));
+                recoverEmailField.setText("");
+                recoverProceedButton.setText("Proceed");
+                Animations.fadeOut(loginSection, 300);
+                Animations.fadeIn(recoverPasswordSection, 300);
+
+            });
+            resetPasswordText.setOnMouseEntered(event -> resetPasswordText.setUnderline(true));
+            resetPasswordText.setOnMouseExited(event -> resetPasswordText.setUnderline(false));
+
+            recoverLoginText.setOnMouseClicked(event -> {
+                Animations.fadeOut(recoverPasswordSection, 300);
+                Animations.fadeIn(loginSection, 300);
+            });
+            recoverLoginText.setOnMouseEntered(event -> recoverLoginText.setUnderline(true));
+            recoverLoginText.setOnMouseExited(event -> recoverLoginText.setUnderline(false));
+
+
+            Label signUpNameError = getNameErrorText();
+            Label signUpEmailError = getEmailErrorText();
+            Label signUpPasswordError = getPasswordErrorText();
+            Label signUpPhoneError = getPhoneErrorText();
+
+            signUpProceedButton.setOnAction(event -> {
+
+                String fullName = signUpNameField.getText();
+                signUpNameSection.getChildren().remove(signUpNameError);
+                if (fullName.split(" ").length == 1) {
+                    signUpNameSection.getChildren().add(signUpNameError);
+                    return;
+                }
+
+                String email = signUpEmailField.getText();
+                signUpEmailSection.getChildren().remove(signUpEmailError);
+                if (!email.contains("@")) {
+                    signUpEmailSection.getChildren().add(signUpEmailError);
+                    return;
+                }
+
+                String password = signUpPasswordField.getText();
+                signUpPasswordSection.getChildren().remove(signUpPasswordError);
+                if (password.length() < 6) {
+                    if (!signUpPasswordSection.getChildren().contains(signUpPasswordError)) {
+                        signUpPasswordSection.getChildren().add(signUpPasswordError);
+                    }
+                    return;
+                }
+
+                String phoneNumber = signUpPhoneField.getCharacters().toString();
+                signUpPhoneSection.getChildren().remove(signUpPhoneError);
+                if (phoneNumber.length() < 11) {
+                    if (!signUpPhoneSection.getChildren().contains(signUpPhoneError)) {
+                        signUpPhoneSection.getChildren().add(signUpPhoneError);
+                    }
+                    return;
+                }
+
+                signUpProceedButton.setDisable(true);
                 showProgressBar();
 
-                String email = recoverEmailField.getText();
-                String appSlug = "utme";
+                signUpEmailSection.getChildren().remove(signUpNameError);
+                signUpEmailSection.getChildren().remove(signUpEmailError);
+                signUpPasswordSection.getChildren().remove(signUpPasswordError);
+                signUpPhoneSection.getChildren().remove(signUpPhoneError);
 
-                UserRequest request = new UserRequest();
-                request.setEmail(email);
-                request.setAppSlug(appSlug);
+                ReferrerInfo referrerInfo = new ReferrerInfo();
+                UserRequest signupRequest = new UserRequest(fullName, email, phoneNumber, password, "nigeria", "fcm-token", "utme", false, null, getSystemProperties(), referrerInfo);
+
+                System.out.println(TAG + "Internet enabled -> " + internetEnabled);
+                if (internetEnabled) {
+                    Task<Void> signupTask = new Task<>() {
+                        @Override
+                        protected Void call() {
+                            signupUser(signupRequest);
+                            return null;
+                        }
+                    };
+                    Thread signupThread = new Thread(signupTask);
+                    signupThread.start();
+                }
+
+            });
+
+
+            Label loginEmailError = getEmailErrorText();
+            Label loginPasswordError = getPasswordErrorText();
+
+            loginProceedButton.setOnAction(event -> {
+                String email = loginEmailField.getText();
+                loginEmailSection.getChildren().remove(loginEmailError);
+                if (!loginEmailField.getText().contains("@")) {
+                    loginEmailSection.getChildren().add(loginEmailError);
+                    return;
+                }
+
+                String password = loginPasswordField.getText();
+                loginPasswordSection.getChildren().remove(loginPasswordError);
+                if (loginPasswordField.getCharacters().length() < 6) {
+                    if (!loginPasswordSection.getChildren().contains(loginPasswordError)) {
+                        loginPasswordSection.getChildren().add(loginPasswordError);
+                    }
+                    return;
+                }
+
+                loginProceedButton.setDisable(true);
+                showProgressBar();
+
+                loginEmailSection.getChildren().remove(loginEmailError);
+                loginPasswordSection.getChildren().remove(loginPasswordError);
+
+                UserRequest loginRequest = new UserRequest();
+                loginRequest.setEmail(email);
+                loginRequest.setPassword(password);
+                loginRequest.setAppSlug("utme");
+                loginRequest.setDeviceInfo(getSystemProperties());
 
                 // Check for internet connectivity
                 try {
@@ -268,15 +227,87 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     URLConnection connection = url.openConnection();
                     connection.connect();
 
-                    Task<Void> recoverTask = new Task<>() {
+                    Task<Void> loginTask = new Task<>() {
                         @Override
-                        protected Void call() throws Exception {
-                            recoverPassword(request);
+                        protected Void call() {
+                            loginUser(loginRequest);
                             return null;
                         }
                     };
-                    Thread recoverThread = new Thread(recoverTask);
-                    recoverThread.start();
+                    Thread loginThread = new Thread(loginTask);
+                    loginThread.start();
+
+                } catch (Exception e) {
+                    Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                    alertDialog.show();
+                    hideProgressBar();
+                    System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
+                }
+
+            });
+
+            recoverProceedButton.setOnAction(event -> {
+
+                if (!recoverEmailField.getText().contains("@")) {
+                    recoverEmailPrompt.setVisible(true);
+                } else {
+
+                    recoverProceedButton.setDisable(true);
+                    showProgressBar();
+
+                    String email = recoverEmailField.getText();
+                    String appSlug = "utme";
+
+                    UserRequest request = new UserRequest();
+                    request.setEmail(email);
+                    request.setAppSlug(appSlug);
+
+                    // Check for internet connectivity
+                    try {
+                        URL url = new URL(BASE_URL);
+                        URLConnection connection = url.openConnection();
+                        connection.connect();
+
+                        Task<Void> recoverTask = new Task<>() {
+                            @Override
+                            protected Void call() throws Exception {
+                                recoverPassword(request);
+                                return null;
+                            }
+                        };
+                        Thread recoverThread = new Thread(recoverTask);
+                        recoverThread.start();
+
+                    } catch (Exception e) {
+                        Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                        alertDialog.show();
+                        hideProgressBar();
+                        System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
+                    }
+
+                }
+            });
+
+            signUpGoogleButton.setOnAction(event -> {
+
+                signUpGoogleButton.setDisable(true);
+                showProgressBar();
+
+                // Check for internet connectivity
+                try {
+                    URL url = new URL(BASE_URL);
+                    URLConnection connection = url.openConnection();
+                    connection.connect();
+
+                    Task<Void> signInGoogleTask = new Task<>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            signInWithGoogle();
+                            return null;
+                        }
+                    };
+                    Thread background = new Thread(signInGoogleTask);
+                    background.start();
 
                 } catch (Exception e) {
                     Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
@@ -284,69 +315,42 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     hideProgressBar();
                     System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
                 }
+            });
 
-            }
-        });
+            loginGoogleButton.setOnAction(event -> {
 
-        signUpGoogleButton.setOnAction(event -> {
+                loginGoogleButton.setDisable(true);
+                showProgressBar();
 
-            signUpGoogleButton.setDisable(true);
-            showProgressBar();
+                // Check for internet connectivity
+                try {
+                    URL url = new URL(BASE_URL);
+                    URLConnection connection = url.openConnection();
+                    connection.connect();
 
-            // Check for internet connectivity
-            try {
-                URL url = new URL(BASE_URL);
-                URLConnection connection = url.openConnection();
-                connection.connect();
+                    Task<Void> loginGoogleTask = new Task<>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            signInWithGoogle();
+                            return null;
+                        }
+                    };
+                    Thread background = new Thread(loginGoogleTask);
+                    background.start();
 
-                Task<Void> signInGoogleTask = new Task<>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        signInWithGoogle();
-                        return null;
-                    }
-                };
-                Thread background = new Thread(signInGoogleTask);
-                background.start();
+                } catch (Exception e) {
+                    Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                    alertDialog.show();
+                    hideProgressBar();
+                    System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
 
-            } catch (Exception e) {
-                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
-                alertDialog.show();
-                hideProgressBar();
-                System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
-            }
-        });
+                }
+            });
 
-        loginGoogleButton.setOnAction(event -> {
-
-            loginGoogleButton.setDisable(true);
-            showProgressBar();
-
-            // Check for internet connectivity
-            try {
-                URL url = new URL(BASE_URL);
-                URLConnection connection = url.openConnection();
-                connection.connect();
-
-                Task<Void> loginGoogleTask = new Task<>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        signInWithGoogle();
-                        return null;
-                    }
-                };
-                Thread background = new Thread(loginGoogleTask);
-                background.start();
-
-            } catch (Exception e) {
-                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
-                alertDialog.show();
-                hideProgressBar();
-                System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
-
-            }
-        });
-
+            MainApplication.logInfo("Done");
+        } catch (Exception e) {
+            MainApplication.log(e);
+        }
     }
 
     private void signupUser(UserRequest newUser) {

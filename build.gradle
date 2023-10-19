@@ -28,7 +28,7 @@ sourceCompatibility = '16'
 targetCompatibility = '16'
 
 project.ext.buildDate = new Date()
-project.version = "0.3"
+project.version = "0.4"
 
 application {
     mainModule = 'com.scholarly.utme'
@@ -37,7 +37,7 @@ application {
 
 javafx {
     version = '18.0.2'
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing']
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing', 'javafx.graphics']
 }
 
 mainClassName = "$moduleName/com.scholarly.utme.MainApplication"
@@ -51,7 +51,6 @@ jlink {
     launcher {
         name = 'Scholarly Jamb CBT'
         jvmArgs = ['-Djdk.gtk.version=2']
-//        noConsole = true
     }
 
     jpackage {
@@ -106,7 +105,24 @@ jlink {
     }
 
     mergedModule {
-
+        /*requires 'javafx.graphics';
+        requires 'javafx.controls';
+        requires 'java.logging';
+        requires 'javafx.swing';
+        requires 'java.sql';
+        requires 'java.xml';
+        requires 'java.desktop';
+        requires 'java.datatransfer';
+        requires 'java.security.jgss';
+        requires 'javafx.base';
+        requires 'javafx.fxml';
+        requires 'jdk.unsupported';
+        provides 'java.sql.Driver' with 'org.sqlite.JDBC';
+        provides 'javax.imageio.spi.ImageInputStreamSpi' with 'com.twelvemonkeys.imageio.color.ProfileDeferralActivator.Spi',
+                'com.twelvemonkeys.imageio.stream.BufferedFileImageInputStreamSpi',
+                'com.twelvemonkeys.imageio.stream.BufferedInputStreamImageInputStreamSpi',
+                'com.twelvemonkeys.imageio.stream.BufferedRAFImageInputStreamSpi';
+        provides 'javax.imageio.spi.ImageReaderSpi' with 'com.twelvemonkeys.imageio.plugins.webp.WebPImageReaderSpi';*/
     }
 }
 

@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller.landing_screens;
 
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.controller.note_screens.NotesScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
@@ -487,6 +488,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             connection.connect();
             return true;
         } catch (IOException e) {
+            MainApplication.log(e);
             return false;
         }
     }
