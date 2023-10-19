@@ -4,12 +4,14 @@ import com.scholarly.utme.data.model.novels.NovelAuthor;
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
+import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.novel_screens.NovelChapterListVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -74,7 +76,12 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
         });
 
         backButton.setOnAction(event -> {;
-            ViewSwitcher.showScreen(View.NOVEL_SCREEN);
+            if (getInitialData().previousScreen == Screens.NOVELS_SCREEN) {
+                ViewSwitcher.showScreen(View.NOVEL_SCREEN);
+            } else {
+                ViewSwitcher.passData(new NovelGridScreenController.InitialData(null, FXCollections.emptyObservableList()));
+                ViewSwitcher.showScreen(View.NOVEL_GRID_SCREEN);
+            }
         });
     }
 
@@ -99,19 +106,19 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
 
     public static class InitialData {
         private NovelModel novelModel;
-        private NovelAuthor author;
+        private Screens previousScreen;
 
-        public InitialData(NovelModel novelModel) {
+        public InitialData(NovelModel novelModel, Screens previousScreen) {
             this.novelModel = novelModel;
-//            this.author = author;
+            this.previousScreen = previousScreen;
         }
 
         public NovelModel getNovelModel() {
             return novelModel;
         }
 
-        public NovelAuthor getAuthor() {
-            return author;
+        public Screens getPreviousScreen() {
+            return previousScreen;
         }
     }
 }

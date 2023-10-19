@@ -166,7 +166,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
                     viewModel.putLastSession(novelLastSession);
 
-                    ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovelModel()));
+                    ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovelModel(), null));
                     ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
                 } else {
                     exitDialogDimmer.setVisible(false);

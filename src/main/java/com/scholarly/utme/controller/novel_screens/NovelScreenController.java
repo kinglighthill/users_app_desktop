@@ -8,6 +8,7 @@ import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.novel_screens.NovelScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -35,6 +36,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import static com.scholarly.utme.util.Constants.PREF_KEY_DONT_SHOW_NOVEL_SCREEN_PROMPT;
+
 @FxmlPath("/layouts/novel_screens/NovelScreen.fxml")
 public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializable {
     private static final String TAG = "NovelScreenController: ";
@@ -55,7 +58,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
     private Button dismissButton, readButton, backButton;
 
     @FXML
-    private VBox centerVBox, novelsVBox;
+    private VBox centerVBox, novelsVBox, novelPrompt;
 
     @FXML
     private ImageView novelImage, authorIcon, chaptersIcon, timeIcon;
@@ -87,7 +90,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
                 Button viewAllButton = new Button("View all");
                 viewAllButton.setTextFill(Paint.valueOf("#12AF20"));
-                viewAllButton.setStyle("-fx-border-color: #12AF20; -fx-border-radius: 5;");
+                viewAllButton.setStyle("-fx-border-color: #12AF20; -fx-border-radius: 5; -fx-cursor: hand;");
                 viewAllButton.setPadding(new Insets(5, 10, 5, 10));
                 viewAllButton.setBackground(Background.EMPTY);
                 viewAllButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
@@ -151,7 +154,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
                             viewModel.setSelectedNovelModel(null);
                         } else {
                             novelVBox.setStyle("-fx-border-color: #12AF20; -fx-border-radius: 8;");
-                            System.out.println(TAG + "NovelVbox -> " + novelVBox);
+//                            System.out.println(TAG + "NovelVbox -> " + novelVBox);
                             viewModel.setSelectedNovelModel(novelModel);
                         }
 
@@ -159,6 +162,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
                         selectNovelBox.set(novelVBox);
                     });
 
+                    novelVBox.setStyle("-fx-cursor: hand;");
                     tilePane.getChildren().add(novelVBox);
                 });
 
@@ -182,6 +186,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
                 novelDescription.setText(newValue.getNovel().getAbout());
                 authorLabel.setText(viewModel.getAuthor(newValue.getNovel()).getName());
                 chaptersLabel.setText(newValue.getChapterText());
+                timeText.setText(newValue.getTimeText());
             } else {
                 authorIcon.setVisible(false);
                 chaptersIcon.setVisible(false);
@@ -198,14 +203,15 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
         dismissButton.setOnAction(event -> {
             if (dontShowButton.isSelected()) {
-                centerVBox.getChildren().remove(0);
+                PreferencesManager.putBoolean(PREF_KEY_DONT_SHOW_NOVEL_SCREEN_PROMPT+viewModel.getUserId(), true);
+                centerVBox.getChildren().remove(novelPrompt);
             } else {
-                centerVBox.getChildren().get(0).setVisible(false);
+                centerVBox.getChildren().remove(novelPrompt);
             }
         });
 
         readButton.setOnAction(event -> {
-            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getSelectedNovelModel()));
+            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getSelectedNovelModel(), Screens.NOVELS_SCREEN));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
     }
@@ -219,6 +225,11 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         authorIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/author_icon.png").toString()));
         chaptersIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/chapter_icon.png").toString()));
         timeIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/time_icon.png").toString()));
+
+        boolean dontShowPrompt = PreferencesManager.getBoolean(PREF_KEY_DONT_SHOW_NOVEL_SCREEN_PROMPT+viewModel.getUserId(), false);
+        if (dontShowPrompt) {
+            centerVBox.getChildren().remove(novelPrompt);
+        }
     }
 
     private void initializeFont() {
