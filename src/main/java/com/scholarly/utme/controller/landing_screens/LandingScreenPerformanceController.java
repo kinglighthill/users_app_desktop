@@ -103,7 +103,7 @@ public class LandingScreenPerformanceController implements FxmlView<LandingScree
         HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectQuestions = new HashMap<>();
         subjectQuestions.put("Eng", new PracticeScreenVM.SubjectQuestionsState(4, 0, questionStates));
 
-        ResultScreenController.InitialData performance1 = new ResultScreenController.InitialData(results, subjects, null, subjectQuestions, View.LANDING_SCREEN);
+        ResultScreenController.InitialData performance1 = new ResultScreenController.InitialData(results, subjects, null, subjectQuestions, null, View.LANDING_SCREEN);
 
         ObservableList<ResultScreenController.InitialData> performanceItems = FXCollections.observableArrayList(performance1);
         testPerformancesList.setCellFactory(new TestPerformanceListCellFactory());

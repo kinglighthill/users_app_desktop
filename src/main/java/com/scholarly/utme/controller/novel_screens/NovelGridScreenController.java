@@ -2,6 +2,7 @@ package com.scholarly.utme.controller.novel_screens;
 
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.data.model.listItems.AppItem;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.ui.cellFactories.NovelGridCellFactory;
@@ -12,7 +13,10 @@ import com.scholarly.utme.viewmodels.novel_screens.NovelGridScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -21,6 +25,8 @@ import javafx.scene.image.ImageView;
 import org.controlsfx.control.GridView;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/novel_screens/NovelGridScreen.fxml")
@@ -28,6 +34,9 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
 
     @FXML
     private GridView<NovelModel> novelGridView;
+
+    @FXML
+    private TextField searchTextField;
 
     @FXML
     private ImageView searchIcon;
@@ -42,6 +51,9 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
     @InjectViewModel
     private NovelGridScreenVM viewModel;
 
+    private static ObservableList<NovelModel> novelItems = FXCollections.observableArrayList();
+
+    private static String appBarTitle;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -51,15 +63,62 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
 
         viewModel.processInitialData(getInitialData());
 
-        pageTitle.setText(viewModel.getNovelType());
+        if (novelItems.isEmpty()) {
+            novelItems.addAll(viewModel.getNovelModels());
+        }
+
+        if (viewModel.getNovelType() != null) {
+            appBarTitle = viewModel.getNovelType();
+        }
+        pageTitle.setText(appBarTitle);
 
         novelGridView.setCellFactory(new NovelGridCellFactory());
-        novelGridView.setItems(viewModel.getNovelModels());
+        novelGridView.setItems(novelItems);
+
+        TextFormatter<String> textFormatter = new TextFormatter<>(change -> {
+            if (!change.isContentChange()) {
+                return change;
+            }
+
+            String text = change.getControlNewText();
+
+            if (text.isBlank()) {
+                novelGridView.setItems(novelItems);
+                return change;
+            }
+
+            List<NovelModel> searchedNovels = new ArrayList<>();
+            Task<Void> task = new Task<>() {
+                @Override
+                protected Void call() {
+                    for (NovelModel novel : novelItems) {
+                        if (novel.getNovel().getName().contains(text)) {
+                            searchedNovels.add(novel);
+                        }
+                    }
+
+                    Platform.runLater(() -> {
+                        novelGridView.setItems(FXCollections.observableArrayList(searchedNovels));
+                    });
+                    return null;
+                }
+            };
+            Thread thread = new Thread(task);
+            thread.setDaemon(true);
+            thread.start();
+
+            return change;
+        });
+
+        searchTextField.setTextFormatter(textFormatter);
+
+        searchTextField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
+            searchIcon.setVisible(!newValue);
+        }));
 
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.NOVELS_SCREEN));
-            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+            ViewSwitcher.showScreen(View.NOVEL_SCREEN);
         });
 
 

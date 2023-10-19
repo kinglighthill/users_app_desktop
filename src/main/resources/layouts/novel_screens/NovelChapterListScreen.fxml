@@ -17,7 +17,7 @@
     <top>
         <VBox >
             <HBox spacing="15" alignment="CENTER_LEFT">
-                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9">
+                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9; -fx-cursor: hand;">
                     <padding>
                         <Insets top="8" right="13" bottom="8" left="13" />
                     </padding>
@@ -45,7 +45,7 @@
                     <Insets left="15"/>
                 </VBox.margin>
             </Label>
-            <ListView fx:id="chaptersList" prefWidth="600" prefHeight="600"/>
+            <ListView fx:id="chaptersList" prefWidth="600" prefHeight="600" style="-fx-cursor: hand;"/>
             <padding>
                 <Insets topRightBottomLeft="20"/>
             </padding>
@@ -78,7 +78,7 @@
                         <ImageView fx:id="timeIcon" preserveRatio="true" pickOnBounds="true"/>
                         <Label fx:id="timeText" text="20 mins"/>
                     </HBox>
-                    <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5;"/>
+                    <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5; -fx-cursor: hand;"/>
                 </VBox>
             </VBox>
             <HBox.margin>

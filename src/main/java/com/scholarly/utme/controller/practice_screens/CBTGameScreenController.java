@@ -3,6 +3,7 @@ package com.scholarly.utme.controller.practice_screens;
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
+import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
@@ -19,6 +20,7 @@ import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -39,6 +41,7 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -91,9 +94,14 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private QuestionState selectedQuestion;
     private Integer enteredBtn = null;
 
+    private Media correctSound;
+    private Media wrongSound;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        correctSound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
+        wrongSound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
+
 
         List<Button> options = new ArrayList<>();
         options.add(optionAButton);
@@ -109,7 +117,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         setupQuestionView();
 //        updateBookmarkIcon();
         setupReportSection();
-
 
         viewModel.selectedQuestionProperty().addListener((observableValue, number, t1) -> {
             changeSelectedQuestion(t1.intValue());
@@ -319,7 +326,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         showAnswersButton.setOnAction(event -> {
-            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), SubjectListItemVM.Type.OBJECTIVE);
+            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getSelectedSubjectYear(), SubjectListItemVM.Type.OBJECTIVE, Screens.CBT_GAME_SCREEN);
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });
@@ -404,11 +411,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         String idleExitButtonStyle = exitButton.getStyle();
         String hoveredExitButtonStyle =
-                "-fx-background-color:#F1F9F0;" +
-                        "-fx-background-radius: 5;" +
-                        "-fx-border-color: #1B9D01;" +
-                        "-fx-border-width: 0.6;" +
-                        "-fx-border-radius: 5";
+                "-fx-background-color:#F1F9F0; " +
+                        "-fx-background-radius: 5; " +
+                        "-fx-border-color: #1B9D01; " +
+                        "-fx-border-width: 0.6; " +
+                        "-fx-border-radius: 5; " +
+                        "-fx-cursor: hand;";
 
         exitButton.setOnMouseEntered(e -> {
             exitButton.setStyle(hoveredExitButtonStyle);
@@ -420,11 +428,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         String idlePlayAgainButtonStyle = playAgainButton.getStyle();
         String hoveredPlayAgainButtonStyle =
-                "-fx-background-color:#F1F9F0;" +
-                        "-fx-background-radius: 5;" +
-                        "-fx-border-color: #1B9D01;" +
-                        "-fx-border-width: 0.6;" +
-                        "-fx-border-radius: 5";
+                "-fx-background-color:#F1F9F0; " +
+                        "-fx-background-radius: 5; " +
+                        "-fx-border-color: #1B9D01; " +
+                        "-fx-border-width: 0.6; " +
+                        "-fx-border-radius: 5; " +
+                        "-fx-cursor: hand;";
 
         playAgainButton.setOnMouseEntered(e -> {
             playAgainButton.setStyle(hoveredPlayAgainButtonStyle);
@@ -436,8 +445,9 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         String idleShowAnswerButtonStyle = showAnswersButton.getStyle();
         String hoveredShowAnswerButtonStyle =
-                "-fx-background-color: #157D01;" +
-                        "-fx-background-radius: 5;";
+                "-fx-background-color: #157D01; " +
+                        "-fx-background-radius: 5; " +
+                        "-fx-cursor: hand;";
 
         showAnswersButton.setOnMouseEntered(e -> {
             showAnswersButton.setStyle(hoveredShowAnswerButtonStyle);
@@ -445,6 +455,106 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         showAnswersButton.setOnMouseExited(e -> {
             showAnswersButton.setStyle(idleShowAnswerButtonStyle);
         });
+    }
+
+    private void setupQuestionView() {
+        List<QuestionState> questions = viewModel.getQuestions();
+        selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1);
+        int selectedQuestionNumber = selectedQuestion.question().getQuestionNumber();
+
+        pageTitle.setText("CBT Game");
+        pageTitle.setText(pageTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(selectedQuestion.subject()).getYear());
+        questionNumberLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
+
+        List<ObjectiveQuestionDescription> questionDescriptionList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+                questionDescription.getId() == selectedQuestion.question().getQuestionDescriptionId()).collect(Collectors.toList());
+
+        if (questionDescriptionList.isEmpty()) {
+            readQuestionDesc.setVisible(false);
+            questionDescriptionHeader.setText("");
+        } else {
+            questionDescriptionHeader.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", " "));
+            questionDescriptionText.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+        }
+
+        String questionText = selectedQuestion.question().getQuestion();
+
+        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
+        if (questionText.contains("<img")) {
+            questionVBox.getChildren().add(questionWithImageVBox);
+            questionText = parseQuestionWithImageView(questionText);
+        } else {
+            questionVBox.getChildren().add(questionScrollPane);
+            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+//            questionWebView.getEngine().loadContent(questionText);
+        }
+//        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+        optionAButton.setUserData(0);
+        optionBButton.setUserData(1);
+        optionCButton.setUserData(2);
+        optionDButton.setUserData(3);
+
+        loadOption(optionAButton, selectedQuestion.question().getOptionA().getText(), " (A) ");
+        loadOption(optionBButton, selectedQuestion.question().getOptionB().getText(), " (B) ");
+        loadOption(optionCButton, selectedQuestion.question().getOptionC().getText(), " (C) ");
+        loadOption(optionDButton, selectedQuestion.question().getOptionD().getText(), " (D) ");
+
+        optionAButton.setDisable(false);
+        optionBButton.setDisable(false);
+        optionCButton.setDisable(false);
+        optionDButton.setDisable(false);
+    }
+
+    private void changeSelectedQuestion(int newValue) {
+        List<QuestionState> questions = viewModel.getQuestions();
+        selectedQuestion = questions.get(newValue - 1);
+
+        pageTitle.setText("CBT Game");
+        pageTitle.setText(pageTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(selectedQuestion.subject()).getYear());
+
+        questionNumberLabel.setText("Question " + newValue + " of " + questions.size());
+
+        List<ObjectiveQuestionDescription> questionDescriptionList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+                questionDescription.getId() == selectedQuestion.question().getQuestionDescriptionId()).collect(Collectors.toList());
+
+        if (questionDescriptionList.isEmpty()) {
+            readQuestionDesc.setVisible(false);
+            questionDescriptionHeader.setText("");
+        } else {
+            questionDescriptionHeader.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", " "));
+            questionDescriptionText.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+        }
+
+        String questionText = selectedQuestion.question().getQuestion();
+        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
+        if (questionText.contains("<img")) {
+            questionVBox.getChildren().add(questionWithImageVBox);
+            questionText = parseQuestionWithImageView(questionText);
+        } else {
+            questionVBox.getChildren().add(questionScrollPane);
+            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+//            questionWebView.getEngine().loadContent(questionText);
+        }
+
+//        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+        optionAButton.setUserData(0);
+        optionBButton.setUserData(1);
+        optionCButton.setUserData(2);
+        optionDButton.setUserData(3);
+
+        loadOption(optionAButton, selectedQuestion.question().getOptionA().getText(), " (A) ");
+        loadOption(optionBButton, selectedQuestion.question().getOptionB().getText(), " (B) ");
+        loadOption(optionCButton, selectedQuestion.question().getOptionC().getText(), " (C) ");
+        loadOption(optionDButton, selectedQuestion.question().getOptionD().getText(), " (D) ");
+
+        optionAButton.setDisable(false);
+        optionBButton.setDisable(false);
+        optionCButton.setDisable(false);
+        optionDButton.setDisable(false);
+
+        updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
     }
 
     private void updateBookmarkIcon() {
@@ -477,11 +587,16 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         QuestionState selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1);
         String question = selectedQuestion.question().getQuestion();
 
-        TextToSpeech.play(question);
+        StringBuilder textToRead = new StringBuilder(question);
+        textToRead.append(". Option A, ").append(selectedQuestion.question().getOptionA().getText());
+        textToRead.append(". Option B, ").append(selectedQuestion.question().getOptionB().getText());
+        textToRead.append(". Option C, ").append(selectedQuestion.question().getOptionC().getText());
+        textToRead.append(". Option D, ").append(selectedQuestion.question().getOptionD().getText());
+
+        TextToSpeech.play(textToRead.toString());
     }
 
     public void onCalculatorClicked() {
-        System.out.println("Calculator clicked");
         if (!calculatorStage.isShowing()) {
             calculatorStage.initModality(Modality.WINDOW_MODAL);
             calculatorStage.setTitle("Calculator");
@@ -572,10 +687,10 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
     private void dispatchAnswerCorrect() {
         if (viewModel.getSoundPreference()) {
-            Media sound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
-            MediaPlayer mediaPlayer = new MediaPlayer(sound);
-            mediaPlayer.setStopTime(Duration.millis(500));
-            mediaPlayer.play();
+            MediaPlayer correctMediaPlayer = new MediaPlayer(correctSound);
+            correctMediaPlayer.setStopTime(Duration.millis(500));
+            correctMediaPlayer.play();
+            TextToSpeech.play("CORRECT!");
         }
 
         FadeTransition fadeTransition = new FadeTransition();
@@ -608,110 +723,14 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
     private void dispatchAnswerIncorrect() {
         if (viewModel.getSoundPreference()) {
-            Media sound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
-            MediaPlayer mediaPlayer = new MediaPlayer(sound);
-            mediaPlayer.setStopTime(Duration.millis(500));
-            mediaPlayer.play();
+            MediaPlayer wrongMediaPlayer = new MediaPlayer(wrongSound);
+            wrongMediaPlayer.setStopTime(Duration.millis(500));
+            wrongMediaPlayer.play();
+            TextToSpeech.play("WRONG!");
         }
 
         viewModel.setIncorrectAnswers(viewModel.getIncorrectAnswers() + 1);
         viewModel.setQuestionAttempts(viewModel.getQuestionAttempts() + 1);
-    }
-
-
-    private void setupQuestionView() {
-        List<QuestionState> questions = viewModel.getQuestions();
-        selectedQuestion = questions.get(viewModel.getSelectedQuestion() - 1);
-        int selectedQuestionNumber = selectedQuestion.question().getQuestionNumber();
-
-        questionNumberLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
-        
-        List<ObjectiveQuestionDescription> questionDescriptionList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
-                questionDescription.getId() == selectedQuestion.question().getQuestionDescriptionId()).collect(Collectors.toList());
-        
-        if (questionDescriptionList.isEmpty()) {
-            readQuestionDesc.setVisible(false);
-            questionDescriptionHeader.setText("");
-        } else {
-            questionDescriptionHeader.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", " "));
-            questionDescriptionText.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-        }
-
-        String questionText = selectedQuestion.question().getQuestion();
-
-        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
-        if (questionText.contains("<img")) {
-            questionVBox.getChildren().add(questionWithImageVBox);
-            questionText = parseQuestionWithImageView(questionText);
-        } else {
-            questionVBox.getChildren().add(questionScrollPane);
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-//            questionWebView.getEngine().loadContent(questionText);
-        }
-//        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-
-        optionAButton.setUserData(0);
-        optionBButton.setUserData(1);
-        optionCButton.setUserData(2);
-        optionDButton.setUserData(3);
-
-        loadOption(optionAButton, selectedQuestion.question().getOptionA().getText(), " (A) ");
-        loadOption(optionBButton, selectedQuestion.question().getOptionB().getText(), " (B) ");
-        loadOption(optionCButton, selectedQuestion.question().getOptionC().getText(), " (C) ");
-        loadOption(optionDButton, selectedQuestion.question().getOptionD().getText(), " (D) ");
-
-        optionAButton.setDisable(false);
-        optionBButton.setDisable(false);
-        optionCButton.setDisable(false);
-        optionDButton.setDisable(false);
-    }
-
-    private void changeSelectedQuestion(int newValue) {
-        List<QuestionState> questions = viewModel.getQuestions();
-        selectedQuestion = questions.get(newValue - 1);
-
-        questionNumberLabel.setText("Question " + newValue + " of " + questions.size());
-
-        List<ObjectiveQuestionDescription> questionDescriptionList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
-                questionDescription.getId() == selectedQuestion.question().getQuestionDescriptionId()).collect(Collectors.toList());
-
-        if (questionDescriptionList.isEmpty()) {
-            readQuestionDesc.setVisible(false);
-            questionDescriptionHeader.setText("");
-        } else {
-            questionDescriptionHeader.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", " "));
-            questionDescriptionText.setText(questionDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-        }
-
-        String questionText = selectedQuestion.question().getQuestion();
-        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
-        if (questionText.contains("<img")) {
-            questionVBox.getChildren().add(questionWithImageVBox);
-            questionText = parseQuestionWithImageView(questionText);
-        } else {
-            questionVBox.getChildren().add(questionScrollPane);
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-//            questionWebView.getEngine().loadContent(questionText);
-        }
-
-//        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-
-        optionAButton.setUserData(0);
-        optionBButton.setUserData(1);
-        optionCButton.setUserData(2);
-        optionDButton.setUserData(3);
-
-        loadOption(optionAButton, selectedQuestion.question().getOptionA().getText(), " (A) ");
-        loadOption(optionBButton, selectedQuestion.question().getOptionB().getText(), " (B) ");
-        loadOption(optionCButton, selectedQuestion.question().getOptionC().getText(), " (C) ");
-        loadOption(optionDButton, selectedQuestion.question().getOptionD().getText(), " (D) ");
-
-        optionAButton.setDisable(false);
-        optionBButton.setDisable(false);
-        optionCButton.setDisable(false);
-        optionDButton.setDisable(false);
-
-        updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
     }
 
     public void loadOption(Button optionButton, String option, String optionLabel) {

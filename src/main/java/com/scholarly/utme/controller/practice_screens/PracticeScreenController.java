@@ -12,6 +12,7 @@ import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.TextToSpeech;
+import com.scholarly.utme.viewmodels.practice_screens.CBTGameScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.SubjectQuestionsState;
@@ -227,9 +228,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             }
 
         });
-
-        tilePane.setVgap(10);
-        tilePane.setHgap(10);
 
         toggleGroup.getToggles().addAll(optionAButton, optionBButton, optionCButton, optionDButton);
 
@@ -460,7 +458,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         resultAnalysisButton.setOnAction(event -> {
             ResultScreenController.InitialData initialData =
-                    new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), View.HOME_SCREEN);
+                    new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getSelectedSubjectYear(), View.HOME_SCREEN);
 
             ViewSwitcher.passData(initialData);
             ViewSwitcher.showScreen(View.RESULT_SCREEN);
@@ -491,22 +489,24 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 //        });
 
         speakerImage.setOnMouseClicked(event -> {
-            int selectedQuestion = viewModel.getSubjectsQuestions()
+            int selectedQuestionNumber = viewModel.getSubjectsQuestions()
                     .get(viewModel.getSelectedSubject().getShortTitle())
                     .getSelectedQuestion();
 
             QuestionState questionState = viewModel.getSubjectsQuestions()
                     .get(viewModel.getSelectedSubject().getShortTitle())
                     .getQuestions()
-                    .get(selectedQuestion - 1);
+                    .get(selectedQuestionNumber - 1);
 
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                // System.out.println("Question: " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
-                StringBuilder textToRead = new StringBuilder(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
-                textToRead.append(" Option A ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionA().getText());
-                textToRead.append(" Option B ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionB().getText());
-                textToRead.append(" Option C ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionC().getText());
-                textToRead.append(" Option D ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionD().getText());
+                ObjectiveQuestion selectedQuestion = ((ObjectiveQuestion) questionState.getQuestion());
+
+                StringBuilder textToRead = new StringBuilder(selectedQuestion.getQuestion());
+                textToRead.append(". Option A, ").append(selectedQuestion.getOptionA().getText());
+                textToRead.append(". Option B, ").append(selectedQuestion.getOptionB().getText());
+                textToRead.append(". Option C, ").append(selectedQuestion.getOptionC().getText());
+                textToRead.append(". Option D, ").append(selectedQuestion.getOptionD().getText());
                 TextToSpeech.play(textToRead.toString());
             } else {
                 TextToSpeech.play(((TheoryQuestion) questionState.getQuestion()).getQuestion());
@@ -747,6 +747,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             String questionText = question.getQuestion().replaceAll("<br>", System.lineSeparator());
             questionLabel.setText(questionText);
+
             questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
 
             if (!quesDescriptionInList.isEmpty()) {
@@ -826,12 +827,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
 
+        tilePane.setVgap(10);
+        tilePane.setHgap(10);
         tilePane.getChildren().clear();
 
         for (int i=1; i <= questions.size(); i++) {
             Rectangle r = new Rectangle(35, 35);
-            r.setFill(Color.web("#FFFFFF"));
             r.setStroke(Color.GRAY);
+            r.setFill(Color.web("#FFFFFF"));
             r.setStrokeType(StrokeType.OUTSIDE);
 
             Label l = new Label(Integer.toString(i));
@@ -954,7 +957,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                     Animations.showDialog(testSummaryDialog, summaryDialogDimmer);
 
                 } else {
-                    ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getQuestionType());
+                    ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getSelectedSubjectYear(), viewModel.getQuestionType(), Screens.PRACTICE_SCREEN);
                     ViewSwitcher.passData(data);
                     ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
                     //TODO: Implement Theory result screen
@@ -995,7 +998,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
                 ResultScreenController.InitialData initialData =
-                        new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), View.HOME_SCREEN);
+                        new ResultScreenController.InitialData(viewModel.getResults(), viewModel.getSubjects(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getSelectedSubjectYear(), View.HOME_SCREEN);
                 ViewSwitcher.passData(initialData);
                 ViewSwitcher.showScreen(View.RESULT_SCREEN);
 

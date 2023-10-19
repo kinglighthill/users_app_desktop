@@ -184,7 +184,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         });
 
         cbtPracticePanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(null, null));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
@@ -437,7 +437,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             });
 
             panel.setOnMouseClicked(event -> {
-                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, subject));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(null, subject));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             });
 

@@ -24,4 +24,15 @@ public class NovelModel {
             return novel.getChaptersCount() + " " + division;
         }
     }
+
+    public String getTimeText() {
+        if (novel.getChaptersCount() > 30) {
+            int totalMins = novel.getChaptersCount()*2;
+            int div = totalMins/60;
+            int rem = totalMins%60;
+            return div + " hour(s) " + rem + "mins";
+        } else {
+            return novel.getChaptersCount() * 2 + " mins";
+        }
+    }
 }

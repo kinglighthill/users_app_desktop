@@ -132,7 +132,7 @@ public class TopicDao {
 
     public static ObservableList<PQTopic> getPQTopicsForSubjectAndYear(int subjectId, int yearId) {
         String query = "SELECT DISTINCT topic_id, topics.title, pq_objective_questions.subject_id FROM pq_objective_questions JOIN topics ON topics._id = pq_objective_questions.topic_id WHERE pq_objective_questions.subject_id = " + subjectId + " AND year_id = " + yearId;
-        System.out.println(TAG + "Get Topics with Subject and Year Query -> " + query);
+//        System.out.println(TAG + "Get Topics with Subject and Year Query -> " + query);
         ObservableList<PQTopic> topics = FXCollections.observableArrayList();
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
