@@ -211,11 +211,13 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 Object initialData = null;
 
                  if (selectedOption == SubjectListOption.STUDY) {
+                     PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PAST_QUESTION_SCREEN.getName());
                     initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
 //                    initialData = new StudyPastQuestScreenController2.InitialData(subjectStates);
                     ViewSwitcher.passData(initialData);
                     ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
                 } else if (selectedOption == SubjectListOption.CBT_GAME) {
+                     PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.CBT_GAME_SCREEN.getName());
                     initialData = new CBTGameScreenController.InitialData(subjectStates, false, false);
                     ViewSwitcher.passData(initialData);
                     ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
@@ -228,6 +230,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                      if (hoursChoiceBox.getValue() != 0 || minutesChoiceBox.getValue() != 0){
 
                          if (selectedOption == SubjectListOption.PRACTICE) {
+                             PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
                              initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
                              ViewSwitcher.passData(initialData);
                              ViewSwitcher. showScreen(View.PRACTICE_SCREEN);

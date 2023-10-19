@@ -2,6 +2,7 @@ package com.scholarly.utme.controller.practice_screens;
 
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
@@ -170,7 +171,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
 
         showExplanationButton.setOnAction(event -> {
-            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), SubjectListItemVM.Type.OBJECTIVE);
+            ExplanationScreenController.InitialData data = new ExplanationScreenController.InitialData(viewModel.getSubjectList(), viewModel.getQuestionDescriptions(), viewModel.getSubjectsQuestions(), viewModel.getSelectedSubjectYear(), SubjectListItemVM.Type.OBJECTIVE, Screens.PRACTICE_SCREEN);
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.EXPLANATION_SCREEN);
         });
@@ -198,6 +199,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
     private void initializeFont() {
         showExplanationButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+        exitButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
     }
 
     private void showExitDialog() {
@@ -230,13 +232,15 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
         private List<PQSubject> subjects;
         private List<QuestionDescription> questionDescriptions;
         private HashMap<String, SubjectQuestionsState> subjectsQuestions;
+        private HashMap<String, Year> selectedSubjectYear;
         private View previousScreen;
 
-        public InitialData(List<Result> results, List<PQSubject> subjects, List<QuestionDescription> questionDescriptions, HashMap<String, SubjectQuestionsState> subjectsQuestions, View previousScreen) {
+        public InitialData(List<Result> results, List<PQSubject> subjects, List<QuestionDescription> questionDescriptions, HashMap<String, SubjectQuestionsState> subjectsQuestions, HashMap<String, Year> selectedSubjectYear,  View previousScreen) {
             this.results = results;
             this.subjects = subjects;
             this.questionDescriptions = questionDescriptions;
             this.subjectsQuestions = subjectsQuestions;
+            this.selectedSubjectYear = selectedSubjectYear;
             this.previousScreen = previousScreen;
         }
 
@@ -254,6 +258,10 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
 
         public List<Result> getResults() {
             return results;
+        }
+
+        public HashMap<String, Year> getSelectedSubjectYear() {
+            return selectedSubjectYear;
         }
 
         public View getPreviousScreen() {

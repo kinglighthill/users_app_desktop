@@ -12,7 +12,7 @@
    <top>
       <ToolBar prefHeight="84.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER">
         <items>
-          <Button fx:id="backButton" mnemonicParsing="false" />
+          <Button fx:id="backButton" mnemonicParsing="false" style="-fx-cursor: hand;"/>
             <Label fx:id="pageTitle" text="CBT Game" textFill="WHITE">
                <padding>
                   <Insets left="20.0" />
@@ -46,10 +46,10 @@
 
                      <!--<ImageView fx:id="bookmarkImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true"/>
                      <ImageView fx:id="reportImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true"/>-->
-                     <ImageView fx:id="speakerImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true"/>
+                     <ImageView fx:id="speakerImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;"/>
 
                      <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                     <StackPane>
+                     <StackPane style="-fx-cursor: hand;">
                         <Button fx:id="fiftyFiftyButton" mnemonicParsing="false" text="50:50" textFill="#1B9D01" style="-fx-background-color: #E6F4E3; -fx-background-radius: 500; -fx-border-color: #1B9D01; -fx-border-radius: 500; -fx-border-width: 1;">
                            <font>
                               <Font size="18.0" />
@@ -76,7 +76,7 @@
                            </HBox.margin>
                      </StackPane>
 
-                     <ImageView fx:id="calculatorImage" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#onCalculatorClicked" pickOnBounds="true" preserveRatio="true">
+                     <ImageView fx:id="calculatorImage" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#onCalculatorClicked" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
                         <HBox.margin>
                            <Insets right="40.0" />
                         </HBox.margin>
@@ -103,7 +103,7 @@
                                     <Font size="16.0"/>
                                  </font>
                               </Label>
-                              <Label fx:id="readQuestionDesc" text="[READ]" textFill="#12AF20">
+                              <Label fx:id="readQuestionDesc" text="[READ]" textFill="#12AF20" style="-fx-cursor: hand;">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -150,13 +150,13 @@
                      <Separator orientation="VERTICAL" prefHeight="200.0" />
                      <VBox spacing="20" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                         <children>
-                           <Button fx:id="optionAButton" userData="0" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" style="-fx-background-color: ##F7B71D; -fx-border-radius: 34; -fx-border-width: 2; -fx-border-color: #00ffff;" text="Button"/>
+                           <Button fx:id="optionAButton" userData="0" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" style="-fx-background-color: ##F7B71D; -fx-border-radius: 34; -fx-border-width: 2; -fx-border-color: #00ffff; -fx-cursor: hand;" text="Button"/>
 
-                           <Button fx:id="optionBButton" userData="1" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button"/>
+                           <Button fx:id="optionBButton" userData="1" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button" style="-fx-cursor: hand;"/>
 
-                           <Button fx:id="optionCButton" userData="2" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button"/>
+                           <Button fx:id="optionCButton" userData="2" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button" style="-fx-cursor: hand;"/>
 
-                           <Button fx:id="optionDButton" userData="3" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button"/>
+                           <Button fx:id="optionDButton" userData="3" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button" style="-fx-cursor: hand;"/>
                         </children>
                         <padding>
                            <Insets bottom="30.0" top="30.0" left="20.0" right="20.0" />
@@ -257,15 +257,15 @@
                      <Insets left="20.0" right="20.0" top="45.0" />
                   </VBox.margin>
                   <children>
-                     <Button fx:id="exitButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #1B9D01; -fx-border-width: .6;" text="Exit" textFill="#1b9d01" HBox.hgrow="ALWAYS">
+                     <Button fx:id="exitButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #1B9D01; -fx-border-width: .6; -fx-cursor: hand;" text="Exit" textFill="#1b9d01" HBox.hgrow="ALWAYS">
                         <font>
                            <Font size="18.0" />
                         </font></Button>
-                     <Button fx:id="playAgainButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #1B9D01; -fx-border-width: .6;" text="Play Again" textFill="#1b9d01" HBox.hgrow="ALWAYS">
+                     <Button fx:id="playAgainButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #1B9D01; -fx-border-width: .6; -fx-cursor: hand;" text="Play Again" textFill="#1b9d01" HBox.hgrow="ALWAYS">
                         <font>
                            <Font size="18.0" />
                         </font></Button>
-                     <Button fx:id="showAnswersButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #1B9D01; -fx-background-radius: 5;" text="Show Answers" textFill="WHITE" HBox.hgrow="ALWAYS">
+                     <Button fx:id="showAnswersButton" maxHeight="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #1B9D01; -fx-background-radius: 5; -fx-cursor: hand;" text="Show Answers" textFill="WHITE" HBox.hgrow="ALWAYS">
                         <font>
                            <Font size="18.0" />
                         </font></Button>

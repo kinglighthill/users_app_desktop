@@ -260,9 +260,9 @@ public class SubjectListItemVM implements ViewModel {
 
     public void loadTopicsForYear(Year year) {
         topics.clear();
-        System.out.println(TAG + "Got Year -> " + year.getYear());
+//        System.out.println(TAG + "Got Year -> " + year.getYear());
         topics.addAll(Objects.requireNonNull(TopicDao.getPQTopicsForSubjectAndYear(subject.getId(), year.getId())));
-        System.out.println(TAG + "Got Topics -> " + topics);
+//        System.out.println(TAG + "Got Topics -> " + topics);
     }
 
     public void loadQuestionNumbersList(List<Integer> topicIdsList) {

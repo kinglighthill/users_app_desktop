@@ -19,7 +19,7 @@
         <Panel>
             <left>
                 <HBox spacing="15" alignment="CENTER_LEFT">
-                    <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
+                    <Button fx:id="backButton" style="-fx-background-color: #E7F7E9; -fx-cursor: hand;"/>
                     <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
                         <font>
                             <Font name="System Bold" size="20"/>
@@ -36,10 +36,14 @@
     <center>
         <VBox BorderPane.alignment="TOP_LEFT" spacing="20" >
             <StackPane maxWidth="250">
-                <TextField promptText="Enter a keyword" prefWidth="50" prefHeight="30" style="-fx-background-color: rgba(0, 107, 23, 0.05); -fx-background-radius: 8; -fx-border-color: #12AF20; -fx-border-radius: 8;"/>
+                <TextField fx:id="searchTextField" promptText="Enter a keyword" prefWidth="50" minWidth="250" prefHeight="30" style="-fx-background-color: rgba(0, 107, 23, 0.05); -fx-background-radius: 8; -fx-border-color: #12AF20; -fx-border-radius: 8;">
+                    <font>
+                        <Font size="15"/>
+                    </font>
+                </TextField>
                 <ImageView fx:id="searchIcon" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT">
                     <StackPane.margin>
-                        <Insets right="15"/>
+                        <Insets right="20"/>
                     </StackPane.margin>
                 </ImageView>
                 <VBox.margin>
@@ -47,7 +51,7 @@
                 </VBox.margin>
             </StackPane>
 
-            <GridView fx:id="novelGridView" horizontalCellSpacing="30" verticalCellSpacing="30" cellWidth="100" cellHeight="200"/>
+            <GridView fx:id="novelGridView" horizontalCellSpacing="30" verticalCellSpacing="30" cellWidth="100" cellHeight="200" style="-fx-cursor: hand;"/>
             <padding>
                 <Insets top="20" right="20" bottom="20" left="10"/>
             </padding>
