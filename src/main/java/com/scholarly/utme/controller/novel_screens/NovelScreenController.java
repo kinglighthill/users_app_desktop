@@ -111,7 +111,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
                 TilePane tilePane = new TilePane(Orientation.HORIZONTAL, 15, 10);
 
-                novelModels.stream().limit(4).forEach(novelModel -> {
+                novelModels.forEach(novelModel -> {
                     VBox novelVBox = new VBox(10);
                     novelVBox.setPadding(new Insets(10, 15, 10, 15));
 

@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NewDatabase {
-    public static final String TAG = "NewDatabase: ";
+    private static final String TAG = "NewDatabase: ";
 
     private static final String location = MainApplication.class.getResource("/assets/note_syllabus_main.db").toExternalForm();
 
