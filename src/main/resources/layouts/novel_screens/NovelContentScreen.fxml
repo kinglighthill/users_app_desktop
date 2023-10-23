@@ -18,9 +18,9 @@
                     <Panel>
                         <left>
                             <HBox spacing="15" alignment="CENTER_LEFT">
-                                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9">
+                                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9; -fx-cursor: hand;">
                                     <padding>
-                                        <Insets top="8" right="13" bottom="8" left="13" />
+                                        <Insets top="8" right="13" bottom="8" left="13"/>
                                     </padding>
                                 </Button>
                                 <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
@@ -50,9 +50,9 @@
                         </StackPane>
 
                         <HBox spacing="15" alignment="CENTER">
-                            <Button fx:id="prevButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
+                            <Button fx:id="prevButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9; -fx-cursor: hand;"/>
                             <Label fx:id="chapterCount" text="1 of 10"/>
-                            <Button fx:id="nextButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>
+                            <Button fx:id="nextButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9; -fx-cursor: hand;"/>
                             <Button fx:id="takeQuizButton" disable="true" prefHeight="30" prefWidth="100" text="Take Quiz" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 5;"/>
                             <padding>
                                 <Insets bottom="15" top="15"/>
@@ -81,7 +81,7 @@
                                         <Insets left="5"/>
                                     </padding>
                                 </Label>
-                                <ListView id="novelChapterList" fx:id="chaptersList" prefHeight="600"/>
+                                <ListView id="novelChapterList" fx:id="chaptersList" prefHeight="600" style="-fx-cursor: hand;"/>
                                 <padding>
                                     <Insets top="20" bottom="10"/>
                                 </padding>
@@ -437,7 +437,7 @@
                     <ImageView fx:id="activateNowPadlockIcon" fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true"/>
                 </left>
                 <right>
-                    <ImageView fx:id="activateNowCloseIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                    <ImageView fx:id="activateNowCloseIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;"/>
                 </right>
             </Panel>
             <Label fx:id="activateHeaderText" text="Activate your App for Unlimited Access" textFill="#12AF20" wrapText="true"/>
@@ -485,7 +485,7 @@
             </VBox>
 
             <HBox alignment="CENTER">
-                <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N2000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8;">
+                <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N2000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8; -fx-cursor: hand;">
                     <font>
                         <Font size="16"/>
                     </font>
