@@ -11,7 +11,7 @@
     <top>
         <ToolBar prefHeight="75.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER">
             <items>
-                <Button fx:id="backButton" mnemonicParsing="false" onMouseClicked="#backButtonClicked"/>
+                <Button fx:id="backButton" mnemonicParsing="false" onMouseClicked="#backButtonClicked" style="-fx-cursor: hand;"/>
                 <Label fx:id="pageTitle" text="Syllabus" textFill="WHITE">
                     <padding>
                         <Insets left="20.0" />
@@ -37,20 +37,20 @@
                                 <Insets right="30.0"/>
                             </padding>
                         </Label>
-                        <ImageView fx:id="sectionLayoutCloseIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_RIGHT"/>
+                        <ImageView fx:id="sectionLayoutCloseIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_RIGHT" style="-fx-cursor: hand;"/>
                     </StackPane>
 
                     <HBox spacing="35.0" alignment="CENTER">
                         <VBox spacing="5" alignment="CENTER">
-                            <Label fx:id="objectivesTab" text="Objectives"/>
+                            <Label fx:id="objectivesTab" text="Objectives" style="-fx-cursor: hand;"/>
                             <Line strokeWidth="5.0" stroke="#12AF20" endX="60.0"/>
                         </VBox>
                         <VBox spacing="5" alignment="CENTER">
-                            <Label fx:id="contentTab" text="Content" disable="true"/>
+                            <Label fx:id="contentTab" text="Content" disable="true" style="-fx-cursor: hand;"/>
                             <Line strokeWidth="5.0" stroke="#12AF20" endX="60.0" visible="false"/>
                         </VBox>
                         <VBox spacing="5" alignment="CENTER">
-                            <Label fx:id="evaluationTab" text="Evaluation" disable="true"/>
+                            <Label fx:id="evaluationTab" text="Evaluation" disable="true" style="-fx-cursor: hand;"/>
                             <Line strokeWidth="5.0" stroke="#12AF20" endX="60.0" visible="false"/>
                         </VBox>
                     </HBox>
@@ -95,16 +95,16 @@
                                 </ScrollPane>
                             </children>
                         </VBox>
-                        <Region prefHeight="200.0" prefWidth="5.0" />
+                        <!--<Region prefHeight="200.0" prefWidth="5.0" />-->
 
                         <StackPane fx:id="syllabusPane" prefHeight="1100" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
 
                             <TabPane fx:id="syllabusTabPane" tabClosingPolicy="UNAVAILABLE" prefHeight="150" prefWidth="600" tabMinHeight="50" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF;">
 
                                 <tabs>
-                                    <Tab fx:id="topicsTab" text="Topics">
+                                    <Tab fx:id="topicsTab" text="Topics" style="-fx-cursor: hand;">
                                         <content>
-                                            <ScrollPane fx:id="syllabusScrollPane" fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                                            <ScrollPane fx:id="syllabusScrollPane" fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" style="-fx-background-color: white;">
                                                 <content>
                                                     <VBox spacing="10.0" fx:id="tabTopicsVBox" prefWidth="800">
                                                         <padding>
@@ -119,8 +119,8 @@
                                         </content>
                                     </Tab>
 
-                                    <Tab fx:id="genObjectiveTab" text="General Objectives">
-                                        <ScrollPane fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                                    <Tab fx:id="genObjectiveTab" text="General Objectives" style="-fx-cursor: hand;">
+                                        <ScrollPane fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" style="-fx-background-color: white;">
                                             <content>
                                                 <Label fx:id="objectivesLabel"/>
                                             </content>
@@ -130,8 +130,8 @@
                                         </ScrollPane>
                                     </Tab>
 
-                                    <Tab fx:id="recTextsTab" text="Recommended Texts">
-                                        <ScrollPane fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                                    <Tab fx:id="recTextsTab" text="Recommended Texts" style="-fx-cursor: hand;">
+                                        <ScrollPane fitToWidth="true" prefHeight="800" prefWidth="800" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" style="-fx-background-color: white;">
                                             <content>
                                                 <Label fx:id="recTextLabel"/>
                                             </content>
@@ -148,39 +148,18 @@
                             <Label fx:id="emptySyllabusListLabel" text="Select a Subject" />
                         </StackPane>
 
-                        <Region prefHeight="200.0" prefWidth="5.0"/>
+                        <!--<Region prefHeight="200.0" prefWidth="5.0" style="-fx-background-color: #EDEDED;"/>-->
 
-<!--                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">-->
-<!--                            <children>-->
-<!--                                <Label fx:id="categoriesTitle" prefHeight="57.0" prefWidth="2000.0" style="-fx-background-color: #ffffff;" text="Categories" textFill="#105801">-->
-
-<!--                                    <padding>-->
-<!--                                        <Insets bottom="20.0" left="20.0" top="20.0" />-->
-<!--                                    </padding>-->
-<!--                                </Label>-->
-<!--                                <Line endX="200.0" fill="BLACK" startX="-100.0" stroke="#ebebeb00" strokeWidth="5.0"/>-->
-<!--                                <StackPane fx:id="topicStackPane" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">-->
-<!--                                    <children>-->
-<!--                                        <ScrollPane fx:id="topicListScrollPane" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">-->
-<!--                                            <content>-->
-<!--                                                <VBox fx:id="categoryListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #F7F7F7;" />-->
-<!--                                            </content>-->
-<!--                                        </ScrollPane>-->
-<!--                                        <Label fx:id="emptyCategoryListLabel" text="Select a Subject" />-->
-<!--                                    </children>-->
-<!--                                </StackPane>-->
-<!--                            </children>-->
-<!--                        </VBox>-->
                     </children>
                 </HBox>
-                <Button fx:id="viewSyllabusButton" mnemonicParsing="false" text="View Syllabus" textFill="WHITE" visible="false" style="-fx-background-color: #4BB036; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_RIGHT">
+                <!--<Button fx:id="viewSyllabusButton" mnemonicParsing="false" text="View Syllabus" textFill="WHITE" visible="false" style="-fx-background-color: #4BB036; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_RIGHT">
                     <StackPane.margin>
                         <Insets bottom="30.0" right="30.0" />
                     </StackPane.margin>
                     <padding>
                         <Insets bottom="15.0" left="30.0" right="30.0" top="15.0" />
                     </padding>
-                </Button>
+                </Button>-->
             </children>
         </StackPane>
     </center>
