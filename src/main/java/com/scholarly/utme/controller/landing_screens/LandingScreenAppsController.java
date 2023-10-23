@@ -263,13 +263,13 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
         searchTextField.setTextFormatter(textFormatter);
 
         mobileAppsButton.setOnAction(event -> {
-            AppsGridScreenController.InitialData data = new AppsGridScreenController.InitialData(FXCollections.observableArrayList(mobileApps), "Mobile Apps");
+            AppsGridScreenController.InitialData data = new AppsGridScreenController.InitialData("Mobile");
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.APPS_GRID_SCREEN);
         });
 
         desktopAppsButton.setOnAction(event -> {
-            AppsGridScreenController.InitialData data = new AppsGridScreenController.InitialData(FXCollections.observableArrayList(desktopApps), "Desktop Apps");
+            AppsGridScreenController.InitialData data = new AppsGridScreenController.InitialData( "Desktop");
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.APPS_GRID_SCREEN);
         });
@@ -394,7 +394,7 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
             panel.setOnMouseClicked(event -> {
                 application.openBrowser(appItem.getDownloadLink());
             });
-            panel.setOnMouseEntered(e -> panel.setStyle("-fx-border-color: #A2CAA6; -fx-border-radius: 5;"));
+            panel.setOnMouseEntered(e -> panel.setStyle("-fx-border-color: #A2CAA6; -fx-border-radius: 5; -fx-cursor: hand;"));
             panel.setOnMouseExited(e -> panel.setStyle("-fx-border-color: #F1F1F1; -fx-border-radius: 5;"));
 
             Platform.runLater(() -> mobileAppsTile.getChildren().add(panel));
@@ -428,7 +428,7 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                 application.openBrowser(appItem.getDownloadLink());
             });
 
-            panel.setOnMouseEntered(e -> panel.setStyle("-fx-border-color: #A2CAA6; -fx-border-radius: 5;"));
+            panel.setOnMouseEntered(e -> panel.setStyle("-fx-border-color: #A2CAA6; -fx-border-radius: 5; -fx-cursor: hand;"));
             panel.setOnMouseExited(e -> panel.setStyle("-fx-border-color: #F1F1F1; -fx-border-radius: 5;"));
 
             Platform.runLater(() -> {

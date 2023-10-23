@@ -17,7 +17,7 @@
     <top>
         <VBox>
             <HBox spacing="10" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
-                <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+                <Button fx:id="backButton" maxHeight="30" maxWidth="30" style="-fx-cursor: hand;"/>
                 <Label fx:id="appsTitle" text="Mobile Apps" textFill="#053500">
                     <font>
                         <Font name="Gill Sans MT Bold" size="24"/>
@@ -46,7 +46,7 @@
             </StackPane>
 
             <GridView fx:id="appsGrid" cellWidth="250" cellHeight="200" verticalCellSpacing="10" horizontalCellSpacing="15"
-                      AnchorPane.leftAnchor="30" AnchorPane.topAnchor="70" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="20"/>
+                      AnchorPane.leftAnchor="30" AnchorPane.topAnchor="70" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="20" style="-fx-cursor: hand;"/>
         </AnchorPane>
     </center>
 

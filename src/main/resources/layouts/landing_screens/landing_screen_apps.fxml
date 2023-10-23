@@ -53,7 +53,7 @@
                                 </Label>
                             </left>
                             <right>
-                                <Button fx:id="mobileAppsButton" text="View all Mobile Apps" textFill="#053500" style="-fx-border-color: #053500; -fx-border-radius: 5;">
+                                <Button fx:id="mobileAppsButton" text="View all Mobile Apps" textFill="#053500" style="-fx-border-color: #053500; -fx-border-radius: 5; -fx-cursor: hand;">
                                     <padding>
                                         <Insets left="10" right="10" top="5" bottom="5"/>
                                     </padding>
@@ -79,7 +79,7 @@
                                 </Label>
                             </left>
                             <right>
-                                <Button fx:id="desktopAppsButton" text="View all Desktop Apps" textFill="#053500" style="-fx-border-color: #053500; -fx-border-radius: 5;">
+                                <Button fx:id="desktopAppsButton" text="View all Desktop Apps" textFill="#053500" style="-fx-border-color: #053500; -fx-border-radius: 5; -fx-cursor: hand;">
                                     <padding>
                                         <Insets left="10" right="10" top="5" bottom="5"/>
                                     </padding>

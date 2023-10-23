@@ -31,9 +31,9 @@
         <center>
             <AnchorPane>
                 <ScrollPane fitToWidth="true" style="-fx-background-color: white;"
-                            AnchorPane.topAnchor="20" AnchorPane.rightAnchor="100" AnchorPane.bottomAnchor="100" AnchorPane.leftAnchor="30">
+                            AnchorPane.topAnchor="20" AnchorPane.rightAnchor="250" AnchorPane.bottomAnchor="100" AnchorPane.leftAnchor="30">
                     <VBox spacing="15">
-                        <Panel fx:id="profilePanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                        <Panel fx:id="profilePanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8; -fx-cursor: hand;">
                             <left>
                                 <HBox spacing="15" alignment="CENTER">
                                     <ImageView fx:id="profileImage"  pickOnBounds="true"/>
@@ -60,7 +60,7 @@
                                 <Insets top="20" left="20" bottom="20" right="30"/>
                             </padding>
                         </Panel>
-                        <Panel fx:id="settingsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                        <Panel fx:id="settingsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8; -fx-cursor: hand;">
                             <left>
                                 <HBox spacing="40" alignment="CENTER">
                                     <ImageView fx:id="settingsImage" fitHeight="25" fitWidth="25" preserveRatio="true" pickOnBounds="true"/>
@@ -336,7 +336,7 @@
                     </padding>
                 </ScrollPane>
                 <Button fx:id="logoutButton" prefWidth="250" text="Logout" textFill="#053500"
-                        style="-fx-background-color: #F4FFF5; -fx-background-radius: 7;" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="30">
+                        style="-fx-background-color: #F4FFF5; -fx-background-radius: 7; -fx-cursor: hand;" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="30">
                     <font>
                         <Font size="16"/>
                     </font>
