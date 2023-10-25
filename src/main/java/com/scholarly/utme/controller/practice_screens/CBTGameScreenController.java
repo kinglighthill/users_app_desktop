@@ -371,7 +371,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private void initializeFonts() {
         questionDescriptionHeader.setFont(FontUtil.getFont(GilroyFontFamily.MEDIUM_ITALIC, 16));
         readQuestionDesc.setFont(FontUtil.getFont(GilroyFontFamily.MEDIUM_ITALIC, 16));
-        questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 22));
+        questionLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 26));
 //        questionWithImageLabel.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 20));
         fiftyFiftyButton.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 18));
         fiftyFiftyCount.setFont(FontUtil.getFont(GilroyFontFamily.SEMI_BOLD, 16));

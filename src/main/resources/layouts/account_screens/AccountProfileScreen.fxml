@@ -16,7 +16,7 @@
 
         <top>
             <HBox spacing="15" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
-                <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+                <Button fx:id="backButton" maxHeight="30" maxWidth="30" style="-fx-cursor: hand;"/>
                 <Label text="Profile" textFill="#053500">
                     <font>
                         <Font name="Gill Sans MT Bold" size="24"/>
@@ -34,7 +34,7 @@
                     <VBox spacing="20" alignment="TOP_CENTER" style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 8;">
                         <StackPane maxHeight="150" maxWidth="150">
                             <ImageView fx:id="profileImage" pickOnBounds="true"/>
-                            <ImageView fx:id="cameraImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="BOTTOM_RIGHT"/>
+                            <ImageView fx:id="cameraImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="BOTTOM_RIGHT" style="-fx-cursor: hand;"/>
                         </StackPane>
                         <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-border-color: #F1F1F1; -fx-border-radius: 7;">
                             <ImageView fx:id="keyImage" preserveRatio="true" pickOnBounds="true"/>
@@ -75,7 +75,7 @@
                                         <Insets left="8"/>
                                     </HBox.margin>
                                 </Label>
-                                <Label fx:id="changeMailHereLabel" text="here" textFill="#12AF20">
+                                <Label fx:id="changeMailHereLabel" text="here" textFill="#12AF20" style="-fx-cursor: hand;">
                                     <font>
                                         <Font size="13"/>
                                     </font>
@@ -113,19 +113,19 @@
                                 </font>
                             </Label>
                             <HBox spacing="20">
-                                <RadioButton fx:id="maleRadioButton" text="Male">
+                                <RadioButton fx:id="maleRadioButton" text="Male" style="-fx-cursor: hand;">
                                     <font>
                                         <Font size="15"/>
                                     </font>
                                 </RadioButton>
-                                <RadioButton fx:id="femaleRadioButton" text="Female">
+                                <RadioButton fx:id="femaleRadioButton" text="Female" style="-fx-cursor: hand;">
                                     <font>
                                         <Font size="15"/>
                                     </font>
                                 </RadioButton>
                             </HBox>
                         </VBox>
-                        <Button fx:id="saveButton" text="Save" textFill="white" prefWidth="300" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 7;">
+                        <Button fx:id="saveButton" text="Save" textFill="white" prefWidth="300" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 7; -fx-cursor: hand;">
                             <font>
                                 <Font size="16"/>
                             </font>

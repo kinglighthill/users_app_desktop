@@ -64,17 +64,11 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         initializeViews();
         initializeFonts();
 
+//        NoteSubject noteSubject = viewModel.getNoteSubjects().get(0);
+//        System.out.println(TAG + "Got Note Subject -> " + noteSubject);
+//        viewModel.setSelectedNoteSubject(noteSubject);
+
         ToggleGroup noteSubjectsToggleGroup = new ToggleGroup();
-        noteSubjectsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                NoteSubject selectedSubject = (NoteSubject) newValue.getUserData();
-                viewModel.setSelectedNoteSubject(selectedSubject);
-                emptyTopicListLabel.setVisible(false);
-            } else {
-                viewModel.setSelectedNoteSubject(null);
-                emptyTopicListLabel.setVisible(true);
-            }
-        });
 
         viewModel.getNoteSubjects().forEach(subject -> {
             ToggleButton button = new ToggleButton();
@@ -121,6 +115,19 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
             subjectListVBox.getChildren().add(button);
         });
 
+        Toggle selectedToggle = noteSubjectsToggleGroup.getToggles().get(0);
+        System.out.println(TAG + "Selected Toggle -> " + selectedToggle);
+//        noteSubjectsToggleGroup.selectToggle(selectedToggle);
+        noteSubjectsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                NoteSubject selectedSubject = (NoteSubject) newValue.getUserData();
+                viewModel.setSelectedNoteSubject(selectedSubject);
+                emptyTopicListLabel.setVisible(false);
+            } else {
+                viewModel.setSelectedNoteSubject(null);
+                emptyTopicListLabel.setVisible(true);
+            }
+        });
 
         ToggleGroup topicListToggleGroup = new ToggleGroup();
         ToggleGroup subtopicsListToggleGroup = new ToggleGroup();

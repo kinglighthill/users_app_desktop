@@ -60,7 +60,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
         subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).toList());
 
         data.questionData.forEach(subjectState -> {
-            selectedSubjectYear.put(subjectState.getSubject().getTitle(), subjectState.getSelectedYear());
+            selectedSubjectYear.put(subjectState.getSubject().getShortTitle(), subjectState.getSelectedYear());
 
             questionType = subjectState.getType();
 

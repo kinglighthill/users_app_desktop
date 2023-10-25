@@ -124,12 +124,12 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         profileNameTextField.setText(viewModel.getUser().getFullName());
         phoneTextField.setText(viewModel.getUser().getPhoneNumber());
 
-        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
-        deviceIdLabel.setText(encodedDeviceId.toUpperCase());
+//        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+        String deviceId = DeviceInfo.getSystemProperties().getDeviceId().replaceAll("-", "").substring(0, 16);
+        deviceIdLabel.setText(deviceId.toUpperCase());
 
         changeMailHereLabel.setOnMouseClicked(event -> {
-            String gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=info@scholarly.africa";
-            application.openBrowser(gmailUrl);
+            application.openBrowser(GMAIL_URL);
         });
         changeMailHereLabel.setOnMouseEntered(event -> changeMailHereLabel.setUnderline(true));
         changeMailHereLabel.setOnMouseExited(event -> changeMailHereLabel.setUnderline(false));

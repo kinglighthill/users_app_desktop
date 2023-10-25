@@ -1,12 +1,11 @@
 package com.scholarly.utme.controller.novel_screens;
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.novels.NovelAuthor;
 import com.scholarly.utme.data.model.novels.NovelChapter;
 import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
-import com.scholarly.utme.ui.utils.Screens;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.novel_screens.NovelChapterListVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -20,6 +19,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,11 +34,15 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
     @FXML
     private Button backButton, readButton;
     @FXML
-    private Label pageTitle, authorLabel, chaptersLabel;
+    private Label pageTitle, authorLabel, chaptersLabel, activateHeaderText;
     @FXML
     private ListView<NovelChapter> chaptersList;
     @FXML
-    private ImageView novelImage, authorIcon, chaptersIcon, timeIcon;
+    private ImageView novelImage, authorIcon, chaptersIcon, timeIcon, activateNowCloseIcon, activateNowPadlockIcon, greenTickIcon1, greenTickIcon2, greenTickIcon3, greenTickIcon4, greenTickIcon5;
+    @FXML
+    private VBox activateNowDialog, dimmer;
+    @FXML
+    private Button activateNowButton;
 
 
     @Override
@@ -65,6 +69,8 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
                 readButton.setDisable(false);
                 viewModel.setSelectedChapter(newValue);
             } else {
+                dimmer.setVisible(true);
+                Animations.translateIn(activateNowDialog, 300);
                 readButton.setDisable(true);
             }
 
@@ -83,6 +89,16 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
                 ViewSwitcher.showScreen(View.NOVEL_GRID_SCREEN);
             }
         });
+
+        activateNowCloseIcon.setOnMouseClicked(event -> {
+            dimmer.setVisible(false);
+            Animations.translateOut(activateNowDialog, 300);
+        });
+
+        activateNowButton.setOnAction(event -> {
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+        });
     }
 
     private void initializeViews() {
@@ -94,10 +110,20 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
         authorIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/author_icon.png").toString()));
         chaptersIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/chapter_icon.png").toString()));
         timeIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/time_icon.png").toString()));
+
+        activateNowCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+        activateNowPadlockIcon.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/padlock_icon.png").toString()));
+        greenTickIcon1.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon2.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon3.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon4.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon5.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
     }
 
     private void initializeFont() {
 //        novelDescription.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+
+        activateHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
     }
 
     private InitialData getInitialData() {

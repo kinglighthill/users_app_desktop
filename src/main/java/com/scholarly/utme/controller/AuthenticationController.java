@@ -552,7 +552,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 }
 
             } catch (Exception e) {
-                System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
+                System.out.println(TAG + "LOGIN_USER: Cannot parse response body to data class because -> " + e.getMessage());
             }
         } catch (Exception e) {
             Platform.runLater(() -> {

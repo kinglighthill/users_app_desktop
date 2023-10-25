@@ -1,12 +1,7 @@
 package com.scholarly.utme.controller.novel_screens;
 
-import com.scholarly.utme.controller.HomeScreenController;
-import com.scholarly.utme.controller.landing_screens.LandingScreenController;
-import com.scholarly.utme.data.model.listItems.AppItem;
-import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.ui.cellFactories.NovelGridCellFactory;
-import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.novel_screens.NovelGridScreenVM;
@@ -19,7 +14,10 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.controlsfx.control.GridView;
@@ -31,6 +29,7 @@ import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/novel_screens/NovelGridScreen.fxml")
 public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, Initializable {
+    private static final String TAG = "NovelGridScreenController: ";
 
     @FXML
     private GridView<NovelModel> novelGridView;
@@ -63,7 +62,8 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
 
         viewModel.processInitialData(getInitialData());
 
-        if (novelItems.isEmpty()) {
+        if (!getInitialData().novelModels.isEmpty()) {
+            novelItems.clear();
             novelItems.addAll(viewModel.getNovelModels());
         }
 
@@ -92,7 +92,7 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
                 @Override
                 protected Void call() {
                     for (NovelModel novel : novelItems) {
-                        if (novel.getNovel().getName().contains(text)) {
+                        if (novel.getNovel().getName().toLowerCase().contains(text) || novel.getNovel().getName().toUpperCase().contains(text)) {
                             searchedNovels.add(novel);
                         }
                     }
@@ -104,7 +104,6 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
                 }
             };
             Thread thread = new Thread(task);
-            thread.setDaemon(true);
             thread.start();
 
             return change;

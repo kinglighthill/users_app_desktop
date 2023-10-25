@@ -8,6 +8,7 @@ import com.scholarly.utme.network.model.RefreshRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.network.model.DeviceInfo;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenActivateVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -54,7 +55,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
     @FXML
     private CustomNumberField activationPinTextField;
     @FXML
-    private Label incorrectPinError, activationSuccessfulMessage, activationText, headerLabel, chatUsLabel;
+    private Label incorrectPinError, activationSuccessfulMessage, activationText, headerLabel, whatsAppNumber;
     @FXML
     private Button activateButton, buyPinButton, continueButton;
 
@@ -86,7 +87,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
             activateButton.setDisable(false);
             centerVBox.getChildren().add(0, notActivatedPane);
             innerVBox.getChildren().add(innerVBox.getChildren().size(), activationText);
-            headerLabel.setText("Enter your 16 digit activation pin to unlock all the layers and amazing features in this app. Activation lasts for one academic year!");
+            headerLabel.setText("Enter your 16 digits activation pin to get unlimited access to the app's content");
         }
 
         activateButton.setDisable(activationPinTextField.getText().length() < 16);
@@ -220,6 +221,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                                     if (activationResponse.getStatus().equalsIgnoreCase("success")) {
 
                                         PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
+                                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, activationResponse.getData().getRefreshToken());
                                         PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
 
                                         Platform.runLater(() -> {
@@ -261,12 +263,11 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
             }
         });
 
-        chatUsLabel.setOnMouseClicked(event -> {
-            String whatsAppUrl = "https://wa.me/2348136941462";
-            application.openBrowser(whatsAppUrl);
+        whatsAppNumber.setOnMouseClicked(event -> {
+            application.openBrowser(WHATSAPP_URL);
         });
-        chatUsLabel.setOnMouseEntered(event -> chatUsLabel.setUnderline(true));
-        chatUsLabel.setOnMouseExited(event -> chatUsLabel.setUnderline(false));
+        whatsAppNumber.setOnMouseEntered(event -> whatsAppNumber.setUnderline(true));
+        whatsAppNumber.setOnMouseExited(event -> whatsAppNumber.setUnderline(false));
 
         buyPinButton.setOnAction(event -> {
             ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
@@ -302,6 +303,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                         if (activationResponse.getStatus().equalsIgnoreCase("success")) {
 
                             PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
+                            PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, activationResponse.getData().getRefreshToken());
                             PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
 
                             Platform.runLater(() -> {
