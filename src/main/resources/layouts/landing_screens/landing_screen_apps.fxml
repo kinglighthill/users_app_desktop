@@ -104,9 +104,9 @@
                 <HBox fx:id="noApplicationHBox" alignment="CENTER" visible="false">
                     <VBox spacing="15" alignment="CENTER">
                         <ImageView fx:id="noAppsImage" fitHeight="220" fitWidth="220"/>
-                        <Label fx:id="noApplicationsText" text="Oops...No Item Available at the moment">
+                        <Label text="Oops...No Item Available at the moment">
                             <font>
-                                <Font size="18"/>
+                                <Font size="20"/>
                             </font>
                         </Label>
                     </VBox>

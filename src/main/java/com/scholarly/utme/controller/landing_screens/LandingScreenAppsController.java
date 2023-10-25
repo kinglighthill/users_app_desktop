@@ -62,7 +62,7 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
     @FXML
     private ImageView searchIcon, noAppsImage;
     @FXML
-    private Label mobileAppsLabel, desktopAppsLabel, noApplicationsText;
+    private Label mobileAppsLabel, desktopAppsLabel;
     @FXML
     private TextField searchTextField;
 
@@ -76,11 +76,6 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
 
     interface NetworkCallback {
         void resendRequest();
-        void refreshToken();
-    }
-
-    interface RxNetworkCallback {
-        List<AppItem> resendRequest();
         void refreshToken();
     }
 
@@ -295,7 +290,6 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
     private void showEmptyAppsScreen() {
         applicationsVBox.setVisible(false);
         noApplicationHBox.setVisible(true);
-//        noApplicationsText.setText("No Applications Found" + System.lineSeparator() + "Check your Internet connectivity and try again");
     }
 
     private void loadMobileApps(Request request, NetworkCallback callback) {
