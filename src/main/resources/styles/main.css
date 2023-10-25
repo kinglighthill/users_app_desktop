@@ -112,6 +112,11 @@
 }
 
 .radio-button .dot {
-  -fx-mark-highlight-color: #12AF20;
-  -fx-mark-color: #12AF20;
+    -fx-mark-highlight-color: #12AF20;
+    -fx-mark-color: #12AF20;
+}
+
+/* -------- ToggleSwitch Styling -------- */
+#sound-toggle:selected .thumb-area {
+    -fx-background-color: #12AF20;
 }

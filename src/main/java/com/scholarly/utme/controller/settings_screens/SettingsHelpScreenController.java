@@ -5,6 +5,7 @@ import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.viewmodels.settings_screens.SettingsHelpScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -89,18 +90,15 @@ public class SettingsHelpScreenController implements FxmlView<SettingsHelpScreen
         }));
 
         whatsAppPane.setOnMouseClicked(event -> {
-            String whatsAppUrl = "https://wa.me/2348136941462";
-            application.openBrowser(whatsAppUrl);
+            application.openBrowser(Constants.WHATSAPP_URL);
         });
 
         gmailPane.setOnMouseClicked(event -> {
-            String gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=info@scholarly.africa";
-            application.openBrowser(gmailUrl);
+            application.openBrowser(Constants.GMAIL_URL);
         });
 
         websitePane.setOnMouseClicked(event -> {
-            String websiteUrl = "https://scholarly.africa/";
-            application.openBrowser(websiteUrl);
+            application.openBrowser(Constants.WEBSITE_URL);
         });
 
         backButton.setOnAction(event -> {
@@ -109,20 +107,16 @@ public class SettingsHelpScreenController implements FxmlView<SettingsHelpScreen
         });
 
         linkedInImage.setOnMouseClicked(event -> {
-            String linkedUrl = "https://www.linkedin.com/company/scholarlyafrica/";
-            application.openBrowser(linkedUrl);
+            application.openBrowser(Constants.LINKEDIN_URL);
         });
         facebookImage.setOnMouseClicked(event -> {
-            String facebookUrl = "https://web.facebook.com/scholarlyng";
-            application.openBrowser(facebookUrl);
+            application.openBrowser(Constants.FACEBOOK_URL);
         });
         twitterImage.setOnMouseClicked(event -> {
-            String twitterUrl = "https://twitter.com/scholarlyng";
-            application.openBrowser(twitterUrl);
+            application.openBrowser(Constants.TWITTER_URL);
         });
         instagramImage.setOnMouseClicked(event -> {
-            String instagramUrl = "https://www.instagram.com/scholarlyng/";
-            application.openBrowser(instagramUrl);
+            application.openBrowser(Constants.INSTAGRAM_URL);
         });
 
     }

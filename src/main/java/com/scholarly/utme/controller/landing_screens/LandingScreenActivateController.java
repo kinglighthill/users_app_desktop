@@ -8,6 +8,7 @@ import com.scholarly.utme.network.model.RefreshRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.network.model.DeviceInfo;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenActivateVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -220,6 +221,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                                     if (activationResponse.getStatus().equalsIgnoreCase("success")) {
 
                                         PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
+                                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, activationResponse.getData().getRefreshToken());
                                         PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
 
                                         Platform.runLater(() -> {
@@ -262,8 +264,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
         });
 
         whatsAppNumber.setOnMouseClicked(event -> {
-            String whatsAppUrl = "https://wa.me/2348136941462";
-            application.openBrowser(whatsAppUrl);
+            application.openBrowser(WHATSAPP_URL);
         });
         whatsAppNumber.setOnMouseEntered(event -> whatsAppNumber.setUnderline(true));
         whatsAppNumber.setOnMouseExited(event -> whatsAppNumber.setUnderline(false));
@@ -302,6 +303,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                         if (activationResponse.getStatus().equalsIgnoreCase("success")) {
 
                             PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
+                            PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, activationResponse.getData().getRefreshToken());
                             PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
 
                             Platform.runLater(() -> {
