@@ -110,21 +110,9 @@ jlink {
         }*/
     }
 
-    mergedModule {
-        requires 'java.logging'
-        requires 'java.sql'
-        requires 'java.xml'
-        requires 'java.desktop'
-        requires 'java.datatransfer'
-        requires 'java.security.jgss'
-        requires 'jdk.unsupported'
-        provides 'java.sql.Driver' with 'org.sqlite.JDBC'
-        provides 'javax.imageio.spi.ImageInputStreamSpi' with 'com.twelvemonkeys.imageio.color.ProfileDeferralActivator.Spi',
-                'com.twelvemonkeys.imageio.stream.BufferedFileImageInputStreamSpi',
-                'com.twelvemonkeys.imageio.stream.BufferedInputStreamImageInputStreamSpi',
-                'com.twelvemonkeys.imageio.stream.BufferedRAFImageInputStreamSpi'
-        provides 'javax.imageio.spi.ImageReaderSpi' with 'com.twelvemonkeys.imageio.plugins.webp.WebPImageReaderSpi'
-    }
+    /*mergedModule {
+
+    }*/
 }
 
 jpackage {
