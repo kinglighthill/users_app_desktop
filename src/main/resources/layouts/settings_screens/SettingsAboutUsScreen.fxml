@@ -16,7 +16,7 @@
 
     <top>
         <HBox spacing="10" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
-            <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+            <Button fx:id="backButton" maxHeight="30" maxWidth="30" style="-fx-cursor: hand;"/>
             <Label text="About Us" textFill="#053500">
                 <font>
                     <Font name="Gill Sans MT Bold" size="24"/>
@@ -30,7 +30,7 @@
 
     <center>
         <AnchorPane style="-fx-background-color: white;">
-            <VBox spacing="40" AnchorPane.rightAnchor="100" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="20">
+            <VBox spacing="40" AnchorPane.rightAnchor="150" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="20">
                 <StackPane>
                     <ImageView fx:id="cbtCentreImage" preserveRatio="true" pickOnBounds="true"/>
                     <Pane opacity="0.5" style="-fx-background-color: #000000;">
@@ -45,7 +45,7 @@
                             <Insets left="100"/>
                         </StackPane.margin>
                     </HBox>
-                    <Button fx:id="contactButton" text="Contact Us" textFill="white" prefWidth="180" prefHeight="35" StackPane.alignment="CENTER_RIGHT" style="-fx-background-color: #12AF20; -fx-background-radius: 7;">
+                    <Button fx:id="contactButton" text="Contact Us" textFill="white" prefWidth="180" prefHeight="35" StackPane.alignment="CENTER_RIGHT" style="-fx-background-color: #12AF20; -fx-background-radius: 7; -fx-cursor: hand;">
                         <StackPane.margin>
                             <Insets right="120"/>
                         </StackPane.margin>
@@ -61,11 +61,11 @@
                     <VBox spacing="15">
                         <VBox fx:id="appDetailsVBox" spacing="20">
                             <children>
-                                <Panel fx:id="appDetailsPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <Panel fx:id="appDetailsPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2); -fx-cursor: hand;">
                                     <left>
                                         <Label text="The App" textFill="#053500">
                                             <font>
-                                                <Font size="16"/>
+                                                <Font size="17"/>
                                             </font>
                                         </Label>
                                     </left>
@@ -79,7 +79,7 @@
 
                                 <Label fx:id="appDetailsLabel" wrapText="true" lineSpacing="5" style="-fx-background-color: white;">
                                     <font>
-                                        <Font size="14"/>
+                                        <Font size="15"/>
                                     </font>
                                     <padding>
                                         <Insets left="30" right="30"/>
@@ -89,11 +89,11 @@
                         </VBox>
 
                         <VBox fx:id="ourTeamVBox" spacing="20">
-                            <Panel fx:id="ourTeamPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <Panel fx:id="ourTeamPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2); -fx-cursor: hand;">
                                 <left>
                                     <Label text="Our Team" textFill="#053500">
                                         <font>
-                                            <Font size="16"/>
+                                            <Font size="17"/>
                                         </font>
                                     </Label>
                                 </left>
@@ -107,7 +107,7 @@
 
                             <Label fx:id="ourTeamLabel" wrapText="true" lineSpacing="5" style="-fx-background-color: white;">
                                 <font>
-                                    <Font size="14"/>
+                                    <Font size="15"/>
                                 </font>
                                 <padding>
                                     <Insets left="30" right="30"/>
@@ -116,11 +116,11 @@
                         </VBox>
 
                         <VBox fx:id="missionVBox" spacing="20">
-                            <Panel fx:id="missionPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <Panel fx:id="missionPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2); -fx-cursor: hand;">
                                 <left>
                                     <Label text="Mission" textFill="#053500">
                                         <font>
-                                            <Font size="16"/>
+                                            <Font size="17"/>
                                         </font>
                                     </Label>
                                 </left>
@@ -134,7 +134,7 @@
 
                             <Label fx:id="missionLabel" wrapText="true" lineSpacing="5" style="-fx-background-color: white;">
                                 <font>
-                                    <Font size="14"/>
+                                    <Font size="15"/>
                                 </font>
                                 <padding>
                                     <Insets left="30" right="30"/>
@@ -143,11 +143,11 @@
                         </VBox>
 
                         <VBox fx:id="visionVBox" spacing="20">
-                            <Panel fx:id="visionPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                            <Panel fx:id="visionPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2); -fx-cursor: hand;">
                                 <left>
                                     <Label text="Vision" textFill="#053500">
                                         <font>
-                                            <Font size="16"/>
+                                            <Font size="17"/>
                                         </font>
                                     </Label>
                                 </left>
@@ -161,10 +161,10 @@
 
                             <Label fx:id="visionLabel" wrapText="true" lineSpacing="5" style="-fx-background-color: white;">
                                 <font>
-                                    <Font size="14"/>
+                                    <Font size="15"/>
                                 </font>
                                 <padding>
-                                    <Insets left="30" right="30"/>
+                                    <Insets left="30" right="30" bottom="20"/>
                                 </padding>
                             </Label>
                         </VBox>
@@ -174,7 +174,7 @@
                         <Insets right="15"/>
                     </padding>
                     <VBox.margin>
-                        <Insets left="70" right="70"/>
+                        <Insets left="70" right="70" bottom="10"/>
                     </VBox.margin>
                 </ScrollPane>
 

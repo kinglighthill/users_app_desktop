@@ -19,7 +19,7 @@
     <top>
         <VBox>
             <HBox spacing="10" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
-                <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+                <Button fx:id="backButton" maxHeight="30" maxWidth="30" style="-fx-cursor: hand;"/>
                 <Label text="Activate" textFill="#053500">
                     <font>
                         <Font name="Gill Sans MT Bold" size="24"/>
@@ -42,7 +42,7 @@
             </Label>
             <ScrollPane fx:id="centerScrollPane" fitToWidth="true" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="60" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="20">
                 <VBox spacing="10">
-                    <VBox fx:id="bankTransferVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
+                    <VBox fx:id="bankTransferVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7; -fx-cursor: hand;">
                         <children>
                             <Panel fx:id="bankTransferPanel" prefHeight="60">
                                 <left>
@@ -90,7 +90,7 @@
                                     </VBox>
                                 </HBox>
 
-                                <Label text="After payment, send an email containing you payment receipt/details to scholarlyng@gmail.com using the format below:">
+                                <Label text="After payment, send an email containing you payment receipt/details to scholarlyng@gmail.com using the format below:" wrapText="true">
                                     <font>
                                         <Font size="14"/>
                                     </font>
@@ -155,7 +155,7 @@
                         </padding>
                     </VBox>
 
-                    <VBox fx:id="paystackVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
+                    <VBox fx:id="paystackVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7; -fx-cursor: hand;">
                         <children>
                             <Panel fx:id="paystackPanel" prefHeight="60">
                                 <left>
@@ -279,7 +279,7 @@
                         </padding>
                     </VBox>-->
 
-                    <VBox fx:id="noAccountVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
+                    <VBox fx:id="noAccountVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7; -fx-cursor: hand;">
                         <children>
                             <Panel fx:id="noAccountPanel" prefHeight="60">
                                 <left>
@@ -312,13 +312,13 @@
                                     </font>
                                 </Label>
 
-                                <Label text="1. Go to any POS Agent in your area, give them cash, provide them with any of our account numbers specified in the first payment option and ask them to do the transfer for you.">
+                                <Label text="1. Go to any POS Agent in your area, give them cash, provide them with any of our account numbers specified in the first payment option and ask them to do the transfer for you." wrapText="true">
                                     <font>
                                         <Font size="14"/>
                                     </font>
                                 </Label>
 
-                                <Label text="2. Ask people who have accounts around you. You can ask from parents, friends or relatives to help you make the transfer to any of our account numbers.">
+                                <Label text="2. Ask people who have accounts around you. You can ask from parents, friends or relatives to help you make the transfer to any of our account numbers." wrapText="true">
                                     <font>
                                         <Font size="14"/>
                                     </font>
@@ -395,20 +395,20 @@
                     <ImageView fx:id="customerSupportImage" preserveRatio="true" pickOnBounds="true"/>
                     <VBox spacing="10">
                         <HBox spacing="5" alignment="CENTER">
-                            <Label text="Need help?" textFill="#053500">
+                            <Label text="Need help? Chat us on WhatsApp" textFill="#053500">
                                 <font>
-                                    <Font size="14"/>
+                                    <Font size="15"/>
                                 </font>
                             </Label>
-                            <Label fx:id="chatUsLabel" text="Chat us" textFill="#12AF20">
+                            <Label fx:id="chatUsLabel" text="+2348136941462" textFill="#12AF20" style="-fx-cursor: hand;">
                                 <font>
-                                    <Font size="14"/>
+                                    <Font size="15"/>
                                 </font>
                             </Label>
                         </HBox>
-                        <Label text="For customer support or bulk purchase of activation pins call +2348136941462 or +2348136941462" textAlignment="CENTER" wrapText="true">
+                        <Label text="For customer support or bulk purchase of activation pins call +2348136941462" textAlignment="CENTER" wrapText="true">
                             <font>
-                                <Font size="14"/>
+                                <Font size="15"/>
                             </font>
                             <padding>
                                 <Insets left="15" right="15"/>

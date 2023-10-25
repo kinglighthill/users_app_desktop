@@ -17,7 +17,7 @@
 
     <top>
         <HBox spacing="10" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
-            <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+            <Button fx:id="backButton" maxHeight="30" maxWidth="30" style="-fx-cursor: hand;"/>
             <Label text="Help" textFill="#053500">
                 <font>
                     <Font name="Gill Sans MT Bold" size="24"/>
@@ -32,10 +32,10 @@
     <center>
         <AnchorPane style="-fx-background-color: white;">
             <ScrollPane fitToWidth="true" style="-fx-background-color: white;"
-                        AnchorPane.leftAnchor="50" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="150"  AnchorPane.bottomAnchor="150">
+                        AnchorPane.leftAnchor="50" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="300"  AnchorPane.bottomAnchor="150">
                 <VBox spacing="15">
                     <VBox fx:id="faqVBox" spacing="15">
-                        <Panel fx:id="faqPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                        <Panel fx:id="faqPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2); -fx-cursor: hand;">
                             <left>
                                 <HBox spacing="30" alignment="CENTER">
                                     <ImageView fx:id="faqImage" preserveRatio="true" pickOnBounds="true"/>
@@ -388,7 +388,7 @@
                     </VBox>
 
                     <VBox fx:id="contactVBox" spacing="10">
-                        <Panel fx:id="contactPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                        <Panel fx:id="contactPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2); -fx-cursor: hand;">
                             <left>
                                 <HBox spacing="30" alignment="CENTER">
                                     <ImageView fx:id="contactImage" preserveRatio="true" pickOnBounds="true"/>
@@ -407,7 +407,7 @@
                             </padding>
                         </Panel>
                         <VBox fx:id="contactDetails" spacing="10">
-                            <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1); -fx-background-radius: 5;">
+                            <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1); -fx-background-radius: 5; -fx-cursor: hand;">
                                 <ImageView fx:id="phoneImage" preserveRatio="true" pickOnBounds="true"/>
                                 <Label text="+234 816 734 8170" textFill="#053500">
                                     <font>
@@ -419,7 +419,7 @@
                                 </padding>
                             </HBox>
 
-                            <HBox fx:id="whatsAppPane" spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1); -fx-background-radius: 5;">
+                            <HBox fx:id="whatsAppPane" spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1); -fx-background-radius: 5; -fx-cursor: hand;">
                                 <ImageView fx:id="whatsAppImage" preserveRatio="true" pickOnBounds="true"/>
                                 <Label text="+234 813 694 1462" textFill="#053500">
                                     <font>
@@ -431,7 +431,7 @@
                                 </padding>
                             </HBox>
 
-                            <HBox fx:id="gmailPane" spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1); -fx-background-radius: 5;">
+                            <HBox fx:id="gmailPane" spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1); -fx-background-radius: 5; -fx-cursor: hand;">
                                 <ImageView fx:id="mailImage" preserveRatio="true" pickOnBounds="true"/>
                                 <Label text="info@scholarly.africa" textFill="#053500">
                                     <font>
@@ -443,7 +443,7 @@
                                 </padding>
                             </HBox>
 
-                            <HBox fx:id="websitePane" spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1);">
+                            <HBox fx:id="websitePane" spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: rgba(18, 175, 32, 0.1); -fx-cursor: hand;">
                                 <ImageView fx:id="websiteImage" preserveRatio="true" pickOnBounds="true"/>
                                 <Label text="www.scholarly.africa" textFill="#053500">
                                     <font>
@@ -466,7 +466,7 @@
                 </padding>
             </ScrollPane>
 
-            <HBox alignment="TOP_CENTER" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50" AnchorPane.bottomAnchor="30">
+            <HBox alignment="TOP_CENTER" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="300" AnchorPane.bottomAnchor="30">
                 <VBox spacing="25">
                     <Label text="You can also reach us via our social handles">
                         <font>
@@ -475,10 +475,10 @@
                     </Label>
 
                     <HBox spacing="20" alignment="TOP_CENTER">
-                        <ImageView fx:id="linkedInImage" preserveRatio="true" pickOnBounds="true"/>
-                        <ImageView fx:id="facebookImage" preserveRatio="true" pickOnBounds="true"/>
-                        <ImageView fx:id="twitterImage" preserveRatio="true" pickOnBounds="true"/>
-                        <ImageView fx:id="instagramImage" preserveRatio="true" pickOnBounds="true"/>
+                        <ImageView fx:id="linkedInImage" preserveRatio="true" pickOnBounds="true" style="-fx-cursor: hand;"/>
+                        <ImageView fx:id="facebookImage" preserveRatio="true" pickOnBounds="true" style="-fx-cursor: hand;"/>
+                        <ImageView fx:id="twitterImage" preserveRatio="true" pickOnBounds="true" style="-fx-cursor: hand;"/>
+                        <ImageView fx:id="instagramImage" preserveRatio="true" pickOnBounds="true" style="-fx-cursor: hand;"/>
                     </HBox>
                 </VBox>
             </HBox>

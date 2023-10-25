@@ -68,10 +68,16 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler());
 
         try {
+            viewModel.processInitialData(getInitialData());
+
+            initializeViews();
+
+            initializeFonts();
+
             long start = System.currentTimeMillis();
 
             Parent homeView = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView();
-//        homeView = homeView == null ? FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView() : homeView;
+            //        homeView = homeView == null ? FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView() : homeView;
             System.out.println(TAG + "Time taken to load Home Screen -> " + (System.currentTimeMillis() - start)+"ms");
 
             Parent accountView = FluentViewLoader.fxmlView(LandingScreenAccountController.class).load().getView();
@@ -82,21 +88,13 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 //        activateView = activateView == null ? FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView() : activateView;
             System.out.println(TAG + "Time taken to load Activate Screen -> " + (System.currentTimeMillis() - start)+"ms");
 
-//        Parent appsView = FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView();
+            //        Parent appsView = FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView();
             appsView = appsView == null ? FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView() : appsView;
 
-//        Parent settingsView = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView();
+            //        Parent settingsView = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView();
             settingsView = settingsView == null ? FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView() : settingsView;
 
             System.out.println(TAG + "Time taken to load Views -> " + (System.currentTimeMillis() - start)+"ms");
-
-            homeContentPane.getChildren().add(homeView);
-
-            viewModel.processInitialData(getInitialData());
-
-            initializeViews();
-
-            initializeFonts();
 
             if (viewModel.getScreenToShow().equals(Screens.ACCOUNT_SCREEN)) {
                 selectButton(accountView, accountButton);
@@ -116,6 +114,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         } else if (viewModel.getScreenToShow().equalsIgnoreCase("updatesScreen")) {
             selectButton(updatesView, updatesButton);
         }*/
+
+//            homeContentPane.getChildren().add(homeView);
 
 
             toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, settingsButton);
@@ -254,7 +254,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
                 PreferencesManager.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+viewModel.getUserId(), activateVBox.getChildren().remove(activatePanel));
             });
         } catch (Exception e) {
-            MainApplication.log(e);
+            e.printStackTrace();
+//            MainApplication.log(e);
         }
     }
 

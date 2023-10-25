@@ -16,7 +16,7 @@
 
     <top>
         <HBox spacing="10" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
-            <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+            <Button fx:id="backButton" maxHeight="30" maxWidth="30" style="-fx-cursor: hand;"/>
             <Label text="App Info" textFill="#053500">
                 <font>
                     <Font name="Gill Sans MT Bold" size="24"/>
@@ -30,9 +30,9 @@
 
     <center>
         <AnchorPane style="-fx-background-color: white;">
-            <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.leftAnchor="50" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="150" AnchorPane.bottomAnchor="30">
+            <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.leftAnchor="50" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="300" AnchorPane.bottomAnchor="30">
                 <VBox spacing="15">
-                    <Panel fx:id="privacyPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                    <Panel fx:id="privacyPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2); -fx-cursor: hand;">
                         <left>
                             <HBox spacing="30" alignment="CENTER">
                                 <ImageView fx:id="privacyImage" preserveRatio="true" pickOnBounds="true"/>
@@ -51,7 +51,7 @@
                         </padding>
                     </Panel>
 
-                    <Panel fx:id="termsPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                    <Panel fx:id="termsPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2); -fx-cursor: hand;">
                         <left>
                             <HBox spacing="30" alignment="CENTER">
                                 <ImageView fx:id="termsImage" preserveRatio="true" pickOnBounds="true"/>
@@ -71,7 +71,7 @@
                     </Panel>
 
                     <VBox fx:id="thirdPartyVBox" spacing="10">
-                        <Panel fx:id="thirdPartyPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                        <Panel fx:id="thirdPartyPanel" style="-fx-background-color: rgba(18, 175, 32, 0.2); -fx-cursor: hand;">
                             <left>
                                 <HBox spacing="30" alignment="CENTER">
                                     <ImageView fx:id="thirdPartyImage" preserveRatio="true" pickOnBounds="true"/>
