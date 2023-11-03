@@ -107,9 +107,9 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
         activationPinTextField.setTextFormatter(textFormatter);
 
-        activationPinTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+        activationPinTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             activateButton.setDisable(newValue.length() < 16);
-        }));
+        });
 
         activateButton.setOnAction(event -> {
 

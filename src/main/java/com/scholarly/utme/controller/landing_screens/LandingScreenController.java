@@ -8,8 +8,10 @@ import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.PreferencesManager;
-import com.scholarly.utme.viewmodels.landing_screens.LandingScreenVM;
+import com.scholarly.utme.viewmodels.landing_screens.*;
 import de.saxsys.mvvmfx.*;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -76,37 +78,106 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
             long start = System.currentTimeMillis();
 
-            Parent homeView = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView();
-            //        homeView = homeView == null ? FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView() : homeView;
+//            Task<Void> homeViewTask = new Task<>() {
+//                @Override
+//                protected Void call() {
+//                    ViewTuple<LandingScreenHomeController, LandingScreenHomeVM> landingScreenHomeViewTuple = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load();
+//                    Platform.runLater(() -> {
+//                        homeView = landingScreenHomeViewTuple.getView();
+//                    });
+//                    return null;
+//                }
+//            };
+//            Thread homeViewThread = new Thread(homeViewTask);
+//            homeViewThread.start();
             System.out.println(TAG + "Time taken to load Home Screen -> " + (System.currentTimeMillis() - start)+"ms");
+            Parent homeView = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView();
 
-            Parent accountView = FluentViewLoader.fxmlView(LandingScreenAccountController.class).load().getView();
+            Task<Void> accountViewTask = new Task<>() {
+                @Override
+                protected Void call() {
+                    ViewTuple<LandingScreenAccountController, LandingScreenAccountVM> landingScreenAccountViewTuple = FluentViewLoader.fxmlView(LandingScreenAccountController.class).load();
+                    Platform.runLater(() -> {
+                        accountView = landingScreenAccountViewTuple.getView();
+                    });
+                    return null;
+                }
+            };
+            Thread accountViewThread = new Thread(accountViewTask);
+            accountViewThread.start();
+//            Parent accountView = FluentViewLoader.fxmlView(LandingScreenAccountController.class).load().getView();
 //        accountView = accountView == null ? FluentViewLoader.fxmlView(LandingScreenAccountController.class).load().getView() : accountView;
             System.out.println(TAG + "Time taken to load Account Screen -> " + (System.currentTimeMillis() - start)+"ms");
 
-            Parent activateView = FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView();
-//        activateView = activateView == null ? FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView() : activateView;
+            Task<Void> activateViewTask = new Task<>() {
+                @Override
+                protected Void call() {
+                    ViewTuple<LandingScreenActivateController, LandingScreenActivateVM> landingScreenActivateViewTuple = FluentViewLoader.fxmlView(LandingScreenActivateController.class).load();
+                    Platform.runLater(() -> {
+                        activateView = landingScreenActivateViewTuple.getView();
+                    });
+                    return null;
+                }
+            };
+            Thread activateViewThread = new Thread(activateViewTask);
+            activateViewThread.start();
+//            Parent activateView = FluentViewLoader.fxmlView(LandingScreenActivateController.class).load().getView();
+
             System.out.println(TAG + "Time taken to load Activate Screen -> " + (System.currentTimeMillis() - start)+"ms");
 
+            Task<Void> appsViewTask = new Task<>() {
+                @Override
+                protected Void call() {
+                    ViewTuple<LandingScreenAppsController, LandingScreenAppsVM> landingScreenAppsViewTuple = FluentViewLoader.fxmlView(LandingScreenAppsController.class).load();
+                    Platform.runLater(() -> {
+                        appsView = landingScreenAppsViewTuple.getView();
+                    });
+                    return null;
+                }
+            };
+            Thread appsViewThread = new Thread(appsViewTask);
+            appsViewThread.start();
             //        Parent appsView = FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView();
-            appsView = appsView == null ? FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView() : appsView;
+//            appsView = appsView == null ? FluentViewLoader.fxmlView(LandingScreenAppsController.class).load().getView() : appsView;
 
+
+            Task<Void> settingsViewTask = new Task<>() {
+                @Override
+                protected Void call() {
+                    ViewTuple<LandingScreenSettingsController, LandingScreenSettingsVM> landingScreenSettingsViewTuple = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load();
+                    Platform.runLater(() -> {
+                        settingsView = landingScreenSettingsViewTuple.getView();
+                    });
+                    return null;
+                }
+            };
+            Thread settingsViewThread = new Thread(settingsViewTask);
+            settingsViewThread.start();
             //        Parent settingsView = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView();
-            settingsView = settingsView == null ? FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView() : settingsView;
+//            settingsView = settingsView == null ? FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView() : settingsView;
+
+            Task<Void> allViewsTask = new Task<>() {
+                @Override
+                protected Void call() {
+                    if (viewModel.getScreenToShow().equals(Screens.ACCOUNT_SCREEN)) {
+                        selectButton(accountView, accountButton);
+                    } else if (viewModel.getScreenToShow().equals(Screens.ACTIVATE_SCREEN)) {
+                        selectButton(activateView, activateButton);
+                    } else if (viewModel.getScreenToShow().equals(Screens.APPS_SCREEN)) {
+                        selectButton(appsView, appsButton);
+                    } else if (viewModel.getScreenToShow().equals(Screens.SETTINGS_SCREEN)) {
+                        selectButton(settingsView, settingsButton);
+                    } else {
+                        selectButton(homeView, homeButton);
+                    }
+                    return null;
+                }
+            };
+            Thread allViewsThread = new Thread(allViewsTask);
+            allViewsThread.start();
 
             System.out.println(TAG + "Time taken to load Views -> " + (System.currentTimeMillis() - start)+"ms");
 
-            if (viewModel.getScreenToShow().equals(Screens.ACCOUNT_SCREEN)) {
-                selectButton(accountView, accountButton);
-            } else if (viewModel.getScreenToShow().equals(Screens.ACTIVATE_SCREEN)) {
-                selectButton(activateView, activateButton);
-            } else if (viewModel.getScreenToShow().equals(Screens.APPS_SCREEN)) {
-                selectButton(appsView, appsButton);
-            } else if (viewModel.getScreenToShow().equals(Screens.SETTINGS_SCREEN)) {
-                selectButton(settingsView, settingsButton);
-            } else {
-                selectButton(homeView, homeButton);
-            }
         /* else if (viewModel.getScreenToShow().equalsIgnoreCase("triviaScreen")) {
             selectButton(triviaView, triviaButton);
         } else if (viewModel.getScreenToShow().equalsIgnoreCase("performanceScreen")) {
