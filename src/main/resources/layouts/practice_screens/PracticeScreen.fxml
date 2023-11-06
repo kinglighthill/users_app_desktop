@@ -164,41 +164,32 @@
                         </Label>
 
                         <VBox fx:id="questionCenterVBox" prefHeight="200" style="-fx-background-color: #ffffff;">
-                           <!--<HBox fx:id="quesDescriptionHBox">
-                              <Label fx:id="questionDescriptionHeader" text="COMPREHENSION: Read the passage...">
-                                 <font>
-                                    <Font size="15.0"/>
-                                 </font>
-                              </Label>
-                              <Label fx:id="readQuestionDesc" text="[READ]" textFill="#12AF20" style="-fx-cursor: hand;">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                              <padding>
-                                 <Insets bottom="10"/>
-                              </padding>
-                           </HBox>-->
 
                            <ScrollPane fx:id="questionScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
                               <VBox fx:id="questionVBox" spacing="15" alignment="CENTER">
                                  <HBox fx:id="questionDescriptionHBox">
-                                    <Label fx:id="questionDescriptionHeader" wrapText="true" text="COMPREHENSION: Read the passage...">
+                                    <Label fx:id="questionDescriptionLabel" wrapText="true" text="COMPREHENSION: Read the passage...">
                                        <font>
                                           <Font size="16.0"/>
                                        </font>
                                     </Label>
                                  </HBox>
-                                 <Line fx:id="questionLine" stroke="black" startX="100" endX="700"/>
+
+                                 <Line fx:id="questionLine" stroke="black" startX="100" endX="700">
+                                    <VBox.margin>
+                                       <Insets bottom="10"/>
+                                    </VBox.margin>
+                                 </Line>
+
                                  <HBox fx:id="questionLabelHBox">
                                     <Label fx:id="questionLabel" wrapText="true">
                                        <font>
                                           <Font size="16.0"/>
                                        </font>
-                                       <VBox.margin>
-                                          <Insets bottom="20"/>
-                                       </VBox.margin>
                                     </Label>
+                                    <VBox.margin>
+                                       <Insets top="10"/>
+                                    </VBox.margin>
                                  </HBox>
                               </VBox>
                               <padding>
@@ -215,19 +206,6 @@
                                  <Insets topRightBottomLeft="10"/>
                               </padding>
                            </HBox>
-                           <!--<StackPane fx:id="questionStackPane">
-                              <children>
-                                 <WebView fx:id="questionWebView" minHeight="100" prefHeight="200.0" prefWidth="200.0"/>
-
-                                 <HBox fx:id="questionWithImageHBox" spacing="10" minHeight="110" prefHeight="200" prefWidth="300" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5">
-                                    <ImageView fx:id="questionImage" fitHeight="200" fitWidth="400" StackPane.alignment="CENTER"/>
-                                    <WebView fx:id="questionWithImageWebView" prefHeight="200"/>
-                                    <padding>
-                                       <Insets topRightBottomLeft="10"/>
-                                    </padding>
-                                 </HBox>
-                              </children>
-                           </StackPane>-->
                            <padding>
                               <Insets topRightBottomLeft="10"/>
                            </padding>

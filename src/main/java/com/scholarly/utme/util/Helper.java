@@ -17,6 +17,7 @@ import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.TheoryQuestion;
 import io.reactivex.rxjava3.annotations.Nullable;
+import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
@@ -150,7 +151,8 @@ public class Helper {
             optionButton.setContentDisplay(ContentDisplay.RIGHT);
             optionButton.setPrefHeight(64.0);
         } else {
-            if (Helper.isWebView(option)) {
+            optionButton.setPrefHeight(24.0);;
+            if (Helper.isWebView(option.replaceAll("<br>", ""))) {
                 WebView webView = new WebView();
                 webView.setPrefHeight(44.0);
                 String content = "<html><body style='background-color: " + backgroundColor +"'>"
@@ -159,11 +161,12 @@ public class Helper {
 
                 optionButton.setText(optionLabel);
                 optionButton.setGraphic(webView);
+                optionButton.setAlignment(Pos.CENTER_LEFT);
                 optionButton.setContentDisplay(ContentDisplay.RIGHT);
-                optionButton.setMinHeight(64.0);
+                optionButton.setMinHeight(44.0);
             } else {
                 optionButton.setGraphic(null);
-                optionButton.setText(optionLabel + option);
+                optionButton.setText(optionLabel + "  " + option.replaceAll("<br>", ""));
                 optionButton.setPrefHeight(24.0);
             }
         }
@@ -180,7 +183,7 @@ public class Helper {
     public static boolean isWebView(ObjectiveQuestion question, boolean checkQuestion) {
         String input;
         if (checkQuestion) {
-            input = question.getQuestion();
+            input = question.getQuestion().replaceAll("<br>", "");
         } else {
             input = question.getQuestionAnswer().getExplanation();
         }
@@ -241,7 +244,7 @@ public class Helper {
                                 ],
                                 throwOnError : false
                            });"></script>
-                       <style type='text/css'>body {margin: 0px;padding: 0px;font-size:16px; } </style>
+                       <style type='text/css'>body {margin: 0px;padding: 0px;font-size: 18px; } </style>
                      </head>
                     <body>
                         <div>{formula}</div>
