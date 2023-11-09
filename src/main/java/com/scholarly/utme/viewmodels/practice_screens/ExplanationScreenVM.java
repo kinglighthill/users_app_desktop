@@ -1,8 +1,7 @@
 package com.scholarly.utme.viewmodels.practice_screens;
 
 import com.scholarly.utme.controller.practice_screens.ExplanationScreenController.InitialData;
-import com.scholarly.utme.data.model.QuestionDescription;
-import com.scholarly.utme.data.model.Year;
+import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -42,7 +41,10 @@ public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
 
         questionDescriptions = data.getQuestionDescriptions();
 
-        subjectsQuestions = data.getSubjectsQuestions();
+        data.getSubjectsQuestions().forEach((s, subjectQuestionState) -> {
+            subjectsQuestions.put(s, subjectQuestionState);
+        });
+//        subjectsQuestions = data.getSubjectsQuestions();
 
         selectedSubjectYear = data.getSelectedSubjectYear();
 

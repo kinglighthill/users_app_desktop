@@ -15,6 +15,7 @@ import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -867,11 +868,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     private void loadObjectiveQuestion(String questionText, List<ObjectiveQuestionDescription> quesDescriptionList, boolean isWebView) {
         if (isWebView) {
-            String content = Helper.loadLatex(getClass(), questionText);
-            questionWebView.getEngine().loadContent(content);
-            questionWebView.setMinHeight(200);
-
-            questionVBox.getChildren().removeAll(questionScrollPane, questionLabelHBox, questionLabel);
+            System.out.println(TAG + "Question is WebView!");
+            questionCenterVBox.getChildren().removeAll(questionScrollPane, questionLabelHBox, questionLabel);
 
             if (!quesDescriptionList.isEmpty()) {
                 if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
@@ -881,8 +879,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 }
             }
 
-            if (!questionCenterVBox.getChildren().contains(questionWebView)) {
-                questionCenterVBox.getChildren().add(questionWebView);
+            questionCenterVBox.getChildren().add(questionWebView);
+            String content = Helper.loadLatex(getClass(), questionText);
+            questionWebView.getEngine().loadContent(content);
+            questionWebView.setMinHeight(200);
+
+            if (!quesDescriptionList.isEmpty()) {
+//                questionCenterVBox.getChildren().add(questionWebView);
                 questionWebView.setMinHeight(30);
             }
         } else {

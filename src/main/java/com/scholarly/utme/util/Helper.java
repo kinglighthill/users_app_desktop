@@ -19,6 +19,7 @@ import com.scholarly.utme.data.model.TheoryQuestion;
 import io.reactivex.rxjava3.annotations.Nullable;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
@@ -168,6 +169,36 @@ public class Helper {
                 optionButton.setGraphic(null);
                 optionButton.setText(optionLabel + "  " + option.replaceAll("<br>", ""));
                 optionButton.setPrefHeight(24.0);
+            }
+        }
+    }
+
+    public static void loadOption(Class<?> mClass, Label optionLabel, String option, String optionText, String backgroundColor) {
+        if (option.contains("<img")) {
+            optionLabel.setText(optionText);
+            ImageView imageView = Helper.getImageFromText(mClass, option);
+            imageView.setFitHeight(44.0);
+            optionLabel.setGraphic(imageView);
+            optionLabel.setContentDisplay(ContentDisplay.RIGHT);
+            optionLabel.setPrefHeight(64.0);
+        } else {
+            optionLabel.setMinHeight(24.0);;
+            if (Helper.isWebView(option.replaceAll("<br>", ""))) {
+                WebView webView = new WebView();
+                webView.setPrefHeight(44.0);
+                String content = "<html><body style='background-color: " + backgroundColor +"'>"
+                        + option + "</body></html>";
+                webView.getEngine().loadContent(content);
+
+                optionLabel.setText(optionText);
+                optionLabel.setGraphic(webView);
+                optionLabel.setAlignment(Pos.CENTER_LEFT);
+                optionLabel.setContentDisplay(ContentDisplay.RIGHT);
+                optionLabel.setMaxHeight(34.0);
+            } else {
+                optionLabel.setGraphic(null);
+                optionLabel.setText(optionText + "  " + option.replaceAll("<br>", ""));
+                optionLabel.setMinHeight(24.0);
             }
         }
     }

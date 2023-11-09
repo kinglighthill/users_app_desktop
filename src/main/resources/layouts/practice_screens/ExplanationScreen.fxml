@@ -157,24 +157,28 @@
                                 <ScrollPane fx:id="questionScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
                                     <VBox fx:id="questionVBox" spacing="15" alignment="CENTER">
                                         <HBox fx:id="questionDescriptionHBox">
-                                            <Label fx:id="questionDescriptionHeader" wrapText="true" text="COMPREHENSION: Read the passage...">
+                                            <Label fx:id="questionDescriptionLabel" wrapText="true" text="COMPREHENSION: Read the passage...">
                                                 <font>
                                                     <Font size="16.0"/>
                                                 </font>
                                             </Label>
                                         </HBox>
-                                        <Line fx:id="questionLine" stroke="black" startX="100" endX="700"/>
+                                        <Line fx:id="questionLine" stroke="black" startX="100" endX="700">
+                                            <VBox.margin>
+                                                <Insets bottom="15" top="10"/>
+                                            </VBox.margin>
+                                        </Line>
                                         <HBox fx:id="questionLabelHBox">
                                             <Label fx:id="questionLabel" wrapText="true">
                                                 <font>
-                                                    <Font size="16.0"/>
+                                                    <Font name="Times New Roman" size="18.0"/>
                                                 </font>
-                                                <VBox.margin>
-                                                    <Insets bottom="20"/>
-                                                </VBox.margin>
                                             </Label>
                                         </HBox>
                                     </VBox>
+                                    <VBox.margin>
+                                        <Insets bottom="20"/>
+                                    </VBox.margin>
                                     <padding>
                                         <Insets right="10"/>
                                     </padding>
@@ -190,6 +194,9 @@
                                     </padding>
                                 </HBox>
 
+                                <padding>
+                                    <Insets bottom="20"/>
+                                </padding>
                             </VBox>
 
                             <Panel fx:id="optionAPanel" prefHeight="17.0" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">

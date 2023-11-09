@@ -166,6 +166,7 @@
                         <VBox fx:id="questionCenterVBox" prefHeight="200" style="-fx-background-color: #ffffff;">
 
                            <ScrollPane fx:id="questionScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
+
                               <VBox fx:id="questionVBox" spacing="15" alignment="CENTER">
                                  <HBox fx:id="questionDescriptionHBox">
                                     <Label fx:id="questionDescriptionLabel" wrapText="true" text="COMPREHENSION: Read the passage...">
@@ -177,21 +178,21 @@
 
                                  <Line fx:id="questionLine" stroke="black" startX="100" endX="700">
                                     <VBox.margin>
-                                       <Insets bottom="10"/>
+                                       <Insets bottom="15" top="10"/>
                                     </VBox.margin>
                                  </Line>
 
                                  <HBox fx:id="questionLabelHBox">
                                     <Label fx:id="questionLabel" wrapText="true">
                                        <font>
-                                          <Font size="16.0"/>
+                                          <Font name="Times New Roman" size="18.0"/>
                                        </font>
                                     </Label>
-                                    <VBox.margin>
-                                       <Insets top="10"/>
-                                    </VBox.margin>
                                  </HBox>
                               </VBox>
+                              <VBox.margin>
+                                 <Insets bottom="20"/>
+                              </VBox.margin>
                               <padding>
                                  <Insets right="10"/>
                               </padding>
