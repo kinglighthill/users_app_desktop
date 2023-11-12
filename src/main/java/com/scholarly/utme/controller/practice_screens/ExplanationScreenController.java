@@ -57,7 +57,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     private ExplanationScreenVM viewModel;
 
     @FXML
-    private WebView questionWebView, explanationWebView, questionWithImageWebView;
+    private WebView questionWebView, explanationWebView, questionWithImageWebView, explanationWithImageWebView;
     @FXML
     private TilePane tilePane;
     @FXML
@@ -71,7 +71,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     @FXML
     private Line questionLine;
     @FXML
-    private VBox centerVBox, questionDescriptionDialog, explanationVBox, questionCenterVBox, questionVBox;
+    private VBox centerVBox, questionDescriptionDialog, explanationVBox, questionCenterVBox, questionVBox, explanationWithImageVbox;
     @FXML
     private HBox toggleBox, quesDescriptionHBox, questionWithImageHBox, questionDescriptionHBox, questionLabelHBox;
     @FXML
@@ -87,7 +87,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
     @FXML
     private ToggleButton textExplanation, videoExplanation;
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, optionAIcon, optionBIcon, optionCIcon, optionDIcon, questionImage, quesDescriptionCloseIcon;
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, optionAIcon, optionBIcon, optionCIcon, optionDIcon, questionImage, quesDescriptionCloseIcon, explanationImage;
 
     private Image correctImage, incorrectImage;
 
@@ -357,8 +357,6 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             String questionText = question.getObjectiveQuestion().getQuestion().replaceAll("<br>", System.lineSeparator());
             questionLabel.setText(questionText);
 
-//            questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
-
             questionCenterVBox.getChildren().removeAll(questionScrollPane, questionLabelHBox);
             questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
 
@@ -493,15 +491,9 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             String explanationText = question.getObjectiveQuestion().getQuestionAnswer().getExplanation();
 
             if (explanationText.contains("<img")) {
-                explanationText = formatExplanationTextWithImage(explanationText);
-                explanationWebView.setVisible(true);
-                explanationWebView.getEngine().loadContent(explanationText);
-                explanationLabel.setVisible(false);
+                showExplanationWithImage(explanationText, Helper.isWebView(explanationText));
             } else {
-                explanationLabel.setVisible(true);
-                explanationLabel.setText(explanationText);
-                explanationWebView.setVisible(false);
-//                explanationWebView.getEngine().loadContent(explanationText);
+                showExplanation(explanationText, Helper.isWebView(explanationText));
             }
 
         } else if (viewModel.getQuestionType() == Type.THEORY){
@@ -686,15 +678,12 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             String explanationText = objectiveQuestion.getQuestionAnswer().getExplanation();
 
             if (explanationText.contains("<img")) {
-                explanationText = formatExplanationTextWithImage(explanationText);
-                explanationWebView.setVisible(true);
-                explanationWebView.getEngine().loadContent(explanationText);
-                explanationLabel.setVisible(false);
+                showExplanationWithImage(explanationText, Helper.isWebView(explanationText));
+
+                System.out.println(TAG + "Explanation with Image Text -> " + explanationText);
+
             } else {
-                explanationLabel.setVisible(true);
-                explanationLabel.setText(explanationText);
-                explanationWebView.setVisible(false);
-//                explanationWebView.getEngine().loadContent(explanationText);
+                showExplanation(explanationText, Helper.isWebView(explanationText));
             }
 
         } else if (viewModel.getQuestionType() == Type.THEORY) {
@@ -808,7 +797,8 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
             if (!quesDescriptionList.isEmpty()) {
 //                questionCenterVBox.getChildren().add(questionWebView);
-                questionWebView.setMinHeight(30);
+                questionScrollPane.setMinHeight(110);
+                questionWebView.setMinHeight(90);
             }
         } else {
             questionVBox.getChildren().removeAll(questionWebView);
@@ -817,6 +807,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
             if (!quesDescriptionList.isEmpty()) {
                 if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
                     questionCenterVBox.getChildren().add(questionScrollPane);
+                    questionScrollPane.setMinHeight(180);
                     questionDescriptionLabel.setText(quesDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
                 }
             } else {
@@ -829,7 +820,6 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
                 questionCenterVBox.getChildren().add(questionLabelHBox);
             }
 
-
 //            if (!questionCenterVBox.getChildren().contains(questionLabel)) {
 //                questionCenterVBox.getChildren().add(questionLabel);
 //            }
@@ -837,7 +827,85 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
         }
     }
 
+    private void showExplanation(String explanationText, boolean isWebView) {
+        if (isWebView) {
+            System.out.println(TAG + "Explanation is WebView");
+
+            explanationWebView.setVisible(true);
+            String content = Helper.loadLatex(getClass(), explanationText);
+            explanationWebView.getEngine().loadContent(content);
+            explanationLabel.setVisible(false);
+            explanationWithImageVbox.setVisible(false);
+
+        } else {
+            explanationLabel.setVisible(true);
+            explanationLabel.setText(explanationText);
+            explanationWebView.setVisible(false);
+            explanationWithImageVbox.setVisible(false);
+
+        }
+    }
+
+    private void showExplanationWithImage(String explanationText, boolean isWebView) {
+        String answer = extractAnswerFromExplanation(explanationText, isWebView);
+        String imageUrl = extractImageUrlFromExplanation(explanationText);
+
+        explanationWithImageVbox.setVisible(true);
+        explanationWithImageWebView.getEngine().loadContent(answer);
+        explanationImage.setImage(new Image(getClass().getResource(imageUrl).toString()));
+
+        explanationWebView.setVisible(false);
+        explanationLabel.setVisible(false);
+    }
+
+    private String extractAnswerFromExplanation(String text, boolean isWebView) {
+        String imageQuestion = text.substring(text.lastIndexOf("100%'")+6);
+        if (isWebView) {
+            imageQuestion = Helper.loadLatex(getClass(), imageQuestion);
+        }
+        return imageQuestion;
+    }
+
+    private String extractImageUrlFromExplanation(String text) {
+        int startIndexOfImg = text.indexOf("<img");
+        int endIndexOfImg = text.indexOf("'100%'>", startIndexOfImg);
+
+        int startIndexOfImgPath = text.indexOf("/android_asset", startIndexOfImg);
+        int endIndexOfImgPath = text.indexOf("' width", startIndexOfImg);
+
+        String imagePath = text.substring(startIndexOfImgPath, endIndexOfImgPath);
+
+        return imagePath.replace("android_asset/images", "assets/images/pq");
+    }
+
     private String formatExplanationTextWithImage(String explanationText) {
+        int startIndexOfImg = explanationText.indexOf("<img");
+        int endIndexOfImg = explanationText.indexOf("'100%'>", startIndexOfImg);
+
+        int startIndexOfImgPath = explanationText.indexOf("/android_asset", startIndexOfImg);
+        int endIndexOfImgPath = explanationText.indexOf("' width", startIndexOfImg);
+
+        String imagePath = explanationText.substring(startIndexOfImgPath, endIndexOfImgPath);
+
+        String newImagePath = imagePath.replace("android_asset/images", "assets/images/pq");
+
+        explanationImage.setImage(new Image(getClass().getResource(newImagePath).toString()));
+
+        String imageQuestion = explanationText.substring(explanationText.lastIndexOf("100%'")+6);
+//        if (isWebView) {
+//            imageQuestion = loadLatex(mClass, imageQuestion);
+//        }
+        explanationWithImageWebView.getEngine().loadContent(imageQuestion);
+
+//        StringBuilder builder = new StringBuilder(explanationText);
+//
+//        URL url = getClass().getResource(newImagePath);
+//        String img = "<img src='"+url+"' width='100%'>";
+//
+//        explanationWebView.getEngine().loadContent(img);
+
+
+
         return Helper.parsePQImageUrl(getClass(), explanationText);
     }
 
@@ -908,7 +976,7 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
         StackPane.setAlignment(playButton, Pos.CENTER);
 
-        explanationVideo.getChildren().addAll(mediaView, playButton);
+//        explanationVideo.getChildren().addAll(mediaView, playButton);
 
     }
 

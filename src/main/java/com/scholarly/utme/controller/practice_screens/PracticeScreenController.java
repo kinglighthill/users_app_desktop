@@ -886,15 +886,17 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             if (!quesDescriptionList.isEmpty()) {
 //                questionCenterVBox.getChildren().add(questionWebView);
-                questionWebView.setMinHeight(30);
+                questionScrollPane.setMinHeight(120);
+                questionWebView.setMinHeight(100);
             }
         } else {
-            questionVBox.getChildren().removeAll(questionWebView);
+            questionCenterVBox.getChildren().removeAll(questionWebView);
 
             questionLabelHBox.setMinHeight(10);
             if (!quesDescriptionList.isEmpty()) {
                 if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
                     questionCenterVBox.getChildren().add(questionScrollPane);
+                    questionScrollPane.setMinHeight(180);
                     questionDescriptionLabel.setText(quesDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
                 }
             } else {
@@ -921,20 +923,20 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             questionWebView.getEngine().loadContent(content);
             questionWebView.setMinHeight(200);
 
-            questionVBox.getChildren().removeAll(questionScrollPane, questionLabelHBox, questionLabel);
+            questionCenterVBox.getChildren().removeAll(questionScrollPane, questionLabelHBox, questionLabel);
 
             if (!questionCenterVBox.getChildren().contains(questionWebView)) {
                 questionCenterVBox.getChildren().add(questionWebView);
             }
         } else {
-            questionVBox.getChildren().removeAll(questionWebView);
+            questionCenterVBox.getChildren().removeAll(questionWebView);
 
             if (!questionCenterVBox.getChildren().contains(questionLabelHBox)) {
                 questionCenterVBox.getChildren().add(questionLabelHBox);
             }
 
-            if (!questionCenterVBox.getChildren().contains(questionLabel)) {
-                questionCenterVBox.getChildren().add(questionLabel);
+            if (!questionCenterVBox.getChildren().contains(questionLabelHBox)) {
+                questionCenterVBox.getChildren().add(questionLabelHBox);
             }
             questionLabel.setText(questionText);
         }

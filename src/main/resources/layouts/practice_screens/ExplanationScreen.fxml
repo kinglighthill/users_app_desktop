@@ -105,7 +105,7 @@
             </top>
 
             <right>
-                <AnchorPane prefHeight="513.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF;"
+                <AnchorPane prefHeight="513.0" prefWidth="300.0" style="-fx-background-color: #FFFFFF;"
                             BorderPane.alignment="CENTER" >
                     <HBox fx:id="toggleBox" prefWidth="200" alignment="CENTER" AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0">
                         <ToggleButton fx:id="textExplanation" prefWidth="200" text="Explanation" textFill="white" style="-fx-background-color: #12AF20; -fx-border-color: #12AF20; -fx-cursor: hand;">
@@ -130,7 +130,15 @@
                         <Label fx:id="explanationLabel" wrapText="true" StackPane.alignment="TOP_CENTER" style="-fx-background-color: white;"/>
                         <WebView fx:id="explanationWebView" visible="false"/>
 
-                        <StackPane fx:id="explanationVideo" visible="false"/>
+                        <VBox fx:id="explanationWithImageVbox" spacing="5" minHeight="210" prefHeight="200" prefWidth="300" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5">
+                            <ImageView fx:id="explanationImage" fitHeight="200" fitWidth="300" StackPane.alignment="CENTER"/>
+                            <WebView fx:id="explanationWithImageWebView"/>
+                            <padding>
+                                <Insets topRightBottomLeft="10"/>
+                            </padding>
+                        </VBox>
+
+<!--                        <StackPane fx:id="explanationVideo" visible="false"/>-->
                     </StackPane>
 
                     <padding>
@@ -221,6 +229,7 @@
                                     <Insets left="10" top="10" right="20" bottom="10"/>
                                 </padding>
                             </Panel>
+
                             <Panel fx:id="optionBPanel"  prefHeight="17.0" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">

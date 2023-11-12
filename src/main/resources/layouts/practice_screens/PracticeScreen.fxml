@@ -183,16 +183,16 @@
                                  </Line>
 
                                  <HBox fx:id="questionLabelHBox">
-                                    <Label fx:id="questionLabel" wrapText="true">
+                                    <Label fx:id="questionLabel" wrapText="true" minHeight="50">
                                        <font>
                                           <Font name="Times New Roman" size="18.0"/>
                                        </font>
                                     </Label>
                                  </HBox>
                               </VBox>
-                              <VBox.margin>
+                              <padding>
                                  <Insets bottom="20"/>
-                              </VBox.margin>
+                              </padding>
                               <padding>
                                  <Insets right="10"/>
                               </padding>

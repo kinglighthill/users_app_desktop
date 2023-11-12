@@ -192,6 +192,7 @@ public class Helper {
 
                 optionLabel.setText(optionText);
                 optionLabel.setGraphic(webView);
+                optionLabel.setGraphicTextGap(10);
                 optionLabel.setAlignment(Pos.CENTER_LEFT);
                 optionLabel.setContentDisplay(ContentDisplay.RIGHT);
                 optionLabel.setMaxHeight(34.0);
