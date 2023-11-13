@@ -1,13 +1,15 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.13'//    id 'org.jetbrains.kotlin.jvm' version '1.6.0-RC'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'org.javamodularity.moduleplugin' version '1.8.12'
     id 'org.beryx.jlink' version '2.25.0'
+    id 'signing'
 //    id 'org.sqlite'
 }
 
 group 'com.scholarly.utme'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 
 
@@ -24,23 +26,42 @@ ext {
     junitVersion = '5.9.2'
 }
 
-sourceCompatibility = '16'
-targetCompatibility = '16'
+sourceCompatibility = '17'
+targetCompatibility = '17'
 
 project.ext.buildDate = new Date()
-project.version = "0.4"
+project.version = "0.3"
+
+tasks.register('stuffZip', Zip) {
+    archiveBaseName = 'stuff'
+    from 'src/main'
+}
+
+//signing {
+//    def signingKey = findProperty("signingKeyId")
+//    def signingPassword = findProperty("signingPassword")
+//    useInMemoryPgpKeys(signingKey as String, signingPassword as String)
+////    sign configurations.archives
+////    sign configurations.runtimeElements
+//    sign stuffZip
+//}
 
 application {
     mainModule = 'com.scholarly.utme'
     mainClass = 'com.scholarly.utme.MainApplication'
 }
 
-javafx {
-    version = '18.0.2'
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing', 'javafx.graphics']
+java {
+    modularity.inferModulePath.set(false)
 }
 
-mainClassName = "$moduleName/com.scholarly.utme.MainApplication"
+javafx {
+    version = '18.0.2'
+    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing']
+}
+
+//mainClassName = "$moduleName/com.scholarly.utme.MainApplication"
+mainClassName = "com.scholarly.utme.MainApplication"
 
 run {
     jvmArgs = ['-Djdk.gtk.version=2']
@@ -59,6 +80,8 @@ jlink {
                 '--description', "Scholarly Jamb CBT App",
                 '--copyright', 'Copyrigth 2020-2024 Scholarly Educational Software Ltd'
         ]
+
+//        jvmArgs = ["-Djavafx.autoproxy.disable=true"]
 
         def currentOs = org.gradle.internal.os.OperatingSystem.current()
         def imgType = currentOs.windows ? 'ico' : currentOs.macOsX ? 'icns' : 'png'
@@ -105,24 +128,12 @@ jlink {
     }
 
     /*mergedModule {
-//        requires 'javafx.graphics'
-//        requires 'javafx.controls'
-        requires 'java.logging'
-//        requires 'javafx.swing'
-        requires 'java.sql'
-        requires 'java.xml'
-        requires 'java.desktop'
-        requires 'java.datatransfer'
-        requires 'java.security.jgss'
-//        requires 'javafx.base'
-//        requires 'javafx.fxml'
-        requires 'jdk.unsupported'
-        provides 'java.sql.Driver' with 'org.sqlite.JDBC'
-        provides 'javax.imageio.spi.ImageInputStreamSpi' with 'com.twelvemonkeys.imageio.color.ProfileDeferralActivator.Spi',
-                'com.twelvemonkeys.imageio.stream.BufferedFileImageInputStreamSpi',
-                'com.twelvemonkeys.imageio.stream.BufferedInputStreamImageInputStreamSpi',
-                'com.twelvemonkeys.imageio.stream.BufferedRAFImageInputStreamSpi'
-        provides 'javax.imageio.spi.ImageReaderSpi' with 'com.twelvemonkeys.imageio.plugins.webp.WebPImageReaderSpi'
+        additive = true
+        excludeRequires 'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing'
+    }*/
+
+    /*mergedModule {
+
     }*/
 }
 
@@ -150,34 +161,34 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     implementation('org.controlsfx:controlsfx:11.1.2') {
-        exclude group: 'org.openjfx'
+        exclude group: 'org.openjfx', module: '*'
     }
     implementation('com.dlsc.formsfx:formsfx-core:11.6.0') {
-        exclude group: 'org.openjfx'
+        exclude group: 'org.openjfx', module: '*'
     }
     implementation('net.synedra:validatorfx:0.4.0') {
-        exclude(group: 'org.openjfx')
+        exclude(group: 'org.openjfx', module: '*')
     }
     implementation('org.kordamp.ikonli:ikonli-javafx:12.3.1') {
-        exclude group: 'org.openjfx'
+        exclude group: 'org.openjfx', module: '*'
     }
     implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0') {
-        exclude group: 'org.openjfx'
+        exclude group: 'org.openjfx', module: '*'
     }
-    implementation ('com.jidesoft:jidefx-fields:0.9.1-b128') {
-        exclude group: 'org.openjfx'
+    implementation ('com.jidesoft:jidefx-fields:0.9.1') {
+        exclude group: 'org.openjfx', module: '*'
     }
     /*implementation('eu.hansolo:tilesfx:16.0.3') {
         exclude group: 'org.openjfx'
     }*/
 
     implementation('org.xerial:sqlite-jdbc:3.36.0.2') {
-        exclude group: 'org.sqlite'
+        exclude group: 'org.sqlite', module: '*'
     }
 
-    implementation 'org.openjfx:javafx-controls:16'
+    implementation 'org.openjfx:javafx-controls:19.0.2.1'
 
-    implementation 'org.openjfx:javafx-swing:18.0.2'
+    implementation 'org.openjfx:javafx-swing:19.0.2.1'
 
     // SQL connector
 //    implementation 'io.github.willena:sqlite-jdbc:3.35.5.3'

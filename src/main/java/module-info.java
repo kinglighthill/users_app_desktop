@@ -16,6 +16,7 @@ module com.scholarly.utme {
     requires jidefx.decoration;
 
     requires java.sql;
+    requires jdk.crypto.cryptoki;
     requires io.reactivex.rxjava3;
     requires org.pdfsam.rxjavafx;
 //    requires sqlite.jdbc;

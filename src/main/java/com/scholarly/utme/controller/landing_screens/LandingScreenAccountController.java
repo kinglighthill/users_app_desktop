@@ -6,6 +6,7 @@ import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAccountVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -62,7 +63,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
     public void initialize(URL location, ResourceBundle resources) {
         String userId = viewModel.getUserId();
 
-        boolean internetEnabled = checkNetworkConnectivity();
+        boolean internetEnabled = Helper.checkNetworkConnectivity();
 
         initializeViews();
         initializeFonts();
@@ -210,16 +211,5 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
     private void initializeFonts() {
 
-    }
-
-    private boolean checkNetworkConnectivity() {
-        try {
-            URL url = new URL(BASE_URL);
-            URLConnection connection = url.openConnection();
-            connection.connect();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
     }
 }

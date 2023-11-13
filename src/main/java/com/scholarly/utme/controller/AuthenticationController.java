@@ -8,6 +8,7 @@ import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.network.model.request.UserRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
 import com.sun.net.httpserver.HttpContext;
@@ -82,7 +83,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 Animations.fadeIn(loginSection, 300);
             }
 
-            boolean internetEnabled = checkNetworkConnectivity();
+            boolean internetEnabled = Helper.checkNetworkConnectivity();
             System.out.println(TAG + "Internet Enabled -> " + internetEnabled);
 
             initializeViews();
@@ -343,7 +344,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     alertDialog.show();
                     hideProgressBar();
                     System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
-
+                    MainApplication.log(e);
                 }
             });
 
@@ -806,18 +807,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         recoverLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverEmailPrompt.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
-    }
-
-    private boolean checkNetworkConnectivity() {
-        try {
-            URL url = new URL(BASE_URL);
-            URLConnection connection = url.openConnection();
-            connection.connect();
-            return true;
-        } catch (IOException e) {
-            MainApplication.log(e);
-            return false;
-        }
     }
 
     private InitialData getInitialData() {

@@ -70,6 +70,9 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
                 );
             });
 
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+
             boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
             if (firstTimeUser) {
                 ViewSwitcher.showScreen(View.WELCOME_SCREEN);
@@ -129,6 +132,7 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
 
     public static void log(Exception exception) {
         if (fileHandler != null) {
+            logger.severe(exception.getMessage());
             for (StackTraceElement element : exception.getStackTrace()) {
                 logger.severe(element.toString());
             }
