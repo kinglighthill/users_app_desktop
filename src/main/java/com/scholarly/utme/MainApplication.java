@@ -65,6 +65,7 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
                 dialog.showAndWait().filter(buttonType -> buttonType != ButtonType.YES).ifPresentOrElse(
                         buttonType -> event.consume(), () -> {
                             System.out.println(TAG + "Screen showing before exit -> " + ViewSwitcher.getCurrentView());
+                            PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
                             PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, ViewSwitcher.getCurrentView() == View.AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.PRE_AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.WELCOME_SCREEN);
                         }
                 );

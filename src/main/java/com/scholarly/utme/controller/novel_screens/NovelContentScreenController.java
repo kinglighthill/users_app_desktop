@@ -122,15 +122,15 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
             if (!newValue.isFree()) {
                 showActivateDialog();
+            } else {
+                renderNovel(newValue);
+                chapterQuizHeader.setText("Chapter " + newValue.getPosition() + " Quiz");
+
+                chapterCount.setText(newValue.getOrder() + " of " + chaptersList.getItems().size());
+                chapterTitle.setText(newValue.getChapterHeading());
             }
-            renderNovel(newValue);
 //            System.out.println(TAG + "Selected Chapter Position -> " + newValue.getPosition());
 //            System.out.println(TAG + "Selected Chapter Sections -> " + viewModel.getChapterSections().get(newValue.getId()).stream().collect(Collectors.toList()));
-
-            chapterQuizHeader.setText("Chapter " + newValue.getPosition() + " Quiz");
-
-            chapterCount.setText(newValue.getOrder() + " of " + chaptersList.getItems().size());
-            chapterTitle.setText(newValue.getChapterHeading());
         }));
 
         prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()).or(chapterQuizPane.visibleProperty()));
@@ -166,7 +166,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
                     viewModel.putLastSession(novelLastSession);
 
-                    ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovelModel(), null));
+                    ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovelModel(), Screens.NOVELS_SCREEN));
                     ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
                 } else {
                     exitDialogDimmer.setVisible(false);
@@ -212,8 +212,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         });
 
 
-        /***************** Novel Quiz Section ***************/
-
+        /* **************** Novel Quiz Section ************** */
         chapterQuizHeader.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + " Quiz");
         chapterQuestionsList.setItems(viewModel.getChapterQuestions().get(viewModel.getSelectedChapter().getId()));
         chapterQuestionsList.setCellFactory(new NovelChapterQuestionListCellFactory());

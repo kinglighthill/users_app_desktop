@@ -70,10 +70,10 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
         emailText.setText(viewModel.getUser().getEmail());
 
-//        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
-        String encodedDeviceId = DeviceInfo.getSystemProperties().getDeviceId();
+//        String deviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+        String deviceId = DeviceInfo.getSystemProperties().getDeviceId().replaceAll("-", "").substring(0, 16);
 
-        deviceIdLabel.setText(encodedDeviceId.toUpperCase());
+        deviceIdLabel.setText(deviceId.toUpperCase());
 
         String imageUrl = viewModel.getUser().getProfilePicUrl();
         String imageUrlWithQueryString = imageUrl + "?" + RandomStringUtils.random(6, true, true);
@@ -143,6 +143,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
                     dialogDimmer.setVisible(true);
                     PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, true);
                     PreferencesManager.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
+                    PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
                     ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                 } else {

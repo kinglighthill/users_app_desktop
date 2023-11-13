@@ -50,7 +50,7 @@
 
                     <AnchorPane style="-fx-border-color: #F1F1F1; -fx-border-radius: 5;">
                         <VBox fx:id="innerVBox" spacing="40" alignment="CENTER_LEFT" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="50">
-                            <Label fx:id="headerLabel" prefWidth="700" text="Enter a 16 digit activation pin to unlock all the layers and amazing features in this app. Activation lasts for one academic year!" textFill="#053500" wrapText="true">
+                            <Label fx:id="headerLabel" prefWidth="700" textFill="#053500" wrapText="true">
                                 <font>
                                     <Font size="16"/>
                                 </font>
@@ -61,26 +61,21 @@
                                         <Font size="16"/>
                                     </font>
                                 </Label>
-                                <CustomNumberField fx:id="activationPinTextField" prefHeight="40" promptText="Enter activation pin here">
+                                <CustomNumberField fx:id="activationPinTextField" prefHeight="40" maxWidth="500" promptText="Enter activation pin here">
                                     <font>
                                         <Font size="16"/>
                                     </font>
                                 </CustomNumberField>
-                                <Label fx:id="incorrectPinError" text="Incorrect Activation Pin" textFill="#FA0000" visible="false">
+                                <Button fx:id="activateButton" text="Activate" textFill="white" prefWidth="500" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 5; -fx-cursor: hand;">
                                     <font>
                                         <Font size="16"/>
-                                    </font>
-                                </Label>
-                                <Button fx:id="activateButton" text="Activate" textFill="white" prefWidth="700" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
-                                    <font>
-                                        <Font size="15"/>
                                     </font>
                                     <VBox.margin>
                                         <Insets top="5"/>
                                     </VBox.margin>
                                 </Button>
                             </VBox>
-                            <Label fx:id="activationText" text="NOTE: Activation unlocks ALL Subjects/Novels and opens ALL Years" textFill="#FA0000">
+                            <Label fx:id="activationText" text="NOTE: Activation unlocks all Notes, Past Questions and Novels" textFill="#FA0000">
                                 <font>
                                     <Font size="16"/>
                                 </font>
@@ -105,38 +100,45 @@
                         <VBox alignment="CENTER">
                             <Label text="Don't have activation pin?">
                                 <font>
-                                    <Font size="15"/>
+                                    <Font size="16"/>
                                 </font>
                             </Label>
                             <Label text="Get one below">
                                 <font>
-                                    <Font size="14"/>
+                                    <Font size="15"/>
                                 </font>
                             </Label>
                         </VBox>
-                        <Button fx:id="buyPinButton" text="Buy Pins Here" prefWidth="250" prefHeight="35" textFill="#053500" style="-fx-background-color: #FCB029; -fx-background-radius: 5;">
+                        <Button fx:id="buyPinButton" text="Buy Pins Here" prefWidth="250" prefHeight="35" textFill="#053500" style="-fx-background-color: #FCB029; -fx-background-radius: 5; -fx-cursor: hand;">
                             <font>
                                 <Font size="14"/>
                             </font>
                         </Button>
                         <VBox spacing="10" alignment="CENTER">
-                            <HBox spacing="5">
-                                <Label text="Need help?" textFill="#053500">
+                            <VBox spacing="5">
+                                <Label text="Need help? Chat us on WhatsApp" textFill="#053500" wrapText="true">
                                     <font>
                                         <Font size="14"/>
                                     </font>
                                 </Label>
-                                <Label fx:id="chatUsLabel" text="Chat us" textFill="#12AF20">
+                                <Label fx:id="whatsAppNumber" text="+2348136941462" textFill="#12AF20" wrapText="true" style="-fx-cursor: hand;">
                                     <font>
                                         <Font size="14"/>
                                     </font>
                                 </Label>
-                            </HBox>
-                            <Label text="For customer support or bulk purchase of activation pins call +2348136941462 or +2348136941462" wrapText="true">
-                                <font>
-                                    <Font size="14"/>
-                                </font>
-                            </Label>
+                            </VBox>
+                            <VBox>
+                                <Label text="For customer support or bulk purchase of activation pins call +2348136941462" wrapText="true">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+                                <!--<Label fx:id="supportNumber" text="+2348136941462" wrapText="true">
+                                    <font>
+                                        <Font size="14" name="System Regular Bold"/>
+                                    </font>
+                                </Label>-->
+                            </VBox>
                             <VBox.margin>
                                 <Insets left="50"/>
                             </VBox.margin>

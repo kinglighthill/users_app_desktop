@@ -33,7 +33,7 @@
 
     <center>
         <AnchorPane>
-            <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.rightAnchor="100" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="30">
+            <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.rightAnchor="250" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="30">
                 <StackPane style="-fx-background-color: white;">
                     <VBox spacing="25">
                         <VBox spacing="15">
@@ -85,7 +85,7 @@
                                 </padding>
                             </Panel>-->
 
-                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            <Panel style="-fx-border-color: #F1F1F1; -fx-border-radius: 8; -fx-cursor: hand;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="soundIcon" fitWidth="25" fitHeight="25" preserveRatio="true" pickOnBounds="true"/>
@@ -100,7 +100,7 @@
                                     </HBox>
                                 </left>
                                 <right>
-                                    <ToggleSwitch fx:id="soundSwitch" selected="true"/>
+                                    <ToggleSwitch id="sound-toggle" fx:id="soundSwitch" selected="true"/>
                                 </right>
                                 <padding>
                                     <Insets topRightBottomLeft="20"/>
@@ -158,7 +158,7 @@
                                 </padding>
                             </Panel>-->
 
-                            <Panel fx:id="aboutPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            <Panel fx:id="aboutPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8; -fx-cursor: hand;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="aboutIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -190,7 +190,7 @@
                                 </padding>
                             </Panel>
 
-                            <Panel fx:id="helpPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            <Panel fx:id="helpPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8; -fx-cursor: hand;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="helpIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -222,7 +222,7 @@
                                 </padding>
                             </Panel>
 
-                            <Panel fx:id="appInfoPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8;">
+                            <Panel fx:id="appInfoPanel" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8; -fx-cursor: hand;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="appInfoIcon" preserveRatio="true" pickOnBounds="true"/>

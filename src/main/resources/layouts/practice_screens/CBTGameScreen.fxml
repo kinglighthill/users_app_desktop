@@ -116,7 +116,7 @@
                               </VBox.margin>
                            </HBox>
 
-                           <VBox fx:id="questionVBox" alignment="TOP_CENTER">
+                           <VBox fx:id="questionVBox" alignment="CENTER">
                               <ScrollPane fx:id="questionScrollPane" fitToWidth="true" prefWidth="100" prefHeight="400">
                                  <Label fx:id="questionLabel" text="Simplify 0.000215 x 0.000028 and Express your answer in standard form" textAlignment="CENTER" textFill="#178102" wrapText="true" VBox.vgrow="ALWAYS">
                                     <font>

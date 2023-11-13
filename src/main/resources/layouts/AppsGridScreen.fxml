@@ -17,7 +17,7 @@
     <top>
         <VBox>
             <HBox spacing="10" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
-                <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+                <Button fx:id="backButton" maxHeight="30" maxWidth="30" style="-fx-cursor: hand;"/>
                 <Label fx:id="appsTitle" text="Mobile Apps" textFill="#053500">
                     <font>
                         <Font name="Gill Sans MT Bold" size="24"/>
@@ -45,8 +45,24 @@
                 </ImageView>
             </StackPane>
 
-            <GridView fx:id="appsGrid" cellWidth="250" cellHeight="200" verticalCellSpacing="10" horizontalCellSpacing="15"
-                      AnchorPane.leftAnchor="30" AnchorPane.topAnchor="70" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="20"/>
+            <StackPane AnchorPane.leftAnchor="30" AnchorPane.topAnchor="70" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="20">
+                <TilePane fx:id="appsTilePane" prefHeight="50" maxHeight="50" hgap="15" vgap="15" StackPane.alignment="TOP_LEFT">
+                    <padding>
+                        <Insets top="10" left="15"/>
+                    </padding>
+                </TilePane>
+
+                <HBox fx:id="noApplicationHBox" alignment="CENTER" visible="false" StackPane.alignment="TOP_CENTER">
+                    <VBox spacing="15" alignment="CENTER">
+                        <ImageView fx:id="noAppsImage" fitHeight="220" fitWidth="220"/>
+                        <Label text="Oops...No Item Available at the moment. Please check your Internet Connection and Try Again">
+                            <font>
+                                <Font size="20"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                </HBox>
+            </StackPane>
         </AnchorPane>
     </center>
 
