@@ -395,7 +395,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         cbtPracticePanel.setOnMouseEntered(e -> cbtPracticePanel.setStyle("-fx-background-color: #3289C6; -fx-background-radius: 10; -fx-cursor: hand;"));
         cbtPracticePanel.setOnMouseExited(e -> cbtPracticePanel.setStyle("-fx-background-color: #1B68AF; -fx-background-radius: 10;"));
 
-        novelsPanel.setOnMouseEntered(e -> novelsPanel.setStyle("-fx-background-color: #0EA362; -fx-background-radius: 10; -fx-cursor: hand;"));
+        novelsPanel.setOnMouseEntered(e -> novelsPanel.setStyle("-fx-background-color: #F1723B; -fx-background-radius: 10; -fx-cursor: hand;"));
         novelsPanel.setOnMouseExited(e -> novelsPanel.setStyle("-fx-background-color: #AD4518; -fx-background-radius: 10;"));
 
         studyNotesPanel.setOnMouseEntered(e -> studyNotesPanel.setStyle("-fx-background-color: #F5A100; -fx-background-radius: 10; -fx-cursor: hand;"));

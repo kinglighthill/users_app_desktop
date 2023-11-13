@@ -183,7 +183,7 @@
                            <ScrollPane fx:id="questionScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
                               <VBox fx:id="questionVBox" spacing="15" alignment="CENTER">
                                  <HBox fx:id="questionDescriptionHBox">
-                                    <Label fx:id="questionDescriptionHeader" wrapText="true" text="COMPREHENSION: Read the passage...">
+                                    <Label fx:id="questionDescriptionLabel" wrapText="true" text="COMPREHENSION: Read the passage...">
                                        <font>
                                           <Font size="16.0"/>
                                        </font>

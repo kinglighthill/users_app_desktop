@@ -143,6 +143,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
                     dialogDimmer.setVisible(true);
                     PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, true);
                     PreferencesManager.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
+                    PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
                     ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                 } else {
