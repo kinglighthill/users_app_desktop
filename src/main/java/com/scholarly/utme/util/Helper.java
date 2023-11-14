@@ -288,6 +288,39 @@ public class Helper {
         return latexContent.replace("{formula}", content);
     }
 
+    public static String loadLatexForCBT(Class mClass, String content, String fontSize, String fontColor) {
+        String cssPath = Objects.requireNonNull(mClass.getResource("/assets/katex/katex.min.css")).toExternalForm();
+        String jsPath = Objects.requireNonNull(mClass.getResource("/assets/katex/katex.min.js")).toExternalForm();
+        String autoRenderJsPath = Objects.requireNonNull(mClass.getResource("/assets/katex/contrib/auto-render.min.js")).toExternalForm();
+
+        String latexContent = """
+                <!DOCTYPE html>
+                <html>
+                    <head>
+                       <link rel="stylesheet" href="{cssPath}">
+                       <script defer src="{jsPath}"></script>
+                       <script defer src="{autoRenderJsPath}"
+                           onload="renderMathInElement(document.body, {
+                                delimiters: [
+                                     {left: '$$', right: '$$', display: false},
+                                     {left: '$', right: '$', display: false},
+                                ],
+                                throwOnError : false
+                           });"></script>
+                       <style type='text/css'>body {margin: 0px;padding: 0px;font-size: fontSize; font-style: 'Gilroy'; font-weight: bold; color: fontColor; text-align: center; align-items: center; justify-content: center; } </style>
+                     </head>
+                    <body>
+                        <div>{formula}</div>
+                    </body>
+                </html>""";
+        latexContent = latexContent.replace("{cssPath}", cssPath)
+                .replace("{jsPath}", jsPath)
+                .replace("{autoRenderJsPath}", autoRenderJsPath)
+                .replace("fontSize", fontSize)
+                .replace("fontColor", fontColor);
+        return latexContent.replace("{formula}", content);
+    }
+
     public static boolean checkNetworkConnectivity() {
         try {
             URL url = new URL(BASE_URL);
