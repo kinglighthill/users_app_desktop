@@ -332,4 +332,20 @@ public class Helper {
             return false;
         }
     }
+
+    public static boolean isOsType(OS_TYPE os_type) {
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.contains("win")) {
+            return os_type == OS_TYPE.WIN;
+        } else if (os.contains("nix") || os.contains("nux") || os.contains("mac")) {
+            return os_type == OS_TYPE.MAC;
+        } else {
+            return os_type == OS_TYPE.LINUX;
+        }
+    }
+
+    public enum OS_TYPE {
+        WIN, MAC, LINUX
+    }
 }
