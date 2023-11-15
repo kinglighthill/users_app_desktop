@@ -1,54 +1,170 @@
-Nov 13, 2023 7:33:36 PM com.scholarly.utme.MainApplication start
+Nov 15, 2023 10:47:44 AM com.scholarly.utme.MainApplication start
 INFO: Welcome to Scholarly.
-Nov 13, 2023 7:33:36 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:44 AM com.scholarly.utme.MainApplication logInfo
 INFO: Passing data: InitialData[screenToShow=HOME_SCREEN]
-Nov 13, 2023 7:33:36 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:44 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 13, 2023 7:33:36 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading com.scholarly.utme.controller.landing_screens.LandingScreenController
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: null
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: java.base/java.util.Objects.requireNonNull(Objects.java:208)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: java.base/sun.nio.fs.UnixFileSystem.getPath(UnixFileSystem.java:263)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: java.base/java.nio.file.Path.of(Path.java:147)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: com.scholarly.utme@0.3/com.scholarly.utme.data.util.DbConnection.getDbConnection(DbConnection.java:51)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: com.scholarly.utme@0.3/com.scholarly.utme.data.DatabaseService.<clinit>(DatabaseService.java:17)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: com.scholarly.utme@0.3/com.scholarly.utme.data.dao.NovelChapterDao.<clinit>(NovelChapterDao.java:26)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: com.scholarly.utme@0.3/com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM.<init>(LandingScreenHomeVM.java:57)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:67)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: java.base/java.lang.reflect.ReflectAccess.newInstance(ReflectAccess.java:128)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: java.base/jdk.internal.reflect.ReflectionFactory.newInstance(ReflectionFactory.java:341)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: java.base/java.lang.Class.newInstance(Class.java:677)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.DependencyInjector.getInstanceOf(DependencyInjector.java:74)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.ViewLoaderReflectionUtils.lambda$createAndInjectViewModel$4(ViewLoaderReflectionUtils.java:265)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.ReflectionUtils.lambda$accessMember$3(ReflectionUtils.java:165)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: java.base/java.security.AccessController.doPrivileged(AccessController.java:318)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.ReflectionUtils.accessMember(ReflectionUtils.java:161)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.ViewLoaderReflectionUtils.createAndInjectViewModel(ViewLoaderReflectionUtils.java:261)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader.handleInjection(FxmlViewLoader.java:377)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader.access$000(FxmlViewLoader.java:48)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader$DefaultControllerFactory.call(FxmlViewLoader.java:357)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader$DefaultControllerFactory.call(FxmlViewLoader.java:332)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.fxml@18.0.2/javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:941)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.fxml@18.0.2/javafx.fxml.FXMLLoader$InstanceDeclarationElement.processAttribute(FXMLLoader.java:981)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.fxml@18.0.2/javafx.fxml.FXMLLoader$Element.processStartElement(FXMLLoader.java:230)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.fxml@18.0.2/javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:755)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.fxml@18.0.2/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2808)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.fxml@18.0.2/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2634)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.fxml@18.0.2/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.fxml@18.0.2/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2516)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader.loadFxmlViewTuple(FxmlViewLoader.java:216)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader.loadFxmlViewTuple(FxmlViewLoader.java:82)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.FluentViewLoader$FxmlViewStep.load(FluentViewLoader.java:333)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: com.scholarly.utme@0.3/com.scholarly.utme.controller.landing_screens.LandingScreenController.initialize(LandingScreenController.java:94)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.fxml@18.0.2/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2655)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.fxml@18.0.2/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.fxml@18.0.2/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2516)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader.loadFxmlViewTuple(FxmlViewLoader.java:216)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader.loadFxmlViewTuple(FxmlViewLoader.java:82)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: de.saxsys.mvvmfx@1.8.0/de.saxsys.mvvmfx.FluentViewLoader$FxmlViewStep.load(FluentViewLoader.java:333)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: com.scholarly.utme@0.3/com.scholarly.utme.ui.utils.ViewSwitcher.showScreen(ViewSwitcher.java:19)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: com.scholarly.utme@0.3/com.scholarly.utme.MainApplication.start(MainApplication.java:75)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.graphics@19.0.2.1/com.sun.javafx.application.LauncherImpl.lambda$launchApplication1$9(LauncherImpl.java:847)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.graphics@19.0.2.1/com.sun.javafx.application.PlatformImpl.lambda$runAndWait$12(PlatformImpl.java:484)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.graphics@19.0.2.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:457)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.graphics@19.0.2.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:456)
+Nov 15, 2023 10:47:45 AM com.scholarly.utme.MainApplication log
+SEVERE: javafx.graphics@19.0.2.1/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:96)
+Nov 15, 2023 10:47:47 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading css
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:47 AM com.scholarly.utme.MainApplication logInfo
 INFO: Adding css
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:47 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting view
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:47 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting root
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:47 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication start
+Nov 15, 2023 10:47:47 AM com.scholarly.utme.MainApplication start
 INFO: MainApplication: Logged Out User -> false
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication start
+Nov 15, 2023 10:47:47 AM com.scholarly.utme.MainApplication start
 INFO: Move to Landing Screen
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:47 AM com.scholarly.utme.MainApplication logInfo
 INFO: Passing data: InitialData[screenToShow=HOME_SCREEN]
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:47 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:47 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading com.scholarly.utme.controller.landing_screens.LandingScreenController
-Nov 13, 2023 7:33:41 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:48 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading css
-Nov 13, 2023 7:33:41 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:48 AM com.scholarly.utme.MainApplication logInfo
 INFO: Adding css
-Nov 13, 2023 7:33:41 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:48 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting view
-Nov 13, 2023 7:33:41 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:48 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting root
-Nov 13, 2023 7:33:41 PM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:48 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
-INFO: Passing data: com.scholarly.utme.controller.HomeScreenController$InitialData@32436bc8
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
-INFO: Done
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
-INFO: Loading com.scholarly.utme.controller.HomeScreenController
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
-INFO: Loading css
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
-INFO: Adding css
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
-INFO: Setting view
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
-INFO: Setting root
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
-INFO: Done
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: Uncaught exception in thread: JavaFX Application Thread
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: java.base/java.util.AbstractList$RandomAccessSpliterator.checkAbstractListModCount(AbstractList.java:743)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: java.base/java.util.AbstractList$RandomAccessSpliterator.tryAdvance(AbstractList.java:707)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: java.base/java.util.stream.ReferencePipeline.forEachWithCancel(ReferencePipeline.java:129)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: java.base/java.util.stream.AbstractPipeline.copyIntoWithCancel(AbstractPipeline.java:527)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:513)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: com.scholarly.utme@0.3/com.scholarly.utme.controller.landing_screens.LandingScreenAppsController.displayMobileApps(LandingScreenAppsController.java:366)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: com.scholarly.utme@0.3/com.scholarly.utme.controller.landing_screens.LandingScreenAppsController$1$1.lambda$resendRequest$2(LandingScreenAppsController.java:183)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: javafx.graphics@19.0.2.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:457)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: javafx.graphics@19.0.2.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:456)
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.GlobalExceptionHandler uncaughtException
+SEVERE: javafx.graphics@19.0.2.1/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:96)
