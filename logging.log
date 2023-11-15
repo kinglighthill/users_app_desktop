@@ -1,58 +1,110 @@
-Nov 14, 2023 1:05:24 AM com.scholarly.utme.MainApplication start
+Nov 15, 2023 10:47:48 AM com.scholarly.utme.MainApplication start
 INFO: Welcome to Scholarly.
-Nov 14, 2023 1:05:24 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:49 AM com.scholarly.utme.MainApplication logInfo
 INFO: Passing data: InitialData[screenToShow=HOME_SCREEN]
-Nov 14, 2023 1:05:24 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:49 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 14, 2023 1:05:24 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:49 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading com.scholarly.utme.controller.landing_screens.LandingScreenController
-Nov 14, 2023 1:05:25 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:49 AM com.scholarly.utme.MainApplication logInfo
 INFO: Database Connecting..
-Nov 14, 2023 1:05:25 AM com.scholarly.utme.MainApplication logInfo
-INFO: DbConnection: Connection created successfully: org.sqlite.jdbc4.JDBC4Connection@5f0d61cd
-Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:50 AM com.scholarly.utme.MainApplication logInfo
+INFO: DbConnection: Connection created successfully: org.sqlite.jdbc4.JDBC4Connection@17931e42
+Nov 15, 2023 10:47:51 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading css
-Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:51 AM com.scholarly.utme.MainApplication logInfo
 INFO: Adding css
-Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:51 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting view
-Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:51 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting root
-Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:51 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication start
+Nov 15, 2023 10:47:51 AM com.scholarly.utme.MainApplication start
 INFO: MainApplication: Logged Out User -> false
-Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication start
+Nov 15, 2023 10:47:51 AM com.scholarly.utme.MainApplication start
 INFO: Move to Landing Screen
-Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:51 AM com.scholarly.utme.MainApplication logInfo
 INFO: Passing data: InitialData[screenToShow=HOME_SCREEN]
-Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:51 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:51 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading com.scholarly.utme.controller.landing_screens.LandingScreenController
-Nov 14, 2023 1:05:28 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:52 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading css
-Nov 14, 2023 1:05:28 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:52 AM com.scholarly.utme.MainApplication logInfo
 INFO: Adding css
-Nov 14, 2023 1:05:28 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:52 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting view
-Nov 14, 2023 1:05:28 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:52 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting root
-Nov 14, 2023 1:05:28 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:47:52 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
-INFO: Passing data: com.scholarly.utme.controller.HomeScreenController$InitialData@68be8f95
-Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
-INFO: Done
-Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
-INFO: Loading com.scholarly.utme.controller.HomeScreenController
-Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:48:27 AM com.scholarly.utme.MainApplication logInfo
+INFO: Loading com.scholarly.utme.controller.novel_screens.NovelScreenController
+Nov 15, 2023 10:48:27 AM com.scholarly.utme.MainApplication logInfo
+INFO: Database Connecting..
+Nov 15, 2023 10:48:28 AM com.scholarly.utme.MainApplication logInfo
+INFO: DbConnection: Connection created successfully: org.sqlite.jdbc4.JDBC4Connection@4849630e
+Nov 15, 2023 10:48:28 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading css
-Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:48:28 AM com.scholarly.utme.MainApplication logInfo
 INFO: Adding css
-Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:48:28 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting view
-Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:48:28 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting root
-Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
+Nov 15, 2023 10:48:28 AM com.scholarly.utme.MainApplication logInfo
+INFO: Done
+Nov 15, 2023 10:48:31 AM com.scholarly.utme.MainApplication logInfo
+INFO: Passing data: com.scholarly.utme.controller.novel_screens.NovelChapterListController$InitialData@1a1f6f48
+Nov 15, 2023 10:48:31 AM com.scholarly.utme.MainApplication logInfo
+INFO: Done
+Nov 15, 2023 10:48:31 AM com.scholarly.utme.MainApplication logInfo
+INFO: Loading com.scholarly.utme.controller.novel_screens.NovelChapterListController
+Nov 15, 2023 10:48:31 AM com.scholarly.utme.MainApplication logInfo
+INFO: Loading css
+Nov 15, 2023 10:48:31 AM com.scholarly.utme.MainApplication logInfo
+INFO: Adding css
+Nov 15, 2023 10:48:31 AM com.scholarly.utme.MainApplication logInfo
+INFO: Setting view
+Nov 15, 2023 10:48:31 AM com.scholarly.utme.MainApplication logInfo
+INFO: Setting root
+Nov 15, 2023 10:48:31 AM com.scholarly.utme.MainApplication logInfo
+INFO: Done
+Nov 15, 2023 10:48:33 AM com.scholarly.utme.MainApplication logInfo
+INFO: Passing data: com.scholarly.utme.controller.novel_screens.NovelContentScreenController$InitialData@79553e9a
+Nov 15, 2023 10:48:33 AM com.scholarly.utme.MainApplication logInfo
+INFO: Done
+Nov 15, 2023 10:48:33 AM com.scholarly.utme.MainApplication logInfo
+INFO: Loading com.scholarly.utme.controller.novel_screens.NovelContentScreenController
+Nov 15, 2023 10:48:33 AM com.scholarly.utme.MainApplication logInfo
+INFO: Database Connecting..
+Nov 15, 2023 10:48:33 AM com.scholarly.utme.MainApplication logInfo
+INFO: DbConnection: Connection created successfully: org.sqlite.jdbc4.JDBC4Connection@2103fd7f
+Nov 15, 2023 10:48:35 AM com.scholarly.utme.MainApplication logInfo
+INFO: Loading css
+Nov 15, 2023 10:48:35 AM com.scholarly.utme.MainApplication logInfo
+INFO: Adding css
+Nov 15, 2023 10:48:35 AM com.scholarly.utme.MainApplication logInfo
+INFO: Setting view
+Nov 15, 2023 10:48:35 AM com.scholarly.utme.MainApplication logInfo
+INFO: Setting root
+Nov 15, 2023 10:48:35 AM com.scholarly.utme.MainApplication logInfo
+INFO: Done
+Nov 15, 2023 10:48:46 AM com.scholarly.utme.MainApplication logInfo
+INFO: Passing data: com.scholarly.utme.controller.novel_screens.NovelChapterListController$InitialData@51d36939
+Nov 15, 2023 10:48:46 AM com.scholarly.utme.MainApplication logInfo
+INFO: Done
+Nov 15, 2023 10:48:46 AM com.scholarly.utme.MainApplication logInfo
+INFO: Loading com.scholarly.utme.controller.novel_screens.NovelChapterListController
+Nov 15, 2023 10:48:46 AM com.scholarly.utme.MainApplication logInfo
+INFO: Loading css
+Nov 15, 2023 10:48:46 AM com.scholarly.utme.MainApplication logInfo
+INFO: Adding css
+Nov 15, 2023 10:48:46 AM com.scholarly.utme.MainApplication logInfo
+INFO: Setting view
+Nov 15, 2023 10:48:46 AM com.scholarly.utme.MainApplication logInfo
+INFO: Setting root
+Nov 15, 2023 10:48:46 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
