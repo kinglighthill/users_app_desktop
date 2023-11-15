@@ -21,13 +21,11 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import okhttp3.*;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -36,6 +34,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
 import static com.scholarly.utme.network.model.DeviceInfo.getSystemProperties;
@@ -48,19 +47,21 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     @FXML
     private StackPane authenticationSection;
     @FXML
-    private VBox dimmer, signUpSection, loginSection, recoverPasswordSection, signUpNameSection, signUpEmailSection, signUpPasswordSection, signUpPhoneSection, loginEmailSection, loginPasswordSection;
+    private HBox enterReferralBox, enterReferralDialog;
     @FXML
-    private ImageView imageView, appIcon;
+    private VBox dimmer, signUpSection, loginSection, recoverPasswordSection, signUpNameSection, signUpEmailSection, signUpPasswordSection, signUpPhoneSection, loginEmailSection, loginPasswordSection, referralDimmer;
+    @FXML
+    private ImageView imageView, appIcon, inputReferralIcon;
     @FXML
     private ProgressIndicator progressBar;
     @FXML
-    private Label scholarlyText, beTheBestText, signUpHeaderText, signUpNameText, signUpEmailText, signUpPasswordText, signUpPhoneText, signUpContinueText, signUpHaveAccountText, signUpLoginText, forgotPasswordText, resetPasswordText;
+    private Label scholarlyText, beTheBestText, signUpHeaderText, signUpNameText, signUpEmailText, signUpPasswordText, signUpPhoneText, signUpContinueText, signUpHaveAccountText, signUpLoginText, forgotPasswordText, resetPasswordText, changeReferralCodeText;
     @FXML
-    private Label signUpEmailError, loginHeaderText, loginEmailText, loginPasswordText, loginContinueText, loginHaveAcctText, loginSignUpText, recoverHeaderText, recoverEmailText, recoverEmailPrompt, recoverLoginText;
+    private Label enterReferralPromptText, loginHeaderText, loginEmailText, loginPasswordText, loginContinueText, loginHaveAcctText, loginSignUpText, recoverHeaderText, recoverEmailText, recoverEmailPrompt, recoverLoginText, referralCodeText;
     @FXML
-    private Button signUpProceedButton, signUpGoogleButton, signUpFacebookButton, loginProceedButton, loginGoogleButton, loginFacebookButton, recoverProceedButton;
+    private Button signUpProceedButton, signUpGoogleButton, signUpFacebookButton, loginProceedButton, loginGoogleButton, loginFacebookButton, recoverProceedButton, enterReferralCancelButton, enterReferralDoneButton;
     @FXML
-    private TextField signUpNameField, signUpEmailField, signUpPasswordField, loginEmailField, loginPasswordField, recoverEmailField;
+    private TextField signUpNameField, signUpEmailField, signUpPasswordField, loginEmailField, loginPasswordField, recoverEmailField, referralCodeTextField;
     @FXML
     private CustomNumberField signUpPhoneField;
 
@@ -74,6 +75,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        AtomicReference<String> referralCode = new AtomicReference<>("");
         try {
             MainApplication.logInfo("Initializing authentication controller");
             boolean showSignUpScreen = getInitialData().showSignUpScreen;
@@ -172,9 +174,11 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 signUpPhoneSection.getChildren().remove(signUpPhoneError);
 
                 ReferrerInfo referrerInfo = new ReferrerInfo();
+                referrerInfo.setReferrerCode(referralCode.get());
                 UserRequest signupRequest = new UserRequest(fullName, email, phoneNumber, password, "nigeria", "fcm-token", "utme", false, null, getSystemProperties(), referrerInfo);
 
                 System.out.println(TAG + "Internet enabled -> " + internetEnabled);
+
                 if (internetEnabled) {
                     Task<Void> signupTask = new Task<>() {
                         @Override
@@ -344,8 +348,63 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     alertDialog.show();
                     hideProgressBar();
                     System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
-
+                    MainApplication.log(e);
                 }
+            });
+
+            TextFormatter<String> textFormatter = new TextFormatter<>(change -> {
+                if (!change.isContentChange()) {
+                    return change;
+                }
+
+                String text = change.getControlNewText();
+
+                if (text.length() > 6) {
+                    return null;
+                }
+                return change;
+            });
+
+            referralCodeTextField.setTextFormatter(textFormatter);
+            enterReferralDoneButton.setDisable(referralCodeTextField.getText().isEmpty());
+            referralCodeTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                enterReferralDoneButton.setDisable(newValue.length() < 6);
+            }));
+
+            enterReferralBox.setOnMouseClicked(event -> {
+                referralDimmer.setVisible(true);
+                Animations.fadeIn(enterReferralDialog, 200);
+            });
+
+            enterReferralDoneButton.setOnAction(event -> {
+                String enteredReferralCode = referralCodeTextField.getText();
+                if (!enteredReferralCode.isEmpty()) {
+                    referralCode.set(enteredReferralCode);
+                    referralCodeText.setText("Referral Code:  " + referralCode);
+                    enterReferralBox.getChildren().remove(inputReferralIcon);
+                    HBox.setMargin(changeReferralCodeText, new Insets(0, 0, 0, 200));
+                }
+                referralDimmer.setVisible(false);
+                Animations.fadeOut(enterReferralDialog, 200);
+            });
+
+            changeReferralCodeText.setOnMouseEntered(e -> changeReferralCodeText.setUnderline(true));
+            changeReferralCodeText.setOnMouseExited(e -> changeReferralCodeText.setUnderline(false));
+
+            changeReferralCodeText.setOnMouseClicked(event -> {
+                referralDimmer.setVisible(true);
+                Animations.fadeIn(enterReferralDialog, 200);
+            });
+
+            enterReferralCancelButton.setOnAction(event -> {
+                if (referralCodeTextField.getText().isEmpty()) {
+                    referralCodeText.setText("Enter Referral Code (Optional) ");
+                    if (!enterReferralBox.getChildren().contains(inputReferralIcon))
+                        enterReferralBox.getChildren().add(1, inputReferralIcon);
+                    HBox.setMargin(changeReferralCodeText, new Insets(0, 0, 0, 150));
+                }
+                referralDimmer.setVisible(false);
+                Animations.fadeOut(enterReferralDialog, 200);
             });
 
             MainApplication.logInfo("Done");
@@ -409,7 +468,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     }
 
                 } catch (Exception e) {
-                    System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                    System.out.println(TAG + "SIGN UP REQUEST -> Cannot parse response body to data class because -> " + e.getMessage());
                 }
             }
 
@@ -516,52 +575,60 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
         Call call = httpClient.newCall(request);
 
-        try(Response response = call.execute()) {
-            try (ResponseBody responseBody = response.body()) {
-                assert responseBody != null;
-                BaseResponse loginResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try(ResponseBody responseBody = response.body()) {
+                    assert responseBody != null;
+                    BaseResponse loginResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
-                if (loginResponse.getStatus().equalsIgnoreCase("success")) {
+                    if (loginResponse.getStatus().equalsIgnoreCase("success")) {
 
-                    String userId = loginResponse.getData().getUserData().getId();
-                    String userData = gson.toJson(loginResponse.getData().getUserData());
+                        String userId = loginResponse.getData().getUserData().getId();
+                        String userData = gson.toJson(loginResponse.getData().getUserData());
 
-                    PreferencesManager.put(PREF_KEY_USER_ID, userId);
-                    PreferencesManager.put(PREF_KEY_USER_DATA+userId, userData);
-                    PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, loginResponse.getData().getAccessToken());
-                    PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, loginResponse.getData().getRefreshToken());
-                    PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, loginResponse.getData().getActivationState().isActivationActive());
-                    PreferencesManager.put(PREF_KEY_ACTIVATE_MESSAGE, loginResponse.getData().getActivationState().getMessage());
+                        PreferencesManager.put(PREF_KEY_USER_ID, userId);
+                        PreferencesManager.put(PREF_KEY_USER_DATA+userId, userData);
+                        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, loginResponse.getData().getAccessToken());
+                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, loginResponse.getData().getRefreshToken());
+                        PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, loginResponse.getData().getActivationState().isActivationActive());
+//                        PreferencesManager.put(PREF_KEY_ACTIVATE_MESSAGE, loginResponse.getData().getActivationState().getMessage());
 
-                    System.out.println(TAG + "Logged in user with id -> " + PreferencesManager.get(PREF_KEY_USER_ID, ""));
-                    System.out.println(TAG + "Logged in user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
+                        System.out.println(TAG + "Logged in user with id -> " + PreferencesManager.get(PREF_KEY_USER_ID, ""));
+                        System.out.println(TAG + "Logged in user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
 
-                    Platform.runLater(() -> {
-                        ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-                        ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                        hideProgressBar();
-                    });
+                        Platform.runLater(() -> {
+                            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
+                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                            hideProgressBar();
+                        });
 
-                } else if (loginResponse.getStatus().equalsIgnoreCase("error")) {
-                    Platform.runLater(() -> {
-                        Alert alertDialog = Alerts.info(getClass(), "Error", loginResponse.getMessage(), "");
-                        alertDialog.show();
-                        hideProgressBar();
-                    });
+                    } else if (loginResponse.getStatus().equalsIgnoreCase("error")) {
+                        Platform.runLater(() -> {
+                            Alert alertDialog = Alerts.info(getClass(), "Error", loginResponse.getMessage(), "");
+                            alertDialog.show();
+                            hideProgressBar();
+                        });
 
+                    }
+
+                } catch (Exception e) {
+                    System.out.println(TAG + "LOGIN REQUEST -> Cannot parse response body to data class because -> " + e.getMessage());
+                    e.printStackTrace();
                 }
 
-            } catch (Exception e) {
-                System.out.println(TAG + "LOGIN_USER: Cannot parse response body to data class because -> " + e.getMessage());
             }
-        } catch (Exception e) {
-            Platform.runLater(() -> {
-                Alert alertDialog = Alerts.info(getClass(), "Error", "Could not connect because " + e.getMessage(), "");
-                alertDialog.show();
-                hideProgressBar();
-            });
-            System.out.println("Request failed with exception -> " + e.getMessage());
-        }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Platform.runLater(() -> {
+                    Alert alertDialog = Alerts.info(getClass(), "Error", "Could not sign up because " + e.getMessage(), "");
+                    alertDialog.show();
+                    hideProgressBar();
+                });
+                System.out.println("Request failed with exception -> " + e.getMessage());
+            }
+        });
 
     }
 
@@ -744,8 +811,11 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     }
 
     private void initializeViews() {
-        imageView.setImage(new Image(getClass().getResource("/drawable/signup_screen_image.jpg").toString()));
         appIcon.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
+//        imageView.setImage(new Image(getClass().getResource("/drawable/signup_screen_image.jpg").toString()));
+        imageView.setImage(new Image(getClass().getResource("/drawable/girl_with_book_image.png").toString()));
+        imageView.setFitWidth(ViewSwitcher.getRootScene().getWidth()/2);
+        imageView.setFitHeight(ViewSwitcher.getRootScene().getHeight()*2);
 
         ImageView googleImage = new ImageView(new Image(getClass().getResource("/drawable/google_icon.png").toString()));
         signUpGoogleButton.setGraphic(googleImage);
@@ -755,6 +825,11 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         loginGoogleButton.setGraphic(googleImage2);
         loginGoogleButton.setGraphicTextGap(20);
         loginGoogleButton.setBackground(Background.EMPTY);
+
+        inputReferralIcon.setImage(new Image(getClass().getResource("/drawable/settings_screen_images/expand_icon.png").toString()));
+
+        enterReferralCancelButton.setBackground(Background.EMPTY);
+        enterReferralDoneButton.setBackground(Background.EMPTY);
 
         /*ImageView facebookImage = new ImageView(new Image(getClass().getResource("/drawable/facebook_icon.png").toString()));
         signUpFacebookButton.setGraphic(facebookImage);
@@ -770,6 +845,8 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 30));
         beTheBestText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 26));
 
+        changeReferralCodeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM_ITALIC, 13));
+
         signUpHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
         signUpNameText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         signUpEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
@@ -784,8 +861,8 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 //        signUpFacebookButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         signUpHaveAccountText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         signUpLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-        recoverLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-
+        referralCodeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+        enterReferralPromptText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
 
         loginHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
         loginEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
@@ -807,6 +884,9 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         recoverLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
         recoverEmailPrompt.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+
+        enterReferralCancelButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        enterReferralDoneButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
     }
 
     private InitialData getInitialData() {

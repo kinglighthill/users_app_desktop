@@ -65,10 +65,14 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
                 dialog.showAndWait().filter(buttonType -> buttonType != ButtonType.YES).ifPresentOrElse(
                         buttonType -> event.consume(), () -> {
                             System.out.println(TAG + "Screen showing before exit -> " + ViewSwitcher.getCurrentView());
+                            PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
                             PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, ViewSwitcher.getCurrentView() == View.AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.PRE_AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.WELCOME_SCREEN);
                         }
                 );
             });
+
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
 
             boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
             if (firstTimeUser) {
@@ -129,6 +133,7 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
 
     public static void log(Exception exception) {
         if (fileHandler != null) {
+            logger.severe(exception.getMessage());
             for (StackTraceElement element : exception.getStackTrace()) {
                 logger.severe(element.toString());
             }

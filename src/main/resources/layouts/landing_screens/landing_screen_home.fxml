@@ -452,8 +452,8 @@
 
     <VBox fx:id="dimmer" style="-fx-background-color: rgb(255, 255, 255, 0.5);" visible="false"/>
 
-    <StackPane fx:id="selectSubjectPane" maxWidth="450" maxHeight="430" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 7;" visible="false">
-        <VBox alignment="CENTER" spacing="10" StackPane.alignment="TOP_CENTER">
+    <StackPane fx:id="selectSubjectPane" maxWidth="570" maxHeight="530" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 7;" visible="false">
+        <VBox alignment="CENTER" spacing="10" StackPane.alignment="TOP_CENTER" style="-fx-border-color: #F1F1F1; -fx-border-radius: 8 15 8 8;">
             <Label fx:id="selectFavoriteText" text="Select your favorite Subjects" textFill="#034801"/>
             <Label fx:id="moreThanOneText" text="Select one or more subjects. (You can change subjects later)" textFill="#034801">
                 <VBox.margin>
@@ -461,7 +461,7 @@
                 </VBox.margin>
             </Label>
 
-            <GridView fx:id="selectSubjectsGrid" prefWidth="150" prefHeight="200"  cellHeight="90" cellWidth="100" horizontalCellSpacing="10" verticalCellSpacing="10" StackPane.alignment="CENTER" style="-fx-cursor: hand;">
+            <GridView fx:id="selectSubjectsGrid" prefWidth="150" prefHeight="300"  cellHeight="90" cellWidth="100" horizontalCellSpacing="10" verticalCellSpacing="10" StackPane.alignment="CENTER" style="-fx-cursor: hand;">
                 <padding>
                     <Insets left="30" right="30"/>
                 </padding>

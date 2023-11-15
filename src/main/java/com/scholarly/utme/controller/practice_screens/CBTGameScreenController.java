@@ -3,7 +3,6 @@ package com.scholarly.utme.controller.practice_screens;
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
-import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
@@ -20,28 +19,24 @@ import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.media.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -55,7 +50,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private CBTGameScreenVM viewModel;
 
     @FXML
-    private WebView questionWebView, questionWithImageLabel;
+    private WebView questionWebView, questionWithImageWebView;
     @FXML
     private ScrollPane questionScrollPane;
     @FXML
@@ -75,7 +70,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     @FXML
     private Pane resultDialogDimmer, reportDialogDimmer;
     @FXML
-    private VBox resultDialog, reportDialog, incorrectAnswerPane, questionDescriptionDialog, questionVBox, questionWithImageVBox;
+    private VBox resultDialog, reportDialog, incorrectAnswerPane, questionDescriptionDialog, questionCenterVBox, questionVBox, questionWithImageVBox, questionLayoutLeft, questionLayoutRight;
   
     private Stage calculatorStage = new Stage();
 
@@ -102,6 +97,10 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         correctSound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
         wrongSound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
 
+        questionLayout.widthProperty().addListener((observable, oldValue, newValue) -> {
+            questionLayoutLeft.setMaxWidth(newValue.doubleValue()/2);
+            questionLayoutRight.setMaxWidth(newValue.doubleValue()/2);
+        });
 
         List<Button> options = new ArrayList<>();
         options.add(optionAButton);
@@ -479,16 +478,13 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
         String questionText = selectedQuestion.question().getQuestion();
 
-        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
+        questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
+
         if (questionText.contains("<img")) {
-            questionVBox.getChildren().add(questionWithImageVBox);
-            questionText = parseQuestionWithImageView(questionText);
+            showQuestionWithImage(questionText, Helper.isWebView(questionText));
         } else {
-            questionVBox.getChildren().add(questionScrollPane);
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-//            questionWebView.getEngine().loadContent(questionText);
+            showQuestion(questionText, Helper.isWebView(questionText));
         }
-//        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
 
         optionAButton.setUserData(0);
         optionBButton.setUserData(1);
@@ -516,7 +512,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         questionNumberLabel.setText("Question " + newValue + " of " + questions.size());
 
         List<ObjectiveQuestionDescription> questionDescriptionList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
-                questionDescription.getId() == selectedQuestion.question().getQuestionDescriptionId()).collect(Collectors.toList());
+                questionDescription.getId() == selectedQuestion.question().getQuestionDescriptionId()).toList();
 
         if (questionDescriptionList.isEmpty()) {
             readQuestionDesc.setVisible(false);
@@ -527,17 +523,13 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         }
 
         String questionText = selectedQuestion.question().getQuestion();
-        questionVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
-        if (questionText.contains("<img")) {
-            questionVBox.getChildren().add(questionWithImageVBox);
-            questionText = parseQuestionWithImageView(questionText);
-        } else {
-            questionVBox.getChildren().add(questionScrollPane);
-            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
-//            questionWebView.getEngine().loadContent(questionText);
-        }
+        questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWithImageVBox);
 
-//        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+        if (questionText.contains("<img")) {
+            showQuestionWithImage(questionText, Helper.isWebView(questionText));
+        } else {
+            showQuestion(questionText, Helper.isWebView(questionText));
+        }
 
         optionAButton.setUserData(0);
         optionBButton.setUserData(1);
@@ -555,6 +547,68 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         optionDButton.setDisable(false);
 
         updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
+    }
+
+    private void showQuestion(String questionText, boolean isWebView) {
+        questionCenterVBox.getChildren().remove(questionWithImageVBox);
+        if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+            questionCenterVBox.getChildren().add(questionScrollPane);
+        }
+        questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+
+        if (isWebView) {
+            questionVBox.getChildren().remove(questionLabel);
+            if (!questionVBox.getChildren().contains(questionWebView)) {
+                questionVBox.getChildren().add(questionWebView);
+            }
+            System.out.println(TAG + "Question is WebView!");
+
+            String content = Helper.loadLatexForCBT(getClass(), questionText, "28px", "#12AF20");
+            questionWebView.setMaxHeight(500);
+            questionWebView.getEngine().loadContent(content);
+
+        } else {
+            questionVBox.getChildren().remove(questionWebView);
+            if (!questionVBox.getChildren().contains(questionLabel)) {
+                questionVBox.getChildren().add(questionLabel);
+                questionLabel.setText(questionText);
+            }
+        }
+    }
+
+    private void showQuestionWithImage(String question, boolean isWebView) {
+        questionCenterVBox.getChildren().remove(questionScrollPane);
+        if (!questionCenterVBox.getChildren().contains(questionWithImageVBox)) {
+            questionCenterVBox.getChildren().add(questionWithImageVBox);
+        }
+
+        String extractedQuestion = extractQuestion(question, isWebView);
+
+        String imageUrl = extractImageUrl(question);
+
+        questionWithImageWebView.getEngine().loadContent(extractedQuestion);
+        questionImage.setImage(new Image(getClass().getResource(imageUrl).toString()));
+
+    }
+
+    private String extractQuestion(String text, boolean isWebView) {
+        String imageQuestion = text.substring(text.lastIndexOf("100%'")+6);
+        if (isWebView) {
+            imageQuestion = Helper.loadLatexForCBT(getClass(), imageQuestion, "28px", "#12AF20");
+        }
+        return imageQuestion;
+    }
+
+    private String extractImageUrl(String text) {
+        int startIndexOfImg = text.indexOf("<img");
+        int endIndexOfImg = text.indexOf("'100%'>", startIndexOfImg);
+
+        int startIndexOfImgPath = text.indexOf("/android_asset", startIndexOfImg);
+        int endIndexOfImgPath = text.indexOf("' width", startIndexOfImg);
+
+        String imagePath = text.substring(startIndexOfImgPath, endIndexOfImgPath);
+
+        return imagePath.replace("android_asset/images", "assets/images/pq");
     }
 
     private void updateBookmarkIcon() {
@@ -854,7 +908,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     }
 
     private String parseQuestionWithImageView(String questionWithImageText) {
-        return Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageLabel, questionWithImageText);
+        return Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText);
     }
 
 

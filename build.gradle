@@ -4,11 +4,12 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'org.javamodularity.moduleplugin' version '1.8.12'
     id 'org.beryx.jlink' version '2.25.0'
+    id 'signing'
 //    id 'org.sqlite'
 }
 
 group 'com.scholarly.utme'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 
 
@@ -30,6 +31,20 @@ targetCompatibility = '16'
 
 project.ext.buildDate = new Date()
 project.version = "0.3"
+
+tasks.register('stuffZip', Zip) {
+    archiveBaseName = 'stuff'
+    from 'src/main'
+}
+
+//signing {
+//    def signingKey = findProperty("signingKeyId")
+//    def signingPassword = findProperty("signingPassword")
+//    useInMemoryPgpKeys(signingKey as String, signingPassword as String)
+////    sign configurations.archives
+////    sign configurations.runtimeElements
+//    sign stuffZip
+//}
 
 application {
     mainModule = 'com.scholarly.utme'
@@ -65,6 +80,8 @@ jlink {
                 '--description', "Scholarly Jamb CBT App",
                 '--copyright', 'Copyrigth 2020-2024 Scholarly Educational Software Ltd'
         ]
+
+//        jvmArgs = ["-Djavafx.autoproxy.disable=true"]
 
         def currentOs = org.gradle.internal.os.OperatingSystem.current()
         def imgType = currentOs.windows ? 'ico' : currentOs.macOsX ? 'icns' : 'png'
@@ -111,8 +128,13 @@ jlink {
     }
 
     /*mergedModule {
-
+        additive = true
+        excludeRequires 'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing'
     }*/
+
+    mergedModule {
+
+    }
 }
 
 jpackage {

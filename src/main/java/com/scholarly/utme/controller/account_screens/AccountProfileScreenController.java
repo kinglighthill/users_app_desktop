@@ -487,6 +487,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                 alertDialog.show();
                 hideProgressBar();
                 System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
+                MainApplication.log(e);
             }
 
         });
