@@ -20,7 +20,8 @@ module com.scholarly.utme {
     requires io.reactivex.rxjava3;
     requires org.pdfsam.rxjavafx;
 //    requires sqlite.jdbc;
-    requires org.xerial.sqlitejdbc;
+//    requires org.xerial.sqlitejdbc;
+    requires io.github.willena.sqlitejdbc;
     requires de.saxsys.mvvmfx;
     requires freetts;
     requires com.google.gson;

@@ -1,6 +1,7 @@
 package com.scholarly.utme.data.util;
 
 import org.sqlite.SQLiteDataSource;
+import org.sqlite.mc.SQLiteMCSqlCipherConfig;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -14,7 +15,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class SQLiteDatabase implements AutoCloseable {
-
     private static final String DB_RESOURCE_NAME = "/assets/databases/jamb_utme.db";
 
     @FunctionalInterface
@@ -49,7 +49,11 @@ public class SQLiteDatabase implements AutoCloseable {
             extractDatabase();
 
             if (connection == null || connection.isClosed()) {
-                connection = source.getConnection();
+                connection =  SQLiteMCSqlCipherConfig
+                        .getV4Defaults()
+                        .withKey(Generator.Error())
+                        .build()
+                        .createConnection(source.getUrl());
             }
             return function.execute(connection);
         } finally {

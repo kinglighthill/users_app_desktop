@@ -178,20 +178,13 @@ dependencies {
     implementation ('com.jidesoft:jidefx-fields:0.9.1') {
         exclude group: 'org.openjfx', module: '*'
     }
-    /*implementation('eu.hansolo:tilesfx:16.0.3') {
-        exclude group: 'org.openjfx'
-    }*/
-
-    implementation('org.xerial:sqlite-jdbc:3.36.0.2') {
-        exclude group: 'org.sqlite', module: '*'
-    }
 
     implementation 'org.openjfx:javafx-controls:19.0.2.1'
 
     implementation 'org.openjfx:javafx-swing:19.0.2.1'
 
     // SQL connector
-//    implementation 'io.github.willena:sqlite-jdbc:3.35.5.3'
+    implementation 'io.github.willena:sqlite-jdbc:3.41.2.1'
 
     // RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.1.6'

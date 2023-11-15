@@ -9,6 +9,7 @@ public class GlobalExceptionHandler implements UncaughtExceptionHandler {
         System.out.println("Uncaught exception in thread: " + thread.getName());
         if (MainApplication.fileHandler != null) {
             MainApplication.logger.severe("Uncaught exception in thread: " + thread.getName());
+            MainApplication.logger.severe("Exception: " + throwable.toString());
             for (StackTraceElement element : throwable.getStackTrace()) {
                 MainApplication.logger.severe(element.toString());
             }
