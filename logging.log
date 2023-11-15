@@ -1,54 +1,58 @@
-Nov 13, 2023 7:33:36 PM com.scholarly.utme.MainApplication start
+Nov 14, 2023 1:05:24 AM com.scholarly.utme.MainApplication start
 INFO: Welcome to Scholarly.
-Nov 13, 2023 7:33:36 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:24 AM com.scholarly.utme.MainApplication logInfo
 INFO: Passing data: InitialData[screenToShow=HOME_SCREEN]
-Nov 13, 2023 7:33:36 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:24 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 13, 2023 7:33:36 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:24 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading com.scholarly.utme.controller.landing_screens.LandingScreenController
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:25 AM com.scholarly.utme.MainApplication logInfo
+INFO: Database Connecting..
+Nov 14, 2023 1:05:25 AM com.scholarly.utme.MainApplication logInfo
+INFO: DbConnection: Connection created successfully: org.sqlite.jdbc4.JDBC4Connection@5f0d61cd
+Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading css
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
 INFO: Adding css
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting view
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting root
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication start
+Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication start
 INFO: MainApplication: Logged Out User -> false
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication start
+Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication start
 INFO: Move to Landing Screen
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
 INFO: Passing data: InitialData[screenToShow=HOME_SCREEN]
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 13, 2023 7:33:39 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:27 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading com.scholarly.utme.controller.landing_screens.LandingScreenController
-Nov 13, 2023 7:33:41 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:28 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading css
-Nov 13, 2023 7:33:41 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:28 AM com.scholarly.utme.MainApplication logInfo
 INFO: Adding css
-Nov 13, 2023 7:33:41 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:28 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting view
-Nov 13, 2023 7:33:41 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:28 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting root
-Nov 13, 2023 7:33:41 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:05:28 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
-INFO: Passing data: com.scholarly.utme.controller.HomeScreenController$InitialData@32436bc8
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
+INFO: Passing data: com.scholarly.utme.controller.HomeScreenController$InitialData@68be8f95
+Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading com.scholarly.utme.controller.HomeScreenController
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
 INFO: Loading css
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
 INFO: Adding css
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting view
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
 INFO: Setting root
-Nov 13, 2023 7:33:48 PM com.scholarly.utme.MainApplication logInfo
+Nov 14, 2023 1:06:45 AM com.scholarly.utme.MainApplication logInfo
 INFO: Done
