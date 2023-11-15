@@ -8,7 +8,7 @@
 <?import javafx.scene.text.*?>
 
 <?import javafx.scene.web.WebView?>
-<BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.practice_screens.CBTGameScreenController">
+<BorderPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.practice_screens.CBTGameScreenController">
    <top>
       <ToolBar prefHeight="84.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER">
         <items>
@@ -95,7 +95,7 @@
 
                <HBox fx:id="questionLayout" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                   <children>
-                     <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <VBox fx:id="questionLayoutLeft" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                         <children>
                            <HBox>
                               <Label fx:id="questionDescriptionHeader" prefWidth="200" prefHeight="20" text="COMPREHENSION: Read the passage..." textFill="#178102" ellipsisString=".." wrapText="true">
@@ -116,22 +116,27 @@
                               </VBox.margin>
                            </HBox>
 
-                           <VBox fx:id="questionVBox" alignment="CENTER">
-                              <ScrollPane fx:id="questionScrollPane" fitToWidth="true" prefWidth="100" prefHeight="400">
-                                 <Label fx:id="questionLabel" text="Simplify 0.000215 x 0.000028 and Express your answer in standard form" textAlignment="CENTER" textFill="#178102" wrapText="true" VBox.vgrow="ALWAYS">
-                                    <font>
-                                       <Font size="24.0" />
-                                    </font>
-                                    <padding>
-                                       <Insets topRightBottomLeft="10"/>
-                                    </padding>
-                                 </Label>
-                                 <!--<WebView fx:id="questionWebView" VBox.vgrow="ALWAYS">
-                                 </WebView>-->
+                           <VBox fx:id="questionCenterVBox" alignment="CENTER">
+                              <ScrollPane fx:id="questionScrollPane" fitToWidth="true" prefWidth="100" prefHeight="600" style="-fx-background-color: white;">
+                                 <VBox fx:id="questionVBox" alignment="CENTER">
+                                    <Label fx:id="questionLabel" alignment="CENTER" textAlignment="CENTER" textFill="#178102" wrapText="true" VBox.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="24.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets topRightBottomLeft="10"/>
+                                       </padding>
+                                    </Label>
+
+                                    <WebView fx:id="questionWebView" VBox.vgrow="ALWAYS"/>
+                                 </VBox>
+                                 <padding>
+                                    <Insets bottom="20"/>
+                                 </padding>
                               </ScrollPane>
                               <VBox fx:id="questionWithImageVBox" spacing="5" prefHeight="400" prefWidth="300" alignment="TOP_CENTER" StackPane.alignment="TOP_CENTER">
                                  <ImageView fx:id="questionImage" fitHeight="200" fitWidth="300" StackPane.alignment="TOP_CENTER"/>
-                                 <WebView fx:id="questionWithImageLabel" prefWidth="600">
+                                 <WebView fx:id="questionWithImageWebView" prefWidth="600" prefHeight="1000">
                                     <!--<font>
                                        <Font size="16"/>
                                     </font>-->
@@ -148,7 +153,7 @@
                         </padding>
                      </VBox>
                      <Separator orientation="VERTICAL" prefHeight="200.0" />
-                     <VBox spacing="20" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <VBox fx:id="questionLayoutRight" spacing="20" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                         <children>
                            <Button fx:id="optionAButton" userData="0" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" style="-fx-background-color: ##F7B71D; -fx-border-radius: 34; -fx-border-width: 2; -fx-border-color: #00ffff; -fx-cursor: hand;" text="Button"/>
 
@@ -343,7 +348,7 @@
          </VBox>
 
          <VBox fx:id="questionDescriptionDialog" spacing="15" maxHeight="450.0" maxWidth="400.0" prefHeight="400.0" prefWidth="250.0" StackPane.alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
-            <ImageView fx:id="quesDescriptionCloseIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
+            <ImageView fx:id="quesDescriptionCloseIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;"/>
             <ScrollPane fitToWidth="true" prefWidth="200" prefHeight="400" style="-fx-background-color: white;">
                <Label fx:id="questionDescriptionText"  wrapText="true" alignment="TOP_CENTER">
                   <font>
