@@ -537,13 +537,6 @@
                 <Insets top="16" right="16"/>
             </StackPane.margin>
         </ImageView>
-
-        <!--<padding>
-            <Insets bottom="10"/>
-        </padding>
-        <StackPane.margin>
-            <Insets bottom="40"/>
-        </StackPane.margin>-->
     </StackPane>
 
 </StackPane>
