@@ -125,7 +125,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         phoneTextField.setText(viewModel.getUser().getPhoneNumber());
 
 //        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
-        String deviceId = DeviceInfo.getSystemProperties().getDeviceId().replaceAll("-", "").substring(0, 16);
+        String deviceId = DeviceInfo.getSystemProperties().getDeviceId();
         deviceIdLabel.setText(deviceId.toUpperCase());
 
         changeMailHereLabel.setOnMouseClicked(event -> {

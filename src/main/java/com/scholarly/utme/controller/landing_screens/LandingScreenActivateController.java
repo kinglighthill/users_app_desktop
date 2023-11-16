@@ -9,6 +9,7 @@ import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.network.model.DeviceInfo;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.Constants;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenActivateVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -61,6 +62,10 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
     private final OkHttpClient httpClient = NetworkService.getHttpClient();
 
+
+    private static int MAX_PIN_LENGTH = 16;
+    private static int SPACE_INTERVAL = 4;
+
     MainApplication application = new MainApplication();
 
     interface NetworkCallback {
@@ -90,7 +95,9 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
             headerLabel.setText("Enter your 16 digits activation pin to get unlimited access to the app's content");
         }
 
-        activateButton.setDisable(activationPinTextField.getText().length() < 16);
+        activateButton.setDisable(
+                isActivationPinValid(activationPinTextField.getText(), false)
+        );
 
         TextFormatter<String> textFormatter = new TextFormatter<>(change -> {
             if (!change.isContentChange()) {
@@ -99,20 +106,24 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
             String text = change.getControlNewText();
 
-            if (text.length() > 16) {
+            if (isActivationPinValid(text, true)) {
                 return null;
             }
+
             return change;
         });
 
         activationPinTextField.setTextFormatter(textFormatter);
 
-        activationPinTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            activateButton.setDisable(newValue.length() < 16);
-        });
+        activationPinTextField.textProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    String formattedText = Helper.addRemoveSpaces(newValue, MAX_PIN_LENGTH, SPACE_INTERVAL);
+                    activationPinTextField.setText(formattedText);
+                    activationPinTextField.positionCaret(formattedText.length());
+                    activateButton.setDisable(isActivationPinValid(newValue, false));
+                });
 
         activateButton.setOnAction(event -> {
-
             showProgressBar();
             // Check for internet connectivity
             try {
@@ -125,7 +136,6 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
                 String ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
 
-//                String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
                 String encodedDeviceId = DeviceInfo.getSystemProperties().getDeviceId();
 
                 ActivationInfo activationInfo = new ActivationInfo(activationPinTextField.getText(), encodedDeviceId);
@@ -273,12 +283,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
             ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
         });
 
-//        activationSuccessfulCloseIcon.setOnMouseClicked(mouseEvent -> {
-//            Animations.hideDialog(activationSuccessfulPane, dialogDimmer);
-//        });
-
         continueButton.setOnAction(event -> {
-//            ViewSwitcher.passData(false);
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
     }
@@ -313,14 +318,18 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
                         } else if (activationResponse.getStatus().equalsIgnoreCase("error")) {
                             Platform.runLater(() -> {
+                                hideProgressBar();
                                 Alert alertDialog = Alerts.info(getClass(), "Error", activationResponse.getMessage(), "");
                                 alertDialog.show();
-                                hideProgressBar();
                             });
                         }
-
                     } catch (Exception e) {
                         System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                        Platform.runLater(() -> {
+                            hideProgressBar();
+                            Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong", "");
+                            alertDialog.show();
+                        });
                     }
                 }
             }
@@ -328,9 +337,9 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
             @Override
             public void onFailure(Call call, IOException e) {
                 Platform.runLater(() -> {
+                    hideProgressBar();
                     Alert alertDialog = Alerts.info(getClass(), "Error", "Could not connect because " + e.getMessage(), "");
                     alertDialog.show();
-                    hideProgressBar();
                 });
                 System.out.println(TAG + "Request failed with exception -> " + e.getMessage());
             }
@@ -356,5 +365,13 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
     private void initializeFonts() {
 
+    }
+
+    private boolean isActivationPinValid(String pin, boolean equals) {
+        if (equals) {
+            return pin.replace(" ", "").length() - 1 == MAX_PIN_LENGTH;
+        } else {
+            return pin.replace(" ", "").length() < MAX_PIN_LENGTH;
+        }
     }
 }
