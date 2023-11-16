@@ -348,4 +348,29 @@ public class Helper {
     public enum OS_TYPE {
         WIN, MAC, LINUX
     }
+
+    public static String addRemoveSpaces(String input , int maxLength, int interval) {
+        char space = ' ';
+        int limit = (int) Math.floor(((double) (maxLength - 1)) / ((double) interval));
+
+        String editable = input;
+        if (!editable.isEmpty() && editable.length() % (interval + 1) == 0) {
+            char c = editable.charAt(editable.length() - 1);
+            if (space == c) {
+                editable = editable.substring(0, editable.length() - 1);
+            }
+        }
+
+        for (int i = 1; i <= limit; i++) {
+            int pos = (interval + 1) * i - 1;
+            if (editable.length() > pos) {
+                char c = editable.charAt(pos);
+                if (Character.isDigit(c) && editable.split(String.valueOf(space)).length <= limit) {
+                    editable = editable.substring(0, pos) + space + editable.substring(pos);
+                }
+            }
+        }
+
+        return editable;
+    }
 }

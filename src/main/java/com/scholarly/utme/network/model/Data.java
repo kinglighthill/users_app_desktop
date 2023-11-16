@@ -8,6 +8,7 @@ import java.util.List;
 public class Data {
     @SerializedName("access_token")
     private String accessToken;
+    @SerializedName("refresh_token")
     private String refreshToken;
     @SerializedName("full_name")
     private String fullName;

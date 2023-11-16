@@ -62,7 +62,7 @@ public class DeviceInfo {
     }
 
     public String getDeviceId() {
-        return deviceId;
+        return deviceId.replaceAll("-", "").substring(0, 16);
     }
 
     public String getAppVersionName() {

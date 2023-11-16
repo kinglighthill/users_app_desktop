@@ -532,7 +532,11 @@
             </HBox>-->
         </VBox>
 
-        <ImageView fx:id="selectSubjectCloseIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_RIGHT" style="-fx-cursor: hand;"/>
+        <ImageView fx:id="selectSubjectCloseIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_RIGHT" style="-fx-cursor: hand;">
+            <StackPane.margin>
+                <Insets top="16" right="16"/>
+            </StackPane.margin>
+        </ImageView>
 
         <!--<padding>
             <Insets bottom="10"/>
