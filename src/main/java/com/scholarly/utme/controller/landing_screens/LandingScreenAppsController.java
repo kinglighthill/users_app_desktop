@@ -149,6 +149,10 @@ public class LandingScreenAppsController implements FxmlView<LandingScreenAppsVM
                                                 });
                                             }
                                         } catch (Exception e) {
+                                            Platform.runLater(() -> {
+                                                Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                                                alertDialog.show();
+                                            });
                                             System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                                         }
                                         response.close();

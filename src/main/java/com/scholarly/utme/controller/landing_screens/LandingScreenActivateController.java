@@ -138,7 +138,10 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
                 String encodedDeviceId = DeviceInfo.getSystemProperties().getDeviceId();
 
-                ActivationInfo activationInfo = new ActivationInfo(activationPinTextField.getText(), encodedDeviceId);
+                ActivationInfo activationInfo = new ActivationInfo(
+                        activationPinTextField.getText().replace(" ", ""),
+                        encodedDeviceId
+                );
 
                 Gson gson = new Gson();
                 String json = gson.toJson(activationInfo);
@@ -191,6 +194,11 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                                         });
                                     }
                                 } catch (Exception e) {
+                                    Platform.runLater(() -> {
+                                        hideProgressBar();
+                                        Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                                        alertDialog.show();
+                                    });
                                     System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                                 }
 
@@ -200,7 +208,6 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                             Platform.runLater(() -> {
                                 Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
                                 alertDialog.show();
-
                             });
                         }
                     }
@@ -324,12 +331,12 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                             });
                         }
                     } catch (Exception e) {
-                        System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                         Platform.runLater(() -> {
                             hideProgressBar();
-                            Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong", "");
+                            Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
                             alertDialog.show();
                         });
+                        System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                     }
                 }
             }

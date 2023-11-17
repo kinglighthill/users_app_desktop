@@ -354,7 +354,6 @@ public class AppsGridScreenController implements FxmlView<AppsGridScreenVM>, Ini
                 } catch (Exception e) {
                     System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                     Platform.runLater(this::showEmptyAppsScreen);
-
                 }
             }
         } catch (Exception e) {

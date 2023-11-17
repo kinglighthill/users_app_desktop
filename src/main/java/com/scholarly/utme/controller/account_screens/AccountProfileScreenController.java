@@ -217,6 +217,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                                                 });
                                             }
                                         } catch (Exception e) {
+                                            Platform.runLater(() -> {
+                                                hideProgressBar();
+                                                Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                                                alertDialog.show();
+                                            });
                                             System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                                         }
                                     }
@@ -289,6 +294,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                                             }
 
                                         } catch (Exception e) {
+                                            Platform.runLater(() -> {
+                                                hideProgressBar();
+                                                Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                                                alertDialog.show();
+                                            });
                                             System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                                         }
                                     }
@@ -396,6 +406,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                                                 });
                                             }
                                         } catch (Exception e) {
+                                            Platform.runLater(() -> {
+                                                hideProgressBar();
+                                                Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                                                alertDialog.show();
+                                            });
                                             System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                                         }
                                     }
@@ -460,6 +475,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                                             }
                                             response.close();
                                         } catch (Exception e) {
+                                            Platform.runLater(() -> {
+                                                hideProgressBar();
+                                                Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                                                alertDialog.show();
+                                            });
                                             System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                                         }
                                     }
@@ -685,6 +705,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                         }
                         response.close();
                     } catch (Exception e) {
+                        Platform.runLater(() -> {
+                            hideProgressBar();
+                            Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                            alertDialog.show();
+                        });
                         System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                     }
 
@@ -766,6 +791,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                         }
 
                     } catch (Exception e) {
+                        Platform.runLater(() -> {
+                            hideProgressBar();
+                            Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                            alertDialog.show();
+                        });
                         System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                     }
                 }

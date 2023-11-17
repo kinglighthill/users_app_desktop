@@ -243,12 +243,11 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     loginThread.start();
 
                 } catch (Exception e) {
+                    hideProgressBar();
                     Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
                     alertDialog.show();
-                    hideProgressBar();
                     System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
                 }
-
             });
 
             recoverProceedButton.setOnAction(event -> {
@@ -468,6 +467,11 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     }
 
                 } catch (Exception e) {
+                    Platform.runLater(() -> {
+                        hideProgressBar();
+                        Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                        alertDialog.show();
+                    });
                     System.out.println(TAG + "SIGN UP REQUEST -> Cannot parse response body to data class because -> " + e.getMessage());
                 }
             }
@@ -541,6 +545,11 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     }
 
                 } catch (Exception e) {
+                    Platform.runLater(() -> {
+                        hideProgressBar();
+                        Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                        alertDialog.show();
+                    });
                     System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                 }
                 callback.stopServer();
@@ -583,7 +592,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     BaseResponse loginResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
                     if (loginResponse.getStatus().equalsIgnoreCase("success")) {
-
                         String userId = loginResponse.getData().getUserData().getId();
                         String userData = gson.toJson(loginResponse.getData().getUserData());
 
@@ -598,21 +606,25 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         System.out.println(TAG + "Logged in user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
 
                         Platform.runLater(() -> {
+                            hideProgressBar();
                             ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
                             ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                            hideProgressBar();
                         });
 
                     } else if (loginResponse.getStatus().equalsIgnoreCase("error")) {
                         Platform.runLater(() -> {
+                            hideProgressBar();
                             Alert alertDialog = Alerts.info(getClass(), "Error", loginResponse.getMessage(), "");
                             alertDialog.show();
-                            hideProgressBar();
                         });
-
                     }
 
                 } catch (Exception e) {
+                    Platform.runLater(() -> {
+                        hideProgressBar();
+                        Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                        alertDialog.show();
+                    });
                     System.out.println(TAG + "LOGIN REQUEST -> Cannot parse response body to data class because -> " + e.getMessage());
                     e.printStackTrace();
                 }
@@ -622,9 +634,9 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             @Override
             public void onFailure(Call call, IOException e) {
                 Platform.runLater(() -> {
+                    hideProgressBar();
                     Alert alertDialog = Alerts.info(getClass(), "Error", "Could not sign up because " + e.getMessage(), "");
                     alertDialog.show();
-                    hideProgressBar();
                 });
                 System.out.println("Request failed with exception -> " + e.getMessage());
             }
@@ -674,6 +686,11 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     }
 
                 } catch (Exception e) {
+                    Platform.runLater(() -> {
+                        hideProgressBar();
+                        Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                        alertDialog.show();
+                    });
                     System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                 }
 
