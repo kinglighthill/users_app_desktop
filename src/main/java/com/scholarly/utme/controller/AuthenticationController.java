@@ -813,9 +813,9 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     private void initializeViews() {
         appIcon.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
 //        imageView.setImage(new Image(getClass().getResource("/drawable/signup_screen_image.jpg").toString()));
-        imageView.setImage(new Image(getClass().getResource("/drawable/girl_with_book_image.png").toString()));
+        imageView.setImage(new Image(getClass().getResource("/drawable/welcome_image.png").toString()));
         imageView.setFitWidth(ViewSwitcher.getRootScene().getWidth()/2);
-        imageView.setFitHeight(ViewSwitcher.getRootScene().getHeight()*2);
+//        imageView.setFitHeight(ViewSwitcher.getRootScene().getHeight()*2);
 
         ImageView googleImage = new ImageView(new Image(getClass().getResource("/drawable/google_icon.png").toString()));
         signUpGoogleButton.setGraphic(googleImage);

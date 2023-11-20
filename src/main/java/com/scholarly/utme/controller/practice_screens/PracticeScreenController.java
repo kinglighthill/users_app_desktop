@@ -495,7 +495,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 textToRead.append(". Option B, ").append(selectedQuestion.getOptionB().getText());
                 textToRead.append(". Option C, ").append(selectedQuestion.getOptionC().getText());
                 textToRead.append(". Option D, ").append(selectedQuestion.getOptionD().getText());
-                TextToSpeech.play(textToRead.toString());
+                if (!Helper.isWebView(selectedQuestion.getQuestion())) {
+                    TextToSpeech.play(textToRead.toString());
+                }
             } else {
                 TextToSpeech.play(((TheoryQuestion) questionState.getQuestion()).getQuestion());
             }
@@ -585,7 +587,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         quesDescriptionCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
         speakerImage.setImage(new Image(getClass().getResource("/drawable/speaker.png").toString()));
 //        flagImage.setImage(new Image(getClass().getResource("/drawable/flag2.png").toString()));
-        timeImage.setImage(new Image(getClass().getResource("/drawable/practice_screen_images/time_image.jpg").toString()));
+        timeImage.setImage(new Image(getClass().getResource("/drawable/timer_clock.png").toString()));
 
         ImageView prevImage = new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/prev_btn_icon.png").toString()));
         prevButton.setGraphicTextGap(15);

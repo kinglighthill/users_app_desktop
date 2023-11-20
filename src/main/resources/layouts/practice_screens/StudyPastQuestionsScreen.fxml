@@ -188,6 +188,7 @@
                                                     </padding>
                                                 </Label>
                                             </ScrollPane>
+                                            <ImageView fx:id="explanationImage" fitHeight="200" fitWidth="300"/>
                                             <WebView fx:id="explanationWebView"/>
                                         </children>
                                     </VBox>

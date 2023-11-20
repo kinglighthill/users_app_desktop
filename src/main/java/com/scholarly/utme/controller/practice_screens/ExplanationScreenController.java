@@ -220,12 +220,16 @@ public class ExplanationScreenController implements FxmlView<ExplanationScreenVM
 
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                 // System.out.println("Question: " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
-                StringBuilder textToRead = new StringBuilder(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
-                textToRead.append(". Option A, ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionA().getText());
-                textToRead.append(". Option B, ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionB().getText());
-                textToRead.append(". Option C, ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionC().getText());
-                textToRead.append(". Option D, ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionD().getText());
-                TextToSpeech.play(textToRead.toString());
+                ObjectiveQuestion currentQuestion = ((ObjectiveQuestion) questionState.getQuestion());
+                StringBuilder textToRead = new StringBuilder(currentQuestion.getQuestion());
+                textToRead.append(". Option A, ").append(currentQuestion.getOptionA().getText());
+                textToRead.append(". Option B, ").append(currentQuestion.getOptionB().getText());
+                textToRead.append(". Option C, ").append(currentQuestion.getOptionC().getText());
+                textToRead.append(". Option D, ").append(currentQuestion.getOptionD().getText());
+
+                if (!Helper.isWebView(currentQuestion.getQuestion())) {
+                    TextToSpeech.play(textToRead.toString());
+                }
             } else {
                 TextToSpeech.play(((TheoryQuestion) questionState.getQuestion()).getQuestion());
             }
