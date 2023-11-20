@@ -183,11 +183,19 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
         });
 
         paystackButton.setOnAction(event -> {
-            UserData user = viewModel.getUser();
-            String firstName = user.getFullName().split(" ")[1];
-            String lastName = user.getFullName().split(" ")[2];
-            String paystackUrl = PAYSTACK_URL + "?first_name=" + firstName + "&last_name=" + lastName + "&email=" + user.getEmail() + "&phone=" + user.getPhoneNumber();
-            application.openBrowser(paystackUrl);
+            try {
+                UserData user = viewModel.getUser();
+                String[] names = user.getFullName().split(" ");
+                String firstName = names[0];
+                String lastName = "";
+                if (names.length > 1) {
+                    lastName = names[names.length - 1];
+                }
+                String paystackUrl = PAYSTACK_URL + "?first_name=" + firstName + "&last_name=" + lastName + "&email=" + user.getEmail() + "&phone=" + user.getPhoneNumber();
+                application.openBrowser(paystackUrl);
+            } catch (Exception exception) {
+                application.openBrowser(PAYSTACK_URL);
+            }
         });
 
         chatUsLabel.setOnMouseClicked(event -> {

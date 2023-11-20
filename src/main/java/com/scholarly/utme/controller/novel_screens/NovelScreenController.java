@@ -49,7 +49,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
     private StackPane centerStackPane;
 
     @FXML
-    private Label infoText, novelDescription, authorLabel, chaptersLabel, timeText, pageTitle;
+    private Label infoText, novelDescription, authorLabel, chaptersLabel/*, timeText*/, pageTitle;
 
     @FXML
     private RadioButton dontShowButton;
@@ -61,7 +61,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
     private VBox centerVBox, novelsVBox, novelPrompt;
 
     @FXML
-    private ImageView novelImage, authorIcon, chaptersIcon, timeIcon;
+    private ImageView novelImage, authorIcon, chaptersIcon/*, timeIcon*/;
 
     @InjectViewModel
     private NovelScreenVM viewModel;
@@ -88,7 +88,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
                 Label header = new Label(categoryGenreTitle);
                 header.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
 
-                Button viewAllButton = new Button("View all");
+                /*Button viewAllButton = new Button("View all");
                 viewAllButton.setTextFill(Paint.valueOf("#12AF20"));
                 viewAllButton.setStyle("-fx-border-color: #12AF20; -fx-border-radius: 5; -fx-cursor: hand;");
                 viewAllButton.setPadding(new Insets(5, 10, 5, 10));
@@ -97,7 +97,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
                 viewAllButton.setOnAction(event -> {
                     ViewSwitcher.passData(new NovelGridScreenController.InitialData(categoryGenreTitle, novelModels));
                     ViewSwitcher.showScreen(View.NOVEL_GRID_SCREEN);
-                });
+                });*/
 
                 ListView<NovelModel> listView = new ListView<>(FXCollections.observableArrayList(novelModels.stream().limit(4).collect(Collectors.toList())));
                 listView.setOrientation(Orientation.HORIZONTAL);
@@ -167,7 +167,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
                 });
 
                 panel.setLeft(header);
-                panel.setRight(viewAllButton);
+//                panel.setRight(viewAllButton);
                 panel.setBottom(tilePane);
 
                 novelsVBox.getChildren().add(panel);
@@ -178,21 +178,21 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
             if (newValue != null) {
                 authorIcon.setVisible(true);
                 chaptersIcon.setVisible(true);
-                timeIcon.setVisible(true);
+//                timeIcon.setVisible(true);
                 readButton.setVisible(true);
-                timeText.setVisible(true);
+//                timeText.setVisible(true);
 
                 novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getNovel().getImagePath()).toString()));
                 novelDescription.setText(newValue.getNovel().getAbout());
                 authorLabel.setText(viewModel.getAuthor(newValue.getNovel()).getName());
                 chaptersLabel.setText(newValue.getChapterText());
-                timeText.setText(newValue.getTimeText());
+//                timeText.setText(newValue.getTimeText());
             } else {
                 authorIcon.setVisible(false);
                 chaptersIcon.setVisible(false);
-                timeIcon.setVisible(false);
+//                timeIcon.setVisible(false);
                 readButton.setVisible(false);
-                timeText.setVisible(false);
+//                timeText.setVisible(false);
 
                 novelImage.setImage(null);
                 novelDescription.setText(null);
@@ -224,7 +224,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
         authorIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/author_icon.png").toString()));
         chaptersIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/chapter_icon.png").toString()));
-        timeIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/time_icon.png").toString()));
+//        timeIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/time_icon.png").toString()));
 
         boolean dontShowPrompt = PreferencesManager.getBoolean(PREF_KEY_DONT_SHOW_NOVEL_SCREEN_PROMPT+viewModel.getUserId(), false);
         if (dontShowPrompt) {

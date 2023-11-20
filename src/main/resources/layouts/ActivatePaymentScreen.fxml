@@ -69,7 +69,7 @@
                             </Panel>
                             <VBox fx:id="bankTransferDetailsPane" spacing="25">
                                 <Separator/>
-                                <Label text="Walk into any Bank branch mentioned below or POS Agent's shop around you to make a deposit of N2000 into any of our accounts below. You can also use your Mobile App or USSD code to make a transfer into any of the accounts below." wrapText="true">
+                                <Label text="Use your mobile banking app or USSD code to make a transfer of N2000 into any of the bank accounts below:" wrapText="true">
                                     <font>
                                         <Font size="14"/>
                                     </font>
@@ -90,14 +90,14 @@
                                     </VBox>
                                 </HBox>
 
-                                <Label text="After payment, send an email containing you payment receipt/details to scholarlyng@gmail.com using the format below:" wrapText="true">
+                                <Label text="After payment send a WhatsApp message to the number +2348136941462 using the format below:" wrapText="true">
                                     <font>
                                         <Font size="14"/>
                                     </font>
                                 </Label>
 
                                 <VBox spacing="10">
-                                    <Label text="1. Account name (belonging to the account owner or POS Agent)">
+                                    <Label text="1. Sender account name">
                                         <font>
                                             <Font size="14"/>
                                         </font>
@@ -107,22 +107,27 @@
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="3. Your email address">
+                                    <Label text="3. Date and Time of Payment">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="4. Date of payment">
+                                    <Label text="4. Bank paid to">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="5. Bank paid to">
+                                    <Label text="5. Exam/app paid for (e.g. JAMB, WAEC, Post UTME etc)">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="6. Exam App paid for (e.g JAMB, WAEC, Novels App etc.)">
+                                    <Label text="6. Device to activate: Desktop or Android">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                    <Label text="7. Picture or screenshot of your payment receipt or debit alert">
                                         <font>
                                             <Font size="14"/>
                                         </font>
@@ -136,7 +141,7 @@
                                 </Label>
 
                                 <VBox spacing="30" alignment="CENTER">
-                                    <Button fx:id="whatsAppButton" text="I have paid. Send WhatsApp Message" textFill="white" prefHeight="45" prefWidth="280" style="-fx-background-color: #12AF20; -fx-background-radius: 7">
+                                    <Button fx:id="whatsAppButton" text="Paid already? Send us a WhatsApp message +2348136941462" textFill="white" prefHeight="45" prefWidth="280" style="-fx-background-color: #12AF20; -fx-background-radius: 7">
                                         <font>
                                             <Font size="15"/>
                                         </font>
@@ -337,32 +342,37 @@
                                 </Label>
 
                                 <VBox spacing="10">
-                                    <Label text="1. Account name (belonging to the account owner or POS agent)">
+                                    <Label text="1. Sender account name">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="2. Bank paid to">
+                                    <Label text="2. Amount paid">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="3. Date of payment">
+                                    <Label text="3. Date and Time of Payment">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="4. Amount paid">
+                                    <Label text="4. Bank paid to">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="5. Your email address">
+                                    <Label text="5. Exam/app paid for (e.g. JAMB, WAEC, Post UTME etc)">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="6. Exam App paid for (e.g JAMB, WAEC, Novels App etc.)">
+                                    <Label text="6. Device to activate: Desktop or Android">
+                                        <font>
+                                            <Font size="14"/>
+                                        </font>
+                                    </Label>
+                                    <Label text="7. Picture or screenshot of your payment receipt or debit alert">
                                         <font>
                                             <Font size="14"/>
                                         </font>

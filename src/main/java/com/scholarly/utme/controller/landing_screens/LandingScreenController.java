@@ -78,6 +78,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
             long start = System.currentTimeMillis();
 
+            appsButton.setVisible(false);
+
 //            Task<Void> homeViewTask = new Task<>() {
 //                @Override
 //                protected Void call() {

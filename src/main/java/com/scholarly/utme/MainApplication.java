@@ -88,7 +88,7 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
 
                 if (userLoggedOut || userData == null) {;
                     logger.info("Move to Auth Screen");
-                    ViewSwitcher.passData(new AuthenticationController.InitialData(false));
+                    ViewSwitcher.passData(new AuthenticationController.InitialData(true));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                 } else {;
                     logger.info("Move to Landing Screen");

@@ -66,8 +66,8 @@
                                 </font>
                             </TextField>
                             <HBox>
-                                <ImageView fx:id="infoImage" preserveRatio="true" pickOnBounds="true"/>
-                                <Label text="To change email, contact support ">
+                                <ImageView fx:id="infoImage" preserveRatio="true" pickOnBounds="true" visible="false"/>
+                                <Label text="To change email, contact support " visible="false">
                                     <font>
                                         <Font size="13"/>
                                     </font>
@@ -75,7 +75,7 @@
                                         <Insets left="8"/>
                                     </HBox.margin>
                                 </Label>
-                                <Label fx:id="changeMailHereLabel" text="here" textFill="#12AF20" style="-fx-cursor: hand;">
+                                <Label fx:id="changeMailHereLabel" text="here" textFill="#12AF20" style="-fx-cursor: hand;" visible="false">
                                     <font>
                                         <Font size="13"/>
                                     </font>

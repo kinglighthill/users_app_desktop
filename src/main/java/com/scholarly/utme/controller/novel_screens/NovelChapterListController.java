@@ -38,7 +38,7 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
     @FXML
     private ListView<NovelChapter> chaptersList;
     @FXML
-    private ImageView novelImage, authorIcon, chaptersIcon, timeIcon, activateNowCloseIcon, activateNowPadlockIcon, greenTickIcon1, greenTickIcon2, greenTickIcon3, greenTickIcon4, greenTickIcon5;
+    private ImageView novelImage, authorIcon, chaptersIcon, /*timeIcon,*/ activateNowCloseIcon, activateNowPadlockIcon, greenTickIcon1, greenTickIcon2, greenTickIcon3, greenTickIcon4, greenTickIcon5;
     @FXML
     private VBox activateNowDialog, dimmer;
     @FXML
@@ -109,7 +109,7 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
 
         authorIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/author_icon.png").toString()));
         chaptersIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/chapter_icon.png").toString()));
-        timeIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/time_icon.png").toString()));
+//        timeIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/time_icon.png").toString()));
 
         activateNowCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
         activateNowPadlockIcon.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/padlock_icon.png").toString()));

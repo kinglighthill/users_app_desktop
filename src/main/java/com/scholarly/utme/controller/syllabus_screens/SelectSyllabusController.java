@@ -334,7 +334,6 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
 
     private void renderObjectives() {
         String formattedText = viewModel.getSelectedSyllabusSubject().getGeneralObjectives().replaceAll("<br>", System.lineSeparator());
-//        Label objectivesLabel = new Label(formattedText);
         objectivesLabel.setText(formattedText);
         objectivesLabel.setWrapText(true);
         objectivesLabel.setTextAlignment(TextAlignment.JUSTIFY);
@@ -347,18 +346,16 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
     }
 
     private void renderRecommendedTexts() {
-        String formattedText = viewModel.getSelectedSyllabusSubject().getRecommendedTexts().replaceAll("<br>", System.lineSeparator());
-//        Label recTextLabel = new Label(formattedText);
-        Document htmlFormat = Jsoup.parse(formattedText);
-//        String secondFormat = formattedText.replaceAll("<i>", )
+        String recommendedText = viewModel.getSelectedSyllabusSubject().getRecommendedTexts();
+        String formattedText = recommendedText
+                .replaceAll("<br>", System.lineSeparator())
+                .replaceAll("<i>", "").replaceAll("</i>", "");
         recTextLabel.setText(formattedText);
         recTextLabel.setWrapText(true);
         recTextLabel.setTextAlignment(TextAlignment.JUSTIFY);
         recTextLabel.setPadding(new Insets(20, 15, 0, 15));
         recTextLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
 
-//        recTextsTab.setContent(recTextLabel);
-//        recTextsTab.getContent().autosize();
         topicsTab.getContent().autosize();
     }
 

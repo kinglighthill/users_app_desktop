@@ -152,25 +152,31 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             }
 
         } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
-//            System.out.println(TAG + "ContentViewType -> ParagraphViewType");
             if (paragraphViewType.getText() != null) {
-                Document doc = Jsoup.parse(paragraphViewType.getText().replaceAll("<br>", System.lineSeparator()));
-                String formattedText = paragraphViewType.getText().replaceAll("<br>", System.lineSeparator());
-                Label label = new Label(formattedText);
-                label.setWrapText(true);
-                label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-                if (section.getSubtopicId() != 0 || section.getMainSectionOrder() != 0) {
-                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-                    label.setPadding(new Insets(10, 0, 0, 0));
+                String contentText = paragraphViewType.getText();
+                if (!Helper.isWebView(contentText)) {
+                    String formattedText = paragraphViewType.getText().replaceAll("<br>", System.lineSeparator());
+                    Label label = new Label(formattedText);
+                    label.setWrapText(true);
+                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+                    if (section.getSubtopicId() != 0 || section.getMainSectionOrder() != 0) {
+                        label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+                        label.setPadding(new Insets(10, 0, 0, 0));
+                    }
+                    contentElement = label;
+                } else {
+                    String content = Helper.loadLatex(getClass(), contentText);
+                    WebView webView = new WebView();
+                    webView.setPrefHeight(200);
+                    WebEngine webEngine = webView.getEngine();
+                    webEngine.loadContent(content);
+
+                    VBox vBox = new VBox();
+                    vBox.getChildren().addAll(webView);
+                    contentElement = vBox;
                 }
-
-                contentElement = label;
-//                System.out.println(TAG + "ParagraphViewType text -> " + label.getText());
             }
-
         } else if (contentViewType instanceof CBTViewType cbtViewType) {
-//            System.out.println(TAG + "ContentViewType -> CBTViewType");
-
             int subjectId = cbtViewType.getSubjectId();
             int yearId = cbtViewType.getYearId();
             int questionNum = cbtViewType.getQuestionId();
@@ -319,18 +325,6 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                 WebEngine webEngine = webView.getEngine();
                 webEngine.loadContent(content);
 
-//                webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
-//                    if (newState == Worker.State.SUCCEEDED) {
-//                        Integer height = (Integer) webEngine.executeScript(
-////                                "document.body.scrollHeight;"
-////                                "document.body.clientHeight;"
-////                                "document.querySelector('div').clientHeight;"
-//                                "document.querySelector('div').scrollHeight;"
-//                        );
-//                        webView.setPrefHeight(height);
-//                    }
-//                });
-
                 VBox vBox = new VBox();
                 vBox.getChildren().addAll(webView);
                 contentElement = vBox;
@@ -371,34 +365,39 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             }
 
         } else if (contentViewType instanceof ReferenceViewType referenceViewType) {
-//            System.out.println(TAG + "ContentViewType -> ReferenceViewType");
-
             if (referenceViewType.getText() != null) {
-                Document doc = Jsoup.parse(referenceViewType.getText());
-                String formattedText = referenceViewType.getText().replaceAll("<br>", System.lineSeparator());
+                String contentText = referenceViewType.getText();
+                if (!Helper.isWebView(contentText)) {
+                    String formattedText = referenceViewType.getText().replaceAll("<br>", System.lineSeparator());
 
-                Label label = new Label(formattedText);
-                label.setWrapText(true);
-                label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-                if (formattedText.contains("www") || formattedText.contains(".com")) {
-                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM_ITALIC, 14));
+                    Label label = new Label(formattedText);
+                    label.setWrapText(true);
+                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+                    if (formattedText.contains("www") || formattedText.contains(".com")) {
+                        label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM_ITALIC, 14));
+                    }
+
+                    contentElement = label;
+                } else {
+                    String content = Helper.loadLatex(getClass(), contentText);
+                    WebView webView = new WebView();
+                    webView.setPrefHeight(200);
+                    WebEngine webEngine = webView.getEngine();
+                    webEngine.loadContent(content);
+
+                    VBox vBox = new VBox();
+                    vBox.getChildren().addAll(webView);
+                    contentElement = vBox;
                 }
-
-                contentElement = label;
             }
         } else if (contentViewType instanceof TableViewType tableViewType) {
-//            System.out.println(TAG + "ContentViewType -> TableViewType");
-
             GridPane tableGrid = new GridPane();
             tableGrid.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #F4D242");
 
             List<List<String>> content = tableViewType.getContent();
 
             for (int row = 0; row < content.size(); row++) {
-
-//                System.out.println("Row Content -> " + content.get(row));
                 for (int col = 0; col < content.get(row).size(); col++) {
-//                    System.out.println("Column content -> " + content.get(row).get(col));
                     Label grid = new Label(content.get(row).get(col));
                     grid.setWrapText(true);
                     grid.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
@@ -427,72 +426,5 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
             }
         }
         return contentElement;
-    }
-
-    private Parent formatMarkdown(String content) {
-//        List<Extension> DEFAULT_EXTENSIONS = ImmutableList.<Extension>builder()
-//                .add(AbbreviationExtension.create())
-//                .add(AutolinkExtension.create())
-//                .add(AutoLinkRendererExtension.create())
-//                .add(EscapedCharacterExtension.create())
-//                .add(TaskListExtension.create())
-//                .add(StrikethroughExtension.create())
-//                .add(TablesExtension.create())
-//                .add(TaskListRendererExtension.create())
-//                .add(InsExtension.create())
-//                .add(SuperscriptExtension.create())
-//                .add(TocExtension.create())
-//                .add(JekyllFrontMatterExtension.create())
-//                .build();
-
-        MutableDataSet options = new MutableDataSet();
-
-        // uncomment to set optional extensions
-//        options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()));
-
-        // uncomment to convert soft-breaks to hard breaks
-//        options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
-
-        Parser parser = Parser.builder(options).build();
-        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
-
-        // You can re-use parser and renderer instances
-        Node document = parser.parse(content);
-        String html = renderer.render(document);  // "<p>This is <em>Sparta</em></p>\n"
-        System.out.println(html);
-
-//        final SwingNode swingNode = new SwingNode();
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                swingNode.setContent(new JButton("Click me!"));
-//            }
-//        });
-
-
-        SwingNode swingNode = new SwingNode();
-//        SwingUtilities.invokeLater(() -> swingNode.setContent(chatPane));
-
-
-        SwingUtilities.invokeLater(() -> {
-            HTMLEditorKit kit = new HTMLEditorKit();
-            JTextPane chatPane = new JTextPane();
-            chatPane.setEditable(false);
-            chatPane.setContentType("text/html");
-            chatPane.setEditorKit(kit);
-            chatPane.setText(html);
-//            // Create and add Swing components here
-            JFrame frame = new JFrame("Swing UI");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(300, 150);
-            frame.add(chatPane);
-            frame.setVisible(true);
-        });
-
-
-        StackPane pane = new StackPane();
-        pane.getChildren().add(swingNode);
-
-        return pane;
     }
 }

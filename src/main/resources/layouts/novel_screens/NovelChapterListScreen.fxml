@@ -74,10 +74,10 @@
                             <ImageView fx:id="chaptersIcon" preserveRatio="true" pickOnBounds="true"/>
                             <Label fx:id="chaptersLabel" text="7 chapters"/>
                         </HBox>
-                        <HBox spacing="10">
+                        <!--<HBox spacing="10">
                             <ImageView fx:id="timeIcon" preserveRatio="true" pickOnBounds="true"/>
                             <Label fx:id="timeText" text="20 mins"/>
-                        </HBox>
+                        </HBox>-->
                         <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5; -fx-cursor: hand;"/>
                     </VBox>
                 </VBox>
