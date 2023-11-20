@@ -5,6 +5,7 @@ import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM2;
@@ -210,7 +211,9 @@ public class StudyPastQuestScreenController2 implements FxmlView<StudyPastScreen
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                 ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questionsState.getQuestions().get(selectedQuestion).getQuestion();
                 String questionText = currentQuestion.getQuestion();
-                TextToSpeech.play(questionText);
+                if (!Helper.isWebView(questionText)) {
+                    TextToSpeech.play(questionText);
+                }
             } else {
                 TheoryQuestion currentQuestion = (TheoryQuestion) questionsState.getQuestions().get(selectedQuestion).getQuestion();
                 String questionText = currentQuestion.getQuestion();

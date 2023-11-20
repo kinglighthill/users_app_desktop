@@ -647,7 +647,9 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         textToRead.append(". Option C, ").append(selectedQuestion.question().getOptionC().getText());
         textToRead.append(". Option D, ").append(selectedQuestion.question().getOptionD().getText());
 
-        TextToSpeech.play(textToRead.toString());
+        if (!Helper.isWebView(question)) {
+            TextToSpeech.play(textToRead.toString());
+        }
     }
 
     public void onCalculatorClicked() {
