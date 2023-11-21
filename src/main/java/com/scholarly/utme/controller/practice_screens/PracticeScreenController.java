@@ -57,7 +57,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     private final static double rectangleSelectedBorderWidth = 1.0;
     private final static Color rectangleBorderSelectedColor = Color.ORANGE;
-    private final static Paint rectangleSelectedColor = Paint.valueOf("#F3FBF4");
+//    private final static Paint rectangleSelectedColor = Paint.valueOf("#F3FBF4");
+    private final static Paint rectangleSelectedColor = Paint.valueOf("#9CFC9C");
 
     @InjectViewModel
     private PracticeScreenVM viewModel;

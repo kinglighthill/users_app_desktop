@@ -90,7 +90,7 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
                     logger.info("Move to Auth Screen");
                     ViewSwitcher.passData(new AuthenticationController.InitialData(true));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
-                } else {;
+                } else {
                     logger.info("Move to Landing Screen");
                     ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
                     ViewSwitcher.showScreen(View.LANDING_SCREEN);

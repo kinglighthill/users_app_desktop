@@ -225,7 +225,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
             if (questionType == Type.OBJECTIVE) {
                 result.setSubjectName(SubjectDao.getSubjectName(s));
                 result.setTotalQuestions(subjectQuestionsState.getQuestions().size());
-                result.setYear(YearsDao.getYear(((ObjectiveQuestion)subjectQuestionsState.getQuestions().get(0).getQuestion()).getYearId()).get().getYear());
+                result.setYear(new YearsDao().getYear(((ObjectiveQuestion)subjectQuestionsState.getQuestions().get(0).getQuestion()).getYearId()).get().getYear());
 
 
                 for (int i = 0; i < subjectQuestionsState.getQuestions().size(); i++) {

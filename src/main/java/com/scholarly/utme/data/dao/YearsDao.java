@@ -31,12 +31,12 @@ public class YearsDao {
     private static final String isNewColumn = "is_new";
     private static final String availableColumn = "available";
 
-    private static final ObservableList<Year> allYears;
-    private static final ObservableList<Year> subjectAvailableYears;
-    private static final ObservableList<FreeContent> freeContents;
-    private static final String userId;
+    private static ObservableList<Year> allYears;
+    private static ObservableList<Year> subjectAvailableYears;
+    private static ObservableList<FreeContent> freeContents;
+    private static String userId;
 
-    static {
+    public YearsDao() {
         userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
         allYears = FXCollections.observableArrayList();
         subjectAvailableYears = FXCollections.observableArrayList();
@@ -45,7 +45,16 @@ public class YearsDao {
         updateFreeYearsColumn();
     }
 
-    public static ObservableList<Year> getAvailableYearsForSubject(SubjectListItemVM.Type type, int subjectId) {
+    /*static {
+        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+        allYears = FXCollections.observableArrayList();
+        subjectAvailableYears = FXCollections.observableArrayList();
+        freeContents = FXCollections.observableArrayList();
+        updateYearsFromDB();
+        updateFreeYearsColumn();
+    }*/
+
+    public ObservableList<Year> getAvailableYearsForSubject(SubjectListItemVM.Type type, int subjectId) {
         String query = "";
 
         if (type == SubjectListItemVM.Type.OBJECTIVE) {
@@ -152,7 +161,7 @@ public class YearsDao {
         return FXCollections.unmodifiableObservableList(subjectAvailableYears);
     }
 
-    public static Optional<Year> getYear(int id) {
+    public Optional<Year> getYear(int id) {
         for (Year year : allYears) {
             if (year.getId() == id) return Optional.of(year);
         }

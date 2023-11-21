@@ -666,13 +666,11 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
                         Map<String,Object> map = mapper.readValue(section.getContent(), Map.class);
                         String content = map.get("text").toString();
 
-                        content = content.replaceAll("<br>\r\n", "<br><br>")
-                                .replaceAll("\r\n", "<br><br>");
-
                         WebView webView = new WebView();
                         webView.setPrefHeight(600);
                         WebEngine webEngine = webView.getEngine();
                         webEngine.loadContent(content);
+                        webEngine.setUserStyleSheetLocation("data:,body { font-size: 18px; line-height: 1.8; }");
 
                         contentPane.getChildren().clear();
                         contentPane.getChildren().addAll(webView);

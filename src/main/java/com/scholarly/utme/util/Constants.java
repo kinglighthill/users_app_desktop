@@ -1,8 +1,8 @@
 package com.scholarly.utme.util;
 
 public class Constants {
-
-    public static String BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
+    public static String BASE_URL = "https://utme.scholarly.africa/api/v1/";
+//    public static String BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
     public static final String WEBSITE_URL = "https://scholarly.africa/";
     public static final String WHATSAPP_URL = "https://wa.me/2348136941462";
 //    public static final String PAYSTACK_URL = "https://paystack.com/pay/utme-activation-pin-pc";

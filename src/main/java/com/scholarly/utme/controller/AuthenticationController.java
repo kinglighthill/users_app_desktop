@@ -600,7 +600,12 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, loginResponse.getData().getAccessToken());
                         PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, loginResponse.getData().getRefreshToken());
                         PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, loginResponse.getData().getActivationState().isActivationActive());
-//                        PreferencesManager.put(PREF_KEY_ACTIVATE_MESSAGE, loginResponse.getData().getActivationState().getMessage());
+                        String activationStateMessage =loginResponse.getData().getActivationState().getMessage();
+                        String message = "";
+                        if (activationStateMessage != null) {
+                            message = activationStateMessage;
+                        }
+                        PreferencesManager.put(PREF_KEY_ACTIVATE_MESSAGE, message);
 
                         System.out.println(TAG + "Logged in user with id -> " + PreferencesManager.get(PREF_KEY_USER_ID, ""));
                         System.out.println(TAG + "Logged in user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));

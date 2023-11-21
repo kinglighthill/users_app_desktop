@@ -318,7 +318,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
                 }
             }
 
-            activateBarLabel.setText(PreferencesManager.get(PREF_KEY_ACTIVATE_MESSAGE, "Your device is not activated."));
+            String message = PreferencesManager.get(PREF_KEY_ACTIVATE_MESSAGE, "Your device is not activated.");
+            activateBarLabel.setText(message);
 
             if (PreferencesManager.getBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+viewModel.getUserId(), false)) {
                 activateVBox.getChildren().remove(activatePanel);

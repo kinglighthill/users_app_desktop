@@ -11,8 +11,6 @@ plugins {
 group 'com.scholarly.utme'
 version '1.0'
 
-
-
 repositories {
     mavenCentral()
     google()
@@ -31,6 +29,20 @@ targetCompatibility = '16'
 
 project.ext.buildDate = new Date()
 project.version = "0.3"
+
+/*sourceSets {
+    release {
+        java {
+            srcDirs 'src/main/java', 'src/release/java'
+        }
+    }
+
+    debug {
+        java {
+            srcDirs 'src/main/java', 'src/debug/java'
+        }
+    }
+}*/
 
 tasks.register('stuffZip', Zip) {
     archiveBaseName = 'stuff'
