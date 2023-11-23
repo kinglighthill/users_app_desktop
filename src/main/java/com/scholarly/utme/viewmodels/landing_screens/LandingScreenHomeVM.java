@@ -48,7 +48,7 @@ public class LandingScreenHomeVM implements ViewModel {
 
     Gson gson = new Gson();
 
-    private final UserData userData;
+    private UserData userData;
     private final String userId;
 
 
@@ -56,16 +56,18 @@ public class LandingScreenHomeVM implements ViewModel {
         long startDisplay = System.currentTimeMillis();
         NovelChapterDao novelChapterDao = new NovelChapterDao();
         userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+        System.out.println(TAG + "Got User ID -> " + userId);
         System.out.println(TAG + "Time taken to load NovelChapterDao -> " + (System.currentTimeMillis() - startDisplay) + "ms");
 
         String userDataString = PreferencesManager.get(PREF_KEY_USER_DATA+userId, "");
+        System.out.println(TAG + "Got user data string -> " + userDataString);
         userData = gson.fromJson(userDataString, UserData.class);
 
 
         favoriteSubjects = FXCollections.observableArrayList();
         subjects = SubjectDao.getFavoriteSubjects();
 
-        ObservableList<SubjectCombination> subjectCombinations = SubjectDao.retrieveSubjectCombination(userData.getId());
+        ObservableList<SubjectCombination> subjectCombinations = SubjectDao.retrieveSubjectCombination(userId);
 
         subjects.forEach(subject -> {
             subject.setSelected(false);
@@ -79,7 +81,7 @@ public class LandingScreenHomeVM implements ViewModel {
 
         System.out.println(TAG + "Time taken to load Favorite Subjects -> " + (System.currentTimeMillis() - startDisplay) + "ms");
 
-        noteLastSession = SectionDao.retrieveLastSession(userData.getId());
+        noteLastSession = SectionDao.retrieveLastSession(userId);
 
         Task<Void> noteLastSessionTask = new Task<>() {
             @Override
@@ -103,7 +105,7 @@ public class LandingScreenHomeVM implements ViewModel {
 
         System.out.println(TAG + "Time taken to load Note Last Session -> " + (System.currentTimeMillis() - startDisplay) + "ms");
 
-        novelLastSession = NovelChapterDao.retrieveLastSession(userData.getId());
+        novelLastSession = NovelChapterDao.retrieveLastSession(userId);
 
         if (novelLastSession != null) {
             lastSessionChapter = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->

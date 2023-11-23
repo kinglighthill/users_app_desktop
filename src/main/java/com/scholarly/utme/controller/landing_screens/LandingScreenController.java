@@ -72,6 +72,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         try {
             viewModel.processInitialData(getInitialData());
 
+            String userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+
             initializeViews();
 
             initializeFonts();
@@ -306,7 +308,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         });*/
 
             topActivateButton.setOnAction(event -> {
-                ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));
+                ViewSwitcher.passData(new InitialData(Screens.ACTIVATE_SCREEN));
                 ViewSwitcher.showScreen(View.LANDING_SCREEN);
             });
 
@@ -413,8 +415,5 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     }
 
     public record InitialData(Screens screenToShow) {
-        public Screens getScreenToShow() {
-            return screenToShow;
-        }
     }
 }
