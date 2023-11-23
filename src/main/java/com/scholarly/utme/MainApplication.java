@@ -71,8 +71,8 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
                 );
             });
 
-            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+//            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
+//            ViewSwitcher.showScreen(View.LANDING_SCREEN);
 
             boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
             if (firstTimeUser) {
@@ -84,16 +84,22 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
 
                 String userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
                 String userDataString = PreferencesManager.get(PREF_KEY_USER_DATA+userId, "");
+                System.out.println(TAG + "User id -> " + userId);
+                System.out.println(TAG + "User Data String -> " + userDataString);
                 UserData userData = new Gson().fromJson(userDataString, UserData.class);
 
-                if (userLoggedOut || userData == null) {;
-                    logger.info("Move to Auth Screen");
-                    ViewSwitcher.passData(new AuthenticationController.InitialData(true));
-                    ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
-                } else {
+                if (!userLoggedOut) {
                     logger.info("Move to Landing Screen");
                     ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
                     ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                } else if (userData == null) {
+                    logger.info("Move to Signup Screen");
+                    ViewSwitcher.passData(new AuthenticationController.InitialData(true));
+                    ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+                } else {
+                    logger.info("Move to Login Screen");
+                    ViewSwitcher.passData(new AuthenticationController.InitialData(false));
+                    ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                 }
             }
         } catch (Exception e) {

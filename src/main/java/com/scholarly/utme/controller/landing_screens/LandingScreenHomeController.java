@@ -256,40 +256,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
 //        List<String> fontFamilies = Font.getFamilies();
 //        List<String> fontNames    = Font.getFontNames();
-
-//        if (Platform.isFxApplicationThread()) {
-//            SwingUtilities.invokeLater(() -> {
-//                SwingNode swingNode = new SwingNode();
-//                JEditorPane editorPane = new JEditorPane();
-//                editorPane.setEditable(false);
-//                editorPane.setEditorKit(new HTMLEditorKit());
-//                editorPane.setContentType("text/html");
-//                editorPane.setText("<html><body><h1>Hello, <em>World</em>!</h1></body></html>");
-//
-//                fontVBox.getChildren().addAll(swingNode, new Label("This is the Label"));
-//                fontVBox.layout();
-//            });
-//        }
-
-
-//        long startTime = System.currentTimeMillis();
-//        fontFamilies.forEach(family -> {
-//            System.out.println("Font family -> " + family);
-//            Label label = new Label("Font family -> " + family);
-//            label.setFont(Font.font(family, 16));
-////            fontVBox.getChildren().add(label);
-//        });
-//        System.out.println(TAG + "Time taken to load font families -> " + (System.currentTimeMillis() - startTime) + "ms");
-
-//        long nameStartTime = System.currentTimeMillis();
-//        fontNames.forEach(name -> {
-//            System.out.println("Font name -> " + name);
-//            Label label = new Label("Font name -> " + name);
-//            label.setFont(Font.font(name, 16));
-////            fontVBox.getChildren().add(label);
-//        });
-//        System.out.println(TAG + "Time taken to load font names -> " + (System.currentTimeMillis() - nameStartTime) + "ms");
-
     }
 
     private void initializeViews() {
@@ -438,7 +404,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             });
 
             panel.setOnMouseClicked(event -> {
-                ViewSwitcher.passData(new HomeScreenController.InitialData(null, subject));
+                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, subject));
                 ViewSwitcher.showScreen(View.HOME_SCREEN);
             });
 

@@ -12,7 +12,7 @@ import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class LandingScreenVM implements ViewModel {
 
-    private final String userId;
+    private String userId;
 
     private final boolean activated;
 
@@ -21,12 +21,12 @@ public class LandingScreenVM implements ViewModel {
     private final SimpleObjectProperty<Screens> currentScreen = new SimpleObjectProperty<>(null);
 
     public LandingScreenVM() {
-        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+//        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
         activated = PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false);
     }
     public void processInitialData(LandingScreenController.InitialData data) {
         if (data != null) {
-            currentScreen.set(data.getScreenToShow());
+            currentScreen.set(data.screenToShow());
         }
     }
 

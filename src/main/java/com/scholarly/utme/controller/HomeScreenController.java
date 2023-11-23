@@ -2,6 +2,7 @@ package com.scholarly.utme.controller;
 
 
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.*;
@@ -65,28 +66,27 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
         viewModel.processInitialData(getInitialData());
 
-        if (viewModel.getSelectedScreen().equals(Screens.PRACTICE_SCREEN.getName())) {
+        Screens selectedScreen = getInitialData().previousScreen;
+        PQSubject selectedSubject = getInitialData().selectedSubject;
+
+        if (selectedScreen == Screens.PRACTICE_SCREEN) {
             pageTitle.setText("CBT Practice");
             toggleGroup.selectToggle(practiceButton);
             subjectListController.setOption(SubjectListOption.PRACTICE);
-            subjectListController.setSelectedSubject(viewModel.getSelectedSubject());
+            subjectListController.setSelectedSubject(selectedSubject);
             selectButton(subjectListView, practiceButton);
-        } else if (viewModel.getSelectedScreen().equals(Screens.PAST_QUESTION_SCREEN.getName())) {
+        } else if (selectedScreen == Screens.PAST_QUESTION_SCREEN) {
             pageTitle.setText("Study Past Questions");
             toggleGroup.selectToggle(pastQuestionButton);
             subjectListController.setOption(SubjectListOption.STUDY);
+            subjectListController.setSelectedSubject(selectedSubject);
             selectButton(subjectListView, pastQuestionButton);
-        } else if (viewModel.getSelectedScreen().equals(Screens.CBT_GAME_SCREEN.getName())) {
+        } else {
             pageTitle.setText("CBT Game");
             toggleGroup.selectToggle(cbtGameButton);
             subjectListController.setOption(SubjectListOption.CBT_GAME);
+            subjectListController.setSelectedSubject(selectedSubject);
             selectButton(subjectListView, cbtGameButton);
-        } else if (viewModel.getSelectedScreen().equals(Screens.VIDEOS_SCREEN.getName())) {
-//            selectButton(audioVideoView, videosButton);
-        } else if (viewModel.getSelectedScreen().equals(Screens.AUDIOS_SCREEN.getName())) {
-//            selectButton(audioVideoView, audiosButton);
-        } else if (viewModel.getSelectedScreen().equals(Screens.LEARNING_CENTER_SCREEN.getName())) {
-//            selectButton(audioVideoView, learningCenterButton);
         }
 
         toggleGroup.getToggles().addAll(practiceButton, pastQuestionButton, cbtGameButton);
