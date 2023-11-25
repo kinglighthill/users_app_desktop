@@ -151,9 +151,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
                 }
                 return buttonType;
             });
-
             dialog.show();
-
         });
 
     }
