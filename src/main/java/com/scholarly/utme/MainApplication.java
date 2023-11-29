@@ -71,9 +71,6 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
                 );
             });
 
-//            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-//            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-
             boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
             if (firstTimeUser) {
                 ViewSwitcher.showScreen(View.WELCOME_SCREEN);

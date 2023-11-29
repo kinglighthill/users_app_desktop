@@ -10,6 +10,7 @@ import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.*;
 import de.saxsys.mvvmfx.*;
+import io.reactivex.rxjava3.annotations.NonNull;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -72,8 +73,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         try {
             viewModel.processInitialData(getInitialData());
 
-            String userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
-
             initializeViews();
 
             initializeFonts();
@@ -82,18 +81,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
             appsButton.setVisible(false);
 
-//            Task<Void> homeViewTask = new Task<>() {
-//                @Override
-//                protected Void call() {
-//                    ViewTuple<LandingScreenHomeController, LandingScreenHomeVM> landingScreenHomeViewTuple = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load();
-//                    Platform.runLater(() -> {
-//                        homeView = landingScreenHomeViewTuple.getView();
-//                    });
-//                    return null;
-//                }
-//            };
-//            Thread homeViewThread = new Thread(homeViewTask);
-//            homeViewThread.start();
             System.out.println(TAG + "Time taken to load Home Screen -> " + (System.currentTimeMillis() - start)+"ms");
             Parent homeView = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView();
 
@@ -160,37 +147,22 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             //        Parent settingsView = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView();
 //            settingsView = settingsView == null ? FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load().getView() : settingsView;
 
-            Task<Void> allViewsTask = new Task<>() {
-                @Override
-                protected Void call() {
-                    if (viewModel.getScreenToShow().equals(Screens.ACCOUNT_SCREEN)) {
-                        selectButton(accountView, accountButton);
-                    } else if (viewModel.getScreenToShow().equals(Screens.ACTIVATE_SCREEN)) {
-                        selectButton(activateView, activateButton);
-                    } else if (viewModel.getScreenToShow().equals(Screens.APPS_SCREEN)) {
-                        selectButton(appsView, appsButton);
-                    } else if (viewModel.getScreenToShow().equals(Screens.SETTINGS_SCREEN)) {
-                        selectButton(settingsView, settingsButton);
-                    } else {
-                        selectButton(homeView, homeButton);
-                    }
-                    return null;
-                }
-            };
-            Thread allViewsThread = new Thread(allViewsTask);
-            allViewsThread.start();
 
-            System.out.println(TAG + "Time taken to load Views -> " + (System.currentTimeMillis() - start)+"ms");
 
-        /* else if (viewModel.getScreenToShow().equalsIgnoreCase("triviaScreen")) {
-            selectButton(triviaView, triviaButton);
-        } else if (viewModel.getScreenToShow().equalsIgnoreCase("performanceScreen")) {
-            selectButton(performanceView, performanceButton);
-        } else if (viewModel.getScreenToShow().equalsIgnoreCase("updatesScreen")) {
-            selectButton(updatesView, updatesButton);
-        }*/
+            Screens screenToShow = getInitialData().screenToShow();
 
-//            homeContentPane.getChildren().add(homeView);
+            if (screenToShow == Screens.ACCOUNT_SCREEN) {
+                selectButton(accountView, accountButton);
+            } else if (screenToShow == Screens.ACTIVATE_SCREEN) {
+                selectButton(activateView, activateButton);
+            } else if (screenToShow == Screens.APPS_SCREEN) {
+                selectButton(appsView, appsButton);
+            } else if (screenToShow == Screens.SETTINGS_SCREEN) {
+                selectButton(settingsView, settingsButton);
+            } else {
+                selectButton(homeView, homeButton);
+            }
+
 
 
             toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, settingsButton);
@@ -414,6 +386,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         }
     }
 
-    public record InitialData(Screens screenToShow) {
+    public record InitialData(@NonNull Screens screenToShow) {
     }
 }

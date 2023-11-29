@@ -69,24 +69,24 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
         Screens selectedScreen = getInitialData().previousScreen;
         PQSubject selectedSubject = getInitialData().selectedSubject;
 
-        if (selectedScreen == Screens.PRACTICE_SCREEN) {
-            pageTitle.setText("CBT Practice");
-            toggleGroup.selectToggle(practiceButton);
-            subjectListController.setOption(SubjectListOption.PRACTICE);
-            subjectListController.setSelectedSubject(selectedSubject);
-            selectButton(subjectListView, practiceButton);
-        } else if (selectedScreen == Screens.PAST_QUESTION_SCREEN) {
+        if (selectedScreen == Screens.PAST_QUESTION_SCREEN) {
             pageTitle.setText("Study Past Questions");
             toggleGroup.selectToggle(pastQuestionButton);
             subjectListController.setOption(SubjectListOption.STUDY);
             subjectListController.setSelectedSubject(selectedSubject);
             selectButton(subjectListView, pastQuestionButton);
-        } else {
+        } else if (selectedScreen == Screens.CBT_GAME_SCREEN) {
             pageTitle.setText("CBT Game");
             toggleGroup.selectToggle(cbtGameButton);
             subjectListController.setOption(SubjectListOption.CBT_GAME);
             subjectListController.setSelectedSubject(selectedSubject);
             selectButton(subjectListView, cbtGameButton);
+        } else {
+            pageTitle.setText("CBT Practice");
+            toggleGroup.selectToggle(practiceButton);
+            subjectListController.setOption(SubjectListOption.PRACTICE);
+            subjectListController.setSelectedSubject(selectedSubject);
+            selectButton(subjectListView, practiceButton);
         }
 
         toggleGroup.getToggles().addAll(practiceButton, pastQuestionButton, cbtGameButton);
