@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Objects;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.*;
 import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.TheoryQuestion;
+import com.sun.net.httpserver.HttpExchange;
 import io.reactivex.rxjava3.annotations.Nullable;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
@@ -374,6 +376,7 @@ public class Helper {
         return editable;
     }
 
+
     public static String extractImageUrlFromText(String text) {
         int startIndexOfImg = text.indexOf("<img");
         int endIndexOfImg = text.indexOf("'100%'>", startIndexOfImg);
@@ -392,5 +395,21 @@ public class Helper {
             imageQuestion = loadLatex(mClass, imageQuestion);
         }
         return imageQuestion;
+
+    public static void showWebpage(HttpExchange exchange, String webContent, ErrorCallback callback) {
+        try {
+            byte[] response = webContent.getBytes();
+            exchange.sendResponseHeaders(200, response.length);
+            OutputStream os = exchange.getResponseBody();
+            os.write(response);
+            os.close();
+        } catch (IOException exception) {
+            MainApplication.log(exception);
+            callback.callback();
+        }
+    }
+
+    public interface ErrorCallback {
+        void callback();
     }
 }
