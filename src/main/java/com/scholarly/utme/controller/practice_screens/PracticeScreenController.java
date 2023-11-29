@@ -2,8 +2,6 @@ package com.scholarly.utme.controller.practice_screens;
 
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.data.model.*;
-//import com.gtranslate.Audio;
-//import com.gtranslate.Language;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.newDb.TheoryQuestionDescription;
@@ -82,7 +80,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @FXML
     private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
     @FXML
-    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog, centerVBox, questionDescriptionDialog, questionCenterVBox, questionVBox;
+    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog, centerVBox, questionDescriptionDialog, questionCenterVBox, questionWithImageVBox;
     @FXML
     private HBox quesDescriptionHBox, questionWithImageHBox, questionDescriptionHBox, questionLabelHBox;
     @FXML
@@ -92,7 +90,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @FXML
     private Pane dialogDimmer, exitDialogDimmer, summaryDialogDimmer;
     @FXML
-    private WebView questionWebView, questionWithImageWebView, optionAWebView;
+    private WebView questionWebView, optionAWebView, questionWithImageWebView;
 
     private ToggleGroup toggleGroup = new ToggleGroup();
 
@@ -656,7 +654,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
                 if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
                     questionCenterVBox.getChildren().add(questionWithImageHBox);
-                showQuestionWithImage(questionText, Helper.isWebView(question, true));
+                showQuestionWithImage(questionText);
             } else {
                 loadObjectiveQuestion(questionText, quesDescriptionInList, Helper.isWebView(question, true));
             }
@@ -690,7 +688,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             String questionText = question.getQuestion();
             if (questionText.contains("<img")) {
                 questionStackPane.getChildren().add(questionWithImageHBox);
-                showQuestionWithImage(questionText, Helper.isWebView(question));
+                showQuestionWithImage(questionText);
             } else {
                 loadTheoryQuestion(questionText, quesDescriptionList, Helper.isWebView(question));
             }
@@ -712,15 +710,14 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             String questionText = question.getQuestion().replaceAll("<br>", System.lineSeparator());
 
-            questionCenterVBox.getChildren().removeAll(questionScrollPane);
-            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox, questionLabelHBox);
+            questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView, questionWithImageVBox, questionLabelHBox);
 
             if (questionText.contains("<img")) {
                 System.out.println(TAG + "Question contains image");
-                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
-                if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
-                    questionCenterVBox.getChildren().add(questionWithImageHBox);
-                showQuestionWithImage(questionText, Helper.isWebView(question, true));
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView, questionLabelHBox);
+                if (!questionCenterVBox.getChildren().contains(questionWithImageVBox))
+                    questionCenterVBox.getChildren().add(questionWithImageVBox);
+                showQuestionWithImage(questionText);
             } else {
                 loadObjectiveQuestion(questionText, quesDescriptionList, Helper.isWebView(question, true));
             }
@@ -767,7 +764,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             String questionText = question.getQuestion();
             if (questionText.contains("<img")) {
                 questionStackPane.getChildren().add(questionWithImageHBox);
-                showQuestionWithImage(questionText, Helper.isWebView(question));
+                showQuestionWithImage(questionText);
             } else {
                 loadTheoryQuestion(questionText, quesDescriptionList, question.getIsQuestionWebView() == 1);
             }
@@ -865,8 +862,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         }
     }
 
-    private void showQuestionWithImage(String questionWithImageText, boolean isWebView) {
-        questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText, isWebView);
+    private void showQuestionWithImage(String questionWithImageText) {
+        String imageQuestion = Helper.extractQuestionOrAnswerFromQuestionWithImage(getClass(), questionWithImageText);
+        String imageUrl = Helper.extractImageUrlFromText(questionWithImageText);
+
+        questionWithImageWebView.getEngine().loadContent(imageQuestion);
+        questionImage.setImage(new Image(getClass().getResource(imageUrl).toString()));
+
     }
 
     private void loadObjectiveQuestion(String questionText, List<ObjectiveQuestionDescription> quesDescriptionList, boolean isWebView) {
