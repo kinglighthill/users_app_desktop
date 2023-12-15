@@ -77,11 +77,15 @@
 
                                 <HBox alignment="CENTER">
                                     <VBox spacing="15">
-                                        <StackPane fx:id="paymentImagePane">
-                                            <ImageView fx:id="ubaPaymentImage" preserveRatio="true" pickOnBounds="true"/>
-                                            <ImageView fx:id="accessPaymentImage" preserveRatio="true" pickOnBounds="true" visible="false"/>
-                                            <ImageView fx:id="zenithPaymentImage" preserveRatio="true" pickOnBounds="true" visible="false"/>
-                                        </StackPane>
+                                        <HBox spacing="10" alignment="CENTER">
+                                            <Button fx:id="paymentImagePrev"/>
+                                            <StackPane fx:id="paymentImagePane">
+                                                <ImageView fx:id="ubaPaymentImage" preserveRatio="true" pickOnBounds="true"/>
+                                                <ImageView fx:id="accessPaymentImage" preserveRatio="true" pickOnBounds="true" visible="false"/>
+                                                <ImageView fx:id="zenithPaymentImage" preserveRatio="true" pickOnBounds="true" visible="false"/>
+                                            </StackPane>
+                                            <Button fx:id="paymentImageNext"/>
+                                        </HBox>
                                         <HBox fx:id="currentPositionHBox" spacing="5" alignment="CENTER">
                                             <Line startX="-10" endX="10" strokeWidth="2.5" stroke="#12AF20"/>
                                             <Line startX="-10" endX="10" strokeWidth="2.5" stroke="#DFDFDF"/>
