@@ -378,7 +378,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         changeButtonStyle(toggleButton);
     }
 
-    private InitialData getInitialData() {
+    public InitialData getInitialData() {
         if (ViewSwitcher.retrieveData() != null) {
             return (InitialData) ViewSwitcher.retrieveData();
         } else {

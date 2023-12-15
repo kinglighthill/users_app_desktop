@@ -57,7 +57,7 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
     private Label customerSupportLabel, paymentMethodText, chatUsLabel;
 
     @FXML
-    private Button backButton, whatsAppButton, paystackButton;
+    private Button backButton, whatsAppButton, paystackButton, paymentImagePrev, paymentImageNext;
 
     @FXML
     private ToggleButton bankTransferDropdown, paystackDropdown, flutterwaveDropdown, monnifyDropdown, noAccountDropdown;
@@ -80,7 +80,7 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
 
         AtomicInteger index = new AtomicInteger(1);
 
-        paymentImagePane.setOnDragDetected(event -> {
+        paymentImagePrev.setOnMouseClicked(event -> {
             currentPositionHBox.getChildren().forEach(child -> {
                 Line line = (Line) child;
                 line.setStroke(Paint.valueOf("#DFDFDF"));
@@ -105,7 +105,33 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
                 Animations.slideIn(zenithPaymentImage, 50f, 0f, 200);
                 index.set(0);
             }
+        });
 
+        paymentImageNext.setOnMouseClicked(event -> {
+            currentPositionHBox.getChildren().forEach(child -> {
+                Line line = (Line) child;
+                line.setStroke(Paint.valueOf("#DFDFDF"));
+            });
+
+            if (index.get() == 0) {
+                Line line = (Line) currentPositionHBox.getChildren().get(index.get());
+                line.setStroke(Paint.valueOf("#12AF20"));
+                Animations.slideOut(zenithPaymentImage, 0f, -50f, 200);
+                Animations.slideIn(ubaPaymentImage, 50f, 0f, 200);
+                index.incrementAndGet();
+            } else if (index.get() == 1) {
+                Line line = (Line) currentPositionHBox.getChildren().get(index.get());
+                line.setStroke(Paint.valueOf("#12AF20"));
+                Animations.slideOut(ubaPaymentImage, 0f, -50f, 200);
+                Animations.slideIn(accessPaymentImage, 50f, 0f, 200);
+                index.incrementAndGet();
+            } else if (index.get() == 2) {
+                Line line = (Line) currentPositionHBox.getChildren().get(index.get());
+                line.setStroke(Paint.valueOf("#12AF20"));
+                Animations.slideOut(accessPaymentImage, 0f, -50f, 200);
+                Animations.slideIn(zenithPaymentImage, 50f, 0f, 200);
+                index.set(0);
+            }
         });
 
 
@@ -237,6 +263,12 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
 //        monnifyCloseDropdownImage = new ImageView(new Image(getClass().getResource("/drawable/activate_screen_images/open_dropdown_icon.png").toString()));
         noAccountCloseDropdownImage = new ImageView(new Image(getClass().getResource("/drawable/activate_screen_images/open_dropdown_icon.png").toString()));
 
+        ImageView prevImage = new ImageView(new Image(getClass().getResource("/drawable/activate_screen_images/payment_image_prev.png").toString()));
+        ImageView nextImage = new ImageView(new Image(getClass().getResource("/drawable/activate_screen_images/payment_image_next.png").toString()));
+
+        paymentImagePrev.setGraphic(prevImage);
+        paymentImageNext.setGraphic(nextImage);
+
         bankTransferDropdown.setGraphic(bankTransferCloseDropdownImage);
         paystackDropdown.setGraphic(paystackCloseDropdownImage);
 //        flutterwaveDropdown.setGraphic(flutterwaveCloseDropdownImage);
@@ -250,6 +282,8 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
 //        flutterwaveDropdown.setBackground(Background.EMPTY);
 //        monnifyDropdown.setBackground(Background.EMPTY);
         noAccountDropdown.setBackground(Background.EMPTY);
+        paymentImagePrev.setBackground(Background.EMPTY);
+        paymentImageNext.setBackground(Background.EMPTY);
 
     }
 
