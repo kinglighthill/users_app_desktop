@@ -390,11 +390,12 @@ public class Helper {
     }
 
     public static String extractQuestionOrAnswerFromQuestionWithImage(Class<?> mClass, String text) {
-        String imageQuestion = text.substring(text.lastIndexOf("100%'")+6);
+        String imageQuestion = text.substring(text.lastIndexOf("100%'") + 6);
         if (isWebView(imageQuestion)) {
             imageQuestion = loadLatex(mClass, imageQuestion);
         }
         return imageQuestion;
+    }
 
     public static void showWebpage(HttpExchange exchange, String webContent, ErrorCallback callback) {
         try {

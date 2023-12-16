@@ -8,6 +8,7 @@ import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.network.model.request.UserRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
@@ -721,7 +722,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         String state = RandomStringUtils.random(6, true, false);
         String scope = "email profile";
         String responseType = "code";
-        String clientId = "671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
+        String clientId = CLIENT_ID;
 
         try {
             InetSocketAddress socketAddress = new InetSocketAddress(ipaddress, 2020);

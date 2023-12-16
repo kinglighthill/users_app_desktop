@@ -1,6 +1,6 @@
 package com.scholarly.utme.controller.practice_screens;
 
-import com.scholarly.utme.controller.HomeScreenController;
+import com.scholarly.utme.controller.PQScreenController;
 import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
@@ -753,8 +753,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 dialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PAST_QUESTION_SCREEN, null));
-                ViewSwitcher.showScreen(View.HOME_SCREEN);
+                ViewSwitcher.passData(new PQScreenController.InitialData(Screens.PAST_QUESTION_SCREEN, null));
+                ViewSwitcher.showScreen(View.PQ_SCREEN);
             }
             dialogDimmer.setVisible(false);
             return buttonType;

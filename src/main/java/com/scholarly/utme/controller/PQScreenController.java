@@ -24,8 +24,8 @@ import java.util.ResourceBundle;
 
 import static com.scholarly.utme.controller.SubjectListViewController.*;
 
-@FxmlPath("/layouts/HomeScreen.fxml")
-public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializable{
+@FxmlPath("/layouts/PQScreen.fxml")
+public class PQScreenController implements FxmlView<HomeScreenVM>, Initializable{
     private static final String TAG = "HomeScreenController: ";
 
     @InjectViewModel

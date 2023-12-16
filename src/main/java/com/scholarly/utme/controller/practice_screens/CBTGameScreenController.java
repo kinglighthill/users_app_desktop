@@ -1,6 +1,6 @@
 package com.scholarly.utme.controller.practice_screens;
 
-import com.scholarly.utme.controller.HomeScreenController;
+import com.scholarly.utme.controller.PQScreenController;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
@@ -33,7 +33,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -335,8 +334,8 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to quit?");
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
-                    ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.CBT_GAME_SCREEN, null));
-                    ViewSwitcher.showScreen(View.HOME_SCREEN);
+                    ViewSwitcher.passData(new PQScreenController.InitialData(Screens.CBT_GAME_SCREEN, null));
+                    ViewSwitcher.showScreen(View.PQ_SCREEN);
                     resultDialogDimmer.setVisible(false);
                 }
                 resultDialogDimmer.setVisible(false);
@@ -346,8 +345,8 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         });
 
         exitButton.setOnAction(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.CBT_GAME_SCREEN, null));
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.passData(new PQScreenController.InitialData(Screens.CBT_GAME_SCREEN, null));
+            ViewSwitcher.showScreen(View.PQ_SCREEN);
         });
     }
 

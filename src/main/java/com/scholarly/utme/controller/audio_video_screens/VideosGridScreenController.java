@@ -61,7 +61,7 @@ public class VideosGridScreenController implements FxmlView<VideosGridScreenVM>,
 
         backButton.setOnAction(event -> {
             ViewSwitcher.passData("videosButton");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.showScreen(View.PQ_SCREEN);
         });
     }
 

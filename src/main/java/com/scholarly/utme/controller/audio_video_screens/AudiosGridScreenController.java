@@ -61,7 +61,7 @@ public class AudiosGridScreenController implements FxmlView<AudiosGridScreenVM>,
 
         backButton.setOnAction(event -> {
             ViewSwitcher.passData("audiosButton");
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.showScreen(View.PQ_SCREEN);
         });
     }
 
