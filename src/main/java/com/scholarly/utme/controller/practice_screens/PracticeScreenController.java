@@ -747,17 +747,6 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             List<TheoryQuestionDescription> quesDescriptionList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getQuestionDescriptionId()).toList();
 
-//            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
-//            questionDescriptionHeader.setText("");
-//
-//            if (!quesDescriptionInList.isEmpty()) {
-////                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-////                readQuestionDesc.setVisible(true);
-//                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-//                questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-//            }
-
-//            questionLabel.setText(question.getQuestion());
             questionWebView.getEngine().loadContent(question.getQuestion());
 
             String questionText = question.getQuestion();

@@ -13,6 +13,7 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -84,6 +85,8 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             "-fx-background-color: #FFA347;" +
                     "-fx-background-radius: 5";
 
+    private SimpleObjectProperty<NovelChapter> previouslySelectedChapter = new SimpleObjectProperty<>();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         options = new ArrayList<>();
@@ -114,6 +117,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         renderNovel(viewModel.getSelectedChapter());
 
         viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
+            previouslySelectedChapter.set(oldValue);
             if (!newValue.isFree()) {
                 showActivateDialog();
             } else {
@@ -132,6 +136,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
         nextButton.setOnAction(event -> {
             int selectedIndex = chaptersList.getSelectionModel().getSelectedIndex();
+            previouslySelectedChapter.set(chaptersList.getSelectionModel().getSelectedItem());
             chaptersList.getSelectionModel().select(selectedIndex + 1);
             viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
             if (!viewModel.getSelectedChapter().isFree()) {
@@ -148,7 +153,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         backButton.setOnAction(event -> {
             exitDialogDimmer.setVisible(true);
 
-            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm", null, "Are you sure you want to exit?");
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm", null, "Are you sure you want to stop reading?");
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
                     NovelLastSession novelLastSession = new NovelLastSession(
@@ -195,7 +200,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         });*/
 
         activateNowCloseIcon.setOnMouseClicked(event -> {
-            chaptersList.getSelectionModel().select(0);
+            chaptersList.getSelectionModel().select(previouslySelectedChapter.get());
             viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
             Animations.hideDialog(activateNowDialog, exitDialogDimmer);
         });

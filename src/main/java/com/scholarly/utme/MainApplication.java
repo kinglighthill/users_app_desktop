@@ -10,7 +10,7 @@ import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.util.LandingScreen;
-import com.scholarly.utme.util.LandingScreenTask;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.PreferencesManager;
 import javafx.application.Application;
 import javafx.scene.control.ButtonType;
@@ -80,6 +80,7 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
                 );
             });
 
+            PreferencesManager.putBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, true);
             boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
             if (firstTimeUser) {
                 ViewSwitcher.showScreen(View.WELCOME_SCREEN);

@@ -59,7 +59,7 @@
                             </VBox.margin>
                         </Label>
 
-                        <TextField fx:id="signUpNameField" promptText="Enter your First Name and Last Name" prefWidth="80" focusTraversable="false" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
+                        <TextField fx:id="signUpNameField" promptText="Enter your first and last name" prefWidth="80" focusTraversable="false" style="-fx-background-color: rgba(44, 189, 57, 0.1);">
                             <padding>
                                 <Insets left="7" top="10" bottom="10"/>
                             </padding>
