@@ -395,6 +395,7 @@ public class Helper {
             imageQuestion = loadLatex(mClass, imageQuestion);
         }
         return imageQuestion;
+    }
 
     public static void showWebpage(HttpExchange exchange, String webContent, ErrorCallback callback) {
         try {
