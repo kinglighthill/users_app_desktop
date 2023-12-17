@@ -252,7 +252,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             });
 
             recoverProceedButton.setOnAction(event -> {
-
                 if (!recoverEmailField.getText().contains("@")) {
                     recoverEmailPrompt.setText("Please enter a valid email address");
                     recoverEmailPrompt.setTextFill(Paint.valueOf("#FF0000"));
@@ -306,7 +305,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             recoverEmailField.setTextFormatter(recoverTextFormatter);
 
             signUpGoogleButton.setOnAction(event -> {
-
                 signUpGoogleButton.setDisable(true);
                 showProgressBar();
 
@@ -335,7 +333,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             });
 
             loginGoogleButton.setOnAction(event -> {
-
                 loginGoogleButton.setDisable(true);
                 showProgressBar();
 
