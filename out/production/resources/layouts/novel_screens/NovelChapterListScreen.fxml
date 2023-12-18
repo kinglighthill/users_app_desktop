@@ -22,7 +22,7 @@
                         <Insets top="8" right="13" bottom="8" left="13" />
                     </padding>
                 </Button>
-                <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
+                <Label fx:id="pageTitle" textFill="#034801">
                     <font>
                         <Font name="System Bold" size="22"/>
                     </font>

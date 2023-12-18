@@ -4,6 +4,8 @@ import com.scholarly.utme.controller.PQScreenController;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
+import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.ui.utils.FontUtil.GilroyFontFamily;
 import com.scholarly.utme.util.Helper;
@@ -12,12 +14,16 @@ import com.scholarly.utme.viewmodels.practice_screens.CBTGameScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.CBTGameScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,7 +43,10 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/practice_screens/CBTGameScreen.fxml")
@@ -70,8 +79,13 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     private Pane resultDialogDimmer, reportDialogDimmer;
     @FXML
     private VBox resultDialog, reportDialog, incorrectAnswerPane, questionDescriptionDialog, questionCenterVBox, questionVBox, questionWithImageVBox, questionLayoutLeft, questionLayoutRight;
-  
-    private Stage calculatorStage = new Stage();
+
+    @FXML
+    private BorderPane practiceContentPane;
+    @FXML
+    private ProgressIndicator progressBar;
+
+    private final Stage calculatorStage = new Stage();
 
     String idleButtonStyle =
             "-fx-background-color: #FF8D19;" +
@@ -93,6 +107,34 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        showProgressBar();
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+        Task<Boolean> contentTask = new Task<>() {
+            @Override
+            protected Boolean call() {
+                viewModel.processInitialData(getInitialData());
+                return true;
+            }
+        };
+        contentTask.setOnSucceeded(
+                succeedEvent -> Platform.runLater(() -> {
+                    viewModel.selectedQuestionProperty().addListener((observableValue, number, t1) -> {
+                        changeSelectedQuestion(t1.intValue());
+//                        updateBookmarkIcon();
+                    });
+
+                    viewModel.fiftyFiftyCountProperty().addListener((observableValue, number, t1) -> {
+                        updateFiftyFiftyButton(t1.intValue());
+                    });
+                    updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
+                    hideProgressBar();
+                })
+        );
+
+        executorService.execute(contentTask);
+        executorService.shutdown();
+
         correctSound = new Media(getClass().getResource("/sounds/correctAnswer.mp3").toExternalForm());
         wrongSound = new Media(getClass().getResource("/sounds/wrongAnswer.mp3").toExternalForm());
 
@@ -107,24 +149,12 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         options.add(optionCButton);
         options.add(optionDButton);
 
-        viewModel.processInitialData(getInitialData());
-
         initializeViews();
         initializeFonts();
         initializeGestures();
         setupQuestionView();
 //        updateBookmarkIcon();
         setupReportSection();
-
-        viewModel.selectedQuestionProperty().addListener((observableValue, number, t1) -> {
-            changeSelectedQuestion(t1.intValue());
-//            updateBookmarkIcon();
-        });
-
-        viewModel.fiftyFiftyCountProperty().addListener((observableValue, number, t1) -> {
-            updateFiftyFiftyButton(t1.intValue());
-        });
-        updateFiftyFiftyButton(viewModel.getFiftyFiftyCount());
 
         fiftyFiftyButton.setOnAction(event -> {
             QuestionState questionState = viewModel.getQuestions().get(viewModel.getSelectedQuestion() - 1);
@@ -267,7 +297,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             }
         });
 
-
         options.forEach(button -> {
             button.setStyle(idleButtonStyle);
             button.setOnMouseEntered(e -> {
@@ -282,7 +311,6 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             button.setWrapText(true);
             button.setTextFill(Color.WHITE);
         });
-
 
         /*bookmarkImage.setOnMouseClicked(event -> {
             viewModel.handleBookmarkClicked();
@@ -912,6 +940,15 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
         return Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText);
     }
 
+    private void hideProgressBar() {
+        progressBar.setVisible(false);
+        practiceContentPane.setVisible(true);
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisible(true);
+        practiceContentPane.setVisible(false);
+    }
 
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();

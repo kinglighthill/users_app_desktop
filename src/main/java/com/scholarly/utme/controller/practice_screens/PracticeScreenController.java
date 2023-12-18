@@ -5,6 +5,7 @@ import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.newDb.TheoryQuestionDescription;
+import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.Helper;
@@ -18,7 +19,9 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.SceneLifecycle;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -46,6 +49,8 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @FxmlPath("/layouts/practice_screens/PracticeScreen.fxml")
@@ -90,8 +95,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     private Pane dialogDimmer, exitDialogDimmer, summaryDialogDimmer;
     @FXML
     private WebView questionWebView, optionAWebView, questionWithImageWebView;
+    @FXML
+    private BorderPane practiceContentPane;
 
-    private ToggleGroup toggleGroup = new ToggleGroup();
+    @FXML
+    private ProgressIndicator progressBar;
+
+    private final ToggleGroup toggleGroup = new ToggleGroup();
 
     double totalScore = 0;
     double totalQuestions = 0;
@@ -100,62 +110,273 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        viewModel.processInitialData(getInitialData());
-        
-        initializeViews();
-
-        initializeFont();
-
-        subjectList.setCellFactory(new PracticeSubjectListCellFactory());
-        subjectList.setItems(viewModel.getSubjects());
-        subjectList.getSelectionModel().selectFirst();
-        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) change -> {
-            if (change.getList().size() == 1) {
-                PQSubject subject = change.getList().get(0);
-                System.out.println(TAG + "Content of change -> " + change);
-                viewModel.setSelectedSubject(subject);
-                appBarTitle.setText("CBT PRACTICE");
-                appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getShortTitle()).getYear());
-            } else {
-                viewModel.setSelectedSubject(null);
-            }
-        });
-
-        viewModel.setSelectedSubject(subjectList.getSelectionModel().getSelectedItem());
-        setupQuestionView(viewModel.getSelectedSubject());
-        setupTilePane(viewModel.getSelectedSubject());
-
-        appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getShortTitle()).getYear());
-
-        viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                setupQuestionView(newValue);
-                setupTilePane(newValue);
-                updateBookmarkIcon();
-            }
-        });
-
-        viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
-            subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
-                if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
-                    if (newValue.intValue() <= subjectQuestionsState.getQuestions().size()){
-                        changeSelectedTile(oldValue.intValue(), newValue.intValue());
-                        changeSelectedQuestion(newValue.intValue());
-                        updateBookmarkIcon();
-                    }
-                }
-            });
-        });
-
         // Integer value to track subjectList subject selection
         AtomicInteger subjectListSelectionAtomicIndex = new AtomicInteger(0);
 
-        subjectList.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<? super Integer>) observable -> {
-            if (observable.getList().size() == 1) {
-                subjectListSelectionAtomicIndex.set(observable.getList().get(0));
+        showProgressBar();
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+        Task<Boolean> contentTask = new Task<>() {
+            @Override
+            protected Boolean call() {
+                viewModel.processInitialData(getInitialData());
+                return true;
             }
-        });
+        };
+        contentTask.setOnSucceeded(
+                succeedEvent -> Platform.runLater(() -> {
+                    subjectList.setCellFactory(new PracticeSubjectListCellFactory());
+                    subjectList.setItems(viewModel.getSubjects());
+                    subjectList.getSelectionModel().selectFirst();
+                    subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) change -> {
+                        if (change.getList().size() == 1) {
+                            PQSubject subject = change.getList().get(0);
+                            System.out.println(TAG + "Content of change -> " + change);
+                            viewModel.setSelectedSubject(subject);
+                            appBarTitle.setText("CBT PRACTICE");
+                            appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getShortTitle()).getYear());
+                        } else {
+                            viewModel.setSelectedSubject(null);
+                        }
+                    });
+
+                    viewModel.setSelectedSubject(subjectList.getSelectionModel().getSelectedItem());
+                    setupQuestionView(viewModel.getSelectedSubject());
+                    setupTilePane(viewModel.getSelectedSubject());
+
+                    appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getShortTitle()).getYear());
+
+                    viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue != null) {
+                            setupQuestionView(newValue);
+                            setupTilePane(newValue);
+                            updateBookmarkIcon();
+                        }
+                    });
+
+                    viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
+                        subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
+                            if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
+                                if (newValue.intValue() <= subjectQuestionsState.getQuestions().size()){
+                                    changeSelectedTile(oldValue.intValue(), newValue.intValue());
+                                    changeSelectedQuestion(newValue.intValue());
+                                    updateBookmarkIcon();
+                                }
+                            }
+                        });
+                    });
+
+                    subjectList.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<? super Integer>) observable -> {
+                        if (observable.getList().size() == 1) {
+                            subjectListSelectionAtomicIndex.set(observable.getList().get(0));
+                        }
+                    });
+
+
+                    if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+                        optionAButton.setOnAction(event -> {
+                            int selectedQuestion = viewModel.getSubjectsQuestions()
+                                    .get(viewModel.getSelectedSubject().getShortTitle())
+                                    .getSelectedQuestion();
+
+
+
+                            QuestionState questionState = viewModel.getSubjectsQuestions()
+                                    .get(viewModel.getSelectedSubject().getShortTitle())
+                                    .getQuestions()
+                                    .get(selectedQuestion - 1);
+
+                            ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
+
+//                questionState.setSelectedOption(question.getOptionA());
+                            questionState.setSelectedOptionId(question.getOptionA().getId());
+
+                            if (questionState.getSelectedOptionId() == -1) {
+                                onOptionSelected(selectedQuestion);
+                            }
+
+                        });
+                        optionAButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                            if (newValue) {
+                                int selectedQuestion = viewModel.getSubjectsQuestions()
+                                        .get(viewModel.getSelectedSubject().getShortTitle())
+                                        .getSelectedQuestion();
+
+                                QuestionState questionState = viewModel.getSubjectsQuestions()
+                                        .get(viewModel.getSelectedSubject().getShortTitle())
+                                        .getQuestions()
+                                        .get(selectedQuestion - 1);
+
+                                ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
+
+                                if (questionState.getSelectedOptionId() == -1) {
+                                    onOptionSelected(selectedQuestion);
+                                }
+
+//                    questionState.setSelectedOption(question.getOptionA());
+                                questionState.setSelectedOptionId(question.getOptionA().getId());
+                            }
+                        });
+
+                        optionBButton.setOnAction(event -> {
+                            int selectedQuestion = viewModel.getSubjectsQuestions()
+                                    .get(viewModel.getSelectedSubject().getShortTitle())
+                                    .getSelectedQuestion();
+
+                            QuestionState questionState = viewModel.getSubjectsQuestions()
+                                    .get(viewModel.getSelectedSubject().getShortTitle())
+                                    .getQuestions()
+                                    .get(selectedQuestion - 1);
+
+                            ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
+
+                            if (questionState.getSelectedOptionId() == -1) {
+                                onOptionSelected(selectedQuestion);
+                            }
+
+//                questionState.setSelectedOption(question.getOptionB());
+                            questionState.setSelectedOptionId(question.getOptionB().getId());
+                        });
+                        optionBButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                            if (newValue) {
+                                int selectedQuestion = viewModel.getSubjectsQuestions()
+                                        .get(viewModel.getSelectedSubject().getShortTitle())
+                                        .getSelectedQuestion();
+
+                                QuestionState questionState = viewModel.getSubjectsQuestions()
+                                        .get(viewModel.getSelectedSubject().getShortTitle())
+                                        .getQuestions()
+                                        .get(selectedQuestion - 1);
+
+                                ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
+
+                                if (questionState.getSelectedOptionId() == -1) {
+                                    onOptionSelected(selectedQuestion);
+                                }
+
+//                    questionState.setSelectedOption(question.getOptionB());
+                                questionState.setSelectedOptionId(question.getOptionB().getId());
+                            }
+                        });
+
+                        optionCButton.setOnAction(event -> {
+                            int selectedQuestion = viewModel.getSubjectsQuestions()
+                                    .get(viewModel.getSelectedSubject().getShortTitle())
+                                    .getSelectedQuestion();
+
+                            QuestionState questionState = viewModel.getSubjectsQuestions()
+                                    .get(viewModel.getSelectedSubject().getShortTitle())
+                                    .getQuestions()
+                                    .get(selectedQuestion - 1);
+
+                            ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
+
+                            if (questionState.getSelectedOptionId() == -1) {
+                                onOptionSelected(selectedQuestion);
+                            }
+
+//                questionState.setSelectedOption(question.getOptionC());
+                            questionState.setSelectedOptionId(question.getOptionC().getId());
+                        });
+                        optionCButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                            if (newValue) {
+                                int selectedQuestion = viewModel.getSubjectsQuestions()
+                                        .get(viewModel.getSelectedSubject().getShortTitle())
+                                        .getSelectedQuestion();
+
+                                QuestionState questionState = viewModel.getSubjectsQuestions()
+                                        .get(viewModel.getSelectedSubject().getShortTitle())
+                                        .getQuestions()
+                                        .get(selectedQuestion - 1);
+
+                                ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
+
+                                if (questionState.getSelectedOptionId() == -1) {
+                                    onOptionSelected(selectedQuestion);
+                                }
+
+//                    questionState.setSelectedOption(question.getOptionC());
+                                questionState.setSelectedOptionId(question.getOptionC().getId());
+                            }
+                        });
+
+                        optionDButton.setOnAction(event -> {
+                            int selectedQuestion = viewModel.getSubjectsQuestions()
+                                    .get(viewModel.getSelectedSubject().getShortTitle())
+                                    .getSelectedQuestion();
+
+                            QuestionState questionState = viewModel.getSubjectsQuestions()
+                                    .get(viewModel.getSelectedSubject().getShortTitle())
+                                    .getQuestions()
+                                    .get(selectedQuestion - 1);
+
+                            ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
+
+                            if (questionState.getSelectedOptionId() == -1) {
+                                onOptionSelected(selectedQuestion);
+                            }
+
+//                questionState.setSelectedOption(question.getOptionD());
+                            questionState.setSelectedOptionId(question.getOptionD().getId());
+                        });
+                        optionDButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                            if (newValue) {
+                                int selectedQuestion = viewModel.getSubjectsQuestions()
+                                        .get(viewModel.getSelectedSubject().getShortTitle())
+                                        .getSelectedQuestion();
+
+                                QuestionState questionState = viewModel.getSubjectsQuestions()
+                                        .get(viewModel.getSelectedSubject().getShortTitle())
+                                        .getQuestions()
+                                        .get(selectedQuestion - 1);
+
+                                ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
+
+                                if (questionState.getSelectedOptionId() == -1) {
+                                    onOptionSelected(selectedQuestion);
+                                }
+
+//                    questionState.setSelectedOption(question.getOptionD());
+                                questionState.setSelectedOptionId(question.getOptionD().getId());
+                            }
+                        });
+
+                    } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+                        centerVBox.getChildren().removeAll(optionAButton, optionBButton, optionCButton, optionDButton);
+                    }
+
+                    viewModel.timeProperty().addListener((observable, oldValue, newValue) -> {
+                        String timeText = "";
+
+                        long hours = newValue.longValue() / 3600;
+                        long minutes = newValue.longValue() % 3600 / 60;
+                        long secs = newValue.longValue() % 60;
+
+                        if (hours > 0) {
+                            timeText = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, secs);
+                        } else {
+                            timeText = String.format(Locale.getDefault(), "%02d:%02d", minutes, secs);
+                        }
+
+                        timeLabel.setText(timeText);
+
+                        if (newValue.intValue() == 0) {
+                            showTimeUpDialog();
+                        }
+
+                        // TODO: Implement time elapsed here
+                    });
+
+                    hideProgressBar();
+                })
+        );
+
+        executorService.execute(contentTask);
+        executorService.shutdown();
+        
+        initializeViews();
+        initializeFont();
+
 
         prevButton.setOnAction(event -> {
             nextButton.setDisable(false);
@@ -217,207 +438,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
         toggleGroup.getToggles().addAll(optionAButton, optionBButton, optionCButton, optionDButton);
 
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-
-            optionAButton.setOnAction(event -> {
-                int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle())
-                        .getSelectedQuestion();
-
-
-
-                QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle())
-                        .getQuestions()
-                        .get(selectedQuestion - 1);
-
-                ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
-
-//                questionState.setSelectedOption(question.getOptionA());
-                questionState.setSelectedOptionId(question.getOptionA().getId());
-
-                if (questionState.getSelectedOptionId() == -1) {
-                    onOptionSelected(selectedQuestion);
-                }
-
-            });
-            optionAButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getShortTitle())
-                            .getSelectedQuestion();
-
-                    QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getShortTitle())
-                            .getQuestions()
-                            .get(selectedQuestion - 1);
-
-                    ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
-
-                    if (questionState.getSelectedOptionId() == -1) {
-                        onOptionSelected(selectedQuestion);
-                    }
-
-//                    questionState.setSelectedOption(question.getOptionA());
-                    questionState.setSelectedOptionId(question.getOptionA().getId());
-                }
-            });
-
-            optionBButton.setOnAction(event -> {
-                int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle())
-                        .getSelectedQuestion();
-
-                QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle())
-                        .getQuestions()
-                        .get(selectedQuestion - 1);
-
-                ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
-
-                if (questionState.getSelectedOptionId() == -1) {
-                    onOptionSelected(selectedQuestion);
-                }
-
-//                questionState.setSelectedOption(question.getOptionB());
-                questionState.setSelectedOptionId(question.getOptionB().getId());
-            });
-            optionBButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getShortTitle())
-                            .getSelectedQuestion();
-
-                    QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getShortTitle())
-                            .getQuestions()
-                            .get(selectedQuestion - 1);
-
-                    ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
-
-                    if (questionState.getSelectedOptionId() == -1) {
-                        onOptionSelected(selectedQuestion);
-                    }
-
-//                    questionState.setSelectedOption(question.getOptionB());
-                    questionState.setSelectedOptionId(question.getOptionB().getId());
-                }
-            });
-
-            optionCButton.setOnAction(event -> {
-                int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle())
-                        .getSelectedQuestion();
-
-                QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle())
-                        .getQuestions()
-                        .get(selectedQuestion - 1);
-
-                ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
-
-                if (questionState.getSelectedOptionId() == -1) {
-                    onOptionSelected(selectedQuestion);
-                }
-
-//                questionState.setSelectedOption(question.getOptionC());
-                questionState.setSelectedOptionId(question.getOptionC().getId());
-            });
-            optionCButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getShortTitle())
-                            .getSelectedQuestion();
-
-                    QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getShortTitle())
-                            .getQuestions()
-                            .get(selectedQuestion - 1);
-
-                    ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
-
-                    if (questionState.getSelectedOptionId() == -1) {
-                        onOptionSelected(selectedQuestion);
-                    }
-
-//                    questionState.setSelectedOption(question.getOptionC());
-                    questionState.setSelectedOptionId(question.getOptionC().getId());
-                }
-            });
-
-            optionDButton.setOnAction(event -> {
-                int selectedQuestion = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle())
-                        .getSelectedQuestion();
-
-                QuestionState questionState = viewModel.getSubjectsQuestions()
-                        .get(viewModel.getSelectedSubject().getShortTitle())
-                        .getQuestions()
-                        .get(selectedQuestion - 1);
-
-                ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
-
-                if (questionState.getSelectedOptionId() == -1) {
-                    onOptionSelected(selectedQuestion);
-                }
-
-//                questionState.setSelectedOption(question.getOptionD());
-                questionState.setSelectedOptionId(question.getOptionD().getId());
-            });
-            optionDButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    int selectedQuestion = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getShortTitle())
-                            .getSelectedQuestion();
-
-                    QuestionState questionState = viewModel.getSubjectsQuestions()
-                            .get(viewModel.getSelectedSubject().getShortTitle())
-                            .getQuestions()
-                            .get(selectedQuestion - 1);
-
-                    ObjectiveQuestion question = (ObjectiveQuestion) questionState.getQuestion();
-
-                    if (questionState.getSelectedOptionId() == -1) {
-                        onOptionSelected(selectedQuestion);
-                    }
-
-//                    questionState.setSelectedOption(question.getOptionD());
-                    questionState.setSelectedOptionId(question.getOptionD().getId());
-                }
-            });
-
-        }
-        else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
-
-            centerVBox.getChildren().removeAll(optionAButton, optionBButton, optionCButton, optionDButton);
-
-        }
-
-        viewModel.timeProperty().addListener((observable, oldValue, newValue) -> {
-            String timeText = "";
-
-            long hours = newValue.longValue() / 3600;
-            long minutes = newValue.longValue() % 3600 / 60;
-            long secs = newValue.longValue() % 60;
-
-            if (hours > 0) {
-                timeText = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, secs);
-            } else {
-                timeText = String.format(Locale.getDefault(), "%02d:%02d", minutes, secs);
-            }
-
-            timeLabel.setText(timeText);
-
-            if (newValue.intValue() == 0) {
-                showTimeUpDialog();
-            }
-
-            // TODO: Implement time elapsed here
-        });
-
-        exitButton.setOnAction(event -> {
-            showExitDialog();
-        });
+        exitButton.setOnAction(event -> showExitDialog());
 
         submitButton.setOnAction(event -> {
             showSubmitDialog();
@@ -1065,6 +1086,16 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @Override
     public void onViewRemoved() {
         TextToSpeech.dispose();
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisible(false);
+        practiceContentPane.setVisible(true);
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisible(true);
+        practiceContentPane.setVisible(false);
     }
 
     public static class InitialData {

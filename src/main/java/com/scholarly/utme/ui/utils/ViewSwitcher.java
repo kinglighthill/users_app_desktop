@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class ViewSwitcher {
     private static Stage stage;
     private static final Scene rootScene = new Scene(new Pane());
@@ -52,6 +54,19 @@ public class ViewSwitcher {
             e.printStackTrace();
         }
     }
+
+    /*public static void showScreen(View view) {
+        try {
+            Parent root = FluentViewLoader.fxmlView(view.getControllerClass()).load().getView();
+            String cssResource = Objects.requireNonNull(MainApplication.class.getResource("/styles/main.css")).toExternalForm();
+            root.getStylesheets().add(cssResource);
+            currentView = view;
+            rootScene.setRoot(root);
+        } catch (Exception e) {
+            MainApplication.log(e);
+            e.printStackTrace();
+        }
+    }*/
 
     public static void setStage(Stage stage) {
         ViewSwitcher.stage = stage;

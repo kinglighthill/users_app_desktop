@@ -35,6 +35,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.scholarly.utme.util.Constants.*;
 
@@ -58,32 +60,20 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
     @FXML
     private Label emailText, deviceIdLabel;
 
-
+    private String userId = "";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        String userId = viewModel.getUserId();
-
-        boolean internetEnabled = Helper.checkNetworkConnectivity();
-
-        initializeViews();
-        initializeFonts();
-
-        emailText.setText(viewModel.getUser().getEmail());
-
-//        String deviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
-        String deviceId = DeviceInfo.getSystemProperties().getDeviceId();
-
-        deviceIdLabel.setText(deviceId.toUpperCase());
-
-        String imageUrl = viewModel.getUser().getProfilePicUrl();
-        String imageUrlWithQueryString = imageUrl + "?" + RandomStringUtils.random(6, true, true);
-
-        long start = System.currentTimeMillis();
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
 
         Task<Void> imageTask = new Task<>() {
             @Override
             protected Void call() {
+                boolean internetEnabled = Helper.checkNetworkConnectivity();
+
+                String imageUrl = viewModel.getUser().getProfilePicUrl();
+                String imageUrlWithQueryString = imageUrl + "?" + RandomStringUtils.random(6, true, true);
+
                 if (imageUrl != null && !imageUrl.contains("empty")) {
                     Image image = new Image(imageUrlWithQueryString, true);
                     if (image.isError() || !internetEnabled) {
@@ -104,10 +94,22 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
                 return null;
             }
         };
-        Thread imageThread = new Thread(imageTask);
-        imageThread.start();
 
-        System.out.println(TAG + "Time taken to load image -> " + (System.currentTimeMillis() - start) + "ms");
+        viewModel.getUidLoaded().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                executorService.execute(imageTask);
+                executorService.shutdown();
+
+                userId = viewModel.getUserId();
+                emailText.setText(viewModel.getUser().getEmail());
+            }
+        });
+
+        String deviceId = DeviceInfo.getSystemProperties().getDeviceId();
+        deviceIdLabel.setText(deviceId.toUpperCase());
+
+        initializeViews();
+        initializeFonts();
 
         profilePanel.setOnMouseClicked(mouseEvent -> {
             ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN);
@@ -141,21 +143,19 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
-                    dialogDimmer.setVisible(true);
                     PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, true);
                     PreferencesManager.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
                     PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
                     ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                     PreferencesManager.putBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, true);
-                } else {
-                    dialogDimmer.setVisible(false);
                 }
+
+                dialogDimmer.setVisible(false);
                 return buttonType;
             });
             dialog.show();
         });
-
     }
 
     private void initializeViews() {
@@ -210,7 +210,5 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
         thread.start();
     }
 
-    private void initializeFonts() {
-
-    }
+    private void initializeFonts() { }
 }

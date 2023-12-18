@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller.syllabus_screens;
 
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.data.dao.newDb.SyllabusSectionDao;
 import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
 import com.scholarly.utme.data.model.newDb.contentViewType.HeaderViewType;
@@ -9,10 +11,14 @@ import com.scholarly.utme.viewmodels.syllabus_screens.SelectSyllabusVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,11 +27,13 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @FxmlPath("/layouts/syllabus_screens/SelectSyllabusScreen.fxml")
 public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Initializable {
@@ -55,6 +63,9 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
     @FXML
     private TabPane syllabusTabPane, sectionTabPane;
 
+    @FXML
+    private ProgressIndicator progressBar;
+
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
@@ -64,220 +75,220 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         initializeViews();
         initializeFonts();
 
         ToggleGroup subjectListToggleGroup = new ToggleGroup();
 
-        viewModel.getSyllabusSubjects().forEach(syllabusSubject -> {
+        viewModel.getSubjectsLoaded().addListener((mObservable, mOldValue, mNewValue) -> {
+            viewModel.getSyllabusSubjects().forEach(syllabusSubject -> {
+                ToggleButton button = new ToggleButton();
+                button.setUserData(syllabusSubject);
+                subjectListToggleGroup.getToggles().add(button);
 
-            ToggleButton button = new ToggleButton();
-            button.setUserData(syllabusSubject);
-            subjectListToggleGroup.getToggles().add(button);
+                button.setMinHeight(70);
+                button.setMaxHeight(70);
+                button.setPadding(new Insets(0, 0, 0, 20));
+                button.setAlignment(Pos.BASELINE_LEFT);
+                button.setMaxWidth(Double.MAX_VALUE);
+                button.setText(syllabusSubject.getTitle());
+                button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
-            button.setMinHeight(70);
-            button.setMaxHeight(70);
-            button.setPadding(new Insets(0, 0, 0, 20));
-            button.setAlignment(Pos.BASELINE_LEFT);
-            button.setMaxWidth(Double.MAX_VALUE);
-            button.setText(syllabusSubject.getTitle());
-            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
+                ImageView graphic = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + syllabusSubject.getShortTitle() + "_image.png").toString()));
+                graphic.setFitWidth(27);
+                graphic.setFitHeight(27);
+                button.setGraphic(graphic);
+                button.setGraphicTextGap(25.0);
 
-            ImageView graphic = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + syllabusSubject.getShortTitle() + "_image.png").toString()));
-            graphic.setFitWidth(27);
-            graphic.setFitHeight(27);
-            button.setGraphic(graphic);
-            button.setGraphicTextGap(25.0);
-
-            button.setStyle(IDLE_BUTTON_STYLE);
-            button.setOnMouseEntered(e -> {
-                if (!button.isSelected()) {
-                    button.setStyle(HOVERED_BUTTON_STYLE2);
-                }
-            });
-            button.setOnMouseExited(e -> {
-                if (!button.isSelected()) {
-                    button.setStyle(IDLE_BUTTON_STYLE);
-                }
-            });
-
-            button.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    button.setStyle(PRESSED_STYLE2);
-//                    button.setTextFill(Color.WHITE);
-                } else {
-                    button.setStyle(IDLE_BUTTON_STYLE);
-//                    button.setTextFill(Color.BLACK);
-                }
-            });
-
-            subjectListVBox.getChildren().add(button);
-        });
-
-//        subjectListToggleGroup.selectToggle(subjectListToggleGroup.getToggles().get(0));
-
-        subjectListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                SyllabusSubject selectedSubject = (SyllabusSubject) newValue.getUserData();
-                viewModel.setSelectedSyllabusSubject(selectedSubject);
-                renderObjectives();
-                renderRecommendedTexts();
-                emptySyllabusListLabel.setVisible(false);
-            } else {
-                viewModel.setSelectedSyllabusSubject(null);
-                emptySyllabusListLabel.setVisible(true);
-                recTextsTab.setContent(null);
-                genObjectiveTab.setContent(null);
-            }
-        });
-
-        viewModel.selectedSyllabusSubjectProperty().addListener(((observable, oldValue, newValue) -> {
-            tabTopicsVBox.getChildren().clear();
-            if (sectionPane.isVisible()) {
-                Animations.slideOut(sectionPane);
-                emptySectionText.setVisible(true);
-            }
-
-            if (newValue != null) {
-
-                viewModel.getCategories().forEach(syllabusCategory -> {
-
-                    if (syllabusCategory.getSubjectId() == newValue.getId()) {
-                        VBox categoryContent = new VBox(5.0);
-
-                        Label categoryTitle = new Label(syllabusCategory.getTitle());
-                        categoryTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 19));
-                        categoryContent.getChildren().add(categoryTitle);
-
-                        viewModel.getSyllabusTopics().get(syllabusCategory.getId()).forEach(topic -> {
-                            HBox topicBottomBox = new HBox(35.0);
-//                            System.out.println("Got Syllabus Topic with Category Id -- " + topic.getCategoryId() + " and section Id -- " + topic.getSectionId());
-
-                            SyllabusSection currentSection = null;
-
-                            for (int i = 0; i < viewModel.getSyllabusSections().get(syllabusCategory.getSubjectId()).size(); i++) {
-                                VBox topicsVBox = new VBox(5.0);
-
-                                SyllabusSection section = viewModel.getSyllabusSections().get(syllabusCategory.getSubjectId()).get(i);
-
-                                if (section.getId() == topic.getSectionId()) {
-//                                    System.out.println("Got Section -- " + section.getContent());
-                                    currentSection = section;
-                                    ContentViewType contentViewType = ContentViewTypes.convert(section);
-                                    HeaderViewType headerViewType = (HeaderViewType) contentViewType;
-
-                                    Label topicHeader = new Label();
-                                    topicHeader.setText(i+1 + ". " + headerViewType.getText());
-                                    topicHeader.setWrapText(true);
-                                    topicHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-
-                                    topicsVBox.getChildren().add(topicHeader);
-
-                                    categoryContent.getChildren().add(topicsVBox);
-                                }
-
-                                if (section.getParentSectionId() == topic.getSectionId()) {
-//                                    System.out.println("Got Section -- " + section.getContent());
-                                    ContentViewType sectionContentViewType = ContentViewTypes.convert(section);
-                                    HeaderViewType sectionViewType = (HeaderViewType) sectionContentViewType;
-
-                                    String index = numberToAlphabet(section.getChildSectionOrder(), false);
-
-                                    Label topicContent = new Label();
-                                    topicContent.setText("   " + index + ". " + sectionViewType.getText());
-                                    topicContent.setWrapText(true);
-                                    topicContent.setTextAlignment(TextAlignment.JUSTIFY);
-                                    topicContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 14));
-
-                                    topicsVBox.getChildren().add(topicContent);
-
-                                    categoryContent.getChildren().add(topicsVBox);
-
-                                }
-                                
-                            }
-
-                            Label objectives = new Label("Objectives");
-                            objectives.setTextFill(Paint.valueOf("#4081FF"));
-                            objectives.setStyle("-fx-cursor: hand;");
-                            objectives.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 16));
-                            SyllabusSection finalCurrentSection = currentSection;
-                            objectives.setOnMouseClicked(event -> {
-                                if (finalCurrentSection != null) {
-                                    renderSection(finalCurrentSection);
-                                }
-                            });
-                            objectives.setOnMouseEntered(event -> {
-                                objectives.setUnderline(true);
-                            });
-                            objectives.setOnMouseExited(event -> {
-                                objectives.setUnderline(false);
-                            });
-
-                            Circle dot1 = new Circle(3.0);
-                            dot1.setFill(Paint.valueOf("#233D2C"));
-
-                            Label content = new Label("Content");
-                            content.setTextFill(Paint.valueOf("#4081FF"));
-                            content.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 15));
-                            content.setDisable(true);
-                            content.setOnMouseEntered(event -> {
-                                content.setUnderline(true);
-                            });
-                            content.setOnMouseExited(event -> {
-                                content.setUnderline(false);
-                            });
-
-                            Circle dot2 = new Circle(3.0);
-                            dot2.setFill(Paint.valueOf("#233D2C"));
-
-                            Label evaluation = new Label("Evaluation");
-                            evaluation.setTextFill(Paint.valueOf("#4081FF"));
-                            evaluation.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 15));
-                            evaluation.setDisable(true);
-                            evaluation.setOnMouseEntered(event -> {
-                                evaluation.setUnderline(true);
-                            });
-                            evaluation.setOnMouseExited(event -> {
-                                evaluation.setUnderline(false);
-                            });
-
-//                            HBox.setMargin(topicBottomBox, new Insets(5.0, 0.0, 10.0, 0.0));
-                            topicBottomBox.setPadding(new Insets(5.0, 0.0, 10.0, 0.0));
-                            topicBottomBox.setAlignment(Pos.CENTER_LEFT);
-                            topicBottomBox.getChildren().addAll(objectives, dot1, content, dot2, evaluation);
-
-                            categoryContent.getChildren().add(topicBottomBox);
-
-                        });
-
-                        tabTopicsVBox.getChildren().add(categoryContent);
-                        tabTopicsVBox.setBackground(Background.EMPTY);
+                button.setStyle(IDLE_BUTTON_STYLE);
+                button.setOnMouseEntered(e -> {
+                    if (!button.isSelected()) {
+                        button.setStyle(HOVERED_BUTTON_STYLE2);
                     }
-
+                });
+                button.setOnMouseExited(e -> {
+                    if (!button.isSelected()) {
+                        button.setStyle(IDLE_BUTTON_STYLE);
+                    }
                 });
 
-            }
+                button.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue) {
+                        button.setStyle(PRESSED_STYLE2);
+                    } else {
+                        button.setStyle(IDLE_BUTTON_STYLE);
+                    }
+                });
 
-        }));
+                subjectListVBox.getChildren().add(button);
+            });
 
-        /*viewSyllabusButton.setOnAction(event -> {
-            SyllabusScreenController.InitialData data = new SyllabusScreenController.InitialData(
-                    viewModel.getSelectedSyllabusSubject(),
-                    viewModel.getSelectedCategory(),
-                    viewModel.getSyllabusCategories().get(
-                            viewModel.getSelectedSyllabusSubject().getSubjectId()
-                    ),
-                    viewModel.getSyllabusTopics().get(
-                            viewModel.getSelectedCategory().getId()
-                    ).stream().filter(syllabusTopic -> syllabusTopic.getCategoryId() == viewModel.getSelectedCategory().getId()).collect(Collectors.toList())
-            );
+            subjectListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+                MainApplication.resetTime();
+                if (newValue != null) {
+                    MainApplication.timeTakenTo("start selecting subject");
+                    SyllabusSubject selectedSubject = (SyllabusSubject) newValue.getUserData();
 
-            ViewSwitcher.passData(data);
-            ViewSwitcher.showScreen(View.SYLLABUS_SCREEN);
+                    if (topicsTab.isSelected()) {
+                        showProgressBar();
+                    } else  {
+                        topicsTab.setDisable(true);
+                    }
 
-        });*/
+                    emptySyllabusListLabel.setVisible(false);
+
+                    viewModel.setSelectedSyllabusSubject(selectedSubject);
+                    MainApplication.timeTakenTo("done selecting subject");
+                } else {
+                    viewModel.setSelectedSyllabusSubject(null);
+                    emptySyllabusListLabel.setVisible(true);
+                    recTextsTab.setContent(null);
+                    genObjectiveTab.setContent(null);
+                }
+            });
+
+            viewModel.selectedSyllabusSubjectProperty().addListener(((observable, oldValue, newValue) -> {
+                MainApplication.timeTakenTo("start loading syllabus");
+                tabTopicsVBox.getChildren().clear();
+                if (sectionPane.isVisible()) {
+                    Animations.slideOut(sectionPane);
+                    emptySectionText.setVisible(true);
+                }
+
+                if (newValue != null) {
+                    ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+                    Task<List<Node>> sectionsTask = new Task<>() {
+                        @Override
+                        protected List<Node> call() {
+                            List<Node> sectionNodes = new ArrayList<>();
+                            viewModel.getCategories().forEach(syllabusCategory -> {
+                                if (syllabusCategory.getSubjectId() == newValue.getId()) {
+                                    VBox categoryContent = new VBox(5.0);
+
+                                    Label categoryTitle = new Label(syllabusCategory.getTitle());
+                                    categoryTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 19));
+                                    categoryContent.getChildren().add(categoryTitle);
+
+                                    viewModel.getSyllabusTopics().get(syllabusCategory.getId()).forEach(topic -> {
+                                        HBox topicBottomBox = new HBox(35.0);
+                                        SyllabusSection currentSection = null;
+
+                                        for (int i = 0; i < viewModel.getSyllabusSections().get(syllabusCategory.getSubjectId()).size(); i++) {
+                                            VBox topicsVBox = new VBox(5.0);
+
+                                            SyllabusSection section = viewModel.getSyllabusSections().get(syllabusCategory.getSubjectId()).get(i);
+
+                                            if (section.getId() == topic.getSectionId()) {
+                                                currentSection = section;
+                                                ContentViewType contentViewType = ContentViewTypes.convert(section);
+                                                HeaderViewType headerViewType = (HeaderViewType) contentViewType;
+
+                                                Label topicHeader = new Label();
+                                                topicHeader.setText(i+1 + ". " + headerViewType.getText());
+                                                topicHeader.setWrapText(true);
+                                                topicHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+
+                                                topicsVBox.getChildren().add(topicHeader);
+
+                                                categoryContent.getChildren().add(topicsVBox);
+                                            }
+
+                                            if (section.getParentSectionId() == topic.getSectionId()) {
+                                                ContentViewType sectionContentViewType = ContentViewTypes.convert(section);
+                                                HeaderViewType sectionViewType = (HeaderViewType) sectionContentViewType;
+
+                                                String index = numberToAlphabet(section.getChildSectionOrder(), false);
+
+                                                Label topicContent = new Label();
+                                                topicContent.setText("   " + index + ". " + sectionViewType.getText());
+                                                topicContent.setWrapText(true);
+                                                topicContent.setTextAlignment(TextAlignment.JUSTIFY);
+                                                topicContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 14));
+
+                                                topicsVBox.getChildren().add(topicContent);
+
+                                                categoryContent.getChildren().add(topicsVBox);
+                                            }
+                                        }
+
+                                        Label objectives = new Label("Objectives");
+                                        objectives.setTextFill(Paint.valueOf("#4081FF"));
+                                        objectives.setStyle("-fx-cursor: hand;");
+                                        objectives.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 16));
+                                        SyllabusSection finalCurrentSection = currentSection;
+                                        objectives.setOnMouseClicked(event -> {
+                                            if (finalCurrentSection != null) {
+                                                renderSection(finalCurrentSection);
+                                            }
+                                        });
+                                        objectives.setOnMouseEntered(event -> {
+                                            objectives.setUnderline(true);
+                                        });
+                                        objectives.setOnMouseExited(event -> {
+                                            objectives.setUnderline(false);
+                                        });
+
+                                        Circle dot1 = new Circle(3.0);
+                                        dot1.setFill(Paint.valueOf("#233D2C"));
+
+                                        Label content = new Label("Content");
+                                        content.setTextFill(Paint.valueOf("#4081FF"));
+                                        content.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 15));
+                                        content.setDisable(true);
+                                        content.setOnMouseEntered(event -> {
+                                            content.setUnderline(true);
+                                        });
+                                        content.setOnMouseExited(event -> {
+                                            content.setUnderline(false);
+                                        });
+
+                                        Circle dot2 = new Circle(3.0);
+                                        dot2.setFill(Paint.valueOf("#233D2C"));
+
+                                        Label evaluation = new Label("Evaluation");
+                                        evaluation.setTextFill(Paint.valueOf("#4081FF"));
+                                        evaluation.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 15));
+                                        evaluation.setDisable(true);
+                                        evaluation.setOnMouseEntered(event -> {
+                                            evaluation.setUnderline(true);
+                                        });
+                                        evaluation.setOnMouseExited(event -> {
+                                            evaluation.setUnderline(false);
+                                        });
+
+                                        topicBottomBox.setPadding(new Insets(5.0, 0.0, 10.0, 0.0));
+                                        topicBottomBox.setAlignment(Pos.CENTER_LEFT);
+                                        topicBottomBox.getChildren().addAll(objectives, dot1, content, dot2, evaluation);
+
+                                        categoryContent.getChildren().add(topicBottomBox);
+                                    });
+
+                                    sectionNodes.add(categoryContent);
+                                }
+                            });
+                            return sectionNodes;
+                        }
+                    };
+                    sectionsTask.setOnSucceeded(
+                            event -> Platform.runLater(() -> {
+                                tabTopicsVBox.getChildren().addAll(sectionsTask.valueProperty().getValue());
+                                tabTopicsVBox.setBackground(Background.EMPTY);
+                                hideProgressBar();
+                            })
+                    );
+                    executorService.execute(sectionsTask);
+                    executorService.shutdown();
+
+                    renderObjectives();
+                    renderRecommendedTexts();
+                } else {
+                    hideProgressBar();
+                }
+
+                MainApplication.timeTakenTo("done loading syllabus");
+            }));
+        });
     }
 
     private void renderSection(SyllabusSection section) {
@@ -390,9 +401,20 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
             default -> "a";
         };
     }
+
     public void backButtonClicked(MouseEvent event) {
         ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
         ViewSwitcher.showScreen(View.LANDING_SCREEN);
     }
 
+    private void hideProgressBar() {
+        progressBar.setVisible(false);
+        tabTopicsVBox.setVisible(true);
+        topicsTab.setDisable(false);
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisible(true);
+        tabTopicsVBox.setVisible(false);
+    }
 }

@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller.landing_screens;
 
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.PQScreenController;
 import com.scholarly.utme.controller.note_screens.NotesScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
@@ -23,6 +24,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -42,7 +45,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -107,10 +109,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionHBox);
 
-        initializeViews();
-        initializeFonts();
-        initializeGestures();
-
         Task<Void> userNameTask = new Task<>() {
             @Override
             protected Void call() {
@@ -120,7 +118,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
                 String firstName = "";
                 if (userNameSplit.length > 0) {
                     firstName = userNameSplit[0];
-                } else if (userName != null) {
+                } else {
                     firstName = userName;
                 }
 
@@ -194,6 +192,8 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             }
         };
 
+        favouriteSubjectsTask.setOnSucceeded(event -> editSubjectsText.setDisable(false));
+
         Task<Void> lastSessionTask = new Task<>() {
             @Override
             protected Void call() {
@@ -235,6 +235,11 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             }
         });
 
+        editSubjectsText.setDisable(true);
+        initializeViews();
+        initializeFonts();
+        initializeGestures();
+
         editSubjectsText.setOnMouseClicked(e -> {
             Animations.fadeIn(selectSubjectPane, 300);
             Animations.fadeIn(dimmer, 250);
@@ -256,28 +261,36 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             PreferencesManager.putBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, false);
         });
 
-        profileImage.setOnMouseClicked(event -> {
-            ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN);
-        });
+        profileImage.setOnMouseClicked(event -> ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN));
 
         cbtPracticePanel.setOnMouseClicked(e -> {
+            MainApplication.resetTime();
             ViewSwitcher.passData(new PQScreenController.InitialData(null, null));
+            MainApplication.timeTakenTo("pass practice data");
             ViewSwitcher.showScreen(View.PQ_SCREEN);
+            MainApplication.timeTakenTo("show pq screen");
         });
 
         novelsPanel.setOnMouseClicked(e -> {
+            MainApplication.resetTime();
             ViewSwitcher.showScreen(View.NOVEL_SCREEN);
+            MainApplication.timeTakenTo("show novel screen");
         });
 
         studyNotesPanel.setOnMouseClicked(e -> {
+            MainApplication.resetTime();
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
+            MainApplication.timeTakenTo("show note screen");
         });
 
         syllabusPanel.setOnMouseClicked(e -> {
+            MainApplication.resetTime();
             ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
+            MainApplication.timeTakenTo("show syllabus screen");
         });
 
         noteLastSessionPanel.setOnMouseClicked(e -> {
+            MainApplication.resetTime();
             NotesScreenController.InitialData data = new NotesScreenController.InitialData(
                     viewModel.getLastSessionSubject(),
                     viewModel.getNoteSubjectTopics().get(
@@ -290,6 +303,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
                     null,
                     viewModel.getNoteLastSection()
             );
+            MainApplication.timeTakenTo("fetch note data");
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.NOTES_SCREEN);
         });
@@ -478,8 +492,10 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             });
 
             panel.setOnMouseClicked(event -> {
+                MainApplication.resetTime();
                 ViewSwitcher.passData(new PQScreenController.InitialData(Screens.PRACTICE_SCREEN, subject));
                 ViewSwitcher.showScreen(View.PQ_SCREEN);
+                MainApplication.timeTakenTo("show pq screen");
             });
 
             favoriteSubjectsTile.getChildren().add(panel);

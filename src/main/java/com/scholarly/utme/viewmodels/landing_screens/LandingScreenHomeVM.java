@@ -1,7 +1,6 @@
 package com.scholarly.utme.viewmodels.landing_screens;
 
 import com.google.gson.Gson;
-import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.data.dao.NovelChapterDao;
 import com.scholarly.utme.data.dao.NovelsDao;
 import com.scholarly.utme.data.dao.SubjectDao;
@@ -14,16 +13,10 @@ import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.network.model.UserData;
 import com.scholarly.utme.util.PreferencesManager;
 import de.saxsys.mvvmfx.ViewModel;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.util.Pair;
 
 import java.util.HashMap;
 import java.util.List;

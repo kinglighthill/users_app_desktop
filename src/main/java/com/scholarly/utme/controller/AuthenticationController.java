@@ -133,7 +133,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             Label signUpPhoneError = getPhoneErrorText();
 
             signUpProceedButton.setOnAction(event -> {
-
                 String fullName = signUpNameField.getText();
                 signUpNameSection.getChildren().remove(signUpNameError);
                 if (fullName.split(" ").length == 1) {
@@ -191,7 +190,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     Thread signupThread = new Thread(signupTask);
                     signupThread.start();
                 }
-
             });
 
 

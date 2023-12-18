@@ -9,7 +9,7 @@ import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.util.LandingScreen;
+import com.scholarly.utme.async.LandingScreen;
 import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.PreferencesManager;
 import javafx.application.Application;
@@ -163,6 +163,10 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
         if (fileHandler != null) {
             logger.info(info);
         }
+    }
+
+    public static void resetTime() {
+        startDisplay = System.currentTimeMillis();
     }
 
     public static void timeTakenTo(String message) {

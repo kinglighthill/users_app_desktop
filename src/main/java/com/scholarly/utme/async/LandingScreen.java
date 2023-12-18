@@ -1,12 +1,9 @@
-package com.scholarly.utme.util;
+package com.scholarly.utme.async;
 
-import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.landing_screens.LandingScreenAccountController;
 import com.scholarly.utme.controller.landing_screens.LandingScreenActivateController;
 import com.scholarly.utme.controller.landing_screens.LandingScreenHomeController;
 import com.scholarly.utme.controller.landing_screens.LandingScreenSettingsController;
-import com.scholarly.utme.ui.utils.Screens;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Parent;
 
@@ -16,11 +13,6 @@ import java.util.concurrent.Executors;
 public class LandingScreen {
     private static LandingScreen instance = null;
 
-    private final LandingScreenTask homeTask;
-    private final LandingScreenTask accountTask;
-    private final LandingScreenTask activateTask;
-    private final LandingScreenTask settingsTask;
-
     private final SimpleObjectProperty<Parent> homeView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<Parent> accountView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<Parent> activateView = new SimpleObjectProperty<>();
@@ -29,10 +21,10 @@ public class LandingScreen {
     private LandingScreen() {
         ExecutorService executorService = Executors.newFixedThreadPool(4);
 
-        homeTask = new LandingScreenTask(LandingScreenHomeController.class);
-        accountTask = new LandingScreenTask(LandingScreenAccountController.class);
-        activateTask = new LandingScreenTask(LandingScreenActivateController.class);
-        settingsTask = new LandingScreenTask(LandingScreenSettingsController.class);
+        LandingScreenTask homeTask = new LandingScreenTask(LandingScreenHomeController.class);
+        LandingScreenTask accountTask = new LandingScreenTask(LandingScreenAccountController.class);
+        LandingScreenTask activateTask = new LandingScreenTask(LandingScreenActivateController.class);
+        LandingScreenTask settingsTask = new LandingScreenTask(LandingScreenSettingsController.class);
 
         homeView.bind(homeTask.valueProperty());
         accountView.bind(accountTask.valueProperty());
@@ -68,21 +60,5 @@ public class LandingScreen {
 
     public SimpleObjectProperty<Parent> getSettingsView() {
         return settingsView;
-    }
-
-    public LandingScreenTask getHomeTask() {
-        return homeTask;
-    }
-
-    public LandingScreenTask getAccountTask() {
-        return accountTask;
-    }
-
-    public LandingScreenTask getActivateTask() {
-        return activateTask;
-    }
-
-    public LandingScreenTask getSettingsTask() {
-        return settingsTask;
     }
 }

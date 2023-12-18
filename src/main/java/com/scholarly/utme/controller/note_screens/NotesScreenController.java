@@ -1,6 +1,7 @@
 package com.scholarly.utme.controller.note_screens;
 
 
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.data.model.Highlights;
@@ -19,10 +20,12 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -52,6 +55,8 @@ import org.jsoup.nodes.Document;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 
@@ -81,13 +86,16 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         }
     }
 
-    private List<String> highlightColorsList = new ArrayList<>();
+    private final List<String> highlightColorsList = new ArrayList<>();
 
     @InjectViewModel
     private NotesScreenVM viewModel;
 
     @FXML
     private StackPane imageViewLayout, noteLayout, quizLayout;
+
+    @FXML
+    private AnchorPane noteContentPane;
 
     @FXML
     private ListView<NoteSection> noteContentList;
@@ -142,6 +150,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     @FXML
     private ProgressIndicator refreshNoteProgressIndicator;
 
+    @FXML
+    private ProgressIndicator progressBar;
+
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0; -fx-cursor: hand;";
     final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
@@ -156,175 +167,198 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        String latex = "\\\\begin{array}{l}";
-//        LaTeXConverter converter = new LaTeXConverter();
-//        try {
-//            File output = converter.convertToImage(latex);
-//            System.out.println(TAG + "Formatted Latex -> " + output.get);
-//        } catch (Exception e) {
-//            System.out.println(TAG + "Cannot parse Latex");
-//        }
+        showProgressBar();
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
 
-        viewModel.initialize(getInitialData());
+        Task<Boolean> contentTask = new Task<>() {
+            @Override
+            protected Boolean call() {
+                viewModel.initialize(getInitialData());
+                return true;
+            }
+        };
+        contentTask.setOnSucceeded(
+                event -> Platform.runLater(() -> {
+                    subjectLabel.setText(viewModel.getSubject().getTitle());
+                    noteTopicLabel.setText(viewModel.getTopic().getTitle());
+                    noteTopicLabel.setTextFill(Paint.valueOf(SubjectDao.getNoteSubjectColor(viewModel.getSubject().getId())));
+
+                    ObservableList<NoteSection> noteSections = viewModel.getNoteSections().get(viewModel.getTopic().getId());
+                    noteContentList.setCellFactory(new NoteContentListCellFactory());
+                    noteContentList.setItems(noteSections);
+                    noteContentList.setSelectionModel(new NoSelectionModel<>());
+                    noteContentList.setPadding(new Insets(10, 20, 30, 15));
+
+                    if (viewModel.getSelectedSubtopicSection() != null) {
+                        noteContentList.scrollTo(viewModel.getSelectedSubtopicSection());
+                    }
+
+                    if (viewModel.getSelectedSection() != null) {
+                        int lastSectionIndex = noteSections.indexOf(noteSections.stream().filter(
+                                section -> section.getId() == viewModel.getSelectedSection().getId()).toList().get(0)
+                        );
+                        System.out.println(TAG + "Note Last Section Index -> " + lastSectionIndex);
+                        noteContentList.scrollTo(lastSectionIndex);
+                    }
+
+                    noSubtopicsLabel.setVisible(viewModel.getSubTopics().get(viewModel.getTopic().getId()).isEmpty());
+
+                    ToggleGroup subtopicsListToggleGroup = new ToggleGroup();
+                    viewModel.getSubTopics().get(viewModel.getSelectedTopic().getId()).forEach(subTopic -> {
+                        ToggleButton button = new ToggleButton();
+                        button.setUserData(subTopic);
+                        subtopicsListToggleGroup.getToggles().add(button);
+
+                        button.setMinHeight(48);
+                        button.setMaxHeight(48);
+                        button.setPadding(new Insets(0, 0, 0, 20));
+                        button.setAlignment(Pos.BASELINE_LEFT);
+                        button.setMaxWidth(Double.MAX_VALUE);
+                        button.setText(subTopic.getTitle());
+                        if (subTopic.getTitle().length() > 40) {
+                            button.setTooltip(new Tooltip(subTopic.getTitle()));
+                        }
+
+                        button.setStyle(IDLE_BUTTON_STYLE);
+                        button.setOnMouseEntered(e -> {
+                            if (!button.isSelected()) {
+                                button.setStyle(HOVERED_BUTTON_STYLE);
+                            }
+                        });
+                        button.setOnMouseExited(e -> {
+                            if (!button.isSelected()) {
+                                button.setStyle(IDLE_BUTTON_STYLE);
+                            }
+                        });
+
+                        button.selectedProperty().addListener((observe, old, newVal) -> {
+                            if (newVal) {
+                                button.setStyle(PRESSED_STYLE);
+                                button.setTextFill(Color.WHITE);
+
+                                viewModel.setSelectedSubTopic(subTopic);
+                                noteContentList.scrollTo(viewModel.getNoteSubtopicSection(subTopic));
+//                    renderNote(subTopic);
+//                    topicLabel.setText(subTopic.getTitle());
+                            } else {
+                                button.setStyle(IDLE_BUTTON_STYLE);
+                                button.setTextFill(Color.BLACK);
+
+                                noteContentList.scrollTo(0);
+
+                                viewModel.setSelectedSubTopic(null);
+                            }
+                        });
+
+                        if (subTopic == viewModel.getSelectedSubTopic()) {
+                            subtopicsListToggleGroup.selectToggle(button);
+                        }
+
+                        button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
+
+                        subtopicsVBox.getChildren().add(button);
+                    });
+
+                    viewModel.selectedTopicProperty().addListener(((observable, oldValue, newValue) -> {
+                        if (newValue != null) {
+                            ObservableList<NoteSection> topicSections = viewModel.getNoteSections().get(newValue.getId());
+                            noteContentList.setItems(topicSections);
+                            noteContentList.scrollTo(0);
+                            noteTopicLabel.setText(newValue.getTitle());
+                            subtopicsListToggleGroup.getToggles().clear();
+                            subtopicsVBox.getChildren().clear();
+
+                            noSubtopicsLabel.setVisible(viewModel.getSubTopics().get(newValue.getId()).isEmpty());
+
+                            System.out.println(TAG + "Selected topic Id -> " + newValue.getId());
+                            viewModel.getSubTopics().get(newValue.getId()).forEach(subTopic -> {
+                                ToggleButton button = new ToggleButton();
+                                button.setUserData(subTopic);
+                                subtopicsListToggleGroup.getToggles().add(button);
+
+                                button.setMinHeight(48);
+                                button.setMaxHeight(48);
+                                button.setPadding(new Insets(0, 0, 0, 20));
+                                button.setAlignment(Pos.BASELINE_LEFT);
+                                button.setMaxWidth(Double.MAX_VALUE);
+                                button.setText(subTopic.getTitle());
+
+                                button.setStyle(IDLE_BUTTON_STYLE);
+                                button.setOnMouseEntered(e -> {
+                                    if (!button.isSelected()) {
+                                        button.setStyle(HOVERED_BUTTON_STYLE);
+                                    }
+                                });
+                                button.setOnMouseExited(e -> {
+                                    if (!button.isSelected()) {
+                                        button.setStyle(IDLE_BUTTON_STYLE);
+                                    }
+                                });
+
+                                button.selectedProperty().addListener((observe, old, newVal) -> {
+                                    if (newVal) {
+                                        button.setStyle(PRESSED_STYLE);
+                                        button.setTextFill(Color.WHITE);
+
+                                        viewModel.setSelectedSubTopic(subTopic);
+                                        noteContentList.scrollTo(viewModel.getNoteSubtopicSection(subTopic));
+                                    } else {
+                                        button.setStyle(IDLE_BUTTON_STYLE);
+                                        button.setTextFill(Color.BLACK);
+
+                                        noteContentList.scrollTo(0);
+
+                                        viewModel.setSelectedSubTopic(null);
+                                    }
+                                });
+
+                                if (subTopic == viewModel.getSelectedSubTopic()) {
+                                    subtopicsListToggleGroup.selectToggle(button);
+                                }
+
+                                button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
+
+                                subtopicsVBox.getChildren().add(button);
+                            });
+                        }
+                    }));
+
+
+
+                    if (viewModel.getSelectedTopicIndex() == 0) {
+                        prevButton.setDisable(true);
+                    }
+                    if (viewModel.getSelectedTopicIndex() == viewModel.getNoteTopics().size()-1) {
+                        nextButton.setDisable(true);
+                    }
+                    viewModel.selectedTopicIndexProperty().addListener(((observable, oldValue, newValue) -> {
+                        if (newValue < viewModel.getNoteTopics().size()) {
+                            viewModel.setSelectedTopic(viewModel.getNoteTopics().get(newValue));
+                            if (newValue == viewModel.getNoteTopics().size()-1) {
+                                nextButton.setDisable(true);
+                            }
+                            if (newValue == 0) {
+                                prevButton.setDisable(true);
+                            }
+                        }
+                    }));
+
+                    viewModel.selectedTopicProperty().addListener(((observable, oldValue, newValue) -> {
+                        if (!newValue.isFree()) {
+                            nextButton.setDisable(true);
+                            Animations.showDialog(activateNowDialog, dialogDimmer);
+                        }
+                    }));
+                    hideProgressBar();
+                })
+        );
+
+        executorService.execute(contentTask);
+        executorService.shutdown();
 
         initializeViews();
         initializeTextFont(FontSize.MEDIUM);
         highlightColorsList.addAll(Arrays.stream(HighlightColors.values()).map(highlightColors1 -> highlightColors1.colorCode).toList());
-
-        subjectLabel.setText(viewModel.getSubject().getTitle());
-        noteTopicLabel.setText(viewModel.getTopic().getTitle());
-        noteTopicLabel.setTextFill(Paint.valueOf(SubjectDao.getNoteSubjectColor(viewModel.getSubject().getId())));
-
-        ObservableList<NoteSection> noteSections = viewModel.getNoteSections().get(viewModel.getTopic().getId());
-        noteContentList.setCellFactory(new NoteContentListCellFactory());
-        noteContentList.setItems(noteSections);
-        noteContentList.setSelectionModel(new NoSelectionModel<>());
-        noteContentList.setPadding(new Insets(10, 20, 30, 15));
-
-        if (viewModel.getSelectedSubtopicSection() != null) {
-            noteContentList.scrollTo(viewModel.getSelectedSubtopicSection());
-        }
-
-        if (viewModel.getSelectedSection() != null) {
-            int lastSectionIndex = noteSections.indexOf(noteSections.stream().filter(section ->
-                    section.getId() == viewModel.getSelectedSection().getId()).toList().get(0));
-            System.out.println(TAG + "Note Last Section Index -> " + lastSectionIndex);
-            noteContentList.scrollTo(lastSectionIndex);
-        }
-
-//        noteContentList.setOnScrollFinished(event -> {
-//            System.out.println(TAG + "Scroll Y-axis value -> " + event.getY());
-//            System.out.println(TAG + "Scroll Screen-Y value -> " + event.getScreenY());
-//            System.out.println(TAG + "Scroll Delta-Y value -> " + event.getDeltaY());
-//            System.out.println(TAG + "Scroll Multiplier-Y value -> " + event.getMultiplierY());
-//            System.out.println(TAG + "Scroll TextDelta-Y Units value -> " + event.getTextDeltaYUnits());
-//            System.out.println(TAG + "Scroll TextDelta-Y value -> " + event.getTextDeltaY());
-//            System.out.println(TAG + "Scroll Total Delta-Y value -> " + event.getTotalDeltaY());
-//            System.out.println(TAG + "Scroll Scene-Y value -> " + event.getSceneY());
-//
-//        });
-
-        noSubtopicsLabel.setVisible(viewModel.getSubTopics().get(viewModel.getTopic().getId()).isEmpty());
-
-        ToggleGroup subtopicsListToggleGroup = new ToggleGroup();
-        viewModel.getSubTopics().get(viewModel.getSelectedTopic().getId()).forEach(subTopic -> {
-            ToggleButton button = new ToggleButton();
-            button.setUserData(subTopic);
-            subtopicsListToggleGroup.getToggles().add(button);
-
-            button.setMinHeight(48);
-            button.setMaxHeight(48);
-            button.setPadding(new Insets(0, 0, 0, 20));
-            button.setAlignment(Pos.BASELINE_LEFT);
-            button.setMaxWidth(Double.MAX_VALUE);
-            button.setText(subTopic.getTitle());
-            if (subTopic.getTitle().length() > 40) {
-                button.setTooltip(new Tooltip(subTopic.getTitle()));
-            }
-
-            button.setStyle(IDLE_BUTTON_STYLE);
-            button.setOnMouseEntered(e -> {
-                if (!button.isSelected()) {
-                    button.setStyle(HOVERED_BUTTON_STYLE);
-                }
-            });
-            button.setOnMouseExited(e -> {
-                if (!button.isSelected()) {
-                    button.setStyle(IDLE_BUTTON_STYLE);
-                }
-            });
-
-            button.selectedProperty().addListener((observe, old, newVal) -> {
-                if (newVal) {
-                    button.setStyle(PRESSED_STYLE);
-                    button.setTextFill(Color.WHITE);
-
-                    viewModel.setSelectedSubTopic(subTopic);
-                    noteContentList.scrollTo(viewModel.getNoteSubtopicSection(subTopic));
-//                    renderNote(subTopic);
-//                    topicLabel.setText(subTopic.getTitle());
-                } else {
-                    button.setStyle(IDLE_BUTTON_STYLE);
-                    button.setTextFill(Color.BLACK);
-
-                    noteContentList.scrollTo(0);
-
-                    viewModel.setSelectedSubTopic(null);
-                }
-            });
-
-            if (subTopic == viewModel.getSelectedSubTopic()) {
-                subtopicsListToggleGroup.selectToggle(button);
-            }
-
-            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
-
-            subtopicsVBox.getChildren().add(button);
-        });
-
-        viewModel.selectedTopicProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                ObservableList<NoteSection> topicSections = viewModel.getNoteSections().get(newValue.getId());
-                noteContentList.setItems(topicSections);
-                noteContentList.scrollTo(0);
-                noteTopicLabel.setText(newValue.getTitle());
-                subtopicsListToggleGroup.getToggles().clear();
-                subtopicsVBox.getChildren().clear();
-
-                noSubtopicsLabel.setVisible(viewModel.getSubTopics().get(newValue.getId()).isEmpty());
-
-                System.out.println(TAG + "Selected topic Id -> " + newValue.getId());
-                viewModel.getSubTopics().get(newValue.getId()).forEach(subTopic -> {
-                    ToggleButton button = new ToggleButton();
-                    button.setUserData(subTopic);
-                    subtopicsListToggleGroup.getToggles().add(button);
-
-                    button.setMinHeight(48);
-                    button.setMaxHeight(48);
-                    button.setPadding(new Insets(0, 0, 0, 20));
-                    button.setAlignment(Pos.BASELINE_LEFT);
-                    button.setMaxWidth(Double.MAX_VALUE);
-                    button.setText(subTopic.getTitle());
-
-                    button.setStyle(IDLE_BUTTON_STYLE);
-                    button.setOnMouseEntered(e -> {
-                        if (!button.isSelected()) {
-                            button.setStyle(HOVERED_BUTTON_STYLE);
-                        }
-                    });
-                    button.setOnMouseExited(e -> {
-                        if (!button.isSelected()) {
-                            button.setStyle(IDLE_BUTTON_STYLE);
-                        }
-                    });
-
-                    button.selectedProperty().addListener((observe, old, newVal) -> {
-                        if (newVal) {
-                            button.setStyle(PRESSED_STYLE);
-                            button.setTextFill(Color.WHITE);
-
-                            viewModel.setSelectedSubTopic(subTopic);
-                            noteContentList.scrollTo(viewModel.getNoteSubtopicSection(subTopic));
-                        } else {
-                            button.setStyle(IDLE_BUTTON_STYLE);
-                            button.setTextFill(Color.BLACK);
-
-                            noteContentList.scrollTo(0);
-
-                            viewModel.setSelectedSubTopic(null);
-                        }
-                    });
-
-                    if (subTopic == viewModel.getSelectedSubTopic()) {
-                        subtopicsListToggleGroup.selectToggle(button);
-                    }
-
-                    button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
-
-                    subtopicsVBox.getChildren().add(button);
-                });
-            }
-        }));
 
         prevButton.setOnAction(event -> {
             nextButton.setDisable(false);
@@ -335,31 +369,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             prevButton.setDisable(false);
             viewModel.setSelectedTopicIndex(viewModel.getSelectedTopicIndex() + 1);
         });
-
-        if (viewModel.getSelectedTopicIndex() == 0) {
-            prevButton.setDisable(true);
-        }
-        if (viewModel.getSelectedTopicIndex() == viewModel.getNoteTopics().size()-1) {
-            nextButton.setDisable(true);
-        }
-        viewModel.selectedTopicIndexProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue < viewModel.getNoteTopics().size()) {
-                viewModel.setSelectedTopic(viewModel.getNoteTopics().get(newValue));
-                if (newValue == viewModel.getNoteTopics().size()-1) {
-                    nextButton.setDisable(true);
-                }
-                if (newValue == 0) {
-                    prevButton.setDisable(true);
-                }
-            }
-        }));
-
-        viewModel.selectedTopicProperty().addListener(((observable, oldValue, newValue) -> {
-            if (!newValue.isFree()) {
-                nextButton.setDisable(true);
-                Animations.showDialog(activateNowDialog, dialogDimmer);
-            }
-        }));
 
         activateNowCloseIcon.setOnMouseClicked(event -> {
             viewModel.setSelectedTopicIndex(viewModel.getSelectedTopicIndex() - 1);
@@ -379,9 +388,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 if (buttonType == ButtonType.YES) {
                     if (noteContentList.getSkin() != null) {
                         VirtualFlow<?> vf = (VirtualFlow<?>) ((ListViewSkin<?>) noteContentList.getSkin()).getChildren().get(0);
-
-//                System.out.println(TAG + "Position -> " + vf.getPosition());
-//                System.out.println(TAG + "Cell count -> " + vf.getCellCount());
 
                         double lastSectionIndex = vf.getPosition() * vf.getCellCount();
                         System.out.println(TAG + "Last Section Index -> " + lastSectionIndex);
@@ -580,10 +586,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             System.out.println("Selected font -> " + newValue.getName());
         });
 
-        fontDropdownList.setConverter(new StringConverter<Font>() {
+        fontDropdownList.setConverter(new StringConverter<>() {
             @Override
             public String toString(Font font) {
-                if (font.getName().contains("Gilroy")){
+                if (font.getName().contains("Gilroy")) {
                     return "Gilroy";
                 }
                 return font.getFamily();
@@ -841,7 +847,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         /*searchTextField.setOnMouseClicked(event -> {
             searchIcon.setVisible(false);
         });*/
-      
+
 //        closeIconImageViewLayout.setImage(new Image(getClass().getResource("/drawable/close_icon_white.png").toString()));
 //        closeIconImageViewLayout.setOnMouseClicked(event -> {
 //            hideImageViewLayout();
@@ -882,8 +888,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             });
 
             hideNoteOptions();
-        });;
-
+        });
+        MainApplication.timeTakenTo("load note screen");
     }
 
     private void initializeViews() {
@@ -1112,1118 +1118,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         }
     }
 
-    private void renderNote(NoteSubTopic subTopic) {
-        List<Node> contentElements = new ArrayList<>();
-
-//        viewModel.getSubTopicSections()
-//                .get(subTopic.getId())
-//                .forEach(section -> {
-//
-//                    ContentViewType contentViewType = ContentViewTypes.convert(section);
-//                    if (contentViewType instanceof TextViewType) {
-//                        System.out.println("ContentViewType -> TextViewType");
-//                        TextViewType textViewType = (TextViewType) contentViewType;
-//
-//                        if (textViewType.getTitle() != null) {
-//                            contentElements.add(getTitle(textViewType.getTitle().getText()));
-//                        }
-//
-//                        if (textViewType.getBody() != null) {
-//
-//                            if (textViewType.getBody().getBodyType() != null) {
-//                                System.out.println("TextView Body types -> " + Arrays.toString(textViewType.getBody().getBodyType()));
-//
-//                                if (textViewType.getBody().getBodyType()[0].equalsIgnoreCase("example")) {
-//                                    VBox exampleBox = new VBox();
-//                                    exampleBox.setStyle("-fx-background-color: #FFFFFF");
-//
-//                                    Label label = new Label("EXAMPLES");
-//                                    label.setTextFill(Paint.valueOf("#FFFFFF"));
-//                                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
-//                                    label.setAlignment(Pos.CENTER);
-//                                    label.setStyle("-fx-background-color: #034801");
-//                                    label.setPadding(new Insets(7, 0, 7, 0));
-//
-//                                    exampleBox.widthProperty().addListener((observable, oldValue, newValue) -> {
-//                                        label.setPrefWidth((Double) newValue);
-//                                    });
-//
-//                                    String[] dummyContent = {"Undergoes", "Cell Membrane", "Develop", "Component", "Structure"};
-//
-//                                    ArrayList<UnorderedListItem> contentItems = new ArrayList<>();
-//
-//                                    for (int i = 0; i < dummyContent.length; i++) {
-//                                        UnorderedListItem unorderedListItem = new UnorderedListItem(dummyContent[i]);
-//                                        contentItems.add(unorderedListItem);
-//                                    }
-//
-//                                    ObservableList<UnorderedListItem> items = FXCollections.observableArrayList(contentItems);
-//
-//                                    ListView<UnorderedListItem> contentList = new ListView<>();
-//                                    contentList.setItems(items);
-//                                    contentList.setBackground(Background.EMPTY);
-//                                    contentList.setCellFactory(new UnorderedListCellFactory());
-//                                    contentList.setSelectionModel(new NoSelectionModel<>());
-//                                    contentList.setPadding(new Insets(15, 0, 0, 15));
-//
-//                                    VBox.setMargin(exampleBox, new Insets(10, 10, 10, 10));
-//                                    exampleBox.getChildren().addAll(label, contentList);
-//
-//                                    contentElements.add(exampleBox);
-//                                }
-//                                else if (textViewType.getBody().getBodyType()[0].equalsIgnoreCase("definition")) {
-//                                    Label definition = new Label("These are very tiny organisms ranging from 0.1 to 10 µm in length. They can only be seen through the high power of a light microscope. They can be spherical (coccus) or rod-like (bacillus) in shape. They can also occur singly, in groups or in chains.These are very tiny organisms ranging from 0.1 to 10 µm in length. They can only be seen through the high power of a light microscope.");
-//                                    definition.setWrapText(true);
-//                                    definition.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//
-//                                    Line stroke = new Line(0, 0, 0, 100);
-//                                    stroke.setStroke(Paint.valueOf("#51C46B"));
-//                                    stroke.setStrokeWidth(3);
-//
-//                                    HBox definitionBox = new HBox(15);
-//                                    definitionBox.setPadding(new Insets(15));
-//                                    definitionBox.getChildren().addAll(stroke, definition);
-//
-//                                    contentElements.add(definitionBox);
-//                                }
-//                                else if (textViewType.getBody().getBodyType()[0].equalsIgnoreCase("quote")) {
-//                                    ImageView quoteImage = new ImageView(new Image(getClass().getResource("/drawable/note_content_quote_icon_1x.png").toString()));
-//                                    quoteImage.setPreserveRatio(true);
-//                                    quoteImage.setPickOnBounds(true);
-//
-//                                    Label quote = new Label("Living things are made up of plants and animals. They range from tiny microscopic plants/animals");
-//                                    quote.setWrapText(true);
-//                                    quote.setTextAlignment(TextAlignment.CENTER);
-//                                    quote.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM_ITALIC, FontUtil.FontSize.FOURTEEN.size));
-//
-//                                    Label author = new Label("-");
-//                                    author.setText(author.getText() + "Charles Darwin");
-//                                    author.setTextFill(Paint.valueOf("#F4D242"));
-//                                    author.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//
-//                                    VBox quoteBox = new VBox(10);
-//                                    quoteBox.setPadding(new Insets(10));
-//                                    VBox.setMargin(quoteBox, new Insets(15));
-//                                    quoteBox.getChildren().addAll(quoteImage, quote, author);
-//                                    quoteBox.setAlignment(Pos.CENTER);
-//
-//                                    contentElements.add(quoteBox);
-//                                }
-//                                else if (textViewType.getBody().getBodyType()[0].equalsIgnoreCase("dyk")) {
-//                                    Label didyouknow = new Label("DID YOU\nKNOW?");
-//                                    didyouknow.setWrapText(true);
-//                                    didyouknow.setTextFill(Paint.valueOf("#F4D242"));
-//                                    didyouknow.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY_TWO.size));
-//
-//                                    ImageView bulbImage = new ImageView(new Image(getClass().getResource("/drawable/bulb_icon_1x.png").toString()));
-//                                    bulbImage.setPreserveRatio(true);
-//                                    bulbImage.setPickOnBounds(true);
-//
-//                                    HBox textAndImageBox = new HBox(15, didyouknow, bulbImage);
-//                                    textAndImageBox.setAlignment(Pos.CENTER);
-//
-//                                    Label didyouknowText = new Label("There is enough DNA in the average person's body to stretch from the sun to Pluto and back ");
-//                                    didyouknowText.setWrapText(true);
-//                                    didyouknowText.setTextAlignment(TextAlignment.CENTER);
-//                                    didyouknowText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM_ITALIC, FontUtil.FontSize.FOURTEEN.size));
-//
-//                                    VBox didyouknowBox = new VBox(20);
-//                                    didyouknowBox.setAlignment(Pos.CENTER);
-//                                    didyouknowBox.setPadding(new Insets(30, 20, 30, 20));
-//                                    didyouknowBox.setStyle("-fx-background-color: #E7F7E9; -fx-border-radius: 5;");
-//                                    didyouknowBox.getChildren().addAll(textAndImageBox, didyouknowText);
-//                                    VBox.setMargin(didyouknowBox, new Insets(10));
-//
-//                                    didyouknowBox.widthProperty().addListener((observable, oldValue, newValue) -> {
-//                                        didyouknowText.setPrefWidth(newValue.doubleValue()/1.2);
-//                                    });
-//
-//                                    contentLayout.widthProperty().addListener((observable, oldValue, newValue) -> {
-//                                        didyouknowBox.setMaxWidth(newValue.doubleValue()/2);
-//                                    });
-//
-//                                    contentElements.add(didyouknowBox);
-//                                }
-//                                else if (textViewType.getBody().getBodyType()[0].equalsIgnoreCase("reference")) {
-//                                    Label references = new Label("References");
-//                                    references.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
-//                                    references.setTextAlignment(TextAlignment.CENTER);
-//                                    references.setAlignment(Pos.CENTER);
-//
-//                                    Label reference1 = new Label("Ndu, F.O. C. Ndu, Abun A. and Aina J.O. (2001)\n" +
-//                                            "Senior Secondary School Biology:\n" +
-//                                            "Books 1 -3, Lagos: Longman \n");
-//                                    reference1.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//                                    reference1.setTextAlignment(TextAlignment.CENTER);
-//
-//                                    Label reference2 = new Label("Ndu, F.O. C. Ndu, Abun A. and Aina J.O. (2001)\n" +
-//                                            "Senior Secondary School Biology:\n" +
-//                                            "Books 1 -3, Lagos: Longman \n");
-//                                    reference2.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//                                    reference2.setTextAlignment(TextAlignment.CENTER);
-//
-//                                    VBox referenceBox = new VBox(15);
-//                                    referenceBox.setPadding(new Insets(20, 0, 20, 0));
-//                                    referenceBox.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #5C5C5C;");
-//                                    referenceBox.getChildren().addAll(references, reference1, reference2);
-//                                    referenceBox.setAlignment(Pos.CENTER);
-//                                    VBox.setMargin(referenceBox, new Insets(20));
-//
-//                                    contentElements.add(referenceBox);
-//                                }
-//                            }
-//
-//                            if (textViewType.getBody().getLink() != null) {
-//                                System.out.println("This text contains a link");
-//                            }else {
-//                                System.out.println("This text doesn't contain a link");
-//                            }
-//
-//
-//                            Label body = new Label();
-//                            body.setText(textViewType.getBody().getText());
-//                            if (textViewType.getBody().getText().contains("<br>")) {
-//                                String newText = textViewType.getBody().getText().replaceAll("<br>", System.lineSeparator());
-//                                body.setText(newText);
-//                            }
-//                            body.setWrapText(true);
-//                            body.setLineSpacing(8);
-//                            body.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-//
-//                            List<Highlights> highlights = viewModel.getSubjectHighlights();
-//                            for (int i = 0; i < highlights.size(); i ++) {
-//                                if (highlights.get(i).getNoteId() == section.getId()) {
-////                                System.out.println("Got highlight with id -> " + highlights.get(i).getNoteId());
-////                                System.out.println("Got highlight color -> " + highlights.get(i).getColor());
-//                                    body.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web(highlights.get(i).getColor()), null, null)}, null));
-//                                }
-//                            }
-//                            body.setOnMouseClicked(event -> {
-//                                if (!noteOptions.isVisible()) {
-//                                    showNoteOptions(section);
-//                                } else {
-//                                    hideNoteOptions();
-//                                }
-//                            });
-//
-//                            contentElements.add(body);
-//                        }
-////                        CustomWebView webView = new CustomWebView();
-////                        webView.loadContent(textViewType.getBody().getText());
-//
-//                    }
-//                    else if (contentViewType instanceof HtmlViewType) {
-//                        System.out.println("ContentViewType -> HTMLViewType");
-//                        HtmlViewType viewType = (HtmlViewType) contentViewType;
-//
-//                        if (viewType.getTitle() != null) {
-//                            contentElements.add(getTitle(viewType.getTitle().getText()));
-//                        }
-//
-//                        CustomWebView webView = new CustomWebView();
-//                        webView.loadContent(viewType.getBody().getText());
-//
-//                        contentElements.add(webView);
-//
-//                    }
-//                    else if (contentViewType instanceof WebViewType) {
-//                        System.out.println("ContentViewType -> WebViewType");
-//                        WebViewType viewType = (WebViewType) contentViewType;
-//
-//                        if (viewType.getTitle() != null) {
-//                            contentElements.add(getTitle(viewType.getTitle().getText()));
-//                        }
-//                        CustomWebView webView = new CustomWebView();
-//                        webView.loadContent(viewType.getBody().getText());
-//
-//                        contentElements.add(webView);
-//
-//                    }
-//                    else if (contentViewType instanceof ImageViewType) {
-//                        System.out.println("ContentViewType -> ImageViewType");
-//                        ImageViewType imageViewType = (ImageViewType) contentViewType;
-//
-//                        if (imageViewType.getTitle() != null) {
-//                            contentElements.add(getTitle(imageViewType.getTitle().getText()));
-//                        }
-//
-//                        if (imageViewType.getBody() == null) {
-//                            System.out.println("Empty image");
-//                        }else {
-//                            Image image = new Image(imageViewType.getBody().getUrl());
-//                            ImageView imageView = new ImageView(image);
-//
-//                            imageView.setFitHeight(imageViewType.getBody().getHeightPx());
-//                            imageView.setFitWidth(imageViewType.getBody().getWidthPx());
-//                            imageView.setPreserveRatio(true);
-//
-//                           // System.out.println("Got ImageView with height -> " + imageViewType.getBody().getHeightPx() + " and width -> " + imageViewType.getBody().getWidthPx());
-//
-//                            contentElements.add(imageView);
-//                        }
-//
-//                    }
-//                    else if (contentViewType instanceof CBTViewType) {
-//                        System.out.println("ContentViewType -> CBTViewType");
-//                        CBTViewType cbtViewType = (CBTViewType) contentViewType;
-//
-//                        String questionTitle = "";
-//
-//                        if (cbtViewType.getTitle() != null) {
-//                            questionTitle = cbtViewType.getTitle().getText().toUpperCase();
-//                        }
-//
-//                        VBox cbtVBox = new VBox();
-//                        cbtVBox.setPadding(new Insets(20, 20, 30, 20));
-//                        cbtVBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #51C46B; -fx-border-radius: 10;");
-//                        cbtVBox.setSpacing(10);
-//                        VBox.setMargin(cbtVBox, new Insets(20, 0, 0, 0));
-//
-//                        Label questionTitleLabel = new Label();
-//                        questionTitleLabel.setText(questionTitle);
-//                        questionTitleLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
-//                        VBox.setMargin(questionTitleLabel, new Insets(0, 0, 10, 0));
-//
-//                        Label questionBox = new Label();
-//                        questionBox.setText("This zygote undergoes meiosis to form spores. Each spore develops into a new organism.");
-//                        questionBox.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
-//                        questionBox.setWrapText(true);
-//                        questionBox.setPadding(new Insets(10));
-//                        questionBox.setStyle("-fx-background-color: #E7F7E9; -fx-border-color: #034801; -fx-border-radius: 5; ");
-//
-//                        RadioButton optionAButton = new RadioButton();
-//                        optionAButton.setText("Cell membrane");
-//                        optionAButton.setAlignment(Pos.CENTER);
-//                        optionAButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//                        optionAButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
-//                        optionAButton.setPadding(new Insets(10));
-//
-//                        RadioButton optionBButton = new RadioButton();
-//                        optionBButton.setText("Cell structure");
-//                        optionBButton.setAlignment(Pos.CENTER);
-//                        optionBButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//                        optionBButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
-//                        optionBButton.setPadding(new Insets(10));
-//
-//                        RadioButton optionCButton = new RadioButton();
-//                        optionCButton.setText("Cell component");
-//                        optionCButton.setAlignment(Pos.CENTER);
-//                        optionCButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//                        optionCButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
-//                        optionCButton.setPadding(new Insets(10));
-//
-//                        questionBox.widthProperty().addListener(((observable, oldValue, newValue) -> {
-//                            optionAButton.setMinWidth((Double) newValue);
-//                            optionBButton.setMinWidth((Double) newValue);
-//                            optionCButton.setMinWidth((Double) newValue);
-//                        }));
-//
-//                        ToggleGroup optionsToggle = new ToggleGroup();
-//                        optionsToggle.getToggles().addAll(optionAButton, optionBButton, optionCButton);
-//
-//                        HBox hBox = new HBox();
-//                        VBox.setMargin(hBox, new Insets(15, 0, 0, 5));
-//                        Label seeExplanation = new Label("See explanation");
-//                        seeExplanation.setAlignment(Pos.CENTER_LEFT);
-//                        seeExplanation.setTextFill(Paint.valueOf("#51C46B"));
-//                        seeExplanation.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//                        ImageView showExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_show_explanation_icon_1x.png").toString()));
-//                        showExplanation.setFitWidth(15);
-//                        showExplanation.setFitHeight(15);
-//                        showExplanation.setPreserveRatio(true);
-//                        showExplanation.setPickOnBounds(true);
-//                        ImageView hideExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_hide_explanation_icon_1x.png").toString()));
-//                        hideExplanation.setFitWidth(15);
-//                        hideExplanation.setFitHeight(15);
-//                        hideExplanation.setPreserveRatio(true);
-//                        hideExplanation.setPickOnBounds(true);
-//                        Button showHideExplanation = new Button();
-//                        showHideExplanation.setBackground(Background.EMPTY);
-//                        showHideExplanation.setGraphic(showExplanation);
-//                        HBox.setMargin(showHideExplanation, new Insets(0, 0, 0, 10));
-//
-//                        hBox.getChildren().addAll(seeExplanation, showHideExplanation);
-//
-//                        Label explanationText = new Label();
-//                        explanationText.setText("This zygote undergoes meiosis to form spores. Each spore develops into a new organism.");
-//                        explanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
-//                        explanationText.setWrapText(true);
-//                        explanationText.setPadding(new Insets(10));
-//                        explanationText.setStyle("-fx-border-color: #034801; -fx-border-radius: 5; ");
-//
-//                        cbtVBox.getChildren().addAll(questionTitleLabel, questionBox, optionAButton, optionBButton, optionCButton, hBox);
-//
-//                        showHideExplanation.setOnAction(event -> {
-//                            if (showHideExplanation.getGraphic() == showExplanation){
-//                                showHideExplanation.setGraphic(hideExplanation);
-//                                seeExplanation.setText("Hide explanation");
-//                                cbtVBox.getChildren().add(explanationText);
-//                            }else {
-//                                showHideExplanation.setGraphic(showExplanation);
-//                                seeExplanation.setText("See explanation");
-//                                cbtVBox.getChildren().remove(explanationText);
-//                            }
-//                        });
-//
-//                        VBox.setMargin(cbtVBox, new Insets(0, 100, 0, 0));
-//                        contentElements.add(cbtVBox);
-//
-//                    }
-//                    else if (contentViewType instanceof OrderedListViewType) {
-//                        System.out.println("ContentViewType -> OrderedListViewType");
-//                        OrderedListViewType viewType = (OrderedListViewType) contentViewType;
-//
-//                        if (viewType.getTitle() != null) {
-//                            contentElements.add(getTitle(viewType.getTitle().getText()));
-//                        }
-//
-//                        String[] content = viewType.getBody().getList();
-//
-//                        ArrayList<OrderedListItem> contentItems = new ArrayList<>();
-//                        for (int i = 0; i < content.length; i++) {
-//                            OrderedListItem orderedListItem = new OrderedListItem(String.valueOf(i+1), content[i]);
-//                            contentItems.add(orderedListItem);
-//
-//                        }
-//
-//                        ObservableList<OrderedListItem> items = FXCollections.observableArrayList(contentItems);
-//
-//                        ListView<OrderedListItem> contentList = new ListView<>();
-//                        contentList.setItems(items);
-//                        contentList.setBackground(Background.EMPTY);
-//                        contentList.setCellFactory(new OrderedListCellFactory());
-//                        contentList.setSelectionModel(new NoSelectionModel<>());
-//
-//                        contentElements.add(contentList);
-//
-//                    }
-//                    else if (contentViewType instanceof UnorderedListViewType) {
-//                        System.out.println("ContentViewType -> UnorderedListViewType");
-//
-//                        UnorderedListViewType viewType = (UnorderedListViewType) contentViewType;
-//
-//                        if (viewType.getTitle() != null) {
-//                            contentElements.add(getTitle(viewType.getTitle().getText()));
-//                        }
-//
-//                        String[] content = viewType.getBody().getList();
-//
-//                        ArrayList<UnorderedListItem> contentItems = new ArrayList<>();
-//                        for (int i = 0; i < content.length; i++) {
-//                            UnorderedListItem unorderedListItem = new UnorderedListItem(content[i]);
-//                            contentItems.add(unorderedListItem);
-//                           // System.out.println("UnorderedListItem created with text -> " + unorderedListItem.getText());
-//                        }
-//
-//                        ObservableList<UnorderedListItem> items = FXCollections.observableArrayList(contentItems);
-//
-//                        ListView<UnorderedListItem> contentList = new ListView<>();
-//                        contentList.setItems(items);
-//                        contentList.setBackground(Background.EMPTY);
-//                        contentList.setCellFactory(new UnorderedListCellFactory());
-//                        contentList.setSelectionModel(new NoSelectionModel<>());
-//
-//                        contentElements.add(contentList);
-//
-//                    }
-//                    else if (contentViewType instanceof TableViewType) {
-//                        System.out.println("ContentViewType -> TableViewType");
-//                        TableViewType viewType = (TableViewType) contentViewType;
-//
-//                        if (viewType.getTitle() != null) {
-//                            contentElements.add(getTitle(viewType.getTitle().getText()));
-//                        }
-//
-//                        GridPane tableGrid = new GridPane();
-//                        tableGrid.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #F4D242");
-//
-//                        if (viewType.getBody().getHeader() != null) {
-//                            ColumnConstraints[] columnConstraints = new ColumnConstraints[viewType.getBody().getHeader().length];
-//
-//                            for (int col = 0; col < viewType.getBody().getHeader().length; col++) {
-//                                Label grid = new Label(viewType.getBody().getHeader()[col]);
-//                                grid.setWrapText(true);
-//                                grid.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
-//                                grid.setPadding(new Insets(5, 5, 5, 5));
-//                               // grid.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #F4D242;");
-//
-//                                columnConstraints[col] = new ColumnConstraints();
-//                                columnConstraints[col].setPercentWidth(100.0 / viewType.getBody().getHeader().length);
-//                                tableGrid.getColumnConstraints().add(columnConstraints[col]);
-//
-//                                tableGrid.add(grid, col, 0);
-//                            }
-//                        }
-//
-//                        if (viewType.getBody().getRows() != null) {
-//
-//                            for (int row = 0; row < viewType.getBody().getRows().length; row++) {
-//                                for (int col = 0; col < viewType.getBody().getRows()[row].length; col++) {
-//                                    Label grid = new Label(viewType.getBody().getRows()[row][col]);
-//                                    grid.setWrapText(true);
-//                                    grid.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//                                    grid.setPadding(new Insets(5, 5, 5, 5));
-//                                    //grid.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #F4D242;");
-//
-//                                    tableGrid.add(grid, col, row+1);
-//                                }
-//                            }
-//                        }
-//
-//                        if (viewType.getBody().getFooter() != null) {
-//
-//                            for (int col = 0; col < viewType.getBody().getFooter().length; col++) {
-//                                Label grid = new Label(viewType.getBody().getFooter()[col]);
-//                                grid.setWrapText(true);
-//                                grid.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
-//                                grid.setPadding(new Insets(5, 5, 5, 5));
-//
-//                                tableGrid.add(grid, col, viewType.getBody().getRows().length + 1);
-//                            }
-//                        }
-//
-//                        /*TableView tableView = new TableView();
-//
-//                        if (viewType.getBody().getHeader() != null) {
-//
-//                            for (int i = 0; i < viewType.getBody().getHeader().length; i++) {
-//
-//                                TableColumn<Map, String> column = new TableColumn<>(viewType.getBody().getHeader()[i]);
-//
-//                                column.setCellValueFactory(new MapValueFactory<>(i));
-//
-//                                tableView.getColumns().add(column);
-//                            }
-//
-//                        }else {
-//                            for (int i = 0; i < viewType.getBody().getRows()[0].length; i++) {
-//
-//                                TableColumn<Map, String> column = new TableColumn<>();
-//
-//                                column.setCellValueFactory(new MapValueFactory<>(i));
-//
-//                                tableView.getColumns().add(column);
-//                            }
-//                        }
-//                        for (int i = 0; i < viewType.getBody().getRows().length; i++) {
-//                            Map<Integer, Object> item = new HashMap<>();
-//
-//                            for (int j = 0; j < viewType.getBody().getRows()[i].length; j++) {
-//                                item.put(j, viewType.getBody().getRows()[i][j]);
-//                                //  System.out.println("Key: j -> " + j + " -> " + item.get(j));
-//                            }
-//
-//                            tableView.getItems().add(item);
-//                        }
-//
-//                        if (viewType.getBody().getFooter() != null) {
-//                            Map<Integer, Object> footerItem = new HashMap<>();
-//
-//                            for (int k = 0; k < viewType.getBody().getFooter().length; k++) {
-//                                footerItem.put(k, viewType.getBody().getFooter()[k]);
-//                                // System.out.println("Key: k -> " + k + " -> " + footerItem.get(k));
-//                            }
-//                            tableView.getItems().add(footerItem);
-//                        }*/
-//
-//                        contentElements.add(tableGrid);
-//
-//                    }
-//                    else if (contentViewType instanceof TableHHViewType) {
-//                        System.out.println("ContentViewType -> TableHHViewType");
-//                        TableHHViewType viewType = (TableHHViewType) contentViewType;
-//
-//                        if (viewType.getTitle() != null) {
-//                            contentElements.add(getTitle(viewType.getTitle().getText()));
-//                        }
-//
-//                        GridPane tableGrid = new GridPane();
-//                        tableGrid.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #F4D242");
-//
-//                        if (viewType.getBody().getHeader() != null) {
-//                            ColumnConstraints[] columnConstraints = new ColumnConstraints[viewType.getBody().getHeader().length];
-//
-//                            for (int col = 0; col < viewType.getBody().getHeader().length; col++) {
-//                                System.out.println("Column -> " + viewType.getBody().getHeader()[col]);
-//
-//                                Label grid = new Label(viewType.getBody().getHeader()[col]);
-//                                grid.setWrapText(true);
-//                                grid.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
-//                                grid.setPadding(new Insets(5, 5, 5, 5));
-//
-//                                columnConstraints[col] = new ColumnConstraints();
-//                                columnConstraints[col].setPercentWidth(100.0 / viewType.getBody().getHeader().length);
-//                                tableGrid.getColumnConstraints().add(columnConstraints[col]);
-//
-//                                tableGrid.add(grid, col, 0);
-//                            }
-//                        }
-//
-//                        if (viewType.getBody().getRows() != null) {
-//                            System.out.println("Number of Maps -> " + viewType.getBody().getRows().size());
-//
-//                            if (viewType.getBody().getHeader() == null) {
-//                                // Values List of the first map in Rows[]. It is used to set the ColumnConstraints for the Table Columns
-//                                List<String> firstMapValuesList = viewType.getBody().getRows().get(0).values().iterator().next();
-//
-//                                ColumnConstraints[] columnConstraint = new ColumnConstraints[firstMapValuesList.size()+1];
-//                                for (int i = 0; i < firstMapValuesList.size()+1; i++) {
-//                                    columnConstraint[i] = new ColumnConstraints();
-//                                    columnConstraint[i].setPercentWidth(100.0 / firstMapValuesList.size()+1);
-//                                    tableGrid.getColumnConstraints().add(columnConstraint[i]);
-//                                }
-//                            }
-//
-//                            for (int row = 0; row < viewType.getBody().getRows().size(); row++) {
-//                                System.out.println("Got Map -> " + viewType.getBody().getRows().get(row));
-//                                List<String> valuesList = viewType.getBody().getRows().get(row).values().iterator().next();
-//                                System.out.println("Map valuesList -> " + valuesList);
-//                                String key = getKey(viewType.getBody().getRows().get(row), valuesList);
-//                                System.out.println("Key in Map -> " + key);
-//
-//                                for (int col = 0; col < viewType.getBody().getRows().get(row).size(); col++) {
-//                                    System.out.println("Number of columns -> " + viewType.getBody().getRows().get(row).size());
-//
-//                                    Label horizontalHeader = new Label(key);
-//                                    horizontalHeader.setWrapText(true);
-//                                    horizontalHeader.setPadding(new Insets(5, 5, 5, 5));
-//                                    horizontalHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//
-//                                    tableGrid.add(horizontalHeader, col, row + 1);
-//
-//
-//                                    for (int i = 1; i < valuesList.size()+1; i++) {
-//                                        System.out.println("Single value in valuesList -> " + valuesList.get(i-1));
-//
-//                                        Label grid = new Label(valuesList.get(i-1));
-//                                        grid.setWrapText(true);
-//                                        grid.setPadding(new Insets(5, 5, 5, 5));
-//                                        grid.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//
-//                                        tableGrid.add(grid, col + i, row + 1);
-//                                    }
-//
-//                                }
-//                            }
-//                        }
-//
-//                        if (viewType.getBody().getFooter() != null) {
-//                            System.out.println("Got Footer Map -> " + viewType.getBody().getFooter());
-//                            List<String> valuesList = viewType.getBody().getFooter().values().iterator().next();
-//                            System.out.println("FooterMap valuesList -> " + valuesList);
-//                            String key = getKey(viewType.getBody().getFooter(), valuesList);
-//                            System.out.println("Key in FooterMap -> " + key);
-//
-//                            Label footer = new Label(key);
-//                            footer.setWrapText(true);
-//                            footer.setPadding(new Insets(5, 5, 5, 5));
-//                            footer.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
-//
-//                            tableGrid.add(footer, 0, viewType.getBody().getRows().size() + 1);
-//
-//                            for (int i = 0; i < valuesList.size(); i++) {
-//                                Label grid = new Label(valuesList.get(i));
-//                                grid.setWrapText(true);
-//                                grid.setPadding(new Insets(5, 5, 5, 5));
-//                                grid.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
-//
-//                                tableGrid.add(grid, i+1, viewType.getBody().getRows().size() + 1);
-//                            }
-//                        }
-//
-//                        contentElements.add(tableGrid);
-//                    }
-//                    else if (contentViewType instanceof AudioViewType) {
-//                        System.out.println("ContentViewType -> AudioViewType");
-//                        AudioViewType viewType = (AudioViewType) contentViewType;
-//
-//                        if (viewType.getTitle() != null) {
-//                            contentElements.add(getTitle(viewType.getTitle().getText()));
-//                        }
-//
-//                        if (viewType.getBody() != null) {
-//                            System.out.println("Got audio -> " + viewType.getBody().getUrl() + " with duration " + viewType.getBody().getDurationSeconds());
-//
-//                            String mediaSource = viewType.getBody().getUrl();
-//
-//                            Media media = new Media(mediaSource);
-//                            MediaPlayer mediaPlayer = new MediaPlayer(media);
-//                            mediaPlayer.setAutoPlay(false);
-//                            media.setOnError(() -> {
-//                                System.out.println("Media error -> " + media.getError());
-//                            });
-//                            mediaPlayer.setOnError(() -> {
-//                                System.out.println("MediaPlayer error -> " + mediaPlayer.getError());
-//                            });
-//
-//                            VBox vBox = new VBox();
-//                            vBox.setPrefHeight(80);
-//                            vBox.setPrefWidth(120);
-//                            vBox.setPadding(new Insets(10, 0, 0, 0));
-//                            vBox.setStyle("-fx-background-color: #034801; -fx-background-radius: 20 20 22 22;");
-//
-//                            StackPane controlsPane = new StackPane();
-//                            controlsPane.setPadding(new Insets(10, 15, 10, 25));
-//                            controlsPane.setPrefWidth(vBox.getPrefWidth());
-//                            controlsPane.setStyle("-fx-background-color: #E7F7E9; -fx-background-radius: 20;");
-//
-//                            Image muteIcon = new Image(getClass().getResource("/drawable/audio_type_mute_icon_1x.png").toString());
-//                            Image unMuteIcon = new Image(getClass().getResource("/drawable/audio_type_unmute_icon_1x.png").toString());
-//                            ImageView speaker = new ImageView(muteIcon);
-//                            speaker.setPreserveRatio(true);
-//                            speaker.setPickOnBounds(true);
-//                            speaker.setFitWidth(20);
-//                            speaker.setFitHeight(20);
-//                            StackPane.setAlignment(speaker, Pos.CENTER_RIGHT);
-//                            StackPane.setMargin(speaker, new Insets(0, 10, 0, 0));
-//                            speaker.setOnMouseClicked(event -> {
-//                                if (mediaPlayer.getVolume() > 0.0) {
-//                                    mediaPlayer.setVolume(0.0);
-//                                    speaker.setImage(unMuteIcon);
-//                                }else {
-//                                    mediaPlayer.setVolume(1.0);
-//                                    speaker.setImage(muteIcon);
-//                                }
-//                            });
-//
-//                            ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/audio_type_play_icon_1x.png").toString()));
-//                            playIcon.setPreserveRatio(true);
-//                            playIcon.setPickOnBounds(true);
-//                            playIcon.setFitWidth(20);
-//                            playIcon.setFitHeight(20);
-//                            ImageView pauseIcon = new ImageView(new Image(getClass().getResource("/drawable/audio_type_pause_icon_1x.png").toString()));
-//                            pauseIcon.setPreserveRatio(true);
-//                            pauseIcon.setPickOnBounds(true);
-//                            pauseIcon.setFitWidth(20);
-//                            pauseIcon.setFitHeight(20);
-//
-//                            Button playButton = new Button();
-//                            playButton.setBackground(Background.EMPTY);
-//                            playButton.setGraphic(playIcon);
-//                            StackPane.setAlignment(playButton, Pos.CENTER_LEFT);
-//
-//                            Label duration = new Label("17:34 / 59:32");
-//                            duration.setAlignment(Pos.CENTER);
-//                            StackPane.setAlignment(duration, Pos.CENTER_LEFT);
-//                            StackPane.setMargin(duration, new Insets(0, 0, 0, 40));
-//
-//                            controlsPane.getChildren().addAll(playButton, duration, speaker);
-//
-//                            ImageView equalizerImage = new ImageView(new Image(getClass().getResource("/drawable/audio_type_equalizer_view_1x.png").toString()));
-//                            equalizerImage.setPreserveRatio(true);
-//                            equalizerImage.setPickOnBounds(true);
-//                            StackPane imagePane = new StackPane(equalizerImage);
-//                            imagePane.setPadding(new Insets(10, 0, 10, 0));
-//                            StackPane.setAlignment(equalizerImage, Pos.CENTER);
-//
-//                            vBox.getChildren().addAll(imagePane, controlsPane);
-//
-//                            playButton.setOnAction(event -> {
-//                                Status mediaStatus = mediaPlayer.getStatus();
-//                                System.out.println("Media Status -> " + mediaPlayer.getStatus());
-//                                if (mediaStatus != Status.PLAYING){
-//                                    mediaPlayer.play();
-//                                }else {
-//                                    mediaPlayer.pause();
-//                                }
-//
-//                                if (mediaStatus == Status.STOPPED) {
-//                                    mediaPlayer.play();
-//                                }
-//
-//                                if (mediaStatus != Status.PLAYING) {
-//                                    playButton.setGraphic(pauseIcon);
-//                                }else {
-//                                    playButton.setGraphic(playIcon);
-//                                }
-//
-//                            });
-//
-//                            mediaPlayer.setOnEndOfMedia(() -> {
-//                                playButton.setGraphic(playIcon);
-//                                mediaPlayer.seek(mediaPlayer.getStartTime());
-//                                mediaPlayer.pause();
-//                            });
-//
-//                            contentElements.add(vBox);
-//                        }
-//
-//                    }
-//                    else if (contentViewType instanceof VideoViewType) {
-//                        System.out.println("ContentViewType -> VideoViewType");
-//                        VideoViewType viewType = (VideoViewType) contentViewType;
-//
-//                        if (viewType.getTitle() != null) {
-//                            contentElements.add(getTitle(viewType.getTitle().getText()));
-//                        }
-//
-////                        System.out.println("Got video -> " + viewType.getBody().getUrl() + " with duration " + viewType.getBody().getDurationSeconds());
-//
-//                        String mediaSource = viewType.getBody().getUrl();
-//                        String mediaUrl = getClass().getResource("/assets/coding.mp4").toExternalForm();
-//
-//                        Media media = new Media(mediaUrl);
-//                        MediaPlayer mediaPlayer = new MediaPlayer(media);
-//
-//                        System.out.println("Media Start time -> " + mediaPlayer.getStartTime() + " and Stop time -> " + mediaPlayer.getStopTime());
-//                        media.setOnError(() -> {
-//                            System.out.println("Media error -> " + media.getError());
-//                        });
-//                        mediaPlayer.setOnError(() -> {
-//                            System.out.println("MediaPlayer error -> " + mediaPlayer.getError());
-//                        });
-//
-//                        MediaView mediaView = new MediaView(mediaPlayer);
-//                        mediaView.setSmooth(true);
-//                        mediaView.setOnError(event -> {
-//                            System.out.println("MediaView error -> " + event.getMediaError().toString());
-//                        });
-//
-//                        DropShadow dropshadow = new DropShadow(20, Color.GRAY);
-//                        mediaView.setEffect(dropshadow);
-//
-//                        StackPane videoPane = new StackPane();
-//
-//                        Label videoDescription = new Label("Cell structure and functions of cell components ");
-//                        videoDescription.setBackground(Background.EMPTY);
-//                        videoDescription.setTextFill(Paint.valueOf("#FFFFFF"));
-//                        videoDescription.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//
-//                        Label duration = new Label("45 mins");
-//                        duration.setBackground(Background.EMPTY);
-//                        duration.setTextFill(Paint.valueOf("#FFFFFF"));
-//                        duration.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-//
-//                        Button playButton = new Button();
-//                        ImageView playIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_play_icon.png").toString()));
-//                        ImageView pauseIcon = new ImageView(new Image(getClass().getResource("/drawable/video_type_pause_icon_1x.png").toString()));
-//                        playButton.setGraphic(playIcon);
-//                        playButton.setBackground(Background.EMPTY);
-//                        playButton.setOnAction(event -> {
-//                            Status status = mediaPlayer.getStatus();
-//                            if (status == Status.PAUSED || status == Status.READY || status == Status.STOPPED) {
-//                                mediaPlayer.play();
-//                                playButton.setGraphic(pauseIcon);
-//                            } else {
-//                                mediaPlayer.pause();
-//                                playButton.setGraphic(playIcon);
-//                            }
-//                        });
-//
-//                        mediaPlayer.setOnEndOfMedia(() -> {
-//                            // Implement later
-//                        });
-//
-//                        StackPane.setAlignment(playButton, Pos.CENTER);
-//                        StackPane.setAlignment(videoDescription, Pos.BOTTOM_LEFT);
-//                        StackPane.setMargin(videoDescription, new Insets(0, 0, 10, 30));
-//                        StackPane.setAlignment(duration, Pos.BOTTOM_RIGHT);
-//                        StackPane.setMargin(duration, new Insets(0, 30, 10, 0));
-//
-//                        videoPane.setOnMouseEntered(event -> {
-//                            Status mediaStatus = mediaPlayer.getStatus();
-//                            if (mediaStatus == Status.READY) {
-//                                if (playButton.isVisible() || videoDescription.isVisible() || duration.isVisible()) {
-//                                    return;
-//                                }
-//                            }
-//
-//                            Animations.fadeIn(playButton, 300, 300);
-//                            Animations.fadeIn(videoDescription, 300, 300);
-//                            Animations.fadeIn(duration, 300, 300);
-//
-//                        });
-//                        videoPane.setOnMouseExited(event -> {
-//                            Animations.fadeOut(playButton, 300, 1000);
-//                            Animations.fadeOut(videoDescription, 300, 1000);
-//                            Animations.fadeOut(duration, 300, 1000);
-//
-//                        });
-//                        videoPane.getChildren().addAll(mediaView, playButton, videoDescription, duration);
-//
-//
-//                        contentElements.add(videoPane);
-//                    }
-//                });
-
-        viewModel.getNoteSections()
-                .get(subTopic.getTopicId())
-                .forEach(section -> {
-
-                    ContentViewType contentViewType = ContentViewTypes.convert(section);
-                    if (contentViewType instanceof HeaderViewType) {
-//                        System.out.println(TAG + "ContentViewType -> HeaderViewType");
-
-                        HeaderViewType headerViewType = (HeaderViewType) contentViewType;
-                        if (headerViewType.getText() != null) {
-                            Document doc = Jsoup.parse(headerViewType.getText());
-                            String formattedText = doc.body().text();
-                            Label label = new Label(formattedText);
-                            label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-                            label.setWrapText(true);
-
-                            contentElements.add(label);
-                        }
-                    } else if (contentViewType instanceof ParagraphViewType) {
-//                        System.out.println(TAG + "ContentViewType -> ParagraphViewType");
-
-                        ParagraphViewType paragraphViewType = (ParagraphViewType) contentViewType;
-                        if (paragraphViewType.getText() != null) {
-                            Document doc = Jsoup.parse(paragraphViewType.getText());
-                            String formattedText = doc.body().text();
-                            Label label = new Label(formattedText);
-                            label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-                            label.setWrapText(true);
-
-                            contentElements.add(label);
-                        }
-                    } else if (contentViewType instanceof CBTViewType) {
-                        System.out.println(TAG + "ContentViewType -> CBTViewType");
-                        CBTViewType cbtViewType = (CBTViewType) contentViewType;
-
-                        // Show the question
-
-                        int yearId = cbtViewType.getYearId();
-                        int questionId = cbtViewType.getQuestionId();
-                        int subjectId = cbtViewType.getSubjectId();
-
-                        ObjectiveQuestion question = viewModel.getQuestion(subjectId, yearId, questionId);
-
-                        VBox cbtVBox = new VBox();
-                        cbtVBox.setPadding(new Insets(20, 20, 30, 20));
-                        cbtVBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #51C46B; -fx-border-radius: 10;");
-                        cbtVBox.setSpacing(10);
-                        VBox.setMargin(cbtVBox, new Insets(20, 0, 0, 0));
-
-                        Document doc = Jsoup.parse(question.getQuestion());
-                        String formattedText = doc.body().text();
-                        Label questionBox = new Label(formattedText);
-                        questionBox.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
-                        questionBox.setWrapText(true);
-                        questionBox.setPadding(new Insets(10));
-                        questionBox.setStyle("-fx-background-color: #E7F7E9; -fx-border-color: #034801; -fx-border-radius: 5; ");
-
-                        RadioButton optionAButton = new RadioButton();
-                        optionAButton.setText(question.getOptionA().getText());
-                        optionAButton.setAlignment(Pos.CENTER);
-                        optionAButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-                        optionAButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
-                        optionAButton.setPadding(new Insets(10));
-
-                        RadioButton optionBButton = new RadioButton();
-                        optionBButton.setText(question.getOptionB().getText());
-                        optionBButton.setAlignment(Pos.CENTER);
-                        optionBButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-                        optionBButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
-                        optionBButton.setPadding(new Insets(10));
-
-                        RadioButton optionCButton = new RadioButton();
-                        optionCButton.setText(question.getOptionC().getText());
-                        optionCButton.setAlignment(Pos.CENTER);
-                        optionCButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-                        optionCButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
-                        optionCButton.setPadding(new Insets(10));
-
-                        RadioButton optionDButton = new RadioButton();
-                        optionDButton.setText(question.getOptionD().getText());
-                        optionDButton.setAlignment(Pos.CENTER);
-                        optionDButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
-                        optionDButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
-                        optionDButton.setPadding(new Insets(10));
-
-                        questionBox.widthProperty().addListener(((observable, oldValue, newValue) -> {
-                            optionAButton.setMinWidth((Double) newValue);
-                            optionBButton.setMinWidth((Double) newValue);
-                            optionCButton.setMinWidth((Double) newValue);
-                            optionDButton.setMinWidth((Double) newValue);
-                        }));
-
-                        ToggleGroup optionsToggle = new ToggleGroup();
-                        optionsToggle.getToggles().addAll(optionAButton, optionBButton, optionCButton, optionDButton);
-
-                        optionAButton.setOnAction(event -> {
-                            if (question.getQuestionAnswer().getId() == 0) {
-                                optionAButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
-                            } else {
-                                optionAButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
-
-                            }
-                        });
-                        optionBButton.setOnAction(event -> {
-                            if (question.getQuestionAnswer().getId() == 1) {
-                                optionBButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
-                            } else {
-                                optionBButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
-                            }
-                        });
-                        optionCButton.setOnAction(event -> {
-                            if (question.getQuestionAnswer().getId() == 2) {
-                                optionCButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
-                            } else {
-                                optionCButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
-                            }
-                        });
-                        optionDButton.setOnAction(event -> {
-                            if (question.getQuestionAnswer().getId() == 3) {
-                                optionDButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
-                            } else {
-                                optionDButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
-                            }
-                        });
-
-                        HBox hBox = new HBox();
-                        VBox.setMargin(hBox, new Insets(15, 0, 0, 5));
-                        Label seeExplanation = new Label("See explanation");
-                        seeExplanation.setAlignment(Pos.CENTER_LEFT);
-                        seeExplanation.setTextFill(Paint.valueOf("#51C46B"));
-                        seeExplanation.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-                        ImageView showExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_show_explanation_icon_1x.png").toString()));
-                        showExplanation.setFitWidth(15);
-                        showExplanation.setFitHeight(15);
-                        showExplanation.setPreserveRatio(true);
-                        showExplanation.setPickOnBounds(true);
-                        ImageView hideExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_hide_explanation_icon_1x.png").toString()));
-                        hideExplanation.setFitWidth(15);
-                        hideExplanation.setFitHeight(15);
-                        hideExplanation.setPreserveRatio(true);
-                        hideExplanation.setPickOnBounds(true);
-                        Button showHideExplanation = new Button();
-                        showHideExplanation.setBackground(Background.EMPTY);
-                        showHideExplanation.setGraphic(showExplanation);
-                        HBox.setMargin(showHideExplanation, new Insets(0, 0, 0, 10));
-
-                        hBox.getChildren().addAll(seeExplanation, showHideExplanation);
-
-                        Label explanationText = new Label();
-                        explanationText.setText(question.getQuestionAnswer().getExplanation());
-                        explanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
-                        explanationText.setWrapText(true);
-                        explanationText.setPadding(new Insets(10));
-                        explanationText.setStyle("-fx-border-color: #034801; -fx-border-radius: 5; ");
-
-                        cbtVBox.getChildren().addAll(questionBox, optionAButton, optionBButton, optionCButton, optionDButton, hBox);
-
-                        showHideExplanation.setOnAction(event -> {
-                            if (showHideExplanation.getGraphic() == showExplanation){
-                                showHideExplanation.setGraphic(hideExplanation);
-                                seeExplanation.setText("Hide explanation");
-                                cbtVBox.getChildren().add(explanationText);
-                            }else {
-                                showHideExplanation.setGraphic(showExplanation);
-                                seeExplanation.setText("See explanation");
-                                cbtVBox.getChildren().remove(explanationText);
-                            }
-                        });
-
-                        VBox.setMargin(cbtVBox, new Insets(0, 100, 0, 0));
-
-                        contentElements.add(cbtVBox);
-
-                    } else if (contentViewType instanceof LatexMathViewType) {
-                        System.out.println(TAG + "ContentViewType -> LatexMathViewType");
-                        LatexMathViewType latexMathViewType = (LatexMathViewType) contentViewType;
-
-                        // Show the content
-
-                        if (latexMathViewType.getKatex() != null) {
-                            org.commonmark.node.Node document = markdownParser.parse(latexMathViewType.getKatex());
-                            String htmlKatex = htmlRenderer.render(document);
-
-                            Document doc = Jsoup.parse(htmlKatex);
-                            String formattedText = doc.body().text();
-
-                            Label label = new Label(formattedText);
-                            label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-                            label.setWrapText(true);
-
-                            contentElements.add(label);
-                        }
-
-                    } else if (contentViewType instanceof ListViewType) {
-                        System.out.println(TAG + "ContentViewType -> ListViewType");
-                        ListViewType listViewType = (ListViewType) contentViewType;
-
-                        // Show the first item in the List
-
-                        if (listViewType.getStyle().equalsIgnoreCase("unordered")) {
-
-                            ArrayList<UnorderedListItem> contentItems = new ArrayList<>();
-
-                            for (int i = 0; i < listViewType.getItems().size(); i++) {
-                                UnorderedListItem unorderedListItem = new UnorderedListItem(listViewType.getItems().get(i));
-                                contentItems.add(unorderedListItem);
-                            }
-
-                            ObservableList<UnorderedListItem> items = FXCollections.observableArrayList(contentItems);
-
-                            ListView<UnorderedListItem> contentList = new ListView<>();
-                            contentList.setItems(items);
-                            contentList.setBackground(Background.EMPTY);
-                            contentList.setCellFactory(new UnorderedListCellFactory(null));
-                            contentList.setSelectionModel(new NoSelectionModel<>());
-                            contentList.setPadding(new Insets(0, 0, 0, 10));
-
-                            contentElements.add(contentList);
-                        }
-
-                    } else if (contentViewType instanceof NestedListViewType) {
-                        System.out.println(TAG + "ContentViewType -> NestedListViewType");
-                    } else if (contentViewType instanceof ReferenceViewType) {
-                        System.out.println(TAG + "ContentViewType -> ReferenceViewType");
-
-                        // Show the Reference content
-
-                        ReferenceViewType referenceViewType = (ReferenceViewType) contentViewType;
-                        if (referenceViewType.getText() != null) {
-                            Document doc = Jsoup.parse(referenceViewType.getText());
-                            String formattedText = doc.body().text();
-
-                            Label label = new Label(formattedText);
-                            label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
-                            label.setWrapText(true);
-
-                            contentElements.add(label);
-                        }
-                    } else if (contentViewType instanceof SimpleImageViewType) {
-                        System.out.println(TAG + "ContentViewType -> SimpleImageViewType");
-                    } else if (contentViewType instanceof TableViewType) {
-                        System.out.println(TAG + "ContentViewType -> TableViewType");
-
-                        TableViewType tableViewType = (TableViewType) contentViewType;
-
-                        // Show the first two headers
-
-                        GridPane tableGrid = new GridPane();
-                        tableGrid.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #F4D242");
-
-                        List<List<String>> content = tableViewType.getContent();
-
-                        for (int row = 0; row < content.size(); row++) {
-
-                            System.out.println("Row Content -> " + content.get(row));
-                            for (int col = 0; col < content.get(row).size(); col++) {
-                                System.out.println("Column content -> " + content.get(row).get(col));
-                                Label grid = new Label(content.get(row).get(col));
-                                grid.setWrapText(true);
-                                grid.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
-                                grid.setPadding(new Insets(5, 5, 5, 5));
-
-                                tableGrid.add(grid, col, row);
-                            }
-                        }
-
-                        contentElements.add(tableGrid);
-
-                    }
-
-                });
-
-//        contentLayout.setSpacing(20);
-//        contentLayout.getChildren().clear();
-//        contentLayout.getChildren().addAll(contentElements);
-//        contentLayout.setAlignment(Pos.CENTER);
-    }
-
     /**
      * Utility method to retrieve a key from a Map using its value
      * @param map the default Map
@@ -2418,6 +1312,16 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         }
 
         return dialog;
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisible(false);
+        noteContentPane.setVisible(true);
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisible(true);
+        noteContentPane.setVisible(false);
     }
 
     private InitialData getInitialData() {

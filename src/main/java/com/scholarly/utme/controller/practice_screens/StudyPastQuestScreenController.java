@@ -8,6 +8,7 @@ import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.TextToSpeech;
+import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.practice_screens.StudyPastScreenVM.SubjectQuestionsState;
@@ -16,7 +17,9 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.SceneLifecycle;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -37,7 +40,10 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @FxmlPath("/layouts/practice_screens/StudyPastQuestionsScreen.fxml")
@@ -76,62 +82,83 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     @FXML
     private DialogPane exitDialogPane;
 
+    @FXML
+    private BorderPane practiceContentPane;
+    @FXML
+    private ProgressIndicator progressBar;
+
     private final String optionWebViewBC = "#FFFFFF;";
+
     @Override
-
     public void initialize(URL location, ResourceBundle resources) {
-        viewModel.processInitialData(getInitialData());
-
-        initializeViews();
-        initializeFont();
-
-        subjectList.setCellFactory(new PracticeSubjectListCellFactory());
-        subjectList.setItems(viewModel.getSubjects());
-        subjectList.getSelectionModel().selectFirst();
-        subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) c -> {
-            if (c.getList().size() == 1) {
-                PQSubject subject = c.getList().get(0);
-                viewModel.setSelectedSubject(subject);
-                appBarTitle.setText("STUDY QUESTIONS");
-                appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
-            } else {
-                viewModel.setSelectedSubject(null);
-            }
-        });
-
-        viewModel.setSelectedSubject(subjectList.getSelectionModel().getSelectedItem());
-        setupQuestionView(viewModel.getSelectedSubject());
-        setupTilePane(viewModel.getSelectedSubject());
-
-        appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
-
-        viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                setupQuestionView(newValue);
-                setupTilePane(newValue);
-//                updateBookmarkIcon();
-            }
-        });
-
-        viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
-            subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
-                if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
-                    changeSelectedTile(oldValue.intValue(), newValue.intValue());
-                    changeSelectedQuestion(newValue.intValue());
-//                    updateBookmarkIcon();
-                }
-            });
-        });
-
-
         // Integer value to track subjectList subject selection
         AtomicInteger subjectListSelectionAtomicIndex = new AtomicInteger(0);
 
-        subjectList.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<? super Integer>) observable -> {
-            if (observable.getList().size() == 1) {
-                subjectListSelectionAtomicIndex.set(observable.getList().get(0));
+        showProgressBar();
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+        Task<Boolean> contentTask = new Task<>() {
+            @Override
+            protected Boolean call() {
+                viewModel.processInitialData(getInitialData());
+                return true;
             }
-        });
+        };
+        contentTask.setOnSucceeded(
+                succeedEvent -> Platform.runLater(() -> {
+                    subjectList.setCellFactory(new PracticeSubjectListCellFactory());
+                    subjectList.setItems(viewModel.getSubjects());
+                    subjectList.getSelectionModel().selectFirst();
+                    subjectList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super PQSubject>) c -> {
+                        if (c.getList().size() == 1) {
+                            PQSubject subject = c.getList().get(0);
+                            viewModel.setSelectedSubject(subject);
+                            appBarTitle.setText("STUDY QUESTIONS");
+                            appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
+                        } else {
+                            viewModel.setSelectedSubject(null);
+                        }
+                    });
+
+                    viewModel.setSelectedSubject(subjectList.getSelectionModel().getSelectedItem());
+                    setupQuestionView(viewModel.getSelectedSubject());
+                    setupTilePane(viewModel.getSelectedSubject());
+
+                    appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
+
+                    viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue != null) {
+                            setupQuestionView(newValue);
+                            setupTilePane(newValue);
+//                            updateBookmarkIcon();
+                        }
+                    });
+
+                    viewModel.getSubjectsQuestions().forEach((s, subjectQuestionsState) -> {
+                        subjectQuestionsState.selectedQuestionProperty().addListener((observable, oldValue, newValue) -> {
+                            if (viewModel.getSelectedSubject().getShortTitle().equalsIgnoreCase(s)) {
+                                changeSelectedTile(oldValue.intValue(), newValue.intValue());
+                                changeSelectedQuestion(newValue.intValue());
+//                                updateBookmarkIcon();
+                            }
+                        });
+                    });
+
+                    subjectList.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<? super Integer>) observable -> {
+                        if (observable.getList().size() == 1) {
+                            subjectListSelectionAtomicIndex.set(observable.getList().get(0));
+                        }
+                    });
+
+                    hideProgressBar();
+                })
+        );
+
+        executorService.execute(contentTask);
+        executorService.shutdown();
+
+        initializeViews();
+        initializeFont();
 
         prevButton.setOnAction(event -> {
             nextButton.setDisable(false);
@@ -295,7 +322,6 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         quesDescriptionCloseIcon.setOnMouseClicked(mouseEvent -> {
             Animations.hideDialog(questionDescriptionDialog, dialogDimmer);
         });
-
     }
 
     private void initializeViews() {
@@ -762,6 +788,16 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         dialog.show();
 
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisible(false);
+        practiceContentPane.setVisible(true);
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisible(true);
+        practiceContentPane.setVisible(false);
     }
 
 

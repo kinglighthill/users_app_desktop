@@ -1,4 +1,4 @@
-package com.scholarly.utme.util;
+package com.scholarly.utme.async;
 
 import com.scholarly.utme.MainApplication;
 import de.saxsys.mvvmfx.FluentViewLoader;

@@ -144,7 +144,6 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                 Observable.interval(1, TimeUnit.SECONDS, Schedulers.io())
                         .observeOn(JavaFxScheduler.platform())
                         .subscribe(
-
                                 it -> {
                                     if (time.get() != 0) {
                                         time.set(time.get() - 1);

@@ -1,26 +1,16 @@
 package com.scholarly.utme.controller.landing_screens;
 
-import com.scholarly.utme.GlobalExceptionHandler;
 import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.data.model.Course;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.util.LandingScreen;
-import com.scholarly.utme.util.LandingScreenTask;
+import com.scholarly.utme.async.LandingScreen;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.*;
 import de.saxsys.mvvmfx.*;
 import io.reactivex.rxjava3.annotations.NonNull;
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -34,9 +24,6 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static com.scholarly.utme.util.Constants.*;
 
@@ -102,6 +89,11 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             activateView = landingScreen.getActivateView().getValue();
             settingsView = landingScreen.getSettingsView().getValue();
 
+            if (homeView == null) homeButton.setDisable(true);
+            if (accountView == null) accountButton.setDisable(true);
+            if (activateView == null) activateButton.setDisable(true);
+            if (settingsView == null) settingsButton.setDisable(true);
+
             if (screenToShow == Screens.ACCOUNT_SCREEN) {
                 selectButton(accountView, accountButton);
             } else if (screenToShow == Screens.ACTIVATE_SCREEN) {
@@ -118,6 +110,8 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             landingScreen.getHomeView().addListener((observable, oldValue, newValue) -> {
                 homeView = newValue;
 
+                if (newValue != null) homeButton.setDisable(false);
+
                 if (screenToShow == Screens.HOME_SCREEN) {
                     homeContentPane.getChildren().clear();
                     homeContentPane.getChildren().add(homeView);
@@ -127,6 +121,9 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             });
             landingScreen.getAccountView().addListener((observable, oldValue, newValue) -> {
                 accountView = newValue;
+
+                if (newValue != null) accountButton.setDisable(false);
+
                 if (screenToShow == Screens.ACCOUNT_SCREEN) {
                     homeContentPane.getChildren().clear();
                     homeContentPane.getChildren().add(newValue);
@@ -135,6 +132,9 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             });
             landingScreen.getActivateView().addListener((observable, oldValue, newValue) -> {
                 activateView = newValue;
+
+                if (newValue != null) activateButton.setDisable(false);
+
                 if (screenToShow == Screens.ACTIVATE_SCREEN) {
                     homeContentPane.getChildren().clear();
                     homeContentPane.getChildren().add(newValue);
@@ -143,6 +143,9 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             });
             landingScreen.getSettingsView().addListener((observable, oldValue, newValue) -> {
                 settingsView = newValue;
+
+                if (newValue != null) settingsButton.setDisable(false);
+
                 if (screenToShow == Screens.SETTINGS_SCREEN) {
                     homeContentPane.getChildren().clear();
                     homeContentPane.getChildren().add(newValue);
