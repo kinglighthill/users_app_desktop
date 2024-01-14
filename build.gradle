@@ -87,7 +87,7 @@ jlink {
     }
 
     jpackage {
-        appVersion = '1.0.0'
+        appVersion = '1.0.1'
         installerOptions = [
                 '--description', "Scholarly Jamb CBT App",
                 '--copyright', 'Copyrigth 2020-2024 Scholarly Educational Software Ltd'
