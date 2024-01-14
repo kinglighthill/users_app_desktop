@@ -101,6 +101,8 @@
                 </ToggleButton>
             </children>
         </VBox>
+
+        <Label alignment="BOTTOM_CENTER" fx:id="versionText" text="Version 1.0.1" textFill="#FFFFFF"/>
     </left>
 
     <center>

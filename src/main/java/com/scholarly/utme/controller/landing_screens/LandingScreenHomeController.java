@@ -1,7 +1,7 @@
 package com.scholarly.utme.controller.landing_screens;
 
 import com.scholarly.utme.MainApplication;
-import com.scholarly.utme.controller.HomeScreenController;
+import com.scholarly.utme.controller.PQScreenController;
 import com.scholarly.utme.controller.note_screens.NotesScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
 import com.scholarly.utme.data.model.listItems.NewsItem;
@@ -17,10 +17,15 @@ import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.embed.swing.SwingNode;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -36,17 +41,13 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.controlsfx.control.GridView;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
-import javax.swing.*;
-import javax.swing.text.html.HTMLEditorKit;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-
-import static com.scholarly.utme.util.Constants.BASE_URL;
 
 @FxmlPath("/layouts/landing_screens/landing_screen_home.fxml")
 public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM>, Initializable {
@@ -100,26 +101,42 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private Label selectFavoriteText, moreThanOneText, actionCbtPracticeText, actionVideosPracticeText, actionNovelsPracticeText, actionAudioPracticeText, otherAppsTitleDesc, otherAppsShortDesc;
 
+    private final SimpleIntegerProperty count = new SimpleIntegerProperty();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
 
-        boolean internetEnabled = Helper.checkNetworkConnectivity();
+        continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionHBox);
 
-        initializeViews();
-        initializeFonts();
-        initializeGestures();
+        Task<Void> userNameTask = new Task<>() {
+            @Override
+            protected Void call() {
+                String userName = viewModel.getUser().getFullName().trim();
+                String[] userNameSplit = userName.split(" ");
 
-        helloText.setText(helloText.getText() + viewModel.getUser().getFullName().trim().split(" ")[0]);
+                String firstName = "";
+                if (userNameSplit.length > 0) {
+                    firstName = userNameSplit[0];
+                } else {
+                    firstName = userName;
+                }
 
-        String imageUrl = viewModel.getUser().getProfilePicUrl();
-        String imageUrlWithQueryString = imageUrl + "?" + RandomStringUtils.random(6, true, true);
+                String finalFirstName = firstName;
+                Platform.runLater(() -> helloText.setText(helloText.getText() + finalFirstName));
 
-        long start = System.currentTimeMillis();
+                count.set(count.add(1).getValue());
+                return null;
+            }
+        };
 
         Task<Void> imageTask = new Task<>() {
             @Override
             protected Void call() {
+                boolean internetEnabled = Helper.checkNetworkConnectivity();
+                String imageUrl = viewModel.getUser().getProfilePicUrl();
+                String imageUrlWithQueryString = imageUrl + "?" + RandomStringUtils.random(6, true, true);
+
                 if (imageUrl != null && !imageUrl.contains("empty")) {
                     Image image = new Image(imageUrlWithQueryString, true);
                     if (image.isError() || !internetEnabled) {
@@ -137,32 +154,91 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
                 } else {
                     displayProfileImage(new Image(getClass().getResource("/drawable/account_screen_images/default_profile_image.png").toString()));
                 }
+
+                count.set(count.add(1).getValue());
                 return null;
             }
         };
-        Thread imageThread = new Thread(imageTask);
-        imageThread.start();
 
-        System.out.println(TAG + "Time taken to load image -> " + (System.currentTimeMillis() - start) + "ms");
+        Task<Void> subjectComboTask = new Task<>() {
+            @Override
+            protected Void call() {
+                ObservableList<FavoriteSubject> subjects = viewModel.getSubjects();
+                selectSubjectsGrid.setCellFactory(new SubjectGridCellFactory());
+                Platform.runLater(() -> selectSubjectsGrid.setItems(subjects));
 
-        selectSubjectsGrid.setCellFactory(new SubjectGridCellFactory());
-        selectSubjectsGrid.setItems(viewModel.getSubjects());
+                count.set(count.add(1).getValue());
+                return null;
+            }
+        };
 
-        boolean showFavSubjectDialog = PreferencesManager.getBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, true);
-        if (viewModel.getFavoriteSubjects().isEmpty() && showFavSubjectDialog) {
-            Animations.fadeIn(selectSubjectPane, 300);
-            Animations.fadeIn(dimmer, 250);
-        } else {
-            displayFavoriteSubjects(viewModel.getFavoriteSubjects());
-        }
+        Task<Void> favouriteSubjectsTask = new Task<>() {
+            @Override
+            protected Void call() {
+                boolean showFavSubjectDialog = PreferencesManager.getBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, true);
+                ObservableList<FavoriteSubject> favouriteSubjects = viewModel.getFavoriteSubjects();
 
-        continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionHBox);
-        if (populateLastSession()) {
-            continuePreviousSessionVBox.getChildren().addAll(continueSessionsText, previousSessionHBox);
-        } else {
-            continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionHBox);
-        }
+                if (favouriteSubjects.isEmpty() && showFavSubjectDialog) {
+                    Platform.runLater(() -> {
+                        Animations.fadeIn(selectSubjectPane, 300);
+                        Animations.fadeIn(dimmer, 250);
+                    });
+                } else {
+                    Platform.runLater(() -> displayFavoriteSubjects(favouriteSubjects));
+                }
 
+                count.set(count.add(1).getValue());
+                return null;
+            }
+        };
+
+        favouriteSubjectsTask.setOnSucceeded(event -> editSubjectsText.setDisable(false));
+
+        Task<Void> lastSessionTask = new Task<>() {
+            @Override
+            protected Void call() {
+                boolean populate = populateLastSession();
+                if (populate) {
+                    Platform.runLater(() -> continuePreviousSessionVBox.getChildren().addAll(continueSessionsText, previousSessionHBox));
+                } else {
+                    Platform.runLater(() -> continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionHBox));
+                }
+
+                count.set(count.add(1).getValue());
+                return null;
+            }
+        };
+
+        viewModel.getUidLoaded().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                executorService.execute(userNameTask);
+                executorService.execute(imageTask);
+            }
+        });
+
+        viewModel.getSubjectLoaded().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                executorService.execute(subjectComboTask);
+                executorService.execute(favouriteSubjectsTask);
+            }
+        });
+
+        viewModel.getLastSessionLoaded().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                executorService.execute(lastSessionTask);
+            }
+        });
+
+        count.addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() > 4) {
+                executorService.shutdown();
+            }
+        });
+
+        editSubjectsText.setDisable(true);
+        initializeViews();
+        initializeFonts();
+        initializeGestures();
 
         editSubjectsText.setOnMouseClicked(e -> {
             Animations.fadeIn(selectSubjectPane, 300);
@@ -185,28 +261,36 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             PreferencesManager.putBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, false);
         });
 
-        profileImage.setOnMouseClicked(event -> {
-            ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN);
-        });
+        profileImage.setOnMouseClicked(event -> ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN));
 
         cbtPracticePanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(null, null));
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            MainApplication.resetTime();
+            ViewSwitcher.passData(new PQScreenController.InitialData(null, null));
+            MainApplication.timeTakenTo("pass practice data");
+            ViewSwitcher.showScreen(View.PQ_SCREEN);
+            MainApplication.timeTakenTo("show pq screen");
         });
 
         novelsPanel.setOnMouseClicked(e -> {
+            MainApplication.resetTime();
             ViewSwitcher.showScreen(View.NOVEL_SCREEN);
+            MainApplication.timeTakenTo("show novel screen");
         });
 
         studyNotesPanel.setOnMouseClicked(e -> {
+            MainApplication.resetTime();
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
+            MainApplication.timeTakenTo("show note screen");
         });
 
         syllabusPanel.setOnMouseClicked(e -> {
+            MainApplication.resetTime();
             ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
+            MainApplication.timeTakenTo("show syllabus screen");
         });
 
         noteLastSessionPanel.setOnMouseClicked(e -> {
+            MainApplication.resetTime();
             NotesScreenController.InitialData data = new NotesScreenController.InitialData(
                     viewModel.getLastSessionSubject(),
                     viewModel.getNoteSubjectTopics().get(
@@ -219,6 +303,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
                     null,
                     viewModel.getNoteLastSection()
             );
+            MainApplication.timeTakenTo("fetch note data");
             ViewSwitcher.passData(data);
             ViewSwitcher.showScreen(View.NOTES_SCREEN);
         });
@@ -234,10 +319,10 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             ViewSwitcher.showScreen(View.NOVEL_CONTENT_SCREEN);
         });
 
-//        viewDesktopAppButton.setOnAction(event -> {
-//            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.APPS_SCREEN));
-//            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-//        });
+        /*viewDesktopAppButton.setOnAction(event -> {
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.APPS_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+        });*/
 
 
         /*videosPanel.setOnMouseClicked(e -> {
@@ -259,8 +344,8 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             ViewSwitcher.showScreen(View.ACCOUNT_NOTIFICATIONS_SCREEN);
         });*/
 
-//        List<String> fontFamilies = Font.getFamilies();
-//        List<String> fontNames    = Font.getFontNames();
+        /*List<String> fontFamilies = Font.getFamilies();
+        List<String> fontNames    = Font.getFontNames();*/
     }
 
     private void initializeViews() {
@@ -396,8 +481,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             subjectLabel.setPadding(new Insets(5, 0, 0, 0));
             panel.setBottom(subjectLabel);
 
-//            panel.setStyle("-fx-background-color: " + subject.getColorCode() + "; -fx-background-radius: 7; -fx-opacity: 0.3;");
-//            panel.setOpacity(0.3);
             panel.setStyle("-fx-background-color: rgba(143, 152, 255, 0.10); -fx-background-radius: 7");
             panel.setPadding(new Insets(10, 0, 10, 15));
 
@@ -409,8 +492,10 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             });
 
             panel.setOnMouseClicked(event -> {
-                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, subject));
-                ViewSwitcher.showScreen(View.HOME_SCREEN);
+                MainApplication.resetTime();
+                ViewSwitcher.passData(new PQScreenController.InitialData(Screens.PRACTICE_SCREEN, subject));
+                ViewSwitcher.showScreen(View.PQ_SCREEN);
+                MainApplication.timeTakenTo("show pq screen");
             });
 
             favoriteSubjectsTile.getChildren().add(panel);
@@ -442,14 +527,16 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     }
 
     private void displayProfileImage(Image image) {
-        Circle clip = new Circle(25, 25, 25);
-        profileImage.setClip(clip);
-        Rectangle2D imageBounds = new Rectangle2D(0, 0, image.getWidth(), image.getHeight());
-        profileImage.setFitWidth(50);
-        profileImage.setFitHeight(50);
-        profileImage.setViewport(imageBounds);
-        profileImage.setSmooth(true);
-        profileImage.setCache(true);
-        profileImage.setImage(image);
+        Platform.runLater(() -> {
+            Circle clip = new Circle(25, 25, 25);
+            profileImage.setClip(clip);
+            Rectangle2D imageBounds = new Rectangle2D(0, 0, image.getWidth(), image.getHeight());
+            profileImage.setFitWidth(50);
+            profileImage.setFitHeight(50);
+            profileImage.setViewport(imageBounds);
+            profileImage.setSmooth(true);
+            profileImage.setCache(true);
+            profileImage.setImage(image);
+        });
     }
 }

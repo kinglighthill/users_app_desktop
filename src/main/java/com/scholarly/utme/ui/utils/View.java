@@ -28,7 +28,7 @@ public enum View {
     PRE_AUTHENTICATION_SCREEN("/layouts/PreAuthenticationScreen.fxml", PreAuthenticationController.class),
     AUTHENTICATION_SCREEN("/layouts/AuthenticationScreen.fxml", AuthenticationController.class),
     LANDING_SCREEN("/layouts/landing_screens/landing_screen.fxml", LandingScreenController.class),
-    HOME_SCREEN("/layouts/HomeScreen.fxml", HomeScreenController.class),
+    PQ_SCREEN("/layouts/PQScreen.fxml", PQScreenController.class),
     RESULT_SCREEN("/layouts/practice_screens/ResultScreen.fxml", ResultScreenController.class),
     PRACTICE_SCREEN("/layouts/practice_screens/PracticeScreen.fxml", PracticeScreenController.class),
     STUDY_PAST_QUESTION_SCREEN("/layouts/practice_screens/StudyPastQuestionsScreen.fxml", StudyPastQuestScreenController.class),

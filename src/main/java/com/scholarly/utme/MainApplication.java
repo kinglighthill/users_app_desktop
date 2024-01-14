@@ -3,12 +3,13 @@ package com.scholarly.utme;
 import com.github.sarxos.webcam.Webcam;
 import com.google.gson.Gson;
 import com.scholarly.utme.controller.AuthenticationController;
-import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.controller.landing_screens.*;
 import com.scholarly.utme.network.model.UserData;
 import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.async.LandingScreen;
 import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.PreferencesManager;
 import javafx.application.Application;
@@ -31,19 +32,25 @@ import static com.scholarly.utme.util.Constants.*;
 
 public class MainApplication extends Application /*implements Thread.UncaughtExceptionHandler*/  {
     private static final String TAG = "MainApplication: ";
+    private static final String TAG_DEV = "TAG: ";
     private Webcam webcam;
 
     public static final Logger logger = Logger.getLogger(MainApplication.class.getName());
     public static FileHandler fileHandler = null;
 
+    static long startDisplay = System.currentTimeMillis();
+
     @Override
     public void start(Stage stage) throws IOException {
         try {
+            startDisplay = System.currentTimeMillis();
             fileHandler = new FileHandler("logging.log");
             fileHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(fileHandler);
 
             logger.info("Welcome to Scholarly.");
+
+            LandingScreen.getInstance();
 
             InputStream iconStream = MainApplication.class.getResourceAsStream("/drawable/app_logo.png");
             assert iconStream != null;
@@ -60,6 +67,7 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
             stage.setHeight(bounds.getHeight());
 
             ViewSwitcher.setStage(stage);
+            System.out.println(TAG_DEV + "Time taken to set stage -> " + (System.currentTimeMillis() - startDisplay) + "ms");
             stage.setOnCloseRequest(event -> {
                 Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to exit the application?");
 
@@ -90,16 +98,22 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
                 if (!userLoggedOut) {
                     logger.info("Move to Landing Screen");
                     ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
+                    MainApplication.timeTakenTo("pass data");
+
                     ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                    MainApplication.timeTakenTo("load landing screen");
                 } else if (userData == null) {
                     logger.info("Move to Signup Screen");
                     ViewSwitcher.passData(new AuthenticationController.InitialData(true));
+                    MainApplication.timeTakenTo("pass data");
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                 } else {
                     logger.info("Move to Login Screen");
                     ViewSwitcher.passData(new AuthenticationController.InitialData(false));
+                    MainApplication.timeTakenTo("pass data");
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                 }
+                MainApplication.timeTakenTo("load app");
             }
         } catch (Exception e) {
             log(e);
@@ -149,5 +163,13 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
         if (fileHandler != null) {
             logger.info(info);
         }
+    }
+
+    public static void resetTime() {
+        startDisplay = System.currentTimeMillis();
+    }
+
+    public static void timeTakenTo(String message) {
+        System.out.println(TAG_DEV + "Time taken to " + message + " -> " + (System.currentTimeMillis() - startDisplay) + "ms");
     }
 }

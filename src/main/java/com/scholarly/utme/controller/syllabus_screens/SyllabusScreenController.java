@@ -106,59 +106,6 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
 
         viewModel.getTopics().forEach(topic -> {
             System.out.println(TAG + "Got Topic -> " + Helper.toString(topic));
-
-
-//            ToggleButton button = new ToggleButton();
-//            button.setUserData(topic);
-//            button.setMinHeight(48);
-//            button.setMaxHeight(48);
-//            button.setPadding(new Insets(0, 0, 0, 20));
-//            button.setAlignment(Pos.BASELINE_LEFT);
-//            button.setMaxWidth(Double.MAX_VALUE);
-//            button.setText(topic.getTitle());
-//            button.setStyle(IDLE_BUTTON_STYLE);
-//            topicListToggleGroup.getToggles().add(button);
-//
-//            button.selectedProperty().addListener(((observable, oldValue, newValue) -> {
-//                if (newValue) {
-//                    viewModel.setSelectedTopic(topic);
-//
-//                    button.setStyle(PRESSED_STYLE);
-//                    button.setTextFill(Color.WHITE);
-//                }else {
-//                    button.setStyle(IDLE_BUTTON_STYLE);
-//                    button.setTextFill(Color.BLACK);
-//                }
-//
-//            }));
-//
-//            if (topic == viewModel.getSelectedTopic()) {
-//                topicListToggleGroup.selectToggle(button);
-//            }
-//
-//            topicVBox.getChildren().add(button);
-//
-//            Label topicItem = new Label();
-//            topicItem.setText(topic.getTitle());
-//            topicItem.setMinHeight(50);
-//
-//            topicItem.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
-//            topicItem.setPadding(new Insets(0, 0, 0, 10));
-//            Separator separator = new Separator();
-//            tabTopicsVBox.getChildren().addAll(topicItem, separator);
-//
-//            viewModel.getSubtopics().forEach((s, subTopics) -> {
-//               subTopics.stream().filter(subTopic -> subTopic.getTopicId() == topic.getId()).forEach(topicSubtopic -> {
-//                   Label subtopicItem = new Label(topicSubtopic.getTitle());
-//                   subtopicItem.setPadding(new Insets(10, 0, 10, 10));
-//                   subtopicItem.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
-//                   Separator separator2 = new Separator();
-//
-//                   tabTopicsVBox.getChildren().addAll(subtopicItem, separator2);
-//               });
-//
-//            });
-
         });
 
         topicsTab.setContent(tabTopicsVBox);
@@ -167,9 +114,7 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
 
         setupRecTextsTab();
 
-        syllabusBackButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
-        });
+        syllabusBackButton.setOnAction(event -> ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN));
     }
 
     private void initializeViews() {

@@ -8,6 +8,7 @@ import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.network.model.request.UserRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
@@ -132,7 +133,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             Label signUpPhoneError = getPhoneErrorText();
 
             signUpProceedButton.setOnAction(event -> {
-
                 String fullName = signUpNameField.getText();
                 signUpNameSection.getChildren().remove(signUpNameError);
                 if (fullName.split(" ").length == 1) {
@@ -190,7 +190,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     Thread signupThread = new Thread(signupTask);
                     signupThread.start();
                 }
-
             });
 
 
@@ -251,7 +250,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             });
 
             recoverProceedButton.setOnAction(event -> {
-
                 if (!recoverEmailField.getText().contains("@")) {
                     recoverEmailPrompt.setText("Please enter a valid email address");
                     recoverEmailPrompt.setTextFill(Paint.valueOf("#FF0000"));
@@ -305,7 +303,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             recoverEmailField.setTextFormatter(recoverTextFormatter);
 
             signUpGoogleButton.setOnAction(event -> {
-
                 signUpGoogleButton.setDisable(true);
                 showProgressBar();
 
@@ -334,7 +331,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             });
 
             loginGoogleButton.setOnAction(event -> {
-
                 loginGoogleButton.setDisable(true);
                 showProgressBar();
 
@@ -735,7 +731,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         String state = RandomStringUtils.random(6, true, false);
         String scope = "email profile";
         String responseType = "code";
-        String clientId = "671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
+        String clientId = CLIENT_ID;
 
         try {
             InetSocketAddress socketAddress = new InetSocketAddress(ipaddress, 2020);

@@ -1,6 +1,6 @@
 package com.scholarly.utme.controller.practice_screens;
 
-import com.scholarly.utme.controller.HomeScreenController;
+import com.scholarly.utme.controller.PQScreenController;
 import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.PQSubject;
@@ -179,7 +179,7 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
         exitButton.setOnAction(event -> {
             View previousScreen = viewModel.getPreviousScreen();
 
-            if (previousScreen == View.HOME_SCREEN) {
+            if (previousScreen == View.PQ_SCREEN) {
                 showExitDialog();
 
             } else if (previousScreen == View.LANDING_SCREEN) {
@@ -210,8 +210,8 @@ public class ResultScreenController implements FxmlView<ResultScreenVM>, Initial
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 exitDialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
-                ViewSwitcher.showScreen(View.HOME_SCREEN);
+                ViewSwitcher.passData(new PQScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
+                ViewSwitcher.showScreen(View.PQ_SCREEN);
             } else if (buttonType == ButtonType.NO) {
                 exitDialogDimmer.setVisible(false);
             }
