@@ -183,6 +183,41 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         initializeViews();
         initializeFonts();
 
+//        ObservableList<SubjectListItemVM> mySubjects = viewModel.getObjectiveSubjects().stream().filter(SubjectListItemVM::isFavoriteSubject).collect(Collectors.toCollection(FXCollections::observableArrayList));
+//        ObservableList<SubjectListItemVM> otherSubjects = viewModel.getObjectiveSubjects().stream().filter(subjectListItemVM -> !subjectListItemVM.isFavoriteSubject()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+
+//        if (mySubjects.isEmpty()) {
+//            subjectListVBox.getChildren().removeAll(mySubjectsLabel, mySubjectsObjectiveList);
+//        }
+//        mySubjectsObjectiveList.setItems(mySubjects);
+        objectiveList.setItems(viewModel.getObjectiveSubjects());
+        theoryList.setItems(viewModel.getTheorySubjects());
+
+        ViewListCellFactory<SubjectListItemVM> objectiveCellFactory = CachedViewModelCellFactory.create(vm -> {
+            vm.setType(SubjectListItemVM.Type.OBJECTIVE);
+            vm.populateYearsList();
+            return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
+        });
+
+        ViewListCellFactory<SubjectListItemVM> theoryCellFactory = CachedViewModelCellFactory.create(vm -> {
+            vm.setType(SubjectListItemVM.Type.THEORY);
+            vm.populateYearsList();
+            return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
+        });
+
+//        mySubjectsObjectiveList.setCellFactory(objectiveCellFactory);
+        objectiveList.setCellFactory(objectiveCellFactory);
+        theoryList.setCellFactory(theoryCellFactory);
+
+//        mySubjectsObjectiveList.setSelectionModel(new NoSelectionModel<>());
+//        mySubjectsObjectiveList.setFocusTraversable(false);
+
+        objectiveList.setSelectionModel(new NoSelectionModel<>());
+        objectiveList.setFocusTraversable(false);
+
+        theoryList.setSelectionModel(new NoSelectionModel<>());
+        theoryList.setFocusTraversable(false);
+
         ObservableList<Integer> hours = FXCollections.observableArrayList();
         ObservableList<Integer> minutes = FXCollections.observableArrayList();
 
