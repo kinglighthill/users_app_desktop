@@ -95,10 +95,10 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             if (newValue) {
                 pageTitle.setText("CBT Practice");
                 subjectListController.setOption(SubjectListOption.PRACTICE);
-//                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
-//                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
-//                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
-//                }
+                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
+                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
+                }
                 selectButton(subjectListView, practiceButton);
             }
         });
@@ -107,10 +107,10 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             if (newValue) {
                 pageTitle.setText("Study Past Questions");
                 subjectListController.setOption(SubjectListOption.STUDY);
-//                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
-//                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
-//                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
-//                }
+                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
+                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
+                }
                 selectButton(subjectListView, pastQuestionButton);
             }
         });
