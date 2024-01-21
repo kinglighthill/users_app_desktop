@@ -2,6 +2,7 @@ package com.scholarly.utme.controller.landing_screens;
 
 import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.PQScreenController;
+import com.scholarly.utme.controller.PQScreenControllerWaec;
 import com.scholarly.utme.controller.note_screens.NotesScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
 import com.scholarly.utme.data.model.listItems.NewsItem;
@@ -159,6 +160,11 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
                 return null;
             }
         };
+
+//        ObservableList<FavoriteSubject> subjects = viewModel.getSubjects();
+//        selectSubjectsGrid.setCellFactory(new SubjectGridCellFactory());
+//        selectSubjectsGrid.setItems(subjects);
+//        Platform.runLater(() -> selectSubjectsGrid.setItems(subjects));
 
         Task<Void> subjectComboTask = new Task<>() {
             @Override

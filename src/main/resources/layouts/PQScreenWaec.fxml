@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.scholarly.utme.controller.PQScreenControllerWaec" style="-fx-background-color: #FFFFFF">
+    <left>
+        <VBox prefHeight="400.0" prefWidth="200.0" BorderPane.alignment="CENTER" style="-fx-background-color: #1B68AF;">
+            <children>
+                <HBox  spacing="5">
+                    <ImageView fx:id="appImage" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                    <Label fx:id="scholarlyText" text="Scholarly" textFill="#FFFFFF"/>
+                    <VBox.margin>
+                        <Insets left="20" top="30" bottom="80"/>
+                    </VBox.margin>
+                </HBox>
+
+                <ToggleButton fx:id="practiceButton" text="CBT Mode" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;">
+                    <padding>
+                        <Insets left="15"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="pastQuestionButton" text="Study Mode" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0">
+                    <padding>
+                        <Insets left="15"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="cbtGameButton" text="Game Mode" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="278.0">
+                    <padding>
+                        <Insets left="15"/>
+                    </padding>
+                </ToggleButton>
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <Panel>
+            <top>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Button fx:id="backButton" style="-fx-background-color: #E7F7E9; -fx-cursor: hand;" onMouseClicked="#homeTextClicked"/>
+                    <Label fx:id="pageTitle" textFill="#034801"/>
+                    <padding>
+                        <Insets top="20" left="20" bottom="20"/>
+                    </padding>
+                </HBox>
+            </top>
+
+            <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                <children>
+                    <Separator orientation="VERTICAL" prefHeight="500.0" />
+                    <StackPane fx:id="contentPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="592.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #FFFFFF;">
+                        <HBox.margin>
+                            <Insets bottom="10"/>
+                        </HBox.margin>
+                    </StackPane>
+                </children>
+            </HBox>
+
+        </Panel>
+    </center>
+
+</BorderPane>

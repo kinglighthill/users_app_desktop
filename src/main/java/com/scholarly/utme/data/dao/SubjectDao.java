@@ -105,6 +105,7 @@ public class SubjectDao {
 
     private static void updateTheorySubjectsFromDb() {
         String query = "SELECT * FROM " + Tables.PQ_THEORY_SUBJECTS + " JOIN " + Tables.SUBJECTS + " ON " + Tables.PQ_THEORY_SUBJECTS + ".subject_id = " + Tables.SUBJECTS + "._id ORDER BY 'order'";
+        System.out.println(TAG + "Theory Subjects Query -> " + query);
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
             theorySubjects.clear();
@@ -120,6 +121,8 @@ public class SubjectDao {
                         rs.getString(descriptionColumn),
                         rs.getString(colorCodeColumn)));
             }
+
+            System.out.println(TAG + "Got Theory Subjects of size -> " + theorySubjects.size());
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(

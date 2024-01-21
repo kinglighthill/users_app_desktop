@@ -1,9 +1,7 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.practice_screens.CBTGameScreenController;
 import com.scholarly.utme.controller.practice_screens.PracticeScreenController;
-//import com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController;
 import com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.*;
@@ -11,23 +9,22 @@ import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
-import de.saxsys.mvvmfx.*;
+import com.scholarly.utme.viewmodels.SubjectListViewWaecVM;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.FxmlPath;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
 import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -42,11 +39,11 @@ import java.util.concurrent.Executors;
 import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/SubjectListView.fxml")
-public class SubjectListViewController implements FxmlView<SubjectListViewVM>, Initializable {
+public class SubjectListViewControllerWaec implements FxmlView<SubjectListViewWaecVM>, Initializable {
     private static final String TAG = "SubjectListViewController:  ";
 
     @InjectViewModel
-    private SubjectListViewVM viewModel;
+    private SubjectListViewWaecVM viewModel;
 
     @FXML
     private ListView<SubjectListItemVM> mySubjectsObjectiveList, objectiveList, theoryList;
@@ -372,6 +369,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     public void showActivateDialog() {
         activateInvisibleButton.fire();
     }
+
 
 //    public enum SubjectListOption {
 //        PRACTICE,

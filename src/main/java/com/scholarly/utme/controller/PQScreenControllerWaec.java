@@ -4,7 +4,8 @@ package com.scholarly.utme.controller;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.*;
-import com.scholarly.utme.viewmodels.*;
+import com.scholarly.utme.viewmodels.PQScreenWaecVM;
+import com.scholarly.utme.viewmodels.SubjectListViewWaecVM;
 import de.saxsys.mvvmfx.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,12 +22,12 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-@FxmlPath("/layouts/PQScreen.fxml")
-public class PQScreenController implements FxmlView<PQScreenVM>, Initializable{
+@FxmlPath("/layouts/PQScreenWaec.fxml")
+public class PQScreenControllerWaec implements FxmlView<PQScreenWaecVM>, Initializable{
     private static final String TAG = "HomeScreenController: ";
 
     @InjectViewModel
-    private PQScreenVM viewModel;
+    private PQScreenWaecVM viewModel;
 
     @FXML
     private ToggleButton practiceButton, pastQuestionButton, cbtGameButton, videosButton, audiosButton, learningCenterButton;
@@ -46,16 +47,16 @@ public class PQScreenController implements FxmlView<PQScreenVM>, Initializable{
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
     private static final String IDLE_BUTTON_STYLE = "-fx-cursor: hand;";
 
-    private static SubjectListViewController subjectListController;
+    private static SubjectListViewControllerWaec subjectListController;
 
     private static Parent subjectListView;
     private final ToggleGroup toggleGroup = new ToggleGroup();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
-        subjectListController = subjectListViewTuple.getCodeBehind();
-        subjectListView = subjectListViewTuple.getView();
+        ViewTuple<SubjectListViewControllerWaec, SubjectListViewWaecVM> subjectListViewWaecTuple = FluentViewLoader.fxmlView(SubjectListViewControllerWaec.class).load();
+        subjectListController = subjectListViewWaecTuple.getCodeBehind();
+        subjectListView = subjectListViewWaecTuple.getView();
 
         practiceButton.setDisable(true);
         pastQuestionButton.setDisable(true);
