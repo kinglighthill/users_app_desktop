@@ -333,15 +333,6 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
             profileNameTextField.setEditable(false);
             phoneTextField.setEditable(false);
 
-            String UPDATE_END_POINT = "user-profile/update-profile";
-
-            String userId = viewModel.getUserId();
-
-            String ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
-            String REFRESH_TOKEN = PreferencesManager.get(PREF_KEY_REFRESH_TOKEN+userId, "");
-
-            UpdateUserRequest updateUserRequest = new UpdateUserRequest(profileNameTextField.getText(), phoneTextField.getText(), gender.get());
-
             showProgressBar();
 
             // Check for internet connectivity
@@ -349,6 +340,15 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                 URL url = new URL(BASE_URL);
                 URLConnection connection = url.openConnection();
                 connection.connect();
+
+                String UPDATE_END_POINT = "user-profile/update-profile";
+
+                String userId = viewModel.getUserId();
+
+                String ACCESS_TOKEN = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN+userId, "");
+                String REFRESH_TOKEN = PreferencesManager.get(PREF_KEY_REFRESH_TOKEN+userId, "");
+
+                UpdateUserRequest updateUserRequest = new UpdateUserRequest(profileNameTextField.getText(), phoneTextField.getText(), gender.get());
 
                 Gson gson = new Gson();
 
