@@ -67,6 +67,8 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
             stage.setWidth(bounds.getWidth());
             stage.setHeight(bounds.getHeight());
 
+            PreferencesManager.initialize();
+
             ViewSwitcher.setStage(stage);
             System.out.println(TAG_DEV + "Time taken to set stage -> " + (System.currentTimeMillis() - startDisplay) + "ms");
             stage.setOnCloseRequest(event -> {
@@ -82,8 +84,10 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
             });
 
             PreferencesManager.putBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, true);
-            boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
-            if (firstTimeUser) {
+
+            Boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
+
+            if (firstTimeUser == null || firstTimeUser) {
                 ViewSwitcher.showScreen(View.WELCOME_SCREEN);
             } else {
                 boolean userLoggedOut = PreferencesManager.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
