@@ -19,12 +19,17 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import okhttp3.*;
@@ -301,6 +306,14 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 return change;
             });
             recoverEmailField.setTextFormatter(recoverTextFormatter);
+
+            signUpNameField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            signUpEmailField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            signUpPasswordField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            signUpPhoneField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            loginEmailField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            loginPasswordField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            recoverEmailField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
 
             signUpGoogleButton.setOnAction(event -> {
                 signUpGoogleButton.setDisable(true);

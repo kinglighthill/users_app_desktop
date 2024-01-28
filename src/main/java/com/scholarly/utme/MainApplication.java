@@ -4,6 +4,7 @@ import com.github.sarxos.webcam.Webcam;
 import com.google.gson.Gson;
 import com.scholarly.utme.controller.AuthenticationController;
 import com.scholarly.utme.controller.landing_screens.*;
+import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.network.model.UserData;
 import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
@@ -117,7 +118,14 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
             }
         } catch (Exception e) {
             log(e);
+            ViewSwitcher.showScreen(View.WELCOME_SCREEN);
         }
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        DbConnection.closeConnection();
     }
 
     public File openFileChooser(Stage stage) {
