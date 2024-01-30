@@ -60,7 +60,6 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        PreferencesManager.putBoolean(PREF_KEY_FIRST_TIME_USER, false);
 
         initializeViews();
         initializeFonts();
@@ -71,6 +70,7 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
         });
 
         skipButton.setOnAction(event -> {
+            PreferencesManager.putBoolean(PREF_KEY_FIRST_TIME_USER, false);
             ViewSwitcher.passData(new AuthenticationController.InitialData(true));
             ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
         });
@@ -85,6 +85,7 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
         } else if (currentScreen == 4) {
             showScreenFour();
         } else if (currentScreen > 4) {
+            PreferencesManager.putBoolean(PREF_KEY_FIRST_TIME_USER, false);
             ViewSwitcher.passData(new AuthenticationController.InitialData(true));
             ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
         }

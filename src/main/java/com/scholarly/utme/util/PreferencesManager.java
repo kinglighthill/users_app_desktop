@@ -8,7 +8,7 @@ import static com.scholarly.utme.util.EncryptionManager.encrypt;
 public class PreferencesManager {
     private static final String TAG = "New PreferenceManager: ";
 
-    static final Preferences preferences = Preferences.userRoot().node("com.scholarly.utme");
+    static Preferences preferences = null;
 
     /*public static void put(String key, String value) {
         try {
@@ -50,6 +50,11 @@ public class PreferencesManager {
         }
         return Boolean.parseBoolean(decryptedOutput);
     }*/
+
+    public static void initialize() {
+        System.out.println(TAG + "Initializing preferences");
+        preferences = Preferences.userRoot().node("com.scholarly.utme");
+    }
 
     public static void put(String key, String value) {
         preferences.put(key, value);
