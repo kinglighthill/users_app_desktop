@@ -6,8 +6,8 @@ public class Constants {
     private static final String STAGING_CLIENT_ID = "671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
     private static final String PROD_CLIENT_ID = "165902144265-ais4ot9qt2rjfj113efqv8h50bp0m1l9.apps.googleusercontent.com";
 
-    public static String BASE_URL = PROD_BASE_URL;
-    public static String CLIENT_ID = PROD_CLIENT_ID;
+    public static String BASE_URL = STAGING_BASE_URL;
+    public static String CLIENT_ID = STAGING_CLIENT_ID;
 
     public static final String WEBSITE_URL = "https://scholarly.africa/";
     public static final String WHATSAPP_URL = "https://wa.me/2348136941462";

@@ -32,6 +32,8 @@ public class LandingScreenVM implements ViewModel {
         }
     }
 
+//    public void refreshState()
+
     public String getUserId() {
         return userId;
     }
