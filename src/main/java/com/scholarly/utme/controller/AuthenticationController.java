@@ -288,7 +288,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         hideProgressBar();
                         System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
                     }
-
                 }
             });
 
