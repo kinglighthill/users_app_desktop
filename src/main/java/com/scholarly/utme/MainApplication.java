@@ -51,8 +51,6 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
 
             logger.info("Welcome to Scholarly.");
 
-            LandingScreen.getInstance();
-
             InputStream iconStream = MainApplication.class.getResourceAsStream("/drawable/app_logo.png");
             assert iconStream != null;
             Image icon = new Image(iconStream);
@@ -102,6 +100,7 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
 
                 if (userData != null) {
                     if (!userLoggedOut) {
+                        LandingScreen.getInstance();
                         logger.info("Move to Landing Screen");
                         ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
                         MainApplication.timeTakenTo("pass data");

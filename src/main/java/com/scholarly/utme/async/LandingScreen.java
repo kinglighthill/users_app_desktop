@@ -46,6 +46,10 @@ public class LandingScreen {
         return instance;
     }
 
+    public static void logOut() {
+        instance = null;
+    }
+
     public SimpleObjectProperty<Parent> getHomeView() {
         return homeView;
     }
