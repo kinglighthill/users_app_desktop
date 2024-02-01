@@ -64,11 +64,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     private static Parent appsView;
     private static Parent settingsView;
 
-    /*private final ObjectProperty<Parent> homeView = new SimpleObjectProperty<>(this, "home");
-    private final ObjectProperty<Parent> accountView = new SimpleObjectProperty<>(this, "account");
-    private final ObjectProperty<Parent> activateView = new SimpleObjectProperty<>(this, "activate");
-    private final ObjectProperty<Parent> settingsView = new SimpleObjectProperty<>(this, "settings");*/
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
