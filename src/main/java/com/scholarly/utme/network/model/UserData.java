@@ -98,4 +98,9 @@ public class UserData {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    @Override
+    public String toString() {
+        return "USerData: " + email + " - " + fullName;
+    }
 }

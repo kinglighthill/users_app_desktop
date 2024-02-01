@@ -17,6 +17,7 @@ public class DbConnection {
     private static final String TAG = "DbConnection: ";
 
     private static Connection connection;
+    private static SQLiteDatabase db;
 
     public static Connection getDbConnection() {
         try {
@@ -33,7 +34,7 @@ public class DbConnection {
             }
 
             Files.createDirectories(dbFile.getParent());
-            var db = new SQLiteDatabase(dbFile);
+            db = new SQLiteDatabase(dbFile);
 
             connection = db.execute(conn -> conn);
 
@@ -44,5 +45,18 @@ public class DbConnection {
             MainApplication.log(e);
         }
         return connection;
+    }
+
+    public static boolean closeConnection() {
+        if (db != null) {
+            try {
+                connection = null;
+                db.close();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return false;
     }
 }

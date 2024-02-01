@@ -4,6 +4,7 @@ import com.github.sarxos.webcam.Webcam;
 import com.google.gson.Gson;
 import com.scholarly.utme.controller.AuthenticationController;
 import com.scholarly.utme.controller.landing_screens.*;
+import com.scholarly.utme.data.util.DbConnection;
 import com.scholarly.utme.network.model.UserData;
 import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
@@ -64,6 +65,8 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
             stage.setWidth(bounds.getWidth());
             stage.setHeight(bounds.getHeight());
 
+            PreferencesManager.initialize();
+
             ViewSwitcher.setStage(stage);
             System.out.println(TAG_DEV + "Time taken to set stage -> " + (System.currentTimeMillis() - startDisplay) + "ms");
             stage.setOnCloseRequest(event -> {
@@ -79,7 +82,9 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
             });
 
             PreferencesManager.putBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, true);
+
             boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
+
             if (firstTimeUser) {
                 ViewSwitcher.showScreen(View.WELCOME_SCREEN);
             } else {
@@ -93,22 +98,24 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
                 System.out.println(TAG + "User Data String -> " + userDataString);
                 UserData userData = new Gson().fromJson(userDataString, UserData.class);
 
-                if (!userLoggedOut) {
-                    LandingScreen.getInstance();
-                    logger.info("Move to Landing Screen");
-                    ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-                    MainApplication.timeTakenTo("pass data");
+                if (userData != null) {
+                    if (!userLoggedOut) {
+                        LandingScreen.getInstance();
+                        logger.info("Move to Landing Screen");
+                        ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
+                        MainApplication.timeTakenTo("pass data");
 
-                    ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                    MainApplication.timeTakenTo("load landing screen");
-                } else if (userData == null) {
+                        ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                        MainApplication.timeTakenTo("load landing screen");
+                    } else {
+                        logger.info("Move to Login Screen");
+                        ViewSwitcher.passData(new AuthenticationController.InitialData(false));
+                        MainApplication.timeTakenTo("pass data");
+                        ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+                    }
+                } else {
                     logger.info("Move to Signup Screen");
                     ViewSwitcher.passData(new AuthenticationController.InitialData(true));
-                    MainApplication.timeTakenTo("pass data");
-                    ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
-                } else {
-                    logger.info("Move to Login Screen");
-                    ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                     MainApplication.timeTakenTo("pass data");
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                 }
@@ -116,7 +123,14 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
             }
         } catch (Exception e) {
             log(e);
+            ViewSwitcher.showScreen(View.WELCOME_SCREEN);
         }
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        DbConnection.closeConnection();
     }
 
     public File openFileChooser(Stage stage) {

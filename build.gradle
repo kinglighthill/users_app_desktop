@@ -9,7 +9,7 @@ plugins {
 }
 
 group 'com.scholarly.utme'
-version '1.0'
+version = '1.0.3'
 
 repositories {
     mavenCentral()
@@ -28,7 +28,7 @@ sourceCompatibility = '16'
 targetCompatibility = '16'
 
 project.ext.buildDate = new Date()
-project.version = "0.3"
+project.version = "1.0.3"
 
 /*sourceSets {
     release {
@@ -87,19 +87,31 @@ jlink {
     }
 
     jpackage {
-        appVersion = '1.0.1'
-        installerOptions = [
-                '--description', "Scholarly Jamb CBT App",
-                '--copyright', 'Copyrigth 2020-2024 Scholarly Educational Software Ltd'
-        ]
+        jvmArgs = ['-splash:$APPDIR/splash.png']
 
-//        jvmArgs = ["-Djavafx.autoproxy.disable=true"]
+        appVersion = version
 
         def currentOs = org.gradle.internal.os.OperatingSystem.current()
         def imgType = currentOs.windows ? 'ico' : currentOs.macOsX ? 'icns' : 'png'
         imageOptions += ['--icon', "src/main/resources/drawable/app_icon.$imgType"]
-        installerOptions += ['--resource-dir', "src/main/resources"]
-        installerOptions += ['--vendor', 'Scholarly Tech']
+        icon = "src/main/resources/drawable/app_icon.$imgType"
+
+        installerOptions += [
+                '--description', "Scholarly Jamb CBT App",
+                '--resource-dir', "src/main/resources",
+                '--vendor', 'Scholarly Educational Software Ltd',
+                '--copyright', 'Copyright 2020-2024 Scholarly Educational Software, Ltd. All Rights reserved',
+                '--file-associations', 'src/main/resources/associations.properties',
+                '--license-file', 'src/main/resources/license.txt',
+                '--app-version', version
+        ]
+
+//        --app-version <version>
+//        --copyright <string>
+//        --description <string>
+//        --license-file <file>
+//        --name <string>
+//        --vendor = ""
 
         if(currentOs.windows) {
             installerOptions += ['--win-per-user-install', '--win-dir-chooser', '--win-menu', '--win-shortcut']
@@ -108,35 +120,6 @@ jlink {
         } else if (currentOs.macOsX) {
             installerOptions += ['--mac-package-name', 'scholarly']
         }
-
-        /*installerType = project.findProperty('installerType')
-        if (installerType == 'msi') {
-            imageOptions += ['--icon', 'src/main/resources/drawable/app_logo.png']
-            installerOptions += [
-                    '--win-per-user-install', '--win-dir-chooser',
-                    '--win-menu', '--win-shortcut'
-            ]
-        }
-        if (installerType == 'pkg') {
-            imageOptions += ['--icon', 'src/main/resources/pdfdecorator/gui/icon.icns']
-        }
-        if (installerType in ['deb', 'rpm']) {
-            imageOptions += ['--icon', 'src/main/resources/pdfdecorator/gui/icon_256x256.png']
-            installerOptions += [
-                    '--linux-menu-group', 'Office',
-                    '--linux-shortcut'
-            ]
-        }
-        if (installerType == 'deb') {
-            installerOptions += [
-                    '--linux-deb-maintainer', 'office@walczak.it'
-            ]
-        }
-        if (installerType == 'rpm') {
-            installerOptions += [
-                    '--linux-rpm-license-type', 'GPLv3'
-            ]
-        }*/
     }
 
     /*mergedModule {
@@ -149,9 +132,17 @@ jlink {
     }*/
 }
 
-jpackage {
+/*jpackage {
     doFirst {
 //        project.getProperty('installerType')
+    }
+}*/
+
+tasks.jpackageImage.doLast {
+    copy {
+        from "src/main/resources"
+        include "splash.png"
+        into "build/jpackage/$project.name/app"
     }
 }
 

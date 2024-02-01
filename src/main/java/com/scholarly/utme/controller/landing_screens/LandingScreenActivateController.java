@@ -79,21 +79,8 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
         initializeViews();
         initializeFonts();
 
-        centerVBox.getChildren().remove(notActivatedPane);
-        innerVBox.getChildren().remove(activationText);
-        if (viewModel.isActivated()) {
-            centerVBox.getChildren().remove(notActivatedPane);
-            innerVBox.getChildren().remove(activationText);
-            activationPinTextField.setDisable(true);
-            activateButton.setDisable(true);
-            headerLabel.setText("Your app has been activated!");
-        } else {
-            activationPinTextField.setDisable(false);
-            activateButton.setDisable(false);
-            centerVBox.getChildren().add(0, notActivatedPane);
-            innerVBox.getChildren().add(innerVBox.getChildren().size(), activationText);
-            headerLabel.setText("Enter your 16 digits activation pin to get unlimited access to the app's content");
-        }
+
+        displayActivationView();
 
         activateButton.setDisable(
                 isActivationPinValid(activationPinTextField.getText(), false)
@@ -291,6 +278,8 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
         });
 
         continueButton.setOnAction(event -> {
+            Animations.hideDialog(activationSuccessfulPane, dialogDimmer);
+            displayActivationView();
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
     }
@@ -352,6 +341,24 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
             }
         });
 
+    }
+
+    private void displayActivationView() {
+        centerVBox.getChildren().remove(notActivatedPane);
+        innerVBox.getChildren().remove(activationText);
+        if (viewModel.isActivated()) {
+            centerVBox.getChildren().remove(notActivatedPane);
+            innerVBox.getChildren().remove(activationText);
+            activationPinTextField.setDisable(true);
+            activateButton.setDisable(true);
+            headerLabel.setText("Your app has been activated!");
+        } else {
+            activationPinTextField.setDisable(false);
+            activateButton.setDisable(false);
+            centerVBox.getChildren().add(0, notActivatedPane);
+            innerVBox.getChildren().add(innerVBox.getChildren().size(), activationText);
+            headerLabel.setText("Enter your 16 digits activation pin to get unlimited access to the app's content");
+        }
     }
 
     private void showProgressBar() {

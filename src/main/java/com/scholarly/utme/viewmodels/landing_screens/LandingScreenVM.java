@@ -11,6 +11,8 @@ import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class LandingScreenVM implements ViewModel {
+    private static final String TAG = "LandingScreenVM: ";
+
     private final String userId;
     private final boolean activated;
 
@@ -20,6 +22,7 @@ public class LandingScreenVM implements ViewModel {
 
     public LandingScreenVM() {
         userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+        System.out.println(TAG + "User ID -> " + userId);
         activated = PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false);
     }
 

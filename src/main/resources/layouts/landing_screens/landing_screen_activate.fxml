@@ -169,7 +169,7 @@
             </font>
         </Label>
 
-        <Button fx:id="continueButton" text="Continue" textFill="white" prefWidth="200" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+        <Button fx:id="continueButton" text="Continue" textFill="white" prefWidth="200" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 5; -fx-cursor: hand;">
             <font>
                 <Font size="15"/>
             </font>
