@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller.landing_screens;
 
+import com.scholarly.utme.async.LandingScreen;
 import com.scholarly.utme.controller.AuthenticationController;
 import com.scholarly.utme.network.model.DeviceInfo;
 import com.scholarly.utme.ui.utils.Alerts;
@@ -143,6 +144,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
+                    LandingScreen.logOut();
                     PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, true);
                     PreferencesManager.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
                     PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
