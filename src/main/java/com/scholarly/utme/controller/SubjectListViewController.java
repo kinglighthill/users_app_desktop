@@ -183,8 +183,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             theoryList.setSelectionModel(new NoSelectionModel<>());
             theoryList.setFocusTraversable(false);
             theoryList.setItems(viewModel.getTheorySubjects());
-
-            hideProgressBar();
         });
 
         initializeViews();

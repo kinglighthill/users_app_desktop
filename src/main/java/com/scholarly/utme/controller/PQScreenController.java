@@ -115,6 +115,7 @@ public class PQScreenController implements FxmlView<HomeScreenVM>, Initializable
                         practiceButton.setDisable(false);
                         pastQuestionButton.setDisable(false);
                         cbtGameButton.setDisable(false);
+                        progressBar.setVisible(false);
                     }
                 });
             });
@@ -240,10 +241,7 @@ public class PQScreenController implements FxmlView<HomeScreenVM>, Initializable
     private void selectButton(Parent view, ToggleButton toggleButton) {
         Animations.animate(contentPane);
         contentPane.getChildren().clear();
-        Platform.runLater(() -> {
-            progressBar.setVisible(false);
-            contentPane.getChildren().add(view);
-        });
+        contentPane.getChildren().add(view);
         changeButtonStyle(toggleButton);
     }
 

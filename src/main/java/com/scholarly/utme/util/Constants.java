@@ -35,8 +35,8 @@ public class Constants {
 
     // Tab Preference Constants
     public static final String PREF_KEY_SELECTED_TAB = "SCH_SELECTED_TAB";
-    public static final String PREF_VALUE_OBJECTIVE_TAB = "SCH_OBJECTIVE";
-    public static final String PREF_VALUE_THEORY_TAB = "SCH_THEORY";
+    public static final String PREF_VALUE_OBJECTIVE_TAB = "OBJECTIVE";
+    public static final String PREF_VALUE_THEORY_TAB = "THEORY";
 
     // Session Preference Constants
     public static final String PREF_KEY_FIRST_TIME_USER = "SCH_FIRST_TIME_USER";
