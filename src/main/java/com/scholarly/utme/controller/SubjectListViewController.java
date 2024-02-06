@@ -185,6 +185,8 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             theoryList.setItems(viewModel.getTheorySubjects());
         });
 
+        theoryTab.setDisable(true);
+
         initializeViews();
         initializeFonts();
 
