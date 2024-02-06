@@ -50,7 +50,7 @@ public class SubjectGridItemCell extends GridCell<FavoriteSubject> {
         } else {
             subjectName.setText(item.getTitle());
             subjectName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-            System.out.println("GridItem shortTitle -> " + item.getShortTitle());
+//            System.out.println("GridItem shortTitle -> " + item.getShortTitle());
             subjectImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/drawable/subject_images/" + item.getShortTitle() + "_image.png")).toString()));
 
             updateGreenTick(item);

@@ -1,8 +1,8 @@
 package com.scholarly.utme.util;
 
 public class Constants {
-//    public static String BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
-    public static String BASE_URL = "https://utme.scholarly.africa/api/v1/";
+    public static String BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
+//    public static String BASE_URL = "https://utme.scholarly.africa/api/v1/";
 //    public static String CLIENT_ID = "671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
     public static String CLIENT_ID = "165902144265-ais4ot9qt2rjfj113efqv8h50bp0m1l9.apps.googleusercontent.com";
 

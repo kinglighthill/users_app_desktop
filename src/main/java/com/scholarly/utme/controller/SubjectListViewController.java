@@ -191,7 +191,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 //        }
 //        mySubjectsObjectiveList.setItems(mySubjects);
         objectiveList.setItems(viewModel.getObjectiveSubjects());
-        theoryList.setItems(viewModel.getTheorySubjects());
+//        theoryList.setItems(viewModel.getTheorySubjects());
 
         ViewListCellFactory<SubjectListItemVM> objectiveCellFactory = CachedViewModelCellFactory.create(vm -> {
             vm.setType(SubjectListItemVM.Type.OBJECTIVE);
@@ -207,7 +207,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
 //        mySubjectsObjectiveList.setCellFactory(objectiveCellFactory);
         objectiveList.setCellFactory(objectiveCellFactory);
-        theoryList.setCellFactory(theoryCellFactory);
+//        theoryList.setCellFactory(theoryCellFactory);
 
 //        mySubjectsObjectiveList.setSelectionModel(new NoSelectionModel<>());
 //        mySubjectsObjectiveList.setFocusTraversable(false);
@@ -215,8 +215,8 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         objectiveList.setSelectionModel(new NoSelectionModel<>());
         objectiveList.setFocusTraversable(false);
 
-        theoryList.setSelectionModel(new NoSelectionModel<>());
-        theoryList.setFocusTraversable(false);
+//        theoryList.setSelectionModel(new NoSelectionModel<>());
+//        theoryList.setFocusTraversable(false);
 
         ObservableList<Integer> hours = FXCollections.observableArrayList();
         ObservableList<Integer> minutes = FXCollections.observableArrayList();
@@ -318,7 +318,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
     private void initializeViews() {
         tabMenu.widthProperty().addListener(((observable, oldValue, newValue) -> {
-            tabMenu.setTabMinWidth((Double) newValue/2);
+            tabMenu.setTabMinWidth((Double) newValue);
         }));
         tabMenu.setBackground(Background.EMPTY);
         hoursChoiceBox.setBackground(Background.EMPTY);

@@ -66,7 +66,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
             subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/" + viewModel.getShortTitle() + "_image.png").toString()));
         } catch (Exception e){
             subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/IRS_image.png").toString()));
-            System.out.println(TAG + e.toString());
+            System.out.println(TAG + e.toString() + " for subject -> " + viewModel.getShortTitle());
         }
 
         subjectText.textProperty().bind(viewModel.subjectNameProperty());

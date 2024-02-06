@@ -38,7 +38,7 @@ import java.util.concurrent.Executors;
 
 import static com.scholarly.utme.util.Constants.*;
 
-@FxmlPath("/layouts/SubjectListView.fxml")
+@FxmlPath("/layouts/SubjectListViewWaec.fxml")
 public class SubjectListViewControllerWaec implements FxmlView<SubjectListViewWaecVM>, Initializable {
     private static final String TAG = "SubjectListViewController:  ";
 

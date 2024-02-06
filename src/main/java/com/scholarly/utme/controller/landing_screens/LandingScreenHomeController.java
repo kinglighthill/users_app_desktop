@@ -271,9 +271,9 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         cbtPracticePanel.setOnMouseClicked(e -> {
             MainApplication.resetTime();
-            ViewSwitcher.passData(new PQScreenController.InitialData(null, null));
+            ViewSwitcher.passData(new PQScreenControllerWaec.InitialData(null, null));
             MainApplication.timeTakenTo("pass practice data");
-            ViewSwitcher.showScreen(View.PQ_SCREEN);
+            ViewSwitcher.showScreen(View.PQ_SCREEN_WAEC);
             MainApplication.timeTakenTo("show pq screen");
         });
 
