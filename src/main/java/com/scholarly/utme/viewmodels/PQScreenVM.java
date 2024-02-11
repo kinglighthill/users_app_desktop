@@ -13,8 +13,8 @@ import static com.scholarly.utme.util.Constants.PREF_KEY_LAST_SELECTED_PRACTICE;
 public class PQScreenVM implements ViewModel, SceneLifecycle {
     public static final String TAG = "HomeScreenVM: ";
 
-    private SimpleObjectProperty<String> screenProperty = new SimpleObjectProperty();
-    private SimpleObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty();
+    private final SimpleObjectProperty<String> screenProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty<>();
 
     public void processInitialData(PQScreenController.InitialData data) {
         String screen = PreferencesManager.get(PREF_KEY_LAST_SELECTED_PRACTICE, "");

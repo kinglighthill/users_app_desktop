@@ -64,11 +64,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     private static Parent appsView;
     private static Parent settingsView;
 
-    /*private final ObjectProperty<Parent> homeView = new SimpleObjectProperty<>(this, "home");
-    private final ObjectProperty<Parent> accountView = new SimpleObjectProperty<>(this, "account");
-    private final ObjectProperty<Parent> activateView = new SimpleObjectProperty<>(this, "activate");
-    private final ObjectProperty<Parent> settingsView = new SimpleObjectProperty<>(this, "settings");*/
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -82,24 +77,12 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
             Screens screenToShow = Objects.requireNonNull(getInitialData()).screenToShow();
 
-//            LandingScreen landingScreen = LandingScreen.getInstance();
-//
-//            homeView = landingScreen.getHomeView().getValue();
-//            accountView = landingScreen.getAccountView().getValue();
-//            activateView = landingScreen.getActivateView().getValue();
-//            settingsView = landingScreen.getSettingsView().getValue();
+            LandingScreen landingScreen = LandingScreen.getInstance();
 
-            ViewTuple<LandingScreenHomeController, LandingScreenHomeVM> landingScreenHomeViewTuple = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load();
-            homeView = landingScreenHomeViewTuple.getView();
-
-            ViewTuple<LandingScreenActivateController, LandingScreenActivateVM> landingScreenActivateViewTuple = FluentViewLoader.fxmlView(LandingScreenActivateController.class).load();
-            activateView = landingScreenActivateViewTuple.getView();
-
-            ViewTuple<LandingScreenAccountController, LandingScreenAccountVM> landingScreenAccountViewTuple = FluentViewLoader.fxmlView(LandingScreenAccountController.class).load();
-            accountView = landingScreenAccountViewTuple.getView();
-
-            ViewTuple<LandingScreenSettingsController, LandingScreenSettingsVM> landingScreenSettingsViewTuple = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load();
-            settingsView = landingScreenSettingsViewTuple.getView();
+            homeView = landingScreen.getHomeView().getValue();
+            accountView = landingScreen.getAccountView().getValue();
+            activateView = landingScreen.getActivateView().getValue();
+            settingsView = landingScreen.getSettingsView().getValue();
 
             if (homeView == null) homeButton.setDisable(true);
             if (accountView == null) accountButton.setDisable(true);
@@ -118,139 +101,51 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
                 selectButton(homeView, homeButton);
             }
 
-            if (screenToShow == Screens.HOME_SCREEN) {
-                homeButton.setDisable(false);
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(homeView);
-                changeButtonStyle(homeButton);
-                MainApplication.timeTakenTo("load home");
-            }
+            landingScreen.getHomeView().addListener((observable, oldValue, newValue) -> {
+                homeView = newValue;
 
-            if (screenToShow == Screens.ACCOUNT_SCREEN) {
-                accountButton.setDisable(false);
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(accountView);
-                changeButtonStyle(accountButton);
-            }
+                if (newValue != null) homeButton.setDisable(false);
 
-            if (screenToShow == Screens.ACTIVATE_SCREEN) {
-                activateButton.setDisable(false);
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(activateView);
-                changeButtonStyle(activateButton);
-            }
-
-            if (screenToShow == Screens.SETTINGS_SCREEN) {
-                settingsButton.setDisable(false);
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(settingsView);
-                changeButtonStyle(settingsButton);
-            }
-
-//            landingScreen.getHomeView().addListener((observable, oldValue, newValue) -> {
-//                homeView = newValue;
-//
-//                if (newValue != null) homeButton.setDisable(false);
-//
-//                if (screenToShow == Screens.HOME_SCREEN) {
-//                    homeContentPane.getChildren().clear();
-//                    homeContentPane.getChildren().add(homeView);
-//                    changeButtonStyle(homeButton);
-//                    MainApplication.timeTakenTo("load home");
-//                }
-//            });
-//            landingScreen.getAccountView().addListener((observable, oldValue, newValue) -> {
-//                accountView = newValue;
-//
-//                if (newValue != null) accountButton.setDisable(false);
-//
-//                if (screenToShow == Screens.ACCOUNT_SCREEN) {
-//                    homeContentPane.getChildren().clear();
-//                    homeContentPane.getChildren().add(newValue);
-//                    changeButtonStyle(accountButton);
-//                }
-//            });
-//            landingScreen.getActivateView().addListener((observable, oldValue, newValue) -> {
-//                activateView = newValue;
-//
-//                if (newValue != null) activateButton.setDisable(false);
-//
-//                if (screenToShow == Screens.ACTIVATE_SCREEN) {
-//                    homeContentPane.getChildren().clear();
-//                    homeContentPane.getChildren().add(newValue);
-//                    changeButtonStyle(activateButton);
-//                }
-//            });
-//            landingScreen.getSettingsView().addListener((observable, oldValue, newValue) -> {
-//                settingsView = newValue;
-//
-//                if (newValue != null) settingsButton.setDisable(false);
-//
-//                if (screenToShow == Screens.SETTINGS_SCREEN) {
-//                    homeContentPane.getChildren().clear();
-//                    homeContentPane.getChildren().add(newValue);
-//                    changeButtonStyle(settingsButton);
-//                }
-//            });
-
-            /*ExecutorService executorService = Executors.newFixedThreadPool(4);
-
-            LandingScreenTask homeTask = new LandingScreenTask(LandingScreenHomeController.class);
-            LandingScreenTask accountTask = new LandingScreenTask(LandingScreenAccountController.class);
-            LandingScreenTask activateTask = new LandingScreenTask(LandingScreenActivateController.class);
-            LandingScreenTask settingsTask = new LandingScreenTask(LandingScreenSettingsController.class);
-
-            homeTask.setOnRunning(event -> homeButton.setDisable(true));
-            homeTask.setOnSucceeded(event -> homeButton.setDisable(false));
-            homeView.bind(homeTask.valueProperty());
-            homeView.addListener((observable, oldValue, newValue) -> {
                 if (screenToShow == Screens.HOME_SCREEN) {
                     homeContentPane.getChildren().clear();
-                    homeContentPane.getChildren().add(newValue);
+                    homeContentPane.getChildren().add(homeView);
                     changeButtonStyle(homeButton);
                     MainApplication.timeTakenTo("load home");
                 }
             });
+            landingScreen.getAccountView().addListener((observable, oldValue, newValue) -> {
+                accountView = newValue;
 
-            accountTask.setOnRunning(event -> accountButton.setDisable(true));
-            accountTask.setOnSucceeded(event -> accountButton.setDisable(false));
-            accountView.bind(accountTask.valueProperty());
-            accountView.addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) accountButton.setDisable(false);
+
                 if (screenToShow == Screens.ACCOUNT_SCREEN) {
                     homeContentPane.getChildren().clear();
                     homeContentPane.getChildren().add(newValue);
                     changeButtonStyle(accountButton);
                 }
             });
+            landingScreen.getActivateView().addListener((observable, oldValue, newValue) -> {
+                activateView = newValue;
 
-            activateTask.setOnRunning(event -> activateButton.setDisable(true));
-            activateTask.setOnSucceeded(event -> activateButton.setDisable(false));
-            activateView.bind(activateTask.valueProperty());
-            activateView.addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) activateButton.setDisable(false);
+
                 if (screenToShow == Screens.ACTIVATE_SCREEN) {
                     homeContentPane.getChildren().clear();
                     homeContentPane.getChildren().add(newValue);
                     changeButtonStyle(activateButton);
                 }
             });
+            landingScreen.getSettingsView().addListener((observable, oldValue, newValue) -> {
+                settingsView = newValue;
 
-            settingsTask.setOnRunning(event -> settingsButton.setDisable(true));
-            settingsTask.setOnSucceeded(event -> settingsButton.setDisable(false));
-            settingsView.bind(settingsTask.valueProperty());
-            settingsView.addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) settingsButton.setDisable(false);
+
                 if (screenToShow == Screens.SETTINGS_SCREEN) {
                     homeContentPane.getChildren().clear();
                     homeContentPane.getChildren().add(newValue);
                     changeButtonStyle(settingsButton);
                 }
             });
-
-            executorService.execute(homeTask);
-            executorService.execute(accountTask);
-            executorService.execute(activateTask);
-            executorService.execute(settingsTask);
-
-            executorService.shutdown();*/
 
             toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, settingsButton);
 
@@ -350,224 +245,6 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             e.printStackTrace();
         }
     }
-
-//    @Override
-    /*public void initialize2(URL location, ResourceBundle resources) {
-        Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler());
-
-        try {
-            viewModel.processInitialData(getInitialData());
-
-            initializeViews();
-
-            initializeFonts();
-
-            long start = System.currentTimeMillis();
-
-            appsButton.setVisible(false);
-
-            Screens screenToShow = getInitialData().screenToShow();
-
-            if (screenToShow == Screens.ACCOUNT_SCREEN) {
-                selectButton(accountView, accountButton);
-            } else if (screenToShow == Screens.ACTIVATE_SCREEN) {
-                selectButton(activateView, activateButton);
-            } else if (screenToShow == Screens.APPS_SCREEN) {
-                selectButton(appsView, appsButton);
-            } else if (screenToShow == Screens.SETTINGS_SCREEN) {
-                selectButton(settingsView, settingsButton);
-            } else {
-                selectButton(homeView, homeButton);
-            }
-
-            LandingScreenTask task = new LandingScreenTask(LandingScreenHomeController.class);
-            rootView.bind(task.valueProperty());
-
-            rootView.addListener((observable, oldValue, newValue) -> {
-                homeContentPane.getChildren().clear();
-                homeContentPane.getChildren().add(newValue);
-//                changeButtonStyle(toggleButton);
-            });
-
-            Parent homeView = FluentViewLoader.fxmlView(LandingScreenHomeController.class).load().getView();
-
-            Task<Void> accountViewTask = new Task<>() {
-                @Override
-                protected Void call() {
-                    ViewTuple<LandingScreenAccountController, LandingScreenAccountVM> landingScreenAccountViewTuple = FluentViewLoader.fxmlView(LandingScreenAccountController.class).load();
-                    Platform.runLater(() -> {
-                        accountView = landingScreenAccountViewTuple.getView();
-                    });
-                    return null;
-                }
-            };
-
-            Thread accountViewThread = new Thread(accountViewTask);
-            accountViewThread.start();
-
-            System.out.println(TAG + "Time taken to load Account Screen -> " + (System.currentTimeMillis() - start)+"ms");
-
-            Task<Void> activateViewTask = new Task<>() {
-                @Override
-                protected Void call() {
-                    ViewTuple<LandingScreenActivateController, LandingScreenActivateVM> landingScreenActivateViewTuple = FluentViewLoader.fxmlView(LandingScreenActivateController.class).load();
-                    Platform.runLater(() -> {
-                        activateView = landingScreenActivateViewTuple.getView();
-                    });
-                    return null;
-                }
-            };
-            Thread activateViewThread = new Thread(activateViewTask);
-            activateViewThread.start();
-
-            System.out.println(TAG + "Time taken to load Activate Screen -> " + (System.currentTimeMillis() - start)+"ms");
-
-            Task<Void> appsViewTask = new Task<>() {
-                @Override
-                protected Void call() {
-                    ViewTuple<LandingScreenAppsController, LandingScreenAppsVM> landingScreenAppsViewTuple = FluentViewLoader.fxmlView(LandingScreenAppsController.class).load();
-                    Platform.runLater(() -> {
-                        appsView = landingScreenAppsViewTuple.getView();
-                    });
-                    return null;
-                }
-            };
-            Thread appsViewThread = new Thread(appsViewTask);
-            appsViewThread.start();
-
-            Task<Void> settingsViewTask = new Task<>() {
-                @Override
-                protected Void call() {
-                    ViewTuple<LandingScreenSettingsController, LandingScreenSettingsVM> landingScreenSettingsViewTuple = FluentViewLoader.fxmlView(LandingScreenSettingsController.class).load();
-                    Platform.runLater(() -> {
-                        settingsView = landingScreenSettingsViewTuple.getView();
-                    });
-                    return null;
-                }
-            };
-            Thread settingsViewThread = new Thread(settingsViewTask);
-            settingsViewThread.start();
-
-
-
-            toggleGroup.getToggles().addAll(homeButton, accountButton, activateButton, appsButton, settingsButton);
-
-            homeButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    selectButton(homeView, homeButton);
-                }
-            });
-            homeButton.setOnMouseEntered(event -> {
-                if (homeButton.getStyle().equals(PRESSED_BUTTON_STYLE))
-                    event.consume();
-                else
-                    homeButton.setStyle(HOVER_BUTTON_STYLE);
-            });
-            homeButton.setOnMouseExited(event -> {
-                if (homeButton.getStyle().equals(PRESSED_BUTTON_STYLE))
-                    event.consume();
-                else
-                    homeButton.setStyle(null);
-            });
-
-            accountButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue){
-                    selectButton(accountView, accountButton);
-                }
-            });
-            accountButton.setOnMouseEntered(event -> {
-                if (accountButton.getStyle().equals(PRESSED_BUTTON_STYLE))
-                    event.consume();
-                else
-                    accountButton.setStyle(HOVER_BUTTON_STYLE);
-            });
-            accountButton.setOnMouseExited(event -> {
-                if (accountButton.getStyle().equals(PRESSED_BUTTON_STYLE))
-                    event.consume();
-                else
-                    accountButton.setStyle(null);
-            });
-
-            activateButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue){
-                    selectButton(activateView, activateButton);
-                }
-            });
-            activateButton.setOnMouseEntered(event -> {
-                if (activateButton.getStyle().equals(PRESSED_BUTTON_STYLE))
-                    event.consume();
-                else
-                    activateButton.setStyle(HOVER_BUTTON_STYLE);
-            });
-            activateButton.setOnMouseExited(event -> {
-                if (activateButton.getStyle().equals(PRESSED_BUTTON_STYLE))
-                    event.consume();
-                else
-                    activateButton.setStyle(null);
-            });
-
-            appsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue){
-                    selectButton(appsView, appsButton);
-                }
-            });
-            appsButton.setOnMouseEntered(event -> {
-                if (appsButton.getStyle().equals(PRESSED_BUTTON_STYLE))
-                    event.consume();
-                else
-                    appsButton.setStyle(HOVER_BUTTON_STYLE);
-            });
-            appsButton.setOnMouseExited(event -> {
-                if (appsButton.getStyle().equals(PRESSED_BUTTON_STYLE))
-                    event.consume();
-                else
-                    appsButton.setStyle(null);
-            });
-
-            settingsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue){
-                    selectButton(settingsView, settingsButton);
-                }
-            });
-            settingsButton.setOnMouseEntered(event -> {
-                if (settingsButton.getStyle().equals(PRESSED_BUTTON_STYLE))
-                    event.consume();
-                else
-                    settingsButton.setStyle(HOVER_BUTTON_STYLE);
-            });
-            settingsButton.setOnMouseExited(event -> {
-                if (settingsButton.getStyle().equals(PRESSED_BUTTON_STYLE))
-                    event.consume();
-                else
-                    settingsButton.setStyle(null);
-            });
-
-            topActivateButton.setOnAction(event -> {
-                ViewSwitcher.passData(new InitialData(Screens.ACTIVATE_SCREEN));
-                ViewSwitcher.showScreen(View.LANDING_SCREEN);
-            });
-
-            if (viewModel.isActivated()) {
-                activateVBox.getChildren().remove(activatePanel);
-            } else {
-                if (!activateVBox.getChildren().contains(activatePanel)) {
-                    activateVBox.getChildren().add(activatePanel);
-                }
-            }
-
-            String message = PreferencesManager.get(PREF_KEY_ACTIVATE_MESSAGE, "Your device is not activated.");
-            activateBarLabel.setText(message);
-
-            if (PreferencesManager.getBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+viewModel.getUserId(), false)) {
-                activateVBox.getChildren().remove(activatePanel);
-            }
-            activateCloseIcon.setOnMouseClicked(event -> {
-                PreferencesManager.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+viewModel.getUserId(), activateVBox.getChildren().remove(activatePanel));
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
     private void initializeViews() {
         appImage.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));

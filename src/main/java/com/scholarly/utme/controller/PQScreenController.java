@@ -1,25 +1,30 @@
 package com.scholarly.utme.controller;
 
 
+import com.scholarly.utme.async.PQScreen;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.*;
 import de.saxsys.mvvmfx.*;
+import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
+import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
+import javafx.util.Pair;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @FxmlPath("/layouts/PQScreen.fxml")
 public class PQScreenController implements FxmlView<PQScreenVM>, Initializable{
@@ -43,6 +48,9 @@ public class PQScreenController implements FxmlView<PQScreenVM>, Initializable{
     @FXML
     private StackPane contentPane;
 
+    @FXML
+    private ProgressIndicator progressBar;
+
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
     private static final String IDLE_BUTTON_STYLE = "-fx-cursor: hand;";
 
@@ -53,49 +61,66 @@ public class PQScreenController implements FxmlView<PQScreenVM>, Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
-        subjectListController = subjectListViewTuple.getCodeBehind();
-        subjectListView = subjectListViewTuple.getView();
+        progressBar.setVisible(true);
 
         practiceButton.setDisable(true);
         pastQuestionButton.setDisable(true);
         cbtGameButton.setDisable(true);
 
-        subjectListController.getIsLoadingDone().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                practiceButton.setDisable(false);
-                pastQuestionButton.setDisable(false);
-                cbtGameButton.setDisable(false);
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        Task<Pair<Screens, PQSubject>> initDataTask = new Task<>() {
+            @Override
+            protected Pair<Screens, PQSubject> call() {
+                viewModel.processInitialData(getInitialData());
+
+                Screens selectedScreen = getInitialData().previousScreen;
+                PQSubject selectedSubject = getInitialData().selectedSubject;
+
+                return new Pair<>(selectedScreen, selectedSubject);
             }
+        };
+        executorService.execute(initDataTask);
+        executorService.shutdown();
+
+        PQScreen pqScreen = PQScreen.getInstance();
+
+        initDataTask.setOnSucceeded(event -> {
+            Pair<Screens, PQSubject> result = initDataTask.valueProperty().getValue();
+
+            Screens selectedScreen = result.getKey();
+            PQSubject selectedSubject = result.getValue();
+
+            pqScreen.getPQView().addListener((observable, oldValue, newValue) -> {
+                subjectListController = newValue.getKey();
+                subjectListView = newValue.getValue();
+
+                if (selectedScreen == Screens.PAST_QUESTION_SCREEN) {
+                    toggleGroup.selectToggle(pastQuestionButton);
+                    subjectListController.setOption(SubjectListOption.STUDY);
+                    subjectListController.setSelectedSubject(selectedSubject);
+                } else if (selectedScreen == Screens.CBT_GAME_SCREEN) {
+                    toggleGroup.selectToggle(cbtGameButton);
+                    subjectListController.setOption(SubjectListOption.CBT_GAME);
+                    subjectListController.setSelectedSubject(selectedSubject);
+                } else {
+                    toggleGroup.selectToggle(practiceButton);
+                    subjectListController.setOption(SubjectListOption.PRACTICE);
+                    subjectListController.setSelectedSubject(selectedSubject);
+                }
+
+                subjectListController.getIsLoadingDone().addListener((sObservable, sOldValue, sNewValue) -> {
+                    if (sNewValue) {
+                        practiceButton.setDisable(false);
+                        pastQuestionButton.setDisable(false);
+                        cbtGameButton.setDisable(false);
+                        progressBar.setVisible(false);
+                    }
+                });
+            });
         });
 
         initializeViews();
         initializeFonts();
-
-        viewModel.processInitialData(getInitialData());
-
-        Screens selectedScreen = getInitialData().previousScreen;
-        PQSubject selectedSubject = getInitialData().selectedSubject;
-
-        if (selectedScreen == Screens.PAST_QUESTION_SCREEN) {
-            pageTitle.setText("Study Past Questions");
-            toggleGroup.selectToggle(pastQuestionButton);
-            subjectListController.setOption(SubjectListOption.STUDY);
-            subjectListController.setSelectedSubject(selectedSubject);
-            selectButton(subjectListView, pastQuestionButton);
-        } else if (selectedScreen == Screens.CBT_GAME_SCREEN) {
-            pageTitle.setText("CBT Game");
-            toggleGroup.selectToggle(cbtGameButton);
-            subjectListController.setOption(SubjectListOption.CBT_GAME);
-            subjectListController.setSelectedSubject(selectedSubject);
-            selectButton(subjectListView, cbtGameButton);
-        } else {
-            pageTitle.setText("CBT Practice");
-            toggleGroup.selectToggle(practiceButton);
-            subjectListController.setOption(SubjectListOption.PRACTICE);
-            subjectListController.setSelectedSubject(selectedSubject);
-            selectButton(subjectListView, practiceButton);
-        }
 
         toggleGroup.getToggles().addAll(practiceButton, pastQuestionButton, cbtGameButton);
 
@@ -154,7 +179,6 @@ public class PQScreenController implements FxmlView<PQScreenVM>, Initializable{
         /*learningCenterButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             changeButtonStyle(learningCenterButton);
         }));*/
-
     }
 
     private void initializeViews() {
@@ -199,11 +223,6 @@ public class PQScreenController implements FxmlView<PQScreenVM>, Initializable{
 //        videosButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 //        audiosButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 //        learningCenterButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-
-    }
-
-    private void showActivateDialog() {
-
     }
 
     private void changeButtonStyle(ToggleButton pressedButton) {
@@ -226,6 +245,7 @@ public class PQScreenController implements FxmlView<PQScreenVM>, Initializable{
 
     public void homeTextClicked() {
         subjectListController.dispose();
+        PQScreen.logOut();
         ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
         ViewSwitcher.showScreen(View.LANDING_SCREEN);
     }
@@ -235,8 +255,8 @@ public class PQScreenController implements FxmlView<PQScreenVM>, Initializable{
     }
 
     public static class InitialData {
-        private Screens previousScreen;
-        private PQSubject selectedSubject;
+        private final Screens previousScreen;
+        private final PQSubject selectedSubject;
 
         public InitialData(Screens previousScreen, PQSubject selectedSubject) {
             this.previousScreen = previousScreen;

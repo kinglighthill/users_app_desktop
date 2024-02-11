@@ -100,7 +100,7 @@
                     </padding>
                 </ToggleButton>-->
                 <Region prefHeight="0.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
-                <Label alignment="BOTTOM_CENTER" fx:id="versionText" text="Version 1.0.0" textFill="#FFFFFF">
+                <Label alignment="BOTTOM_CENTER" fx:id="versionText" text="Version 1.0.4" textFill="#FFFFFF">
                     <VBox.margin>
                         <Insets bottom="10.0"/>
                     </VBox.margin>

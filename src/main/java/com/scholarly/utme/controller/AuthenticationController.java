@@ -2,6 +2,7 @@ package com.scholarly.utme.controller;
 
 import com.google.gson.Gson;
 import com.scholarly.utme.MainApplication;
+import com.scholarly.utme.async.LandingScreen;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.*;
@@ -19,12 +20,17 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import okhttp3.*;
@@ -283,7 +289,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         hideProgressBar();
                         System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
                     }
-
                 }
             });
 
@@ -301,6 +306,14 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 return change;
             });
             recoverEmailField.setTextFormatter(recoverTextFormatter);
+
+            signUpNameField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            signUpEmailField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            signUpPasswordField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            signUpPhoneField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            loginEmailField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            loginPasswordField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            recoverEmailField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
 
             signUpGoogleButton.setOnAction(event -> {
                 signUpGoogleButton.setDisable(true);
@@ -459,11 +472,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         System.out.println(TAG + "Signed up user with id -> " + userId);
                         System.out.println(TAG + "Signed up user with User Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
 
-                        Platform.runLater(() -> {
-                            hideProgressBar();
-                            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                        });
+                        Platform.runLater(() -> moveToHome());
 
                     } else if (signupResponse.getStatus().equalsIgnoreCase("error")) {
                         Platform.runLater(() -> {
@@ -537,11 +546,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                         callback.redirect();
 
-                        Platform.runLater(() -> {
-                            hideProgressBar();
-                            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                        });
+                        Platform.runLater(() -> moveToHome());
 
                     } else if (signupResponse.getStatus().equalsIgnoreCase("error")) {
                         Platform.runLater(() -> {
@@ -618,11 +623,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         System.out.println(TAG + "Logged in user with id -> " + PreferencesManager.get(PREF_KEY_USER_ID, ""));
                         System.out.println(TAG + "Logged in user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
 
-                        Platform.runLater(() -> {
-                            hideProgressBar();
-                            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                        });
+                        Platform.runLater(() -> moveToHome());
 
                     } else if (loginResponse.getStatus().equalsIgnoreCase("error")) {
                         Platform.runLater(() -> {
@@ -802,6 +803,13 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             });
             System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
         }
+    }
+
+    private void moveToHome() {
+        LandingScreen.getInstance();
+        hideProgressBar();
+        ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
+        ViewSwitcher.showScreen(View.LANDING_SCREEN);
     }
 
     private void hideProgressBar() {

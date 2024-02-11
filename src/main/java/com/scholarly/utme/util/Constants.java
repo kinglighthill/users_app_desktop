@@ -1,10 +1,13 @@
 package com.scholarly.utme.util;
 
 public class Constants {
-    public static String BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
-//    public static String BASE_URL = "https://utme.scholarly.africa/api/v1/";
-//    public static String CLIENT_ID = "671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
-    public static String CLIENT_ID = "165902144265-ais4ot9qt2rjfj113efqv8h50bp0m1l9.apps.googleusercontent.com";
+    private static final String STAGING_BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
+    private static final String PROD_BASE_URL = "https://utme.scholarly.africa/api/v1/";
+    private static final String STAGING_CLIENT_ID = "671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
+    private static final String PROD_CLIENT_ID = "165902144265-ais4ot9qt2rjfj113efqv8h50bp0m1l9.apps.googleusercontent.com";
+
+    public static String BASE_URL = STAGING_BASE_URL;
+    public static String CLIENT_ID = STAGING_CLIENT_ID;
 
     public static final String WEBSITE_URL = "https://scholarly.africa/";
     public static final String WHATSAPP_URL = "https://wa.me/2348136941462";
@@ -32,8 +35,8 @@ public class Constants {
 
     // Tab Preference Constants
     public static final String PREF_KEY_SELECTED_TAB = "SCH_SELECTED_TAB";
-    public static final String PREF_VALUE_OBJECTIVE_TAB = "SCH_OBJECTIVE";
-    public static final String PREF_VALUE_THEORY_TAB = "SCH_THEORY";
+    public static final String PREF_VALUE_OBJECTIVE_TAB = "OBJECTIVE";
+    public static final String PREF_VALUE_THEORY_TAB = "THEORY";
 
     // Session Preference Constants
     public static final String PREF_KEY_FIRST_TIME_USER = "SCH_FIRST_TIME_USER";

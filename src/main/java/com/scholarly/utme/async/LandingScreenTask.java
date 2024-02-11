@@ -20,4 +20,9 @@ public class LandingScreenTask extends Task<Parent> {
         MainApplication.timeTakenTo("load " + controller.getSimpleName());
         return view;
     }
+
+    @Override
+    protected void updateValue(Parent value) {
+        super.updateValue(value);
+    }
 }

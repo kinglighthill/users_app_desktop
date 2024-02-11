@@ -1,14 +1,15 @@
 package com.scholarly.utme.controller.landing_screens;
 
 import com.scholarly.utme.MainApplication;
+import com.scholarly.utme.async.PQScreen;
 import com.scholarly.utme.controller.PQScreenController;
-import com.scholarly.utme.controller.PQScreenControllerWaec;
 import com.scholarly.utme.controller.note_screens.NotesScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
 import com.scholarly.utme.data.model.listItems.NewsItem;
 import com.scholarly.utme.data.model.newDb.FavoriteSubject;
 import com.scholarly.utme.data.model.newDb.NoteLastSession;
 import com.scholarly.utme.data.model.newDb.NovelLastSession;
+import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.cellFactories.SubjectGridCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.Constants;
@@ -161,11 +162,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             }
         };
 
-//        ObservableList<FavoriteSubject> subjects = viewModel.getSubjects();
-//        selectSubjectsGrid.setCellFactory(new SubjectGridCellFactory());
-//        selectSubjectsGrid.setItems(subjects);
-//        Platform.runLater(() -> selectSubjectsGrid.setItems(subjects));
-
         Task<Void> subjectComboTask = new Task<>() {
             @Override
             protected Void call() {
@@ -269,13 +265,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         profileImage.setOnMouseClicked(event -> ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN));
 
-        cbtPracticePanel.setOnMouseClicked(e -> {
-            MainApplication.resetTime();
-            ViewSwitcher.passData(new PQScreenControllerWaec.InitialData(null, null));
-            MainApplication.timeTakenTo("pass practice data");
-            ViewSwitcher.showScreen(View.PQ_SCREEN_WAEC);
-            MainApplication.timeTakenTo("show pq screen");
-        });
+        cbtPracticePanel.setOnMouseClicked(e -> moveToPQScreen(null, null));
 
         novelsPanel.setOnMouseClicked(e -> {
             MainApplication.resetTime();
@@ -490,22 +480,21 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             panel.setStyle("-fx-background-color: rgba(143, 152, 255, 0.10); -fx-background-radius: 7");
             panel.setPadding(new Insets(10, 0, 10, 15));
 
-            panel.setOnMouseEntered(event -> {
-                ViewSwitcher.getRootScene().setCursor(Cursor.HAND);
-            });
-            panel.setOnMouseExited(event -> {
-                ViewSwitcher.getRootScene().setCursor(Cursor.DEFAULT);
-            });
+            panel.setOnMouseEntered(event -> ViewSwitcher.getRootScene().setCursor(Cursor.HAND));
+            panel.setOnMouseExited(event -> ViewSwitcher.getRootScene().setCursor(Cursor.DEFAULT));
 
-            panel.setOnMouseClicked(event -> {
-                MainApplication.resetTime();
-                ViewSwitcher.passData(new PQScreenController.InitialData(Screens.PRACTICE_SCREEN, subject));
-                ViewSwitcher.showScreen(View.PQ_SCREEN);
-                MainApplication.timeTakenTo("show pq screen");
-            });
+            panel.setOnMouseClicked(event -> moveToPQScreen(Screens.PRACTICE_SCREEN, subject));
 
             favoriteSubjectsTile.getChildren().add(panel);
         });
+    }
+
+    private void moveToPQScreen(Screens previousScreen, PQSubject selectedSubject) {
+        MainApplication.resetTime();
+        PQScreen.getInstance();
+        ViewSwitcher.passData(new PQScreenController.InitialData(previousScreen, selectedSubject));
+        ViewSwitcher.showScreen(View.PQ_SCREEN);
+        MainApplication.timeTakenTo("show pq screen");
     }
 
     private boolean populateLastSession() {

@@ -5,6 +5,8 @@ import com.scholarly.utme.controller.landing_screens.LandingScreenActivateContro
 import com.scholarly.utme.controller.landing_screens.LandingScreenHomeController;
 import com.scholarly.utme.controller.landing_screens.LandingScreenSettingsController;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
 
 import java.util.concurrent.ExecutorService;
@@ -44,6 +46,10 @@ public class LandingScreen {
             instance = new LandingScreen();
 
         return instance;
+    }
+
+    public static void logOut() {
+        instance = null;
     }
 
     public SimpleObjectProperty<Parent> getHomeView() {

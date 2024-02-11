@@ -19,7 +19,6 @@ public class SQLiteDatabase implements AutoCloseable {
 
     @FunctionalInterface
     public interface SQLFunction<R> {
-
         R execute(Connection connection) throws SQLException;
     }
 

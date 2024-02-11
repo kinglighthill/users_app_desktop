@@ -16,25 +16,23 @@ import java.util.HashMap;
 public class SyllabusScreenVM implements ViewModel {
     private SyllabusSubject selectedSubject;
     private SyllabusCategory selectedCategory;
-    private SimpleObjectProperty<SyllabusTopic> selectedTopic = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<SyllabusTopic> selectedTopic = new SimpleObjectProperty<>();
 
-    private ObservableList<SyllabusTopic> topics = FXCollections.observableArrayList();
+    private final ObservableList<SyllabusTopic> topics = FXCollections.observableArrayList();
 
-    private ObservableList<SyllabusCategory> syllabusCategories = FXCollections.observableArrayList();
+    private final ObservableList<SyllabusCategory> syllabusCategories = FXCollections.observableArrayList();
 
-    private HashMap<String, ObservableList<SubTopic>> subtopics = new HashMap<>();
+    private final HashMap<String, ObservableList<SubTopic>> subtopics = new HashMap<>();
 
     public HashMap<Integer, ObservableList<SyllabusSection>> getSyllabusSections() {
         return syllabusSections;
     }
 
-    private HashMap<Integer, ObservableList<SyllabusSection>> syllabusSections = new HashMap<>();
+    private final HashMap<Integer, ObservableList<SyllabusSection>> syllabusSections = new HashMap<>();
 
     private SyllabusSubject syllabusSubject;
 
-    public SyllabusScreenVM() {
-
-    }
+    public SyllabusScreenVM() {  }
 
     public void processInitialData(InitialData data) {
         selectedSubject = data.getSubject();
