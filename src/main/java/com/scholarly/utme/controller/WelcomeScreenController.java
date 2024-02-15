@@ -60,19 +60,19 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        PreferencesManager.putBoolean(PREF_KEY_FIRST_TIME_USER, false);
 
         initializeViews();
         initializeFonts();
 
         nextButton.setOnAction(event -> {
             currentScreen++;
-            System.out.println("Current screen -> " + currentScreen);
             changeScreen(currentScreen);
         });
 
         skipButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
+            PreferencesManager.putBoolean(PREF_KEY_FIRST_TIME_USER, false);
+            ViewSwitcher.passData(new AuthenticationController.InitialData(true));
+            ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
         });
 
     }
@@ -84,10 +84,10 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
             showScreenThree();
         } else if (currentScreen == 4) {
             showScreenFour();
-        } else if (currentScreen == 5) {
-            showScreenFive();
-        } else if (currentScreen > 5) {
-            ViewSwitcher.showScreen(View.PRE_AUTHENTICATION_SCREEN);
+        } else if (currentScreen > 4) {
+            PreferencesManager.putBoolean(PREF_KEY_FIRST_TIME_USER, false);
+            ViewSwitcher.passData(new AuthenticationController.InitialData(true));
+            ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
         }
 
     }
@@ -112,7 +112,7 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
         divider2.setOpacity(0.5);
 
         advertHeader.setText("Use app without internet");
-
+        advertExplanation.setText("App works offline, you can access all the quality content on the app without internet connection, hence you save money on data cost.");
     }
 
     private void showScreenThree() {
@@ -135,7 +135,7 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
         divider3.setOpacity(0.5);
 
         advertHeader.setText("Test yourself with JAMB CBT Practice");
-
+        advertExplanation.setText("Familiarize yourself with this software before the actual exam, use the CBT Practice feature on the app to understand the method and mode of the actual exam.");
     }
 
     private void showScreenFour() {
@@ -157,7 +157,8 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
 
         divider4.setOpacity(0.5);
 
-        advertHeader.setText("Get Latest Jamb Updates");
+        advertHeader.setText("Concise summary of Recommended Texts");
+        advertExplanation.setText("Access easy to understand analysis and summary of JAMB English Novel and Literature Texts");
     }
 
     private void showScreenFive() {

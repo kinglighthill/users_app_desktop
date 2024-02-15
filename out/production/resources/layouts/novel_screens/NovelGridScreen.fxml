@@ -20,7 +20,7 @@
             <left>
                 <HBox spacing="15" alignment="CENTER_LEFT">
                     <Button fx:id="backButton" style="-fx-background-color: #E7F7E9"/>
-                    <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
+                    <Label fx:id="pageTitle" textFill="#034801">
                         <font>
                             <Font name="System Bold" size="20"/>
                         </font>

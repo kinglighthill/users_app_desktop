@@ -1,50 +1,65 @@
 package com.scholarly.utme.viewmodels.syllabus_screens;
 
-import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.data.dao.newDb.*;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.*;
 import de.saxsys.mvvmfx.ViewModel;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SelectSyllabusVM implements ViewModel {
 
-    private ObservableList<Subject> subjects = FXCollections.observableArrayList();
-    private ObservableList<SyllabusSubject> syllabusSubjects = FXCollections.observableArrayList();
-    private ObservableList<SyllabusCategory> categories = FXCollections.observableArrayList();
-    private HashMap<Integer, ObservableList<SyllabusCategory>> syllabusCategories = new HashMap<>();
-    private HashMap<Integer, ObservableList<SyllabusTopic>> syllabusTopics = new HashMap<>();
-    private HashMap<Integer, ObservableList<SyllabusSection>> syllabusSections = new HashMap<>();
+    private final ObservableList<Subject> subjects = FXCollections.observableArrayList();
+    private final ObservableList<SyllabusSubject> syllabusSubjects = FXCollections.observableArrayList();
+    private final ObservableList<SyllabusCategory> categories = FXCollections.observableArrayList();
+    private final HashMap<Integer, ObservableList<SyllabusCategory>> syllabusCategories = new HashMap<>();
+    private final HashMap<Integer, ObservableList<SyllabusTopic>> syllabusTopics = new HashMap<>();
+    private final HashMap<Integer, ObservableList<SyllabusSection>> syllabusSections = new HashMap<>();
 
-    private SimpleObjectProperty<Subject> selectedSubject = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<SyllabusSubject> selectedSyllabusSubject = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<SyllabusCategory> selectedCategory = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<SyllabusTopic> selectedTopic = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<Subject> selectedSubject = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<SyllabusSubject> selectedSyllabusSubject = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<SyllabusCategory> selectedCategory = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<SyllabusTopic> selectedTopic = new SimpleObjectProperty<>();
+
+    private final SimpleBooleanProperty subjectsLoaded = new SimpleBooleanProperty();
 
     public SelectSyllabusVM() {
-        ObservableList<SyllabusSubject> subjectList = SyllabusSubjectDao.getSyllabusSubjects();
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-//        subjects.addAll(subjectList);
+        Task<Boolean> subjectsTask = new Task<>() {
+            @Override
+            protected Boolean call() {
+                ObservableList<SyllabusSubject> subjectList = SyllabusSubjectDao.getSyllabusSubjects();
+                syllabusSubjects.addAll(subjectList);
+                categories.addAll(SyllabusCategoryDao.getCategories());
+                syllabusSubjects.forEach(syllabusSubject -> {
+                    syllabusCategories.put(syllabusSubject.getSubjectId(), SyllabusCategoryDao.getCategories(getCategorySubjectId(syllabusSubject.getSubjectId())));
 
-        syllabusSubjects.addAll(subjectList);
+                    syllabusCategories.get(syllabusSubject.getSubjectId()).forEach(syllabusCategory -> {
+                        syllabusTopics.put(syllabusCategory.getId(), SyllabusTopicDao.getTopicsForCategory(syllabusCategory.getId()));
+                    });
+                });
+                return true;
+            }
+        };
+        subjectsLoaded.bind(subjectsTask.valueProperty());
 
-//        this.setSelectedSyllabusSubject(syllabusSubjects.get(0));
+        executorService.execute(subjectsTask);
+        executorService.shutdown();
+    }
 
-        categories.addAll(SyllabusCategoryDao.getCategories());
-
-        syllabusSubjects.forEach(syllabusSubject -> {
-            syllabusCategories.put(syllabusSubject.getSubjectId(), SyllabusCategoryDao.getCategories(getCategorySubjectId(syllabusSubject.getSubjectId())));
-
-            syllabusCategories.get(syllabusSubject.getSubjectId()).forEach(syllabusCategory -> {
-                syllabusTopics.put(syllabusCategory.getId(), SyllabusTopicDao.getTopicsForCategory(syllabusCategory.getId()));
-            });
-
-        });
-
+    public SimpleBooleanProperty getSubjectsLoaded() {
+        return subjectsLoaded;
     }
 
     private int getCategorySubjectId(int subjectId) {
@@ -74,11 +89,28 @@ public class SelectSyllabusVM implements ViewModel {
     public void setSelectedSubject(Subject selectedSubject) {
         this.selectedSubject.set(selectedSubject);
     }
+
     public void setSelectedSyllabusSubject(SyllabusSubject selectedSubject) {
         if (selectedSubject != null) {
-            syllabusSections.put(selectedSubject.getId(), SyllabusSectionDao.getSections(selectedSubject.getId()));
+            ExecutorService executorService = Executors.newFixedThreadPool(1);
+            Task<ObservableList<SyllabusSection>> sectionsTask = new Task<>() {
+                @Override
+                protected ObservableList<SyllabusSection> call() {
+                    return SyllabusSectionDao.getSections(selectedSubject.getId());
+                }
+            };
+            sectionsTask.setOnSucceeded(
+                    event -> {
+                        syllabusSections.put(selectedSubject.getId(), sectionsTask.valueProperty().getValue());
+                        this.selectedSyllabusSubject.set(selectedSubject);
+                    }
+            );
+
+            executorService.execute(sectionsTask);
+            executorService.shutdown();
+        } else {
+            this.selectedSyllabusSubject.set(null);
         }
-        this.selectedSyllabusSubject.set(selectedSubject);
     }
 
     public Subject getSelectedSubject() {

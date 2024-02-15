@@ -7,56 +7,63 @@ import com.scholarly.utme.data.dao.newDb.TopicDao;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.*;
 import de.saxsys.mvvmfx.ViewModel;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SelectNoteVM implements ViewModel {
+    private final ObservableList<NoteSubject> noteSubjects = FXCollections.observableArrayList();
+    private final ObservableList<NoteTopic> noteTopics = FXCollections.observableArrayList();
+    private final HashMap<String, ObservableList<Topic>> subjectTopics = new HashMap<>();
+    private final HashMap<Integer, ObservableList<NoteTopic>> noteSubjectTopics = new HashMap<>();
+    private final HashMap<String, ObservableList<SubTopic>> subjectSubTopics = new HashMap<>();
+    private final HashMap<Integer, ObservableList<NoteSubTopic>> noteSubTopics = new HashMap<>();
 
-    private ObservableList<NoteSubject> noteSubjects = FXCollections.observableArrayList();
-    private ObservableList<NoteTopic> noteTopics = FXCollections.observableArrayList();
-    private HashMap<String, ObservableList<Topic>> subjectTopics = new HashMap<>();
-    private HashMap<Integer, ObservableList<NoteTopic>> noteSubjectTopics = new HashMap<>();
-    private HashMap<String, ObservableList<SubTopic>> subjectSubTopics = new HashMap<>();
-    private HashMap<Integer, ObservableList<NoteSubTopic>> noteSubTopics = new HashMap<>();
+    private final SimpleObjectProperty<Subject> selectedSubject = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Topic> selectedTopic = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<SubTopic> selectedSubTopic = new SimpleObjectProperty<>(null);
 
-    private SimpleObjectProperty<Subject> selectedSubject = new SimpleObjectProperty<>(null);
-    private SimpleObjectProperty<Topic> selectedTopic = new SimpleObjectProperty<>(null);
-    private SimpleObjectProperty<SubTopic> selectedSubTopic = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<NoteSubject> selectedNoteSubject = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<NoteTopic> selectedNoteTopic = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<NoteSubTopic> selectedNoteSubTopic = new SimpleObjectProperty<>(null);
 
-    private SimpleObjectProperty<NoteSubject> selectedNoteSubject = new SimpleObjectProperty<>(null);
-    private SimpleObjectProperty<NoteTopic> selectedNoteTopic = new SimpleObjectProperty<>(null);
-    private SimpleObjectProperty<NoteSubTopic> selectedNoteSubTopic = new SimpleObjectProperty<>(null);
+    private final SimpleBooleanProperty subjectsLoaded = new SimpleBooleanProperty();
 
     public SelectNoteVM() {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-        ObservableList<NoteSubject> noteSubjectsList = SubjectDao.getNoteSubjects();
+        Task<Boolean> subjectsTask = new Task<>() {
+            @Override
+            protected Boolean call() {
+                ObservableList<NoteSubject> noteSubjectsList = SubjectDao.getNoteSubjects();
 
-        ObservableList<NoteTopic> noteTopicsList = TopicDao.getNoteTopics();
+                ObservableList<NoteTopic> noteTopicsList = TopicDao.getNoteTopics();
 
-        noteSubjects.addAll(noteSubjectsList);
+                noteSubjects.addAll(noteSubjectsList);
 
-        noteTopics.addAll(noteTopicsList);
+                noteTopics.addAll(noteTopicsList);
 
-        noteSubjects.forEach(subject -> {
-            noteSubjectTopics.put(subject.getId(), TopicDao.getNoteTopicsForSubject(subject.getId()));
-        });
+                noteSubjects.forEach(subject -> noteSubjectTopics.put(subject.getId(), TopicDao.getNoteTopicsForSubject(subject.getId())));
 
-        noteTopics.forEach(topic -> {
-            noteSubTopics.put(topic.getId(), SubTopicDao.getSubTopicsForTopic(topic.getId()));
-        });
+                noteTopics.forEach(topic -> noteSubTopics.put(topic.getId(), SubTopicDao.getSubTopicsForTopic(topic.getId())));
+                return true;
+            }
+        };
+        subjectsLoaded.bind(subjectsTask.valueProperty());
 
-//        subjects.forEach(subject -> {
-//            subjectTopics.put(subject.getSubjectName(), TopicDao.getTopics("note_" + subject.getTableName() + "_topics"));
-//        });
-
-//        subjects.forEach(subject -> {
-//            subjectSubTopics.put(subject.getSubjectName(), SubTopicDao.getSubTopics("note_" + subject.getTableName() + "_sub_topics"));
-//        });
+        executorService.execute(subjectsTask);
+        executorService.shutdown();
     }
 
+    public SimpleBooleanProperty getSubjectsLoaded() {
+        return subjectsLoaded;
+    }
 
     public HashMap<String, ObservableList<Topic>> getSubjectTopics() {
         return subjectTopics;

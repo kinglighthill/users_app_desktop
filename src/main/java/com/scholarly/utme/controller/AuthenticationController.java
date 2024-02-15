@@ -2,12 +2,14 @@ package com.scholarly.utme.controller;
 
 import com.google.gson.Gson;
 import com.scholarly.utme.MainApplication;
+import com.scholarly.utme.async.LandingScreen;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.network.model.request.UserRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
@@ -18,12 +20,17 @@ import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import okhttp3.*;
@@ -116,6 +123,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             });
             resetPasswordText.setOnMouseEntered(event -> resetPasswordText.setUnderline(true));
             resetPasswordText.setOnMouseExited(event -> resetPasswordText.setUnderline(false));
+            recoverProceedButton.disableProperty().bind(recoverEmailField.textProperty().isEmpty());
 
             recoverLoginText.setOnMouseClicked(event -> {
                 Animations.fadeOut(recoverPasswordSection, 300);
@@ -131,7 +139,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             Label signUpPhoneError = getPhoneErrorText();
 
             signUpProceedButton.setOnAction(event -> {
-
                 String fullName = signUpNameField.getText();
                 signUpNameSection.getChildren().remove(signUpNameError);
                 if (fullName.split(" ").length == 1) {
@@ -189,7 +196,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     Thread signupThread = new Thread(signupTask);
                     signupThread.start();
                 }
-
             });
 
 
@@ -250,20 +256,16 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             });
 
             recoverProceedButton.setOnAction(event -> {
-
                 if (!recoverEmailField.getText().contains("@")) {
+                    recoverEmailPrompt.setText("Please enter a valid email address");
+                    recoverEmailPrompt.setTextFill(Paint.valueOf("#FF0000"));
                     recoverEmailPrompt.setVisible(true);
                 } else {
-
-                    recoverProceedButton.setDisable(true);
                     showProgressBar();
 
-                    String email = recoverEmailField.getText();
-                    String appSlug = "utme";
-
                     UserRequest request = new UserRequest();
-                    request.setEmail(email);
-                    request.setAppSlug(appSlug);
+                    request.setEmail(recoverEmailField.getText());
+                    request.setAppSlug("utme");
 
                     // Check for internet connectivity
                     try {
@@ -287,12 +289,33 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         hideProgressBar();
                         System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
                     }
-
                 }
             });
 
-            signUpGoogleButton.setOnAction(event -> {
+            TextFormatter<String> recoverTextFormatter = new TextFormatter<>(change -> {
+                if (!change.isContentChange()) {
+                    return change;
+                }
 
+                String text = change.getControlNewText();
+
+                if (text.length() > 0 && !recoverEmailPrompt.getText().equalsIgnoreCase("")) {
+                    recoverEmailPrompt.setText("");
+                    return change;
+                }
+                return change;
+            });
+            recoverEmailField.setTextFormatter(recoverTextFormatter);
+
+            signUpNameField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            signUpEmailField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            signUpPasswordField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            signUpPhoneField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            loginEmailField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            loginPasswordField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+            recoverEmailField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+
+            signUpGoogleButton.setOnAction(event -> {
                 signUpGoogleButton.setDisable(true);
                 showProgressBar();
 
@@ -321,7 +344,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             });
 
             loginGoogleButton.setOnAction(event -> {
-
                 loginGoogleButton.setDisable(true);
                 showProgressBar();
 
@@ -350,7 +372,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 }
             });
 
-            TextFormatter<String> textFormatter = new TextFormatter<>(change -> {
+            TextFormatter<String> referralTextFormatter = new TextFormatter<>(change -> {
                 if (!change.isContentChange()) {
                     return change;
                 }
@@ -363,7 +385,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                 return change;
             });
 
-            referralCodeTextField.setTextFormatter(textFormatter);
+            referralCodeTextField.setTextFormatter(referralTextFormatter);
             enterReferralDoneButton.setDisable(referralCodeTextField.getText().isEmpty());
             referralCodeTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
                 enterReferralDoneButton.setDisable(newValue.length() < 6);
@@ -450,11 +472,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         System.out.println(TAG + "Signed up user with id -> " + userId);
                         System.out.println(TAG + "Signed up user with User Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
 
-                        Platform.runLater(() -> {
-                            hideProgressBar();
-                            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                        });
+                        Platform.runLater(() -> moveToHome());
 
                     } else if (signupResponse.getStatus().equalsIgnoreCase("error")) {
                         Platform.runLater(() -> {
@@ -528,11 +546,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                         callback.redirect();
 
-                        Platform.runLater(() -> {
-                            hideProgressBar();
-                            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                        });
+                        Platform.runLater(() -> moveToHome());
 
                     } else if (signupResponse.getStatus().equalsIgnoreCase("error")) {
                         Platform.runLater(() -> {
@@ -609,11 +623,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         System.out.println(TAG + "Logged in user with id -> " + PreferencesManager.get(PREF_KEY_USER_ID, ""));
                         System.out.println(TAG + "Logged in user with Activation State -> " + PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false));
 
-                        Platform.runLater(() -> {
-                            hideProgressBar();
-                            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-                        });
+                        Platform.runLater(() -> moveToHome());
 
                     } else if (loginResponse.getStatus().equalsIgnoreCase("error")) {
                         Platform.runLater(() -> {
@@ -676,7 +686,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                             recoverEmailPrompt.setVisible(true);
                             recoverEmailPrompt.setText(baseResponse.getMessage());
                             recoverEmailPrompt.setTextFill(Paint.valueOf("#053500"));
-
+                            recoverEmailField.setText("");
                             hideProgressBar();
                         });
                     } else if (baseResponse.getStatus().equalsIgnoreCase("error")) {
@@ -684,6 +694,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                         Platform.runLater(() -> {
                             recoverEmailPrompt.setVisible(true);
                             recoverEmailPrompt.setText(baseResponse.getMessage());
+                            recoverEmailField.setText("");
                             hideProgressBar();
                         });
 
@@ -721,7 +732,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         String state = RandomStringUtils.random(6, true, false);
         String scope = "email profile";
         String responseType = "code";
-        String clientId = "671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
+        String clientId = CLIENT_ID;
 
         try {
             InetSocketAddress socketAddress = new InetSocketAddress(ipaddress, 2020);
@@ -794,12 +805,18 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         }
     }
 
+    private void moveToHome() {
+        LandingScreen.getInstance();
+        hideProgressBar();
+        ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
+        ViewSwitcher.showScreen(View.LANDING_SCREEN);
+    }
+
     private void hideProgressBar() {
         signUpProceedButton.setDisable(false);
         loginProceedButton.setDisable(false);
         signUpGoogleButton.setDisable(false);
         loginGoogleButton.setDisable(false);
-        recoverProceedButton.setDisable(false);
         dimmer.setVisible(false);
         progressBar.setVisible(false);
     }
@@ -844,7 +861,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 //        imageView.setImage(new Image(getClass().getResource("/drawable/signup_screen_image.jpg").toString()));
         imageView.setImage(new Image(getClass().getResource("/drawable/welcome_image.png").toString()));
         imageView.setFitWidth(ViewSwitcher.getRootScene().getWidth()/2);
-//        imageView.setFitHeight(ViewSwitcher.getRootScene().getHeight()*2);
+        imageView.setFitHeight(ViewSwitcher.getRootScene().getHeight());
 
         ImageView googleImage = new ImageView(new Image(getClass().getResource("/drawable/google_icon.png").toString()));
         signUpGoogleButton.setGraphic(googleImage);

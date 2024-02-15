@@ -2,6 +2,7 @@ package com.scholarly.utme.controller.landing_screens;
 
 import com.google.gson.Gson;
 import com.scholarly.utme.MainApplication;
+import com.scholarly.utme.async.LandingScreen;
 import com.scholarly.utme.network.NetworkService;
 import com.scholarly.utme.network.model.ActivationInfo;
 import com.scholarly.utme.network.model.RefreshRequest;
@@ -75,25 +76,10 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         initializeViews();
         initializeFonts();
 
-        centerVBox.getChildren().remove(notActivatedPane);
-        innerVBox.getChildren().remove(activationText);
-        if (viewModel.isActivated()) {
-            centerVBox.getChildren().remove(notActivatedPane);
-            innerVBox.getChildren().remove(activationText);
-            activationPinTextField.setDisable(true);
-            activateButton.setDisable(true);
-            headerLabel.setText("Your app has been activated!");
-        } else {
-            activationPinTextField.setDisable(false);
-            activateButton.setDisable(false);
-            centerVBox.getChildren().add(0, notActivatedPane);
-            innerVBox.getChildren().add(innerVBox.getChildren().size(), activationText);
-            headerLabel.setText("Enter your 16 digits activation pin to get unlimited access to the app's content");
-        }
+        displayActivationView();
 
         activateButton.setDisable(
                 isActivationPinValid(activationPinTextField.getText(), false)
@@ -236,16 +222,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                                     BaseResponse activationResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
                                     if (activationResponse.getStatus().equalsIgnoreCase("success")) {
-
-                                        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
-                                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, activationResponse.getData().getRefreshToken());
-                                        PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
-
-                                        Platform.runLater(() -> {
-                                            progressBar.setVisible(false);
-                                            Animations.showDialog(activationSuccessfulPane, dialogDimmer);
-                                        });
-
+                                        onActivationSuccessful(userId, activationResponse);
                                     } else if (activationResponse.getStatus().equalsIgnoreCase("error")) {
                                         Platform.runLater(() -> {
                                             Alert alertDialog = Alerts.info(getClass(), "Error", activationResponse.getMessage(), "");
@@ -253,7 +230,6 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                                             hideProgressBar();
                                         });
                                     }
-
                                 } catch (Exception e) {
                                     System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                                 }
@@ -291,6 +267,8 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
         });
 
         continueButton.setOnAction(event -> {
+            Animations.hideDialog(activationSuccessfulPane, dialogDimmer);
+            displayActivatedView();
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
     }
@@ -313,16 +291,7 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
                         BaseResponse activationResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
 
                         if (activationResponse.getStatus().equalsIgnoreCase("success")) {
-
-                            PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
-                            PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, activationResponse.getData().getRefreshToken());
-                            PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
-
-                            Platform.runLater(() -> {
-                                progressBar.setVisible(false);
-                                Animations.showDialog(activationSuccessfulPane, dialogDimmer);
-                            });
-
+                            onActivationSuccessful(userId, activationResponse);
                         } else if (activationResponse.getStatus().equalsIgnoreCase("error")) {
                             Platform.runLater(() -> {
                                 hideProgressBar();
@@ -352,6 +321,45 @@ public class LandingScreenActivateController implements FxmlView<LandingScreenAc
             }
         });
 
+    }
+
+    private void onActivationSuccessful(String userId, BaseResponse activationResponse) {
+        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN+userId, activationResponse.getData().getAccessToken());
+        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN+userId, activationResponse.getData().getRefreshToken());
+        PreferencesManager.putBoolean(PREF_KEY_ACTIVATION_STATE+userId, true);
+
+        Platform.runLater(() -> {
+            progressBar.setVisible(false);
+            Animations.showDialog(activationSuccessfulPane, dialogDimmer);
+        });
+    }
+
+    private void displayActivationView() {
+        if (viewModel.isActivated()) {
+            displayActivatedView();
+        } else {
+            displayNotActivatedView();
+        }
+    }
+
+    private void displayActivatedView() {
+        centerVBox.getChildren().remove(notActivatedPane);
+        innerVBox.getChildren().remove(activationText);
+        activationPinTextField.clear();
+        activationPinTextField.setDisable(true);
+        activateButton.setDisable(true);
+        headerLabel.setText("Your app has been activated!");
+    }
+
+    private void displayNotActivatedView() {
+        centerVBox.getChildren().remove(notActivatedPane);
+        innerVBox.getChildren().remove(activationText);
+
+        activationPinTextField.setDisable(false);
+        activateButton.setDisable(false);
+        centerVBox.getChildren().add(0, notActivatedPane);
+        innerVBox.getChildren().add(innerVBox.getChildren().size(), activationText);
+        headerLabel.setText("Enter your 16 digits activation pin to get unlimited access to the app's content");
     }
 
     private void showProgressBar() {

@@ -1,5 +1,7 @@
 package com.scholarly.utme.util;
 
+import com.scholarly.utme.MainApplication;
+
 import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.EncryptionManager.decrypt;
@@ -8,7 +10,8 @@ import static com.scholarly.utme.util.EncryptionManager.encrypt;
 public class PreferencesManager {
     private static final String TAG = "New PreferenceManager: ";
 
-    static final Preferences preferences = Preferences.userRoot().node("com.scholarly.utme");
+//    static final Preferences preferences = Preferences.userRoot().node("com.scholarly.utme");
+    static Preferences preferences = null;
 
     /*public static void put(String key, String value) {
         try {
@@ -51,6 +54,11 @@ public class PreferencesManager {
         return Boolean.parseBoolean(decryptedOutput);
     }*/
 
+    public static void initialize() {
+        System.out.println(TAG + "Initializing preferences");
+        preferences = Preferences.userRoot().node("com.scholarly.utme");
+    }
+
     public static void put(String key, String value) {
         preferences.put(key, value);
     }
@@ -65,5 +73,13 @@ public class PreferencesManager {
 
     public static boolean getBoolean(String key, boolean defaultValue) {
         return preferences.getBoolean(key, defaultValue);
+    }
+
+    public static void flush() {
+        try {
+            preferences.flush();
+        } catch (Exception e) {
+
+        }
     }
 }

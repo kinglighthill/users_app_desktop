@@ -9,45 +9,62 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.concurrent.Task;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class NovelScreenVM implements ViewModel {
     private static final String TAG = "NovelScreenVM: ";
 
-    private ObservableList<Novel> novels = FXCollections.observableArrayList();
+    private final ObservableList<Novel> novels = FXCollections.observableArrayList();
 
-    private ObservableList<NovelAuthor> authors = FXCollections.observableArrayList();
+    private final ObservableList<NovelAuthor> authors = FXCollections.observableArrayList();
 
-    private ObservableList<NovelGenre> genres = FXCollections.observableArrayList();
+    private final ObservableList<NovelGenre> genres = FXCollections.observableArrayList();
 
-    private ObservableList<NovelCategory> categories = FXCollections.observableArrayList();
+    private final ObservableList<NovelCategory> categories = FXCollections.observableArrayList();
 
-    private ObjectProperty<NovelModel> selectedNovelModel = new SimpleObjectProperty<>();
+    private final ObjectProperty<NovelModel> selectedNovelModel = new SimpleObjectProperty<>();
 
-    private HashMap<NovelGenre, List<NovelCategory>> genreCategoryMap = new HashMap<>();
+    private final HashMap<NovelGenre, List<NovelCategory>> genreCategoryMap = new HashMap<>();
 
-    private ObservableMap<NovelCategoryGenre, List<NovelModel>> genresCategories = FXCollections.observableHashMap();
+    private final ObservableMap<NovelCategoryGenre, List<NovelModel>> genresCategories = FXCollections.observableHashMap();
 
     private String userId;
 
+    private final SimpleBooleanProperty novelsLoaded = new SimpleBooleanProperty();
 
     public NovelScreenVM() {
-        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-        novels.addAll(NovelsDao.getNovels());
-        genres.addAll(NovelsDao.getGenres());
-        authors.addAll(NovelAuthorDao.getAuthors());
-        categories.addAll(NovelsDao.getCategories());
-        genresCategories.putAll(NovelsDao.getGenresCategories());
+        Task<Boolean> novelsTask = new Task<>() {
+            @Override
+            protected Boolean call() {
+                userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
 
-        genres.forEach(novelGenre -> {
-            genreCategoryMap.put(novelGenre, categories);
-        });
+                novels.addAll(NovelsDao.getNovels());
+                genres.addAll(NovelsDao.getGenres());
+                authors.addAll(NovelAuthorDao.getAuthors());
+                categories.addAll(NovelsDao.getCategories());
+                genresCategories.putAll(NovelsDao.getGenresCategories());
 
+                genres.forEach(novelGenre -> genreCategoryMap.put(novelGenre, categories));
+                return true;
+            }
+        };
+        novelsLoaded.bind(novelsTask.valueProperty());
+
+        executorService.execute(novelsTask);
+        executorService.shutdown();
+    }
+
+    public SimpleBooleanProperty getNovelsLoaded() {
+        return novelsLoaded;
     }
 
     public String getUserId() {

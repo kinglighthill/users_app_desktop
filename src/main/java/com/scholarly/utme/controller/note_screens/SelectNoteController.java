@@ -1,30 +1,39 @@
 package com.scholarly.utme.controller.note_screens;
 
 
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.newDb.*;
+import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
+import com.scholarly.utme.data.model.newDb.contentViewType.HeaderViewType;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.note_screens.SelectNoteVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.TextAlignment;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @FxmlPath("/layouts/note_screens/SelectNoteScreen.fxml")
 public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializable {
@@ -50,6 +59,8 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
     @FXML
     private ImageView startAllExpandIcon, subtopicCloseDialog, activateNowPadlockIcon, activateNowCloseIcon, greenTickIcon1, greenTickIcon2, greenTickIcon3, greenTickIcon4, greenTickIcon5;
 
+    @FXML
+    private ProgressIndicator progressBar;
 
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0; -fx-cursor: hand;";
@@ -60,194 +71,39 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         initializeViews();
         initializeFonts();
 
-//        NoteSubject noteSubject = viewModel.getNoteSubjects().get(0);
-//        System.out.println(TAG + "Got Note Subject -> " + noteSubject);
-//        viewModel.setSelectedNoteSubject(noteSubject);
-
         ToggleGroup noteSubjectsToggleGroup = new ToggleGroup();
-
-        viewModel.getNoteSubjects().forEach(subject -> {
-            ToggleButton button = new ToggleButton();
-            button.setUserData(subject);
-            noteSubjectsToggleGroup.getToggles().add(button);
-
-
-            button.setMinHeight(70);
-            button.setMaxHeight(70);
-            button.setPadding(new Insets(0, 0, 0, 20));
-            button.setAlignment(Pos.BASELINE_LEFT);
-            button.setMaxWidth(Double.MAX_VALUE);
-            button.setText(subject.getTitle());
-            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 15));
-
-            ImageView graphic = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + subject.getShortTitle() + "_image.png").toString()));
-            graphic.setFitWidth(27);
-            graphic.setFitHeight(27);
-            button.setGraphic(graphic);
-            button.setGraphicTextGap(25.0);
-
-            button.setStyle(IDLE_BUTTON_STYLE);
-            button.setOnMouseEntered(e -> {
-                if (!button.isSelected()) {
-                    button.setStyle(HOVERED_BUTTON_STYLE2);
-                }
-            });
-            button.setOnMouseExited(e -> {
-                if (!button.isSelected()) {
-                    button.setStyle(IDLE_BUTTON_STYLE);
-                }
-            });
-
-            button.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    button.setStyle(PRESSED_STYLE2);
-//                    button.setTextFill(Color.WHITE);
-                } else {
-                    button.setStyle(IDLE_BUTTON_STYLE);
-//                    button.setTextFill(Color.BLACK);
-                }
-            });
-
-            subjectListVBox.getChildren().add(button);
-        });
-
-        Toggle selectedToggle = noteSubjectsToggleGroup.getToggles().get(0);
-        System.out.println(TAG + "Selected Toggle -> " + selectedToggle);
-//        noteSubjectsToggleGroup.selectToggle(selectedToggle);
-        noteSubjectsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                NoteSubject selectedSubject = (NoteSubject) newValue.getUserData();
-                viewModel.setSelectedNoteSubject(selectedSubject);
-                emptyTopicListLabel.setVisible(false);
-            } else {
-                viewModel.setSelectedNoteSubject(null);
-                emptyTopicListLabel.setVisible(true);
-            }
-        });
 
         ToggleGroup topicListToggleGroup = new ToggleGroup();
         ToggleGroup subtopicsListToggleGroup = new ToggleGroup();
 
-        topicListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-//                Pair<NoteTopic, NoteSubTopic> selectedTopic = (Pair<NoteTopic, NoteSubTopic>) newValue.getUserData();
-//                viewModel.setSelectedNoteTopic(selectedTopic.getKey());
-//                viewModel.setSelectedNoteSubTopic(selectedTopic.getValue());
-
-                NoteTopic selectedTopic = (NoteTopic) newValue.getUserData();
-
-                if(!selectedTopic.isFree()) {
-                    dimmer.setVisible(true);
-                    Animations.translateIn(activateNowDialog, 300);
-                } else {
-                    viewModel.setSelectedNoteTopic(selectedTopic);
-
-                    if (viewModel.getNoteSubTopics().get(selectedTopic.getId()).isEmpty()) {
-                        if (!commenceButton.isVisible())
-                            Animations.translateIn(commenceButton, 300);
-                    } else {
-                        subtopicsVBox.getChildren().clear();
-                        viewModel.getNoteSubTopics().get(selectedTopic.getId()).forEach(subTopic -> {
-                            ToggleButton button = new ToggleButton();
-                            button.setText(subTopic.getTitle());
-                            if (subTopic.getTitle().length() > 50)
-                                button.setTooltip(new Tooltip(subTopic.getTitle()));
-                            button.setUserData(subTopic);
-                            subtopicsVBox.getChildren().add(button);
-                            subtopicsListToggleGroup.getToggles().add(button);
-
-                            button.setMinHeight(48);
-                            button.setMaxHeight(48);
-                            button.setPadding(new Insets(0, 15, 0, 15));
-                            button.setAlignment(Pos.BASELINE_LEFT);
-                            button.setMaxWidth(Integer.MAX_VALUE);
-                            button.setText(subTopic.getTitle());
-
-                            button.setStyle(IDLE_BUTTON_STYLE);
-                            button.setOnMouseEntered(e -> {
-                                if (!button.isSelected()) {
-                                    button.setStyle(HOVERED_BUTTON_STYLE);
-                                }
-                            });
-                            button.setOnMouseExited(e -> {
-                                if (!button.isSelected()) {
-                                    button.setStyle(IDLE_BUTTON_STYLE);
-                                }
-                            });
-
-                            button.selectedProperty().addListener((observe, old, newVal) -> {
-                                if (newVal) {
-                                    button.setStyle(PRESSED_STYLE2);
-//                                    button.setTextFill(Color.WHITE);
-                                } else {
-                                    button.setStyle(IDLE_BUTTON_STYLE);
-                                    button.setTextFill(Color.BLACK);
-                                }
-                            });
-
-                            button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 13));
-                        });
-                        if (commenceButton.isVisible())
-                            Animations.translateOut(commenceButton, 300);
-                        dimmer.setVisible(true);
-                        Animations.translateIn(subtopicsDialog, 300);
-                    }
-                }
-            } else {
-                if (commenceButton.isVisible())
-                    Animations.translateOut(commenceButton, 300);
-            }
-        });
-
-        subtopicsListToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                viewModel.setSelectedNoteSubTopic((NoteSubTopic) newValue.getUserData());
-                if (!subtopicsCommenceButton.isVisible()) {
-                    Animations.translateIn(subtopicsCommenceButton, 200);
-                }
-            } else {
-                viewModel.setSelectedNoteSubTopic(null);
-                Animations.translateOut(subtopicsCommenceButton, 200);
-            }
-        }));
-
-        viewModel.selectedNoteSubjectProperty().addListener((observable, oldValue, newValue) -> {
-            topicListToggleGroup.getToggles().clear();
-            topicListVBox.getChildren().clear();
-
-            if (newValue != null) {
-                viewModel.getNoteSubjectTopics().get(newValue.getId()).forEach(topic -> {
-                    StackPane pane = new StackPane();
+        viewModel.getSubjectsLoaded().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                viewModel.getNoteSubjects().forEach(subject -> {
                     ToggleButton button = new ToggleButton();
-                    button.setText(topic.getTitle());
-                    button.setUserData(topic);
-                    topicListToggleGroup.getToggles().add(button);
+                    button.setUserData(subject);
+                    noteSubjectsToggleGroup.getToggles().add(button);
 
-                    button.setMinHeight(48);
-                    button.setMaxHeight(48);
+                    button.setMinHeight(70);
+                    button.setMaxHeight(70);
                     button.setPadding(new Insets(0, 0, 0, 20));
                     button.setAlignment(Pos.BASELINE_LEFT);
                     button.setMaxWidth(Double.MAX_VALUE);
-                    button.setText(topic.getTitle());
+                    button.setText(subject.getTitle());
+                    button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 15));
 
-                    pane.setMinHeight(48);
-                    pane.setMinWidth(48);
-                    pane.setMaxWidth(Double.MAX_VALUE);
-
-                    ImageView padlockIcon = new ImageView(new Image(getClass().getResource("/drawable/novel_images/padlock_icon.png").toString()));
-                    padlockIcon.setFitWidth(15);
-                    padlockIcon.setFitHeight(20);
-                    StackPane.setAlignment(padlockIcon, Pos.CENTER_RIGHT);
-                    StackPane.setMargin(padlockIcon, new Insets(0, 20, 0, 0));
+                    ImageView graphic = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + subject.getShortTitle() + "_image.png").toString()));
+                    graphic.setFitWidth(27);
+                    graphic.setFitHeight(27);
+                    button.setGraphic(graphic);
+                    button.setGraphicTextGap(25.0);
 
                     button.setStyle(IDLE_BUTTON_STYLE);
                     button.setOnMouseEntered(e -> {
                         if (!button.isSelected()) {
-                            button.setStyle(HOVERED_BUTTON_STYLE);
+                            button.setStyle(HOVERED_BUTTON_STYLE2);
                         }
                     });
                     button.setOnMouseExited(e -> {
@@ -256,72 +112,194 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                         }
                     });
 
-                    button.selectedProperty().addListener((observe, old, newVal) -> {
-                        if (newVal) {
+                    button.selectedProperty().addListener((btnObservable, btnOldValue, btnNewValue) -> {
+                        if (btnNewValue) {
                             button.setStyle(PRESSED_STYLE2);
-//                            button.setTextFill(Color.WHITE);
                         } else {
                             button.setStyle(IDLE_BUTTON_STYLE);
-                            button.setTextFill(Color.BLACK);
                         }
                     });
 
-                    button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 13));
+                    subjectListVBox.getChildren().add(button);
+                });
 
-                    if (topic.isFree()) {
-                        pane.getChildren().add(button);
+                noteSubjectsToggleGroup.selectedToggleProperty().addListener((subjObservable, subjOldValue, subjNewValue) -> {
+                    if (subjNewValue != null) {
+                        NoteSubject selectedSubject = (NoteSubject) subjNewValue.getUserData();
+                        viewModel.setSelectedNoteSubject(selectedSubject);
+                        emptyTopicListLabel.setVisible(false);
                     } else {
-//                        button.setDisable(true);
-                        pane.getChildren().addAll(button, padlockIcon);
+                        viewModel.setSelectedNoteSubject(null);
+                        emptyTopicListLabel.setVisible(true);
                     }
-                    topicListVBox.getChildren().add(pane);
+                });
+
+                topicListToggleGroup.selectedToggleProperty().addListener((topicObservable, topicOldValue, topicNewValue) -> {
+                    if (topicNewValue != null) {
+                        NoteTopic selectedTopic = (NoteTopic) topicNewValue.getUserData();
+
+                        if(!selectedTopic.isFree()) {
+                            dimmer.setVisible(true);
+                            Animations.translateIn(activateNowDialog, 300);
+                        } else {
+                            viewModel.setSelectedNoteTopic(selectedTopic);
+
+                            if (viewModel.getNoteSubTopics().get(selectedTopic.getId()).isEmpty()) {
+                                if (!commenceButton.isVisible())
+                                    Animations.translateIn(commenceButton, 300);
+                            } else {
+                                subtopicsVBox.getChildren().clear();
+                                viewModel.getNoteSubTopics().get(selectedTopic.getId()).forEach(subTopic -> {
+                                    ToggleButton button = new ToggleButton();
+                                    button.setText(subTopic.getTitle());
+                                    if (subTopic.getTitle().length() > 50)
+                                        button.setTooltip(new Tooltip(subTopic.getTitle()));
+                                    button.setUserData(subTopic);
+                                    subtopicsVBox.getChildren().add(button);
+                                    subtopicsListToggleGroup.getToggles().add(button);
+
+                                    button.setMinHeight(48);
+                                    button.setMaxHeight(48);
+                                    button.setPadding(new Insets(0, 15, 0, 15));
+                                    button.setAlignment(Pos.BASELINE_LEFT);
+                                    button.setMaxWidth(Integer.MAX_VALUE);
+                                    button.setText(subTopic.getTitle());
+
+                                    button.setStyle(IDLE_BUTTON_STYLE);
+                                    button.setOnMouseEntered(e -> {
+                                        if (!button.isSelected()) {
+                                            button.setStyle(HOVERED_BUTTON_STYLE);
+                                        }
+                                    });
+                                    button.setOnMouseExited(e -> {
+                                        if (!button.isSelected()) {
+                                            button.setStyle(IDLE_BUTTON_STYLE);
+                                        }
+                                    });
+
+                                    button.selectedProperty().addListener((observe, old, newVal) -> {
+                                        if (newVal) {
+                                            button.setStyle(PRESSED_STYLE2);
+//                                    button.setTextFill(Color.WHITE);
+                                        } else {
+                                            button.setStyle(IDLE_BUTTON_STYLE);
+                                            button.setTextFill(Color.BLACK);
+                                        }
+                                    });
+
+                                    button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 13));
+                                });
+                                if (commenceButton.isVisible())
+                                    Animations.translateOut(commenceButton, 300);
+                                dimmer.setVisible(true);
+                                Animations.translateIn(subtopicsDialog, 300);
+                            }
+                        }
+                    } else {
+                        if (commenceButton.isVisible())
+                            Animations.translateOut(commenceButton, 300);
+                    }
+                });
+
+                subtopicsListToggleGroup.selectedToggleProperty().addListener(((subTopicObservable, subTopicOldValue, subTopicNewValue) -> {
+                    if (subTopicNewValue != null) {
+                        viewModel.setSelectedNoteSubTopic((NoteSubTopic) subTopicNewValue.getUserData());
+                        if (!subtopicsCommenceButton.isVisible()) {
+                            Animations.translateIn(subtopicsCommenceButton, 200);
+                        }
+                    } else {
+                        viewModel.setSelectedNoteSubTopic(null);
+                        Animations.translateOut(subtopicsCommenceButton, 200);
+                    }
+                }));
+
+                viewModel.selectedNoteSubjectProperty().addListener((selectedNoteObservable, topicOldValue, selectedNoteNewValue) -> {
+                    topicListToggleGroup.getToggles().clear();
+                    topicListVBox.getChildren().clear();
+
+                    if (selectedNoteNewValue != null) {
+                        showProgressBar();
+
+                        ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+                        Task<List<Node>> topicsTask = new Task<>() {
+                            @Override
+                            protected List<Node> call() {
+                                List<Node> topicNodes = new ArrayList<>();
+                                viewModel.getNoteSubjectTopics().get(selectedNoteNewValue.getId()).forEach(topic -> {
+                                    StackPane pane = new StackPane();
+                                    ToggleButton button = new ToggleButton();
+                                    button.setText(topic.getTitle());
+                                    button.setUserData(topic);
+                                    topicListToggleGroup.getToggles().add(button);
+
+                                    button.setMinHeight(48);
+                                    button.setMaxHeight(48);
+                                    button.setPadding(new Insets(0, 0, 0, 20));
+                                    button.setAlignment(Pos.BASELINE_LEFT);
+                                    button.setMaxWidth(Double.MAX_VALUE);
+                                    button.setText(topic.getTitle());
+
+                                    pane.setMinHeight(48);
+                                    pane.setMinWidth(48);
+                                    pane.setMaxWidth(Double.MAX_VALUE);
+
+                                    ImageView padlockIcon = new ImageView(new Image(getClass().getResource("/drawable/novel_images/padlock_icon.png").toString()));
+                                    padlockIcon.setFitWidth(15);
+                                    padlockIcon.setFitHeight(20);
+                                    StackPane.setAlignment(padlockIcon, Pos.CENTER_RIGHT);
+                                    StackPane.setMargin(padlockIcon, new Insets(0, 20, 0, 0));
+
+                                    button.setStyle(IDLE_BUTTON_STYLE);
+                                    button.setOnMouseEntered(e -> {
+                                        if (!button.isSelected()) {
+                                            button.setStyle(HOVERED_BUTTON_STYLE);
+                                        }
+                                    });
+                                    button.setOnMouseExited(e -> {
+                                        if (!button.isSelected()) {
+                                            button.setStyle(IDLE_BUTTON_STYLE);
+                                        }
+                                    });
+
+                                    button.selectedProperty().addListener((observe, old, newVal) -> {
+                                        if (newVal) {
+                                            button.setStyle(PRESSED_STYLE2);
+                                        } else {
+                                            button.setStyle(IDLE_BUTTON_STYLE);
+                                            button.setTextFill(Color.BLACK);
+                                        }
+                                    });
+
+                                    button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 13));
+
+                                    if (topic.isFree()) {
+                                        pane.getChildren().add(button);
+                                    } else {
+                                        pane.getChildren().addAll(button, padlockIcon);
+                                    }
+                                    topicNodes.add(pane);
+                                });
+                                return topicNodes;
+                            }
+                        };
+                        topicsTask.setOnSucceeded(
+                                event -> Platform.runLater(() -> {
+                                    topicListVBox.getChildren().addAll(topicsTask.valueProperty().getValue());
+                                    hideProgressBar();
+                                })
+                        );
+                        executorService.execute(topicsTask);
+                        executorService.shutdown();
+                    }
                 });
             }
         });
 
-        commenceButton.setOnAction(event -> {
-//            System.out.println(TAG + "SelectedNoteSubject -> " + Helper.toString(viewModel.getSelectedNoteSubject()));
-//            System.out.println(TAG + "SelectedNoteTopic -> " + Helper.toString(viewModel.getSelectedNoteTopic()));
-//            System.out.println(TAG + "SelectedNoteSubtopics -> " + Helper.toString(viewModel.getNoteSubTopics().get(viewModel.getSelectedNoteTopic().getTopicId())));
-//            System.out.println(TAG + "SelectedNoteSubtopic -> " + Helper.toString(viewModel.getSelectedNoteSubTopic()));
-
-            NotesScreenController.InitialData data = new NotesScreenController.InitialData(
-                    viewModel.getSelectedNoteSubject(),
-                    viewModel.getNoteSubjectTopics().get(
-                            viewModel.getSelectedNoteSubject().getId()
-                    ),
-                    viewModel.getSelectedNoteTopic(),
-                    viewModel.getNoteSubTopics().get(
-                            viewModel.getSelectedNoteTopic().getId()
-                    ),
-                    viewModel.getSelectedNoteSubTopic(),
-                    null
-            );
-            ViewSwitcher.passData(data);
-            ViewSwitcher.showScreen(View.NOTES_SCREEN);
-        });
+        commenceButton.setOnAction(event -> startNoteScreen(viewModel.getSelectedNoteSubTopic()));
 
         subtopicsCommenceButton.setOnAction(event -> {
-//            System.out.println(TAG + "SelectedNoteSubject -> " + Helper.toString(viewModel.getSelectedNoteSubject()));
-//            System.out.println(TAG + "SelectedNoteTopic -> " + Helper.toString(viewModel.getSelectedNoteTopic()));
-//            System.out.println(TAG + "SelectedNoteSubtopics -> " + Helper.toString(viewModel.getNoteSubTopics().get(viewModel.getSelectedNoteTopic().getId())));
-//            System.out.println(TAG + "SelectedNoteSubtopics with Filter -> " + Helper.toString(viewModel.getNoteSubTopics().get(viewModel.getSelectedNoteTopic().getId()).stream().filter(subTopic -> subTopic.getTopicId() == viewModel.getSelectedNoteTopic().getId()).collect(Collectors.toList())));
-//            System.out.println(TAG + "SelectedNoteSubtopic -> " + Helper.toString(viewModel.getSelectedNoteSubTopic()));
-
-            NotesScreenController.InitialData data = new NotesScreenController.InitialData(
-                    viewModel.getSelectedNoteSubject(),
-                    viewModel.getNoteSubjectTopics().get(
-                            viewModel.getSelectedNoteSubject().getId()
-                    ),
-                    viewModel.getSelectedNoteTopic(),
-                    viewModel.getNoteSubTopics().get(
-                            viewModel.getSelectedNoteTopic().getId()
-                    ),
-                    viewModel.getSelectedNoteSubTopic(),
-                    null
-            );
-            ViewSwitcher.passData(data);
-            ViewSwitcher.showScreen(View.NOTES_SCREEN);
+            startNoteScreen(viewModel.getSelectedNoteSubTopic());
         });
 
         startAllPanel.setOnMouseEntered(event -> {
@@ -336,20 +314,7 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         });
         startAllPanel.setOnMouseClicked(event -> {
             if (subtopicsListToggleGroup.getSelectedToggle() == null) {
-                NotesScreenController.InitialData data = new NotesScreenController.InitialData(
-                        viewModel.getSelectedNoteSubject(),
-                        viewModel.getNoteSubjectTopics().get(
-                                viewModel.getSelectedNoteSubject().getId()
-                        ),
-                        viewModel.getSelectedNoteTopic(),
-                        viewModel.getNoteSubTopics().get(
-                                viewModel.getSelectedNoteTopic().getId()
-                        ),
-                        null,
-                        null
-                );
-                ViewSwitcher.passData(data);
-                ViewSwitcher.showScreen(View.NOTES_SCREEN);
+                startNoteScreen(null);
             }
         });
 
@@ -373,7 +338,6 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
             ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
-
     }
 
     private void initializeViews() {
@@ -407,9 +371,39 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
         subtopicsStartAllText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
     }
 
+    private void startNoteScreen(NoteSubTopic noteSubTopic) {
+        MainApplication.resetTime();
+        NotesScreenController.InitialData data = new NotesScreenController.InitialData(
+                viewModel.getSelectedNoteSubject(),
+                viewModel.getNoteSubjectTopics().get(
+                        viewModel.getSelectedNoteSubject().getId()
+                ),
+                viewModel.getSelectedNoteTopic(),
+                viewModel.getNoteSubTopics().get(
+                        viewModel.getSelectedNoteTopic().getId()
+                ),
+                noteSubTopic,
+                null
+        );
+        MainApplication.timeTakenTo("get note data");
+        ViewSwitcher.passData(data);
+        MainApplication.timeTakenTo("pass data");
+        ViewSwitcher.showScreen(View.NOTES_SCREEN);
+        MainApplication.timeTakenTo("show screen");
+    }
 
     public void backButtonClicked() {
         ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
         ViewSwitcher.showScreen(View.LANDING_SCREEN);
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisible(false);
+        topicListVBox.setVisible(true);
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisible(true);
+        topicListVBox.setVisible(false);
     }
 }

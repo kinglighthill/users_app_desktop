@@ -377,41 +377,41 @@
                         </VBox.margin>
                     </VBox>
 
-                    <Separator>
-                        <VBox.margin>
-                            <Insets top="30" left="20" right="20"/>
-                        </VBox.margin>
-                    </Separator>
+<!--                    <Separator>-->
+<!--                        <VBox.margin>-->
+<!--                            <Insets top="30" left="20" right="20"/>-->
+<!--                        </VBox.margin>-->
+<!--                    </Separator>-->
 
-                    <Panel style="-fx-background-color: #F3FBF4; -fx-background-radius: 5;">
-                        <left>
-                            <VBox alignment="CENTER_LEFT" spacing="20">
-                                <VBox>
-                                    <Label fx:id="otherAppsTitleDesc" text="Sitting for other Exams?" textFill="#034801"/>
-                                    <Label fx:id="otherAppsShortDesc" text="Download Desktop apps for other exams: UTME, WASSCE, Post UTME, BECE etc." textFill="#034801"/>
-                                </VBox>
-                                <Button fx:id="viewDesktopAppButton" text="Here" textFill="#FFFFFF" prefWidth="120" style="-fx-background-color: #12AF20; -fx-background-radius: 8; -fx-cursor: hand;"/>
+<!--                    <Panel style="-fx-background-color: #F3FBF4; -fx-background-radius: 5;">-->
+<!--                        <left>-->
+<!--                            <VBox alignment="CENTER_LEFT" spacing="20">-->
+<!--                                <VBox>-->
+<!--                                    <Label fx:id="otherAppsTitleDesc" text="Sitting for other Exams?" textFill="#034801"/>-->
+<!--                                    <Label fx:id="otherAppsShortDesc" text="Download Desktop apps for other exams: UTME, WASSCE, Post UTME, BECE etc." textFill="#034801"/>-->
+<!--                                </VBox>-->
+<!--                                <Button fx:id="viewDesktopAppButton" text="Here" textFill="#FFFFFF" prefWidth="120" style="-fx-background-color: #12AF20; -fx-background-radius: 8; -fx-cursor: hand;"/>-->
 
-                                <padding>
-                                    <Insets left="30"/>
-                                </padding>
-                            </VBox>
-                        </left>
+<!--                                <padding>-->
+<!--                                    <Insets left="30"/>-->
+<!--                                </padding>-->
+<!--                            </VBox>-->
+<!--                        </left>-->
 
-                        <right>
-                            <ImageView fx:id="boyWithLaptop" preserveRatio="true" pickOnBounds="true">
-                                <VBox.margin>
-                                    <Insets right="50"/>
-                                </VBox.margin>
-                            </ImageView>
-                        </right>
-                        <VBox.margin>
-                            <Insets top="20" left="15" right="15" bottom="10"/>
-                        </VBox.margin>
-                        <padding>
-                            <Insets top="10" bottom="10"/>
-                        </padding>
-                    </Panel>
+<!--                        <right>-->
+<!--                            <ImageView fx:id="boyWithLaptop" preserveRatio="true" pickOnBounds="true">-->
+<!--                                <VBox.margin>-->
+<!--                                    <Insets right="50"/>-->
+<!--                                </VBox.margin>-->
+<!--                            </ImageView>-->
+<!--                        </right>-->
+<!--                        <VBox.margin>-->
+<!--                            <Insets top="20" left="15" right="15" bottom="10"/>-->
+<!--                        </VBox.margin>-->
+<!--                        <padding>-->
+<!--                            <Insets top="10" bottom="10"/>-->
+<!--                        </padding>-->
+<!--                    </Panel>-->
 
                     <VBox fx:id="fontVBox" spacing="10">
                         <VBox.margin>
@@ -538,5 +538,4 @@
             </StackPane.margin>
         </ImageView>
     </StackPane>
-
 </StackPane>

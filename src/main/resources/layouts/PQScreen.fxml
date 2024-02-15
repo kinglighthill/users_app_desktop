@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.scholarly.utme.controller.HomeScreenController" style="-fx-background-color: #FFFFFF">
+            fx:controller="com.scholarly.utme.controller.PQScreenController" style="-fx-background-color: #FFFFFF">
    <left>
       <VBox prefHeight="400.0" prefWidth="200.0" BorderPane.alignment="CENTER" style="-fx-background-color: #1B68AF;">
          <children>
@@ -40,29 +40,30 @@
    </left>
 
    <center>
-      <Panel>
-         <top>
-            <HBox spacing="15" alignment="CENTER_LEFT">
-               <Button fx:id="backButton" style="-fx-background-color: #E7F7E9; -fx-cursor: hand;" onMouseClicked="#homeTextClicked"/>
-               <Label fx:id="pageTitle" textFill="#034801"/>
-               <padding>
-                  <Insets top="20" left="20" bottom="20"/>
-               </padding>
+      <StackPane>
+         <Panel>
+            <top>
+               <HBox spacing="15" alignment="CENTER_LEFT">
+                  <Button fx:id="backButton" style="-fx-background-color: #E7F7E9; -fx-cursor: hand;" onMouseClicked="#homeTextClicked"/>
+                  <Label fx:id="pageTitle" textFill="#034801"/>
+                  <padding>
+                     <Insets top="20" left="20" bottom="20"/>
+                  </padding>
+               </HBox>
+            </top>
+
+            <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Separator orientation="VERTICAL" prefHeight="500.0" />
+                  <StackPane fx:id="contentPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="592.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #FFFFFF;">
+                     <HBox.margin>
+                        <Insets bottom="10"/>
+                     </HBox.margin>
+                  </StackPane>
+               </children>
             </HBox>
-         </top>
-
-         <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <children>
-               <Separator orientation="VERTICAL" prefHeight="500.0" />
-               <StackPane fx:id="contentPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="592.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #FFFFFF;">
-                  <HBox.margin>
-                     <Insets bottom="10"/>
-                  </HBox.margin>
-               </StackPane>
-            </children>
-         </HBox>
-
-      </Panel>
+         </Panel>
+         <ProgressIndicator fx:id="progressBar" maxWidth="150" maxHeight="50" StackPane.alignment="CENTER" visible="false"/>
+      </StackPane>
    </center>
-
 </BorderPane>
