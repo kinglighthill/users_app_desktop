@@ -67,6 +67,8 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
 
             PreferencesManager.initialize();
 
+            PreferencesManager.put(PREF_KEY_APP_TYPE, "WAEC");
+
             ViewSwitcher.setStage(stage);
             System.out.println(TAG_DEV + "Time taken to set stage -> " + (System.currentTimeMillis() - startDisplay) + "ms");
             stage.setOnCloseRequest(event -> {

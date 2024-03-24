@@ -128,9 +128,9 @@ public class PQScreenControllerWaec implements FxmlView<PQScreenWaecVM>, Initial
             if (newValue) {
                 pageTitle.setText("CBT Game");
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
-//                boolean removed = subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
-//                if (removed)
-//                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() * 2);
+                boolean removed = subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
+                if (removed)
+                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() * 2);
                 selectButton(subjectListView, cbtGameButton);
             }
         });

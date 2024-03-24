@@ -97,11 +97,7 @@ public class QuestionDescriptionDao {
     private static void updateQuestionDescriptionsFromDb() {
         String query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUES_DESCRIPTIONS;
 
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-
-            ResultSet rs = statement.executeQuery();
+        try(ResultSet rs = databaseService.executeQuery(query)) {
             questionDescriptions.clear();
             while (rs.next()) {
                 questionDescriptions.add(new QuestionDescription(
@@ -113,7 +109,7 @@ public class QuestionDescriptionDao {
 
 //            System.out.println(TAG + "Got questions descriptions with size -> " + questionDescriptions.size());
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Question descriptions from database because " + e.getMessage());

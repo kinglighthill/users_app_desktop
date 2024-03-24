@@ -8,14 +8,14 @@ public class TheoryQuestion implements Question {
     private int subjectId;
     private int yearId;
     private int topicId;
-    private int questionNumber;
+    private String questionNumber;
     private int questionDescriptionId;
     private String question;
     private QuestionAnswer questionAnswer;
     private int isExplanationWebView;
     private int isQuestionWebView;
 
-    public TheoryQuestion(int id, int subjectId, int yearId, int topicId, int questionNumber, int questionDescriptionId, String question, QuestionAnswer questionAnswer, int isExplanationWebView, int isQuestionWebView) {
+    public TheoryQuestion(int id, int subjectId, int yearId, int topicId, String questionNumber, int questionDescriptionId, String question, QuestionAnswer questionAnswer, int isExplanationWebView, int isQuestionWebView) {
         Id = id;
         this.subjectId = subjectId;
         this.yearId = yearId;
@@ -44,7 +44,7 @@ public class TheoryQuestion implements Question {
         return topicId;
     }
 
-    public int getQuestionNumber() {
+    public String getQuestionNumber() {
         return questionNumber;
     }
 

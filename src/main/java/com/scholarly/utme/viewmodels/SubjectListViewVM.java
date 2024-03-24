@@ -61,9 +61,9 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
         Task<Boolean> subjectTask = new Task<>() {
             @Override
             protected Boolean call() {
-                objectiveSubjects.addAll(SubjectDao.getFavoriteSubjects().stream().map(favoriteSubject -> new SubjectListItemVM(new PQSubject(favoriteSubject.getId(), favoriteSubject.getSubjectId(), favoriteSubject.getMinutesAllotted(), favoriteSubject.getOrder(), favoriteSubject.getTitle(), favoriteSubject.getShortTitle(), favoriteSubject.getColorCode(), favoriteSubject.isSelected()))).toList());
+                objectiveSubjects.addAll(SubjectDao.getObjFavoriteSubjects().stream().map(favoriteSubject -> new SubjectListItemVM(new PQSubject(favoriteSubject.getId(), favoriteSubject.getSubjectId(), favoriteSubject.getMinutesAllotted(), favoriteSubject.getOrder(), favoriteSubject.getTitle(), favoriteSubject.getShortTitle(), favoriteSubject.getColorCode(), favoriteSubject.isSelected()))).toList());
 
-                theorySubjects.addAll(SubjectDao.getTheorySubjects().stream().map(SubjectListItemVM::new).toList());
+                theorySubjects.addAll(SubjectDao.getTheoryFavoriteSubjects().stream().map(favoriteSubject -> new SubjectListItemVM(new PQSubject(favoriteSubject.getId(), favoriteSubject.getSubjectId(), favoriteSubject.getMinutesAllotted(), favoriteSubject.getOrder(), favoriteSubject.getTitle(), favoriteSubject.getShortTitle(), favoriteSubject.getColorCode(), favoriteSubject.isSelected()))).toList());
 
                 objectiveSubjects.forEach(vm -> disposables.add(
                         vm.getSubjectState()
@@ -135,7 +135,7 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
         if (subject != null) {
             objectiveSubjects.forEach(vm -> {
                 if (vm.getSubject().getSubjectId() == subject.getSubjectId()) {
-                    vm.selectSubject(true);
+                    vm.selectSubject(SubjectListItemVM.Type.OBJECTIVE);
                     vm.setSubject(subject);
                 }
             });

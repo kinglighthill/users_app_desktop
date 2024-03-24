@@ -39,6 +39,7 @@ public class Constants {
     public static final String PREF_VALUE_THEORY_TAB = "THEORY";
 
     // Session Preference Constants
+    public static final String PREF_KEY_APP_TYPE = "SCH_APP_TYPE";
     public static final String PREF_KEY_FIRST_TIME_USER = "SCH_FIRST_TIME_USER";
     public static final String PREF_KEY_LAST_SELECTED_PRACTICE = "SCH_LAST_SELECTED_PRACTICE";
 

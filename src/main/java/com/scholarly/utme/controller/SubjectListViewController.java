@@ -93,41 +93,34 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             }
         };
 
-        Task<ViewListCellFactory<SubjectListItemVM>> theorySubjectTask = new Task<>() {
-            @Override
-            protected ViewListCellFactory<SubjectListItemVM> call() {
-                return CachedViewModelCellFactory.create(vm -> {
-                    vm.setType(SubjectListItemVM.Type.THEORY);
-                    vm.populateYearsList();
-                    return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
-                });
-            }
-        };
+//        Task<ViewListCellFactory<SubjectListItemVM>> theorySubjectTask = new Task<>() {
+//            @Override
+//            protected ViewListCellFactory<SubjectListItemVM> call() {
+//                return CachedViewModelCellFactory.create(vm -> {
+//                    vm.setType(SubjectListItemVM.Type.THEORY);
+//                    vm.populateYearsList();
+//                    return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
+//                });
+//            }
+//        };
 
         viewModel.getSubjectLoaded().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 executorService.execute(objectiveSubjectTask);
-                executorService.execute(theorySubjectTask);
+//                executorService.execute(theorySubjectTask);
                 executorService.shutdown();
-
-                String lastSelectedTab = PreferencesManager.get(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
-
-                if (lastSelectedTab.equalsIgnoreCase(PREF_VALUE_OBJECTIVE_TAB)){
-                    tabMenu.getSelectionModel().select(objectiveTab);
-                } else if (lastSelectedTab.equalsIgnoreCase(PREF_VALUE_THEORY_TAB)){
-                    tabMenu.getSelectionModel().select(theoryTab);
-                }
 
                 viewModel.getSelectedObjectiveSubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
                     selectedObjectiveSubjects.clear();
                     selectedObjectiveSubjects.addAll(viewModel.getSelectedObjectiveSubjects().values());
+                    questionOverviewTable.setItems(selectedObjectiveSubjects);
                 });
 
-                viewModel.getSelectedTheorySubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
-                    selectedTheorySubjects.clear();
-                    selectedTheorySubjects.addAll(viewModel.getSelectedTheorySubjects().values());
-
-                });
+//                viewModel.getSelectedTheorySubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
+//                    selectedTheorySubjects.clear();
+//                    selectedTheorySubjects.addAll(viewModel.getSelectedTheorySubjects().values());
+//
+//                });
 
                 viewModel.getSelectedSubjectAllottedTime().addListener((MapChangeListener<? super String, ? super Integer>) change -> {
                     int totalTime = viewModel.getSelectedSubjectAllottedTime().values().stream().reduce(0, Integer::sum);
@@ -153,8 +146,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                     }
                 }));
 
-                questionOverviewTable.setItems(selectedObjectiveSubjects);
-
                 subjectColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getSubject().getTitle()));
 
                 yearColumn.setCellValueFactory( param -> new SimpleStringProperty(param.getValue().getSelectedYear().getShortDescription()));
@@ -178,12 +169,14 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             objectiveList.setItems(viewModel.getObjectiveSubjects());
         });
 
-        theorySubjectTask.setOnSucceeded(event -> {
-            theoryList.setCellFactory(theorySubjectTask.valueProperty().getValue());
-            theoryList.setSelectionModel(new NoSelectionModel<>());
-            theoryList.setFocusTraversable(false);
-            theoryList.setItems(viewModel.getTheorySubjects());
-        });
+//        theorySubjectTask.setOnSucceeded(event -> {
+//            hideProgressBar();
+//
+//            theoryList.setCellFactory(theorySubjectTask.valueProperty().getValue());
+//            theoryList.setSelectionModel(new NoSelectionModel<>());
+//            theoryList.setFocusTraversable(false);
+//            theoryList.setItems(viewModel.getTheorySubjects());
+//        });
 
         theoryTab.setDisable(true);
 
@@ -344,11 +337,11 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         activateInvisibleButton.fire();
     }
 
-    public enum SubjectListOption {
-        PRACTICE,
-        STUDY,
-        CBT_GAME
-    }
+//    public enum SubjectListOption {
+//        PRACTICE,
+//        STUDY,
+//        CBT_GAME
+//    }
 
     public void dispose() {
         viewModel.invalidateSubjectStates();

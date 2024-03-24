@@ -4,6 +4,7 @@ import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.PQTopic;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
+import com.scholarly.utme.viewmodels.SubjectListViewWaecVM;
 import de.saxsys.mvvmfx.*;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -53,6 +54,8 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
 
     SubjectListViewController subjectListViewController;
 
+    SubjectListViewControllerWaec subjectListViewControllerWaec;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initializeViews();
@@ -60,7 +63,10 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
         subjectListViewController = subjectListViewTuple.getCodeBehind();
 
-//        System.out.println("Subject " + viewModel.getSubjectTableName() + " color name -> " + viewModel.getSubjectColorName());
+        ViewTuple<SubjectListViewControllerWaec, SubjectListViewWaecVM> subjectListViewWaecTuple = FluentViewLoader.fxmlView(SubjectListViewControllerWaec.class).load();
+        subjectListViewControllerWaec = subjectListViewWaecTuple.getCodeBehind();
+
+//        System.out.println(TAG + "Subject " + viewModel.getShortTitle() + " color name -> " + viewModel.getSubjectColorName());
         subjectImageBackground.setStyle("-fx-background-radius: 8 0 0 8; -fx-background-color: " + viewModel.getSubjectColorName());
         try {
             subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/" + viewModel.getShortTitle() + "_image.png").toString()));
@@ -102,6 +108,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
                     yearChoiceBox.getSelectionModel().clearSelection();
                     yearChoiceBox.getSelectionModel().select(freeYears.get(0));
                     subjectListViewController.showActivateDialog();
+                    subjectListViewControllerWaec.showActivateDialog();
                 }
             }
 

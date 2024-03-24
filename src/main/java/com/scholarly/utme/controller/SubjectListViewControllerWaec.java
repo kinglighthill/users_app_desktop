@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.async.PQScreen;
 import com.scholarly.utme.controller.practice_screens.CBTGameScreenController;
 import com.scholarly.utme.controller.practice_screens.PracticeScreenController;
 import com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController;
@@ -40,7 +41,7 @@ import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/SubjectListViewWaec.fxml")
 public class SubjectListViewControllerWaec implements FxmlView<SubjectListViewWaecVM>, Initializable {
-    private static final String TAG = "SubjectListViewController:  ";
+    private static final String TAG = "SubjectListViewControllerWaec:  ";
 
     @InjectViewModel
     private SubjectListViewWaecVM viewModel;
@@ -120,12 +121,13 @@ public class SubjectListViewControllerWaec implements FxmlView<SubjectListViewWa
                 viewModel.getSelectedObjectiveSubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
                     selectedObjectiveSubjects.clear();
                     selectedObjectiveSubjects.addAll(viewModel.getSelectedObjectiveSubjects().values());
+                    questionOverviewTable.setItems(selectedObjectiveSubjects);
                 });
 
                 viewModel.getSelectedTheorySubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
                     selectedTheorySubjects.clear();
                     selectedTheorySubjects.addAll(viewModel.getSelectedTheorySubjects().values());
-
+                    questionOverviewTable.setItems(selectedTheorySubjects);
                 });
 
                 viewModel.getSelectedSubjectAllottedTime().addListener((MapChangeListener<? super String, ? super Integer>) change -> {
@@ -152,8 +154,6 @@ public class SubjectListViewControllerWaec implements FxmlView<SubjectListViewWa
                     }
                 }));
 
-                questionOverviewTable.setItems(selectedObjectiveSubjects);
-
                 subjectColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getSubject().getTitle()));
 
                 yearColumn.setCellValueFactory( param -> new SimpleStringProperty(param.getValue().getSelectedYear().getShortDescription()));
@@ -169,12 +169,21 @@ public class SubjectListViewControllerWaec implements FxmlView<SubjectListViewWa
         });
 
         objectiveSubjectTask.setOnSucceeded(event -> {
+            hideProgressBar();
+
             objectiveList.setCellFactory(objectiveSubjectTask.valueProperty().getValue());
             objectiveList.setSelectionModel(new NoSelectionModel<>());
             objectiveList.setFocusTraversable(false);
             objectiveList.setItems(viewModel.getObjectiveSubjects());
+        });
 
+        theorySubjectTask.setOnSucceeded(event -> {
             hideProgressBar();
+
+            theoryList.setCellFactory(theorySubjectTask.valueProperty().getValue());
+            theoryList.setSelectionModel(new NoSelectionModel<>());
+            theoryList.setFocusTraversable(false);
+            theoryList.setItems(viewModel.getTheorySubjects());
         });
 
         initializeViews();
@@ -186,34 +195,35 @@ public class SubjectListViewControllerWaec implements FxmlView<SubjectListViewWa
 //        if (mySubjects.isEmpty()) {
 //            subjectListVBox.getChildren().removeAll(mySubjectsLabel, mySubjectsObjectiveList);
 //        }
+
 //        mySubjectsObjectiveList.setItems(mySubjects);
-        objectiveList.setItems(viewModel.getObjectiveSubjects());
-        theoryList.setItems(viewModel.getTheorySubjects());
-
-        ViewListCellFactory<SubjectListItemVM> objectiveCellFactory = CachedViewModelCellFactory.create(vm -> {
-            vm.setType(SubjectListItemVM.Type.OBJECTIVE);
-            vm.populateYearsList();
-            return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
-        });
-
-        ViewListCellFactory<SubjectListItemVM> theoryCellFactory = CachedViewModelCellFactory.create(vm -> {
-            vm.setType(SubjectListItemVM.Type.THEORY);
-            vm.populateYearsList();
-            return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
-        });
-
-//        mySubjectsObjectiveList.setCellFactory(objectiveCellFactory);
-        objectiveList.setCellFactory(objectiveCellFactory);
-        theoryList.setCellFactory(theoryCellFactory);
-
-//        mySubjectsObjectiveList.setSelectionModel(new NoSelectionModel<>());
-//        mySubjectsObjectiveList.setFocusTraversable(false);
-
-        objectiveList.setSelectionModel(new NoSelectionModel<>());
-        objectiveList.setFocusTraversable(false);
-
-        theoryList.setSelectionModel(new NoSelectionModel<>());
-        theoryList.setFocusTraversable(false);
+//        objectiveList.setItems(viewModel.getObjectiveSubjects());
+//        theoryList.setItems(viewModel.getTheorySubjects());
+//
+//        ViewListCellFactory<SubjectListItemVM> objectiveCellFactory = CachedViewModelCellFactory.create(vm -> {
+//            vm.setType(SubjectListItemVM.Type.OBJECTIVE);
+//            vm.populateYearsList();
+//            return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
+//        });
+//
+//        ViewListCellFactory<SubjectListItemVM> theoryCellFactory = CachedViewModelCellFactory.create(vm -> {
+//            vm.setType(SubjectListItemVM.Type.THEORY);
+//            vm.populateYearsList();
+//            return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
+//        });
+//
+////        mySubjectsObjectiveList.setCellFactory(objectiveCellFactory);
+//        objectiveList.setCellFactory(objectiveCellFactory);
+//        theoryList.setCellFactory(theoryCellFactory);
+//
+////        mySubjectsObjectiveList.setSelectionModel(new NoSelectionModel<>());
+////        mySubjectsObjectiveList.setFocusTraversable(false);
+//
+//        objectiveList.setSelectionModel(new NoSelectionModel<>());
+//        objectiveList.setFocusTraversable(false);
+//
+//        theoryList.setSelectionModel(new NoSelectionModel<>());
+//        theoryList.setFocusTraversable(false);
 
         ObservableList<Integer> hours = FXCollections.observableArrayList();
         ObservableList<Integer> minutes = FXCollections.observableArrayList();
@@ -258,11 +268,13 @@ public class SubjectListViewControllerWaec implements FxmlView<SubjectListViewWa
                      PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PAST_QUESTION_SCREEN.getName());
                     initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
 //                    initialData = new StudyPastQuestScreenController2.InitialData(subjectStates);
+                     PQScreen.logOut();
                     ViewSwitcher.passData(initialData);
                     ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
                 } else if (selectedOption == SubjectListOption.CBT_GAME) {
                      PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.CBT_GAME_SCREEN.getName());
                     initialData = new CBTGameScreenController.InitialData(subjectStates, false, false);
+                     PQScreen.logOut();
                     ViewSwitcher.passData(initialData);
                     ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
                 }
@@ -276,6 +288,7 @@ public class SubjectListViewControllerWaec implements FxmlView<SubjectListViewWa
                          if (selectedOption == SubjectListOption.PRACTICE) {
                              PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
                              initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
+                             PQScreen.logOut();
                              ViewSwitcher.passData(initialData);
                              ViewSwitcher. showScreen(View.PRACTICE_SCREEN);
                          }
@@ -384,13 +397,13 @@ public class SubjectListViewControllerWaec implements FxmlView<SubjectListViewWa
 
     private void hideProgressBar() {
         subjectsPane.setVisible(true);
-        progressBar.setVisible(false);
+//        progressBar.setVisible(false);
         isLoadingDone.setValue(true);
     }
 
     private void showProgressBar() {
         isLoadingDone.setValue(false);
         subjectsPane.setVisible(false);
-        progressBar.setVisible(true);
+//        progressBar.setVisible(true);
     }
 }
