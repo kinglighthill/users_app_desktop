@@ -24,9 +24,9 @@ public class ViewSwitcher {
             MainApplication.timeTakenTo("start showing screen (" + view.getControllerClass().getSimpleName() + ")");
 //            MainApplication.logInfo("Loading " + view.getControllerClass().getName());
             Class<? extends FxmlView<? extends ViewModel>> myClass = view.getControllerClass();
-            MainApplication.timeTakenTo("get class");
+            MainApplication.timeTakenTo("get class " + view.getControllerClass());
             FluentViewLoader.FxmlViewStep<? extends FxmlView<? extends ViewModel>, ? extends ViewModel> step = FluentViewLoader.fxmlView(myClass);
-            MainApplication.timeTakenTo("get step");
+            MainApplication.timeTakenTo("get step " + step);
             ViewTuple<? extends FxmlView<? extends ViewModel>, ? extends ViewModel> tuple = step.load();
             MainApplication.timeTakenTo("get tuple");
             Parent root = tuple.getView();

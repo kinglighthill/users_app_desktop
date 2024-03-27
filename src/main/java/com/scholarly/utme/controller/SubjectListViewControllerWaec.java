@@ -1,10 +1,8 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.async.PQScreen;
 import com.scholarly.utme.controller.practice_screens.CBTGameScreenController;
 import com.scholarly.utme.controller.practice_screens.PracticeScreenController;
-//import com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController;
 import com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.*;
@@ -12,23 +10,22 @@ import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
-import de.saxsys.mvvmfx.*;
+import com.scholarly.utme.viewmodels.SubjectListViewWaecVM;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.FxmlPath;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
 import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -42,12 +39,12 @@ import java.util.concurrent.Executors;
 
 import static com.scholarly.utme.util.Constants.*;
 
-@FxmlPath("/layouts/SubjectListView.fxml")
-public class SubjectListViewController implements FxmlView<SubjectListViewVM>, Initializable {
-    private static final String TAG = "SubjectListViewController:  ";
+@FxmlPath("/layouts/SubjectListViewWaec.fxml")
+public class SubjectListViewControllerWaec implements FxmlView<SubjectListViewWaecVM>, Initializable {
+    private static final String TAG = "SubjectListViewControllerWaec:  ";
 
     @InjectViewModel
-    private SubjectListViewVM viewModel;
+    private SubjectListViewWaecVM viewModel;
 
     @FXML
     private ListView<SubjectListItemVM> mySubjectsObjectiveList, objectiveList, theoryList;
@@ -68,6 +65,8 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     @FXML
     Button startButton, activateInvisibleButton;
     @FXML
+    private ProgressIndicator progressBar;
+    @FXML
     private BorderPane subjectsPane;
 
     private SubjectListOption selectedOption;
@@ -82,6 +81,14 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         showProgressBar();
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
+        String lastSelectedTab = PreferencesManager.get(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
+
+        if (lastSelectedTab.equalsIgnoreCase(PREF_VALUE_OBJECTIVE_TAB)){
+            tabMenu.getSelectionModel().select(objectiveTab);
+        } else if (lastSelectedTab.equalsIgnoreCase(PREF_VALUE_THEORY_TAB)){
+            tabMenu.getSelectionModel().select(theoryTab);
+        }
+
         Task<ViewListCellFactory<SubjectListItemVM>> objectiveSubjectTask = new Task<>() {
             @Override
             protected ViewListCellFactory<SubjectListItemVM> call() {
@@ -93,21 +100,22 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             }
         };
 
-//        Task<ViewListCellFactory<SubjectListItemVM>> theorySubjectTask = new Task<>() {
-//            @Override
-//            protected ViewListCellFactory<SubjectListItemVM> call() {
-//                return CachedViewModelCellFactory.create(vm -> {
-//                    vm.setType(SubjectListItemVM.Type.THEORY);
-//                    vm.populateYearsList();
-//                    return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
-//                });
-//            }
-//        };
+        Task<ViewListCellFactory<SubjectListItemVM>> theorySubjectTask = new Task<>() {
+            @Override
+            protected ViewListCellFactory<SubjectListItemVM> call() {
+                return CachedViewModelCellFactory.create(vm -> {
+                    vm.setType(SubjectListItemVM.Type.THEORY);
+                    vm.populateYearsList();
+                    return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
+                });
+            }
+        };
 
         viewModel.getSubjectLoaded().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
+//                theoryList.setItems(viewModel.getTheorySubjects());
                 executorService.execute(objectiveSubjectTask);
-//                executorService.execute(theorySubjectTask);
+                executorService.execute(theorySubjectTask);
                 executorService.shutdown();
 
                 viewModel.getSelectedObjectiveSubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
@@ -116,11 +124,11 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                     questionOverviewTable.setItems(selectedObjectiveSubjects);
                 });
 
-//                viewModel.getSelectedTheorySubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
-//                    selectedTheorySubjects.clear();
-//                    selectedTheorySubjects.addAll(viewModel.getSelectedTheorySubjects().values());
-//
-//                });
+                viewModel.getSelectedTheorySubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
+                    selectedTheorySubjects.clear();
+                    selectedTheorySubjects.addAll(viewModel.getSelectedTheorySubjects().values());
+                    questionOverviewTable.setItems(selectedTheorySubjects);
+                });
 
                 viewModel.getSelectedSubjectAllottedTime().addListener((MapChangeListener<? super String, ? super Integer>) change -> {
                     int totalTime = viewModel.getSelectedSubjectAllottedTime().values().stream().reduce(0, Integer::sum);
@@ -169,19 +177,53 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             objectiveList.setItems(viewModel.getObjectiveSubjects());
         });
 
-//        theorySubjectTask.setOnSucceeded(event -> {
-//            hideProgressBar();
-//
-//            theoryList.setCellFactory(theorySubjectTask.valueProperty().getValue());
-//            theoryList.setSelectionModel(new NoSelectionModel<>());
-//            theoryList.setFocusTraversable(false);
-//            theoryList.setItems(viewModel.getTheorySubjects());
-//        });
+        theorySubjectTask.setOnSucceeded(event -> {
+            hideProgressBar();
 
-        theoryTab.setDisable(true);
+            theoryList.setCellFactory(theorySubjectTask.valueProperty().getValue());
+            theoryList.setSelectionModel(new NoSelectionModel<>());
+            theoryList.setFocusTraversable(false);
+            theoryList.setItems(viewModel.getTheorySubjects());
+        });
 
         initializeViews();
         initializeFonts();
+
+//        ObservableList<SubjectListItemVM> mySubjects = viewModel.getObjectiveSubjects().stream().filter(SubjectListItemVM::isFavoriteSubject).collect(Collectors.toCollection(FXCollections::observableArrayList));
+//        ObservableList<SubjectListItemVM> otherSubjects = viewModel.getObjectiveSubjects().stream().filter(subjectListItemVM -> !subjectListItemVM.isFavoriteSubject()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+
+//        if (mySubjects.isEmpty()) {
+//            subjectListVBox.getChildren().removeAll(mySubjectsLabel, mySubjectsObjectiveList);
+//        }
+
+//        mySubjectsObjectiveList.setItems(mySubjects);
+//        objectiveList.setItems(viewModel.getObjectiveSubjects());
+//        theoryList.setItems(viewModel.getTheorySubjects());
+//
+//        ViewListCellFactory<SubjectListItemVM> objectiveCellFactory = CachedViewModelCellFactory.create(vm -> {
+//            vm.setType(SubjectListItemVM.Type.OBJECTIVE);
+//            vm.populateYearsList();
+//            return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
+//        });
+//
+//        ViewListCellFactory<SubjectListItemVM> theoryCellFactory = CachedViewModelCellFactory.create(vm -> {
+//            vm.setType(SubjectListItemVM.Type.THEORY);
+//            vm.populateYearsList();
+//            return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
+//        });
+//
+////        mySubjectsObjectiveList.setCellFactory(objectiveCellFactory);
+//        objectiveList.setCellFactory(objectiveCellFactory);
+//        theoryList.setCellFactory(theoryCellFactory);
+//
+////        mySubjectsObjectiveList.setSelectionModel(new NoSelectionModel<>());
+////        mySubjectsObjectiveList.setFocusTraversable(false);
+//
+//        objectiveList.setSelectionModel(new NoSelectionModel<>());
+//        objectiveList.setFocusTraversable(false);
+//
+//        theoryList.setSelectionModel(new NoSelectionModel<>());
+//        theoryList.setFocusTraversable(false);
 
         ObservableList<Integer> hours = FXCollections.observableArrayList();
         ObservableList<Integer> minutes = FXCollections.observableArrayList();
@@ -224,9 +266,9 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
                  if (selectedOption == SubjectListOption.STUDY) {
                      PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PAST_QUESTION_SCREEN.getName());
-                     initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
+                    initialData = new StudyPastQuestScreenController.InitialData(subjectStates);
 //                    initialData = new StudyPastQuestScreenController2.InitialData(subjectStates);
-                    PQScreen.logOut();
+                     PQScreen.logOut();
                     ViewSwitcher.passData(initialData);
                     ViewSwitcher.showScreen(View.STUDY_PAST_QUESTION_SCREEN);
                 } else if (selectedOption == SubjectListOption.CBT_GAME) {
@@ -241,7 +283,8 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                  if (!viewModel.getSelectedSubjectNumberOfQuestions().containsValue(0)) {
 
                      // Ensure time(hours and minutes) selected is greater than for CBT Practice
-                     if (hoursChoiceBox.getValue() != 0 || minutesChoiceBox.getValue() != 0) {
+                     if (hoursChoiceBox.getValue() != 0 || minutesChoiceBox.getValue() != 0){
+
                          if (selectedOption == SubjectListOption.PRACTICE) {
                              PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
                              initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
@@ -249,6 +292,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                              ViewSwitcher.passData(initialData);
                              ViewSwitcher. showScreen(View.PRACTICE_SCREEN);
                          }
+
                      } else {
                          Alerts.info(
                                  this.getClass(),
@@ -257,6 +301,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                                  "Select a time greater than 0"
                          ).show();
                      }
+
                  } else {
                      Integer value = 0;
                      List<String> subjects = viewModel.getSelectedSubjectNumberOfQuestions().entrySet().stream().filter(entry -> value.equals(entry.getValue())).map(Map.Entry::getKey).toList();
@@ -269,6 +314,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                      ).show();
 
                  }
+
             } else {
                 Alerts.info(
                         this.getClass(),
@@ -282,7 +328,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
     private void initializeViews() {
         tabMenu.widthProperty().addListener(((observable, oldValue, newValue) -> {
-            tabMenu.setTabMinWidth((Double) newValue);
+            tabMenu.setTabMinWidth((Double) newValue/2);
         }));
         tabMenu.setBackground(Background.EMPTY);
         hoursChoiceBox.setBackground(Background.EMPTY);
@@ -337,6 +383,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         activateInvisibleButton.fire();
     }
 
+
 //    public enum SubjectListOption {
 //        PRACTICE,
 //        STUDY,
@@ -350,11 +397,13 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
     private void hideProgressBar() {
         subjectsPane.setVisible(true);
+//        progressBar.setVisible(false);
         isLoadingDone.setValue(true);
     }
 
     private void showProgressBar() {
         isLoadingDone.setValue(false);
         subjectsPane.setVisible(false);
+//        progressBar.setVisible(true);
     }
 }

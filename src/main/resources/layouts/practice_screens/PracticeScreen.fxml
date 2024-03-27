@@ -163,9 +163,9 @@
                            </font>
                         </Label>
 
-                        <VBox fx:id="questionCenterVBox" prefHeight="200" style="-fx-background-color: #ffffff;">
+                        <VBox fx:id="objQuestionCenterVBox" prefHeight="200" style="-fx-background-color: #ffffff;">
 
-                           <ScrollPane fx:id="questionScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
+                           <ScrollPane fx:id="objScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
 
                               <VBox fx:id="questionVBox" spacing="15" alignment="CENTER">
                                  <HBox fx:id="questionDescriptionHBox">
@@ -198,7 +198,7 @@
                               </padding>
                            </ScrollPane>
 
-                           <WebView fx:id="questionWebView" minHeight="200" prefHeight="200.0" prefWidth="200.0"/>
+                           <WebView fx:id="questionWebView" minHeight="100" prefHeight="200.0" prefWidth="200.0"/>
 
                            <HBox fx:id="questionWithImageHBox" minHeight="250" prefHeight="200" prefWidth="300" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5">
                               <VBox fx:id="questionWithImageVBox" spacing="10" minHeight="300" prefHeight="200" prefWidth="300" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5">
@@ -212,6 +212,20 @@
                            <padding>
                               <Insets topRightBottomLeft="10"/>
                            </padding>
+                        </VBox>
+
+                        <VBox fx:id="theoryQuestionCenterVBox" prefHeight="200" alignment="TOP_CENTER">
+                           <ScrollPane fx:id="theoryScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
+                              <VBox>
+                                 <HBox fx:id="theoryQuestionHBox">
+                                    <Label fx:id="theoryQuestionLabel" wrapText="true" minHeight="50">
+                                       <font>
+                                          <Font name="Times New Roman" size="18.0"/>
+                                       </font>
+                                    </Label>
+                                 </HBox>
+                              </VBox>
+                           </ScrollPane>
                         </VBox>
 
                         <RadioButton fx:id="optionAButton" mnemonicParsing="false" prefHeight="24.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8; -fx-cursor: hand;">

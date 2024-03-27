@@ -1,17 +1,16 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.DatabaseService;
-import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.data.util.CRUDHelper;
 import com.scholarly.utme.data.util.Tables;
+import com.scholarly.utme.util.Helper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ListIterator;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,19 +43,22 @@ public class SubjectDao {
     private static final ObservableList<TheorySubject> theorySubjects;
     private static final ObservableList<NoteSubject> noteSubjects;
 
-    private static final ObservableList<FavoriteSubject> favoriteSubjects;
+    private static final ObservableList<FavoriteSubject> objFavoriteSubjects;
+    private static final ObservableList<FavoriteSubject> theoryFavoriteSubjects;
 
     static {
         subjects = FXCollections.observableArrayList();
         objectiveSubjects = FXCollections.observableArrayList();
         theorySubjects = FXCollections.observableArrayList();
         noteSubjects = FXCollections.observableArrayList();
-        favoriteSubjects = FXCollections.observableArrayList();
+        objFavoriteSubjects = FXCollections.observableArrayList();
+        theoryFavoriteSubjects = FXCollections.observableArrayList();
 //        updateSubjectsFromDB();
         updateObjectiveSubjectsFromDb();
         updateTheorySubjectsFromDb();
         updateNoteSubjectsFromDb();
-        updateFavoriteSubjectsFromDb();
+        updateObjFavoriteSubjectsFromDb();
+        updateTheoryFavoriteSubjectsFromDb();
     }
 
     public static String getSubjectName(String subjectShortTitle) {
@@ -76,6 +78,7 @@ public class SubjectDao {
         }
     }
 
+    // TODO: Add an isFavorite field to ObjectiveSubject and TheorySubject Model to make them look like FavoriteSubject Model, reducing complexity in FavoriteSubject logic
     private static void updateObjectiveSubjectsFromDb() {
         String query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_SUBJECTS + " JOIN " + Tables.SUBJECTS + " ON " + Tables.PQ_OBJECTIVE_SUBJECTS + ".subject_id = " + Tables.SUBJECTS + "._id ORDER BY 'order'";
         System.out.println(TAG + "Objective Subjects Query -> " + query);
@@ -105,6 +108,7 @@ public class SubjectDao {
 
     private static void updateTheorySubjectsFromDb() {
         String query = "SELECT * FROM " + Tables.PQ_THEORY_SUBJECTS + " JOIN " + Tables.SUBJECTS + " ON " + Tables.PQ_THEORY_SUBJECTS + ".subject_id = " + Tables.SUBJECTS + "._id ORDER BY 'order'";
+        System.out.println(TAG + "Theory Subjects Query -> " + query);
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
             theorySubjects.clear();
@@ -117,9 +121,11 @@ public class SubjectDao {
                         rs.getInt(orderColumn),
                         rs.getString(titleColumn),
                         rs.getString(shortTitleColumn),
-                        rs.getString(descriptionColumn),
-                        rs.getString(colorCodeColumn)));
+                        rs.getString(colorCodeColumn),
+                        rs.getString(descriptionColumn)));
             }
+
+//            System.out.println(TAG + "Got Theory Subjects of size -> " + theorySubjects.size() + " and first index -> " + Helper.toString(theorySubjects.get(0)));
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
@@ -153,9 +159,10 @@ public class SubjectDao {
         }
     }
 
-    private static void updateFavoriteSubjectsFromDb() {
+    //TODO: This is unnecessary, ObjectiveSubjects and TheorySubjects should rather be returned with an isFavorite field
+    private static void updateObjFavoriteSubjectsFromDb() {
         for (ObjectiveSubject objectiveSubject : objectiveSubjects) {
-            favoriteSubjects.add(new FavoriteSubject(
+            objFavoriteSubjects.add(new FavoriteSubject(
                     objectiveSubject.getId(),
                     objectiveSubject.getSubjectId(),
                     objectiveSubject.getMinutesAllotted(),
@@ -164,6 +171,22 @@ public class SubjectDao {
                     objectiveSubject.getShortTitle(),
                     objectiveSubject.getColorCode(),
                     objectiveSubject.getDescription(),
+                    false
+            ));
+        }
+    }
+
+    private static void updateTheoryFavoriteSubjectsFromDb() {
+        for (TheorySubject theorySubject : theorySubjects) {
+            theoryFavoriteSubjects.add(new FavoriteSubject(
+                    theorySubject.getId(),
+                    theorySubject.getSubjectId(),
+                    theorySubject.getMinutesAllotted(),
+                    theorySubject.getOrder(),
+                    theorySubject.getTitle(),
+                    theorySubject.getShortTitle(),
+                    theorySubject.getColorCode(),
+                    theorySubject.getDescription(),
                     false
             ));
         }
@@ -230,8 +253,12 @@ public class SubjectDao {
         return FXCollections.unmodifiableObservableList(objectiveSubjects);
     }
 
-    public static ObservableList<FavoriteSubject> getFavoriteSubjects() {
-        return FXCollections.unmodifiableObservableList(favoriteSubjects);
+    public static ObservableList<FavoriteSubject> getObjFavoriteSubjects() {
+        return FXCollections.unmodifiableObservableList(objFavoriteSubjects);
+    }
+
+    public static ObservableList<FavoriteSubject> getTheoryFavoriteSubjects() {
+        return FXCollections.unmodifiableObservableList(theoryFavoriteSubjects);
     }
 
     public static ObservableList<TheorySubject> getTheorySubjects() {

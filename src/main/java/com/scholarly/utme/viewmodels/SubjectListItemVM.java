@@ -6,6 +6,7 @@ import com.scholarly.utme.data.dao.YearsDao;
 import com.scholarly.utme.data.dao.newDb.TopicDao;
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.*;
+import com.scholarly.utme.util.Helper;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -64,7 +65,6 @@ public class SubjectListItemVM implements ViewModel {
     }
 
     private SimpleStringProperty subjectName = new SimpleStringProperty("");
-    private SimpleStringProperty subjectTableName = new SimpleStringProperty("");
     private SimpleStringProperty subjectShortTitle = new SimpleStringProperty("");
     private SimpleStringProperty subjectColorName = new SimpleStringProperty("");
     private ObservableList<Year> years;
@@ -86,6 +86,7 @@ public class SubjectListItemVM implements ViewModel {
     private BehaviorSubject<SubjectState> subjectState = BehaviorSubject.create();
 
     public SubjectListItemVM(PQSubject subject) {
+//        System.out.println(TAG + "Subject -> " + Helper.toString(subject));
         this.subject = subject;
         subjectName.set(subject.getTitle());
         subjectShortTitle.set(subject.getShortTitle());
@@ -138,11 +139,12 @@ public class SubjectListItemVM implements ViewModel {
         shuffleOptions.set(false);
     }
 
-    public void selectSubject(boolean value) {
-        type = Type.OBJECTIVE;
-        subjectSelected.set(value);
-        shuffleQuestions.set(!value);
-        shuffleOptions.set(!value);
+    public void selectSubject(Type subjectType) {
+//        type = Type.OBJECTIVE;
+        type = subjectType;
+        subjectSelected.set(true);
+        shuffleQuestions.set(false);
+        shuffleOptions.set(false);
         selectedTopicsProperty.set(topics.stream().map(PQTopic::getId).collect(Collectors.toList()));
         Year year = Objects.requireNonNull(new YearsDao().getAvailableYearsForSubject(type, subject.getId())).stream().filter(Year::isFree).toList().get(0);
         selectedYearProperty.set(year);
@@ -154,10 +156,6 @@ public class SubjectListItemVM implements ViewModel {
 
     public String getSubjectName() {
         return subjectName.get();
-    }
-
-    public String getSubjectTableName() {
-        return subjectTableName.get();
     }
 
     public String getShortTitle() {

@@ -74,7 +74,8 @@ public class LandingScreenHomeVM implements ViewModel {
             @Override
             protected Boolean call() {
                 favoriteSubjects = FXCollections.observableArrayList();
-                subjects = SubjectDao.getFavoriteSubjects();
+                // TODO: Based on comment in SubjectDao, this method should change to return either ObjectiveSubjects or TheorySubjects directly and then remodelled to FavoriteSubject based on isFavorite field
+                subjects = SubjectDao.getObjFavoriteSubjects();
 
                 ObservableList<SubjectCombination> subjectCombinations = SubjectDao.retrieveSubjectCombination(userId);
 
@@ -82,6 +83,7 @@ public class LandingScreenHomeVM implements ViewModel {
                     subject.setSelected(false);
                     subjectCombinations.forEach(subjectCombination -> {
                         if (subject.getSubjectId() == subjectCombination.getSubjectId()) {
+                            // TODO: When the preceding comments have been implemented there will be no need for having 'subjects' and 'favoriteSubjects', can be named any of each then returned in its getter
                             subject.setSelected(true);
                             favoriteSubjects.add(subject);
                         }

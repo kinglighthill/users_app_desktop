@@ -1,7 +1,9 @@
 package com.scholarly.utme.data.dao;
 
+import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.TheoryQuestion;
 import com.scholarly.utme.data.util.*;
+import com.scholarly.utme.util.Helper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -17,6 +19,8 @@ import static com.scholarly.utme.data.dao.ObjectiveQuestionDao.removeBracketsFro
 
 public class TheoryQuestionDao {
     private static final String TAG = "TheoryQuestionDao: ";
+
+    private static final DatabaseService databaseService = new DatabaseService();
 
     private static final String idColumn = "_id";
     private static final String subjectIdColumn = "subject_id";
@@ -44,17 +48,15 @@ public class TheoryQuestionDao {
         String query;
 
         if (!shuffled) {
-            query = "SELECT * FROM " + Tables.PQ_THEORY_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause;
+//            query = "SELECT * FROM " + Tables.PQ_THEORY_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause;
+            query = "SELECT * FROM " + Tables.PQ_THEORY_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId;
         } else {
-            query = "SELECT * FROM " + Tables.PQ_THEORY_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause + " ORDER BY RANDOM()";
+//            query = "SELECT * FROM " + Tables.PQ_THEORY_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause + " ORDER BY RANDOM()";
+            query = "SELECT * FROM " + Tables.PQ_THEORY_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + " ORDER BY RANDOM()";
         }
+//        System.out.println(TAG + "getQuestions Query -> " + query);
 
-//        System.out.println(TAG + "Query = " + query);
-
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
+        try(ResultSet rs = databaseService.executeQuery(query)) {
             questions.clear();
             while (rs.next()) {
                 questions.add(new TheoryQuestion(
@@ -62,7 +64,7 @@ public class TheoryQuestionDao {
                         rs.getInt(subjectIdColumn),
                         rs.getInt(yearIdColumn),
                         rs.getInt(topicIdColumn),
-                        rs.getInt(questionNumberColumn),
+                        rs.getString(questionNumberColumn),
                         rs.getInt(questionDescriptionIdColumn),
                         rs.getString(questionColumn),
                         new QuestionAnswer(-1, rs.getString(optionAnswerColumn), rs.getString(answerExplanationColumn)),
@@ -70,11 +72,11 @@ public class TheoryQuestionDao {
                         rs.getInt(isQuestionWebViewColumn)));
             }
 
-//            System.out.println(TAG + "Got Theory questions with size -> " + questions.size());
+            System.out.println(TAG + "Got Theory questions with size -> " + questions.size());
 
             return questions;
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Theory Questions from database because " + e.getMessage());
@@ -82,5 +84,6 @@ public class TheoryQuestionDao {
 
             return null;
         }
+
     }
 }

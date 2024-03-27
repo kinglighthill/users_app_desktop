@@ -23,6 +23,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -58,7 +59,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     @FXML
     private HBox answerHeaderHBox, rightPane, quesDescriptionHBox, questionWithImageHBox, questionDescriptionHBox, questionLabelHBox;
     @FXML
-    private VBox centerVBox, rightVBox, questionDescriptionDialog, explanationVBox, questionCenterVBox, questionVBox;
+    private VBox centerVBox, rightVBox, questionDescriptionDialog, explanationVBox, questionCenterVBox, questionVBox, optionsVBox;
     @FXML
     private TilePane tilePane;
     @FXML
@@ -352,32 +353,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         hideAnswerButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
     }
 
-    public void onCalculatorClicked(MouseEvent mouseEvent) {
-        Stage calculatorStage = new Stage();
-
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/layouts/CalculatorView.fxml"));
-            Scene scene = new Scene(root);
-
-            Image appIcon = new Image(getClass().getResource("/drawable/app_logo.png").toString());
-            calculatorStage.getIcons().add(appIcon);
-
-            calculatorStage.setTitle("Calculator");
-            calculatorStage.setResizable(false);
-            calculatorStage.setScene(scene);
-            calculatorStage.initOwner(ViewSwitcher.getRootScene().getWindow());
-
-            calculatorStage.setX(ViewSwitcher.getRootScene().getWidth() / 1.3);
-            calculatorStage.setY(ViewSwitcher.getRootScene().getHeight() / 2.7);
-
-            calculatorStage.showAndWait();
-
-        } catch (Exception e) {
-            System.out.println(TAG + "Cannot create scene because " + e.getMessage());
-        }
-    }
-
     private void setupQuestionView(PQSubject selectedSubject) {
+        System.out.println(TAG + "Setup QuestionView called!");
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(selectedSubject.getShortTitle());
         List<QuestionState> questions = subjectQuestionsState.getQuestions();
         int selectedQuestionNumber = subjectQuestionsState.getSelectedQuestion();
@@ -415,12 +392,13 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             Helper.loadOption(getClass(), optionC, currentQuestion.getOptionC().getText(), " (C) ", optionWebViewBC);
             Helper.loadOption(getClass(), optionD, currentQuestion.getOptionD().getText(), " (D) ", optionWebViewBC);
 
+            explanationTitle.setText("Explanation");
 //            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
             String correctAnswer = currentQuestion.getQuestionAnswer().getAnswer();
             showCorrectAnswer(correctAnswer, Helper.isWebView(correctAnswer));
 
             String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
-//            explanationVBox.getChildren().clear();
+
             if (explanationText.contains("<img")) {
 //                explanationVBox.getChildren().addAll(explanationTitle, explanationWebView);
 //                String questionWithImageText = parseExplanationWithImageView(explanationText);
@@ -436,16 +414,35 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
             String questionText = currentQuestion.getQuestion();
-//            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+            questionText = questionText.replaceAll("<br>", System.lineSeparator());
 
-            centerVBox.getChildren().removeAll(optionA, optionB, optionC, optionD);
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
+            questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+
+            if (questionText.contains("<img")) {
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
+                if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
+                    questionCenterVBox.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText, Helper.isWebView(currentQuestion, true));
+            } else {
+                loadTheoryQuestion(questionText, Helper.isWebView(currentQuestion, true));
+            }
+
+            centerVBox.getChildren().removeAll(optionsVBox);
+
+            answerHeaderHBox.getChildren().remove(showExplanationButton);
+            answerHeaderHBox.setAlignment(Pos.CENTER);
 
             rightVBox.getChildren().remove(answerPane);
 
-//            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
-            answerHeaderHBox.getChildren().remove(showExplanationButton);
+            explanationTitle.setText("Answer");
             String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
             explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+            if (explanationText.contains("<img")) {
+                loadExplanationWithImage(explanationText, Helper.isWebView(explanationText));
+            } else {
+                loadExplanation(explanationText, Helper.isWebView(explanationText));
+            }
 
         }
 
@@ -486,6 +483,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             Helper.loadOption(getClass(), optionC, currentQuestion.getOptionC().getText(), " (C) ", optionWebViewBC);
             Helper.loadOption(getClass(), optionD, currentQuestion.getOptionD().getText(), " (D) ", optionWebViewBC);
 
+            explanationTitle.setText("Explanation");
+
 //            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
             String correctAnswer = currentQuestion.getQuestionAnswer().getAnswer();
             showCorrectAnswer(correctAnswer, Helper.isWebView(correctAnswer));
@@ -509,11 +508,34 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
             String questionText = currentQuestion.getQuestion();
-//            questionLabel.setText(questionText.replaceAll("<br>", System.lineSeparator()));
+            questionText = questionText.replaceAll("<br>", System.lineSeparator());
 
-            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
+            questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+
+            if (questionText.contains("<img")) {
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
+                if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
+                    questionCenterVBox.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText, Helper.isWebView(currentQuestion, currentQuestion.getIsQuestionWebView() != 1));
+            } else {
+                loadTheoryQuestion(questionText, Helper.isWebView(currentQuestion, currentQuestion.getIsQuestionWebView() != 1));
+            }
+
+            centerVBox.getChildren().removeAll(optionsVBox);
+
+            rightVBox.getChildren().remove(answerPane);
+
+            explanationTitle.setText("Answer");
+
             String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
             explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+
+            if (explanationText.contains("<img")) {
+                loadExplanationWithImage(explanationText, Helper.isWebView(explanationText));
+            } else {
+                loadExplanation(explanationText, Helper.isWebView(explanationText));
+            }
 
         }
 
@@ -564,6 +586,22 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
                 questionCenterVBox.getChildren().add(questionLabelHBox);
             }
             questionLabel.setText(questionText);
+        }
+    }
+
+    private void loadTheoryQuestion(String question, boolean webView) {
+        if (webView) {
+            questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView, questionWithImageHBox);
+            questionCenterVBox.getChildren().add(questionWebView);
+
+            String content = Helper.loadLatex(getClass(), question);
+            questionWebView.getEngine().loadContent(content);
+            questionWebView.setMinHeight(200);
+        } else {
+            questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView, questionWithImageHBox);
+            questionCenterVBox.getChildren().add(questionScrollPane);
+
+            questionLabel.setText(question);
         }
     }
 
@@ -631,11 +669,37 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     }
 
     private void showQuestionWithImage(String questionWithImageText, boolean isWebView) {
+//        System.out.println(TAG + "Question with image -> " + questionWithImageText);
         questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText, isWebView);
     }
 
     private String parseExplanationWithImageView(String explanationWithImageText) {
         return Helper.parsePQImageUrl(getClass(), explanationWithImageText);
+    }
+
+    public void onCalculatorClicked(MouseEvent mouseEvent) {
+        Stage calculatorStage = new Stage();
+
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/layouts/CalculatorView.fxml"));
+            Scene scene = new Scene(root);
+
+            Image appIcon = new Image(getClass().getResource("/drawable/app_logo.png").toString());
+            calculatorStage.getIcons().add(appIcon);
+
+            calculatorStage.setTitle("Calculator");
+            calculatorStage.setResizable(false);
+            calculatorStage.setScene(scene);
+            calculatorStage.initOwner(ViewSwitcher.getRootScene().getWindow());
+
+            calculatorStage.setX(ViewSwitcher.getRootScene().getWidth() / 1.3);
+            calculatorStage.setY(ViewSwitcher.getRootScene().getHeight() / 2.7);
+
+            calculatorStage.showAndWait();
+
+        } catch (Exception e) {
+            System.out.println(TAG + "Cannot create scene because " + e.getMessage());
+        }
     }
 
     private void updateBookmarkIcon() {
@@ -678,7 +742,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         QuestionState questionState = questionsState.getQuestions().get(questionsState.getSelectedQuestion() - 1);
 
         if (!questionState.isShowExplanation() && !questionState.isShowAnswer()) {
-//            System.out.println(TAG + "showing default explanation view");
+            System.out.println(TAG + "not showing answer or explanation view");
+
             showAnswerButton.setDisable(false);
             showExplanationButton.setDisable(false);
             explanationTitle.setVisible(false);
@@ -692,8 +757,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             hideAnswerButton.setVisible(false);
 
         } else if (questionState.isShowExplanation()) {
+            System.out.println(TAG + "showing explanation and answer view");
 
-//            System.out.println(TAG + "showing explanation and answer view");
             explanationTitle.setVisible(true);
             explanationScrollPane.setVisible(true);
             explanationLabel.setVisible(true);
@@ -705,13 +770,15 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             correctAnswerTitle.setVisible(true);
             showAnswerButton.setDisable(true);
 
-            hideAnswerButton.setText("Hide Explanation");
+            if (explanationTitle.getText().contains("Answer"))
+                hideAnswerButton.setText("Hide Answer");
+            else
+                hideAnswerButton.setText("Hide Explanation");
             hideAnswerButton.setVisible(true);
 
-
         } else if (questionState.isShowAnswer()) {
+            System.out.println(TAG + "showing show answer view alone");
 
-//            System.out.println(TAG + "showing show answer view alone");
             correctAnswerLabel.setVisible(true);
             correctAnswerTitle.setVisible(true);
             showAnswerButton.setDisable(true);
@@ -779,8 +846,9 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.YES) {
                 dialogDimmer.setVisible(false);
-                ViewSwitcher.passData(new PQScreenController.InitialData(Screens.PAST_QUESTION_SCREEN, null));
-                ViewSwitcher.showScreen(View.PQ_SCREEN);
+                Helper.moveToPQScreen(Screens.PAST_QUESTION_SCREEN, null);
+//                ViewSwitcher.passData(new PQScreenController.InitialData(Screens.PAST_QUESTION_SCREEN, null));
+//                ViewSwitcher.showScreen(View.PQ_SCREEN);
             }
             dialogDimmer.setVisible(false);
             return buttonType;

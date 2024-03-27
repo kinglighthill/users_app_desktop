@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class SubjectListViewVM implements ViewModel, SceneLifecycle {
+public class SubjectListViewWaecVM implements ViewModel, SceneLifecycle {
     private static final String TAG = "SubjectListViewVM: ";
 
     private final ObservableList<SubjectListItemVM> objectiveSubjects = FXCollections.observableArrayList();
@@ -55,7 +55,7 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
 
     private final SimpleBooleanProperty subjectLoaded = new SimpleBooleanProperty();
 
-    public SubjectListViewVM() {
+    public SubjectListViewWaecVM() {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
 
         Task<Boolean> subjectTask = new Task<>() {
