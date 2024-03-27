@@ -143,7 +143,7 @@ public class Alerts {
         VBox innerVBox = new VBox(15);
         innerVBox.getChildren().addAll(hBox1, hBox2, hBox3, hBox4, hBox5);
 
-        Button activateNowButton = new Button("Activate Now (N2000)");
+        Button activateNowButton = new Button("Activate Now (N3000)");
         activateNowButton.setPrefSize(200, 45);
         activateNowButton.setTextFill(Paint.valueOf("#FFFFFF"));
         activateNowButton.setStyle("-fx-background-color: #12AF20; -fx-background-radius: 8;");

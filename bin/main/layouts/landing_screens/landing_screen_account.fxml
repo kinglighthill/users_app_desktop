@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenAccountController">
+    <BorderPane prefHeight="400.0" prefWidth="600.0">
+
+        <top>
+            <VBox>
+                <HBox prefHeight="60" alignment="CENTER_LEFT">
+                    <Label text="Account" textFill="#053500">
+                        <font>
+                            <Font name="Gill Sans MT Bold" size="24"/>
+                        </font>
+                    </Label>
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </HBox>
+                <Separator/>
+            </VBox>
+        </top>
+
+        <center>
+            <AnchorPane>
+                <ScrollPane fitToWidth="true" style="-fx-background-color: white;"
+                            AnchorPane.topAnchor="20" AnchorPane.rightAnchor="250" AnchorPane.bottomAnchor="100" AnchorPane.leftAnchor="30">
+                    <VBox spacing="15">
+                        <Panel fx:id="profilePanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8; -fx-cursor: hand;">
+                            <left>
+                                <HBox spacing="15" alignment="CENTER">
+                                    <ImageView fx:id="profileImage"  pickOnBounds="true"/>
+                                    <VBox spacing="5" alignment="CENTER_LEFT">
+                                        <Label fx:id="emailText" text="ogbonnalucy@gmail.com">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="deviceIdLabel" textFill="#12AF20">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                </HBox>
+                            </left>
+                            <right>
+                                <HBox alignment="CENTER">
+                                    <ImageView fx:id="accountExpandIcon"/>
+                                </HBox>
+                            </right>
+                            <padding>
+                                <Insets top="20" left="20" bottom="20" right="30"/>
+                            </padding>
+                        </Panel>
+                        <Panel fx:id="settingsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8; -fx-cursor: hand;">
+                            <left>
+                                <HBox spacing="40" alignment="CENTER">
+                                    <ImageView fx:id="settingsImage" fitHeight="25" fitWidth="25" preserveRatio="true" pickOnBounds="true"/>
+                                    <VBox>
+                                        <Label text="Settings" textFill="#053500">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Choose your app preferences">
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <padding>
+                                        <Insets left="20"/>
+                                    </padding>
+                                </HBox>
+                            </left>
+                            <right>
+                                <HBox alignment="CENTER">
+                                    <ImageView fx:id="settingsExpandIcon" preserveRatio="true" pickOnBounds="true"/>
+                                </HBox>
+                            </right>
+                            <padding>
+                                <Insets top="20" left="20" bottom="20" right="30"/>
+                            </padding>
+                        </Panel>
+                        <!--<Panel fx:id="triviaPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                            <left>
+                                <HBox spacing="40" alignment="CENTER">
+                                    <ImageView fx:id="triviaImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <VBox>
+                                        <Label text="Trivia Ranking" textFill="#053500">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Insert description here" >
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <padding>
+                                        <Insets left="20"/>
+                                    </padding>
+                                </HBox>
+                            </left>
+                            <right>
+                                <HBox alignment="CENTER">
+                                    <ImageView fx:id="triviaExpandIcon"/>
+                                </HBox>
+                            </right>
+                            <padding>
+                                <Insets top="20" left="20" bottom="20" right="30"/>
+                            </padding>
+                        </Panel>
+                        <Panel fx:id="referralPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                            <left>
+                                <HBox spacing="40" alignment="CENTER">
+                                    <ImageView fx:id="referralsImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <VBox>
+                                        <Label text="Referrals" textFill="#053500">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Insert description here" >
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <padding>
+                                        <Insets left="20"/>
+                                    </padding>
+                                </HBox>
+                            </left>
+                            <right>
+                                <HBox alignment="CENTER">
+                                    <ImageView fx:id="referralsExpandIcon"/>
+                                </HBox>
+                            </right>
+                            <padding>
+                                <Insets top="20" left="20" bottom="20" right="30"/>
+                            </padding>
+                        </Panel>
+                        <Panel fx:id="activityPanel"  style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                            <left>
+                                <HBox spacing="40" alignment="CENTER">
+                                    <ImageView fx:id="activityImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <VBox>
+                                        <Label text="Activity" textFill="#053500">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Insert description here" >
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <padding>
+                                        <Insets left="20"/>
+                                    </padding>
+                                </HBox>
+                            </left>
+                            <right>
+                                <HBox alignment="CENTER">
+                                    <ImageView fx:id="activityExpandIcon"/>
+                                </HBox>
+                            </right>
+                            <padding>
+                                <Insets top="20" left="20" bottom="20" right="30"/>
+                            </padding>
+                        </Panel>
+                        <Panel fx:id="walletPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                            <left>
+                                <HBox spacing="40" alignment="CENTER">
+                                    <ImageView fx:id="walletImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <VBox>
+                                        <Label text="Wallet" textFill="#053500">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Insert description here" >
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <padding>
+                                        <Insets left="20"/>
+                                    </padding>
+                                </HBox>
+                            </left>
+                            <right>
+                                <HBox alignment="CENTER">
+                                    <ImageView fx:id="walletExpandIcon"/>
+                                </HBox>
+                            </right>
+                            <padding>
+                                <Insets top="20" left="20" bottom="20" right="30"/>
+                            </padding>
+                        </Panel>-->
+                        <!--<Panel fx:id="bookmarksPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                            <left>
+                                <HBox spacing="40" alignment="CENTER">
+                                    <ImageView fx:id="bookmarkImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <VBox>
+                                        <Label text="Bookmarks" textFill="#053500">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Insert description here" >
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <padding>
+                                        <Insets left="20"/>
+                                    </padding>
+                                </HBox>
+                            </left>
+                            <right>
+                                <HBox alignment="CENTER">
+                                    <ImageView fx:id="bookmarkExpandIcon" preserveRatio="true" pickOnBounds="true"/>
+                                </HBox>
+                            </right>
+                            <padding>
+                                <Insets top="20" left="20" bottom="20" right="30"/>
+                            </padding>
+                        </Panel>-->
+                        <!--<Panel fx:id="notificationsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                            <left>
+                                <HBox spacing="40" alignment="CENTER">
+                                    <ImageView fx:id="notificationImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <VBox>
+                                        <Label text="Notifications" textFill="#053500">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Insert description here" >
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <padding>
+                                        <Insets left="20"/>
+                                    </padding>
+                                </HBox>
+                            </left>
+                            <right>
+                                <HBox alignment="CENTER">
+                                    <ImageView fx:id="notificationExpandIcon" preserveRatio="true" pickOnBounds="true"/>
+                                </HBox>
+                            </right>
+                            <padding>
+                                <Insets top="20" left="20" bottom="20" right="30"/>
+                            </padding>
+                        </Panel>-->
+                        <!--<Panel fx:id="rewardsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                            <left>
+                                <HBox spacing="40" alignment="CENTER">
+                                    <ImageView fx:id="rewardsImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <VBox>
+                                        <Label text="Rewards" textFill="#053500">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Insert description here" >
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <padding>
+                                        <Insets left="20"/>
+                                    </padding>
+                                </HBox>
+                            </left>
+                            <right>
+                                <HBox alignment="CENTER">
+                                    <ImageView fx:id="rewardsExpandIcon"/>
+                                </HBox>
+                            </right>
+                            <padding>
+                                <Insets top="20" left="20" bottom="20" right="30"/>
+                            </padding>
+                        </Panel>
+                        <Panel fx:id="downloadsPanel" style="-fx-border-color: #CFCFCF; -fx-border-radius: 8;">
+                            <left>
+                                <HBox spacing="40" alignment="CENTER">
+                                    <ImageView fx:id="downloadsImage" preserveRatio="true" pickOnBounds="true"/>
+                                    <VBox>
+                                        <Label text="Downloads" textFill="#053500">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Insert description here" >
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <padding>
+                                        <Insets left="20"/>
+                                    </padding>
+                                </HBox>
+                            </left>
+                            <right>
+                                <HBox alignment="CENTER">
+                                    <ImageView fx:id="downloadsExpandIcon"/>
+                                </HBox>
+                            </right>
+                            <padding>
+                                <Insets top="20" left="20" bottom="20" right="30"/>
+                            </padding>
+                        </Panel>-->
+                    </VBox>
+                    <padding>
+                        <Insets right="15"/>
+                    </padding>
+                </ScrollPane>
+                <Button fx:id="logoutButton" prefWidth="250" text="Logout" textFill="#053500"
+                        style="-fx-background-color: #F4FFF5; -fx-background-radius: 7; -fx-cursor: hand;" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="30">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                    <padding>
+                        <Insets top="15" bottom="15" left="10" right="60"/>
+                    </padding>
+                </Button>
+            </AnchorPane>
+        </center>
+
+    </BorderPane>
+    <Pane fx:id="dialogDimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
+</StackPane>
+

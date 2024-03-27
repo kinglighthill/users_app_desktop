@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.novel_screens.NovelScreenController"
+            prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;">
+
+    <BorderPane AnchorPane.topAnchor="1.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0">
+        <top>
+            <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9; -fx-cursor: hand;" onMouseClicked="#backButtonClicked"/>
+                <Label fx:id="pageTitle" text="Novels" textFill="#034801"/>
+                <padding>
+                    <Insets top="20" left="20" bottom="20"/>
+                </padding>
+            </HBox>
+        </top>
+
+        <center>
+            <ScrollPane fx:id="centerScrollPane" prefWidth="600" fitToWidth="true" fitToHeight="true">
+                <StackPane fx:id="centerStackPane" prefWidth="600" style="-fx-background-color: white;">
+                    <VBox fx:id="centerVBox" spacing="30" prefWidth="500">
+                        <VBox fx:id="novelPrompt" spacing="15" prefWidth="500" style="-fx-background-color: #F4FFF5; -fx-background-radius: 5;">
+                            <Label fx:id="infoText" text="NOTE: These books listed below represent both the new and old recommended literary texts. You are expected to study texts relevant to JAMB 2024 according to the JAMB syllabus" textFill="#053500" wrapText="true"/>
+                            <HBox spacing="15" alignment="CENTER_LEFT">
+                                <RadioButton fx:id="dontShowButton" text="Don't show again" textFill="#053500" style="-fx-cursor: hand;"/>
+                                <Button fx:id="dismissButton" text="Dismiss" textFill="white" style="-fx-background-color: #12AF20; -fx-cursor: hand;"/>
+                            </HBox>
+                            <padding>
+                                <Insets topRightBottomLeft="15"/>
+                            </padding>
+                        </VBox>
+
+                        <VBox fx:id="novelsVBox" spacing="30"/>
+                        <padding>
+                            <Insets top="20" left="18" bottom="20" right="20"/>
+                        </padding>
+                    </VBox>
+                    <ProgressIndicator fx:id="progressBar" maxWidth="150" maxHeight="50" StackPane.alignment="CENTER" visible="false"/>
+                </StackPane>
+            </ScrollPane>
+        </center>
+
+        <right>
+            <HBox spacing="20">
+                <Separator orientation="VERTICAL" />
+                <VBox spacing="20" prefHeight="600" prefWidth="300">
+                    <ImageView fx:id="novelImage" fitWidth="180" fitHeight="230" preserveRatio="true" pickOnBounds="true"/>
+                    <Label fx:id="novelDescription" prefHeight="180" wrapText="true"/>
+                    <Separator/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ImageView fx:id="authorIcon" preserveRatio="true" pickOnBounds="true" visible="false"/>
+                        <Label fx:id="authorLabel"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ImageView fx:id="chaptersIcon" preserveRatio="true" pickOnBounds="true" visible="false"/>
+                        <Label fx:id="chaptersLabel"/>
+                    </HBox>
+                    <!--<HBox spacing="10" alignment="CENTER_LEFT">
+                        <ImageView fx:id="timeIcon" preserveRatio="true" pickOnBounds="true" visible="false"/>
+                        <Label fx:id="timeText"/>
+                    </HBox>-->
+
+                    <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5; -fx-cursor: hand;" visible="false"/>
+
+                    <padding>
+                        <Insets top="20"/>
+                    </padding>
+                </VBox>
+
+                <padding>
+                    <Insets right="20"/>
+                </padding>
+            </HBox>
+        </right>
+
+    </BorderPane>
+</AnchorPane>
+

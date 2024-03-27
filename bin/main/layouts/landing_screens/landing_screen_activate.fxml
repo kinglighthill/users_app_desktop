@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import jidefx.scene.control.field.NumberField?>
+<?import com.scholarly.utme.ui.utils.CustomNumberField?>
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenActivateController"
+           prefHeight="400.0" prefWidth="600.0">
+
+    <BorderPane>
+        <top>
+            <VBox>
+                <HBox prefHeight="60" alignment="CENTER_LEFT">
+                    <Label text="Activate" textFill="#053500">
+                        <font>
+                            <Font name="Gill Sans MT Bold" size="24"/>
+                        </font>
+                    </Label>
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </HBox>
+                <Separator/>
+            </VBox>
+        </top>
+
+        <center>
+            <AnchorPane prefWidth="500" prefHeight="400" style="-fx-background-color: white;">
+                <VBox fx:id="centerVBox" spacing="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="30">
+                    <StackPane fx:id="notActivatedPane" style="-fx-background-color: rgba(223, 56, 102, 0.2); -fx-background-radius: 5;">
+                        <HBox spacing="5" prefHeight="80" alignment="CENTER">
+                            <Label text="Your app has not been activated" textFill="#FF0046">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </Label>
+                            <ImageView fx:id="padlockIcon" preserveRatio="true" pickOnBounds="true"/>
+                        </HBox>
+                        <StackPane.margin>
+                            <Insets topRightBottomLeft="30"/>
+                        </StackPane.margin>
+                    </StackPane>
+
+                    <AnchorPane style="-fx-border-color: #F1F1F1; -fx-border-radius: 5;">
+                        <VBox fx:id="innerVBox" spacing="40" alignment="CENTER_LEFT" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="50">
+                            <Label fx:id="headerLabel" prefWidth="700" textFill="#053500" wrapText="true">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+                            <VBox spacing="10">
+                                <Label text="Enter Pin">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <CustomNumberField fx:id="activationPinTextField" prefHeight="40" maxWidth="500" promptText="Enter activation pin here">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </CustomNumberField>
+                                <Button fx:id="activateButton" text="Activate" textFill="white" prefWidth="500" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets top="5"/>
+                                    </VBox.margin>
+                                </Button>
+                            </VBox>
+                            <Label fx:id="activationText" text="NOTE: Activation unlocks all Notes, Past Questions and Novels" textFill="#FA0000">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+                        </VBox>
+                    </AnchorPane>
+                </VBox>
+            </AnchorPane>
+        </center>
+
+        <right>
+            <AnchorPane prefWidth="400" prefHeight="400" style="-fx-background-color: white;">
+                <HBox alignment="CENTER" style="-fx-background-color: #F4FFF5; -fx-background-radius: 5;"
+                      AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20">
+                    <VBox spacing="30" alignment="TOP_CENTER">
+                        <Label text="Buy activation pins" textFill="#053500">
+                            <font>
+                                <Font size="18"/>
+                            </font>
+                        </Label>
+                        <ImageView fx:id="atmCardImage" preserveRatio="true" pickOnBounds="true"/>
+                        <VBox alignment="CENTER">
+                            <Label text="Don't have activation pin?">
+                                <font>
+                                    <Font size="16"/>
+                                </font>
+                            </Label>
+                            <Label text="Get one below">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </Label>
+                        </VBox>
+                        <Button fx:id="buyPinButton" text="Buy Pins Here" prefWidth="250" prefHeight="35" textFill="#053500" style="-fx-background-color: #FCB029; -fx-background-radius: 5; -fx-cursor: hand;">
+                            <font>
+                                <Font size="14"/>
+                            </font>
+                        </Button>
+                        <VBox spacing="10" alignment="CENTER">
+                            <VBox spacing="5">
+                                <Label text="Need help? Chat us on WhatsApp" textFill="#053500" wrapText="true">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="whatsAppNumber" text="+2348136941462" textFill="#12AF20" wrapText="true" style="-fx-cursor: hand;">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+                            </VBox>
+                            <VBox>
+                                <Label text="For customer support or bulk purchase of activation pins call +2348136941462" wrapText="true">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+                                <!--<Label fx:id="supportNumber" text="+2348136941462" wrapText="true">
+                                    <font>
+                                        <Font size="14" name="System Regular Bold"/>
+                                    </font>
+                                </Label>-->
+                            </VBox>
+                            <VBox.margin>
+                                <Insets left="50"/>
+                            </VBox.margin>
+                        </VBox>
+                        <HBox.margin>
+                            <Insets top="40"/>
+                        </HBox.margin>
+                    </VBox>
+                </HBox>
+            </AnchorPane>
+        </right>
+    </BorderPane>
+
+    <Pane fx:id="dialogDimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
+
+    <VBox fx:id="activationSuccessfulPane" spacing="30" maxWidth="400" maxHeight="350" alignment="TOP_CENTER" visible="false" style="-fx-background-color: white; -fx-background-radius: 10;" StackPane.alignment="TOP_CENTER">
+        <Panel>
+            <right>
+<!--                <ImageView fx:id="activationSuccessfulCloseIcon" fitWidth="30" fitHeight="30" preserveRatio="true" pickOnBounds="true"/>-->
+            </right>
+        </Panel>
+
+        <ImageView fx:id="activationSuccessfulImage" preserveRatio="true" pickOnBounds="true"/>
+
+        <Label fx:id="activationSuccessfulMessage" text="Your account has been activated successfully" textFill="#053500">
+            <font>
+                <Font size="16"/>
+            </font>
+        </Label>
+
+        <Button fx:id="continueButton" text="Continue" textFill="white" prefWidth="200" prefHeight="40" style="-fx-background-color: #12AF20; -fx-background-radius: 5; -fx-cursor: hand;">
+            <font>
+                <Font size="15"/>
+            </font>
+            <VBox.margin>
+                <Insets top="5"/>
+            </VBox.margin>
+        </Button>
+
+        <padding>
+            <Insets top="20" bottom="25" left="30" right="30"/>
+        </padding>
+        <StackPane.margin>
+            <Insets top="100" right="50"/>
+        </StackPane.margin>
+    </VBox>
+
+    <ProgressIndicator fx:id="progressBar" maxWidth="150" maxHeight="50" StackPane.alignment="CENTER" visible="false"/>
+
+</StackPane>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenAppsController"
+            prefHeight="400.0" prefWidth="600.0" >
+
+    <top>
+        <VBox>
+            <HBox prefHeight="60" alignment="CENTER_LEFT">
+                <Label text="Applications" textFill="#053500">
+                    <font>
+                        <Font name="Gill Sans MT Bold" size="24"/>
+                    </font>
+                </Label>
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </HBox>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <AnchorPane prefHeight="600" prefWidth="800">
+            <StackPane AnchorPane.leftAnchor="30" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="80" AnchorPane.bottomAnchor="30">
+                <ScrollPane fx:id="centerScrollPane" fitToWidth="true">
+                    <VBox fx:id="applicationsVBox" spacing="35">
+                        <StackPane maxWidth="300" minHeight="35" alignment="CENTER_LEFT">
+                            <TextField fx:id="searchTextField" maxWidth="300" minHeight="35" promptText="Enter a keyword">
+                                <font>
+                                    <Font size="15"/>
+                                </font>
+                            </TextField>
+                            <ImageView fx:id="searchIcon" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT">
+                                <StackPane.margin>
+                                    <Insets right="20"/>
+                                </StackPane.margin>
+                            </ImageView>
+                        </StackPane>
+
+                        <Panel prefHeight="100" prefWidth="500">
+                            <left>
+                                <Label fx:id="mobileAppsLabel" text="Mobile Apps">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                            </left>
+                            <right>
+                                <Button fx:id="mobileAppsButton" text="View all Mobile Apps" textFill="#053500" style="-fx-border-color: #053500; -fx-border-radius: 5; -fx-cursor: hand;">
+                                    <padding>
+                                        <Insets left="10" right="10" top="5" bottom="5"/>
+                                    </padding>
+                                </Button>
+                            </right>
+                            <bottom>
+                                <VBox prefWidth="700">
+                                    <TilePane fx:id="mobileAppsTile" prefHeight="50" maxHeight="50" hgap="15" vgap="10">
+                                        <padding>
+                                            <Insets top="10" left="15"/>
+                                        </padding>
+                                    </TilePane>
+                                </VBox>
+                            </bottom>
+                        </Panel>
+
+                        <Panel prefHeight="100" prefWidth="500">
+                            <left>
+                                <Label fx:id="desktopAppsLabel" text="Desktop Apps">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                            </left>
+                            <right>
+                                <Button fx:id="desktopAppsButton" text="View all Desktop Apps" textFill="#053500" style="-fx-border-color: #053500; -fx-border-radius: 5; -fx-cursor: hand;">
+                                    <padding>
+                                        <Insets left="10" right="10" top="5" bottom="5"/>
+                                    </padding>
+                                </Button>
+                            </right>
+                            <bottom>
+                                <VBox prefWidth="700">
+                                    <TilePane fx:id="desktopAppsTile" prefHeight="50" maxHeight="50" hgap="15" vgap="10" prefColumns="8">
+                                        <padding>
+                                            <Insets top="10" left="15"/>
+                                        </padding>
+                                    </TilePane>
+                                </VBox>
+                            </bottom>
+                        </Panel>
+                    </VBox>
+                    <padding>
+                        <Insets right="15"/>
+                    </padding>
+                </ScrollPane>
+
+                <HBox fx:id="noApplicationHBox" alignment="CENTER" visible="false">
+                    <VBox spacing="15" alignment="CENTER">
+                        <ImageView fx:id="noAppsImage" fitHeight="220" fitWidth="220"/>
+                        <Label text="Oops...No Item Available at the moment">
+                            <font>
+                                <Font size="20"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                </HBox>
+            </StackPane>
+
+        </AnchorPane>
+    </center>
+
+</BorderPane>

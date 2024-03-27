@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+
+    <graphic>
+        <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 8;">
+            <Panel>
+                <left>
+                    <ImageView fx:id="challengeImage"/>
+                </left>
+                <center>
+                    <VBox spacing="10">
+                        <VBox spacing="5">
+                            <Label text="Topic: Integration" textFill="#053500">
+                                <font>
+                                    <Font name="Gill Sans MT" size="18"/>
+                                </font>
+                            </Label>
+                            <Label text="Integral transforms" textFill="#053500">
+                                <font>
+                                    <Font name="Gill Sans MT" size="14"/>
+                                </font>
+                            </Label>
+                        </VBox>
+                        <Separator/>
+                        <HBox spacing="15">
+                            <Label text="300 Players online" prefWidth="70" wrapText="true">
+                                <font>
+                                    <Font name="Gill Sans MT" size="14"/>
+                                </font>
+                            </Label>
+                            <Separator orientation="VERTICAL" maxHeight="15"/>
+                            <Label text="50 Questions" textFill="#12AF20">
+                                <font>
+                                    <Font name="Gill Sans MT" size="14"/>
+                                </font>
+                            </Label>
+                        </HBox>
+                        <Panel>
+                            <left>
+                                <HBox spacing="5">
+                                    <ImageView fx:id="playerImage" fitWidth="30" fitHeight="30"/>
+                                    <VBox>
+                                        <Label text="Created by">
+                                            <font>
+                                                <Font name="Gill Sans MT" size="13"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Zuri Nzube">
+                                            <font>
+                                                <Font name="Gill Sans MT" size="14"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                </HBox>
+                            </left>
+                            <right>
+                                <VBox spacing="5" alignment="TOP_RIGHT">
+                                    <Button fx:id="statusButton" text="New" textFill="white">
+                                        <padding>
+                                            <Insets left="15" right="15"/>
+                                        </padding>
+                                    </Button>
+                                    <Label fx:id="statusText" text="Starting in 3 days" textFill="#EE8700" visible="false"/>
+                                    <padding>
+                                        <Insets left="15"/>
+                                    </padding>
+                                </VBox>
+
+                            </right>
+
+                        </Panel>
+                        <padding>
+                            <Insets left="15"/>
+                        </padding>
+                    </VBox>
+                </center>
+                <right>
+                    <RadioButton/>
+                </right>
+            </Panel>
+
+            <padding>
+                <Insets topRightBottomLeft="15"/>
+            </padding>
+        </VBox>
+    </graphic>
+
+</fx:root>

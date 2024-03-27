@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+
+    <graphic>
+        <Panel style="-fx-border-color: #CFCFCF; -fx-border-radius: 7;">
+            <left>
+                <VBox spacing="15">
+                    <Label fx:id="notificationDate" text="22ND FEB, 2022" textFill="#053500"/>
+                    <Label fx:id="notificationTitle" text="Customer activation sssdata table ready for export." textFill="#053500"/>
+                    <Label fx:id="notificationText" text="Non tempor eu ullamco veniam nulla ex. Sunt amet consectetur in pariatur amet incididunt." textFill="#053500"/>
+                </VBox>
+            </left>
+            <right>
+                <HBox alignment="CENTER">
+                    <ImageView fx:id="notificationOptionsIcon" preserveRatio="true" pickOnBounds="true"/>
+                </HBox>
+            </right>
+            <padding>
+                <Insets top="20" right="30" bottom="20" left="20"/>
+            </padding>
+        </Panel>
+    </graphic>
+
+</fx:root>
