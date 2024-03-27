@@ -15,7 +15,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class SQLiteDatabase implements AutoCloseable {
-    private static final String DB_RESOURCE_NAME = "/assets/databases/jamb_utme.db";
+    private static final String DB_RESOURCE_NAME = "/assets/databases/waec_ssce.db";
 
     @FunctionalInterface
     public interface SQLFunction<R> {

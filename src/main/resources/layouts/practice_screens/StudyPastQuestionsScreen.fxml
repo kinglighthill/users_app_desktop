@@ -223,7 +223,7 @@
 
                                 <VBox fx:id="questionCenterVBox" prefHeight="200" style="-fx-background-color: #ffffff;">
 
-                                    <ScrollPane fx:id="questionScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
+                                    <ScrollPane fx:id="questionScrollPane" fitToWidth="true" minHeight="250" style="-fx-background-color: white;">
 
                                         <VBox fx:id="questionVBox" spacing="15" alignment="CENTER">
                                             <HBox fx:id="questionDescriptionHBox">
@@ -266,65 +266,67 @@
                                     </padding>
                                 </VBox>
 
-                                <Panel prefHeight="17.0">
-                                    <left>
-                                        <HBox spacing="30" alignment="CENTER">
-                                            <Label fx:id="optionA" text="Label" textFill="#000000">
-                                                <font>
-                                                    <Font size="14.0"/>
-                                                </font>
-                                            </Label>
-                                        </HBox>
-                                    </left>
-                                    <padding>
-                                        <Insets bottom="10" right="10"/>
-                                    </padding>
-                                </Panel>
+                                <VBox fx:id="optionsVBox">
+                                    <Panel prefHeight="17.0">
+                                        <left>
+                                            <HBox spacing="30" alignment="CENTER">
+                                                <Label fx:id="optionA" text="Label" textFill="#000000">
+                                                    <font>
+                                                        <Font size="14.0"/>
+                                                    </font>
+                                                </Label>
+                                            </HBox>
+                                        </left>
+                                        <padding>
+                                            <Insets bottom="10" right="10"/>
+                                        </padding>
+                                    </Panel>
 
-                                <Panel prefHeight="17.0">
-                                    <left>
-                                        <HBox spacing="30" alignment="CENTER">
-                                            <Label fx:id="optionB" text="Label">
-                                                <font>
-                                                    <Font size="15.0"/>
-                                                </font>
-                                            </Label>
-                                        </HBox>
-                                    </left>
-                                    <padding>
-                                        <Insets bottom="10" right="10"/>
-                                    </padding>
-                                </Panel>
+                                    <Panel prefHeight="17.0">
+                                        <left>
+                                            <HBox spacing="30" alignment="CENTER">
+                                                <Label fx:id="optionB" text="Label">
+                                                    <font>
+                                                        <Font size="15.0"/>
+                                                    </font>
+                                                </Label>
+                                            </HBox>
+                                        </left>
+                                        <padding>
+                                            <Insets bottom="10" right="10"/>
+                                        </padding>
+                                    </Panel>
 
-                                <Panel prefHeight="17.0">
-                                    <left>
-                                        <HBox spacing="30" alignment="CENTER">
-                                            <Label fx:id="optionC" text="Label">
-                                                <font>
-                                                    <Font size="15.0"/>
-                                                </font>
-                                            </Label>
-                                        </HBox>
-                                    </left>
-                                    <padding>
-                                        <Insets bottom="10" right="10"/>
-                                    </padding>
-                                </Panel>
+                                    <Panel prefHeight="17.0">
+                                        <left>
+                                            <HBox spacing="30" alignment="CENTER">
+                                                <Label fx:id="optionC" text="Label">
+                                                    <font>
+                                                        <Font size="15.0"/>
+                                                    </font>
+                                                </Label>
+                                            </HBox>
+                                        </left>
+                                        <padding>
+                                            <Insets bottom="10" right="10"/>
+                                        </padding>
+                                    </Panel>
 
-                                <Panel prefHeight="17.0">
-                                    <left>
-                                        <HBox spacing="30" alignment="CENTER">
-                                            <Label fx:id="optionD" text="Label">
-                                                <font>
-                                                    <Font size="15.0"/>
-                                                </font>
-                                            </Label>
-                                        </HBox>
-                                    </left>
-                                    <padding>
-                                        <Insets right="10" bottom="10"/>
-                                    </padding>
-                                </Panel>
+                                    <Panel prefHeight="17.0">
+                                        <left>
+                                            <HBox spacing="30" alignment="CENTER">
+                                                <Label fx:id="optionD" text="Label">
+                                                    <font>
+                                                        <Font size="15.0"/>
+                                                    </font>
+                                                </Label>
+                                            </HBox>
+                                        </left>
+                                        <padding>
+                                            <Insets right="10" bottom="10"/>
+                                        </padding>
+                                    </Panel>
+                                </VBox>
 
                                 <!--<Separator prefWidth="200.0">
                                     <VBox.margin>

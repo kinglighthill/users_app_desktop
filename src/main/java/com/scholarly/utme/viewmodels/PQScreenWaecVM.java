@@ -1,6 +1,6 @@
 package com.scholarly.utme.viewmodels;
 
-import com.scholarly.utme.controller.PQScreenController;
+import com.scholarly.utme.controller.PQScreenControllerWaec;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.util.PreferencesManager;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -9,13 +9,13 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_LAST_SELECTED_PRACTICE;
 
-public class HomeScreenVM implements ViewModel, SceneLifecycle {
+public class PQScreenWaecVM implements ViewModel, SceneLifecycle {
     public static final String TAG = "HomeScreenVM: ";
 
-    private final SimpleObjectProperty<String> screenProperty = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<String> screenProperty = new SimpleObjectProperty();
+    private SimpleObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty();
 
-    public void processInitialData(PQScreenController.InitialData data) {
+    public void processInitialData(PQScreenControllerWaec.InitialData data) {
         String screen = PreferencesManager.get(PREF_KEY_LAST_SELECTED_PRACTICE, "");
         if (data.getPreviousScreen() != null) {
             screenProperty.set(data.getPreviousScreen().getName());

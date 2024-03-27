@@ -25,12 +25,12 @@ public class DbConnection {
 
             Path dbFile;
             if (Helper.isOsType(Helper.OS_TYPE.WIN)) {
-                dbFile = Path.of(System.getenv("LOCALAPPDATA"), "Scholarly JAMB CBT", "jamb_utme.db");
+                dbFile = Path.of(System.getenv("LOCALAPPDATA"), "Scholarly JAMB CBT", "waec_ssce.db");
             } else if (Helper.isOsType(Helper.OS_TYPE.MAC)) {
                 String pathUrl = System.getProperty("user.home") + "/Library/Application Support/";
-                dbFile = Path.of(pathUrl, "Scholarly JAMB CBT", "jamb_utme.db");
+                dbFile = Path.of(pathUrl, "Scholarly JAMB CBT", "waec_ssce.db");
             } else {
-                dbFile = Path.of(System.getProperty("user.home"), "Scholarly JAMB CBT", "jamb_utme.db");
+                dbFile = Path.of(System.getProperty("user.home"), "Scholarly JAMB CBT", "waec_ssce.db");
             }
 
             Files.createDirectories(dbFile.getParent());

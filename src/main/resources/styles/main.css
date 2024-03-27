@@ -57,6 +57,7 @@
 }
 .tab:selected {
     -fx-background-color: rgba(244, 255, 245, 1);
+    -fx-background-color: rgba(0, 0, 255, 0.4);
 }
 
 

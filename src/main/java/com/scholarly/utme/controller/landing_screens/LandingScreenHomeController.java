@@ -3,6 +3,7 @@ package com.scholarly.utme.controller.landing_screens;
 import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.async.PQScreen;
 import com.scholarly.utme.controller.PQScreenController;
+import com.scholarly.utme.controller.PQScreenControllerWaec;
 import com.scholarly.utme.controller.note_screens.NotesScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
 import com.scholarly.utme.data.model.listItems.NewsItem;
@@ -265,7 +266,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         profileImage.setOnMouseClicked(event -> ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN));
 
-        cbtPracticePanel.setOnMouseClicked(e -> moveToPQScreen(null, null));
+        cbtPracticePanel.setOnMouseClicked(e -> Helper.moveToPQScreen(null, null));
 
         novelsPanel.setOnMouseClicked(e -> {
             MainApplication.resetTime();
@@ -483,18 +484,10 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             panel.setOnMouseEntered(event -> ViewSwitcher.getRootScene().setCursor(Cursor.HAND));
             panel.setOnMouseExited(event -> ViewSwitcher.getRootScene().setCursor(Cursor.DEFAULT));
 
-            panel.setOnMouseClicked(event -> moveToPQScreen(Screens.PRACTICE_SCREEN, subject));
+            panel.setOnMouseClicked(event -> Helper.moveToPQScreen(Screens.PRACTICE_SCREEN, subject));
 
             favoriteSubjectsTile.getChildren().add(panel);
         });
-    }
-
-    private void moveToPQScreen(Screens previousScreen, PQSubject selectedSubject) {
-        MainApplication.resetTime();
-        PQScreen.getInstance();
-        ViewSwitcher.passData(new PQScreenController.InitialData(previousScreen, selectedSubject));
-        ViewSwitcher.showScreen(View.PQ_SCREEN);
-        MainApplication.timeTakenTo("show pq screen");
     }
 
     private boolean populateLastSession() {

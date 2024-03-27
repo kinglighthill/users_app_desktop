@@ -362,8 +362,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
             Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to quit?");
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
-                    ViewSwitcher.passData(new PQScreenController.InitialData(Screens.CBT_GAME_SCREEN, null));
-                    ViewSwitcher.showScreen(View.PQ_SCREEN);
+                    Helper.moveToPQScreen(Screens.CBT_GAME_SCREEN, null);
                     resultDialogDimmer.setVisible(false);
                 }
                 resultDialogDimmer.setVisible(false);

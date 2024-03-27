@@ -16,8 +16,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.scholarly.utme.MainApplication;
+import com.scholarly.utme.async.PQScreen;
+import com.scholarly.utme.controller.PQScreenController;
+import com.scholarly.utme.controller.PQScreenControllerWaec;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.TheoryQuestion;
+import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.ui.utils.Screens;
+import com.scholarly.utme.ui.utils.View;
+import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.sun.net.httpserver.HttpExchange;
 import io.reactivex.rxjava3.annotations.Nullable;
 import javafx.concurrent.Worker;
@@ -33,6 +40,7 @@ import javafx.scene.web.WebView;
 import javax.imageio.ImageIO;
 
 import static com.scholarly.utme.util.Constants.BASE_URL;
+import static com.scholarly.utme.util.Constants.PREF_KEY_APP_TYPE;
 
 public class Helper {
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
@@ -238,8 +246,26 @@ public class Helper {
         return inputCheck == 1 || matcher.find();
     }
 
-    public static boolean isWebView(TheoryQuestion question) {
-        return question.getIsQuestionWebView() == 1;
+    public static boolean isWebView(TheoryQuestion question, boolean checkQuestion) {
+        String input;
+        if (checkQuestion) {
+            input = question.getQuestion().replaceAll("<br>", "");
+        } else {
+            input = question.getQuestionAnswer().getExplanation();
+        }
+
+        String pattern = "<.*?>|&.*?;";
+        Pattern compiledPattern = Pattern.compile(pattern);
+        Matcher matcher = compiledPattern.matcher(input);
+
+        int inputCheck;
+        if (checkQuestion) {
+            inputCheck = question.getIsQuestionWebView();
+        } else {
+            inputCheck = question.getIsExplanationWebView();
+        }
+
+        return inputCheck == 1 || matcher.find();
     }
 
     public static String parsePQImageUrl(Class<?> mClass, String imageUrl) {
@@ -433,6 +459,20 @@ public class Helper {
             MainApplication.log(exception);
             callback.callback();
         }
+    }
+
+    public static void moveToPQScreen(Screens previousScreen, PQSubject selectedSubject) {
+        MainApplication.resetTime();
+        PQScreen.getInstance();
+        String APP_TYPE = PreferencesManager.get(PREF_KEY_APP_TYPE, "UTME");
+        if (APP_TYPE.equalsIgnoreCase("UTME")) {
+            ViewSwitcher.passData(new PQScreenController.InitialData(previousScreen, selectedSubject));
+            ViewSwitcher.showScreen(View.PQ_SCREEN);
+        } else if (APP_TYPE.equalsIgnoreCase("WAEC")) {
+            ViewSwitcher.passData(new PQScreenControllerWaec.InitialData(previousScreen, selectedSubject));
+            ViewSwitcher.showScreen(View.PQ_SCREEN_WAEC);
+        }
+        MainApplication.timeTakenTo("show pq screen");
     }
 
     public interface ErrorCallback {

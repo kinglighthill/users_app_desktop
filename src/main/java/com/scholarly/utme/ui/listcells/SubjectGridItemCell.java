@@ -11,6 +11,7 @@ import javafx.scene.layout.Background;
 import org.controlsfx.control.GridCell;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class SubjectGridItemCell extends GridCell<FavoriteSubject> {
     private static final String TAG = "SubjectGridItemCell: ";
@@ -49,7 +50,8 @@ public class SubjectGridItemCell extends GridCell<FavoriteSubject> {
         } else {
             subjectName.setText(item.getTitle());
             subjectName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-            subjectImage.setImage(new Image(getClass().getResource("/drawable/subject_images/" + item.getShortTitle() + "_image.png").toString()));
+//            System.out.println("GridItem shortTitle -> " + item.getShortTitle());
+            subjectImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/drawable/subject_images/" + item.getShortTitle() + "_image.png")).toString()));
 
             updateGreenTick(item);
 

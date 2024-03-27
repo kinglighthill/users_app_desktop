@@ -7,6 +7,7 @@ import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.newDb.TheoryQuestionDescription;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.Type;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -59,6 +60,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
         subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).toList());
 
+//        System.out.println(TAG + "Got initial data -> " + Helper.toString(data.questionData));
+
         data.questionData.forEach(subjectState -> {
             selectedSubjectYear.put(subjectState.getSubject().getShortTitle(), subjectState.getSelectedYear());
 
@@ -107,6 +110,8 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .stream()
                         .map(question -> new QuestionState(question, Type.THEORY, -1))
                         .collect(Collectors.toList());
+
+                System.out.println(TAG + "Got Theory Questions -> " + questionStates.size());
 
                 subjectsQuestions.put(subjectState.getSubject().getShortTitle(), new SubjectQuestionsState(1, 0, questionStates));
 

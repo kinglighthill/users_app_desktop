@@ -1,5 +1,6 @@
 package com.scholarly.utme.data.dao;
 
+import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.ObjectiveBookmark;
 import com.scholarly.utme.data.model.TheoryBookmark;
 import com.scholarly.utme.data.util.CRUDHelper;
@@ -18,6 +19,8 @@ import java.util.logging.Logger;
 public class TheoryBookmarkDao {
     private static final String TAG = "TheoryBookmarkDao: ";
 
+    private static final DatabaseService databaseService = new DatabaseService();
+
     private static final String idColumn = "_id";
     private static final String subjectIdColumn = "subject_id";
     private static final String yearIdColumn = "year_id";
@@ -29,10 +32,7 @@ public class TheoryBookmarkDao {
 
         String query = "SELECT * FROM " + Tables.BOOKMARKS_THEORY_QUESTIONS + " WHERE " + subjectIdColumn + " = " + subjectId;
 
-        try {
-            Connection connection = DbConnection.getDbConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
+        try(ResultSet rs = databaseService.executeQuery(query)) {
             bookmarks.clear();
             while (rs.next()) {
                 bookmarks.add(new TheoryBookmark(
@@ -46,7 +46,7 @@ public class TheoryBookmarkDao {
             System.out.println(TAG + "Got Theory bookmarks of length -> " + bookmarks.size() + " for subject with ID -> " + subjectId);
 
             return bookmarks;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load bookmarks from database because of " + e.getMessage());
