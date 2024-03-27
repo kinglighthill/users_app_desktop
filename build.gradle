@@ -9,7 +9,7 @@ plugins {
 }
 
 group 'com.scholarly.utme'
-version = '1.0.4'
+version = '1.0.5'
 
 repositories {
     mavenCentral()
@@ -28,7 +28,7 @@ sourceCompatibility = '16'
 targetCompatibility = '16'
 
 project.ext.buildDate = new Date()
-project.version = "1.0.4"
+project.version = "1.0.5"
 
 /*sourceSets {
     release {
@@ -261,3 +261,6 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+//2033
+//700

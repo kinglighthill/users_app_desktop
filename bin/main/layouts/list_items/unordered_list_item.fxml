@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.shape.Circle?>
+<?import javafx.geometry.Insets?>
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+    <graphic>
+        <HBox spacing="10">
+            <Circle fx:id="dot" radius="3.0">
+                <HBox.margin>
+                    <Insets top="7.0"/>
+                </HBox.margin>
+            </Circle>
+            <Label fx:id="itemText" wrapText="true"/>
+        </HBox>
+    </graphic>
+
+</fx:root>

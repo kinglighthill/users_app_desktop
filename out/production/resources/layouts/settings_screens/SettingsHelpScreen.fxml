@@ -175,7 +175,7 @@
 
                                 <TitledPane text="How can I activate my App?" textFill="#053500" expanded="false">
                                     <HBox alignment="CENTER_LEFT">
-                                        <Label text="To activate your app, you will need to pay a sum of #2000 using the payment methods provided">
+                                        <Label text="To activate your app, you will need to pay a sum of #3000 using the payment methods provided">
                                             <font>
                                                 <Font size="16"/>
                                             </font>

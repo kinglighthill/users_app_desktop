@@ -207,7 +207,7 @@
         </VBox>
 
         <HBox alignment="CENTER">
-            <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N2000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8;">
+            <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N3000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8;">
                 <font>
                     <Font size="16"/>
                 </font>

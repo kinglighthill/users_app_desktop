@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import org.controlsfx.glyphfont.Glyph?>
+<fx:root type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #F1F1F1;">
+
+    <graphic>
+        <VBox spacing="10" alignment="CENTER" >
+            <ImageView fx:id="playerImage" fitHeight="40" fitWidth="40" preserveRatio="true" pickOnBounds="true"/>
+            <Label fx:id="participantName" text="Uche Umeh" textFill="#053500" textAlignment="CENTER" wrapText="true"/>
+            <Label fx:id="numOfPoints" text="500 pts" textFill="#12AF20"/>
+            <ImageView fx:id="rankingBar" preserveRatio="true" pickOnBounds="true"/>
+        </VBox>
+    </graphic>
+
+</fx:root>
+

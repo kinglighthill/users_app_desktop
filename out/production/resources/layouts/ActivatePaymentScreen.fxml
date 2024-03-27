@@ -69,7 +69,7 @@
                             </Panel>
                             <VBox fx:id="bankTransferDetailsPane" spacing="25">
                                 <Separator/>
-                                <Label text="Walk into any Bank branch mentioned below or POS Agent's shop around you to make a deposit of N2000 into any of our accounts below. You can also use your Mobile App or USSD code to make a transfer into any of the accounts below." wrapText="true">
+                                <Label text="Walk into any Bank branch mentioned below or POS Agent's shop around you to make a deposit of N3000 into any of our accounts below. You can also use your Mobile App or USSD code to make a transfer into any of the accounts below." wrapText="true">
                                     <font>
                                         <Font size="14"/>
                                     </font>
