@@ -4,7 +4,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'org.javamodularity.moduleplugin' version '1.8.12'
     id 'org.beryx.jlink' version '2.25.0'
-    id 'signing'
+//    id 'signing'
 //    id 'org.sqlite'
 }
 
@@ -83,7 +83,7 @@ jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
         name = 'Scholarly Jamb CBT'
-        jvmArgs = ['-Djdk.gtk.version=2']
+//        jvmArgs = ['-Djdk.gtk.version=2']
     }
 
     jpackage {
