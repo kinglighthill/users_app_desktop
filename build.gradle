@@ -30,8 +30,8 @@ targetCompatibility = '16'
 project.ext.buildDate = new Date()
 project.version = "1.0.5"
 
-/*sourceSets {
-    release {
+sourceSets {
+    /*release {
         java {
             srcDirs 'src/main/java', 'src/release/java'
         }
@@ -41,8 +41,15 @@ project.version = "1.0.5"
         java {
             srcDirs 'src/main/java', 'src/debug/java'
         }
+    }*/
+
+    main {
+        resources {
+//            srcDirs 'src/main/resources', 'src/waec/resources'
+            srcDirs 'src/waec/resources'
+        }
     }
-}*/
+}
 
 tasks.register('stuffZip', Zip) {
     archiveBaseName = 'stuff'
@@ -77,6 +84,10 @@ mainClassName = "com.scholarly.utme.MainApplication"
 
 run {
     jvmArgs = ['-Djdk.gtk.version=2']
+}
+
+jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }
 
 jlink {
@@ -154,6 +165,18 @@ tasks.withType(JavaCompile) {
         options.encoding = 'utf-8'
     }
 }
+
+//tasks.withType(Jar) {
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//
+////    manifest {
+////        attributes["Main-Class"] = "MainKt"
+////    }
+////
+//    configurations["compileClasspath"].forEach { file: File ->
+//            from(zipTree(file.absoluteFile))
+//    }
+//}
 
 /*packagingOptions {
     exclude 'META-INF/LICENSE-LGPL-2.1.txt'
