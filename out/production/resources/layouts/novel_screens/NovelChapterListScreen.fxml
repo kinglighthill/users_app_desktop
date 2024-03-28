@@ -11,7 +11,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.novel_screens.NovelChapterListController"
+            fx:controller="com.scholarly.controller.novel_screens.NovelChapterListController"
              style="-fx-background-color: white;">
 
     <top>

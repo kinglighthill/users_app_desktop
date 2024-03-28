@@ -11,7 +11,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.settings_screens.SettingsAboutUsScreenController"
+            fx:controller="com.scholarly.controller.settings_screens.SettingsAboutUsScreenController"
             prefHeight="400.0" prefWidth="600.0">
 
     <top>
@@ -50,7 +50,7 @@
                             <Insets right="120"/>
                         </StackPane.margin>
                     </Button>
-                    <Label fx:id="versionLabel" text="Version 1.0" textFill="white" StackPane.alignment="BOTTOM_LEFT">
+                    <Label fx:id="versionLabel" textFill="white" StackPane.alignment="BOTTOM_LEFT">
                         <StackPane.margin>
                             <Insets left="110" bottom="20"/>
                         </StackPane.margin>

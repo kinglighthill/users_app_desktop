@@ -11,7 +11,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.settings_screens.SettingsAppInfoScreenController"
+            fx:controller="com.scholarly.controller.settings_screens.SettingsAppInfoScreenController"
             prefHeight="400.0" prefWidth="600.0">
 
     <top>

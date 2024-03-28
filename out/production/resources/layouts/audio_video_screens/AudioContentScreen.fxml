@@ -11,7 +11,7 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.audio_video_screens.AudioContentScreenController"
+            fx:controller="com.scholarly.controller.audio_video_screens.AudioContentScreenController"
             prefHeight="400.0" prefWidth="600.0">
 
     <top>

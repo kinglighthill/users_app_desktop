@@ -9,7 +9,7 @@
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.text.Font?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenTriviaController" prefHeight="800.0" prefWidth="1000.0">
+            fx:controller="com.scholarly.controller.landing_screens.LandingScreenTriviaController" prefHeight="800.0" prefWidth="1000.0">
 
     <top>
         <HBox prefHeight="70" style="-fx-background-color:white;"/>

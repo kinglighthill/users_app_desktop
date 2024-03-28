@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 
 <StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.scholarly.utme.controller.trivia_screens.TriviaChallengeQuizScreenController"
+           fx:controller="com.scholarly.controller.trivia_screens.TriviaChallengeQuizScreenController"
            prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #006B17;">
 
     <BorderPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #006B17;">

@@ -1,0 +1,82 @@
+{
+  "faqs": [
+    {
+      "faq_title": "Activation",
+      "faq_items": [
+        {
+          "question": "What is meant by the term 'Activate app'",
+          "answer": "To activate your app means to unlock and gain full access to all the app's contents."
+        },
+        {
+          "question": "How can I activate",
+          "answer": "To activate your app you will need to pay a sum of ₦3000 using the payment methods provided."
+        },
+        {
+          "question": "How do I make payment",
+          "answer": "You can pay with 3 options.\\n\\n1. Bank transfer/deposit: pay with any banking app or go to the bank to make payment. After payment you will need to send us an evidence of payment to our email scholarlyapp.ng@gmail.com\n\\n\\n2. Cards: this is done online within the app with your atm card and your app gets activated instantly.\n\\n\\n3. Online bank transfer: this is performed within the app with only your account number and does not require the use of atm card"
+        },
+        {
+          "question": "How long does the activation lasts",
+          "answer": "Your activation will last for one academic year. No recurrent subscription fee or hidden charges."
+        },
+        {
+          "question": "I cannot afford activation fee. What do I do",
+          "answer": "There is a limited opportunity for people to activate with just ₦1500 when they refer 5 friends to the app. Visit Profile > Invite Friends Promo for this offer."
+        },
+        {
+          "question": "Can activation be used in multiple devices",
+          "answer": "No, only one device per activation"
+        },
+        {
+          "question": "What is a Product Key",
+          "answer": "A product key is a unique 16 digits alphanumeric key that is used to identify a device"
+        }
+      ]
+    },
+    {
+      "faq_title": "How to use Scholarly UTME App",
+      "faq_items": [
+        {
+          "question": "How to check your performance",
+          "answer": "Go to 'Account' screen and click on 'My Performance'"
+        },
+        {
+          "question": "How to check your bookmarked questions",
+          "answer": "Go to 'Account' screen and click on 'My Saved Questions'"
+        },
+        {
+          "question": "How update your profile",
+          "answer": "Go to 'Account' screen and click on the card displaying your email and product key. Click 'Save' button after making changes to your profile"
+        },
+        {
+          "question": "How to share questions",
+          "answer": "Click on the share icon at the top left or bottom right corner. A dialog will appear, then select the platform you would like to share the question on. Make sure you accept all necessary permissions."
+        },
+        {
+          "question": "How to share your results",
+          "answer": "Click on the 'Share screenshot' button at the Result screen. A dialog will appear, then select the platform you would like to share the question on. Make sure you accept all necessary permissions."
+        },
+        {
+          "question": "How to report wrong questions, answers and explanation",
+          "answer": "Click on the report icon, the second item (first item for cbt game) at the top left corner or the third item at the bottom left corner. A bottomsheet dialog will appear. Tick and fill in the necessary fields and click the 'Submit' button"
+        },
+        {
+          "question": "How to refer a friend",
+          "answer": "Go to 'Account' screen and click on 'Invite Friends Promo' Click on the 'Share my referral link now' button to share your link via any social media patform or 'Copy link' button to copy your link."
+        },
+        {
+          "question": "How to turn off sounds and vibrations",
+          "answer": "Go to 'Settings' screen, under the 'Preference category', toggle off the 'Enable in app sound' and 'Enable vibrations' switches. Also within the Exam Screens, sound and vibrations can be turned off from the dropdown menu at the topmost right corner of the screens."
+        },
+        {
+          "question": "How to turn off notifications",
+          "answer": "Go to 'Settings' screen, under the 'Preference category', toggle off the 'Enable message notifications' switch"
+        },
+        {
+          "question": "How to change cbt game mode",
+          "answer": "At the 'CBT Game' screen, click at the 3 vertical dots check and uncheck the 'Show solution' menu item to determine the cbt game mode you prefer."
+        }
+      ]
+    }
+  ]
+}

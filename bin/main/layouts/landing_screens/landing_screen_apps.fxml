@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenAppsController"
+            fx:controller="com.scholarly.controller.landing_screens.LandingScreenAppsController"
             prefHeight="400.0" prefWidth="600.0" >
 
     <top>

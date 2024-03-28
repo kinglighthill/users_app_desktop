@@ -9,7 +9,7 @@
 
 
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.note_screens.NotesScreenController">
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.controller.note_screens.NotesScreenController">
 
    <StackPane fx:id="noteLayout" prefHeight="800" prefWidth="1000" AnchorPane.topAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0">
 

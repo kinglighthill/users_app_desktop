@@ -9,7 +9,7 @@
 <?import org.controlsfx.control.CheckListView?>
 <?import javafx.scene.text.Font?>
 <StackPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenHomeController">
+           fx:controller="com.scholarly.controller.landing_screens.LandingScreenHomeController">
 
     <BorderPane fx:id="rootPane" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
 
