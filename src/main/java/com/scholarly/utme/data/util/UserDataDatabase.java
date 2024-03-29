@@ -13,7 +13,8 @@ public class UserDataDatabase {
     /**
      * Location of database
      */
-    private static final String location = MainApplication.class.getResource("/assets/localDB.db").toExternalForm();
+//    private static final String location = MainApplication.class.getResource("/assets/localDB.db").toExternalForm();
+    private static final String location = MainApplication.class.getResource("/assets/databases/waec_ssce.db").toExternalForm();
 
 
     /**
