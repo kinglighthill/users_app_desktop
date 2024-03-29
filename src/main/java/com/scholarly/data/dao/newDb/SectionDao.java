@@ -1,7 +1,7 @@
 package com.scholarly.data.dao.newDb;
 
 
-import com.scholarly.data.DatabaseService;
+import com.scholarly.data.util.DatabaseService;
 import com.scholarly.data.model.newDb.NoteLastSession;
 import com.scholarly.data.model.newDb.NoteSection;
 import com.scholarly.data.model.newDb.Section;
@@ -23,7 +23,7 @@ public class SectionDao {
 
     private static final DatabaseService databaseService = new DatabaseService();
 
-    private static final String idColumn = "_id";
+    public static final String idColumn = "_id";
     private static final String subjectIdColumn = "subject_id";
     private static final String topicIdColumn = "topic_id";
     private static final String subtopicIdColumn = "sub_topic_id";
@@ -32,9 +32,9 @@ public class SectionDao {
     private static final String mainSectionOrderColumn = "main_section_order";
     private static final String childSectionOrderColumn = "child_section_order";
     private static final String contentViewTypeColumn = "content_view_type_id";
-    private static final String sectionIdColumn = "section_id";
-    private static final String sectionTitleColumn = "section_title";
-    private static final String userIdColumn = "uid";
+    public static final String sectionIdColumn = "section_id";
+    public static final String sectionTitleColumn = "section_title";
+    public static final String userIdColumn = "uid";
 
     private static final ObservableList<NoteSection> noteSections;
 

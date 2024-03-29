@@ -37,6 +37,7 @@ public class AppProperties {
     private String stagingClientID;
     private String prodClientID;
     private String paystackUrl;
+    private String welcomeTextOne;
 
     private ArrayList<FAQ> faqs = new ArrayList<>();
 
@@ -69,6 +70,7 @@ public class AppProperties {
             stagingClientID = properties.getProperty(PropertyKeys.STAGING_CLIENT_ID);
             prodClientID = properties.getProperty(PropertyKeys.PROD_CLIENT_ID);
             paystackUrl = properties.getProperty(PropertyKeys.PAYSTACK_URL);
+            welcomeTextOne = properties.getProperty(PropertyKeys.WELCOME_TEXT_ONE);
 
             loadFAQs("exam.json");
             loadFAQs("data.json");
@@ -201,6 +203,10 @@ public class AppProperties {
         return paystackUrl;
     }
 
+    public String getWelcomeTextOne() {
+        return welcomeTextOne;
+    }
+
     public ArrayList<FAQ> getFaqs() {
         return faqs;
     }
@@ -227,6 +233,7 @@ public class AppProperties {
         static String STAGING_CLIENT_ID = "stagingClientID";
         static String PROD_CLIENT_ID = "prodClientID";
         static String PAYSTACK_URL = "paystackURL";
+        static String WELCOME_TEXT_ONE = "welcomeTextOne";
     }
 
     private static class JsonKeys {

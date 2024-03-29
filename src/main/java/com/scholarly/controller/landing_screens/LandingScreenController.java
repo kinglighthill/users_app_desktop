@@ -21,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Pair;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
@@ -59,11 +60,11 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     private static final String HOVER_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FFFFFF; -fx-border-width: 0 0 0 0; -fx-cursor: hand;";
 
 
-    private static Parent homeView;
-    private static Parent accountView;
-    private static Parent activateView;
-    private static Parent appsView;
-    private static Parent settingsView;
+    private static Pair<LandingScreenHomeController, Parent> homeView;
+    private static Pair<LandingScreenAccountController, Parent> accountView;
+    private static Pair<LandingScreenActivateController, Parent> activateView;
+    private static Pair<LandingScreenAppsController, Parent> appsView;
+    private static Pair<LandingScreenSettingsController, Parent> settingsView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -100,6 +101,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
                 selectButton(settingsView, settingsButton);
             } else {
                 selectButton(homeView, homeButton);
+                refreshHomeLastSession(landingScreen);
             }
 
             landingScreen.getHomeView().addListener((observable, oldValue, newValue) -> {
@@ -107,10 +109,11 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
                 if (newValue != null) homeButton.setDisable(false);
 
-                if (screenToShow == Screens.HOME_SCREEN) {
+                if (screenToShow == Screens.HOME_SCREEN && homeView != null) {
                     homeContentPane.getChildren().clear();
-                    homeContentPane.getChildren().add(homeView);
+                    homeContentPane.getChildren().add(homeView.getValue());
                     changeButtonStyle(homeButton);
+                    refreshHomeLastSession(landingScreen);
                     MainApplication.timeTakenTo("load home");
                 }
             });
@@ -119,9 +122,9 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
                 if (newValue != null) accountButton.setDisable(false);
 
-                if (screenToShow == Screens.ACCOUNT_SCREEN) {
+                if (screenToShow == Screens.ACCOUNT_SCREEN && accountView != null) {
                     homeContentPane.getChildren().clear();
-                    homeContentPane.getChildren().add(newValue);
+                    homeContentPane.getChildren().add(activateView.getValue());
                     changeButtonStyle(accountButton);
                 }
             });
@@ -130,9 +133,9 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
                 if (newValue != null) activateButton.setDisable(false);
 
-                if (screenToShow == Screens.ACTIVATE_SCREEN) {
+                if (screenToShow == Screens.ACTIVATE_SCREEN && activateView != null) {
                     homeContentPane.getChildren().clear();
-                    homeContentPane.getChildren().add(newValue);
+                    homeContentPane.getChildren().add(activateView.getValue());
                     changeButtonStyle(activateButton);
                 }
             });
@@ -141,9 +144,9 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
 
                 if (newValue != null) settingsButton.setDisable(false);
 
-                if (screenToShow == Screens.SETTINGS_SCREEN) {
+                if (screenToShow == Screens.SETTINGS_SCREEN && settingsView != null) {
                     homeContentPane.getChildren().clear();
-                    homeContentPane.getChildren().add(newValue);
+                    homeContentPane.getChildren().add(settingsView.getValue());
                     changeButtonStyle(settingsButton);
                 }
             });
@@ -153,6 +156,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
             homeButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     selectButton(homeView, homeButton);
+                    refreshHomeLastSession(landingScreen);
                 }
             });
             homeButton.setOnMouseEntered(event -> {
@@ -248,7 +252,7 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
     }
 
     private void initializeViews() {
-        appImage.setImage(new Image(getClass().getResource("/drawable/app_icon.png").toString()));
+        appImage.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
         activateCloseIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/activate_close_icon.png").toString()));
         activateInfoIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/activate_info_icon.png").toString()));
         topActivateButton.setBackground(Background.EMPTY);
@@ -314,12 +318,19 @@ public class LandingScreenController implements FxmlView<LandingScreenVM>, Initi
         pressedButton.setStyle(PRESSED_BUTTON_STYLE);
     }
 
-    private void selectButton(Parent view, ToggleButton toggleButton) {
+    private void selectButton(Pair<? extends FxmlView<? extends ViewModel>, Parent> view, ToggleButton toggleButton) {
         if (view != null) {
             homeContentPane.getChildren().clear();
-            homeContentPane.getChildren().add(view);
+            homeContentPane.getChildren().add(view.getValue());
         }
         changeButtonStyle(toggleButton);
+    }
+
+    private void refreshHomeLastSession(LandingScreen landingScreen) {
+        if (landingScreen.isRefreshHomeLastSession() && homeView != null) {
+            homeView.getKey().refreshLastSession();
+            landingScreen.refreshHomeLastSession(false);
+        }
     }
 
     public InitialData getInitialData() {

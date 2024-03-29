@@ -114,7 +114,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         AtomicInteger subjectListSelectionAtomicIndex = new AtomicInteger(0);
 
         showProgressBar();
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         Task<Boolean> contentTask = new Task<>() {
             @Override

@@ -1,6 +1,6 @@
 package com.scholarly.data.dao;
 
-import com.scholarly.data.DatabaseService;
+import com.scholarly.data.util.DatabaseService;
 import com.scholarly.data.model.FreeContent;
 import com.scholarly.data.model.newDb.NovelLastSession;
 import com.scholarly.data.model.novels.NovelChapter;
@@ -25,7 +25,7 @@ public class NovelChapterDao {
     private static final String TAG = "NovelChapterDao: ";
     private static final DatabaseService databaseService = new DatabaseService();
 
-    private static final String idColumn = "_id";
+    public static final String idColumn = "_id";
     private static final String positionColumn = "position";
     private static final String titleColumn = "title";
     private static final String descriptionColumn = "description";
@@ -36,9 +36,9 @@ public class NovelChapterDao {
     private static final String divisionColumn = "division";
     private static final String chapterCategoryColumn = "chapter_category";
 
-    private static final String chapterIdColumn = "chapter_id";
-    private static final String chapterTitleColumn = "chapter_title";
-    private static final String userIdColumn = "uid";
+    public static final String chapterIdColumn = "chapter_id";
+    public static final String chapterTitleColumn = "chapter_title";
+    public static final String userIdColumn = "uid";
 
     private static final ObservableList<FreeContent> freeContents = FXCollections.observableArrayList();
 

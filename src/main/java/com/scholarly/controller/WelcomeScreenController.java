@@ -4,6 +4,7 @@ import com.scholarly.ui.utils.Animations;
 import com.scholarly.ui.utils.FontUtil;
 import com.scholarly.ui.utils.View;
 import com.scholarly.ui.utils.ViewSwitcher;
+import com.scholarly.util.AppProperties;
 import com.scholarly.util.PreferencesManager;
 import com.scholarly.viewmodels.WelcomeScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -134,7 +135,8 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
 
         divider3.setOpacity(0.5);
 
-        advertHeader.setText("Test yourself with JAMB CBT Practice");
+        String header = "Test yourself with " + AppProperties.getInstance().getAppName() + " Practice";
+        advertHeader.setText(header);
         advertExplanation.setText("Familiarize yourself with this software before the actual exam, use the CBT Practice feature on the app to understand the method and mode of the actual exam.");
     }
 
@@ -158,7 +160,7 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
         divider4.setOpacity(0.5);
 
         advertHeader.setText("Concise summary of Recommended Texts");
-        advertExplanation.setText("Access easy to understand analysis and summary of JAMB English Novel and Literature Texts");
+        advertExplanation.setText("Access easy to understand analysis and summary of JAMB/WAEC English Novel and Literature Texts");
     }
 
     private void showScreenFive() {
@@ -222,6 +224,7 @@ public class WelcomeScreenController implements FxmlView<WelcomeScreenVM>, Initi
         StackPane.setMargin(screenFiveDoughnutImageView, new Insets(50, 0, 0, 0));
         StackPane.setMargin(screenFiveSemicolonImageView, new Insets(0, 0, 30, 0));
 
+        advertHeader.setText(AppProperties.getInstance().getWelcomeTextOne());
     }
 
     private void initializeFonts() {

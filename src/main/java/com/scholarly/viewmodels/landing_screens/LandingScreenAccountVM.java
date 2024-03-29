@@ -23,7 +23,7 @@ public class LandingScreenAccountVM implements ViewModel {
     private final SimpleBooleanProperty uidLoaded = new SimpleBooleanProperty();
 
     public LandingScreenAccountVM() {
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         Task<Boolean> uidTask = new Task<>() {
             @Override

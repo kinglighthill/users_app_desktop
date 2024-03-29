@@ -9,8 +9,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -34,6 +33,7 @@ public class SQLiteDatabase implements AutoCloseable {
 
     public SQLiteDatabase(Path dbFile) {
         this.dbFile = dbFile.toAbsolutePath().normalize();
+
         extracted = Files.exists(dbFile);
 
         source = new SQLiteDataSource();
@@ -69,8 +69,8 @@ public class SQLiteDatabase implements AutoCloseable {
 
     private void extractDatabase() {
         if (!extracted) {
-            System.out.println("Db resource name: " + DB_RESOURCE_NAME);
             try (var input = SQLiteDatabase.class.getResourceAsStream(DB_RESOURCE_NAME)) {
+                assert input != null;
                 Files.copy(input, dbFile);
                 extracted = true;
                 System.out.println("Extracted db: " + true);

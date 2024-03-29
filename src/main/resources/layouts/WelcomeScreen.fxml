@@ -27,7 +27,7 @@
                 </StackPane>
 
                 <VBox alignment="CENTER" spacing="15" prefHeight="200" prefWidth="600" VBox.vgrow="ALWAYS">
-                    <Label fx:id="advertHeader" text="Access thousands of real JAMB Past Questions" textFill="#FFFFFF" textAlignment="CENTER" />
+                    <Label fx:id="advertHeader" textFill="#FFFFFF" textAlignment="CENTER" />
                     <Label fx:id="advertExplanation" alignment="CENTER" prefHeight="200" prefWidth="800" text="Thousands of up to date Past Questions and Modelled Questions, Answers and easy to understand Explanations are at your finger tips. " textFill="#FFFFFF" textAlignment="CENTER" wrapText="true" />
 
                     <HBox alignment="CENTER" spacing="5">

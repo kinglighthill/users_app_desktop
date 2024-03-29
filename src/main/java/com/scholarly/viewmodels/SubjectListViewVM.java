@@ -56,7 +56,7 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
     private final SimpleBooleanProperty subjectLoaded = new SimpleBooleanProperty();
 
     public SubjectListViewVM() {
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         Task<Boolean> subjectTask = new Task<>() {
             @Override

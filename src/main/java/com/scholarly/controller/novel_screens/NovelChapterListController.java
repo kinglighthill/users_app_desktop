@@ -54,7 +54,7 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showProgressBar();
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         Task<Boolean> chaptersTask = new Task<>() {
             @Override

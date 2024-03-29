@@ -154,7 +154,7 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
                 }
 
                 if (newValue != null) {
-                    ExecutorService executorService = Executors.newFixedThreadPool(1);
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
 
                     Task<List<Node>> sectionsTask = new Task<>() {
                         @Override

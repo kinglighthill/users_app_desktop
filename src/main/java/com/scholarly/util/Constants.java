@@ -6,7 +6,6 @@ public class Constants {
 
     public static final String PAYSTACK_URL = AppProperties.getInstance().getPaystackUrl();
 
-
     public static String COUNTRY = "Version " + AppProperties.getInstance().getCountry().toLowerCase();
     public static String VERSION_TXT = "Version " + AppProperties.getInstance().getVersionName();
 
@@ -41,6 +40,7 @@ public class Constants {
     // Session Preference Constants
 //    public static final String PREF_KEY_APP_TYPE = "SCH_APP_TYPE";
     public static final String PREF_KEY_FIRST_TIME_USER = "SCH_FIRST_TIME_USER";
+    public static final String PREF_KEY_DB_VERSION = "SCH_DB_VERSION";
     public static final String PREF_KEY_LAST_SELECTED_PRACTICE = "SCH_LAST_SELECTED_PRACTICE";
 
     // Settings Preference Constants

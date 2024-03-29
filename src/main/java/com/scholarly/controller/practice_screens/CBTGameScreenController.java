@@ -103,7 +103,7 @@ public class CBTGameScreenController implements FxmlView<CBTGameScreenVM>, Initi
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         showProgressBar();
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         Task<Boolean> contentTask = new Task<>() {
             @Override

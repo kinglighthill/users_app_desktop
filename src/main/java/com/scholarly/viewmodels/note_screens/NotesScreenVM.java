@@ -1,6 +1,7 @@
 package com.scholarly.viewmodels.note_screens;
 
 import com.google.gson.Gson;
+import com.scholarly.async.LandingScreen;
 import com.scholarly.controller.note_screens.NotesScreenController.InitialData;
 import com.scholarly.data.dao.ObjectiveQuestionDao;
 import com.scholarly.data.dao.SubjectDao;
@@ -78,6 +79,7 @@ public class NotesScreenVM implements ViewModel {
     public void putLastSession(NoteLastSession lastSession) {
         int id = SectionDao.insertLastSection(lastSession);
         System.out.println(TAG + "Inserted last session with id -> " + id);
+        LandingScreen.getInstance().refreshHomeLastSession(true);
     }
 
     public NoteSubject getSubject() {

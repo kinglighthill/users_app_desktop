@@ -215,7 +215,7 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                     if (selectedNoteNewValue != null) {
                         showProgressBar();
 
-                        ExecutorService executorService = Executors.newFixedThreadPool(1);
+                        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
                         Task<List<Node>> topicsTask = new Task<>() {
                             @Override

@@ -1,6 +1,6 @@
 package com.scholarly.data.dao;
 
-import com.scholarly.data.DatabaseService;
+import com.scholarly.data.util.DatabaseService;
 import com.scholarly.data.model.Subject;
 import com.scholarly.data.model.newDb.*;
 import com.scholarly.data.util.CRUDHelper;
@@ -19,8 +19,8 @@ public class SubjectDao {
 
     private static final DatabaseService databaseService = new DatabaseService();
 
-    private static final String idColumn = "_id";
-    private static final String userIdColumn = "uid";
+    public static final String idColumn = "_id";
+    public static final String userIdColumn = "uid";
     private static final String tableNameColumn = "table_name";
     private static final String subjectNameColumn = "subject_name";
     private static final String timeAllottedColumn = "time_alloted";
@@ -29,7 +29,7 @@ public class SubjectDao {
     private static final String subjectColorColumn = "subject_color";
     private static final String colorNameColumn = "color_name";
 
-    private static final String subjectIdColumn = "subject_id";
+    public static final String subjectIdColumn = "subject_id";
     private static final String minutesAllottedColumn = "minutes_allotted";
     private static final String orderColumn = "order";
     private static final String titleColumn = "title";

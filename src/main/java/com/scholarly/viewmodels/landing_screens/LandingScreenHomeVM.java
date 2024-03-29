@@ -56,6 +56,8 @@ public class LandingScreenHomeVM implements ViewModel {
     private final SimpleBooleanProperty subjectLoaded = new SimpleBooleanProperty();
     private final SimpleBooleanProperty lastSessionLoaded = new SimpleBooleanProperty();
 
+    private Task<Boolean> lastSessionTask;
+
     public LandingScreenHomeVM() throws ExecutionException, InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
@@ -94,42 +96,61 @@ public class LandingScreenHomeVM implements ViewModel {
         };
         subjectLoaded.bind(subjectTask.valueProperty());
 
-        Task<Boolean> lastSessionTask = new Task<>() {
-            @Override
-            protected Boolean call() {
-                noteLastSession = SectionDao.retrieveLastSession(userId);
-                if (noteLastSession != null) {
-                    noteLastSection = SectionDao.getNoteSectionWithId(noteLastSession.getSectionId());
-                    assert noteLastSection != null;
-                    selectedNoteTopic = TopicDao.getTopic(noteLastSection.getTopicId());
-                    lastSectionSubject = SubjectDao.getNoteSubject(noteLastSection.getSubjectId());
-                    assert lastSectionSubject != null;
-                    noteSubjectTopics.put(lastSectionSubject.getId(), TopicDao.getNoteTopicsForSubject(lastSectionSubject.getId()));
-                    TopicDao.getNoteTopicsForSubject(lastSectionSubject.getId()).forEach(topic -> {
-                        noteSubTopics.put(topic.getId(), SubTopicDao.getSubTopicsForTopic(topic.getId()));
-                    });
-                }
-
-                NovelChapterDao novelChapterDao = new NovelChapterDao();
-                novelLastSession = NovelChapterDao.retrieveLastSession(userId);
-                if (novelLastSession != null) {
-                    lastSessionChapter = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
-                            novelChapter.getId() == novelLastSession.getChapterId()).toList().get(0);
-                    assert lastSessionChapter != null;
-                    System.out.println(TAG + "NovelLastSessionChapter -> " + lastSessionChapter);
-                    lastSessionNovel = NovelsDao.getNovel(lastSessionChapter.getNovelId());
-                    System.out.println(TAG + "NovelLastSessionNovel -> " + lastSessionNovel);
-                    lastSessionChapters = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
-                            novelChapter.getNovelId() == lastSessionNovel.getNovel().getId()).collect(Collectors.toCollection(FXCollections::observableArrayList));
-                }
-
-                return true;
-            }
-        };
+        lastSessionTask = createLastSessionTask();
         lastSessionLoaded.bind(lastSessionTask.valueProperty());
 
         executorService.submit(uidTask).get();
         executorService.execute(subjectTask);
+        executorService.execute(lastSessionTask);
+        executorService.shutdown();
+    }
+
+    private Task<Boolean> createLastSessionTask() {
+        return new Task<>() {
+            @Override
+            protected Boolean call() {
+                try {
+                    noteLastSession = SectionDao.retrieveLastSession(userId);
+                    if (noteLastSession != null) {
+                        noteLastSection = SectionDao.getNoteSectionWithId(noteLastSession.getSectionId());
+                        assert noteLastSection != null;
+                        selectedNoteTopic = TopicDao.getTopic(noteLastSection.getTopicId());
+                        lastSectionSubject = SubjectDao.getNoteSubject(noteLastSection.getSubjectId());
+                        assert lastSectionSubject != null;
+                        noteSubjectTopics.put(lastSectionSubject.getId(), TopicDao.getNoteTopicsForSubject(lastSectionSubject.getId()));
+                        TopicDao.getNoteTopicsForSubject(lastSectionSubject.getId()).forEach(topic -> {
+                            noteSubTopics.put(topic.getId(), SubTopicDao.getSubTopicsForTopic(topic.getId()));
+                        });
+                    }
+
+                    NovelChapterDao novelChapterDao = new NovelChapterDao();
+                    novelLastSession = NovelChapterDao.retrieveLastSession(userId);
+                    if (novelLastSession != null) {
+                        lastSessionChapter = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+                                novelChapter.getId() == novelLastSession.getChapterId()).toList().get(0);
+                        assert lastSessionChapter != null;
+                        System.out.println(TAG + "NovelLastSessionChapter -> " + lastSessionChapter);
+                        lastSessionNovel = NovelsDao.getNovel(lastSessionChapter.getNovelId());
+                        System.out.println(TAG + "NovelLastSessionNovel -> " + lastSessionNovel);
+                        lastSessionChapters = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+                                novelChapter.getNovelId() == lastSessionNovel.getNovel().getId()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+                    }
+
+                    return true;
+                } catch (Exception e) {
+                    System.out.println("Refresh last session: " + e.getMessage());
+                    return false;
+                }
+            }
+        };
+    }
+
+    public void reloadLastSession() {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        lastSessionTask = createLastSessionTask();
+        lastSessionLoaded.bind(lastSessionTask.valueProperty());
+
         executorService.execute(lastSessionTask);
         executorService.shutdown();
     }

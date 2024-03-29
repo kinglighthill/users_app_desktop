@@ -9,6 +9,7 @@ import com.scholarly.data.model.newDb.NoteLastSession;
 import com.scholarly.data.model.newDb.NovelLastSession;
 import com.scholarly.ui.cellFactories.SubjectGridCellFactory;
 import com.scholarly.ui.utils.*;
+import com.scholarly.util.AppProperties;
 import com.scholarly.util.Constants;
 import com.scholarly.util.Helper;
 import com.scholarly.util.PreferencesManager;
@@ -30,8 +31,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.util.Pair;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.controlsfx.control.GridView;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
@@ -39,6 +42,7 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -72,23 +76,21 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private ListView<NewsItem> newsList;
     @FXML
-    private ImageView handImage, notificationIcon, profileImage, biologyIcon, englishIcon, physicsIcon, chemistryIcon, mathematicsIcon, geographyIcon, boyWithLaptop;
+    private ImageView handImage, notificationIcon, profileImage, boyWithLaptop;
     @FXML
-    private ImageView cbtPracticeIcon, videosIcon, novelsIcon, studyNotesIcon, cbtCentresIcon, audioIcon, syllabusIcon, noteSessionSubjectImage, firstSessionPlayIcon, thirdSessionVideoImage, thirdSessionPlayIcon;
-    @FXML
-    private ImageView firstSessionOneStar, firstSessionTwoStar, firstSessionThreeStar, firstSessionFourStar, firstSessionFiveStar, thirdSessionOneStar, thirdSessionTwoStar, thirdSessionThreeStar, thirdSessionFourStar, thirdSessionFiveStar;
+    private ImageView videosIcon, cbtCentresIcon, audioIcon, noteSessionSubjectImage;
     @FXML
     private ImageView novelLastSessionImage, novelLastSessionAuthorIcon, novelLastSessionChaptersIcon, fourthSessionBookImage, fourthSessionAuthorIcon, fourthSessionChaptersIcon, selectSubjectCloseIcon, actionCbtPracticeIcon, actionVideosPracticeIcon, actionNovelsPracticeIcon, actionAudioPracticeIcon;
+
     @FXML
-    private Panel biologyPane, englishPane, physicsPane, chemistryPane, mathematicsPane, geographyPane;
+    private GridPane quickActionGrid;
+
     @FXML
-    private Panel cbtPracticePanel, pastQuestionsPanel, cbtGamePanel, videosPanel, audioPanel, novelsPanel,  studyNotesPanel, cbtCentresPanel, syllabusPanel;
+    private Panel videosPanel, audioPanel, cbtCentresPanel, noteLastSessionPanel, novelLastSessionPanel, thirdSession, fourthSession, actionCbtPracticePanel;
     @FXML
-    private Panel noteLastSessionPanel, novelLastSessionPanel, thirdSession, fourthSession, actionCbtPracticePanel;
+    private Label helloText, startLearningText, editSubjectsText, topSubjectsText, libraryText, continueSessionsText;
     @FXML
-    private Label helloText, startLearningText, editSubjectsText, topSubjectsText, biologyText, englishText, physicsText, chemistryText, mathematicsText, geographyText, libraryText, continueSessionsText;
-    @FXML
-    private Label cbtPracticeText, videosText, novelsText, pastQuestionsLabel, audioText, syllabusText, studyNotesText, cbtCentresText, syllabusLabel, noteSessionSubjectName, firstSessionTimeText, firstSessionRatingNumber, noteLastSessionText;
+    private Label videosText, pastQuestionsLabel, audioText, cbtCentresText, noteSessionSubjectName, noteLastSessionText;
     @FXML
     private Label novelLastSessionTitle, novelLastSessionAuthorName, novelLastSessionChapterText;
     @FXML
@@ -96,7 +98,28 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @FXML
     private Label selectFavoriteText, moreThanOneText, actionCbtPracticeText, actionVideosPracticeText, actionNovelsPracticeText, actionAudioPracticeText, otherAppsTitleDesc, otherAppsShortDesc;
 
+    MainApplication application = new MainApplication();
+
+    private final Panel cbtPracticePanel = new Panel();
+    private final Panel studyNotesPanel = new Panel();
+    private final Panel novelsPanel = new Panel();
+    private final Panel syllabusPanel = new Panel();
+    private final Panel websitePanel = new Panel();
+
+    private final Label cbtPracticeText = new Label();
+    private final Label studyNotesText = new Label();
+    private final Label novelsText = new Label();
+    private final Label syllabusText = new Label();
+    private final Label websiteText = new Label();
+
+    private final ImageView cbtPracticeIcon = new ImageView();
+    private final ImageView studyNotesIcon = new ImageView();
+    private final ImageView novelsIcon = new ImageView();
+    private final ImageView syllabusIcon = new ImageView();
+    private final ImageView websiteIcon = new ImageView();
+
     private final SimpleIntegerProperty count = new SimpleIntegerProperty();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -110,7 +133,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
                 String userName = viewModel.getUser().getFullName().trim();
                 String[] userNameSplit = userName.split(" ");
 
-                String firstName = "";
+                String firstName;
                 if (userNameSplit.length > 0) {
                     firstName = userNameSplit[0];
                 } else {
@@ -189,21 +212,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         favouriteSubjectsTask.setOnSucceeded(event -> editSubjectsText.setDisable(false));
 
-        Task<Void> lastSessionTask = new Task<>() {
-            @Override
-            protected Void call() {
-                boolean populate = populateLastSession();
-                if (populate) {
-                    Platform.runLater(() -> continuePreviousSessionVBox.getChildren().addAll(continueSessionsText, previousSessionHBox));
-                } else {
-                    Platform.runLater(() -> continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionHBox));
-                }
-
-                count.set(count.add(1).getValue());
-                return null;
-            }
-        };
-
         viewModel.getUidLoaded().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 executorService.execute(userNameTask);
@@ -220,7 +228,53 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         viewModel.getLastSessionLoaded().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                executorService.execute(lastSessionTask);
+                Task<Void> lastSessionTask = new Task<>() {
+                    @Override
+                    protected Void call() {
+                        Pair<NoteLastSession, NovelLastSession> sessions = populateLastSession();
+                        if (sessions != null) {
+                            NoteLastSession noteLastSession = sessions.getKey();
+                            NovelLastSession novelLastSession = sessions.getValue();
+
+                            if (noteLastSession != null || novelLastSession != null) {
+                                Platform.runLater(() -> {
+                                    previousSessionHBox.getChildren().removeAll(noteLastSessionPanel, novelLastSessionPanel);
+
+                                    if (noteLastSession != null) {
+                                        previousSessionHBox.getChildren().add(noteLastSessionPanel);
+
+                                        noteLastSessionText.setText(noteLastSession.getSectionTitle());
+                                        noteSessionSubjectName.setText(viewModel.getLastSessionSubject().getTitle());
+                                        noteSessionSubjectImage.setImage(new Image(getClass().getResource("/drawable/subject_images/" + viewModel.getLastSessionSubject().getShortTitle() + "_image.png").toString()));
+
+                                    }
+                                    if (novelLastSession != null) {
+                                        previousSessionHBox.getChildren().add(previousSessionHBox.getChildren().size(), novelLastSessionPanel);
+
+                                        novelLastSessionTitle.setText(viewModel.getLastSessionNovel().getNovel().getName());
+                                        novelLastSessionChapterText.setText(novelLastSession.getChapterTitle());
+                                        novelLastSessionImage.setImage(new Image(getClass().getResource("/assets/images/novels/" + viewModel.getLastSessionNovel().getNovel().getImagePath()).toString()));
+                                    }
+
+                                    continuePreviousSessionVBox.getChildren().addAll(continueSessionsText, previousSessionHBox);
+                                });
+                            } else  {
+                                Platform.runLater(() -> continuePreviousSessionVBox.getChildren().removeAll(continueSessionsText, previousSessionHBox));
+                            }
+
+                            count.set(count.add(1).getValue());
+                        }
+                        return null;
+                    }
+                };
+
+                if (executorService.isShutdown()) {
+                    ExecutorService newExecutorService = Executors.newSingleThreadExecutor();
+                    newExecutorService.execute(lastSessionTask);
+                    newExecutorService.shutdown();
+                } else {
+                    executorService.execute(lastSessionTask);
+                }
             }
         });
 
@@ -231,9 +285,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         });
 
         editSubjectsText.setDisable(true);
-        initializeViews();
-        initializeFonts();
-        initializeGestures();
 
         editSubjectsText.setOnMouseClicked(e -> {
             Animations.fadeIn(selectSubjectPane, 300);
@@ -258,6 +309,10 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         profileImage.setOnMouseClicked(event -> ViewSwitcher.showScreen(View.ACCOUNT_PROFILE_SCREEN));
 
+        initializeViews();
+        initializeFonts();
+        initializeGestures();
+
         cbtPracticePanel.setOnMouseClicked(e -> Helper.moveToPQScreen(null, null));
 
         novelsPanel.setOnMouseClicked(e -> {
@@ -277,6 +332,8 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             ViewSwitcher.showScreen(View.SELECT_SYLLABUS_SCREEN);
             MainApplication.timeTakenTo("show syllabus screen");
         });
+
+        websitePanel.setOnMouseClicked(e -> application.openBrowser(Constants.WEBSITE_URL + "apps"));
 
         noteLastSessionPanel.setOnMouseClicked(e -> {
             MainApplication.resetTime();
@@ -313,7 +370,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });*/
 
-
         /*videosPanel.setOnMouseClicked(e -> {
             ViewSwitcher.passData("videosPanel");
             ViewSwitcher.showScreen(View.HOME_SCREEN);
@@ -332,9 +388,10 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         /*notificationIcon.setOnMouseClicked(event -> {
             ViewSwitcher.showScreen(View.ACCOUNT_NOTIFICATIONS_SCREEN);
         });*/
+    }
 
-        /*List<String> fontFamilies = Font.getFamilies();
-        List<String> fontNames    = Font.getFontNames();*/
+    public void refreshLastSession() {
+        viewModel.reloadLastSession();
     }
 
     private void initializeViews() {
@@ -344,14 +401,51 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         selectSubjectCloseIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/action_close_icon.png").toString()));
 //        boyWithLaptop.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/boy_with_laptop.png").toString()));
 
+        boolean includeNovels = AppProperties.getInstance().isIncludeLiteraryTexts();
+        boolean hasNotes = AppProperties.getInstance().isHasNotes();
 
-        cbtPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_practice_icon.png").toString()));
+        setUpPanel(
+                cbtPracticePanel, cbtPracticeIcon, cbtPracticeText,
+                new PanelData("Past Questions", "cbt_practice_icon.png", true, true)
+        );
+
+        if (hasNotes) {
+            setUpPanel(
+                    studyNotesPanel, studyNotesIcon, studyNotesText,
+                    new PanelData("Study Notes", "notes_icon.png", false, true)
+            );
+        }
+
+        if (includeNovels && hasNotes) {
+            setUpPanel(
+                    novelsPanel, novelsIcon, novelsText,
+                    new PanelData("Novels", "novels_icon.png", true, false)
+            );
+
+            setUpPanel(
+                    syllabusPanel, syllabusIcon, syllabusText,
+                    new PanelData("Syllabus", "syllabus_icon.png", false, false)
+            );
+        } else if (!includeNovels && hasNotes) {
+            setUpPanel(
+                    syllabusPanel, syllabusIcon, syllabusText,
+                    new PanelData("Syllabus", "syllabus_icon.png", true, false)
+            );
+
+            setUpPanel(
+                    websitePanel, websiteIcon, websiteText,
+                    new PanelData("Website", "novels_icon.png", false, false)
+            );
+        } else if (!includeNovels) {
+            setUpPanel(
+                    websitePanel, websiteIcon, websiteText,
+                    new PanelData("Website", "novels_icon.png", false, true)
+            );
+        }
+
 //        videosIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/videos_icon.png").toString()));
-        novelsIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/novels_icon.png").toString()));
-        studyNotesIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/notes_icon.png").toString()));
 //        cbtCentresIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_centres_icon.png").toString()));
 //        audioIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/audio_icon.png").toString()));
-        syllabusIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/syllabus_icon.png").toString()));
 
 //        lastSessionSubjectImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/session_lung_image.png").toString()));
 //        firstSessionPlayIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/session_play_icon.png").toString()));
@@ -376,10 +470,71 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //            thirdSession.setPrefWidth((Double) newValue/2);
 //            fourthSession.setPrefWidth((Double) newValue/2);
         }));
-
 //        performanceScrollPane.setBackground(Background.EMPTY);
 //        scrollHBox.setBackground(Background.EMPTY);
+    }
 
+    private void setUpPanel(Panel panel, ImageView icon, Label label, PanelData panelData) {
+        int columnIndex;
+        int rowIndex;
+
+        String defaultStyle;
+        String onEnteredStyle;
+        String onExitedStyle;
+
+        if (panelData.isLeft && panelData.isTop) {
+            defaultStyle = "-fx-background-color: #E18400; -fx-background-radius: 10;";
+            onEnteredStyle = "-fx-background-color: #F5A100; -fx-background-radius: 10; -fx-cursor: hand;";
+            onExitedStyle = "-fx-background-color: #E18400; -fx-background-radius: 10;";
+
+            columnIndex = 0;
+            rowIndex = 0;
+        } else if (!panelData.isLeft && panelData.isTop) {
+            defaultStyle = "-fx-background-color: #1B68AF; -fx-background-radius: 10;";
+            onEnteredStyle = "-fx-background-color: #3289C6; -fx-background-radius: 10; -fx-cursor: hand;";
+            onExitedStyle = "-fx-background-color: #1B68AF; -fx-background-radius: 10;";
+
+            columnIndex = 1;
+            rowIndex = 0;
+        } else if (panelData.isLeft) {
+            defaultStyle = "-fx-background-color: #AD4518; -fx-background-radius: 10;";
+            onEnteredStyle = "-fx-background-color: #F1723B; -fx-background-radius: 10; -fx-cursor: hand;";
+            onExitedStyle = "-fx-background-color: #AD4518; -fx-background-radius: 10;";
+
+            columnIndex = 0;
+            rowIndex = 1;
+        } else {
+            defaultStyle = "-fx-background-color: #D4107A; -fx-background-radius: 10;";
+            onEnteredStyle = "-fx-background-color: #FF29A3; -fx-background-radius: 10; -fx-cursor: hand;";
+            onExitedStyle = "-fx-background-color: #D4107A; -fx-background-radius: 10;";
+
+            columnIndex = 1;
+            rowIndex = 1;
+        }
+
+        panel.prefWidth(250);
+        panel.minHeight(120.0);
+        panel.setStyle(defaultStyle);
+        panel.setOnMouseEntered(e -> panel.setStyle(onEnteredStyle));
+        panel.setOnMouseExited(e -> panel.setStyle(onExitedStyle));
+
+        String iconPath = "/drawable/landing_screen_images/" + panelData.icon;
+        icon.setImage(new Image(Objects.requireNonNull(getClass().getResource(iconPath)).toString()));
+        icon.setFitWidth(35);
+        icon.setFitHeight(35);
+        icon.setPreserveRatio(true);
+        icon.setPickOnBounds(true);
+
+        label.setText(panelData.label);
+        label.setTextFill(Color.WHITE);
+        label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+
+        panel.setTop(icon);
+        panel.setBottom(label);
+        panel.setPadding(new Insets(20, 0, 20, 30));
+
+        quickActionGrid.add(panel, columnIndex, rowIndex);
+        GridPane.setHgrow(panel, Priority.ALWAYS);
     }
 
     private void initializeFonts() {
@@ -391,11 +546,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
         libraryText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 
-        cbtPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 //        videosText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-        novelsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-        studyNotesText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-        syllabusText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 //        audioText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 //        cbtCentresText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
 
@@ -436,19 +587,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     private void initializeGestures() {
         editSubjectsText.setOnMouseEntered(e -> editSubjectsText.setUnderline(true));
         editSubjectsText.setOnMouseExited(e -> editSubjectsText.setUnderline(false));
-
-        cbtPracticePanel.setOnMouseEntered(e -> cbtPracticePanel.setStyle("-fx-background-color: #3289C6; -fx-background-radius: 10; -fx-cursor: hand;"));
-        cbtPracticePanel.setOnMouseExited(e -> cbtPracticePanel.setStyle("-fx-background-color: #1B68AF; -fx-background-radius: 10;"));
-
-        novelsPanel.setOnMouseEntered(e -> novelsPanel.setStyle("-fx-background-color: #F1723B; -fx-background-radius: 10; -fx-cursor: hand;"));
-        novelsPanel.setOnMouseExited(e -> novelsPanel.setStyle("-fx-background-color: #AD4518; -fx-background-radius: 10;"));
-
-        studyNotesPanel.setOnMouseEntered(e -> studyNotesPanel.setStyle("-fx-background-color: #F5A100; -fx-background-radius: 10; -fx-cursor: hand;"));
-        studyNotesPanel.setOnMouseExited(e -> studyNotesPanel.setStyle("-fx-background-color: #E18400; -fx-background-radius: 10;"));
-
-        syllabusPanel.setOnMouseEntered(e -> syllabusPanel.setStyle("-fx-background-color: #FF29A3; -fx-background-radius: 10; -fx-cursor: hand;"));
-        syllabusPanel.setOnMouseExited(e -> syllabusPanel.setStyle("-fx-background-color: #D4107A; -fx-background-radius: 10;"));
-
         noteLastSessionPanel.setOnMouseEntered(e -> noteLastSessionPanel.setStyle("-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10; -fx-border-color: #A2CAA6; -fx-border-radius: 10; -fx-cursor: hand;"));
         noteLastSessionPanel.setOnMouseExited(e -> noteLastSessionPanel.setStyle("-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;"));
 
@@ -482,28 +620,15 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         });
     }
 
-    private boolean populateLastSession() {
-        NoteLastSession noteLastSession = viewModel.getNoteLastSession();
-        NovelLastSession novelLastSession = viewModel.getNovelLastSession();
-        previousSessionHBox.getChildren().removeAll(noteLastSessionPanel, novelLastSessionPanel);
-
-        if (noteLastSession != null) {
-            previousSessionHBox.getChildren().add(noteLastSessionPanel);
-
-            noteLastSessionText.setText(noteLastSession.getSectionTitle());
-            noteSessionSubjectName.setText(viewModel.getLastSessionSubject().getTitle());
-            noteSessionSubjectImage.setImage(new Image(getClass().getResource("/drawable/subject_images/" + viewModel.getLastSessionSubject().getShortTitle() + "_image.png").toString()));
-
+    private Pair<NoteLastSession, NovelLastSession> populateLastSession() {
+        try {
+            NoteLastSession noteLastSession = viewModel.getNoteLastSession();
+            NovelLastSession novelLastSession = viewModel.getNovelLastSession();
+            return new Pair<>(noteLastSession, novelLastSession);
+        } catch (Exception e) {
+            System.out.println("Hey what: " + e.getMessage());
+            return null;
         }
-        if (novelLastSession != null) {
-            previousSessionHBox.getChildren().add(previousSessionHBox.getChildren().size(), novelLastSessionPanel);
-
-            novelLastSessionTitle.setText(viewModel.getLastSessionNovel().getNovel().getName());
-            novelLastSessionChapterText.setText(novelLastSession.getChapterTitle());
-            novelLastSessionImage.setImage(new Image(getClass().getResource("/assets/images/novels/" + viewModel.getLastSessionNovel().getNovel().getImagePath()).toString()));
-        }
-
-        return noteLastSession != null || novelLastSession != null;
     }
 
     private void displayProfileImage(Image image) {
@@ -519,4 +644,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             profileImage.setImage(image);
         });
     }
+
+    record PanelData(String label, String icon, boolean isLeft, boolean isTop) { }
 }

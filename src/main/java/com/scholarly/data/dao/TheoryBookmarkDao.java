@@ -1,6 +1,6 @@
 package com.scholarly.data.dao;
 
-import com.scholarly.data.DatabaseService;
+import com.scholarly.data.util.DatabaseService;
 import com.scholarly.data.model.TheoryBookmark;
 import com.scholarly.data.util.CRUDHelper;
 import com.scholarly.data.util.DbConnection;

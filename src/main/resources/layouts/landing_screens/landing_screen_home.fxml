@@ -94,19 +94,18 @@
                                 </padding>
                             </Label>
 
-                            <GridPane prefHeight="200" prefWidth="350" alignment="CENTER_LEFT" hgap="15.0" vgap="15.0">
-
-                                <children>
-                                    <Panel fx:id="studyNotesPanel" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                            <GridPane fx:id="quickActionGrid" prefHeight="200" prefWidth="350" alignment="CENTER_LEFT" hgap="15.0" vgap="15.0">
+                                <!--<children>
+                                    &lt;!&ndash;<Panel fx:id="studyNotesPanel" GridPane.columnIndex="0" GridPane.rowIndex="0"
                                            prefWidth="200.0" style="-fx-background-color: #E18400; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
                                             <ImageView fx:id="studyNotesIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true"/>
                                         </top>
                                         <bottom>
                                             <Label fx:id="studyNotesText" text="Study Notes" textFill="white">
-                                                <!--<font>
+                                                &lt;!&ndash;<font>
                                                     <Font name="SansSerif" size="18"/>
-                                                </font>-->
+                                                </font>&ndash;&gt;
                                             </Label>
                                         </bottom>
 
@@ -122,9 +121,9 @@
                                         </top>
                                         <bottom>
                                             <Label fx:id="cbtPracticeText" text="Past Questions" textFill="white">
-                                                <!--<font>
+                                                &lt;!&ndash;<font>
                                                     <Font name="SansSerif" size="18"/>
-                                                </font>-->
+                                                </font>&ndash;&gt;
                                             </Label>
                                         </bottom>
                                         <padding>
@@ -139,9 +138,9 @@
                                         </top>
                                         <bottom>
                                             <Label fx:id="novelsText" text="Novels" textFill="white">
-                                                <!--<font>
+                                                &lt;!&ndash;<font>
                                                     <Font name="SansSerif" size="18"/>
-                                                </font>-->
+                                                </font>&ndash;&gt;
                                             </Label>
                                         </bottom>
                                         <padding>
@@ -156,17 +155,17 @@
                                         </top>
                                         <bottom>
                                             <Label fx:id="syllabusText" text="Syllabus" textFill="white">
-                                                <!--<font>
+                                                &lt;!&ndash;<font>
                                                     <Font name="SansSerif" size="18"/>
-                                                </font>-->
+                                                </font>&ndash;&gt;
                                             </Label>
                                         </bottom>
                                         <padding>
                                             <Insets left="30" bottom="20" top="20"/>
                                         </padding>
-                                    </Panel>
+                                    </Panel>&ndash;&gt;
 
-                                    <!--<Panel fx:id="videosPanel" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                    &lt;!&ndash;<Panel fx:id="videosPanel" GridPane.columnIndex="1" GridPane.rowIndex="0"
                                            prefWidth="250.0" style="-fx-background-color: #AD4518; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
                                             <ImageView fx:id="videosIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -177,20 +176,20 @@
                                         <padding>
                                             <Insets left="20" bottom="20" top="20"/>
                                         </padding>
-                                    </Panel>-->
+                                    </Panel>&ndash;&gt;
 
 
-                                    <!-- <Panel fx:id="cbtGamePanel" GridPane.columnIndex="2" GridPane.rowIndex="0" minHeight="120.0"
+                                    &lt;!&ndash; <Panel fx:id="cbtGamePanel" GridPane.columnIndex="2" GridPane.rowIndex="0" minHeight="120.0"
                                             prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                          <Label fx:id="cbtGameLabel" text="CBT Game" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
                                              <padding>
                                                  <Insets left="65"/>
                                              </padding>
                                          </Label>
-                                     </Panel>-->
+                                     </Panel>&ndash;&gt;
 
 
-                                    <!--<Panel fx:id="cbtCentresPanel" GridPane.columnIndex="1" GridPane.rowIndex="1" minHeight="120.0"
+                                    &lt;!&ndash;<Panel fx:id="cbtCentresPanel" GridPane.columnIndex="1" GridPane.rowIndex="1" minHeight="120.0"
                                            prefWidth="250.0" style="-fx-background-color: #D4107A; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
                                             <ImageView fx:id="cbtCentresIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -201,9 +200,9 @@
                                         <padding>
                                             <Insets left="20" bottom="20" top="20"/>
                                         </padding>
-                                    </Panel>-->
+                                    </Panel>&ndash;&gt;
 
-                                    <!--<Panel fx:id="audioPanel" GridPane.columnIndex="2" GridPane.rowIndex="1" minHeight="120.0"
+                                    &lt;!&ndash;<Panel fx:id="audioPanel" GridPane.columnIndex="2" GridPane.rowIndex="1" minHeight="120.0"
                                            prefWidth="250.0" style="-fx-background-color: #1B68AF; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
                                             <ImageView fx:id="audioIcon" preserveRatio="true" pickOnBounds="true"/>
@@ -214,21 +213,21 @@
                                         <padding>
                                             <Insets left="20" bottom="20" top="20"/>
                                         </padding>
-                                    </Panel>-->
+                                    </Panel>&ndash;&gt;
 
-                                    <!--<Panel fx:id="pastQuestionsPanel" GridPane.columnIndex="0" GridPane.rowIndex="2" minHeight="120.0"
+                                    &lt;!&ndash;<Panel fx:id="pastQuestionsPanel" GridPane.columnIndex="0" GridPane.rowIndex="2" minHeight="120.0"
                                            prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <Label fx:id="pastQuestionsLabel" text="Past Questions" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
                                             <padding>
                                                 <Insets left="65"/>
                                             </padding>
                                         </Label>
-                                    </Panel>-->
+                                    </Panel>&ndash;&gt;
 
                                 </children>
                                 <padding>
                                     <Insets left="10.0" right="10.0"/>
-                                </padding>
+                                </padding>-->
                             </GridPane>
                         </children>
                         <padding>

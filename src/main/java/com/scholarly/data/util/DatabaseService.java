@@ -1,4 +1,4 @@
-package com.scholarly.data;
+package com.scholarly.data.util;
 
 import com.scholarly.data.util.DbConnection;
 import javafx.concurrent.Task;

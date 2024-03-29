@@ -1,6 +1,8 @@
 package com.scholarly.viewmodels.novel_screens;
 
 import com.google.gson.Gson;
+import com.scholarly.async.LandingScreen;
+import com.scholarly.async.LandingScreenTask;
 import com.scholarly.controller.novel_screens.NovelContentScreenController;
 import com.scholarly.data.dao.NovelChapterDao;
 import com.scholarly.data.dao.NovelObjectiveBookmarkDao;
@@ -77,6 +79,7 @@ public class NovelContentScreenVM implements ViewModel {
     public void putLastSession(NovelLastSession lastSession) {
         int id = NovelChapterDao.insertLastSection(lastSession);
         System.out.println(TAG + "Inserted Novel last session with id -> " + id);
+        LandingScreen.getInstance().refreshHomeLastSession(true);
     }
 
 

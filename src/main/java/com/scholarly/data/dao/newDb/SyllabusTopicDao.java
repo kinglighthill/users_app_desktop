@@ -1,6 +1,6 @@
 package com.scholarly.data.dao.newDb;
 
-import com.scholarly.data.DatabaseService;
+import com.scholarly.data.util.DatabaseService;
 import com.scholarly.data.model.newDb.SyllabusTopic;
 import com.scholarly.data.util.SyllabusDatabase;
 import com.scholarly.data.util.Tables;

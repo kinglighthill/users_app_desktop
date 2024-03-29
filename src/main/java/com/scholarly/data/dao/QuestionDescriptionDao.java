@@ -1,6 +1,6 @@
 package com.scholarly.data.dao;
 
-import com.scholarly.data.DatabaseService;
+import com.scholarly.data.util.DatabaseService;
 import com.scholarly.data.model.QuestionDescription;
 import com.scholarly.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.data.model.newDb.TheoryQuestionDescription;

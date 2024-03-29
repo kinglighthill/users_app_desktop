@@ -2,13 +2,15 @@ package com.scholarly.util;
 
 import java.util.prefs.Preferences;
 
+import static com.scholarly.util.EncryptionManager.decrypt;
+import static com.scholarly.util.EncryptionManager.encrypt;
+
 public class PreferencesManager {
     private static final String TAG = "New PreferenceManager: ";
 
-//    static final Preferences preferences = Preferences.userRoot().node("com.scholarly.utme");
     static Preferences preferences = null;
 
-    /*public static void put(String key, String value) {
+    public static void put(String key, String value) {
         try {
             String encryptedInput = encrypt(value);
             preferences.put(key, encryptedInput);
@@ -47,14 +49,33 @@ public class PreferencesManager {
             decryptedOutput = preferences.get(key, String.valueOf(defaultValue));
         }
         return Boolean.parseBoolean(decryptedOutput);
-    }*/
+    }
+
+    public static void putInt(String key, int value) {
+        String intString = String.valueOf(value);
+        try {
+            String encryptedInput = encrypt(intString);
+            preferences.put(key, encryptedInput);
+        } catch (Exception ignored) {
+            preferences.putInt(key, value);
+        }
+    }
+
+    public static int getInt(String key, int defaultValue) {
+        try {
+            String encryptedOutput = preferences.get(key, String.valueOf(defaultValue));
+            String decryptedOutput = decrypt(encryptedOutput);
+            return Integer.parseInt(decryptedOutput);
+        } catch (Exception ignored) {
+            return preferences.getInt(key, defaultValue);
+        }
+    }
 
     public static void initialize() {
-        System.out.println(TAG + "Initializing preferences");
         preferences = Preferences.userRoot().node("com.scholarly.utme");
     }
 
-    public static void put(String key, String value) {
+    /*public static void put(String key, String value) {
         preferences.put(key, value);
     }
 
@@ -68,7 +89,7 @@ public class PreferencesManager {
 
     public static boolean getBoolean(String key, boolean defaultValue) {
         return preferences.getBoolean(key, defaultValue);
-    }
+    }*/
 
     public static void flush() {
         try {

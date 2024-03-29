@@ -163,7 +163,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         showProgressBar();
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         Task<Boolean> contentTask = new Task<>() {
             @Override

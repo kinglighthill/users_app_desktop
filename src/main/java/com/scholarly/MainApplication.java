@@ -4,6 +4,7 @@ import com.github.sarxos.webcam.Webcam;
 import com.google.gson.Gson;
 import com.scholarly.controller.AuthenticationController;
 import com.scholarly.controller.landing_screens.*;
+import com.scholarly.data.util.DatabaseHelper;
 import com.scholarly.data.util.DbConnection;
 import com.scholarly.network.model.UserData;
 import com.scholarly.ui.utils.Alerts;
@@ -45,6 +46,9 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
     @Override
     public void start(Stage stage) throws IOException {
         try {
+            PreferencesManager.initialize();
+            DatabaseHelper.initDb();
+
             startDisplay = System.currentTimeMillis();
             fileHandler = new FileHandler("logging.log");
             fileHandler.setFormatter(new SimpleFormatter());
@@ -66,7 +70,6 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
             stage.setWidth(bounds.getWidth());
             stage.setHeight(bounds.getHeight());
 
-            PreferencesManager.initialize();
 
             ViewSwitcher.setStage(stage);
 

@@ -1,6 +1,6 @@
 package com.scholarly.data.dao.newDb;
 
-import com.scholarly.data.DatabaseService;
+import com.scholarly.data.util.DatabaseService;
 import com.scholarly.data.model.newDb.SyllabusSubject;
 import com.scholarly.data.util.Tables;
 import javafx.collections.FXCollections;

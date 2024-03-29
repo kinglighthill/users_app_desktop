@@ -89,7 +89,7 @@ public class SelectSyllabusVM implements ViewModel {
 
     public void setSelectedSyllabusSubject(SyllabusSubject selectedSubject) {
         if (selectedSubject != null) {
-            ExecutorService executorService = Executors.newFixedThreadPool(1);
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
             Task<ObservableList<SyllabusSection>> sectionsTask = new Task<>() {
                 @Override
                 protected ObservableList<SyllabusSection> call() {

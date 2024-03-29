@@ -1,7 +1,7 @@
 package com.scholarly.data.dao.newDb;
 
 
-import com.scholarly.data.DatabaseService;
+import com.scholarly.data.util.DatabaseService;
 import com.scholarly.data.model.MediaSubTopic;
 import com.scholarly.data.model.newDb.NoteSubTopic;
 import com.scholarly.data.model.newDb.SubTopic;

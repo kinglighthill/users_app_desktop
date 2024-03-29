@@ -1,6 +1,6 @@
 package com.scholarly.data.dao;
 
-import com.scholarly.data.DatabaseService;
+import com.scholarly.data.util.DatabaseService;
 import com.scholarly.data.model.novels.*;
 import com.scholarly.data.util.Tables;
 import javafx.collections.FXCollections;

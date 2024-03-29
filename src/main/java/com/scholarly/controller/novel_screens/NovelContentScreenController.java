@@ -97,7 +97,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showProgressBar();
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         Task<Boolean> contentTask = new Task<>() {
             @Override
