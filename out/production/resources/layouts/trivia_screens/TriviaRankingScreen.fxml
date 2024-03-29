@@ -10,7 +10,7 @@
 <?import javafx.geometry.Insets?>
 <?import org.controlsfx.control.GridView?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.trivia_screens.TriviaRankingScreenController"
+            fx:controller="com.scholarly.controller.trivia_screens.TriviaRankingScreenController"
             prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;">
 
     <top>

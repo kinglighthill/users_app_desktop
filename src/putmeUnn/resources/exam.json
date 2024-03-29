@@ -1,0 +1,29 @@
+{
+  "faqs": [
+    {
+      "faq_title": "About Scholarly UNN Post UTME App",
+      "faq_items": [
+        {
+          "question": "What is Scholarly UNN Post UTME App",
+          "answer": "Scholarly UNN Post UTME app is an android application that is designed to help students learn, pass exams and gain admission into higher institutions"
+        },
+        {
+          "question": "How can I get Scholarly UNN Post UTME App",
+          "answer": "You can download the app from google play store or collect the app from your friends through bluetooth or xender."
+        },
+        {
+          "question": "What is the difference between Scholarly UNN Post UTME App and past question booklets",
+          "answer": "1. Mobility: you can carry your phone anywhere and study wherever you are.\n\n2. CBT: with this app you can time yourself and take exams just like JAMB CBT\n\n3. All in one: Rather than having different booklets for different subjects. In this app all your UNN Post UTME subjects are in one app.\n\n4. Customer support: with this app, you have people to go to if you have questions or complaints.\n\n5. Audio question/answers: questions/answers and explanation can be read to you, meaning you can learn by listening rather than reading.\n\n6. Save questions for later: you can save questions that matter to you so that you can easily find them later.\n\n7. Detailed result breakdown: see how you performed at various subjects, visual representations like bar chart and tables.\n\n8. Built in scientific calculator: use the app's JAMB like calculator without having to use an external device or calculator.\n\n9. Practice one or more subjects at once: take a test or exam in more than one subjects at a time.\n\n10. Shuffle questions/options: test your remembering ability by rearranging the questions and options order.\n\n11. Profile: personalize your app using our feature rich profile screen. update your picture, email, fullname, phone etc."
+        },
+        {
+          "question": "What is the difference between Scholarly UNN Post UTME App and other apps",
+          "answer": "1. Explanation to every question: This app provides concise explanation to every question be it mathematical or non mathematical.\n\n2. Interactive learning: with features like CBT game and study past questions, you learn in a fun filled and interactive manner\n\n3.Customizable: Customize the app features to suit your needs with its preference setting.\n\n4. Easy to use: This app has been designed with you in mind. It affords users a wonderful user experience with its intuitive user interface.\n\n5. Notifications/SMS: Get notified and alerted with the latest information on admissions, universities.\n\n6. Share questions/score: with this app you can share difficult questions you encountered to your friends via different social media platform. Also share your results to friends"
+        },
+        {
+          "question": "Who is Scholarly UNN Post UTME App for",
+          "answer": "Any student who wants to learn, pass exam and gain admission into higher institutions"
+        }
+      ]
+    }
+  ]
+}

@@ -13,7 +13,7 @@
 <?import org.controlsfx.dialog.FontSelectorDialog.FontPanel?>
 <?import javafx.scene.shape.Line?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.ActivatePaymentScreenController"
+            fx:controller="com.scholarly.controller.ActivatePaymentScreenController"
             prefHeight="400.0" prefWidth="600.0">
 
     <top>

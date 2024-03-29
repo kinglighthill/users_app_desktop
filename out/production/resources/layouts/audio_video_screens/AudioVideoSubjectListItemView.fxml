@@ -10,7 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.text.Font?>
 <AnchorPane maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.audio_video_screens.AudioVideoSubjectListItemController">
+            fx:controller="com.scholarly.controller.audio_video_screens.AudioVideoSubjectListItemController">
 
     <children>
         <VBox fx:id="subRoot" prefWidth="600.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-border-color: #e5e5e5; -fx-border-width: 1; -fx-border-radius: 8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

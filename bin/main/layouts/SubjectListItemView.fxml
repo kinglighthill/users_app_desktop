@@ -10,7 +10,7 @@
 <?import org.controlsfx.control.CheckComboBox?>
 <AnchorPane maxWidth="1.7976931348623157E308" style="-fx-background-color: #FFFFFF;"
             xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.scholarly.utme.controller.SubjectListItemController">
+            fx:controller="com.scholarly.controller.SubjectListItemController">
 
    <VBox fx:id="subRoot" prefWidth="600.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-border-color: #e5e5e5; -fx-border-width: 1; -fx-border-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(241, 241, 241, 1), 10.0, 0.5, 0.0, 5.0);"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

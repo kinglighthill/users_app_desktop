@@ -7,7 +7,7 @@
 
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.image.ImageView?>
-<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.SubjectListViewController">
+<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.controller.SubjectListViewController">
     <BorderPane fx:id="subjectsPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" >
         <right>
             <HBox prefHeight="448.0" prefWidth="300.0" BorderPane.alignment="TOP_CENTER">
@@ -109,7 +109,7 @@
         <center>
             <TabPane fx:id="tabMenu" prefHeight="200.0" prefWidth="200.0" tabMinHeight="50" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                 <tabs>
-                    <Tab fx:id="objectiveTab"  text="Objective">
+                    <Tab fx:id="objectiveTab"  text="Objective" style="-fx-cursor: hand;">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="371.0" prefWidth="496.0" style="-fx-background-color: #FFFFFF;">
                                 <children>
@@ -137,7 +137,7 @@
                             </AnchorPane>
                         </content>
                     </Tab>
-                    <Tab fx:id="theoryTab" text="Theory">
+                    <Tab fx:id="theoryTab" text="Theory" style="-fx-cursor: hand;">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>

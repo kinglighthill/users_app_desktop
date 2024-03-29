@@ -10,9 +10,9 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.image.ImageView?>
-<?import com.scholarly.utme.ui.utils.CustomTitledPane?>
+<?import com.scholarly.ui.utils.CustomTitledPane?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.settings_screens.SettingsHelpScreenController"
+            fx:controller="com.scholarly.controller.settings_screens.SettingsHelpScreenController"
             prefHeight="400.0" prefWidth="600.0">
 
     <top>

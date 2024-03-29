@@ -9,7 +9,7 @@
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.web.WebView?>
 <?import com.sun.javafx.scene.control.WebColorField?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.controller.practice_screens.StudyPastQuestScreenController">
     <center>
         <StackPane>
             <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">

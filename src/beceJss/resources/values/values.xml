@@ -1,0 +1,147 @@
+<resources>
+    <string name="app_name">Scholarly BECE JSS</string>
+    <string name="app_name_short">BECE JSS</string>
+    <string name="app_image_directory_name">Scholarly BECE JSS Images</string>
+
+    <string name="facebook_app_id" translatable="false">570121156985581</string>
+    <string name="facebook_client_token" translatable="false">ee689e3cad9a9f3f66a0bcca0df26ddd</string>
+    <string name="fb_login_protocol_scheme">fb570121156985581</string>
+
+    <string name="client_server_id">976105403915-im2asvh95ds2st0bldklua4ft806no4r.apps.googleusercontent.com</string>
+    <string name="staging_client_server_id">976105403915-im2asvh95ds2st0bldklua4ft806no4r.apps.googleusercontent.com</string>
+
+    <string name="slide_1_title">Access Thousands Of Real BECE JSS Past Questions</string>
+    <string name="slide_4_title">Get Latest BECE JSS Updates</string>
+
+    <!--    <string name="slide_1_desc">The easiest way to order food from your favourite restaurant!</string>-->
+    <!--    <string name="slide_4_desc">Book tickets of any transportation and travel the world!</string>-->
+
+    <string name="slide_5_title">Smash your exams and move into Senior Secondary</string>
+
+    <string name="txt_select_subject_info">NOTE: All candidates sitting for BECE JSS would write 7 - 10 subjects \n(Based on their course of study)</string>
+
+    <string name="txt_benefits_more">✔ Access thousands of REAL BECE JSS past questions, answers and explanation from BECE JSS\n\n✔ No Internet/Data required: App can work completely OFFLINE!!!\n\n✔ No annoying ads: There is not even a single advertisement in this app.\n\n✔ Theory Questions: Has both Theory and Objective questions including their explanations.\n\n✔ Pay once: Activation is once, No recurrent or monthly payment. Superb!!!\n\n✔ Listen to questions: an intelligent assistant can read out questions, answers and explanations to you. Great!!!\n\n✔ Results: view a detailed breakdown of CBT scores by subjects.\n\n✔ Retrieve your activation: get back your activated account in cases of new or flashed device\n\n✔ Learning options: You can study past questions, take CBT exams and even play fun-filled games\n\n✔ Get important info: get latest information relating to admissions or school of choice\n\n✔ Bookmarks: Save questions, answers or explanations you want to see later\n\n✔ Literature texts: Availability of a concise, yet inclusive summaries of the recommended texts including possible questions, answers and explanation\n\n✔ Preferences/Settings: App is fully customizable to suit your needs. Personalize the app settings as you want them\n\n✔ Customer service: Our customer service ensures that every problem encountered by our users is resolved in almost 0 second!!!\n\n✔ User interface: App offers a clean and intuitive user interface that guarantees a quality user experience\n\n✔ Calculator: A built-in JAMB-like calculator that helps with basic calculations\n\n ✔ And lots more&#8230; What are you waiting for?</string>
+    <string name="txt_benefits">✔ Access thousands of REAL BECE JSS past questions, answers and explanation from BECE JSS\n\n✔ No Internet/Data required: App can work completely OFFLINE!!!\n\n✔ No annoying ads: There is not even a single advertisement in this app.\n\n✔ Theory Questions: Has both Theory and Objective questions including their explanations.\n\n✔ Pay once: Activation is once, No recurrent or monthly payment. Superb!!!\n\n✔ Click here for more</string>
+
+    <string name="txt_fb_extra_text_result">👆👆👆\nHello, See what I scored using the *Scholarly BECE JSS app*\n\n*https://BECEJSS.web.app/result*</string>
+    <string name="txt_whatsapp_extra_text_result">👆👆👆\nHello, See what I scored using the *Scholarly BECE JSS app*\n\n*https://BECEJSS.web.app/result*</string>
+    <string name="txt_whatsapp_extra_text_question">👆👆👆\nHello, I need you to attempt this past WASSCE question I found in the Scholarly app. Thanks&#8230;\n\n*https://BECEJSS.web.app/pastQuestion*</string>
+    <string name="txt_fb_extra_text_question">👆👆👆\nHello, I need you to attempt this past WASSCE question I found in the Scholarly app. Thanks&#8230;\n\n*https://BECEJSS.web.app/pastQuestion*</string>
+    <string name="txt_result_screenshot_title">Scholarly BECE JSS CBT Result 2021</string>
+    <string name="txt_share_question_option_title">BECE JSS %1$s, Question %2$s</string>
+    <string name="txt_share_literary_texts_title">BECE JSS LITERARY TEXTS 2021 - 2025</string>
+
+    <string name="txt_whatsapp_extra_txt_literary_texts">👆👆👆\nHello, Looking for the bece jss recommended prose, drama and poetry, I found them here in the Scholarly BECE JSS App. Thanks&#8230;\n\n*https://BECEJSS.web.app/pastQuestion*</string>
+    <string name="txt_fb_extra_txt_literary_texts">👆👆👆\nHello, Looking for the bece jss recommended prose, drama and poetry, I found them here in the Scholarly BECE JSS app. Thanks&#8230;\n\n*https://BECEJSS.web.app/pastQuestion*</string>
+
+    <string name="txt_payment_currency_naira">Naira (NG&#8358;)</string>
+
+    <string name="title_activity_waec_time_table">BECE JSS TimeTable</string>
+
+    <string name="txt_store_appname">Scholarly BECE JSS App</string>
+
+    <string name="txt_gh_mobile_money_hint">Residents in Ghana only</string>
+    <string name="txt_bank_deposit_prompt_detail">Receive activation pin after payment confirmation\n(May take up to 20 minutes)</string>
+    <string name="txt_pay_flutterwave">Pay Online (Flutterwave)</string>
+    <string name="txt_atm_pay_prompt">Cards</string>
+    <string name="txt_atm_pay_prompt_detail">Get activated instantly with ATM payment</string>
+    <string name="txt_pay_paystack">Pay Online (Paystack)</string>
+    <string name="txt_pay_monnify">Bank Transfer (Monnify)</string>
+    <string name="txt_pay_ghana_mobile_money">Ghana Mobile money</string>
+    <string name="txt_pay_ghana_mobile_money_rave">Ghana Mobile money (Flutterwave)</string>
+    <string name="txt_no_bank_account_prompt">I don\'t have an account</string>
+    <string name="txt_no_bank_account_details">For those who cannot make payment because they don\'t have a bank account, you can do any of these:
+        \n\n1. Go to any POS agent in your area, pay them cash and ask them to do the transfer for you. You provide them with any of our account numbers specified in the first payment option.
+        \n\n2. Ask people who have accounts to help you make the transfer. You can ask from parents, siblings, friends or relatives to make transfer to any of our account numbers.
+        \n\nAfter they make payment, you will be required to send the details of payment on whatsapp to +2348136941462
+        \n\nDetails to be sent to the email: \n\n1. Account name (Belonging to the account owner or POS agent) \n\n2. Bank paid to \n\n3. Date of payment \n\n4. Amount paid \n\n5. Your email address
+        \n\nAs soon as your payment is confirmed, we\'ll send the activation pin to you on whatsapp.</string>
+
+    <!--about_us.xml-->
+    <string name="txt_app_name">Scholarly BECE JSS APP</string>
+
+    <!--activation_bottom_sheet.xml-->
+    <string name="txt_bank_transfer_prompt">Walk into any POS agent\'s shop around you or any of the bank branches below or use your mobile app or USSD code to make a deposit/transfer of %1$s%2$s to any of our accounts below.</string>
+
+    <!--rate_app-->
+    <string name="txt_rate_app_desc">If you like Scholarly BECE JSS, we would greatly appreciate it if you could rate the app on PlayStore</string>
+
+    <string name="txt_desc_cbt_practice">Take BECE JSS-Like CBT exam to better prepare you</string>
+    <string name="txt_desc_study_pq">Study and understand BECE JSS past questions and answers</string>
+    <string name="txt_novel">BECE JSS Novels</string>
+    <string name="txt_title_novel_grid">BECE JSS Literary Texts</string>
+    <string name="txt_desc_novel">Summary of BECE JSS recommended literature texts</string>
+    <string name="txt_desc_novel_grid">Summary of recommended BECE JSS literature texts</string>
+
+
+    <string name="txt_sch_website">BECE JSS Updates</string>
+    <string name="txt_title_novel_list">BECE JSS\nLiterary Texts</string>
+    <string name="txt_desc_novel_list">Get access to concise analysis and summary of the new literary texts (novels, dramas and poetry) for 2021 – 2025</string>
+    <string name="school_website">https://www.waecnigeria.org</string>
+
+    <string name="txt_update">BECE JSS\nUpdates</string>
+    <string name="txt_desc_update">See the latest admissions update from BECE JSS</string>
+    <string name="txt_time_table">BECE JSS\nTimetable</string>
+    <string name="txt_desc_time_table">Check your bece jss examination timetable</string>
+
+    <string-array name="home_items">
+        <item>cbt_practice</item>
+        <item>study_pq</item>
+        <item>cbt_game</item>
+        <item>website</item>
+        <item>faq</item>
+        <item>other_apps</item>
+    </string-array>
+
+    <string name="txt_account_name">Scholarly Educational Software Ltd</string>
+    <string name="txt_account_name_title">Account name</string>
+    <string name="txt_account_number_title">Account number</string>
+    <string name="txt_bank_name_title">Bank name</string>
+
+    <string name="txt_bank_name_access">Access bank</string>
+    <string name="txt_bank_account_number_access">1237106943</string>
+    <string name="txt_bank_logo_url_access">R.drawable.access_logo</string>
+
+    <string name="txt_bank_name_zenith">Zenith Bank</string>
+    <string name="txt_bank_account_number_zenith">1017030259</string>
+    <string name="txt_bank_logo_url_zenith">R.drawable.zenith_logo</string>
+
+    <string name="txt_bank_name_uba">United Bank for Africa</string>
+    <string name="txt_bank_account_number_uba">1022561456</string>
+    <string name="txt_bank_logo_url_uba">R.drawable.uba_logo</string>
+
+    <string name="txt_no_account_title">I don\'t have an account</string>
+    <string name="txt_no_account_text1"><![CDATA[<i>For those who cannot make payment because they don\'t have a bank account, you can do any of these:         <br><br>1. Go to any POS agent in your area, pay them cash and ask them to do the transfer for you. You provide them with any of our account numbers specified in the first payment option.         <br><br>2. Ask people who have accounts to help you make the transfer. You can ask from parents, siblings, friends or relatives to make transfer to any of our account numbers.         <br><br>After they make payment, you will be required to send a WhatsApp message containing payment details to {contact_address}         <br><br>Details to be sent to WhatsApp: <br><br>1. Account name (Belonging to the account owner or POS agent) <br><br>2. Bank paid to <br><br>3. Date & Time of payment <br><br>4. Amount paid<br><br>5. Name of app paid for: eg WAEC App         <br><br>As soon as your payment is confirmed, we\'ll send the activation pin to you on WhatsApp.</i>]]></string>
+
+    <string name="txt_email_body_template">1. Bank paid to: \n\n2. Amount paid:\n\n3. Sender account name:\n\n4. Date/Time of payment:\n\n5. Name of app paid for: BECE JSS App\n\n</string>
+    <string name="txt_whatsapp_body_template">1. Bank paid to: \n\n2. Amount paid:\n\n3. Sender account name:\n\n4. Date/Time of payment:\n\n5. Name of app paid for: BECE JSS App\n\n</string>
+
+    <string name="txt_text1">Walk into any POS agent\'s shop around you or any of the bank branches below or use your mobile app or USSD code to make a deposit/transfer of {currency}{amount} to any of our accounts below.</string>
+    <string name="txt_text2"><![CDATA[***After payment, send a WhatsApp message containing payment details to: <br>{contact_address} using the format below:]]></string>
+    <string name="txt_text3"><![CDATA[1. Bank paid to:<br><br>2. Sender account name (belonging to the account owner or POS agent):<br><br>3. Amount paid:<br><br>4. Date & Time of payment:<br><br>5. Name of app paid for: eg BECE JSS App]]></string>
+
+    <string name="server_base_url_prod">https://bece-jss.scholarly.africa</string>
+    <string name="server_base_url_staging">https://staging.bece-jss.scholarly.africa</string>
+
+    <string-array name="faq_titles">
+        <item>"About Scholarly BECE JSS App"</item>
+        <item>"Activation"</item>
+        <item>"How to use Scholarly BECE JSS App"</item>
+    </string-array>
+
+    <string-array name="faq_about_names">
+        <item>"What is Scholarly BECE JSS App"</item>
+        <item>"How can I get Scholarly BECE JSS App"</item>
+        <item>"What is the difference between Scholarly BECE JSS App and past question booklets"</item>
+        <item>"What is the difference between Scholarly BECE JSS App and other apps"</item>
+        <item>"Who is Scholarly BECE JSS App for"</item>
+    </string-array>
+
+    <string-array name="faq_about_description">
+        <item>"Scholarly BECE JSS app is an android application that is designed to help students learn, pass exams and gain admission into higher institutions"</item>
+        <item>"You can download the app from google play store or collect the app from your friends through bluetooth or xender."</item>
+        <item>"1. Mobility: you can carry your phone anywhere and study wherever you are.\n\n2. CBT: with this app you can time yourself and take exams just like WAEC CBT\n\n3. All in one: Rather than having different booklets for different subjects. In this app all your BECE JSS subjects are in one app.\n\n4. Customer support: with this app, you have people to go to if you have questions or complaints.\n\n5. Audio question/answers: questions/answers and explanation can be read to you, meaning you can learn by listening rather than reading.\n\n6. Save questions for later: you can save questions that matter to you so that you can easily find them later.\n\n7. Detailed result breakdown: see how you performed at various subjects, visual representations like bar chart and tables.\n\n8. Built in scientific calculator: use the app's BECE JSS like calculator without having to use an external device or calculator.\n\n9. Practice one or more subjects at once: take a test or exam in more than one subjects at a time.\n\n10. Shuffle questions/options: test your remembering ability by rearranging the questions and options order.\n\n11. Profile: personalize your app using our feature rich profile screen. update your picture, email, fullname, phone etc."</item>
+        <item>"2. Explanation to every question: This app provides concise explanation to every question be it mathematical or non mathematical.\n\n2. Interactive learning: with features like CBT game and study past questions, you learn in a fun filled and interactive manner\n\n3.Customizable: Customize the app features to suit your needs with its preference setting.\n\n4. Easy to use: This app has been designed with you in mind. It affords users a wonderful user experience with its intuitive user interface.\n\n5. Notifications/SMS: Get notified and alerted with the latest information on admissions, universities.\n\n6. Share questions/score: with this app you can share difficult questions you encountered to your friends via different social media platform. Also share your results to friends"</item>
+        <item>"Any student who wants to learn, pass exam and gain admission into higher institutions"</item>
+    </string-array>
+</resources>

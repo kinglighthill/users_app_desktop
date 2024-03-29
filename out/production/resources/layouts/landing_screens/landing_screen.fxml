@@ -7,7 +7,7 @@
 
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.controller.landing_screens.LandingScreenController">
     <top>
         <VBox fx:id="activateVBox">
             <Panel fx:id="activatePanel" style="-fx-background-color: #FAF6CA;">
@@ -102,7 +102,7 @@
             </children>
         </VBox>
 
-        <Label alignment="BOTTOM_CENTER" fx:id="versionText" text="Version 1.0.1" textFill="#FFFFFF"/>
+        <Label alignment="BOTTOM_CENTER" fx:id="versionText" textFill="#FFFFFF"/>
     </left>
 
     <center>
