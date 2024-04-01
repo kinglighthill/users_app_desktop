@@ -29,6 +29,7 @@ public class AppProperties {
     private String appName;
     private String exam;
     private String school;
+    private String website;
     private String dbName;
     private int dbVersion;
     private String srcPath;
@@ -62,6 +63,7 @@ public class AppProperties {
             appName = properties.getProperty(PropertyKeys.APP_NAME);
             exam = properties.getProperty(PropertyKeys.EXAM);
             school = properties.getProperty(PropertyKeys.SCHOOL);
+            website = properties.getProperty(PropertyKeys.WEBSITE);
             dbName = properties.getProperty(PropertyKeys.DB_NAME);
             dbVersion = Integer.parseInt(properties.getProperty(PropertyKeys.DB_VERSION));
             srcPath = properties.getProperty(PropertyKeys.SRC_PATH);
@@ -171,6 +173,10 @@ public class AppProperties {
         return school;
     }
 
+    public String getWebsite() {
+        return website;
+    }
+
     public String getDbName() {
         return dbName;
     }
@@ -225,6 +231,7 @@ public class AppProperties {
         static String APP_NAME = "appName";
         static String EXAM = "exam";
         static String SCHOOL = "school";
+        static String WEBSITE = "website";
         static String DB_NAME = "dbName";
         static String DB_VERSION = "dbVersion";
         static String SRC_PATH = "srcPath";
