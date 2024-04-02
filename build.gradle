@@ -292,9 +292,3 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
-//PQScreenController
-//PQScreenVM
-//SubjectListViewVM
-//SubjectListViewController
-//SubjectListViewTuple
