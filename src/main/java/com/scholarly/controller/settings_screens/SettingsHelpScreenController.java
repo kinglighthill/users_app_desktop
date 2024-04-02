@@ -106,7 +106,7 @@ public class SettingsHelpScreenController implements FxmlView<SettingsHelpScreen
         });
 
         websitePane.setOnMouseClicked(event -> {
-            application.openBrowser(Constants.WEBSITE_URL);
+            application.openBrowser(AppProperties.getInstance().getWebsite());
         });
 
         backButton.setOnAction(event -> {

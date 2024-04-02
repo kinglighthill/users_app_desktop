@@ -137,7 +137,7 @@ jlink {
         } else if (currentOs.linux) {
             installerOptions += ['--linux-package-name', 'scholarly','--linux-shortcut']
         } else if (currentOs.macOsX) {
-            installerOptions += ['--mac-package-name', 'scholarly']
+            installerOptions += ['--mac-package-name', 'scholarly', '--mac-package-identifier', 'com.scholarly.wassce']
         }
     }
 
@@ -146,9 +146,9 @@ jlink {
         excludeRequires 'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing'
     }*/
 
-    /*mergedModule {
+    mergedModule {
 
-    }*/
+    }
 }
 
 /*jpackage {
