@@ -106,7 +106,7 @@ public class PreAuthenticationController implements FxmlView<PreAuthenticationVM
     }
 
     private void initializeViews() {
-        scholarlyLogo.setImage(new Image(getClass().getResource("/drawable/app_icon.png").toString()));
+        scholarlyLogo.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
         sliderImageView1.setImage(new Image(getClass().getResource("/drawable/auth_screen_image1.jpg").toString()));
         sliderImageView2.setImage(new Image(getClass().getResource("/drawable/auth_screen_image2.jpg").toString()));
         sliderImageView3.setImage(new Image(getClass().getResource("/drawable/auth_screen_image3.jpg").toString()));

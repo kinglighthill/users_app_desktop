@@ -1,9 +1,9 @@
 package com.scholarly.data.model.newDb;
 
 public class SubjectCombination {
-    private int id;
-    private int subjectId;
-    private String userId;
+    private final int id;
+    private final int subjectId;
+    private final String userId;
 
     public SubjectCombination(int id, int subjectId, String userId) {
         this.id = id;

@@ -50,8 +50,7 @@ public class SubjectGridItemCell extends GridCell<FavoriteSubject> {
         } else {
             subjectName.setText(item.getTitle());
             subjectName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-//            System.out.println("GridItem shortTitle -> " + item.getShortTitle());
-            subjectImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/drawable/subject_images/" + item.getShortTitle() + "_image.png")).toString()));
+            subjectImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/drawable/subject_images/" + item.getTitle() + "_image.png")).toString()));
 
             updateGreenTick(item);
 
@@ -62,7 +61,6 @@ public class SubjectGridItemCell extends GridCell<FavoriteSubject> {
 
 
             setStyle("-fx-background-color: rgba(143, 152, 255, 0.10); -fx-background-radius: 7");
-//            setBackground(new Background(new BackgroundFill(Paint.valueOf(item.getColorCode() != null ? item.getColorCode() : "12AF20"), new CornerRadii(3.0, 3.0, 3.0, 3.0, false), new Insets(3))));
 
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
