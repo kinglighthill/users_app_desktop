@@ -72,7 +72,8 @@ public class PreferencesManager {
     }
 
     public static void initialize() {
-        preferences = Preferences.userRoot().node("com.scholarly.utme");
+        String packageName = "com.scholarly" + AppProperties.getInstance().getApplicationIdSuffix();
+        preferences = Preferences.userRoot().node(packageName);
     }
 
     /*public static void put(String key, String value) {
@@ -94,7 +95,7 @@ public class PreferencesManager {
     public static void flush() {
         try {
             preferences.flush();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

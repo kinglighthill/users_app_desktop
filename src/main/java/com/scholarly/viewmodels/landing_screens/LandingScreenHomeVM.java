@@ -213,19 +213,6 @@ public class LandingScreenHomeVM implements ViewModel {
         subjectCombinationList.forEach(SubjectDao::insertSubjectCombination);
     }
 
-    public ObservableList<ObjectiveSubject> getSubjectCombination() {
-        List<SubjectCombination> subjectCombinationList = SubjectDao.retrieveSubjectCombination(userData.getId());
-        ObservableList<ObjectiveSubject> favSubjects = FXCollections.observableArrayList();
-        subjects.forEach(subject -> {
-            subjectCombinationList.forEach(subjectCombination -> {
-                if (subject.getSubjectId() == subjectCombination.getSubjectId()) {
-                    favSubjects.add(subject);
-                }
-            });
-        });
-        return favSubjects;
-    }
-
     public HashMap<Integer, ObservableList<NoteTopic>> getNoteSubjectTopics() {
         return noteSubjectTopics;
     }

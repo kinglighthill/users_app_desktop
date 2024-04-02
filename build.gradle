@@ -142,10 +142,10 @@ jlink {
         }
     }
 
-    mergedModule {
+    /*mergedModule {
         additive = true
         excludeRequires 'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing'
-    }
+    }*/
 
     /*mergedModule {
 

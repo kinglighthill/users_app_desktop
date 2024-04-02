@@ -171,7 +171,7 @@ public class PQScreenController implements FxmlView<PQScreenVM>, Initializable{
         ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/practice_back_button_icon.png").toString()));
         backButton.setGraphic(backIcon);
 
-        appImage.setImage(new Image(getClass().getResource("/drawable/app_icon.png").toString()));
+        appImage.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
 
         practiceButton.setBackground(Background.EMPTY);
         practiceButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/cbt_practice_icon.png").toString())));
