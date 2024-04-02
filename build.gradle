@@ -117,9 +117,6 @@ jlink {
 
         appVersion = version
 
-//        imageZip = file("$buildDir/release/$appId/${appId}.zip")
-//        imageDir = file("$buildDir/release/$appId")
-
         def currentOs = org.gradle.internal.os.OperatingSystem.current()
         def imgType = currentOs.windows ? 'ico' : currentOs.macOsX ? 'icns' : 'png'
         def imgName = srcPath + "/drawable/app_icon.$imgType"
