@@ -1,6 +1,5 @@
 package com.scholarly.async;
 
-import com.scholarly.controller.SubjectListViewController;
 import com.scholarly.controller.landing_screens.LandingScreenAccountController;
 import com.scholarly.controller.landing_screens.LandingScreenActivateController;
 import com.scholarly.controller.landing_screens.LandingScreenHomeController;

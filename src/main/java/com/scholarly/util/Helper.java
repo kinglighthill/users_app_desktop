@@ -478,6 +478,14 @@ public class Helper {
         MainApplication.timeTakenTo("show pq screen");
     }
 
+    public static Image getSubjectIcon(Class<?> mClass, String title) {
+        URL imageUrl = mClass.getResource("/drawable/subject_images/" + title + "_image.png");
+        if (imageUrl == null) {
+            imageUrl = mClass.getResource("/drawable/subject_images/default_image.png");
+        }
+        return new Image(Objects.requireNonNull(imageUrl).toString());
+    }
+
     public interface ErrorCallback {
         void callback();
     }

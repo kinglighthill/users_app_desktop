@@ -2,12 +2,17 @@ package com.scholarly.controller;
 
 import com.scholarly.data.model.Year;
 import com.scholarly.data.model.newDb.PQTopic;
+import com.scholarly.ui.utils.FontUtil;
+import com.scholarly.util.Helper;
 import com.scholarly.viewmodels.SubjectListItemVM;
 import com.scholarly.viewmodels.SubjectListViewVM;
 import de.saxsys.mvvmfx.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -38,7 +43,7 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     @FXML
     private CheckComboBox<PQTopic> topicsComboBox;
     @FXML
-    private VBox subRoot;
+    private VBox subRoot, subjectVBox;
     @FXML
     private ChoiceBox<Integer> questionNoChoiceBox;
     @FXML
@@ -47,13 +52,10 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
     private HBox optionPanel;
     @FXML
     private ImageView subjectImage;
-    @FXML
-    private Label subjectText;
-
+//    @FXML
+//    private Label subjectText, subjectDesc;
 
     SubjectListViewController subjectListViewController;
-
-//    SubjectListViewControllerWaec subjectListViewControllerWaec;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -66,13 +68,20 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
 //        subjectListViewControllerWaec = subjectListViewWaecTuple.getCodeBehind();
 
         subjectImageBackground.setStyle("-fx-background-radius: 8 0 0 8; -fx-background-color: " + viewModel.getSubjectColorName());
-        try {
-            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/" + viewModel.getShortTitle() + "_image.png").toString()));
-        } catch (Exception e){
-            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/IRS_image.png").toString()));
-        }
+        subjectImage.setImage(Helper.getSubjectIcon(getClass(), viewModel.getSubjectName()));
 
+        Label subjectText = new Label();
+        subjectText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
         subjectText.textProperty().bind(viewModel.subjectNameProperty());
+        subjectVBox.getChildren().add(subjectText);
+
+        if (viewModel.getSubjectDesc() != null) {
+            Label subjectDesc = new Label();
+            subjectDesc.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.LIGHT, FontUtil.FontSize.TWELVE.size));
+            subjectDesc.setText(viewModel.getSubjectDesc());
+            subjectDesc.setPadding(new Insets(8, 0, 0, 0));
+            subjectVBox.getChildren().add(subjectDesc);
+        }
 
         subjectPane.setOnMouseClicked(event -> subjectCheckBox.setSelected(!subjectCheckBox.isSelected()));
 
@@ -92,7 +101,13 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
 
         yearChoiceBox.getItems().addAll(viewModel.getYears());
         List<Year> freeYears = viewModel.getYears().stream().filter(Year::isFree).toList();
-        viewModel.setSelectedYearProperty(freeYears.get(0));
+
+        if (!freeYears.isEmpty()) {
+            viewModel.setSelectedYearProperty(freeYears.get(0));
+        } else {
+            viewModel.setSelectedYearProperty(viewModel.getYears().get(0));
+        }
+
         yearChoiceBox.getSelectionModel().selectedItemProperty().addListener( (observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (newValue.isFree()) {
@@ -101,15 +116,24 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
                     viewModel.loadQuestionNumbersList(newValue);
                 } else {
                     yearChoiceBox.getSelectionModel().clearSelection();
-                    yearChoiceBox.getSelectionModel().select(freeYears.get(0));
-                    subjectListViewController.showActivateDialog();
-//                    subjectListViewControllerWaec.showActivateDialog();
+                    if (!freeYears.isEmpty()) {
+                        yearChoiceBox.getSelectionModel().select(freeYears.get(0));
+                        subjectListViewController.showActivateDialog();
+                    } else {
+                        yearChoiceBox.getSelectionModel().select(oldValue);
+                        if (viewModel.isSubjectSelected()) {
+                            subjectListViewController.showActivateDialog();
+                        }
+                    }
                 }
             }
-
         });
-        yearChoiceBox.setValue(freeYears.get(0));
 
+        if (!freeYears.isEmpty()) {
+            yearChoiceBox.setValue(freeYears.get(0));
+        } else {
+            yearChoiceBox.setValue(viewModel.getYears().get(0));
+        }
 
         topicsComboBox.getItems().addAll(viewModel.getTopics());
         topicsComboBox.getCheckModel().checkAll();
@@ -138,8 +162,10 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         });
 
         subRoot.getChildren().removeAll(divider, optionPanel);
-        if (viewModel.isSubjectSelected())
+
+        if (viewModel.isSubjectSelected()) {
             subRoot.getChildren().addAll(divider, optionPanel);
+        }
 
         viewModel.subjectSelectedProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println(TAG + viewModel.getSubject() + " selected property changed to -> " + newValue + " from -> " + oldValue);

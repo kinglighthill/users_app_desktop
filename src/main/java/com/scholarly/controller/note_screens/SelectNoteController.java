@@ -5,6 +5,7 @@ import com.scholarly.MainApplication;
 import com.scholarly.controller.landing_screens.LandingScreenController;
 import com.scholarly.data.model.newDb.*;
 import com.scholarly.ui.utils.*;
+import com.scholarly.util.Helper;
 import com.scholarly.viewmodels.note_screens.SelectNoteVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -89,7 +90,7 @@ public class SelectNoteController implements FxmlView<SelectNoteVM>, Initializab
                     button.setText(subject.getTitle());
                     button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 15));
 
-                    ImageView graphic = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + subject.getShortTitle() + "_image.png").toString()));
+                    ImageView graphic = new ImageView(Helper.getSubjectIcon(getClass(), subject.getTitle()));
                     graphic.setFitWidth(27);
                     graphic.setFitHeight(27);
                     button.setGraphic(graphic);

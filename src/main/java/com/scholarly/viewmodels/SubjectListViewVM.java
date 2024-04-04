@@ -1,6 +1,7 @@
 package com.scholarly.viewmodels;
 
 import com.scholarly.data.dao.SubjectDao;
+import com.scholarly.data.model.newDb.FavoriteSubject;
 import com.scholarly.data.model.newDb.PQSubject;
 import com.scholarly.viewmodels.SubjectListItemVM.SubjectState;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -15,6 +16,7 @@ import javafx.concurrent.Task;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,28 +28,28 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
     private final ObservableList<SubjectListItemVM> objectiveSubjects = FXCollections.observableArrayList();
     private final ObservableList<SubjectListItemVM> theorySubjects = FXCollections.observableArrayList();
 
-    private final Map<String, SubjectState> objectiveHashMap = new LinkedHashMap<>();
-    private final ObservableMap<String, SubjectState> selectedObjectiveSubjects = FXCollections.observableMap(objectiveHashMap); // LinkedHashMap because it maintains insertion order
+    private final Map<Integer, SubjectState> objectiveHashMap = new LinkedHashMap<>();
+    private final ObservableMap<Integer, SubjectState> selectedObjectiveSubjects = FXCollections.observableMap(objectiveHashMap); // LinkedHashMap because it maintains insertion order
 
-    public ObservableMap<String, SubjectState> getSelectedObjectiveSubjects() {
+    public ObservableMap<Integer, SubjectState> getSelectedObjectiveSubjects() {
         return selectedObjectiveSubjects;
     }
 
-    private final Map<String, SubjectState> theoryHashMap = new LinkedHashMap<>();
+    private final Map<Integer, SubjectState> theoryHashMap = new LinkedHashMap<>();
 
-    private final ObservableMap<String, SubjectState> selectedTheorySubjects = FXCollections.observableMap(theoryHashMap);
+    private final ObservableMap<Integer, SubjectState> selectedTheorySubjects = FXCollections.observableMap(theoryHashMap);
 
-    public ObservableMap<String, SubjectState> getSelectedTheorySubjects() {
+    public ObservableMap<Integer, SubjectState> getSelectedTheorySubjects() {
         return selectedTheorySubjects;
     }
 
-    private final ObservableMap<String, Integer> selectedSubjectAllottedTime = FXCollections.observableHashMap();
-    private final ObservableMap<String, Integer> selectedSubjectNumberOfQuestions = FXCollections.observableHashMap();
+    private final ObservableMap<Integer, Integer> selectedSubjectAllottedTime = FXCollections.observableHashMap();
+    private final ObservableMap<Integer, Integer> selectedSubjectNumberOfQuestions = FXCollections.observableHashMap();
 
-    public ObservableMap<String, Integer> getSelectedSubjectAllottedTime() {
+    public ObservableMap<Integer, Integer> getSelectedSubjectAllottedTime() {
         return selectedSubjectAllottedTime;
     }
-    public ObservableMap<String, Integer> getSelectedSubjectNumberOfQuestions() {
+    public ObservableMap<Integer, Integer> getSelectedSubjectNumberOfQuestions() {
         return selectedSubjectNumberOfQuestions;
     }
 
@@ -61,9 +63,9 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
         Task<Boolean> subjectTask = new Task<>() {
             @Override
             protected Boolean call() {
-                objectiveSubjects.addAll(SubjectDao.getObjFavoriteSubjects().stream().map(favoriteSubject -> new SubjectListItemVM(new PQSubject(favoriteSubject.getId(), favoriteSubject.getSubjectId(), favoriteSubject.getMinutesAllotted(), favoriteSubject.getOrder(), favoriteSubject.getTitle(), favoriteSubject.getShortTitle(), favoriteSubject.getColorCode(), favoriteSubject.isSelected()))).toList());
+                objectiveSubjects.addAll(SubjectDao.getObjFavoriteSubjects().stream().map(favoriteSubject -> new SubjectListItemVM(new PQSubject(favoriteSubject.getId(), favoriteSubject.getSubjectId(), favoriteSubject.getMinutesAllotted(), favoriteSubject.getOrder(), favoriteSubject.getTitle(), favoriteSubject.getShortTitle(), favoriteSubject.getDescription(), favoriteSubject.getColorCode(), favoriteSubject.isSelected()))).toList());
 
-                theorySubjects.addAll(SubjectDao.getTheoryFavoriteSubjects().stream().map(favoriteSubject -> new SubjectListItemVM(new PQSubject(favoriteSubject.getId(), favoriteSubject.getSubjectId(), favoriteSubject.getMinutesAllotted(), favoriteSubject.getOrder(), favoriteSubject.getTitle(), favoriteSubject.getShortTitle(), favoriteSubject.getColorCode(), favoriteSubject.isSelected()))).toList());
+                theorySubjects.addAll(SubjectDao.getTheoryFavoriteSubjects().stream().map(favoriteSubject -> new SubjectListItemVM(new PQSubject(favoriteSubject.getId(), favoriteSubject.getSubjectId(), favoriteSubject.getMinutesAllotted(), favoriteSubject.getOrder(), favoriteSubject.getTitle(), favoriteSubject.getShortTitle(), favoriteSubject.getDescription(), favoriteSubject.getColorCode(), favoriteSubject.isSelected()))).toList());
 
                 objectiveSubjects.forEach(vm -> disposables.add(
                         vm.getSubjectState()
@@ -72,20 +74,15 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
                                 .subscribe(subjectState -> {
                                             if (subjectState.getSelected()) {
                                                 System.out.println(TAG + "subject obj: " + subjectState.getSubject() + " selected.. adding to selected list in map with allotted time -> " + subjectState.getSubject().getMinutesAllotted());
-                                                selectedObjectiveSubjects.put(subjectState.getSubject().getShortTitle(), subjectState);
-                                                selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAllotted());
+                                                selectedObjectiveSubjects.put(subjectState.getSubject().getId(), subjectState);
+                                                selectedSubjectAllottedTime.put(subjectState.getSubject().getId(), subjectState.getSubject().getMinutesAllotted());
 
-                                                selectedSubjectNumberOfQuestions.put(subjectState.getSubject().getTitle(), subjectState.getNumberOfQuestions());
+                                                selectedSubjectNumberOfQuestions.put(subjectState.getSubject().getId(), subjectState.getNumberOfQuestions());
 
                                                 System.out.println(TAG + "Selected Objective Subjects: (Key Set) -> " + selectedObjectiveSubjects.keySet());
-//                                            System.out.println(TAG + "Selected Objective Subjects Time Map: (Key Set) -> " + selectedSubjectAllottedTime.keySet() + " with values -> " + selectedSubjectAllottedTime.values());
-
-                                                //  System.out.println("SubjectStates (shuffleQuestion): " + subjectState.getShuffleQuestions());
-
                                             } else {
-//                                            System.out.println(TAG + "subject obj: " + subjectState.getSubject() + " unselected.. removing from selected list");
-                                                selectedObjectiveSubjects.remove(subjectState.getSubject().getShortTitle());
-                                                selectedSubjectAllottedTime.remove(subjectState.getSubject().getShortTitle());
+                                                selectedObjectiveSubjects.remove(subjectState.getSubject().getId());
+                                                selectedSubjectAllottedTime.remove(subjectState.getSubject().getId());
                                             }
                                         })
                 ));
@@ -97,16 +94,15 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
                                 .subscribe(subjectState -> {
                                             if (subjectState.getSelected()) {
                                                 System.out.println(TAG + "subject theory: " + subjectState.getSubject() + " selected.. adding to selected list in map");
-                                                selectedTheorySubjects.put(subjectState.getSubject().getShortTitle(), subjectState);
+                                                selectedTheorySubjects.put(subjectState.getSubject().getId(), subjectState);
 
-                                                selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAllotted());
-                                                selectedSubjectNumberOfQuestions.put(subjectState.getSubject().getTitle(), subjectState.getNumberOfQuestions());
+                                                selectedSubjectAllottedTime.put(subjectState.getSubject().getId(), subjectState.getSubject().getMinutesAllotted());
+                                                selectedSubjectNumberOfQuestions.put(subjectState.getSubject().getId(), subjectState.getNumberOfQuestions());
 
                                                 System.out.println(TAG + "Selected Theory Subjects: (Key Set) -> " + selectedTheorySubjects.keySet());
                                             } else {
-//                                            System.out.println(TAG + "subject theory unselected.. removing from selected list");
-                                                selectedTheorySubjects.remove(subjectState.getSubject().getShortTitle());
-                                                selectedSubjectAllottedTime.remove(subjectState.getSubject().getShortTitle());
+                                                selectedTheorySubjects.remove(subjectState.getSubject().getId());
+                                                selectedSubjectAllottedTime.remove(subjectState.getSubject().getId());
                                             }
                                         })
                 ));
@@ -134,7 +130,7 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
     public void setSubjectSelected(PQSubject subject) {
         if (subject != null) {
             objectiveSubjects.forEach(vm -> {
-                if (vm.getSubject().getSubjectId() == subject.getSubjectId()) {
+                if (vm.getSubject().getId() == subject.getId()) {
                     vm.selectSubject(SubjectListItemVM.Type.OBJECTIVE);
                     vm.setSubject(subject);
                 }

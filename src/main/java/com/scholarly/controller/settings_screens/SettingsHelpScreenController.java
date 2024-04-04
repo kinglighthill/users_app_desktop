@@ -97,17 +97,11 @@ public class SettingsHelpScreenController implements FxmlView<SettingsHelpScreen
             }
         }));
 
-        whatsAppPane.setOnMouseClicked(event -> {
-            application.openBrowser(Constants.WHATSAPP_URL);
-        });
+        whatsAppPane.setOnMouseClicked(event -> application.openBrowser(Constants.WHATSAPP_URL));
 
-        gmailPane.setOnMouseClicked(event -> {
-            application.openBrowser(Constants.GMAIL_URL);
-        });
+        gmailPane.setOnMouseClicked(event -> application.openBrowser(Constants.GMAIL_URL));
 
-        websitePane.setOnMouseClicked(event -> {
-            application.openBrowser(AppProperties.getInstance().getWebsite());
-        });
+        websitePane.setOnMouseClicked(event -> application.openBrowser(Constants.WEBSITE_URL));
 
         backButton.setOnAction(event -> {
             ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.SETTINGS_SCREEN));

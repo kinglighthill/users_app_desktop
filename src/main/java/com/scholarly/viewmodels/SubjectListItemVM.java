@@ -63,32 +63,32 @@ public class SubjectListItemVM implements ViewModel {
         THEORY
     }
 
-    private SimpleStringProperty subjectName = new SimpleStringProperty("");
-    private SimpleStringProperty subjectShortTitle = new SimpleStringProperty("");
-    private SimpleStringProperty subjectColorName = new SimpleStringProperty("");
+    private final SimpleStringProperty subjectName = new SimpleStringProperty("");
+    private String subjectDesc = null;
+    private final SimpleStringProperty subjectColorName = new SimpleStringProperty("");
     private ObservableList<Year> years;
-    private ObservableList<PQTopic> topics = FXCollections.observableArrayList();
+    private final ObservableList<PQTopic> topics = FXCollections.observableArrayList();
 
-    private ObservableList<Integer> questionNumbers = FXCollections.observableArrayList();
+    private final ObservableList<Integer> questionNumbers = FXCollections.observableArrayList();
 
     private Type type;
 
-    private SimpleBooleanProperty subjectSelected = new SimpleBooleanProperty(false);
-    private SimpleBooleanProperty shuffleQuestions = new SimpleBooleanProperty(false);
-    private SimpleBooleanProperty shuffleOptions = new SimpleBooleanProperty(false);
-    private ObjectProperty<List<Integer>> selectedTopicsProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<Year> selectedYearProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<Integer> selectedNumberOfQuestions = new SimpleObjectProperty<>();
-    private SimpleBooleanProperty favoriteSubject = new SimpleBooleanProperty(false);
+    private final SimpleBooleanProperty subjectSelected = new SimpleBooleanProperty(false);
+    private final SimpleBooleanProperty shuffleQuestions = new SimpleBooleanProperty(false);
+    private final SimpleBooleanProperty shuffleOptions = new SimpleBooleanProperty(false);
+    private final ObjectProperty<List<Integer>> selectedTopicsProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Year> selectedYearProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Integer> selectedNumberOfQuestions = new SimpleObjectProperty<>();
+    private final SimpleBooleanProperty favoriteSubject = new SimpleBooleanProperty(false);
 
     private PQSubject subject;
-    private BehaviorSubject<SubjectState> subjectState = BehaviorSubject.create();
+    private final BehaviorSubject<SubjectState> subjectState = BehaviorSubject.create();
 
     public SubjectListItemVM(PQSubject subject) {
-//        System.out.println(TAG + "Subject -> " + Helper.toString(subject));
         this.subject = subject;
         subjectName.set(subject.getTitle());
-        subjectShortTitle.set(subject.getShortTitle());
+        subjectDesc = subject.getDescription();
+
         subjectColorName.set(subject.getColorCode());
         favoriteSubject.set(subject.isFavorite());
 
@@ -98,7 +98,6 @@ public class SubjectListItemVM implements ViewModel {
         subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedTopicsProperty.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
 
         mapPropertiesToState();
-
     }
 
     public SubjectListItemVM() {
@@ -157,8 +156,8 @@ public class SubjectListItemVM implements ViewModel {
         return subjectName.get();
     }
 
-    public String getShortTitle() {
-        return subjectShortTitle.get();
+    public String getSubjectDesc() {
+        return subjectDesc;
     }
 
     public String getSubjectColorName() {
@@ -257,9 +256,7 @@ public class SubjectListItemVM implements ViewModel {
 
     public void loadTopicsForYear(Year year) {
         topics.clear();
-//        System.out.println(TAG + "Got Year -> " + year.getYear());
         topics.addAll(Objects.requireNonNull(TopicDao.getPQTopicsForSubjectAndYear(subject.getId(), year.getId())));
-//        System.out.println(TAG + "Got Topics -> " + topics);
     }
 
     public void loadQuestionNumbersList(List<Integer> topicIdsList) {

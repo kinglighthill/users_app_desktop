@@ -245,7 +245,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
                                         noteLastSessionText.setText(noteLastSession.getSectionTitle());
                                         noteSessionSubjectName.setText(viewModel.getLastSessionSubject().getTitle());
-                                        noteSessionSubjectImage.setImage(new Image(getClass().getResource("/drawable/subject_images/" + viewModel.getLastSessionSubject().getShortTitle() + "_image.png").toString()));
+                                        noteSessionSubjectImage.setImage(Helper.getSubjectIcon(getClass(), viewModel.getLastSessionSubject().getTitle()));
 
                                     }
                                     if (novelLastSession != null) {
@@ -333,7 +333,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             MainApplication.timeTakenTo("show syllabus screen");
         });
 
-        websitePanel.setOnMouseClicked(e -> application.openBrowser(Constants.WEBSITE_URL + "apps"));
+        websitePanel.setOnMouseClicked(e -> application.openBrowser(AppProperties.getInstance().getWebsite()));
 
         noteLastSessionPanel.setOnMouseClicked(e -> {
             MainApplication.resetTime();
@@ -599,7 +599,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         selectedSubjects.forEach(subject -> {
             Panel panel = new Panel();
             panel.setPrefSize(110, 90);
-            ImageView subjectImage = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + subject.getShortTitle() + "_image.png").toString()));
+            ImageView subjectImage = new ImageView(Helper.getSubjectIcon(getClass(), subject.getTitle()));
             panel.setTop(subjectImage);
 
             Label subjectLabel = new Label(subject.getTitle());

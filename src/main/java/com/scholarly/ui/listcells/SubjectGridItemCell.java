@@ -2,6 +2,7 @@ package com.scholarly.ui.listcells;
 
 import com.scholarly.data.model.newDb.FavoriteSubject;
 import com.scholarly.ui.utils.FontUtil;
+import com.scholarly.util.Helper;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -11,6 +12,7 @@ import javafx.scene.layout.Background;
 import org.controlsfx.control.GridCell;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 
 public class SubjectGridItemCell extends GridCell<FavoriteSubject> {
@@ -18,6 +20,7 @@ public class SubjectGridItemCell extends GridCell<FavoriteSubject> {
 
 
     public Label subjectName;
+    public Label subjectDesc;
     public ImageView subjectImage;
     public ImageView greenTickImage;
 
@@ -50,7 +53,15 @@ public class SubjectGridItemCell extends GridCell<FavoriteSubject> {
         } else {
             subjectName.setText(item.getTitle());
             subjectName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
-            subjectImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/drawable/subject_images/" + item.getTitle() + "_image.png")).toString()));
+
+            if (item.getDescription() != null) {
+                subjectDesc.setText(item.getDescription());
+                subjectDesc.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 10));
+            } else {
+                subjectDesc.setVisible(false);
+            }
+
+            subjectImage.setImage(Helper.getSubjectIcon(getClass(), item.getTitle()));
 
             updateGreenTick(item);
 

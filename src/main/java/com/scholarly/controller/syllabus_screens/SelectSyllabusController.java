@@ -6,6 +6,7 @@ import com.scholarly.data.model.newDb.*;
 import com.scholarly.data.model.newDb.contentType.ContentViewType;
 import com.scholarly.data.model.newDb.contentViewType.HeaderViewType;
 import com.scholarly.ui.utils.*;
+import com.scholarly.util.Helper;
 import com.scholarly.viewmodels.syllabus_screens.SelectSyllabusVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -92,7 +93,7 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
                 button.setText(syllabusSubject.getTitle());
                 button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
 
-                ImageView graphic = new ImageView(new Image(getClass().getResource("/drawable/subject_images/" + syllabusSubject.getShortTitle() + "_image.png").toString()));
+                ImageView graphic = new ImageView(Helper.getSubjectIcon(getClass(), syllabusSubject.getTitle()));
                 graphic.setFitWidth(27);
                 graphic.setFitHeight(27);
                 button.setGraphic(graphic);

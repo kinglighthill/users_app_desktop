@@ -86,17 +86,24 @@ public class SubjectDao {
             objectiveSubjects.clear();
 
             while (rs.next()) {
-                objectiveSubjects.add(new ObjectiveSubject(
-                        rs.getInt(idColumn),
-                        rs.getInt(subjectIdColumn),
-                        rs.getInt(minutesAllottedColumn),
-                        rs.getInt(orderColumn),
-                        rs.getString(titleColumn),
-                        rs.getString(shortTitleColumn),
-                        rs.getString(colorCodeColumn),
-                        rs.getString(descriptionColumn)));
+                objectiveSubjects.add(
+                        new ObjectiveSubject(
+                            rs.getInt(idColumn),
+                            rs.getInt(subjectIdColumn),
+                            rs.getInt(minutesAllottedColumn),
+                            rs.getInt(orderColumn),
+                            rs.getString(titleColumn),
+                            rs.getString(shortTitleColumn),
+                            rs.getString(colorCodeColumn),
+                            rs.getString(descriptionColumn)
+                        )
+                );
             }
-
+//            objectiveSubjects.remove(10, 11);
+//            objectiveSubjects.remove(22, 24);
+//            objectiveSubjects.remove(36, 42);
+//            objectiveSubjects.remove(44);
+            System.out.println("TAG:" + objectiveSubjects.size());
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,

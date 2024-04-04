@@ -2,6 +2,7 @@ package com.scholarly.controller.audio_video_screens;
 
 import com.scholarly.data.model.MediaSubTopic;
 import com.scholarly.data.model.Topic;
+import com.scholarly.util.Helper;
 import com.scholarly.viewmodels.audio_video_screens.AudioVideoSubjectListItemVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -62,12 +63,7 @@ public class AudioVideoSubjectListItemController implements FxmlView<AudioVideoS
         initializeViews();
 
         subjectImageBackground.setStyle("-fx-background-radius: 8 0 0 8; -fx-background-color: " + viewModel.getSubjectColorName());
-        try {
-            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/" + viewModel.getSubjectTableName() + "_image.png").toString()));
-        }catch (Exception e){
-            subjectImage.setImage(new Image(getClass().getResource("/drawable/select_subject_images/IRS_image.png").toString()));
-            System.out.println(e.toString());
-        }
+        subjectImage.setImage(Helper.getSubjectIcon(getClass(), viewModel.getSubjectName()));
 
         subjectText.textProperty().bind(viewModel.subjectNameProperty());
         subjectCheckBox.selectedProperty().bindBidirectional(viewModel.subjectSelectedProperty());
