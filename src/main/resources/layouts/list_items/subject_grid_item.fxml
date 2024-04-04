@@ -22,11 +22,13 @@
                     </HBox>
                 </left>
                 <bottom>
-                    <Label fx:id="subjectName">
+                    <VBox>
+                        <Label fx:id="subjectName"/>
+                        <Label fx:id="subjectDesc"/>
                         <padding>
-                            <Insets left="10" bottom="10"/>
+                            <Insets left="10" bottom="10" top="10"/>
                         </padding>
-                    </Label>
+                    </VBox>
                 </bottom>
             </Panel>
             <ImageView fx:id="greenTickImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_RIGHT"/>

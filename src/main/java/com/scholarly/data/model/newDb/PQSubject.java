@@ -8,17 +8,20 @@ public class PQSubject {
     private int order;
     private String title;
     private String shortTitle;
+
+    private String description;
     private String colorCode;
     private boolean favorite;
 
 
-    public PQSubject(int id, int subjectId, int minutesAllotted, int order, String title, String shortTitle, String colorCode, boolean favorite) {
+    public PQSubject(int id, int subjectId, int minutesAllotted, int order, String title, String shortTitle, String description, String colorCode, boolean favorite) {
         this.id = id;
         this.subjectId = subjectId;
         this.minutesAllotted = minutesAllotted;
         this.order = order;
         this.title = title;
         this.shortTitle = shortTitle;
+        this.description = description;
         this.colorCode = colorCode;
         this.favorite = favorite;
     }
@@ -49,6 +52,10 @@ public class PQSubject {
 
     public String getShortTitle() {
         return shortTitle;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getColorCode() {

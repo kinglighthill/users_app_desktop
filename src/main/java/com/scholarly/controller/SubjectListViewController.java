@@ -27,6 +27,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Builder;
+import javafx.util.BuilderFactory;
 
 import java.net.URL;
 import java.util.List;
@@ -93,6 +95,10 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 return CachedViewModelCellFactory.create(vm -> {
                     vm.setType(SubjectListItemVM.Type.OBJECTIVE);
                     vm.populateYearsList();
+                    /*var f = FluentViewLoader.fxmlView(SubjectListItemController.class);
+                    var v = f.viewModel(vm);
+                    var l = v.load();
+                    return l;*/
                     return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
                 });
             }
@@ -115,19 +121,19 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                 executorService.execute(theorySubjectTask);
                 executorService.shutdown();
 
-                viewModel.getSelectedObjectiveSubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
+                viewModel.getSelectedObjectiveSubjects().addListener((MapChangeListener<? super Integer, ? super SubjectState>) change -> {
                     selectedObjectiveSubjects.clear();
                     selectedObjectiveSubjects.addAll(viewModel.getSelectedObjectiveSubjects().values());
                     questionOverviewTable.setItems(selectedObjectiveSubjects);
                 });
 
-                viewModel.getSelectedTheorySubjects().addListener((MapChangeListener<? super String, ? super SubjectState>) change -> {
+                viewModel.getSelectedTheorySubjects().addListener((MapChangeListener<? super Integer, ? super SubjectState>) change -> {
                     selectedTheorySubjects.clear();
                     selectedTheorySubjects.addAll(viewModel.getSelectedTheorySubjects().values());
                     questionOverviewTable.setItems(selectedTheorySubjects);
                 });
 
-                viewModel.getSelectedSubjectAllottedTime().addListener((MapChangeListener<? super String, ? super Integer>) change -> {
+                viewModel.getSelectedSubjectAllottedTime().addListener((MapChangeListener<? super Integer, ? super Integer>) change -> {
                     int totalTime = viewModel.getSelectedSubjectAllottedTime().values().stream().reduce(0, Integer::sum);
                     hoursChoiceBox.setValue(0);
                     minutesChoiceBox.setValue(totalTime);
@@ -151,7 +157,16 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                     }
                 }));
 
-                subjectColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getSubject().getTitle()));
+                subjectColumn.setCellValueFactory(param -> {
+                    PQSubject subject = param.getValue().getSubject();
+                    String title = subject.getTitle();
+
+                    if (subject.getDescription() != null) {
+                        title += "\n" + subject.getDescription();
+                    }
+
+                    return new SimpleStringProperty(title);
+                });
 
                 yearColumn.setCellValueFactory( param -> new SimpleStringProperty(param.getValue().getSelectedYear().getShortDescription()));
 
@@ -263,15 +278,28 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                      }
                  } else {
                      Integer value = 0;
-                     List<String> subjects = viewModel.getSelectedSubjectNumberOfQuestions().entrySet().stream().filter(entry -> value.equals(entry.getValue())).map(Map.Entry::getKey).toList();
+                     List<Integer> subjects = viewModel.getSelectedSubjectNumberOfQuestions().entrySet().stream().filter(entry -> value.equals(entry.getValue())).map(Map.Entry::getKey).toList();
+
+                     /*Alerts.info(
+                             this.getClass(),
+                             "Message",
+                             null,
+                             "Selected number of questions selected for Subject(s):" + subjects.toString().replace("[", "").replace("]", "") + " must be greater than 0"
+                     ).show();*/
+
+                     String message;
+                     if (subjects.size() > 1) {
+                         message = "Selected number of questions for selected subjects must be greater than 0";
+                     } else {
+                         message = "Selected number of questions for selected subject must be greater than 0";
+                     }
 
                      Alerts.info(
                              this.getClass(),
                              "Message",
                              null,
-                             "Selected number of questions selected for Subject(s):" + subjects.toString().replace("[", "").replace("]", "") + " must be greater than 0"
+                             message
                      ).show();
-
                  }
             } else {
                 Alerts.info(
@@ -336,7 +364,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     public void setSelectedSubject(PQSubject subject) {
         if (subject != null) {
             viewModel.getObjectiveSubjects().forEach(vm -> {
-                if (vm.getSubject().getSubjectId() == subject.getSubjectId()) {
+                if (vm.getSubject().getId() == subject.getId()) {
                     objectiveList.scrollTo(vm);
                 }
             });

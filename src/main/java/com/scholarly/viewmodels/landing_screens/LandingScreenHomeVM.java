@@ -84,7 +84,7 @@ public class LandingScreenHomeVM implements ViewModel {
                 subjects.forEach(subject -> {
                     subject.setSelected(false);
                     subjectCombinations.forEach(subjectCombination -> {
-                        if (subject.getSubjectId() == subjectCombination.getSubjectId()) {
+                        if (subject.getId() == subjectCombination.getSubjectId()) {
                             // TODO: When the preceding comments have been implemented there will be no need for having 'subjects' and 'favoriteSubjects', can be named any of each then returned in its getter
                             subject.setSelected(true);
                             favoriteSubjects.add(subject);
@@ -208,7 +208,7 @@ public class LandingScreenHomeVM implements ViewModel {
     }
 
     public void putSubjectCombination(ObservableList<FavoriteSubject> subjects) {
-        List<SubjectCombination> subjectCombinationList = subjects.stream().map(objectiveSubject -> new SubjectCombination(objectiveSubject.getId(), objectiveSubject.getSubjectId(), userData.getId())).toList();
+        List<SubjectCombination> subjectCombinationList = subjects.stream().map(objectiveSubject -> new SubjectCombination(objectiveSubject.getSubjectId(), objectiveSubject.getId(), userData.getId())).toList();
         SubjectDao.deletePreviousSubjectCombination(userData.getId());
         subjectCombinationList.forEach(SubjectDao::insertSubjectCombination);
     }

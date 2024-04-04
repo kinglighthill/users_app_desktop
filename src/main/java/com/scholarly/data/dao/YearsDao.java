@@ -65,8 +65,6 @@ public class YearsDao {
 
         }
 
-//        System.out.println(TAG + "Available Years For Subject with id -> " + subjectId + " Query -> " + query + " AND Type -> " + type);
-
         try (ResultSet rs = databaseService.executeQuery(query)) {
             subjectAvailableYears.clear();
             while (rs.next()) {

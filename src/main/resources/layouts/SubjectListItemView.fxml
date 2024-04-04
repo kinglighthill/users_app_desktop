@@ -33,14 +33,11 @@
 
             <center>
                <HBox alignment="CENTER_LEFT">
-                  <Label fx:id="subjectText" textFill="#034801">
-                     <font>
-                        <Font name="Gill Sans MT Bold" size="18.0"/>
-                     </font>
+                  <VBox fx:id="subjectVBox" alignment="CENTER_LEFT">
                      <HBox.margin>
                         <Insets left="50"/>
                      </HBox.margin>
-                  </Label>
+                  </VBox>
                </HBox>
             </center>
 

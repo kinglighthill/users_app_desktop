@@ -20,6 +20,7 @@ def applicationIdSuffix = keystoreProperties['applicationIdSuffix']
 def appName = keystoreProperties['appName']
 def appVersion = keystoreProperties['versionName']
 def srcPath = keystoreProperties['srcPath']
+def appId = keystoreProperties['appId']
 
 group 'com.scholarly' + applicationIdSuffix
 version = appVersion
@@ -108,7 +109,7 @@ jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
         name = appName
-//        jvmArgs = ['-Djdk.gtk.version=2']
+        jvmArgs = ['-Djdk.gtk.version=2']
     }
 
     jpackage {
@@ -121,6 +122,8 @@ jlink {
         def imgName = srcPath + "/drawable/app_icon.$imgType"
         imageOptions += ['--icon', imgName]
         icon = imgName
+
+        outputDir = "jpackage/" + build
 
         installerOptions += [
                 '--description', appName + " App",
@@ -146,16 +149,10 @@ jlink {
         excludeRequires 'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing'
     }*/
 
-    /*mergedModule {
+    mergedModule {
 
-    }*/
-}
-
-/*jpackage {
-    doFirst {
-//        project.getProperty('installerType')
     }
-}*/
+}
 
 tasks.jpackageImage.doLast {
     copy {
@@ -173,18 +170,6 @@ tasks.withType(JavaCompile) {
         options.encoding = 'utf-8'
     }
 }
-
-//tasks.withType(Jar) {
-//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//
-////    manifest {
-////        attributes["Main-Class"] = "MainKt"
-////    }
-////
-//    configurations["compileClasspath"].forEach { file: File ->
-//            from(zipTree(file.absoluteFile))
-//    }
-//}
 
 /*packagingOptions {
     exclude 'META-INF/LICENSE-LGPL-2.1.txt'

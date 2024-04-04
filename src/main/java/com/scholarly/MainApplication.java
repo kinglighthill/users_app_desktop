@@ -15,6 +15,9 @@ import com.scholarly.async.LandingScreen;
 import com.scholarly.util.Constants;
 import com.scholarly.util.AppProperties;
 import com.scholarly.util.PreferencesManager;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -23,6 +26,7 @@ import javafx.stage.FileChooser;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,34 +49,56 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
 
     @Override
     public void start(Stage stage) throws IOException {
+        PreferencesManager.initialize();
+        DatabaseHelper.initDb();
+
+        startDisplay = System.currentTimeMillis();
+        fileHandler = new FileHandler("logging.log");
+        fileHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(fileHandler);
+
+        logger.info("Welcome to Scholarly.");
+
+        SplashScreen splashScreen = new SplashScreen();
+        splashScreen.show();
+        stage.setScene(splashScreen.getSplashScene());
+
+        splashScreen.getSequentialTransition().setOnFinished(e -> {
+            Timeline timeline = new Timeline();
+            KeyFrame key = new KeyFrame(
+                    Duration.millis(0),
+                    new KeyValue(splashScreen.getSplashScene().getRoot().opacityProperty(), 0)
+            );
+            timeline.getKeyFrames().add(key);
+            timeline.setOnFinished((event) -> startApp(stage));
+            timeline.play();
+        });
+
+        InputStream iconStream = MainApplication.class.getResourceAsStream("/drawable/app_icon.png");
+        assert iconStream != null;
+        Image icon = new Image(iconStream);
+
+        stage.getIcons().add(icon);
+        stage.setTitle(AppProperties.getInstance().getAppName());
+
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+
+        stage.setX(bounds.getMinX());
+        stage.setY(bounds.getMinY());
+        stage.setWidth(bounds.getWidth());
+        stage.setHeight(bounds.getHeight());
+        stage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        DbConnection.closeConnection();
+    }
+
+    private void startApp(Stage stage) {
         try {
-            PreferencesManager.initialize();
-            DatabaseHelper.initDb();
-
-            startDisplay = System.currentTimeMillis();
-            fileHandler = new FileHandler("logging.log");
-            fileHandler.setFormatter(new SimpleFormatter());
-            logger.addHandler(fileHandler);
-
-            logger.info("Welcome to Scholarly.");
-
-            InputStream iconStream = MainApplication.class.getResourceAsStream("/drawable/app_icon.png");
-            assert iconStream != null;
-            Image icon = new Image(iconStream);
-
-            stage.getIcons().add(icon);
-            stage.setTitle(AppProperties.getInstance().getAppName());
-
-            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-
-            stage.setX(bounds.getMinX());
-            stage.setY(bounds.getMinY());
-            stage.setWidth(bounds.getWidth());
-            stage.setHeight(bounds.getHeight());
-
-
             ViewSwitcher.setStage(stage);
-
             stage.setOnCloseRequest(event -> {
                 Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to exit the application?");
 
@@ -84,11 +110,8 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
                         }
                 );
             });
-
             PreferencesManager.putBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, true);
-
             boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
-
             if (firstTimeUser) {
                 ViewSwitcher.showScreen(View.WELCOME_SCREEN);
             } else {
@@ -129,12 +152,6 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
             log(e);
             ViewSwitcher.showScreen(View.WELCOME_SCREEN);
         }
-    }
-
-    @Override
-    public void stop() throws Exception {
-        super.stop();
-        DbConnection.closeConnection();
     }
 
     public File openFileChooser(Stage stage) {
