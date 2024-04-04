@@ -133,9 +133,6 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                     questionOverviewTable.setItems(selectedTheorySubjects);
                 });
 
-//                SELECT * FROM pq_objective_questions JOIN pq_objective_subjects ON pq_objective_subjects._id = pq_objective_questions.subject_id JOIN topics ON topics._id = pq_objective_questions.topic_id WHERE topics.subject_id != pq_objective_subjects.subject_id
-//                -- UPDATE pq_objective_questions SET topic_id = 115 WHERE subject_id = 6 AND topic_id = 68;
-
                 viewModel.getSelectedSubjectAllottedTime().addListener((MapChangeListener<? super Integer, ? super Integer>) change -> {
                     int totalTime = viewModel.getSelectedSubjectAllottedTime().values().stream().reduce(0, Integer::sum);
                     hoursChoiceBox.setValue(0);

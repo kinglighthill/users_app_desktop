@@ -123,6 +123,8 @@ jlink {
         imageOptions += ['--icon', imgName]
         icon = imgName
 
+        outputDir = "jpackage/" + build
+
         installerOptions += [
                 '--description', appName + " App",
                 '--resource-dir', "src/main/resources", /*srcPath,*/
@@ -147,16 +149,10 @@ jlink {
         excludeRequires 'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing'
     }*/
 
-    /*mergedModule {
+    mergedModule {
 
-    }*/
-}
-
-/*jpackage {
-    doFirst {
-//        project.getProperty('installerType')
     }
-}*/
+}
 
 tasks.jpackageImage.doLast {
     copy {
@@ -174,18 +170,6 @@ tasks.withType(JavaCompile) {
         options.encoding = 'utf-8'
     }
 }
-
-//tasks.withType(Jar) {
-//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//
-////    manifest {
-////        attributes["Main-Class"] = "MainKt"
-////    }
-////
-//    configurations["compileClasspath"].forEach { file: File ->
-//            from(zipTree(file.absoluteFile))
-//    }
-//}
 
 /*packagingOptions {
     exclude 'META-INF/LICENSE-LGPL-2.1.txt'
