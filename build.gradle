@@ -9,6 +9,10 @@ plugins {
 }
 
 def build = System.getenv("build")
+def buildP = System.getProperty("build")
+
+System.out.println("Build: " + build)
+System.out.println("BuildP: " + buildP)
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('src/' + build + '/resources/exam.properties')
