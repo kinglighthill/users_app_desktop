@@ -3,6 +3,7 @@ package com.scholarly.controller.practice_screens;
 import com.scholarly.data.model.*;
 import com.scholarly.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.data.model.newDb.PQSubject;
+import com.scholarly.data.model.newDb.TheoryQuestionDescription;
 import com.scholarly.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.ui.utils.*;
 import com.scholarly.util.Helper;
@@ -358,9 +359,6 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
-//        prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
-//        nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
-
         prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && selectedQuestionNumber == 1);
 
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
@@ -409,6 +407,9 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
             TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
             questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
+
+            List<TheoryQuestionDescription> quesDescriptionList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
 
             String questionText = currentQuestion.getQuestion();
             questionText = questionText.replaceAll("<br>", System.lineSeparator());
@@ -482,20 +483,14 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
             explanationTitle.setText("Explanation");
 
-//            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
             String correctAnswer = currentQuestion.getQuestionAnswer().getAnswer();
             showCorrectAnswer(correctAnswer, Helper.isWebView(correctAnswer));
 
             String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
-//            explanationVBox.getChildren().clear();
+
             if (explanationText.contains("<img")) {
-//                explanationVBox.getChildren().addAll(explanationTitle, explanationWebView);
-//                String explanationWithImageText = parseExplanationWithImageView(explanationText);
-//                explanationWebView.getEngine().loadContent(explanationWithImageText);
                 loadExplanationWithImage(explanationText, Helper.isWebView(explanationText));
             } else {
-//                explanationVBox.getChildren().addAll(explanationTitle, explanationScrollPane);
-//                explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
                 loadExplanation(explanationText, Helper.isWebView(explanationText));
             }
 
@@ -503,6 +498,9 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
 
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            List<TheoryQuestionDescription> quesDescriptionList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
 
             String questionText = currentQuestion.getQuestion();
             questionText = questionText.replaceAll("<br>", System.lineSeparator());
