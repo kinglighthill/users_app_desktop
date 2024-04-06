@@ -8,11 +8,7 @@ plugins {
 //    id 'org.sqlite'
 }
 
-def build = System.getenv("build")
-def buildP = System.getProperty("build")
-
-System.out.println("Build: " + build)
-System.out.println("BuildP: " + buildP)
+def build = System.getProperty("build")
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('src/' + build + '/resources/exam.properties')
@@ -278,7 +274,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 //    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
 }
 
 test {
