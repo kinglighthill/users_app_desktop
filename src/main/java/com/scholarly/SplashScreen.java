@@ -23,7 +23,6 @@ public class SplashScreen {
     public SplashScreen() {
         pane = new StackPane();
         pane.setStyle("-fx-background-color:white");
-
         seqT = new SequentialTransition();
     }
 
