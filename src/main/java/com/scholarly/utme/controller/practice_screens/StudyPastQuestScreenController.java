@@ -4,6 +4,7 @@ import com.scholarly.utme.controller.PQScreenController;
 import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.data.model.newDb.TheoryQuestionDescription;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.Helper;
@@ -413,6 +414,9 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
             questionOverviewLabel.setText("Question " + selectedQuestionNumber + " of " + questions.size());
 
+            List<TheoryQuestionDescription> quesDescriptionList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
+
             String questionText = currentQuestion.getQuestion();
             questionText = questionText.replaceAll("<br>", System.lineSeparator());
 
@@ -504,8 +508,10 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
             TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(newValue - 1).getQuestion();
-
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
+
+            List<TheoryQuestionDescription> quesDescriptionList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
+                    questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
 
             String questionText = currentQuestion.getQuestion();
             questionText = questionText.replaceAll("<br>", System.lineSeparator());
