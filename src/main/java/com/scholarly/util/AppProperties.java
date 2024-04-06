@@ -10,6 +10,7 @@ import org.json.JSONTokener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -51,8 +52,18 @@ public class AppProperties {
             properties.load(propertiesStream);
 
             applicationIdSuffix = properties.getProperty(PropertyKeys.APPLICATION_ID_SUFFIX);
-            versionCode = Integer.parseInt(properties.getProperty(PropertyKeys.VERSION_CODE));
-            versionName = properties.getProperty(PropertyKeys.VERSION_NAME);
+
+            if (Helper.isOsType(Helper.OS_TYPE.WIN)) {
+                versionCode = Integer.parseInt(properties.getProperty(PropertyKeys.VERSION_CODE_WIN));
+                versionName = properties.getProperty(PropertyKeys.VERSION_NAME_WIN);
+            } else if (Helper.isOsType(Helper.OS_TYPE.MAC)) {
+                versionCode = Integer.parseInt(properties.getProperty(PropertyKeys.VERSION_CODE_MAC));
+                versionName = properties.getProperty(PropertyKeys.VERSION_NAME_MAC);
+            } else {
+                versionCode = Integer.parseInt(properties.getProperty(PropertyKeys.VERSION_CODE_LINUX));
+                versionName = properties.getProperty(PropertyKeys.VERSION_NAME_LINUX);
+            }
+
             appSlug = properties.getProperty(PropertyKeys.APP_SLUG);
             appId = properties.getProperty(PropertyKeys.APP_ID);
             country = properties.getProperty(PropertyKeys.COUNTRY);
@@ -219,8 +230,12 @@ public class AppProperties {
 
     private static class PropertyKeys {
         static String APPLICATION_ID_SUFFIX = "applicationIdSuffix";
-        static String VERSION_CODE = "versionCode";
-        static String VERSION_NAME = "versionName";
+        static String VERSION_CODE_WIN = "versionCodeWin";
+        static String VERSION_NAME_WIN = "versionNameWin";
+        static String VERSION_CODE_MAC = "versionCodeMac";
+        static String VERSION_NAME_MAC = "versionNameMac";
+        static String VERSION_CODE_LINUX = "versionCodeLinux";
+        static String VERSION_NAME_LINUX = "versionNameLinux";
         static String APP_SLUG = "appSlug";
         static String APP_ID = "appId";
         static String COUNTRY = "country";

@@ -18,12 +18,16 @@ if (keystorePropertiesFile.exists()) {
 
 def applicationIdSuffix = keystoreProperties['applicationIdSuffix']
 def appName = keystoreProperties['appName']
-def appVersion = keystoreProperties['versionName']
+def appVersionWin = keystoreProperties['versionNameWin']
+def appVersionMac = keystoreProperties['versionNameMac']
+def appVersionLinux = keystoreProperties['versionNameLinux']
 def srcPath = keystoreProperties['srcPath']
 def appId = keystoreProperties['appId']
 
+def currentOs = org.gradle.internal.os.OperatingSystem.current()
+
 group 'com.scholarly' + applicationIdSuffix
-version = appVersion
+version = currentOs.windows ? appVersionWin : currentOs.macOsX ? appVersionMac : appVersionLinux
 
 repositories {
     mavenCentral()
@@ -42,7 +46,7 @@ sourceCompatibility = '16'
 targetCompatibility = '16'
 
 project.ext.buildDate = new Date()
-project.version = appVersion
+project.version = currentOs.windows ? appVersionWin : currentOs.macOsX ? appVersionMac : appVersionLinux
 
 sourceSets {
     /*release {
@@ -117,7 +121,6 @@ jlink {
 
         appVersion = version
 
-        def currentOs = org.gradle.internal.os.OperatingSystem.current()
         def imgType = currentOs.windows ? 'ico' : currentOs.macOsX ? 'icns' : 'png'
         def imgName = srcPath + "/drawable/app_icon.$imgType"
         imageOptions += ['--icon', imgName]

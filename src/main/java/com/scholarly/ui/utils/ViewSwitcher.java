@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class ViewSwitcher {
     private static Stage stage;
     private static final Scene rootScene = new Scene(new Pane());
@@ -18,34 +20,25 @@ public class ViewSwitcher {
 
     public static void showScreen(View view) {
         try {
-            MainApplication.timeTakenTo("start showing screen (" + view.getControllerClass().getSimpleName() + ")");
-//            MainApplication.logInfo("Loading " + view.getControllerClass().getName());
-            Class<? extends FxmlView<? extends ViewModel>> myClass = view.getControllerClass();
-            MainApplication.timeTakenTo("get class " + view.getControllerClass());
-            FluentViewLoader.FxmlViewStep<? extends FxmlView<? extends ViewModel>, ? extends ViewModel> step = FluentViewLoader.fxmlView(myClass);
-            MainApplication.timeTakenTo("get step " + step);
-            ViewTuple<? extends FxmlView<? extends ViewModel>, ? extends ViewModel> tuple = step.load();
-            MainApplication.timeTakenTo("get tuple");
-            Parent root = tuple.getView();
-//            Parent root = FluentViewLoader.fxmlView(view.getControllerClass()).load().getView();
-            MainApplication.timeTakenTo("get view");
-
-//            MainApplication.logInfo("Loading css");
-            String cssResource = MainApplication.class.getResource("/styles/main.css").toExternalForm();
-            MainApplication.timeTakenTo("get css");
-//            MainApplication.logInfo("Adding css");
+            Parent root = FluentViewLoader.fxmlView(view.getControllerClass()).load().getView();
+            String cssResource = Objects.requireNonNull(MainApplication.class.getResource("/styles/main.css")).toExternalForm();
             root.getStylesheets().add(cssResource);
-            MainApplication.timeTakenTo("load css");
 //            root.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 
-//            MainApplication.logInfo("Setting view");
             currentView = view;
-            MainApplication.timeTakenTo("set view");
-//            MainApplication.logInfo("Setting root");
             rootScene.setRoot(root);
-            MainApplication.timeTakenTo("set root");
-//            MainApplication.logInfo("Done");
-            MainApplication.timeTakenTo("finish showing screen (" + view.getControllerClass().getSimpleName() + ")");
+        } catch (Exception e) {
+            MainApplication.log(e);
+            e.printStackTrace();
+        }
+    }
+
+    public static void showScreen(Parent root) {
+        try {
+            String cssResource = Objects.requireNonNull(MainApplication.class.getResource("/styles/main.css")).toExternalForm();
+            root.getStylesheets().add(cssResource);
+
+            rootScene.setRoot(root);
         } catch (Exception e) {
             MainApplication.log(e);
             e.printStackTrace();
