@@ -3,32 +3,26 @@ package com.scholarly;
 import com.scholarly.ui.utils.FontUtil;
 import javafx.animation.*;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.*;
 import javafx.util.Duration;
 
 import java.io.InputStream;
 
 public class SplashScreen {
-    static Scene splash;
-    static Rectangle rect = new Rectangle();
-    final private StackPane pane;
+    final private Pane pane;
     final private SequentialTransition seqT;
 
-    public SplashScreen()
-    {
+    public SplashScreen() {
         pane = new StackPane();
         pane.setStyle("-fx-background-color:white");
-
-        splash = new Scene(pane);
         seqT = new SequentialTransition();
     }
 
@@ -76,9 +70,8 @@ public class SplashScreen {
         seqT.setNode(hBox);
     }
 
-    public Scene getSplashScene()
-    {
-        return splash;
+    public Parent getRoot() {
+        return pane;
     }
 
     public SequentialTransition getSequentialTransition() {

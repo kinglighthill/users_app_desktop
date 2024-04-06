@@ -52,7 +52,6 @@ public class SubjectDao {
         noteSubjects = FXCollections.observableArrayList();
         objFavoriteSubjects = FXCollections.observableArrayList();
         theoryFavoriteSubjects = FXCollections.observableArrayList();
-//        updateSubjectsFromDB();
         updateObjectiveSubjectsFromDb();
         updateTheorySubjectsFromDb();
         updateNoteSubjectsFromDb();
@@ -99,11 +98,6 @@ public class SubjectDao {
                         )
                 );
             }
-//            objectiveSubjects.remove(10, 11);
-//            objectiveSubjects.remove(22, 24);
-//            objectiveSubjects.remove(36, 42);
-//            objectiveSubjects.remove(44);
-            System.out.println("TAG:" + objectiveSubjects.size());
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,

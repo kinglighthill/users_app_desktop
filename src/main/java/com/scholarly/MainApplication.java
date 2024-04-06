@@ -59,21 +59,6 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
 
         logger.info("Welcome to Scholarly.");
 
-        SplashScreen splashScreen = new SplashScreen();
-        splashScreen.show();
-        stage.setScene(splashScreen.getSplashScene());
-
-        splashScreen.getSequentialTransition().setOnFinished(e -> {
-            Timeline timeline = new Timeline();
-            KeyFrame key = new KeyFrame(
-                    Duration.millis(0),
-                    new KeyValue(splashScreen.getSplashScene().getRoot().opacityProperty(), 0)
-            );
-            timeline.getKeyFrames().add(key);
-            timeline.setOnFinished((event) -> startApp(stage));
-            timeline.play();
-        });
-
         InputStream iconStream = MainApplication.class.getResourceAsStream("/drawable/app_icon.png");
         assert iconStream != null;
         Image icon = new Image(iconStream);
@@ -87,7 +72,22 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
         stage.setY(bounds.getMinY());
         stage.setWidth(bounds.getWidth());
         stage.setHeight(bounds.getHeight());
-        stage.show();
+        ViewSwitcher.setStage(stage);
+
+        SplashScreen splashScreen = new SplashScreen();
+        splashScreen.show();
+        splashScreen.getSequentialTransition().setOnFinished(e -> {
+            Timeline timeline = new Timeline();
+            KeyFrame key = new KeyFrame(
+                    Duration.millis(0),
+                    new KeyValue(splashScreen.getRoot().opacityProperty(), 0)
+            );
+            timeline.getKeyFrames().add(key);
+            timeline.setOnFinished((event) -> startApp(stage));
+            timeline.play();
+        });
+
+        ViewSwitcher.showScreen(splashScreen.getRoot());
     }
 
     @Override
@@ -98,7 +98,6 @@ public class MainApplication extends Application /*implements Thread.UncaughtExc
 
     private void startApp(Stage stage) {
         try {
-            ViewSwitcher.setStage(stage);
             stage.setOnCloseRequest(event -> {
                 Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to exit the application?");
 

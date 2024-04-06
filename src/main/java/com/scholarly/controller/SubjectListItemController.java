@@ -64,9 +64,6 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
         ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
         subjectListViewController = subjectListViewTuple.getCodeBehind();
 
-//        ViewTuple<SubjectListViewControllerWaec, SubjectListViewWaecVM> subjectListViewWaecTuple = FluentViewLoader.fxmlView(SubjectListViewControllerWaec.class).load();
-//        subjectListViewControllerWaec = subjectListViewWaecTuple.getCodeBehind();
-
         subjectImageBackground.setStyle("-fx-background-radius: 8 0 0 8; -fx-background-color: " + viewModel.getSubjectColorName());
         subjectImage.setImage(Helper.getSubjectIcon(getClass(), viewModel.getSubjectName()));
 
@@ -147,10 +144,6 @@ public class SubjectListItemController implements FxmlView<SubjectListItemVM>, I
                 topicsComboBox.getCheckModel().checkAll();
             }
         });
-
-//        topicsComboBox.getItems().addListener((ListChangeListener<? super PQTopic>) changedList -> {
-//            System.out.println(TAG + "TopicsComboBox changedList -> " + changedList.getList());
-//        });
 
         topicsComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<PQTopic>) changeList -> {
             if (topicsComboBox.getCheckModel().getCheckedItems().size() == 0) {

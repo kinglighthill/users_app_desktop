@@ -232,8 +232,7 @@ public class SubjectListItemVM implements ViewModel {
                     );
 
         } else {
-
-            Observable.just(TheoryQuestionDao.getQuestions(subject.getId(), year.getId(), FXCollections.emptyObservableList(),  false))
+            Observable.just(Objects.requireNonNull(TheoryQuestionDao.getQuestions(subject.getId(), year.getId(), FXCollections.emptyObservableList(), false)))
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();
@@ -358,14 +357,14 @@ public class SubjectListItemVM implements ViewModel {
 
 
     public static class SubjectState {
-        private PQSubject subject;
-        private Type type;
-        private Boolean isSelected;
-        private Boolean shuffleQuestions;
-        private Boolean shuffleOptions;
-        private List<Integer> selectedTopics;
-        private Year selectedYear;
-        private Integer numberOfQuestions;
+        private final PQSubject subject;
+        private final Type type;
+        private final Boolean isSelected;
+        private final Boolean shuffleQuestions;
+        private final Boolean shuffleOptions;
+        private final List<Integer> selectedTopics;
+        private final Year selectedYear;
+        private final Integer numberOfQuestions;
 
         public SubjectState(PQSubject subject, Type type, Boolean isSelected, Boolean shuffleQuestions, Boolean shuffleOptions, List<Integer> selectedTopics, Year selectedYear, Integer numberOfQuestions) {
             this.subject = subject;
