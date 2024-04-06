@@ -266,7 +266,7 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                              initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
                              PQScreen.logOut();
                              ViewSwitcher.passData(initialData);
-                             ViewSwitcher. showScreen(View.PRACTICE_SCREEN);
+                             ViewSwitcher.showScreen(View.PRACTICE_SCREEN);
                          }
                      } else {
                          Alerts.info(
