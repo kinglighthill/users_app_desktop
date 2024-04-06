@@ -8,7 +8,7 @@ plugins {
 //    id 'org.sqlite'
 }
 
-def build = System.getenv("build")
+def build = System.getProperty("build")
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('src/' + build + '/resources/exam.properties')
