@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#all
-#except
-#only
-
 allApps=("jamb" "waec" "beceJss" "putmeAbsu" "putmeAbsu" "putmeAbu" "putmeBuk" "putmeDelsu" "putmeEsut" "putmeFunaab" "putmeFuta" "putmeFutminna"
 "putmeFuto" "putmeImsu" "putmeNda" "putmeOau" "putmeRsust" "putmeUi" "putmeUniabuja" "putmeUniben" "putmeUnical" "putmeUnijos" "putmeUnilag"
 "putmeUnilorin" "putmeUniport" "putmeUnizik" "putmeUnn")
@@ -23,7 +19,6 @@ while getopts ${OPT_STRING} opt; do
           ;;
         e)
           IFS=',' read -r -a exclude <<< "${OPTARG}"
-          excludes="${OPTARG}"
           ;;
         o)
           IFS=',' read -r -a apps <<< "${OPTARG}"
