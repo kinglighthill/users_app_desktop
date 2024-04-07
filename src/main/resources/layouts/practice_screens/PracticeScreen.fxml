@@ -84,22 +84,23 @@
                                  </children>
                               </VBox>-->
 
-                              <VBox fx:id="calculatorButton" alignment="TOP_CENTER" onMouseClicked="#onCalculatorClicked" prefHeight="78.0" prefWidth="85.0" style="-fx-cursor: hand;">
-                                 <children>
-                                    <ImageView fx:id="calculatorImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                                       <VBox.margin>
-                                          <Insets top="15.0" />
-                                       </VBox.margin>
-                                    </ImageView>
-                                    <Label text="Calculator" textFill="#053500">
-                                       <padding>
-                                          <Insets bottom="15.0" top="5.0" />
-                                       </padding>
-                                       <font>
-                                          <Font name="Gill Sans MT Bold" size="12.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
+                              <VBox fx:id="calculatorButton" alignment="TOP_CENTER"
+                                    onMouseClicked="#onCalculatorClicked" prefHeight="78.0" prefWidth="85.0"
+                                    style="-fx-cursor: hand;">
+                                 <ImageView fx:id="calculatorImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true"
+                                            preserveRatio="true">
+                                    <VBox.margin>
+                                       <Insets top="15.0"/>
+                                    </VBox.margin>
+                                 </ImageView>
+                                 <Label text="Calculator" textFill="#053500">
+                                    <padding>
+                                       <Insets bottom="15.0" top="5.0"/>
+                                    </padding>
+                                    <font>
+                                       <Font name="Gill Sans MT Bold" size="12.0"/>
+                                    </font>
+                                 </Label>
                               </VBox>
                            </children>
                         </HBox>
@@ -214,19 +215,19 @@
                            </padding>
                         </VBox>
 
-                        <VBox fx:id="theoryQuestionCenterVBox" prefHeight="200" alignment="TOP_CENTER">
-                           <ScrollPane fx:id="theoryScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
-                              <VBox>
-                                 <HBox fx:id="theoryQuestionHBox">
-                                    <Label fx:id="theoryQuestionLabel" wrapText="true" minHeight="50">
-                                       <font>
-                                          <Font name="Times New Roman" size="18.0"/>
-                                       </font>
-                                    </Label>
-                                 </HBox>
-                              </VBox>
-                           </ScrollPane>
-                        </VBox>
+<!--                        <VBox fx:id="theoryQuestionCenterVBox" prefHeight="200" alignment="TOP_CENTER">-->
+<!--                           <ScrollPane fx:id="theoryScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">-->
+<!--                              <VBox>-->
+<!--                                 <HBox fx:id="theoryQuestionHBox">-->
+<!--                                    <Label fx:id="theoryQuestionLabel" wrapText="true" minHeight="50">-->
+<!--                                       <font>-->
+<!--                                          <Font name="Times New Roman" size="18.0"/>-->
+<!--                                       </font>-->
+<!--                                    </Label>-->
+<!--                                 </HBox>-->
+<!--                              </VBox>-->
+<!--                           </ScrollPane>-->
+<!--                        </VBox>-->
 
                         <RadioButton fx:id="optionAButton" mnemonicParsing="false" prefHeight="24.0" prefWidth="1000.0" text="RadioButton" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8; -fx-cursor: hand;">
                            <VBox.margin>
@@ -515,5 +516,4 @@
          </padding>
       </VBox>
    </StackPane>
-
 </AnchorPane>

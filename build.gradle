@@ -98,9 +98,6 @@ javafx {
     modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing']
 }
 
-//mainClassName = "$moduleName/com.scholarly.utme.MainApplication"
-//mainClassName = "com.scholarly.utme.MainApplication"
-
 run {
     jvmArgs = ['-Djdk.gtk.version=2']
 }
@@ -147,14 +144,7 @@ jlink {
         }
     }
 
-    /*mergedModule {
-        additive = true
-        excludeRequires 'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing'
-    }*/
-
-    mergedModule {
-
-    }
+    addExtraDependencies("javafx")
 }
 
 tasks.jpackageImage.doLast {
