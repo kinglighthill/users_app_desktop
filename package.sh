@@ -36,7 +36,7 @@ done
 
 if [ $all ]; then
   apps=("${allApps[@]}")
-elif [ ${#exclude[@]} ]; then
+elif [ "${#exclude[@]}" -gt 0 ]; then
   apps=()
   for app in "${allApps[@]}"; do
       if [[ "${exclude[*]}" =~ $app ]]; then
@@ -46,7 +46,6 @@ elif [ ${#exclude[@]} ]; then
       fi
   done
 fi
-
 
 for app in "${apps[@]}"; do
   package_app "$app"
