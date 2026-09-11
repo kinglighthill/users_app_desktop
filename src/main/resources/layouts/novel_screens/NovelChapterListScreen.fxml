@@ -10,81 +10,150 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.image.ImageView?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.novel_screens.NovelChapterListController"
-             style="-fx-background-color: white;">
-
-    <top>
-        <VBox >
-            <HBox spacing="15" alignment="CENTER_LEFT">
-                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9">
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.scholarly.utme.controller.novel_screens.NovelChapterListController"
+           style="-fx-background-color: white;">
+    <BorderPane>
+        <top>
+            <VBox >
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Button fx:id="backButton" style="-fx-background-color: #E7F7E9; -fx-cursor: hand;">
+                        <padding>
+                            <Insets top="8" right="13" bottom="8" left="13" />
+                        </padding>
+                    </Button>
+                    <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
+                        <font>
+                            <Font name="System Bold" size="22"/>
+                        </font>
+                    </Label>
                     <padding>
-                        <Insets top="8" right="13" bottom="8" left="13" />
+                        <Insets top="20" left="20" bottom="20"/>
                     </padding>
-                </Button>
-                <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
+                </HBox>
+                <Separator />
+            </VBox>
+        </top>
+
+        <center>
+            <VBox spacing="10">
+                <Label text="Text Breakdown">
                     <font>
-                        <Font name="System Bold" size="22"/>
+                        <Font name="System Bold" size="20"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets left="15"/>
+                    </VBox.margin>
+                </Label>
+                <ListView fx:id="chaptersList" prefWidth="600" prefHeight="600" style="-fx-cursor: hand;"/>
+                <padding>
+                    <Insets topRightBottomLeft="20"/>
+                </padding>
+            </VBox>
+        </center>
+
+        <right>
+            <HBox spacing="20" prefHeight="400" prefWidth="400">
+                <Separator orientation="VERTICAL"/>
+                <VBox spacing="50" prefHeight="300" prefWidth="300">
+                    <StackPane maxWidth="200" minHeight="300" style="-fx-background-color: #D7D7D7; -fx-background-radius: 8;">
+                        <ImageView fx:id="novelImage" fitWidth="200" fitHeight="300" preserveRatio="true" pickOnBounds="true"/>
+                        <padding>
+                            <Insets topRightBottomLeft="20"/>
+                        </padding>
+                        <VBox.margin>
+                            <Insets top="20"/>
+                        </VBox.margin>
+                    </StackPane>
+                    <VBox spacing="20">
+                        <HBox spacing="10">
+                            <ImageView fx:id="authorIcon" preserveRatio="true" pickOnBounds="true"/>
+                            <Label fx:id="authorLabel" text="John Uzodinma"/>
+                        </HBox>
+                        <HBox spacing="10">
+                            <ImageView fx:id="chaptersIcon" preserveRatio="true" pickOnBounds="true"/>
+                            <Label fx:id="chaptersLabel" text="7 chapters"/>
+                        </HBox>
+                        <!--<HBox spacing="10">
+                            <ImageView fx:id="timeIcon" preserveRatio="true" pickOnBounds="true"/>
+                            <Label fx:id="timeText" text="20 mins"/>
+                        </HBox>-->
+                        <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                    </VBox>
+                </VBox>
+                <HBox.margin>
+                    <Insets top="30" bottom="20"/>
+                </HBox.margin>
+            </HBox>
+        </right>
+
+    </BorderPane>
+
+    <VBox fx:id="dimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
+
+    <VBox fx:id="activateNowDialog" spacing="25" maxHeight="450.0" maxWidth="380.0" prefHeight="400.0" prefWidth="250.0" StackPane.alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
+        <Panel>
+            <left>
+                <ImageView fx:id="activateNowPadlockIcon" fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true"/>
+            </left>
+            <right>
+                <ImageView fx:id="activateNowCloseIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;"/>
+            </right>
+        </Panel>
+        <Label fx:id="activateHeaderText" text="Activate your App for Unlimited Access" textFill="#12AF20" wrapText="true"/>
+        <VBox spacing="15">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon1" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Unlock all Note Topics">
+                    <font>
+                        <Font size="16"/>
                     </font>
                 </Label>
-                <padding>
-                    <Insets top="20" left="20" bottom="20"/>
-                </padding>
             </HBox>
-            <Separator />
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon2" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Unlock all Past Questions Years">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon3" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Unlock all Novel Chapters">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon4" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Use App without internet">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon5" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Activation lasts for One Academic Year">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
         </VBox>
-    </top>
 
-    <center>
-        <VBox spacing="10">
-            <Label text="Text Breakdown">
+        <HBox alignment="CENTER">
+            <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N2000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8; -fx-cursor: hand;">
                 <font>
-                    <Font name="System Bold" size="20"/>
+                    <Font size="16"/>
                 </font>
-                <VBox.margin>
-                    <Insets left="15"/>
-                </VBox.margin>
-            </Label>
-            <ListView fx:id="chaptersList" prefWidth="600" prefHeight="600"/>
-            <padding>
-                <Insets topRightBottomLeft="20"/>
-            </padding>
-        </VBox>
-    </center>
-
-    <right>
-        <HBox spacing="20" prefHeight="400" prefWidth="400">
-            <Separator orientation="VERTICAL"/>
-            <VBox spacing="50" prefHeight="300" prefWidth="300">
-                <StackPane maxWidth="200" minHeight="300" style="-fx-background-color: #D7D7D7; -fx-background-radius: 8;">
-                    <ImageView fx:id="novelImage" fitWidth="200" fitHeight="300" preserveRatio="true" pickOnBounds="true"/>
-                    <padding>
-                        <Insets topRightBottomLeft="20"/>
-                    </padding>
-                    <VBox.margin>
-                        <Insets top="20"/>
-                    </VBox.margin>
-                </StackPane>
-                <VBox spacing="20">
-                    <HBox spacing="10">
-                        <ImageView fx:id="authorIcon" preserveRatio="true" pickOnBounds="true"/>
-                        <Label fx:id="authorLabel" text="John Uzodinma"/>
-                    </HBox>
-                    <HBox spacing="10">
-                        <ImageView fx:id="chaptersIcon" preserveRatio="true" pickOnBounds="true"/>
-                        <Label fx:id="chaptersLabel" text="7 chapters"/>
-                    </HBox>
-                    <HBox spacing="10">
-                        <ImageView fx:id="timeIcon" preserveRatio="true" pickOnBounds="true"/>
-                        <Label fx:id="timeText" text="20 mins"/>
-                    </HBox>
-                    <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5;"/>
-                </VBox>
-            </VBox>
-            <HBox.margin>
-                <Insets top="30" bottom="20"/>
-            </HBox.margin>
+            </Button>
         </HBox>
-    </right>
 
-</BorderPane>
+        <padding>
+            <Insets topRightBottomLeft="25"/>
+        </padding>
+    </VBox>
+</StackPane>

@@ -70,6 +70,12 @@
                     </padding>
                 </ToggleButton>
 
+                <ToggleButton fx:id="settingsButton" text="Settings" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
                 <ToggleButton fx:id="appsButton" text="Apps" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
                     <padding>
                         <Insets left="30"/>
@@ -93,12 +99,6 @@
                         <Insets left="30"/>
                     </padding>
                 </ToggleButton>-->
-
-                <ToggleButton fx:id="settingsButton" text="Settings" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
-                    <padding>
-                        <Insets left="30"/>
-                    </padding>
-                </ToggleButton>
             </children>
         </VBox>
     </left>

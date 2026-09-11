@@ -1,8 +1,7 @@
 package com.scholarly.utme.viewmodels.practice_screens;
 
 import com.scholarly.utme.controller.practice_screens.ExplanationScreenController.InitialData;
-import com.scholarly.utme.data.model.QuestionDescription;
-import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
+import com.scholarly.utme.data.model.*;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.SceneLifecycle;
@@ -16,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
+    private static final String TAG = "ExplanationScreenVM: ";
 
     private ObservableList<PQSubject> subjects = FXCollections.observableArrayList();
     private ObjectProperty<PQSubject> selectedSubject = new SimpleObjectProperty<>();
@@ -23,6 +23,8 @@ public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
     private List<QuestionDescription> questionDescriptions = FXCollections.observableArrayList();
 
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions = new HashMap<>();
+
+    private HashMap<String, Year> selectedSubjectYear;
 
     private SubjectListItemVM.Type questionType;
 
@@ -39,7 +41,12 @@ public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
 
         questionDescriptions = data.getQuestionDescriptions();
 
-        subjectsQuestions = data.getSubjectsQuestions();
+        data.getSubjectsQuestions().forEach((s, subjectQuestionState) -> {
+            subjectsQuestions.put(s, subjectQuestionState);
+        });
+//        subjectsQuestions = data.getSubjectsQuestions();
+
+        selectedSubjectYear = data.getSelectedSubjectYear();
 
         questionType = data.getQuestionType();
     }
@@ -85,6 +92,10 @@ public class ExplanationScreenVM implements ViewModel, SceneLifecycle {
 
     public void setSubjectsQuestions(HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions) {
         this.subjectsQuestions = subjectsQuestions;
+    }
+
+    public HashMap<String, Year> getSelectedSubjectYear() {
+        return selectedSubjectYear;
     }
 
     public SubjectListItemVM.Type getQuestionType() {

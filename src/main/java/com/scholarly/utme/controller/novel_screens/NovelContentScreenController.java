@@ -1,6 +1,5 @@
 package com.scholarly.utme.controller.novel_screens;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.newDb.NovelLastSession;
@@ -15,14 +14,12 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -32,14 +29,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.util.Duration;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
-import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,15 +116,15 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
             if (!newValue.isFree()) {
                 showActivateDialog();
+            } else {
+                renderNovel(newValue);
+                chapterQuizHeader.setText("Chapter " + newValue.getPosition() + " Quiz");
+
+                chapterCount.setText(newValue.getOrder() + " of " + chaptersList.getItems().size());
+                chapterTitle.setText(newValue.getChapterHeading());
             }
-            renderNovel(newValue);
 //            System.out.println(TAG + "Selected Chapter Position -> " + newValue.getPosition());
 //            System.out.println(TAG + "Selected Chapter Sections -> " + viewModel.getChapterSections().get(newValue.getId()).stream().collect(Collectors.toList()));
-
-            chapterQuizHeader.setText("Chapter " + newValue.getPosition() + " Quiz");
-
-            chapterCount.setText(newValue.getOrder() + " of " + chaptersList.getItems().size());
-            chapterTitle.setText(newValue.getChapterHeading());
         }));
 
         prevButton.disableProperty().bind(Bindings.equal(0, chaptersList.getSelectionModel().selectedIndexProperty()).or(chapterQuizPane.visibleProperty()));
@@ -166,7 +160,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
                     viewModel.putLastSession(novelLastSession);
 
-                    ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovelModel()));
+                    ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getNovelModel(), Screens.NOVELS_SCREEN));
                     ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
                 } else {
                     exitDialogDimmer.setVisible(false);
@@ -212,8 +206,7 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         });
 
 
-        /***************** Novel Quiz Section ***************/
-
+        /* **************** Novel Quiz Section ************** */
         chapterQuizHeader.setText("Chapter " + viewModel.getSelectedChapter().getPosition() + " Quiz");
         chapterQuestionsList.setItems(viewModel.getChapterQuestions().get(viewModel.getSelectedChapter().getId()));
         chapterQuestionsList.setCellFactory(new NovelChapterQuestionListCellFactory());
@@ -672,32 +665,17 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
                     try {
                         Map<String,Object> map = mapper.readValue(section.getContent(), Map.class);
                         String content = map.get("text").toString();
-                        SwingNode swingNode = new SwingNode();
 
-                        SwingUtilities.invokeLater(() -> {
-                            HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
-                            StyleSheet styleSheet = htmlEditorKit.getStyleSheet();
-                            styleSheet.addRule("body { font-size: 18pt; line-height: 2; }");
+                        WebView webView = new WebView();
+                        webView.setPrefHeight(600);
+                        WebEngine webEngine = webView.getEngine();
+                        webEngine.loadContent(content);
+                        webEngine.setUserStyleSheetLocation("data:,body { font-size: 18px; line-height: 1.8; }");
 
-                            JTextPane jContentPane = new JTextPane();
-                            jContentPane.setEditable(false);
-                            jContentPane.setContentType("text/html");
-                            jContentPane.setEditorKit(htmlEditorKit);
-
-                            jContentPane.setText(
-                                    content.replaceAll("<br>\r\n", "<br><br>")
-                                            .replaceAll("\r\n", "<br><br>")
-                            );
-                            jContentPane.setPreferredSize(new Dimension(600, 800));
-                            JScrollPane scrollPane = new JScrollPane(jContentPane);
-                            scrollPane.setBorder(null);
-                            swingNode.setContent(scrollPane);
-                        });
                         contentPane.getChildren().clear();
-                        contentPane.getChildren().addAll(swingNode);
+                        contentPane.getChildren().addAll(webView);
                     } catch (Exception e) {
-                        System.out.println(TAG + "Swing error -> " + e.getMessage());
-//                        e.printStackTrace();
+                        System.out.println(TAG + e.getMessage());
                     }
                 });
     }

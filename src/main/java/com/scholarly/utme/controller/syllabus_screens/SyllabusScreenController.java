@@ -212,16 +212,12 @@ public class SyllabusScreenController implements FxmlView<SyllabusScreenVM>, Ini
 
     private void setupRecTextsTab() {
         String recommendedText = viewModel.getSyllabusSubject().getRecommendedTexts();
+        recommendedText = recommendedText.replaceAll("<i>", "").replaceAll("</i>", "");
         Label recTextLabel = new Label(recommendedText);
         recTextLabel.setWrapText(true);
         recTextLabel.setTextAlignment(TextAlignment.JUSTIFY);
         recTextLabel.setPadding(new Insets(20, 15, 0, 15));
         recTextLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
-
-//        recTextLabel.heightProperty().addListener(((observable, oldValue, newValue) -> {
-//            System.out.println("Rec text label height -> " + newValue.doubleValue());
-//            syllabusPane.setPrefHeight((Double) newValue);
-//        }));
 
         recTextsTab.setContent(recTextLabel);
         recTextsTab.getContent().autosize();

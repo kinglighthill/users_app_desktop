@@ -1,6 +1,7 @@
 package com.scholarly.utme.viewmodels.practice_screens;
 
 import com.scholarly.utme.data.model.QuestionDescription;
+import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.View;
@@ -27,6 +28,8 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
     private List<PQSubject> subjectList;
     private HashMap<String, PracticeScreenVM.SubjectQuestionsState> subjectsQuestions;
 
+    private HashMap<String, Year> selectedSubjectYear;
+
     private View previousScreen;
 
 
@@ -48,6 +51,7 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
         subjectList = initialData.getSubjects();
         questionDescriptions = initialData.getQuestionDescriptions();
         subjectsQuestions = initialData.getSubjectsQuestions();
+        selectedSubjectYear = initialData.getSelectedSubjectYear();
 
         double totalScore = 0;
         double totalPercent = 0;
@@ -90,6 +94,10 @@ public class ResultScreenVM implements ViewModel, SceneLifecycle {
 
     public HashMap<String, PracticeScreenVM.SubjectQuestionsState> getSubjectsQuestions() {
         return subjectsQuestions;
+    }
+
+    public HashMap<String, Year> getSelectedSubjectYear() {
+        return selectedSubjectYear;
     }
 
     public View getPreviousScreen() {

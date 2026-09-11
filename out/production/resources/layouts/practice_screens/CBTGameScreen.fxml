@@ -116,7 +116,7 @@
                               </VBox.margin>
                            </HBox>
 
-                           <VBox fx:id="questionVBox" alignment="TOP_CENTER">
+                           <VBox fx:id="questionCenterVBox" alignment="TOP_CENTER">
                               <ScrollPane fx:id="questionScrollPane" fitToWidth="true" prefWidth="100" prefHeight="400">
                                  <Label fx:id="questionLabel" text="Simplify 0.000215 x 0.000028 and Express your answer in standard form" textAlignment="CENTER" textFill="#178102" wrapText="true" VBox.vgrow="ALWAYS">
                                     <font>
@@ -131,7 +131,7 @@
                               </ScrollPane>
                               <VBox fx:id="questionWithImageVBox" spacing="5" prefHeight="400" prefWidth="300" alignment="TOP_CENTER" StackPane.alignment="TOP_CENTER">
                                  <ImageView fx:id="questionImage" fitHeight="200" fitWidth="300" StackPane.alignment="TOP_CENTER"/>
-                                 <WebView fx:id="questionWithImageLabel" prefWidth="600">
+                                 <WebView fx:id="questionWithImageWebView" prefWidth="600">
                                     <!--<font>
                                        <Font size="16"/>
                                     </font>-->
@@ -150,13 +150,13 @@
                      <Separator orientation="VERTICAL" prefHeight="200.0" />
                      <VBox spacing="20" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                         <children>
-                           <Button fx:id="optionAButton" userData="0" textAlignment="CENTER" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" style="-fx-background-color: ##F7B71D; -fx-border-radius: 34; -fx-border-width: 2; -fx-border-color: #00ffff;" text="Button"/>
+                           <Button fx:id="optionAButton" userData="0" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" style="-fx-background-color: ##F7B71D; -fx-border-radius: 34; -fx-border-width: 2; -fx-border-color: #00ffff;" text="Button"/>
 
-                           <Button fx:id="optionBButton" userData="1" textAlignment="CENTER" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button"/>
+                           <Button fx:id="optionBButton" userData="1" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button"/>
 
-                           <Button fx:id="optionCButton" userData="2" textAlignment="CENTER" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button"/>
+                           <Button fx:id="optionCButton" userData="2" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button"/>
 
-                           <Button fx:id="optionDButton" userData="3" textAlignment="CENTER" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button"/>
+                           <Button fx:id="optionDButton" userData="3" mnemonicParsing="false" prefHeight="140.0" prefWidth="800.0" text="Button"/>
                         </children>
                         <padding>
                            <Insets bottom="30.0" top="30.0" left="20.0" right="20.0" />

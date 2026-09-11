@@ -1,5 +1,6 @@
 package com.scholarly.utme.controller.landing_screens;
 
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.HomeScreenController;
 import com.scholarly.utme.controller.note_screens.NotesScreenController;
 import com.scholarly.utme.controller.novel_screens.NovelContentScreenController;
@@ -9,6 +10,7 @@ import com.scholarly.utme.data.model.newDb.NoteLastSession;
 import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.ui.cellFactories.SubjectGridCellFactory;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -100,7 +102,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        boolean internetEnabled = checkNetworkConnectivity();
+        boolean internetEnabled = Helper.checkNetworkConnectivity();
 
         initializeViews();
         initializeFonts();
@@ -183,7 +185,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         });
 
         cbtPracticePanel.setOnMouseClicked(e -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.PRACTICE_SCREEN, null));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(null, null));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 
@@ -254,40 +256,6 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 
 //        List<String> fontFamilies = Font.getFamilies();
 //        List<String> fontNames    = Font.getFontNames();
-
-//        if (Platform.isFxApplicationThread()) {
-//            SwingUtilities.invokeLater(() -> {
-//                SwingNode swingNode = new SwingNode();
-//                JEditorPane editorPane = new JEditorPane();
-//                editorPane.setEditable(false);
-//                editorPane.setEditorKit(new HTMLEditorKit());
-//                editorPane.setContentType("text/html");
-//                editorPane.setText("<html><body><h1>Hello, <em>World</em>!</h1></body></html>");
-//
-//                fontVBox.getChildren().addAll(swingNode, new Label("This is the Label"));
-//                fontVBox.layout();
-//            });
-//        }
-
-
-//        long startTime = System.currentTimeMillis();
-//        fontFamilies.forEach(family -> {
-//            System.out.println("Font family -> " + family);
-//            Label label = new Label("Font family -> " + family);
-//            label.setFont(Font.font(family, 16));
-////            fontVBox.getChildren().add(label);
-//        });
-//        System.out.println(TAG + "Time taken to load font families -> " + (System.currentTimeMillis() - startTime) + "ms");
-
-//        long nameStartTime = System.currentTimeMillis();
-//        fontNames.forEach(name -> {
-//            System.out.println("Font name -> " + name);
-//            Label label = new Label("Font name -> " + name);
-//            label.setFont(Font.font(name, 16));
-////            fontVBox.getChildren().add(label);
-//        });
-//        System.out.println(TAG + "Time taken to load font names -> " + (System.currentTimeMillis() - nameStartTime) + "ms");
-
     }
 
     private void initializeViews() {
@@ -393,7 +361,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         cbtPracticePanel.setOnMouseEntered(e -> cbtPracticePanel.setStyle("-fx-background-color: #3289C6; -fx-background-radius: 10; -fx-cursor: hand;"));
         cbtPracticePanel.setOnMouseExited(e -> cbtPracticePanel.setStyle("-fx-background-color: #1B68AF; -fx-background-radius: 10;"));
 
-        novelsPanel.setOnMouseEntered(e -> novelsPanel.setStyle("-fx-background-color: #0EA362; -fx-background-radius: 10; -fx-cursor: hand;"));
+        novelsPanel.setOnMouseEntered(e -> novelsPanel.setStyle("-fx-background-color: #F1723B; -fx-background-radius: 10; -fx-cursor: hand;"));
         novelsPanel.setOnMouseExited(e -> novelsPanel.setStyle("-fx-background-color: #AD4518; -fx-background-radius: 10;"));
 
         studyNotesPanel.setOnMouseEntered(e -> studyNotesPanel.setStyle("-fx-background-color: #F5A100; -fx-background-radius: 10; -fx-cursor: hand;"));
@@ -478,28 +446,5 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         profileImage.setSmooth(true);
         profileImage.setCache(true);
         profileImage.setImage(image);
-    }
-
-    private boolean checkNetworkConnectivity() {
-        try {
-            URL url = new URL(BASE_URL);
-            URLConnection connection = url.openConnection();
-            connection.connect();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    private void createSwingContent(final SwingNode swingNode) {
-        SwingUtilities.invokeLater(() -> {
-            JEditorPane editorPane = new JEditorPane();
-            editorPane.setEditorKit(new HTMLEditorKit());
-            editorPane.setContentType("text/html");
-            editorPane.setText("<html><body><h1>Hello, <em>World</em>!</h1></body></html>");
-
-            JScrollPane scrollPane = new JScrollPane(editorPane);
-            swingNode.setContent(editorPane);
-        });
     }
 }

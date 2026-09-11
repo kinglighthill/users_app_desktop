@@ -13,8 +13,8 @@
         <top>
             <ToolBar prefHeight="75.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER">
                 <items>
-                    <Button fx:id="backButton" mnemonicParsing="false" onMouseClicked="#backButtonClicked"/>
-                    <Label fx:id="pageTitle" text="Select Note" textFill="WHITE">
+                    <Button fx:id="backButton" mnemonicParsing="false" onMouseClicked="#backButtonClicked" style="-fx-cursor: hand;"/>
+                    <Label fx:id="pageTitle" text="Study Notes" textFill="WHITE">
                         <padding>
                             <Insets left="20.0" />
                         </padding>
@@ -42,7 +42,7 @@
                                             <Insets bottom="20.0" left="20.0" top="20.0" />
                                         </padding>
                                     </Label>
-                                    <Region prefHeight="5.0" prefWidth="200.0" />
+                                    <Region prefHeight="1.0" prefWidth="200.0" />
                                     <ScrollPane fx:id="subjectListScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-border-color: #EDEDED;" VBox.vgrow="ALWAYS">
                                         <content>
                                             <VBox fx:id="subjectListVBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #FFFFFF;">
@@ -54,7 +54,7 @@
                                     </ScrollPane>
                                 </children>
                             </VBox>
-                            <Region prefHeight="200.0" prefWidth="5.0" />
+                            <Region prefHeight="200.0" prefWidth="1.0" />
                             <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                 <children>
                                     <Label fx:id="topicsTitle" prefHeight="57.0" prefWidth="2000.0" style="-fx-background-color: #ffffff;" text="Topics" textFill="#105801">
@@ -79,7 +79,7 @@
                         </children>
                     </HBox>
 
-                    <Button fx:id="commenceButton" mnemonicParsing="false" text="Commence Study" textFill="WHITE" visible="false" style="-fx-background-color: #4BB036; -fx-background-radius: 5;" StackPane.alignment="BOTTOM_RIGHT">
+                    <Button fx:id="commenceButton" mnemonicParsing="false" text="Commence Study" textFill="WHITE" visible="false" style="-fx-background-color: #4BB036; -fx-background-radius: 5; -fx-cursor: hand;" StackPane.alignment="BOTTOM_RIGHT">
                         <StackPane.margin>
                             <Insets bottom="30.0" right="30.0" />
                         </StackPane.margin>
@@ -99,8 +99,19 @@
                 </children>
             </StackPane>
         </center>
+
+        <right>
+            <HBox fx:id="rightPane" prefWidth="290" style="-fx-background-color: white; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
+
+                <padding>
+                    <Insets left="10" right="5"/>
+                </padding>
+            </HBox>
+        </right>
     </BorderPane>
+
     <VBox fx:id="dimmer" opacity="0.5" style="-fx-background-color: #000000;" visible="false"/>
+
     <BorderPane fx:id="subtopicsDialog" maxHeight="450.0" maxWidth="380.0"  StackPane.alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 8;" visible="false">
         <center>
             <VBox>
@@ -109,7 +120,7 @@
                         <Label fx:id="subtopicsLabel" text="Sub Topics" textFill="#034801"/>
                     </left>
                     <right>
-                        <ImageView fx:id="subtopicCloseDialog" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true"/>
+                        <ImageView fx:id="subtopicCloseDialog" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;"/>
                     </right>
                 </Panel>
                 <Line endX="350" stroke="#E2F2E4">
@@ -142,7 +153,7 @@
         </center>
         <bottom>
             <HBox alignment="BOTTOM_CENTER">
-                <Button fx:id="subtopicsCommenceButton" prefHeight="45" prefWidth="200" text="Commence Study" textFill="white" style="-fx-background-color: #4BB036; -fx-background-radius: 8;" visible="false">
+                <Button fx:id="subtopicsCommenceButton" prefHeight="45" prefWidth="200" text="Commence Study" textFill="white" style="-fx-background-color: #4BB036; -fx-background-radius: 8; -fx-cursor: hand;" visible="false">
                     <font>
                         <Font size="16"/>
                     </font>
@@ -156,5 +167,71 @@
             <Insets top="20" right="25" left="25" bottom="20"/>
         </padding>
     </BorderPane>
+
+    <VBox fx:id="activateNowDialog" spacing="25" maxHeight="450.0" maxWidth="380.0" prefHeight="400.0" prefWidth="250.0" StackPane.alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
+        <Panel>
+            <left>
+                <ImageView fx:id="activateNowPadlockIcon" fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true"/>
+            </left>
+            <right>
+                <ImageView fx:id="activateNowCloseIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;"/>
+            </right>
+        </Panel>
+        <Label fx:id="activateHeaderText" text="Activate your App for Unlimited Access" textFill="#12AF20" wrapText="true"/>
+        <VBox spacing="15">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon1" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Unlock all Note Topics">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon2" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Unlock all Past Questions Years">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon3" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Unlock all Novel Chapters">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon4" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Use App without internet">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ImageView fx:id="greenTickIcon5" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"/>
+                <Label text="Activation lasts for One Academic Year">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+        </VBox>
+
+        <HBox alignment="CENTER">
+            <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N2000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8; -fx-cursor: hand;">
+                <font>
+                    <Font size="16"/>
+                </font>
+            </Button>
+        </HBox>
+
+        <padding>
+            <Insets topRightBottomLeft="25"/>
+        </padding>
+    </VBox>
 
 </StackPane>

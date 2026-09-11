@@ -40,14 +40,13 @@ public class NovelChapterDao {
     private static final String chapterTitleColumn = "chapter_title";
     private static final String userIdColumn = "uid";
 
-    private static final ObservableList<FreeContent> freeContents;
+    private static final ObservableList<FreeContent> freeContents = FXCollections.observableArrayList();
 
     ObservableList<NovelChapter> novelChapters;
-    private static final String userId;
+    private final String userId;
 
-    static {
+    public NovelChapterDao() {
         userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
-        freeContents = FXCollections.observableArrayList();
         updateFreeChaptersColumn();
     }
 
@@ -142,7 +141,8 @@ public class NovelChapterDao {
 
     public ObservableList<NovelChapter> getNovelChapters() {
         updateNovelChaptersFromDb();
-        if (PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
+        boolean isActivated = PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false);
+        if (isActivated) {
             for (NovelChapter chapter : novelChapters) {
                 chapter.setFree(true);
             }

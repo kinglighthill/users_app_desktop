@@ -11,7 +11,7 @@
     <BorderPane AnchorPane.topAnchor="1.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0">
         <top>
             <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white;">
-                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9" onMouseClicked="#backButtonClicked"/>
+                <Button fx:id="backButton" style="-fx-background-color: #E7F7E9; -fx-cursor: hand;" onMouseClicked="#backButtonClicked"/>
                 <Label fx:id="pageTitle" text="Novels" textFill="#034801"/>
                 <padding>
                     <Insets top="20" left="20" bottom="20"/>
@@ -23,11 +23,11 @@
             <ScrollPane fx:id="centerScrollPane" prefWidth="600" fitToWidth="true">
                 <StackPane fx:id="centerStackPane" prefWidth="600" style="-fx-background-color: white;">
                     <VBox fx:id="centerVBox" spacing="30" prefWidth="500">
-                        <VBox spacing="15" prefWidth="500" style="-fx-background-color: #F4FFF5; -fx-background-radius: 5;">
+                        <VBox fx:id="novelPrompt" spacing="15" prefWidth="500" style="-fx-background-color: #F4FFF5; -fx-background-radius: 5;">
                             <Label fx:id="infoText" text="NOTE: These books listed below represent both the new and old recommended literary texts. You are expected to study texts relevant to JAMB 2021 according to the JAMB syllabus" textFill="#053500" wrapText="true"/>
                             <HBox spacing="15" alignment="CENTER_LEFT">
-                                <RadioButton fx:id="dontShowButton" text="Don't show again" textFill="#053500"/>
-                                <Button fx:id="dismissButton" text="Dismiss" textFill="white" style="-fx-background-color: #12AF20;"/>
+                                <RadioButton fx:id="dontShowButton" text="Don't show again" textFill="#053500" style="-fx-cursor: hand;"/>
+                                <Button fx:id="dismissButton" text="Dismiss" textFill="white" style="-fx-background-color: #12AF20; -fx-cursor: hand;"/>
                             </HBox>
                             <padding>
                                 <Insets topRightBottomLeft="15"/>
@@ -58,12 +58,12 @@
                         <ImageView fx:id="chaptersIcon" preserveRatio="true" pickOnBounds="true" visible="false"/>
                         <Label fx:id="chaptersLabel"/>
                     </HBox>
-                    <HBox spacing="10" alignment="CENTER_LEFT">
+                    <!--<HBox spacing="10" alignment="CENTER_LEFT">
                         <ImageView fx:id="timeIcon" preserveRatio="true" pickOnBounds="true" visible="false"/>
-                        <Label fx:id="timeText" text="20 mins" visible="false"/>
-                    </HBox>
+                        <Label fx:id="timeText"/>
+                    </HBox>-->
 
-                    <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5;" visible="false"/>
+                    <Button fx:id="readButton" text="Read" textFill="white" prefWidth="110" prefHeight="30" style="-fx-background-color: #12AF20; -fx-background-radius: 5; -fx-cursor: hand;" visible="false"/>
 
                     <padding>
                         <Insets top="20"/>

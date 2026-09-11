@@ -94,6 +94,10 @@ public class AccessTokenAuthenticator implements Authenticator {
                     }
 
                 } catch (Exception e) {
+                    Platform.runLater(() -> {
+                        Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                        alertDialog.show();
+                    });
                     System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                 }
             }

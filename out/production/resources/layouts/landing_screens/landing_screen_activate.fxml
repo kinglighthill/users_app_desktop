@@ -126,7 +126,7 @@
                                         <Font size="14"/>
                                     </font>
                                 </Label>
-                                <Label fx:id="chatUsLabel" text="Chat us" textFill="#12AF20">
+                                <Label fx:id="whatsAppNumber" text="Chat us" textFill="#12AF20">
                                     <font>
                                         <Font size="14"/>
                                     </font>

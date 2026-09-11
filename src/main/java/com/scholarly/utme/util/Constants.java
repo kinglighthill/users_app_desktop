@@ -1,10 +1,17 @@
 package com.scholarly.utme.util;
 
 public class Constants {
-
     public static String BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
+//    public static String BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
+    public static final String WEBSITE_URL = "https://scholarly.africa/";
     public static final String WHATSAPP_URL = "https://wa.me/2348136941462";
+//    public static final String PAYSTACK_URL = "https://paystack.com/pay/utme-activation-pin-pc";
     public static final String PAYSTACK_URL = "https://paystack.com/pay/utme-activation-pin-pc";
+    public static final String GMAIL_URL = "https://mail.google.com/mail/?view=cm&fs=1&to=info@scholarly.africa";
+    public static final String LINKEDIN_URL = "https://www.linkedin.com/company/scholarlyafrica/";
+    public static final String FACEBOOK_URL = "https://web.facebook.com/scholarlyng";
+    public static final String TWITTER_URL = "https://twitter.com/scholarlyng";
+    public static final String INSTAGRAM_URL = "https://www.instagram.com/scholarlyng/";
     public static String REFRESH_URL = BASE_URL + "login/refresh";
 
     // Network Preference Constants
@@ -18,6 +25,7 @@ public class Constants {
     public static final String PREF_KEY_ACTIVATE_ACCESS_TOKEN = "ACTIVATE_ACCESS_TOKEN";
     public static final String PREF_KEY_LOGGED_USER_OUT = "LOGGED_USER_OUT";
     public static final String PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED = "HOME_SCREEN_ACTIVATE_PROMPT_REMOVED";
+    public static final String PREF_KEY_DONT_SHOW_NOVEL_SCREEN_PROMPT = "NOVEL_SCREEN_PROMPT_DISMISSED";
 
     // Tab Preference Constants
     public static final String PREF_KEY_SELECTED_TAB = "SELECTED_TAB";
@@ -26,6 +34,7 @@ public class Constants {
 
     // Session Preference Constants
     public static final String PREF_KEY_FIRST_TIME_USER = "FIRST_TIME_USER";
+    public static final String PREF_KEY_LAST_SELECTED_PRACTICE = "LAST_SELECTED_PRACTICE";
 
     // Settings Preference Constants
     public static final String PREF_KEY_VIBRATION = "VIBRATION";

@@ -144,7 +144,7 @@ public class SubjectListItemVM implements ViewModel {
         shuffleQuestions.set(!value);
         shuffleOptions.set(!value);
         selectedTopicsProperty.set(topics.stream().map(PQTopic::getId).collect(Collectors.toList()));
-        Year year = Objects.requireNonNull(YearsDao.getAvailableYearsForSubject(type, subject.getId())).stream().filter(Year::isFree).toList().get(0);
+        Year year = Objects.requireNonNull(new YearsDao().getAvailableYearsForSubject(type, subject.getId())).stream().filter(Year::isFree).toList().get(0);
         selectedYearProperty.set(year);
     }
 
@@ -260,9 +260,9 @@ public class SubjectListItemVM implements ViewModel {
 
     public void loadTopicsForYear(Year year) {
         topics.clear();
-        System.out.println(TAG + "Got Year -> " + year.getYear());
+//        System.out.println(TAG + "Got Year -> " + year.getYear());
         topics.addAll(Objects.requireNonNull(TopicDao.getPQTopicsForSubjectAndYear(subject.getId(), year.getId())));
-        System.out.println(TAG + "Got Topics -> " + topics);
+//        System.out.println(TAG + "Got Topics -> " + topics);
     }
 
     public void loadQuestionNumbersList(List<Integer> topicIdsList) {
@@ -321,7 +321,7 @@ public class SubjectListItemVM implements ViewModel {
     }
 
     public void populateYearsList() {
-        years = YearsDao.getAvailableYearsForSubject(type, subject.getId());
+        years = new YearsDao().getAvailableYearsForSubject(type, subject.getId());
     }
 
     public void setType(Type type) {

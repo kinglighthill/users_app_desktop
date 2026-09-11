@@ -4,6 +4,7 @@ module com.scholarly.utme {
     requires javafx.web;
     requires javafx.media;
     requires javafx.swing;
+    requires javafx.graphics;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
@@ -15,10 +16,12 @@ module com.scholarly.utme {
     requires jidefx.decoration;
 
     requires java.sql;
+    requires jdk.crypto.cryptoki;
     requires io.reactivex.rxjava3;
     requires org.pdfsam.rxjavafx;
 //    requires sqlite.jdbc;
-    requires org.xerial.sqlitejdbc;
+//    requires org.xerial.sqlitejdbc;
+    requires io.github.willena.sqlitejdbc;
     requires de.saxsys.mvvmfx;
     requires freetts;
     requires com.google.gson;
@@ -63,6 +66,8 @@ module com.scholarly.utme {
     exports com.scholarly.utme.data.model;
     exports com.scholarly.utme.ui.utils;
     exports com.scholarly.utme.network;
+
+//    opens jdk.internal.org.objectweb.asm to ALL-UNNAMED;
 
     opens com.scholarly.utme.ui.listcells to javafx.fxml;
     opens com.scholarly.utme.network.model to com.google.gson;

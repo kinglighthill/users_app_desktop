@@ -3,6 +3,7 @@ package com.scholarly.utme.viewmodels.novel_screens;
 import com.scholarly.utme.data.dao.NovelAuthorDao;
 import com.scholarly.utme.data.dao.NovelsDao;
 import com.scholarly.utme.data.model.novels.*;
+import com.scholarly.utme.util.PreferencesManager;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -11,6 +12,8 @@ import javafx.collections.ObservableMap;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class NovelScreenVM implements ViewModel {
     private static final String TAG = "NovelScreenVM: ";
@@ -29,8 +32,12 @@ public class NovelScreenVM implements ViewModel {
 
     private ObservableMap<NovelCategoryGenre, List<NovelModel>> genresCategories = FXCollections.observableHashMap();
 
+    private String userId;
+
 
     public NovelScreenVM() {
+        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+
         novels.addAll(NovelsDao.getNovels());
         genres.addAll(NovelsDao.getGenres());
         authors.addAll(NovelAuthorDao.getAuthors());
@@ -41,6 +48,10 @@ public class NovelScreenVM implements ViewModel {
             genreCategoryMap.put(novelGenre, categories);
         });
 
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public ObservableList<Novel> getNovels(NovelCategory category, NovelGenre genre) {

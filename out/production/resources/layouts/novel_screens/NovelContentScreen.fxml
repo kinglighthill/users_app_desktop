@@ -43,16 +43,11 @@
                     <VBox spacing="20" prefWidth="600" prefHeight="400" style="-fx-background-color: white;">
                         <Label fx:id="chapterTitle" text="The Letter"/>
 
-                        <ScrollPane fx:id="contentPane" fitToWidth="true" style="-fx-background-color: #FFFFFF;" prefHeight="400"  VBox.vgrow="ALWAYS">
-                            <Label fx:id="chapterContent" wrapText="true" lineSpacing="6" style="-fx-background-color: #FFFFFF;">
-                                <padding>
-                                    <Insets top="5" bottom="5" left="5" right="15"/>
-                                </padding>
-                            </Label>
+                        <StackPane  fx:id="contentPane" style="-fx-background-color: #FFFFFF;">
                             <padding>
                                 <Insets topRightBottomLeft="5"/>
                             </padding>
-                        </ScrollPane>
+                        </StackPane>
 
                         <HBox spacing="15" alignment="CENTER">
                             <Button fx:id="prevButton" prefHeight="30" prefWidth="50" style="-fx-background-color: #E7F7E9"/>

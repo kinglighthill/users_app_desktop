@@ -12,10 +12,9 @@ public class CustomNumberField extends TextField {
             char ch = ar[keyEvent.getCharacter().toCharArray().length - 1];
             if (!(ch >= '0' && ch <= '9')) {
                 setPromptText("Please enter a valid number");
-//                System.out.println("The char you entered is not a number");
+                System.out.println("The char you entered is not a number");
                 keyEvent.consume();
             }
         });
-
     }
 }

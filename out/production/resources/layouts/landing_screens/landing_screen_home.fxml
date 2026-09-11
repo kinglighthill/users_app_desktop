@@ -8,70 +8,71 @@
 <?import org.controlsfx.control.GridView?>
 <?import org.controlsfx.control.CheckListView?>
 <?import javafx.scene.text.Font?>
-<BorderPane fx:id="rootPane" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenHomeController">
+<StackPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenHomeController">
 
-    <top>
-        <VBox HBox.hgrow="ALWAYS">
-            <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
-                <children>
-                    <Label fx:id="helloText" text="Hello! " textFill="#034801">
-                        <!--<font>
-                            <Font name="SansSerif" size="22"/>
-                        </font>-->
-                        <HBox.margin>
-                            <Insets left="20.0" />
-                        </HBox.margin>
-                    </Label>
+    <BorderPane fx:id="rootPane" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
 
-                    <ImageView fx:id="handImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                        <HBox.margin>
-                            <Insets left="20.0" />
-                        </HBox.margin>
-                    </ImageView>
+        <top>
+            <VBox HBox.hgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
+                    <children>
+                        <Label fx:id="helloText" text="Hello! " textFill="#034801">
+                            <!--<font>
+                                <Font name="SansSerif" size="22"/>
+                            </font>-->
+                            <HBox.margin>
+                                <Insets left="20.0" />
+                            </HBox.margin>
+                        </Label>
 
-                    <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" HBox.hgrow="ALWAYS">
-<!--                        <ImageView fx:id="notificationIcon" pickOnBounds="true" preserveRatio="true">-->
-<!--                            <HBox.margin>-->
-<!--                                <Insets right="20.0"/>-->
-<!--                            </HBox.margin>-->
-<!--                        </ImageView>-->
-                        <ImageView fx:id="profileImage" pickOnBounds="true"/>
-                        <HBox.margin>
-                            <Insets left="20.0"/>
-                        </HBox.margin>
-                    </HBox>
-                </children>
-            </HBox>
-            <Label fx:id="startLearningText" text="Let's start learning" textFill="#034801">
-                <!--<font>
-                    <Font name="SansSerif" size="15"/>
-                </font>-->
-                <VBox.margin>
-                    <Insets left="20.0" />
-                </VBox.margin>
-            </Label>
+                        <ImageView fx:id="handImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                            <HBox.margin>
+                                <Insets left="20.0" />
+                            </HBox.margin>
+                        </ImageView>
 
-            <padding>
-                <Insets top="10" left="15" right="15"/>
-            </padding>
-        </VBox>
-    </top>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" HBox.hgrow="ALWAYS">
+                            <!--                        <ImageView fx:id="notificationIcon" pickOnBounds="true" preserveRatio="true">-->
+                            <!--                            <HBox.margin>-->
+                            <!--                                <Insets right="20.0"/>-->
+                            <!--                            </HBox.margin>-->
+                            <!--                        </ImageView>-->
+                            <ImageView fx:id="profileImage" pickOnBounds="true" style="-fx-cursor: hand;"/>
+                            <HBox.margin>
+                                <Insets left="20.0"/>
+                            </HBox.margin>
+                        </HBox>
+                    </children>
+                </HBox>
+                <Label fx:id="startLearningText" text="Let's start learning" textFill="#034801">
+                    <!--<font>
+                        <Font name="SansSerif" size="15"/>
+                    </font>-->
+                    <VBox.margin>
+                        <Insets left="20.0" />
+                    </VBox.margin>
+                </Label>
 
-    <center>
-        <StackPane fx:id="centerStackPane">
+                <padding>
+                    <Insets bottom="10" left="15" right="15"/>
+                </padding>
+            </VBox>
+        </top>
+
+        <center>
             <ScrollPane fx:id="mainScrollPane" fitToWidth="true" style="-fx-background-color: #FFFFFF;">
                 <VBox prefWidth="800" prefHeight="600" style="-fx-background-color: #FFFFFF;">
                     <Panel>
                         <left>
-                            <Label fx:id="topSubjectsText" text="Top subjects to get started" textFill="#034801">
+                            <Label fx:id="topSubjectsText" text="My Subjects" textFill="#034801">
                                 <padding>
                                     <Insets left="20.0" top="10.0" bottom="20.0"/>
                                 </padding>
                             </Label>
                         </left>
                         <right>
-                            <Label fx:id="editSubjectsText" text="Edit subjects" textFill="#12AF20">
+                            <Label fx:id="editSubjectsText" text="Edit subjects" textFill="#12AF20" style="-fx-cursor: hand;">
                                 <padding>
                                     <Insets right="20.0" top="10.0" bottom="20.0" />
                                 </padding>
@@ -87,9 +88,9 @@
 
                     <VBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="150.0">
                         <children>
-                            <Label fx:id="libraryText" text="Activities for you" textFill="#034801">
+                            <Label fx:id="libraryText" text="Library" textFill="#034801">
                                 <padding>
-                                    <Insets left="10.0" top="20.0" bottom="20.0" />
+                                    <Insets left="10.0" top="20.0" bottom="10.0" />
                                 </padding>
                             </Label>
 
@@ -97,9 +98,9 @@
 
                                 <children>
                                     <Panel fx:id="studyNotesPanel" GridPane.columnIndex="0" GridPane.rowIndex="0"
-                                           prefWidth="250.0" style="-fx-background-color: #0EA362; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                           prefWidth="200.0" style="-fx-background-color: #E18400; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
-                                            <ImageView fx:id="studyNotesIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                                            <ImageView fx:id="studyNotesIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true"/>
                                         </top>
                                         <bottom>
                                             <Label fx:id="studyNotesText" text="Study Notes" textFill="white">
@@ -108,31 +109,31 @@
                                                 </font>-->
                                             </Label>
                                         </bottom>
+
                                         <padding>
                                             <Insets left="30" bottom="20" top="20"/>
                                         </padding>
                                     </Panel>
 
-                                    <Panel fx:id="cbtPracticePanel" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                                           prefWidth="200.0" style="-fx-background-color: #E18400; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                    <Panel fx:id="cbtPracticePanel" GridPane.columnIndex="1" GridPane.rowIndex="0" minHeight="120.0"
+                                           prefWidth="250.0" style="-fx-background-color: #1B68AF; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
-                                            <ImageView fx:id="cbtPracticeIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true"/>
+                                            <ImageView fx:id="cbtPracticeIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
                                         </top>
                                         <bottom>
-                                            <Label fx:id="cbtPracticeText" text="Practice Questions" textFill="white">
+                                            <Label fx:id="cbtPracticeText" text="Past Questions" textFill="white">
                                                 <!--<font>
                                                     <Font name="SansSerif" size="18"/>
                                                 </font>-->
                                             </Label>
                                         </bottom>
-
                                         <padding>
                                             <Insets left="30" bottom="20" top="20"/>
                                         </padding>
                                     </Panel>
 
-                                    <Panel fx:id="novelsPanel" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="120.0"
-                                           prefWidth="250.0" style="-fx-background-color: #1B68AF; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                    <Panel fx:id="novelsPanel" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                           prefWidth="250.0" style="-fx-background-color: #AD4518; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                         <top>
                                             <ImageView fx:id="novelsIcon" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
                                         </top>
@@ -179,14 +180,14 @@
                                     </Panel>-->
 
 
-                                   <!-- <Panel fx:id="cbtGamePanel" GridPane.columnIndex="2" GridPane.rowIndex="0" minHeight="120.0"
-                                           prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
-                                        <Label fx:id="cbtGameLabel" text="CBT Game" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
-                                            <padding>
-                                                <Insets left="65"/>
-                                            </padding>
-                                        </Label>
-                                    </Panel>-->
+                                    <!-- <Panel fx:id="cbtGamePanel" GridPane.columnIndex="2" GridPane.rowIndex="0" minHeight="120.0"
+                                            prefWidth="250.0" style="-fx-background-color: #105801; -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                         <Label fx:id="cbtGameLabel" text="CBT Game" textFill="white" GridPane.halignment="LEFT" GridPane.valignment="CENTER" >
+                                             <padding>
+                                                 <Insets left="65"/>
+                                             </padding>
+                                         </Label>
+                                     </Panel>-->
 
 
                                     <!--<Panel fx:id="cbtCentresPanel" GridPane.columnIndex="1" GridPane.rowIndex="1" minHeight="120.0"
@@ -233,20 +234,19 @@
                         <padding>
                             <Insets left="10"/>
                         </padding>
+                        <VBox.margin>
+                            <Insets top="20"/>
+                        </VBox.margin>
                     </VBox>
-
-                    <padding>
-                        <Insets top="20" left="15" right="15"/>
-                    </padding>
 
                     <VBox fx:id="continuePreviousSessionVBox" spacing="10">
                         <Label fx:id="continueSessionsText" text="Continue previous sessions" textFill="#034801"/>
 
-                        <GridPane fx:id="previousSessionHBox" prefWidth="500" alignment="CENTER_LEFT" hgap="15.0" vgap="15.0" style="-fx-background-color: #FFFFFF;">
+                        <HBox fx:id="previousSessionHBox" spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: #FFFFFF;">
                             <children>
-                                <Panel fx:id="noteLastSessionPanel" prefWidth="250" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                <Panel fx:id="noteLastSessionPanel" prefWidth="500" prefHeight="250" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;">
                                     <left>
-                                        <StackPane prefWidth="100" style="-fx-background-color: white; -fx-background-radius: 10;">
+                                        <StackPane prefWidth="100">
                                             <ImageView fx:id="noteSessionSubjectImage" preserveRatio="true" pickOnBounds="true"/>
                                         </StackPane>
                                     </left>
@@ -264,23 +264,29 @@
                                     </padding>
                                 </Panel>
 
-                                <Panel fx:id="novelLastSessionPanel" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
+                                <Panel fx:id="novelLastSessionPanel" prefWidth="500" prefHeight="250" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;">
                                     <left>
-                                        <StackPane>
-                                            <ImageView fx:id="novelLastSessionImage" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_LEFT"/>
+                                        <StackPane  style="-fx-background-color: white; -fx-background-radius: 10;">
+                                            <ImageView fx:id="novelLastSessionImage" fitWidth="80" fitHeight="100" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER"/>
+                                            <padding>
+                                                <Insets topRightBottomLeft="10"/>
+                                            </padding>
                                         </StackPane>
                                     </left>
                                     <center>
-                                        <VBox spacing="10">
+                                        <VBox spacing="10" alignment="CENTER_LEFT">
                                             <Label fx:id="novelLastSessionTitle" text="The Life Changer" textFill="#034801"/>
-                                            <HBox spacing="5" alignment="CENTER_LEFT">
-                                                <ImageView fx:id="novelLastSessionAuthorIcon" preserveRatio="true" pickOnBounds="true"/>
-                                                <Label fx:id="novelLastSessionAuthorName" text="John Uzodinma" textFill="#034801"/>
-                                            </HBox>
-                                            <HBox spacing="5" alignment="CENTER_LEFT">
-                                                <ImageView fx:id="novelLastSessionChaptersIcon" preserveRatio="true" pickOnBounds="true"/>
-                                                <Label fx:id="novelLastSessionChaptersText" text="7 chapters" textFill="#034801"/>
-                                            </HBox>
+
+                                            <Label fx:id="novelLastSessionChapterText" text="7 chapters" textFill="#034801"/>
+
+                                            <!--                                            <HBox spacing="5" alignment="CENTER_LEFT">-->
+                                            <!--                                                <Label fx:id="novelLastSessionChapterText" text="7 chapters" textFill="#034801"/>-->
+                                            <!--                                            </HBox>-->
+
+                                            <!--                                            <HBox spacing="5" alignment="CENTER_LEFT">-->
+                                            <!--                                                <ImageView fx:id="novelLastSessionAuthorIcon" preserveRatio="true" pickOnBounds="true"/>-->
+                                            <!--                                                <Label fx:id="novelLastSessionAuthorName" text="John Uzodinma" textFill="#034801"/>-->
+                                            <!--                                            </HBox>-->
 
                                             <padding>
                                                 <Insets left="30" top="10"/>
@@ -361,11 +367,14 @@
                             <padding>
                                 <Insets right="5" bottom="5"/>
                             </padding>
-                        </GridPane>
+                        </HBox>
 
                         <padding>
                             <Insets top="20" left="20" right="10"/>
                         </padding>
+                        <VBox.margin>
+                            <Insets top="20"/>
+                        </VBox.margin>
                     </VBox>
 
                     <Separator>
@@ -376,9 +385,12 @@
 
                     <Panel style="-fx-background-color: #F3FBF4; -fx-background-radius: 5;">
                         <left>
-                            <VBox alignment="CENTER" spacing="20">
-                                <Label fx:id="otherAppsTitleDesc" text="View All Desktop Apps" textFill="#034801"/>
-                                <Button fx:id="viewDesktopAppButton" text="Here" textFill="#FFFFFF" prefWidth="120" style="-fx-background-color: #12AF20; -fx-background-radius: 8;"/>
+                            <VBox alignment="CENTER_LEFT" spacing="20">
+                                <VBox>
+                                    <Label fx:id="otherAppsTitleDesc" text="Sitting for other Exams?" textFill="#034801"/>
+                                    <Label fx:id="otherAppsShortDesc" text="Download Desktop apps for other exams: UTME, WASSCE, Post UTME, BECE etc." textFill="#034801"/>
+                                </VBox>
+                                <Button fx:id="viewDesktopAppButton" text="Here" textFill="#FFFFFF" prefWidth="120" style="-fx-background-color: #12AF20; -fx-background-radius: 8; -fx-cursor: hand;"/>
 
                                 <padding>
                                     <Insets left="30"/>
@@ -394,8 +406,11 @@
                             </ImageView>
                         </right>
                         <VBox.margin>
-                            <Insets top="30" left="15" right="15" bottom="20"/>
+                            <Insets top="20" left="15" right="15" bottom="10"/>
                         </VBox.margin>
+                        <padding>
+                            <Insets top="10" bottom="10"/>
+                        </padding>
                     </Panel>
 
                     <VBox fx:id="fontVBox" spacing="10">
@@ -403,124 +418,132 @@
                             <Insets left="20" bottom="10"/>
                         </VBox.margin>
                     </VBox>
+
+                    <padding>
+                        <Insets top="20" left="15" right="15"/>
+                    </padding>
                 </VBox>
             </ScrollPane>
+        </center>
 
-            <VBox fx:id="dimmer" style="-fx-background-color: rgb(255, 255, 255, 0.5);" visible="false"/>
+        <right>
+            <HBox fx:id="rightPane" prefWidth="290" style="-fx-background-color: white; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
+                <!--<VBox spacing="5">
+                    <Panel>
+                        <left>
+                            <Label fx:id="newsFeedText" text="News Feed" textFill="#053500"/>
+                        </left>
 
-            <StackPane fx:id="selectSubjectPane" maxWidth="450" maxHeight="430" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 7;" visible="false">
-                <VBox alignment="CENTER" spacing="10" StackPane.alignment="TOP_CENTER">
-                    <Label fx:id="selectFavoriteText" text="Select your favorite Subjects" textFill="#034801"/>
-                    <Label fx:id="moreThanOneText" text="You can select more than one" textFill="#034801">
-                        <VBox.margin>
-                            <Insets bottom="20"/>
-                        </VBox.margin>
-                    </Label>
+                        <right>
+                            <Label fx:id="seeAllText" text="See all" textFill="#12AF20"/>
+                        </right>
+                    </Panel>
 
-                    <GridView fx:id="selectSubjectsGrid" prefWidth="150" prefHeight="200"  cellHeight="90" cellWidth="100" horizontalCellSpacing="10" verticalCellSpacing="10" StackPane.alignment="CENTER">
-                        <padding>
-                            <Insets left="30" right="30"/>
-                        </padding>
-                    </GridView>
+                    <ListView fx:id="newsList" prefWidth="390" prefHeight="600" style="-fx-background-color: white;"/>
+                </VBox>-->
 
-                    <Button fx:id="completeEditSubjectsButton" text="Complete" textFill="white" prefHeight="40" prefWidth="150" style="-fx-background-color: #12AF20; -fx-background-radius: 6;">
-                        <VBox.margin>
-                            <Insets top="15"/>
-                        </VBox.margin>
-                    </Button>
-
-                    <!--<HBox prefHeight="200" prefWidth="400" alignment="CENTER" StackPane.alignment="CENTER" spacing="10" >
-                        <VBox spacing="10">
-
-                            <Panel fx:id="actionCbtPracticePanel" prefWidth="200.0" prefHeight="80" style="-fx-background-color: #E18400; -fx-background-radius: 10;" >
-                                <top>
-                                    <ImageView fx:id="actionCbtPracticeIcon" preserveRatio="true" pickOnBounds="true"/>
-                                </top>
-                                <bottom>
-                                    <Label fx:id="actionCbtPracticeText" text="CBT Practice" textFill="white"/>
-                                </bottom>
-
-                                <padding>
-                                    <Insets left="15" bottom="15" top="15"/>
-                                </padding>
-                            </Panel>
-
-                            <Panel fx:id="actionVideosPracticePanel" prefWidth="200.0" prefHeight="80" style="-fx-background-color: #AD4518; -fx-background-radius: 10;" >
-                                <top>
-                                    <ImageView fx:id="actionVideosPracticeIcon" preserveRatio="true" pickOnBounds="true"/>
-                                </top>
-                                <bottom>
-                                    <Label fx:id="actionVideosPracticeText" text="Videos" textFill="white"/>
-                                </bottom>
-
-                                <padding>
-                                    <Insets left="15" bottom="15" top="15"/>
-                                </padding>
-                            </Panel>
-                        </VBox>
-                        <VBox spacing="10">
-                            <Panel fx:id="actionNovelsPracticePanel" prefWidth="200.0" prefHeight="80" style="-fx-background-color: #10AFD4; -fx-background-radius: 10;" >
-                                <top>
-                                    <ImageView fx:id="actionNovelsPracticeIcon" preserveRatio="true" pickOnBounds="true"/>
-                                </top>
-                                <bottom>
-                                    <Label fx:id="actionNovelsPracticeText" text="Novels" textFill="white"/>
-                                </bottom>
-
-                                <padding>
-                                    <Insets left="15" bottom="15" top="15"/>
-                                </padding>
-                            </Panel>
-
-                            <Panel fx:id="actionAudioPracticePanel" prefWidth="200.0" prefHeight="80" style="-fx-background-color: #1B68AF; -fx-background-radius: 10;" >
-                                <top>
-                                    <ImageView fx:id="actionAudioPracticeIcon" preserveRatio="true" pickOnBounds="true"/>
-                                </top>
-                                <bottom>
-                                    <Label fx:id="actionAudioPracticeText" text="Audio" textFill="white" />
-                                </bottom>
-
-                                <padding>
-                                    <Insets left="15" bottom="15" top="15"/>
-                                </padding>
-                            </Panel>
-                        </VBox>
-                    </HBox>-->
-                </VBox>
-
-                <ImageView fx:id="selectSubjectCloseIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_RIGHT"/>
-
-                <!--<padding>
-                    <Insets bottom="10"/>
+                <padding>
+                    <Insets left="10" right="5"/>
                 </padding>
-                <StackPane.margin>
-                    <Insets bottom="40"/>
-                </StackPane.margin>-->
-            </StackPane>
+            </HBox>
+        </right>
 
-        </StackPane>
-    </center>
+    </BorderPane>
 
-    <!--<right>
-        <HBox fx:id="rightPane" prefWidth="390" style="-fx-background-color: white; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
-            <VBox spacing="5">
-                <Panel>
-                    <left>
-                        <Label fx:id="newsFeedText" text="News Feed" textFill="#053500"/>
-                    </left>
+    <VBox fx:id="dimmer" style="-fx-background-color: rgb(255, 255, 255, 0.5);" visible="false"/>
 
-                    <right>
-                        <Label fx:id="seeAllText" text="See all" textFill="#12AF20"/>
-                    </right>
-                </Panel>
+    <StackPane fx:id="selectSubjectPane" maxWidth="450" maxHeight="430" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 7;" visible="false">
+        <VBox alignment="CENTER" spacing="10" StackPane.alignment="TOP_CENTER">
+            <Label fx:id="selectFavoriteText" text="Select your favorite Subjects" textFill="#034801"/>
+            <Label fx:id="moreThanOneText" text="Select one or more subjects. (You can change subjects later)" textFill="#034801">
+                <VBox.margin>
+                    <Insets bottom="20"/>
+                </VBox.margin>
+            </Label>
 
-                <ListView fx:id="newsList" prefWidth="390" prefHeight="600" style="-fx-background-color: white;"/>
-            </VBox>
+            <GridView fx:id="selectSubjectsGrid" prefWidth="150" prefHeight="200"  cellHeight="90" cellWidth="100" horizontalCellSpacing="10" verticalCellSpacing="10" StackPane.alignment="CENTER" style="-fx-cursor: hand;">
+                <padding>
+                    <Insets left="30" right="30"/>
+                </padding>
+            </GridView>
 
-            <padding>
-                <Insets left="10" right="5"/>
-            </padding>
-        </HBox>
-    </right>-->
+            <Button fx:id="completeEditSubjectsButton" text="Complete" textFill="white" prefHeight="40" prefWidth="150" style="-fx-background-color: #12AF20; -fx-background-radius: 6; -fx-cursor: hand;">
+                <VBox.margin>
+                    <Insets top="15"/>
+                </VBox.margin>
+            </Button>
 
-</BorderPane>
+            <!--<HBox prefHeight="200" prefWidth="400" alignment="CENTER" StackPane.alignment="CENTER" spacing="10" >
+                <VBox spacing="10">
+
+                    <Panel fx:id="actionCbtPracticePanel" prefWidth="200.0" prefHeight="80" style="-fx-background-color: #E18400; -fx-background-radius: 10;" >
+                        <top>
+                            <ImageView fx:id="actionCbtPracticeIcon" preserveRatio="true" pickOnBounds="true"/>
+                        </top>
+                        <bottom>
+                            <Label fx:id="actionCbtPracticeText" text="CBT Practice" textFill="white"/>
+                        </bottom>
+
+                        <padding>
+                            <Insets left="15" bottom="15" top="15"/>
+                        </padding>
+                    </Panel>
+
+                    <Panel fx:id="actionVideosPracticePanel" prefWidth="200.0" prefHeight="80" style="-fx-background-color: #AD4518; -fx-background-radius: 10;" >
+                        <top>
+                            <ImageView fx:id="actionVideosPracticeIcon" preserveRatio="true" pickOnBounds="true"/>
+                        </top>
+                        <bottom>
+                            <Label fx:id="actionVideosPracticeText" text="Videos" textFill="white"/>
+                        </bottom>
+
+                        <padding>
+                            <Insets left="15" bottom="15" top="15"/>
+                        </padding>
+                    </Panel>
+                </VBox>
+                <VBox spacing="10">
+                    <Panel fx:id="actionNovelsPracticePanel" prefWidth="200.0" prefHeight="80" style="-fx-background-color: #10AFD4; -fx-background-radius: 10;" >
+                        <top>
+                            <ImageView fx:id="actionNovelsPracticeIcon" preserveRatio="true" pickOnBounds="true"/>
+                        </top>
+                        <bottom>
+                            <Label fx:id="actionNovelsPracticeText" text="Novels" textFill="white"/>
+                        </bottom>
+
+                        <padding>
+                            <Insets left="15" bottom="15" top="15"/>
+                        </padding>
+                    </Panel>
+
+                    <Panel fx:id="actionAudioPracticePanel" prefWidth="200.0" prefHeight="80" style="-fx-background-color: #1B68AF; -fx-background-radius: 10;" >
+                        <top>
+                            <ImageView fx:id="actionAudioPracticeIcon" preserveRatio="true" pickOnBounds="true"/>
+                        </top>
+                        <bottom>
+                            <Label fx:id="actionAudioPracticeText" text="Audio" textFill="white" />
+                        </bottom>
+
+                        <padding>
+                            <Insets left="15" bottom="15" top="15"/>
+                        </padding>
+                    </Panel>
+                </VBox>
+            </HBox>-->
+        </VBox>
+
+        <ImageView fx:id="selectSubjectCloseIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_RIGHT" style="-fx-cursor: hand;">
+            <StackPane.margin>
+                <Insets top="16" right="16"/>
+            </StackPane.margin>
+        </ImageView>
+
+        <!--<padding>
+            <Insets bottom="10"/>
+        </padding>
+        <StackPane.margin>
+            <Insets bottom="40"/>
+        </StackPane.margin>-->
+    </StackPane>
+
+</StackPane>

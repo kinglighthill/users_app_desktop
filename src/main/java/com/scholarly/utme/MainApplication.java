@@ -1,8 +1,10 @@
 package com.scholarly.utme;
 
 import com.github.sarxos.webcam.Webcam;
+import com.google.gson.Gson;
 import com.scholarly.utme.controller.AuthenticationController;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.network.model.UserData;
 import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
@@ -20,25 +22,34 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import static com.scholarly.utme.util.Constants.*;
 
-public class MainApplication extends Application {
+public class MainApplication extends Application /*implements Thread.UncaughtExceptionHandler*/  {
     private static final String TAG = "MainApplication: ";
-
     private Webcam webcam;
+
+    public static final Logger logger = Logger.getLogger(MainApplication.class.getName());
+    public static FileHandler fileHandler = null;
 
     @Override
     public void start(Stage stage) throws IOException {
         try {
+            fileHandler = new FileHandler("logging.log");
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+
+            logger.info("Welcome to Scholarly.");
+
             InputStream iconStream = MainApplication.class.getResourceAsStream("/drawable/app_logo.png");
             assert iconStream != null;
             Image icon = new Image(iconStream);
 
             stage.getIcons().add(icon);
             stage.setTitle("Scholarly JAMB CBT");
-
-//            stage.setWidth(1200);
 
             Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 
@@ -47,52 +58,53 @@ public class MainApplication extends Application {
             stage.setWidth(bounds.getWidth());
             stage.setHeight(bounds.getHeight());
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+            ViewSwitcher.setStage(stage);
+            stage.setOnCloseRequest(event -> {
+                Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to exit the application?");
 
-        ViewSwitcher.setStage(stage);
+                dialog.showAndWait().filter(buttonType -> buttonType != ButtonType.YES).ifPresentOrElse(
+                        buttonType -> event.consume(), () -> {
+                            System.out.println(TAG + "Screen showing before exit -> " + ViewSwitcher.getCurrentView());
+                            PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
+                            PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, ViewSwitcher.getCurrentView() == View.AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.PRE_AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.WELCOME_SCREEN);
+                        }
+                );
+            });
 
+//            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
+//            ViewSwitcher.showScreen(View.LANDING_SCREEN);
 
-        stage.setOnCloseRequest(event -> {
-            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to exit the application?");
-
-            dialog.showAndWait().filter(buttonType -> buttonType != ButtonType.YES).ifPresentOrElse(
-                    buttonType -> event.consume(), () -> {
-                        System.out.println(TAG + "Screen showing before exit -> " + ViewSwitcher.getCurrentView());
-                        PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, ViewSwitcher.getCurrentView() == View.AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.PRE_AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.WELCOME_SCREEN);
-                    }
-            );
-        });
-
-        boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
-        if (firstTimeUser) {
-            ViewSwitcher.showScreen(View.WELCOME_SCREEN);
-        } else {
-            boolean userLoggedOut = PreferencesManager.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
-            System.out.println(TAG + "Logged Out User -> " + userLoggedOut);
-            if (userLoggedOut) {
-                ViewSwitcher.passData(new AuthenticationController.InitialData(false));
-                ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+            boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
+            if (firstTimeUser) {
+                ViewSwitcher.showScreen(View.WELCOME_SCREEN);
             } else {
-                ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
-                ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                boolean userLoggedOut = PreferencesManager.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
+                System.out.println(TAG + "Logged Out User -> " + userLoggedOut);
+                logger.info(TAG + "Logged Out User -> " + userLoggedOut);
+
+                String userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+                String userDataString = PreferencesManager.get(PREF_KEY_USER_DATA+userId, "");
+                System.out.println(TAG + "User id -> " + userId);
+                System.out.println(TAG + "User Data String -> " + userDataString);
+                UserData userData = new Gson().fromJson(userDataString, UserData.class);
+
+                if (!userLoggedOut) {
+                    logger.info("Move to Landing Screen");
+                    ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
+                    ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                } else if (userData == null) {
+                    logger.info("Move to Signup Screen");
+                    ViewSwitcher.passData(new AuthenticationController.InitialData(true));
+                    ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+                } else {
+                    logger.info("Move to Login Screen");
+                    ViewSwitcher.passData(new AuthenticationController.InitialData(false));
+                    ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+                }
             }
+        } catch (Exception e) {
+            log(e);
         }
-
-//        try {
-//            webcam = Webcam.getDefault();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-
-//        ViewTuple viewTuple = FluentViewLoader.fxmlView(PracticeScreenController.class).load();
-//
-//        Parent root = viewTuple.getView();
-//        stage.setMaximized(true);
-//        stage.setScene(new Scene(root));
-//        stage.show();
     }
 
     public File openFileChooser(Stage stage) {
@@ -120,7 +132,23 @@ public class MainApplication extends Application {
         getHostServices().showDocument(url);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler());
         launch();
+    }
+
+    public static void log(Exception exception) {
+        if (fileHandler != null) {
+            logger.severe(exception.getMessage());
+            for (StackTraceElement element : exception.getStackTrace()) {
+                logger.severe(element.toString());
+            }
+        }
+    }
+
+    public static void logInfo(String info) {
+        if (fileHandler != null) {
+            logger.info(info);
+        }
     }
 }

@@ -59,8 +59,8 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
     final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
     final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
 
-    final String PRESSED_STYLE2 = "-fx-background-color: #EDEDED; -fx-background-radius: 10; -fx-border-radius: 10;";
-    final String HOVERED_BUTTON_STYLE2 = "-fx-background-color: #F7F7F7; -fx-background-radius: 10; -fx-border-radius: 10;";
+    final String PRESSED_STYLE2 = "-fx-background-color: #EDEDED; -fx-background-radius: 10; -fx-border-radius: 10; -fx-cursor: hand;";
+    final String HOVERED_BUTTON_STYLE2 = "-fx-background-color: #F7F7F7; -fx-background-radius: 10; -fx-border-radius: 10; -fx-cursor: hand;";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -69,20 +69,6 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
         initializeFonts();
 
         ToggleGroup subjectListToggleGroup = new ToggleGroup();
-        subjectListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                SyllabusSubject selectedSubject = (SyllabusSubject) newValue.getUserData();
-                viewModel.setSelectedSyllabusSubject(selectedSubject);
-                renderObjectives();
-                renderRecommendedTexts();
-                emptySyllabusListLabel.setVisible(false);
-            } else {
-                viewModel.setSelectedSyllabusSubject(null);
-                emptySyllabusListLabel.setVisible(true);
-                recTextsTab.setContent(null);
-                genObjectiveTab.setContent(null);
-            }
-        });
 
         viewModel.getSyllabusSubjects().forEach(syllabusSubject -> {
 
@@ -129,6 +115,23 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
             subjectListVBox.getChildren().add(button);
         });
 
+//        subjectListToggleGroup.selectToggle(subjectListToggleGroup.getToggles().get(0));
+
+        subjectListToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                SyllabusSubject selectedSubject = (SyllabusSubject) newValue.getUserData();
+                viewModel.setSelectedSyllabusSubject(selectedSubject);
+                renderObjectives();
+                renderRecommendedTexts();
+                emptySyllabusListLabel.setVisible(false);
+            } else {
+                viewModel.setSelectedSyllabusSubject(null);
+                emptySyllabusListLabel.setVisible(true);
+                recTextsTab.setContent(null);
+                genObjectiveTab.setContent(null);
+            }
+        });
+
         viewModel.selectedSyllabusSubjectProperty().addListener(((observable, oldValue, newValue) -> {
             tabTopicsVBox.getChildren().clear();
             if (sectionPane.isVisible()) {
@@ -144,7 +147,7 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
                         VBox categoryContent = new VBox(5.0);
 
                         Label categoryTitle = new Label(syllabusCategory.getTitle());
-                        categoryTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 18));
+                        categoryTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 19));
                         categoryContent.getChildren().add(categoryTitle);
 
                         viewModel.getSyllabusTopics().get(syllabusCategory.getId()).forEach(topic -> {
@@ -167,7 +170,7 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
                                     Label topicHeader = new Label();
                                     topicHeader.setText(i+1 + ". " + headerViewType.getText());
                                     topicHeader.setWrapText(true);
-                                    topicHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+                                    topicHeader.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
 
                                     topicsVBox.getChildren().add(topicHeader);
 
@@ -185,7 +188,7 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
                                     topicContent.setText("   " + index + ". " + sectionViewType.getText());
                                     topicContent.setWrapText(true);
                                     topicContent.setTextAlignment(TextAlignment.JUSTIFY);
-                                    topicContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 13));
+                                    topicContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 14));
 
                                     topicsVBox.getChildren().add(topicContent);
 
@@ -197,7 +200,8 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
 
                             Label objectives = new Label("Objectives");
                             objectives.setTextFill(Paint.valueOf("#4081FF"));
-                            objectives.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 15));
+                            objectives.setStyle("-fx-cursor: hand;");
+                            objectives.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 16));
                             SyllabusSection finalCurrentSection = currentSection;
                             objectives.setOnMouseClicked(event -> {
                                 if (finalCurrentSection != null) {
@@ -211,7 +215,7 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
                                 objectives.setUnderline(false);
                             });
 
-                            Circle dot1 = new Circle(2.0);
+                            Circle dot1 = new Circle(3.0);
                             dot1.setFill(Paint.valueOf("#233D2C"));
 
                             Label content = new Label("Content");
@@ -225,7 +229,7 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
                                 content.setUnderline(false);
                             });
 
-                            Circle dot2 = new Circle(2.0);
+                            Circle dot2 = new Circle(3.0);
                             dot2.setFill(Paint.valueOf("#233D2C"));
 
                             Label evaluation = new Label("Evaluation");
@@ -289,7 +293,7 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
         String formattedText = section.getObjectives().replaceAll("<br>", System.lineSeparator());
         sectionContent.setText(formattedText);
         sectionContent.setWrapText(true);
-        sectionContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 14));
+        sectionContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, 16));
     }
 
     private void initializeViews() {
@@ -319,7 +323,7 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
         subjectsTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
 //        categoriesTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
         emptySyllabusListLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
-        topicTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+        topicTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 17));
         objectivesTab.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
         contentTab.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
         evaluationTab.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
@@ -330,7 +334,6 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
 
     private void renderObjectives() {
         String formattedText = viewModel.getSelectedSyllabusSubject().getGeneralObjectives().replaceAll("<br>", System.lineSeparator());
-//        Label objectivesLabel = new Label(formattedText);
         objectivesLabel.setText(formattedText);
         objectivesLabel.setWrapText(true);
         objectivesLabel.setTextAlignment(TextAlignment.JUSTIFY);
@@ -343,18 +346,16 @@ public class SelectSyllabusController implements FxmlView<SelectSyllabusVM>, Ini
     }
 
     private void renderRecommendedTexts() {
-        String formattedText = viewModel.getSelectedSyllabusSubject().getRecommendedTexts().replaceAll("<br>", System.lineSeparator());
-//        Label recTextLabel = new Label(formattedText);
-        Document htmlFormat = Jsoup.parse(formattedText);
-//        String secondFormat = formattedText.replaceAll("<i>", )
+        String recommendedText = viewModel.getSelectedSyllabusSubject().getRecommendedTexts();
+        String formattedText = recommendedText
+                .replaceAll("<br>", System.lineSeparator())
+                .replaceAll("<i>", "").replaceAll("</i>", "");
         recTextLabel.setText(formattedText);
         recTextLabel.setWrapText(true);
         recTextLabel.setTextAlignment(TextAlignment.JUSTIFY);
         recTextLabel.setPadding(new Insets(20, 15, 0, 15));
         recTextLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
 
-//        recTextsTab.setContent(recTextLabel);
-//        recTextsTab.getContent().autosize();
         topicsTab.getContent().autosize();
     }
 

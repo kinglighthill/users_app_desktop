@@ -12,7 +12,7 @@
     -fx-padding: 10 0 10 0;
 }
 .table-view .table-cell {
-    -fx-alignment: center;
+    -fx-alignment: center-left;
 }
 .table-row-cell {
     -fx-background-color: transparent;
@@ -42,10 +42,10 @@
     -fx-font-weight: normal;
 }
 .tab:selected .tab-label {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
 .tab:selected {
-    -fx-background-color: #12AF20;
+    -fx-background-color: rgba(244, 255, 245, 1);
 }
 
 
@@ -77,4 +77,17 @@
 .titled-pane .title {
     -fx-background-color: rgba(18, 175, 32, 0.1);
     -fx-padding: 15 10 15 10;
+}
+
+/* ------- CheckBox Styling ------- */
+.check-box .box {
+    -fx-background-radius: 20;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #12AF20;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: white;
 }

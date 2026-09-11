@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.practice_screens.ResultScreenController">
    <BorderPane prefHeight="1000.0" prefWidth="1200.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.bottomAnchor="1.0" AnchorPane.topAnchor="1.0" >
       <top>
@@ -31,44 +32,59 @@
          <ScrollPane prefHeight="300.0" prefWidth="300.0" BorderPane.alignment="CENTER" fitToWidth="true" >
             <VBox style="-fx-background-color: white">
                <children>
-                  <HBox spacing="20">
-                     <VBox>
-                        <Label text="Total Subject Score">
-                           <padding>
-                              <Insets left="20.0" top="20.0" />
-                           </padding>
-                           <font>
-                              <Font name="Gill Sans MT Bold" size="14.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="totalScoreLabel" text="80">
-                           <VBox.margin>
-                              <Insets left="20.0" top="15.0" />
-                           </VBox.margin>
-                           <font>
-                              <Font name="Gill Sans MT Bold" size="40.0" />
-                           </font>
-                        </Label>
-                     </VBox>
-                     <VBox>
-                        <Label text="Your Average Score">
-                           <padding>
-                              <Insets left="20.0" top="20.0" />
-                           </padding>
-                           <font>
-                              <Font name="Gill Sans MT Bold" size="14.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="averageScoreLabel" text="80%">
-                           <VBox.margin>
-                              <Insets left="20.0" top="15.0" />
-                           </VBox.margin>
-                           <font>
-                              <Font name="Gill Sans MT Bold" size="40.0" />
-                           </font>
-                        </Label>
-                     </VBox>
-                  </HBox>
+                  <Panel>
+                     <left>
+                        <HBox spacing="20">
+                           <VBox>
+                              <Label text="Total Subject Score">
+                                 <padding>
+                                    <Insets left="20.0" top="20.0" />
+                                 </padding>
+                                 <font>
+                                    <Font name="Gill Sans MT Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="totalScoreLabel" text="80">
+                                 <VBox.margin>
+                                    <Insets left="20.0" top="15.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="Gill Sans MT Bold" size="40.0" />
+                                 </font>
+                              </Label>
+                           </VBox>
+                           <VBox>
+                              <Label text="Your Average Score">
+                                 <padding>
+                                    <Insets left="20.0" top="20.0" />
+                                 </padding>
+                                 <font>
+                                    <Font name="Gill Sans MT Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="averageScoreLabel" text="80%">
+                                 <VBox.margin>
+                                    <Insets left="20.0" top="15.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="Gill Sans MT Bold" size="40.0" />
+                                 </font>
+                              </Label>
+                           </VBox>
+                        </HBox>
+                     </left>
+
+                     <right>
+                        <HBox alignment="CENTER_RIGHT">
+                           <Button fx:id="showExplanationButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="250.0"
+                                   text="See Answers and Explanation" textFill="white" style="-fx-background-color: #12AF20; -fx-cursor: hand;">
+                              <HBox.margin>
+                                 <Insets left="20.0" top="15.0" right="20" bottom="15"/>
+                              </HBox.margin>
+                           </Button>
+                        </HBox>
+                     </right>
+                  </Panel>
 
                   <Separator prefWidth="200.0">
                      <VBox.margin>
@@ -134,12 +150,12 @@
             <children>
                <!--            <Separator orientation="VERTICAL" prefHeight="200.0" scaleX="2.0" />-->
                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" style="-fx-background-radius: 5;">
-                  <Button fx:id="showExplanationButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="170.0"
-                          text="Go to explanation" textFill="white" style="-fx-background-color: #12AF20;">
+                  <!--<Button fx:id="showExplanationButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="170.0"
+                          text="See Answers and Explanation" textFill="white" style="-fx-background-color: #12AF20; -fx-cursor: hand;">
                      <VBox.margin>
                         <Insets top="49.0" left="10.0" right="10.0"/>
                      </VBox.margin>
-                  </Button>
+                  </Button>-->
 
                </VBox>
             </children>
@@ -153,10 +169,10 @@
                <children>
                   <Label text="Subjects" textFill="#FFFFFF">
                      <font>
-                        <Font name="Gill Sans MT" size="16"/>
+                        <Font name="System Bold" size="16"/>
                      </font>
                      <padding>
-                        <Insets left="20" bottom="10" top="20"/>
+                        <Insets left="20" top="20"/>
                      </padding>
                   </Label>
                   <ListView fx:id="subjectListView" prefHeight="946.0" prefWidth="239.0"
@@ -166,7 +182,7 @@
                      </padding>
                   </ListView>
 
-                  <Button fx:id="exitButton" mnemonicParsing="false" minHeight="40.0" prefHeight="80.0" prefWidth="164.0" text="Exit" textFill="white" style="-fx-border-color: #ACCDAF; -fx-border-radius: 8;">
+                  <Button fx:id="exitButton" mnemonicParsing="false" minHeight="40.0" prefHeight="80.0" prefWidth="164.0" text="Exit" textFill="white" style="-fx-border-color: #ACCDAF; -fx-border-radius: 8; -fx-cursor: hand;">
                      <VBox.margin>
                         <Insets bottom="15.0" left="10.0" right="10.0" top="15.0"/>
                      </VBox.margin>

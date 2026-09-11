@@ -2,27 +2,24 @@ package com.scholarly.utme.viewmodels;
 
 import com.scholarly.utme.controller.AppsGridScreenController;
 import com.scholarly.utme.data.model.listItems.AppItem;
+import com.scholarly.utme.util.Constants;
+import com.scholarly.utme.util.PreferencesManager;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class AppsGridScreenVM implements ViewModel {
+    private static final String TAG = "AppsGridScreenVM: ";
 
-    private ObservableList<AppItem> apps = FXCollections.observableArrayList();
+    private final String userId;
 
-    private SimpleStringProperty type = new SimpleStringProperty();
-
-    public void processInitialData(AppsGridScreenController.InitialData data) {
-        apps.addAll(data.getApps());
-        type.set(data.getType());
+    public AppsGridScreenVM(){
+        userId = PreferencesManager.get(Constants.PREF_KEY_USER_ID, "");
+        System.out.println(TAG + "Got User Id from Preferences -> " + userId);
     }
 
-    public ObservableList<AppItem> getApps() {
-        return apps;
-    }
-
-    public SimpleStringProperty typeProperty() {
-        return type;
+    public String getUserId() {
+        return userId;
     }
 }

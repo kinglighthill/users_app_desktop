@@ -6,6 +6,7 @@ import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAccountVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -62,17 +63,17 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
     public void initialize(URL location, ResourceBundle resources) {
         String userId = viewModel.getUserId();
 
-        boolean internetEnabled = checkNetworkConnectivity();
+        boolean internetEnabled = Helper.checkNetworkConnectivity();
 
         initializeViews();
         initializeFonts();
 
         emailText.setText(viewModel.getUser().getEmail());
 
-//        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
-        String encodedDeviceId = DeviceInfo.getSystemProperties().getDeviceId();
+//        String deviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+        String deviceId = DeviceInfo.getSystemProperties().getDeviceId();
 
-        deviceIdLabel.setText(encodedDeviceId.toUpperCase());
+        deviceIdLabel.setText(deviceId.toUpperCase());
 
         String imageUrl = viewModel.getUser().getProfilePicUrl();
         String imageUrlWithQueryString = imageUrl + "?" + RandomStringUtils.random(6, true, true);
@@ -142,6 +143,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
                     dialogDimmer.setVisible(true);
                     PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, true);
                     PreferencesManager.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
+                    PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
                     ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                 } else {
@@ -210,16 +212,5 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
     private void initializeFonts() {
 
-    }
-
-    private boolean checkNetworkConnectivity() {
-        try {
-            URL url = new URL(BASE_URL);
-            URLConnection connection = url.openConnection();
-            connection.connect();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
     }
 }

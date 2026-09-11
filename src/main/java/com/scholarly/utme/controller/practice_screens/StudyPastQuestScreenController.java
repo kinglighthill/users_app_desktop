@@ -18,7 +18,10 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.SceneLifecycle;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,8 +29,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.List;
@@ -44,31 +50,35 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     @FXML
     private WebView questionWebView, explanationWebView, questionWithImageWebView;
     @FXML
-    private HBox answerHeaderHBox, rightPane, quesDescriptionHBox, questionWithImageHBox;
+    private HBox answerHeaderHBox, rightPane, quesDescriptionHBox, questionWithImageHBox, questionDescriptionHBox, questionLabelHBox;
     @FXML
-    private VBox centerVBox, rightVBox, questionDescriptionDialog, explanationVBox;
+    private VBox centerVBox, rightVBox, questionDescriptionDialog, explanationVBox, questionCenterVBox, questionVBox;
     @FXML
     private TilePane tilePane;
     @FXML
-    private ScrollPane tileScrollPane, explanationScrollPane;
+    private ScrollPane tileScrollPane, explanationScrollPane, questionScrollPane;
     @FXML
     private StackPane answerPane, explanationPane, questionStackPane;
     @FXML
     private ListView<PQSubject> subjectList;
     @FXML
-    private Label questionOverviewLabel, optionA, optionB, optionC, optionD, explanationLabel, explanationTitle, correctAnswerTitle, correctAnswerLabel, questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
+    private Line questionLine;
+    @FXML
+    private Label questionOverviewLabel, optionA, optionB, optionC, optionD, explanationLabel, explanationTitle, correctAnswerTitle, correctAnswerLabel, questionDescriptionLabel, appBarTitle, questionDescriptionText, questionLabel;
     @FXML
     private Button prevButton, nextButton, exitButton, hideAnswerButton, viewImageButton;
     @FXML
     private ToggleButton showAnswerButton, showExplanationButton;
     @FXML
-    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, quesDescriptionCloseIcon, questionImage;
+    private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage, quesDescriptionCloseIcon, questionImage, explanationImage;
     @FXML
     private Pane dialogDimmer;
     @FXML
     private DialogPane exitDialogPane;
 
+    private final String optionWebViewBC = "#FFFFFF;";
     @Override
+
     public void initialize(URL location, ResourceBundle resources) {
         viewModel.processInitialData(getInitialData());
 
@@ -82,6 +92,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             if (c.getList().size() == 1) {
                 PQSubject subject = c.getList().get(0);
                 viewModel.setSelectedSubject(subject);
+                appBarTitle.setText("STUDY QUESTIONS");
+                appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
             } else {
                 viewModel.setSelectedSubject(null);
             }
@@ -90,6 +102,8 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         viewModel.setSelectedSubject(subjectList.getSelectionModel().getSelectedItem());
         setupQuestionView(viewModel.getSelectedSubject());
         setupTilePane(viewModel.getSelectedSubject());
+
+        appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
 
         viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -222,6 +236,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             explanationTitle.setVisible(false);
             explanationScrollPane.setVisible(false);
             explanationLabel.setVisible(false);
+            explanationImage.setVisible(false);
             explanationWebView.setVisible(false);
             correctAnswerLabel.setVisible(false);
             correctAnswerTitle.setVisible(false);
@@ -239,8 +254,15 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                 ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questionsState.getQuestions().get(selectedQuestion - 1).getQuestion();
-                String questionText = currentQuestion.getQuestion();
-                TextToSpeech.play(questionText);
+                StringBuilder textToRead = new StringBuilder(currentQuestion.getQuestion());
+                textToRead.append(". Option A, ").append(currentQuestion.getOptionA().getText());
+                textToRead.append(". Option B, ").append(currentQuestion.getOptionB().getText());
+                textToRead.append(". Option C, ").append(currentQuestion.getOptionC().getText());
+                textToRead.append(". Option D, ").append(currentQuestion.getOptionD().getText());
+
+                if (!Helper.isWebView(currentQuestion.getQuestion())) {
+                    TextToSpeech.play(textToRead.toString());
+                }
 
             } else {
                 TheoryQuestion currentQuestion = (TheoryQuestion) questionsState.getQuestions().get(selectedQuestion - 1).getQuestion();
@@ -264,11 +286,11 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             showExitDialog();
         });
 
-        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
-            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
-        });
-        readQuestionDesc.setOnMouseEntered(event -> readQuestionDesc.setUnderline(true));
-        readQuestionDesc.setOnMouseExited(event -> readQuestionDesc.setUnderline(false));
+//        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
+//            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
+//        });
+//        readQuestionDesc.setOnMouseEntered(event -> readQuestionDesc.setUnderline(true));
+//        readQuestionDesc.setOnMouseExited(event -> readQuestionDesc.setUnderline(false));
 
         quesDescriptionCloseIcon.setOnMouseClicked(mouseEvent -> {
             Animations.hideDialog(questionDescriptionDialog, dialogDimmer);
@@ -279,7 +301,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     private void initializeViews() {
         subjectList.setBackground(Background.EMPTY);
         exitButton.setBackground(Background.EMPTY);
-        tileScrollPane.setBackground(Background.EMPTY);
+//        tileScrollPane.setBackground(Background.EMPTY);
         showAnswerButton.setBackground(Background.EMPTY);
         showExplanationButton.setBackground(Background.EMPTY);
 
@@ -305,7 +327,28 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     }
 
     public void onCalculatorClicked(MouseEvent mouseEvent) {
+        Stage calculatorStage = new Stage();
 
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/layouts/CalculatorView.fxml"));
+            Scene scene = new Scene(root);
+
+            Image appIcon = new Image(getClass().getResource("/drawable/app_logo.png").toString());
+            calculatorStage.getIcons().add(appIcon);
+
+            calculatorStage.setTitle("Calculator");
+            calculatorStage.setResizable(false);
+            calculatorStage.setScene(scene);
+            calculatorStage.initOwner(ViewSwitcher.getRootScene().getWindow());
+
+            calculatorStage.setX(ViewSwitcher.getRootScene().getWidth() / 1.3);
+            calculatorStage.setY(ViewSwitcher.getRootScene().getHeight() / 2.7);
+
+            calculatorStage.showAndWait();
+
+        } catch (Exception e) {
+            System.out.println(TAG + "Cannot create scene because " + e.getMessage());
+        }
     }
 
     private void setupQuestionView(PQSubject selectedSubject) {
@@ -323,47 +366,44 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
             ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
 
-            List<ObjectiveQuestionDescription> questionDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+            List<ObjectiveQuestionDescription> quesDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
 
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
-            if (!questionDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
-                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-            }
+            String questionText = currentQuestion.getQuestion().replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(questionText);
 
-            String questionText = currentQuestion.getQuestion();
-
-            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+            questionCenterVBox.getChildren().removeAll(questionScrollPane, questionLabelHBox);
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
 
             if (questionText.contains("<img")) {
-                questionStackPane.getChildren().add(questionWithImageHBox);
-                showQuestionWithImage(questionText);
-
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
+                if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
+                    questionCenterVBox.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText, Helper.isWebView(currentQuestion,true));
             } else {
-                questionStackPane.getChildren().add(questionWebView);
-                questionWebView.getEngine().loadContent(questionText);
+                loadObjectiveQuestion(questionText, quesDescriptionInList, Helper.isWebView(currentQuestion, true));
             }
 
-            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
-            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
-            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
-            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
+            Helper.loadOption(getClass(), optionA, currentQuestion.getOptionA().getText(), " (A) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionB, currentQuestion.getOptionB().getText(), " (B) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionC, currentQuestion.getOptionC().getText(), " (C) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionD, currentQuestion.getOptionD().getText(), " (D) ", optionWebViewBC);
 
-            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
+//            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
+            String correctAnswer = currentQuestion.getQuestionAnswer().getAnswer();
+            showCorrectAnswer(correctAnswer, Helper.isWebView(correctAnswer));
+
             String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
-            explanationVBox.getChildren().clear();
+//            explanationVBox.getChildren().clear();
             if (explanationText.contains("<img")) {
-                explanationVBox.getChildren().addAll(explanationTitle, explanationWebView);
-                String questionWithImageText = parseExplanationWithImageView(explanationText);
-                explanationWebView.getEngine().loadContent(questionWithImageText);
+//                explanationVBox.getChildren().addAll(explanationTitle, explanationWebView);
+//                String questionWithImageText = parseExplanationWithImageView(explanationText);
+//                explanationWebView.getEngine().loadContent(questionWithImageText);
+                loadExplanationWithImage(explanationText, Helper.isWebView(explanationText));
             } else {
-                explanationVBox.getChildren().addAll(explanationTitle, explanationScrollPane);
-                explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+//                explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+                loadExplanation(explanationText, Helper.isWebView(explanationText));
             }
-
 
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
             TheoryQuestion currentQuestion = (TheoryQuestion) questions.get(selectedQuestionNumber - 1).getQuestion();
@@ -396,47 +436,45 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             ObjectiveQuestion currentQuestion = (ObjectiveQuestion) questions.get(newValue - 1).getQuestion();
             questionOverviewLabel.setText("Question " + newValue + " of " + questions.size());
 
-            List<ObjectiveQuestionDescription> questionDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
+            List<ObjectiveQuestionDescription> quesDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == currentQuestion.getQuestionDescriptionId()).toList();
-
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
-            if (!questionDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
-                questionDescriptionText.setText(questionDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
-            }
 
             String questionText = currentQuestion.getQuestion();
 
-            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+            questionLabel.setText(questionText);
+
+            questionCenterVBox.getChildren().removeAll(questionScrollPane);
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox, questionLabelHBox);
 
             if (questionText.contains("<img")) {
-                questionStackPane.getChildren().add(questionWithImageHBox);
-                showQuestionWithImage(questionText);
-                System.out.println(TAG + "questionWithImageHBox.heightProperty() -> " + questionWithImageHBox.heightProperty().get());
-                questionWebView.setMinHeight(questionWithImageHBox.heightProperty().get());
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
+                if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
+                    questionCenterVBox.getChildren().add(questionWithImageHBox);
+                showQuestionWithImage(questionText, Helper.isWebView(currentQuestion,true));
             } else {
-                questionStackPane.getChildren().add(questionWebView);
-                questionWebView.getEngine().loadContent(questionText);
+                loadObjectiveQuestion(questionText, quesDescriptionInList, Helper.isWebView(currentQuestion, true));
             }
 
-            optionA.setText(" (A) " + currentQuestion.getOptionA().getText());
-            optionB.setText(" (B) " + currentQuestion.getOptionB().getText());
-            optionC.setText(" (C) " + currentQuestion.getOptionC().getText());
-            optionD.setText(" (D) " + currentQuestion.getOptionD().getText());
+            Helper.loadOption(getClass(), optionA, currentQuestion.getOptionA().getText(), " (A) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionB, currentQuestion.getOptionB().getText(), " (B) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionC, currentQuestion.getOptionC().getText(), " (C) ", optionWebViewBC);
+            Helper.loadOption(getClass(), optionD, currentQuestion.getOptionD().getText(), " (D) ", optionWebViewBC);
 
-            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
+//            correctAnswerLabel.setText(currentQuestion.getQuestionAnswer().getAnswer());
+            String correctAnswer = currentQuestion.getQuestionAnswer().getAnswer();
+            showCorrectAnswer(correctAnswer, Helper.isWebView(correctAnswer));
 
             String explanationText = currentQuestion.getQuestionAnswer().getExplanation();
-            explanationVBox.getChildren().clear();
+//            explanationVBox.getChildren().clear();
             if (explanationText.contains("<img")) {
-                explanationVBox.getChildren().addAll(explanationTitle, explanationWebView);
-                String questionWithImageText = parseExplanationWithImageView(explanationText);
-                explanationWebView.getEngine().loadContent(questionWithImageText);
+//                explanationVBox.getChildren().addAll(explanationTitle, explanationWebView);
+//                String explanationWithImageText = parseExplanationWithImageView(explanationText);
+//                explanationWebView.getEngine().loadContent(explanationWithImageText);
+                loadExplanationWithImage(explanationText, Helper.isWebView(explanationText));
             } else {
-                explanationVBox.getChildren().addAll(explanationTitle, explanationScrollPane);
-                explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+//                explanationVBox.getChildren().addAll(explanationTitle, explanationScrollPane);
+//                explanationLabel.setText(explanationText.replaceAll("<br>", System.lineSeparator()));
+                loadExplanation(explanationText, Helper.isWebView(explanationText));
             }
 
         } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
@@ -453,12 +491,121 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         }
 
-        updateExplanationView();
+//        updateExplanationView();
 
     }
 
-    private void showQuestionWithImage(String questionWithImageText) {
-        questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText);
+    private void loadObjectiveQuestion(String questionText, List<ObjectiveQuestionDescription> quesDescriptionList, boolean isWebView) {
+        if (isWebView) {
+            System.out.println(TAG + "Question is WebView!");
+            questionCenterVBox.getChildren().removeAll(questionScrollPane, questionLabelHBox, questionLabel);
+
+            if (!quesDescriptionList.isEmpty()) {
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                    questionScrollPane.setMinHeight(180);
+                    questionDescriptionLabel.setText(quesDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+                }
+            }
+
+            questionCenterVBox.getChildren().add(questionWebView);
+            String content = Helper.loadLatex(getClass(), questionText);
+            questionWebView.getEngine().loadContent(content);
+            questionWebView.setMinHeight(200);
+
+            if (!quesDescriptionList.isEmpty()) {
+//                questionCenterVBox.getChildren().add(questionWebView);
+                questionScrollPane.setMinHeight(120);
+                questionWebView.setMinHeight(100);
+            }
+        } else {
+            questionCenterVBox.getChildren().removeAll(questionWebView);
+
+            questionLabelHBox.setMinHeight(10);
+            if (!quesDescriptionList.isEmpty()) {
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                    questionScrollPane.setMinHeight(180);
+                    questionDescriptionLabel.setText(quesDescriptionList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+                }
+            } else {
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionLabelHBox.setMinHeight(200);
+                }
+            }
+
+            if (!questionCenterVBox.getChildren().contains(questionLabelHBox)) {
+                questionCenterVBox.getChildren().add(questionLabelHBox);
+            }
+            questionLabel.setText(questionText);
+        }
+    }
+
+    private void loadExplanation(String explanation, Boolean isWebView) {
+        explanationVBox.getChildren().removeAll(explanationTitle, explanationScrollPane, explanationImage, explanationWebView);
+        if (isWebView) {
+            explanationVBox.getChildren().addAll(explanationTitle, explanationWebView);
+            String content = Helper.loadLatex(getClass(), explanation);
+            explanationWebView.getEngine().loadContent(content);
+        } else {
+            explanationVBox.getChildren().addAll(explanationTitle, explanationScrollPane);
+            explanationLabel.setText(explanation.replaceAll("<br>", System.lineSeparator()));
+        }
+    }
+
+    private void showCorrectAnswer(String answer, Boolean isWebView) {
+        if (isWebView) {
+            String content = Helper.loadLatex(getClass(), answer);
+            WebView webView = new WebView();
+            webView.getEngine().loadContent(content);
+            correctAnswerLabel.setGraphic(webView);
+            correctAnswerLabel.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        } else {
+            correctAnswerLabel.setGraphic(null);
+            correctAnswerLabel.setContentDisplay(ContentDisplay.TEXT_ONLY);
+            correctAnswerLabel.setText(answer.replaceAll("<br>", System.lineSeparator()));
+        }
+    }
+
+    private void loadExplanationWithImage(String explanation, Boolean isWebView) {
+        explanationVBox.getChildren().removeAll(explanationTitle, explanationScrollPane, explanationImage, explanationWebView);
+
+        explanationVBox.getChildren().addAll(explanationTitle, explanationImage, explanationWebView);
+
+        String answer = extractAnswerFromExplanation(explanation, isWebView);
+        String imageUrl = extractImageUrlFromExplanation(explanation);
+
+
+        explanationWebView.setVisible(true);
+        explanationWebView.getEngine().loadContent(answer);
+        explanationImage.setImage(new Image(getClass().getResource(imageUrl).toString()));
+
+//        explanationWebView.setVisible(false);
+//        explanationLabel.setVisible(false);
+    }
+
+    private String extractAnswerFromExplanation(String text, boolean isWebView) {
+        String imageQuestion = text.substring(text.lastIndexOf("100%'")+6);
+        if (isWebView) {
+            imageQuestion = Helper.loadLatex(getClass(), imageQuestion);
+        }
+        return imageQuestion;
+    }
+
+    private String extractImageUrlFromExplanation(String text) {
+        int startIndexOfImg = text.indexOf("<img");
+        int endIndexOfImg = text.indexOf("'100%'>", startIndexOfImg);
+
+        int startIndexOfImgPath = text.indexOf("/android_asset", startIndexOfImg);
+        int endIndexOfImgPath = text.indexOf("' width", startIndexOfImg);
+
+        String imagePath = text.substring(startIndexOfImgPath, endIndexOfImgPath);
+
+        return imagePath.replace("android_asset/images", "assets/images/pq");
+    }
+
+    private void showQuestionWithImage(String questionWithImageText, boolean isWebView) {
+        questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText, isWebView);
     }
 
     private String parseExplanationWithImageView(String explanationWithImageText) {
@@ -511,6 +658,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             explanationTitle.setVisible(false);
             explanationScrollPane.setVisible(false);
             explanationLabel.setVisible(false);
+            explanationImage.setVisible(false);
             explanationWebView.setVisible(false);
             correctAnswerLabel.setVisible(false);
             correctAnswerTitle.setVisible(false);
@@ -524,6 +672,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             explanationScrollPane.setVisible(true);
             explanationLabel.setVisible(true);
             explanationWebView.setVisible(true);
+            explanationImage.setVisible(true);
             showExplanationButton.setDisable(true);
 
             correctAnswerLabel.setVisible(true);
@@ -557,8 +706,11 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         for (int i=1; i <= questions.size(); i++) {
             Rectangle r = new Rectangle(30, 30);
-            r.setStroke(Paint.valueOf("#12AF20"));
-            r.setFill(Color.web("#ededed"));
+//            r.setStroke(Paint.valueOf("#12AF20"));
+            r.setStroke(Color.GRAY);
+//            r.setFill(Color.web("#ededed"));
+            r.setFill(Color.web("#FFFFFF"));
+            r.setStrokeType(StrokeType.OUTSIDE);
 
             Label l = new Label(Integer.toString(i));
             if (subjectQuestionsState.getSelectedQuestion() == i) {
@@ -566,6 +718,7 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
                 l.setTextFill(Color.WHITE);
             }
             StackPane s = new StackPane(r, l);
+            s.setStyle("-fx-cursor: hand;");
             tilePane.getChildren().add(s);
 
             int finalI = i;
@@ -585,10 +738,10 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
         Label oldQuestionText = (Label) oldQuestionPane.getChildren().get(1);
 
+        oldQuestionRectangle.setFill(Paint.valueOf("#EDEDED"));
         oldQuestionText.setTextFill(Color.BLACK);
-        oldQuestionRectangle.setFill(Paint.valueOf("#ededed"));
-        selectedQuestionText.setTextFill(Color.WHITE);
         selectedQuestionRectangle.setFill(Paint.valueOf("#12AF20"));
+        selectedQuestionText.setTextFill(Color.WHITE);
 
     }
 

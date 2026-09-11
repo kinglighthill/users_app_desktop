@@ -8,7 +8,10 @@ import java.util.List;
 public class Data {
     @SerializedName("access_token")
     private String accessToken;
+    @SerializedName("refresh_token")
     private String refreshToken;
+    @SerializedName("refreshToken")
+    private String authRefreshToken;
     @SerializedName("full_name")
     private String fullName;
     @SerializedName("phone_number")
@@ -27,9 +30,10 @@ public class Data {
     public Data() {
     }
 
-    public Data(String accessToken, String refreshToken, String fullName, String phoneNumber, String gender, UserData userData, String userId, String projectId, ActivationState activationState, List<AppItem> apps) {
+    public Data(String accessToken, String refreshToken, String authRefreshToken, String fullName, String phoneNumber, String gender, UserData userData, String userId, String projectId, ActivationState activationState, List<AppItem> apps) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.authRefreshToken = authRefreshToken;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
@@ -45,6 +49,9 @@ public class Data {
     }
 
     public String getRefreshToken() {
+        if (refreshToken == null && authRefreshToken != null) {
+            return authRefreshToken;
+        }
         return refreshToken;
     }
 

@@ -9,6 +9,7 @@ import com.scholarly.utme.network.model.request.UpdateUserRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.network.model.response.UploadResponse;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.account_screens.AccountProfileScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
@@ -85,7 +86,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
     @Override
     public void initialize(URL location, ResourceBundle resourceBundle) {
 
-        boolean internetEnabled = checkNetworkConnectivity();
+        boolean internetEnabled = Helper.checkNetworkConnectivity();
 
         initializeViews();
         initializeFonts();
@@ -123,12 +124,12 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         profileNameTextField.setText(viewModel.getUser().getFullName());
         phoneTextField.setText(viewModel.getUser().getPhoneNumber());
 
-        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
-        deviceIdLabel.setText(encodedDeviceId.toUpperCase());
+//        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+        String deviceId = DeviceInfo.getSystemProperties().getDeviceId();
+        deviceIdLabel.setText(deviceId.toUpperCase());
 
         changeMailHereLabel.setOnMouseClicked(event -> {
-            String gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=info@scholarly.africa";
-            application.openBrowser(gmailUrl);
+            application.openBrowser(GMAIL_URL);
         });
         changeMailHereLabel.setOnMouseEntered(event -> changeMailHereLabel.setUnderline(true));
         changeMailHereLabel.setOnMouseExited(event -> changeMailHereLabel.setUnderline(false));
@@ -216,6 +217,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                                                 });
                                             }
                                         } catch (Exception e) {
+                                            Platform.runLater(() -> {
+                                                hideProgressBar();
+                                                Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                                                alertDialog.show();
+                                            });
                                             System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                                         }
                                     }
@@ -288,6 +294,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                                             }
 
                                         } catch (Exception e) {
+                                            Platform.runLater(() -> {
+                                                hideProgressBar();
+                                                Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                                                alertDialog.show();
+                                            });
                                             System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                                         }
                                     }
@@ -395,6 +406,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                                                 });
                                             }
                                         } catch (Exception e) {
+                                            Platform.runLater(() -> {
+                                                hideProgressBar();
+                                                Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                                                alertDialog.show();
+                                            });
                                             System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                                         }
                                     }
@@ -459,6 +475,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                                             }
                                             response.close();
                                         } catch (Exception e) {
+                                            Platform.runLater(() -> {
+                                                hideProgressBar();
+                                                Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                                                alertDialog.show();
+                                            });
                                             System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                                         }
                                     }
@@ -486,6 +507,7 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                 alertDialog.show();
                 hideProgressBar();
                 System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
+                MainApplication.log(e);
             }
 
         });
@@ -683,6 +705,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                         }
                         response.close();
                     } catch (Exception e) {
+                        Platform.runLater(() -> {
+                            hideProgressBar();
+                            Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                            alertDialog.show();
+                        });
                         System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
                     }
 
@@ -764,6 +791,11 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
                         }
 
                     } catch (Exception e) {
+                        Platform.runLater(() -> {
+                            hideProgressBar();
+                            Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                            alertDialog.show();
+                        });
                         System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
                     }
                 }
@@ -794,17 +826,4 @@ public class AccountProfileScreenController implements FxmlView<AccountProfileSc
         profileImage.setCache(true);
         profileImage.setImage(image);
     }
-
-    private boolean checkNetworkConnectivity() {
-        try {
-            URL url = new URL(BASE_URL);
-            URLConnection connection = url.openConnection();
-            connection.connect();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-
 }

@@ -4,6 +4,7 @@ import com.scholarly.utme.controller.novel_screens.NovelChapterListController;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +33,7 @@ public class NovelGridItemCell extends GridCell<NovelModel> {
         loadFxml();
 
         setOnMouseClicked(event -> {
-            ViewSwitcher.passData(new NovelChapterListController.InitialData(novelModel));
+            ViewSwitcher.passData(new NovelChapterListController.InitialData(novelModel, Screens.NOVELS_GRID_SCREEN));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
     }
