@@ -7,13 +7,15 @@ public class Year {
     private String shortDescription;
     private int isNew;
     private int isAvailable;
+    private boolean free;
 
-    public Year(int id, String year, String shortDescription, int isNew, int isAvailable) {
+    public Year(int id, String year, String shortDescription, int isNew, int isAvailable, boolean free) {
         this.id = id;
         this.year = year;
         this.shortDescription = shortDescription;
         this.isNew = isNew;
         this.isAvailable = isAvailable;
+        this.free = free;
     }
 
     public Year(String year) {
@@ -60,8 +62,19 @@ public class Year {
         this.isAvailable = isAvailable;
     }
 
+    public boolean isFree() {
+        return free;
+    }
+
+    public void setFree(boolean free) {
+        this.free = free;
+    }
+
     @Override
     public String toString() {
-        return year;
+        if (free)
+            return year;
+        else
+            return year + " (Locked)";
     }
 }

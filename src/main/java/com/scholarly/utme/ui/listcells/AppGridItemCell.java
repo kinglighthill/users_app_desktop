@@ -1,9 +1,8 @@
 package com.scholarly.utme.ui.listcells;
 
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.data.model.listItems.AppItem;
 import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -20,13 +19,11 @@ public class AppGridItemCell extends GridCell<AppItem> {
     public ImageView appImage;
     public Label appName;
 
+    MainApplication application = new MainApplication();
+
     public AppGridItemCell() {
         loadFxml();
 
-        setOnMouseClicked(event -> {
-            ViewSwitcher.passData(appItem);
-            ViewSwitcher.showScreen(View.APP_DETAILS_SCREEN);
-        });
     }
 
     private void loadFxml() {
@@ -36,8 +33,7 @@ public class AppGridItemCell extends GridCell<AppItem> {
             loader.setRoot(this);
             loader.load();
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -51,17 +47,22 @@ public class AppGridItemCell extends GridCell<AppItem> {
             setText(null);
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-        }else {
+        } else {
+
             try {
-                appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/" + item.getImageUrl()).toString()));
-            }catch (Exception e) {
+                appImage.setImage(new Image(item.getImageUrl()));
+            } catch (Exception e) {
                 appImage.setImage(new Image(getClass().getResource("/drawable/app_screen_images/scholarly_logo.png").toString()));
                 System.out.println(e.getMessage());
                 System.out.println("App image not found, using default image (Scholarly logo)");
             }
 
             appName.setText(item.getName());
-            appName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+            appName.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+
+            setOnMouseClicked(event -> {
+                application.openBrowser(item.getDownloadLink());
+            });
 
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }

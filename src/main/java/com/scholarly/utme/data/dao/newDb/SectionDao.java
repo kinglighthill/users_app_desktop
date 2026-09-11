@@ -2,21 +2,15 @@ package com.scholarly.utme.data.dao.newDb;
 
 
 import com.scholarly.utme.data.DatabaseService;
+import com.scholarly.utme.data.model.newDb.NoteLastSection;
 import com.scholarly.utme.data.model.newDb.NoteSection;
-import com.scholarly.utme.data.model.newDb.NoteSubject;
 import com.scholarly.utme.data.model.newDb.Section;
-import com.scholarly.utme.data.util.SyllabusDatabase;
-import com.scholarly.utme.data.util.Table;
-import com.scholarly.utme.data.util.Tables;
-import com.scholarly.utme.util.Helper;
+import com.scholarly.utme.data.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +31,9 @@ public class SectionDao {
     private static final String mainSectionOrderColumn = "main_section_order";
     private static final String childSectionOrderColumn = "child_section_order";
     private static final String contentViewTypeColumn = "content_view_type_id";
+    private static final String sectionIdColumn = "section_id";
+    private static final String sectionTitleColumn = "section_title";
+    private static final String userIdColumn = "uid";
 
     private static final ObservableList<NoteSection> noteSections;
 
@@ -48,7 +45,7 @@ public class SectionDao {
     public static ObservableList<NoteSection> getNoteSectionsWithTopicId(int topicId) {
         ObservableList<NoteSection> noteSections = FXCollections.observableArrayList();
 
-        String query = "SELECT * FROM " + Tables.NOTE_SECTIONS + " WHERE topic_id = " + topicId;
+        String query = "SELECT * FROM " + Tables.NOTE_SECTIONS + " WHERE topic_id = " + topicId + " ORDER BY " + idColumn;
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
             noteSections.clear();
@@ -67,17 +64,87 @@ public class SectionDao {
 
                 noteSections.add(section);
             }
-            System.out.println(TAG + "Got Note sections for topic Id " + topicId + " -> " + Helper.toString(noteSections));
+//            System.out.println(TAG + "Got Note sections for topic Id " + topicId + " -> " + Helper.toString(noteSections));
             return noteSections;
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load sub topics from database ");
+                    LocalDateTime.now() + ": Could not load note sections from database because " + e.getMessage());
             noteSections.clear();
 
             return null;
         }
 
+    }
+
+    public static NoteSection getNoteSectionWithId(int sectionId) {
+        NoteSection section = null;
+
+        String query = "SELECT * FROM " + Tables.NOTE_SECTIONS + " WHERE " + idColumn + " = " + sectionId;
+
+        try(ResultSet rs = databaseService.executeQuery(query)) {
+            while (rs.next()) {
+                section = new NoteSection(
+                        rs.getInt(idColumn),
+                        rs.getInt(subjectIdColumn),
+                        rs.getInt(topicIdColumn),
+                        rs.getInt(subtopicIdColumn),
+                        rs.getString(contentColumn),
+                        rs.getInt(parentSectionIdColumn),
+                        rs.getInt(mainSectionOrderColumn),
+                        rs.getInt(childSectionOrderColumn),
+                        rs.getInt(contentViewTypeColumn));
+            }
+            return section;
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not get section from database because " + e.getMessage());
+
+            return null;
+        }
+    }
+
+    public static int insertLastSection(NoteLastSection section) {
+        String query = CRUDHelper.insertOrReplaceQuery(
+                Tables.NOTE_LAST_SECTION,
+                new String[]{"_id", "section_id","section_title", "uid"},
+                new Object[]{section.getId(), section.getSectionId(), section.getSectionTitle(), section.getUserId()},
+                new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.VARCHAR});
+
+        System.out.println(TAG + "InsertLastSection SQL Query -> " + query);
+
+        try {
+            return (int) databaseService.executeUpdate(query);
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not insert item to database because " + ex.getMessage());
+            return -1;
+        }
+
+    }
+
+    public static NoteLastSection retrieveLastSection(String userId) {
+        NoteLastSection lastSection = null;
+        String query = "SELECT * FROM " + Tables.NOTE_LAST_SECTION + " WHERE " + userIdColumn + " = '" + userId + "'";
+
+        try(ResultSet rs = databaseService.executeQuery(query)) {
+            while (rs.next()) {
+                lastSection = new NoteLastSection(
+                        rs.getInt(idColumn),
+                        rs.getInt(sectionIdColumn),
+                        rs.getString(sectionTitleColumn),
+                        rs.getString(userIdColumn));
+            }
+            return lastSection;
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load last session from database because " + e.getMessage());
+
+            return null;
+        }
     }
 
     public static ObservableList<Section> getSections(String tableName, int sectionId) {

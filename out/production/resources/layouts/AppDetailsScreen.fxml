@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.AppDetailsScreenController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <HBox spacing="15" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+            <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+            <Label fx:id="appTitle" text="JAMB" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT Bold" size="24"/>
+                </font>
+            </Label>
+            <padding>
+                <Insets left="30"/>
+            </padding>
+        </HBox>
+    </top>
+
+    <center>
+        <AnchorPane style="-fx-background-color: white;">
+            <HBox spacing="40" alignment="CENTER_LEFT" prefWidth="600" prefHeight="400" style="-fx-background-color: #F4FFF5; -fx-background-radius: 5;"
+                  AnchorPane.leftAnchor="30" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="30">
+
+                <VBox spacing="20" maxHeight="220" maxWidth="180" alignment="CENTER" style="-fx-background-color: white;">
+                    <ImageView fx:id="appImage" fitHeight="150" fitWidth="150" preserveRatio="true" pickOnBounds="true"/>
+                    <Label fx:id="appName" text="JAMB" wrapText="true"/>
+                    <HBox.margin>
+                        <Insets left="30"/>
+                    </HBox.margin>
+                </VBox>
+
+                <Separator orientation="VERTICAL"/>
+
+                <VBox spacing="20" alignment="CENTER_LEFT">
+                    <Label text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit." wrapText="true">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </Label>
+                    <Label text=" Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper " wrapText="true">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </Label>
+                    <Button prefWidth="250" prefHeight="35" text="Copy download link" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 5;">
+                        <font>
+                            <Font size="14"/>
+                        </font>
+                        <VBox.margin>
+                            <Insets top="15"/>
+                        </VBox.margin>
+                    </Button>
+                </VBox>
+
+                <padding>
+                    <Insets top="25" right="50" bottom="25"/>
+                </padding>
+            </HBox>
+        </AnchorPane>
+    </center>
+
+</BorderPane>

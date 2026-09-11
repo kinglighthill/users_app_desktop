@@ -15,6 +15,7 @@ public class UnorderedListItemCell extends ListCell<UnorderedListItem> {
 
     public UnorderedListItemCell() {
         loadFXML();
+        setPrefWidth(300);
     }
 
     private void loadFXML() {

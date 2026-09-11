@@ -1,9 +1,11 @@
 package com.scholarly.utme.controller.novel_screens;
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelCategory;
 import com.scholarly.utme.ui.cellFactories.NovelListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.novel_screens.NovelScreenVM;
@@ -162,6 +164,7 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
     }
 
     public void backButtonClicked(MouseEvent mouseEvent) {
+        ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
         ViewSwitcher.showScreen(View.LANDING_SCREEN);
     }
 }

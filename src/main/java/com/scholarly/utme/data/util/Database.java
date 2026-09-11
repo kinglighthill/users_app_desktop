@@ -1,9 +1,6 @@
 package com.scholarly.utme.data.util;
 
-import com.scholarly.utme.HelloApplication;
-import com.scholarly.utme.data.dao.BookmarkDao;
-import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
-import com.scholarly.utme.data.dao.TheoryBookmarkDao;
+import com.scholarly.utme.MainApplication;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -18,7 +15,7 @@ public class Database {
     /**
      * Location of database
      */
-    private static final String location = HelloApplication.class.getResource("/assets/databaseFile.db").toExternalForm();
+    private static final String location = MainApplication.class.getResource("/assets/databaseFile.db").toExternalForm();
 
 
     /**

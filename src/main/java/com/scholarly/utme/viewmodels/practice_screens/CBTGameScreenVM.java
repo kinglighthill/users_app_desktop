@@ -1,5 +1,6 @@
 package com.scholarly.utme.viewmodels.practice_screens;
 
+import com.google.gson.Gson;
 import com.scholarly.utme.controller.practice_screens.CBTGameScreenController.InitialData;
 import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
@@ -9,6 +10,9 @@ import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.QuestionDescription;
 import com.scholarly.utme.data.model.newDb.ObjectiveQuestionDescription;
 import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.network.model.UserData;
+import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -18,10 +22,15 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
+
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_DATA;
 
 public class CBTGameScreenVM implements ViewModel {
     private static final String TAG = "CBTGameScreenVM: ";
+
+    private final Preferences preferences = AppPreferences.getPreferences();
 
     private SimpleIntegerProperty selectedQuestion = new SimpleIntegerProperty();
     private List<QuestionState> questions = new ArrayList<>();
@@ -39,7 +48,21 @@ public class CBTGameScreenVM implements ViewModel {
 
     private int correctAnswers, incorrectAnswers, questionAttempts;
 
+    private final UserData userData;
+
+    private final Boolean vibrationPreference;
+    private final Boolean soundPreference;
+
     public CBTGameScreenVM() {
+        String userData = preferences.get(PREF_KEY_USER_DATA, "");
+        Gson gson = new Gson();
+        this.userData = gson.fromJson(userData, UserData.class);
+        String USER_ID = this.userData.getId();
+
+        vibrationPreference = preferences.getBoolean(Constants.PREF_KEY_VIBRATION + USER_ID, false);
+        soundPreference = preferences.getBoolean(Constants.PREF_KEY_SOUND + USER_ID, false);
+
+
         selectedQuestion.set(1);
     }
 
@@ -160,6 +183,18 @@ public class CBTGameScreenVM implements ViewModel {
 
     public ObservableList<ObjectiveBookmark> getObjectiveBookmarks() {
         return objectiveBookmarks;
+    }
+
+    public UserData getUser() {
+        return userData;
+    }
+
+    public Boolean getVibrationPreference() {
+        return vibrationPreference;
+    }
+
+    public Boolean getSoundPreference() {
+        return soundPreference;
     }
 
     public void handleBookmarkClicked() {

@@ -185,6 +185,39 @@ public class Animations {
         });
     }
 
+    public static void showToast(Node node) {
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(700));
+        fadeIn.setNode(node);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+        fadeIn.setCycleCount(1);
+        fadeIn.setAutoReverse(false);
+
+        fadeIn.play();
+
+        node.setVisible(!node.isVisible());
+
+        fadeIn.setOnFinished(event2 -> {
+            try {
+                Thread.sleep(3000);
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+            }finally {
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(700));
+                fadeOut.setNode(node);
+                fadeOut.setFromValue(1.0);
+                fadeOut.setToValue(0.0);
+                fadeOut.setCycleCount(1);
+                fadeOut.setAutoReverse(false);
+
+                fadeOut.play();
+
+                fadeOut.setOnFinished(event3 -> node.setVisible(false));
+            }
+
+        });
+    }
+
     public static void slideIn(Node node) {
         node.setVisible(true);
 

@@ -6,6 +6,7 @@ package com.scholarly.utme.data.util;
  */
 public class Tables {
 
+    public static final String FREE_CONTENTS = "free_contents";
     public static final String TOPICS = "topics";
     public static final String YEARS = "years";
     public static final String SUBJECTS = "subjects";
@@ -15,6 +16,7 @@ public class Tables {
     public static final String PQ_THEORY_QUES_DESCRIPTIONS = "pq_theory_questions_descriptions";
     public static final String PQ_OBJECTIVE_SUBJECTS = "pq_objective_subjects";
     public static final String PQ_THEORY_SUBJECTS = "pq_theory_subjects";
+    public static final String SUBJECTS_COMBINATION = "subjects_combination";
 
 
     // Novel Tables
@@ -31,6 +33,13 @@ public class Tables {
     public static final String NOTE_TOPICS = "note_topics";
     public static final String NOTE_SUB_TOPICS = "note_sub_topics";
     public static final String NOTE_SECTIONS = "note_sections";
+    public static final String NOTE_LAST_SECTION = "note_last_session";
+
+    // Syllabus Tables
+    public static final String SYLLABUS_SUBJECTS = "syllabus_subjects";
+    public static final String SYLLABUS_TOPICS = "syllabus_topics";
+    public static final String SYLLABUS_CATEGORIES = "syllabus_categories";
+    public static final String SYLLABUS_SECTIONS = "syllabus_sections";
 
 
     // User generated Tables

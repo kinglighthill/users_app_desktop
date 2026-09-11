@@ -56,7 +56,7 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
 
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.NOVELS_SCREEN));
+            ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.NOVELS_SCREEN, null));
             ViewSwitcher.showScreen(View.HOME_SCREEN);
         });
 

@@ -19,12 +19,23 @@ public class NetworkService {
             if (httpClient == null) {
                 httpClient = new OkHttpClient.Builder()
                         .addInterceptor(loggingInterceptor)
+//                        .addInterceptor(new AccessTokenInterceptor())
                         .build();
             }
         } catch (Exception e) {
             System.out.println(TAG + "Cannot create HTTP client because -> " + e.getMessage());
         }
-
         return httpClient;
+    }
+
+    public static OkHttpClient getHttpClientWithoutInterceptor() {
+        try {
+            return new OkHttpClient.Builder()
+                    .addInterceptor(loggingInterceptor)
+                    .build();
+        } catch (Exception e) {
+            System.out.println(TAG + "Cannot create HTTP client without Interceptor because -> " + e.getMessage());
+            return null;
+        }
     }
 }

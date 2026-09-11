@@ -5,6 +5,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.bootstrapfx.scene.layout.*?>
+<?import org.controlsfx.control.GridView?>
+<?import org.controlsfx.control.CheckListView?>
 <BorderPane fx:id="rootPane" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenHomeController">
 
@@ -12,7 +14,7 @@
         <VBox HBox.hgrow="ALWAYS">
             <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
                 <children>
-                    <Label fx:id="helloText" text="Hello! Johnny" textFill="#034801">
+                    <Label fx:id="helloText" text="Hello! " textFill="#034801">
                         <HBox.margin>
                             <Insets left="20.0" />
                         </HBox.margin>
@@ -25,13 +27,12 @@
                     </ImageView>
 
                     <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" HBox.hgrow="ALWAYS">
-                        <ImageView fx:id="notificationIcon" pickOnBounds="true" preserveRatio="true">
-                            <HBox.margin>
-                                <Insets right="20.0"/>
-                            </HBox.margin>
-                        </ImageView>
-                        <ImageView fx:id="profileImage" fitWidth="70" fitHeight="60" pickOnBounds="true" preserveRatio="true"/>
-
+<!--                        <ImageView fx:id="notificationIcon" pickOnBounds="true" preserveRatio="true">-->
+<!--                            <HBox.margin>-->
+<!--                                <Insets right="20.0"/>-->
+<!--                            </HBox.margin>-->
+<!--                        </ImageView>-->
+                        <ImageView fx:id="profileImage" pickOnBounds="true"/>
                         <HBox.margin>
                             <Insets left="20.0"/>
                         </HBox.margin>
@@ -52,90 +53,30 @@
 
     <center>
         <StackPane fx:id="centerStackPane">
-            <ScrollPane fx:id="mainScrollPane" fitToWidth="true" style="-fx-background-color: #FFFFFF;" >
+            <ScrollPane fx:id="mainScrollPane" fitToWidth="true" style="-fx-background-color: #FFFFFF;">
                 <VBox prefWidth="800" prefHeight="600" style="-fx-background-color: #FFFFFF;">
-                    <Label fx:id="topSubjectsText" text="Top subjects to get started" textFill="#034801">
-                        <padding>
-                            <Insets left="20.0" top="10.0" bottom="20.0" />
-                        </padding>
-                    </Label>
-                    <HBox spacing="10">
-                        <Panel fx:id="biologyPane" prefWidth="110" prefHeight="80" style="-fx-background-color: rgba(255, 118, 72, 0.1); -fx-background-radius: 10;">
-                            <top>
-                                <ImageView fx:id="biologyIcon" preserveRatio="true" pickOnBounds="true"/>
-                            </top>
-                            <bottom>
-                                <Label fx:id="biologyText" text="Biology" textFill="#D35329"/>
-                            </bottom>
-                            <padding>
-                                <Insets left="15" bottom="10" top="10"/>
-                            </padding>
-                        </Panel>
+                    <Panel>
+                        <left>
+                            <Label fx:id="topSubjectsText" text="Top subjects to get started" textFill="#034801">
+                                <padding>
+                                    <Insets left="20.0" top="10.0" bottom="20.0"/>
+                                </padding>
+                            </Label>
+                        </left>
+                        <right>
+                            <Label fx:id="editSubjectsText" text="Edit subjects" textFill="#12AF20">
+                                <padding>
+                                    <Insets right="20.0" top="10.0" bottom="20.0" />
+                                </padding>
+                            </Label>
+                        </right>
+                    </Panel>
 
-                        <Panel fx:id="englishPane" prefWidth="110" prefHeight="80" style="-fx-background-color: rgba(77, 197, 145, 0.1); -fx-background-radius: 10;">
-                            <top>
-                                <ImageView fx:id="englishIcon" preserveRatio="true" pickOnBounds="true"/>
-                            </top>
-                            <bottom>
-                                <Label fx:id="englishText" text="English" textFill="#269565"/>
-                            </bottom>
-                            <padding>
-                                <Insets left="15" bottom="10" top="10"/>
-                            </padding>
-                        </Panel>
-
-                        <Panel fx:id="physicsPane" prefWidth="110" prefHeight="80" style="-fx-background-color: rgba(136, 90, 137, 0.1); -fx-background-radius: 10;">
-                            <top>
-                                <ImageView fx:id="physicsIcon" preserveRatio="true" pickOnBounds="true"/>
-                            </top>
-                            <bottom>
-                                <Label fx:id="physicsText" text="Physics" textFill="#885A89"/>
-                            </bottom>
-                            <padding>
-                                <Insets left="15" bottom="10" top="10"/>
-                            </padding>
-                        </Panel>
-
-                        <Panel fx:id="chemistryPane" prefWidth="110" prefHeight="80" style="-fx-background-color: rgba(0, 206, 255, 0.1); -fx-background-radius: 10;">
-                            <top>
-                                <ImageView fx:id="chemistryIcon" preserveRatio="true" pickOnBounds="true"/>
-                            </top>
-                            <bottom>
-                                <Label fx:id="chemistryText" text="Chemistry" textFill="#885A89"/>
-                            </bottom>
-                            <padding>
-                                <Insets left="15" bottom="10" top="10"/>
-                            </padding>
-                        </Panel>
-
-                        <Panel fx:id="mathematicsPane" prefWidth="110" prefHeight="80" style="-fx-background-color: rgba(143, 152, 255, 0.1); -fx-background-radius: 10;">
-                            <top>
-                                <ImageView fx:id="mathematicsIcon" preserveRatio="true" pickOnBounds="true"/>
-                            </top>
-                            <bottom>
-                                <Label fx:id="mathematicsText" text="Mathematics" textFill="#5F69E3"/>
-                            </bottom>
-                            <padding>
-                                <Insets left="15" bottom="10" top="10"/>
-                            </padding>
-                        </Panel>
-
-                        <Panel fx:id="geographyPane" prefWidth="110" prefHeight="80" style="-fx-background-color: rgba(219, 127, 142, 0.1); -fx-background-radius: 10;">
-                            <top>
-                                <ImageView fx:id="geographyIcon" preserveRatio="true" pickOnBounds="true"/>
-                            </top>
-                            <bottom>
-                                <Label fx:id="geographyText" text="Geography" textFill="#A74252"/>
-                            </bottom>
-                            <padding>
-                                <Insets left="15" bottom="10" top="10"/>
-                            </padding>
-                        </Panel>
-
+                    <TilePane fx:id="favoriteSubjectsTile" prefHeight="50" maxHeight="50" hgap="10" vgap="10" prefColumns="8">
                         <padding>
                             <Insets left="20"/>
                         </padding>
-                    </HBox>
+                    </TilePane>
 
                     <VBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="150.0">
                         <children>
@@ -275,7 +216,7 @@
                         <Insets top="20" left="15" right="15"/>
                     </padding>
 
-                    <VBox spacing="10">
+                    <VBox fx:id="continuePreviousSessionVBox" spacing="10">
                         <Label fx:id="continueSessionsText" text="Continue previous sessions" textFill="#034801"/>
 
                         <GridPane fx:id="previousSessionGridPane" prefWidth="500" alignment="CENTER_LEFT" hgap="15.0" vgap="15.0" style="-fx-background-color: #FFFFFF;">
@@ -283,26 +224,13 @@
                                 <Panel fx:id="firstSession" prefWidth="250" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-background-color: rgba(18, 175, 32, 0.05); -fx-background-radius: 10;" GridPane.hgrow="ALWAYS">
                                     <left>
                                         <StackPane prefWidth="100" style="-fx-background-color: white; -fx-background-radius: 10;">
-                                            <ImageView fx:id="firstSessionVideoImage" preserveRatio="true" pickOnBounds="true"/>
-                                            <ImageView fx:id="firstSessionPlayIcon" preserveRatio="true" pickOnBounds="true"/>
+                                            <ImageView fx:id="noteSessionSubjectImage" preserveRatio="true" pickOnBounds="true"/>
                                         </StackPane>
                                     </left>
                                     <center>
                                         <VBox spacing="10" alignment="CENTER_LEFT">
-                                            <Label fx:id="firstSessionVideoTitle" text="Central Nervous System" textFill="#034801"/>
-                                            <!--<HBox spacing="15">
-                                                <Label fx:id="firstSessionTimeText" text="45 mins" textFill="#12AF20"/>
-                                                <HBox alignment="CENTER" spacing="5">
-                                                    <ImageView fx:id="firstSessionOneStar" preserveRatio="true" pickOnBounds="true"/>
-                                                    <ImageView fx:id="firstSessionTwoStar" preserveRatio="true" pickOnBounds="true"/>
-                                                    <ImageView fx:id="firstSessionThreeStar" preserveRatio="true" pickOnBounds="true"/>
-                                                    <ImageView fx:id="firstSessionFourStar" preserveRatio="true" pickOnBounds="true"/>
-                                                    <ImageView fx:id="firstSessionFiveStar" preserveRatio="true" pickOnBounds="true"/>
-                                                </HBox>
-
-                                                <Label fx:id="firstSessionRatingNumber" text="4.5" textFill="#034801" textAlignment="RIGHT"/>
-                                            </HBox>-->
-                                            <Label fx:id="firstSessionDescriptionText" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae " textFill="#034801" wrapText="true"/>
+                                            <Label fx:id="noteSessionSubjectName" textFill="#034801"/>
+                                            <Label fx:id="noteLastSessionText" maxHeight="60" textFill="#034801" wrapText="true"/>
                                             <padding>
                                                 <Insets left="20"/>
                                             </padding>
@@ -446,19 +374,39 @@
                             <Insets top="30" left="15" right="15" bottom="20"/>
                         </VBox.margin>
                     </Panel>
+
+                    <VBox fx:id="fontVBox" spacing="10">
+                        <VBox.margin>
+                            <Insets left="20" bottom="10"/>
+                        </VBox.margin>
+                    </VBox>
                 </VBox>
             </ScrollPane>
 
-            <StackPane fx:id="actionsPane" prefWidth="200" prefHeight="100" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF;" visible="false">
+            <VBox fx:id="dimmer" style="-fx-background-color: rgb(255, 255, 255, 0.5);" visible="false"/>
 
-                <VBox alignment="CENTER" >
-                    <Label fx:id="whichActionText" text="Which action would you like to perform now" textFill="#034801" StackPane.alignment="TOP_CENTER">
+            <StackPane fx:id="selectSubjectPane" maxWidth="450" maxHeight="430" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 7;" visible="false">
+                <VBox alignment="CENTER" spacing="10" StackPane.alignment="TOP_CENTER">
+                    <Label fx:id="selectFavoriteText" text="Select your favorite Subjects" textFill="#034801"/>
+                    <Label fx:id="moreThanOneText" text="You can select more than one" textFill="#034801">
                         <VBox.margin>
-                            <Insets  bottom="50"/>
+                            <Insets bottom="20"/>
                         </VBox.margin>
                     </Label>
 
-                    <HBox prefHeight="200" prefWidth="400" alignment="CENTER" StackPane.alignment="CENTER" spacing="10" >
+                    <GridView fx:id="selectSubjectsGrid" prefWidth="150" prefHeight="200"  cellHeight="90" cellWidth="100" horizontalCellSpacing="10" verticalCellSpacing="10" StackPane.alignment="CENTER">
+                        <padding>
+                            <Insets left="30" right="30"/>
+                        </padding>
+                    </GridView>
+
+                    <Button fx:id="completeEditSubjectsButton" text="Complete" textFill="white" prefHeight="40" prefWidth="150" style="-fx-background-color: #12AF20; -fx-background-radius: 6;">
+                        <VBox.margin>
+                            <Insets top="15"/>
+                        </VBox.margin>
+                    </Button>
+
+                    <!--<HBox prefHeight="200" prefWidth="400" alignment="CENTER" StackPane.alignment="CENTER" spacing="10" >
                         <VBox spacing="10">
 
                             <Panel fx:id="actionCbtPracticePanel" prefWidth="200.0" prefHeight="80" style="-fx-background-color: #E18400; -fx-background-radius: 10;" >
@@ -514,22 +462,23 @@
                                 </padding>
                             </Panel>
                         </VBox>
-                    </HBox>
+                    </HBox>-->
                 </VBox>
 
-                <ImageView fx:id="actionCloseImage" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_RIGHT"/>
+                <ImageView fx:id="selectSubjectCloseIcon" fitHeight="35" fitWidth="35" preserveRatio="true" pickOnBounds="true" StackPane.alignment="TOP_RIGHT"/>
 
-                <padding>
-                    <Insets topRightBottomLeft="30"/>
+                <!--<padding>
+                    <Insets bottom="10"/>
                 </padding>
                 <StackPane.margin>
-                    <Insets topRightBottomLeft="80"/>
-                </StackPane.margin>
+                    <Insets bottom="40"/>
+                </StackPane.margin>-->
             </StackPane>
+
         </StackPane>
     </center>
 
-    <right>
+    <!--<right>
         <HBox fx:id="rightPane" prefWidth="390" style="-fx-background-color: white; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
             <VBox spacing="5">
                 <Panel>
@@ -543,14 +492,12 @@
                 </Panel>
 
                 <ListView fx:id="newsList" prefWidth="390" prefHeight="600" style="-fx-background-color: white;"/>
-
             </VBox>
 
             <padding>
                 <Insets left="10" right="5"/>
             </padding>
         </HBox>
-
-    </right>
+    </right>-->
 
 </BorderPane>

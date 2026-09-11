@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller;
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.ui.utils.FontUtil;
+import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
 import com.scholarly.utme.viewmodels.ActivatePaymentScreenVM;
@@ -102,14 +104,14 @@ public class ActivatePaymentScreenController implements FxmlView<ActivatePayment
             if (newValue){
                 noAccountVBox.getChildren().add(noAccountDetailsPane);
                 noAccountDropdown.setGraphic(noAccountOpenDropdownImage);
-            }else {
+            } else {
                 noAccountVBox.getChildren().remove(noAccountDetailsPane);
                 noAccountDropdown.setGraphic(noAccountCloseDropdownImage);
             }
         }));
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData("activateButton");
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));
             ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
     }

@@ -2,8 +2,7 @@ package com.scholarly.utme.data.model.newDb;
 
 import com.google.gson.Gson;
 import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
-import com.scholarly.utme.data.model.newDb.contentViewType.HeaderViewType;
-import com.scholarly.utme.data.model.newDb.contentViewType.ParagraphViewType;
+import com.scholarly.utme.data.model.newDb.contentViewType.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +16,34 @@ public enum ContentViewTypes {
     PARAGRAPH(21, "paragraph", content -> {
         Gson gson = new Gson();
         return gson.fromJson(content, ParagraphViewType.class);
+    }),
+    SIMPLE_IMAGE(24, "simple-image", content -> {
+        Gson gson = new Gson();
+        return gson.fromJson(content, SimpleImageViewType.class);
+    }),
+    CBT(26, "cbt", content -> {
+        Gson gson = new Gson();
+        return gson.fromJson(content, CBTViewType.class);
+    }),
+    LATEX_MATH(29, "latex-math", content -> {
+        Gson gson = new Gson();
+        return gson.fromJson(content, LatexMathViewType.class);
+    }),
+    LIST(30, "list", content -> {
+        Gson gson = new Gson();
+        return gson.fromJson(content, ListViewType.class);
+    }),
+    NESTED_LIST(31, "nested-list", content -> {
+        Gson gson = new Gson();
+        return gson.fromJson(content, NestedListViewType.class);
+    }),
+    TABLE(32, "table", content -> {
+        Gson gson = new Gson();
+        return gson.fromJson(content, TableViewType.class);
+    }),
+    REFERENCE(38, "reference", content -> {
+        Gson gson = new Gson();
+        return gson.fromJson(content, ReferenceViewType.class);
     });
 
     private int id;
@@ -51,6 +78,13 @@ public enum ContentViewTypes {
         }
 
         return null;
+    }
+
+    public static ContentViewType convert(SyllabusSection section) {
+        List<ContentViewTypes> contentViewTypesList = Arrays.stream(ContentViewTypes.values()).collect(Collectors.toList());
+
+        return contentViewTypesList.get(0).getContentType(section.getContent());
+
     }
 
     private interface Convert {

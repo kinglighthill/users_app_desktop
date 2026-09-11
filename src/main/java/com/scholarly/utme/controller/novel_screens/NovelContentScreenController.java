@@ -1,5 +1,7 @@
 package com.scholarly.utme.controller.novel_screens;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scholarly.utme.data.model.novels.*;
 import com.scholarly.utme.ui.cellFactories.NovelChapterQuestionListCellFactory;
 import com.scholarly.utme.ui.cellFactories.NovelChapterListCellFactory;
@@ -29,10 +31,12 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
+import com.sandec.mdfx.MarkdownView;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 @FxmlPath("/layouts/novel_screens/NovelContentScreen.fxml")
@@ -41,39 +45,29 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
     @FXML
     private ScrollPane contentPane;
-
     @FXML
     private ListView<NovelChapter> chaptersList;
-
     @FXML
     private ListView<NovelObjectiveQuestion> chapterQuestionsList;
-
     @FXML
     private Panel questionFooter, resultPane;
-
     @FXML
-    private VBox dimmer, exitNovelDialog, exitDialogDimmer, quitDialogDimmer, quitQuizDialog;
-
+    private VBox dimmer, exitNovelDialog, exitDialogDimmer, quitDialogDimmer, quitQuizDialog, activateNowDialog;
     @FXML
     private Button backButton, prevButton, nextButton, takeQuizButton, quitQuizButton, fiftyFiftyButton, exitDialogCancelButton, exitDialogExitButton, quitDialogCancelButton, quitDialogQuitButton;
-
     @FXML
-    private Button optionAButton, optionBButton, optionCButton, optionDButton, optionEButton, answerContinueButton, tryAgainButton, resultContinueButton;
-
+    private Button optionAButton, optionBButton, optionCButton, optionDButton, optionEButton, answerContinueButton, tryAgainButton, resultContinueButton, activateNowButton;
     @FXML
     private Label pageTitle, chapterIndex, chapterTitle, chapterContent, chapterCount, questionNumberLabel, fiftyFiftyCount, questionLabel, answerLabel, explanationLabel;
 
     @FXML
-    private Label numOfCorrectAnsLabel, numOfGuessesLabel, scorePercentageLabel, resultHeader, chapterQuizHeader, showAllAnswersLabel;
-
+    private Label numOfCorrectAnsLabel, numOfGuessesLabel, scorePercentageLabel, resultHeader, chapterQuizHeader, showAllAnswersLabel, activateHeaderText;
     @FXML
     private HBox chapterHeader;
-
     @FXML
     private VBox chaptersListPane, chapterQuizPane, answerPane, questionPane, chapterQuizQuestionPane;
-
     @FXML
-    private ImageView bookmarkImage, reportImage, speakerImage, exitQuestionMarkIcon, quitQuestionMarkIcon;
+    private ImageView bookmarkImage, reportImage, speakerImage, exitQuestionMarkIcon, quitQuestionMarkIcon, activateNowCloseIcon, activateNowPadlockIcon, greenTickIcon1, greenTickIcon2, greenTickIcon3, greenTickIcon4, greenTickIcon5;
 
     @InjectViewModel
     private NovelContentScreenVM viewModel;
@@ -127,8 +121,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         renderNovel(viewModel.getSelectedChapter());
 
         viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (!newValue.isFree()) {
+                showActivateDialog();
+            }
             renderNovel(newValue);
-
 //            System.out.println(TAG + "Selected Chapter Position -> " + newValue.getPosition());
 //            System.out.println(TAG + "Selected Chapter Sections -> " + viewModel.getChapterSections().get(newValue.getId()).stream().collect(Collectors.toList()));
 
@@ -155,6 +151,9 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
             int selectedIndex = chaptersList.getSelectionModel().getSelectedIndex();
             chaptersList.getSelectionModel().select(selectedIndex + 1);
             viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
+            if (!viewModel.getSelectedChapter().isFree()) {
+                showActivateDialog();
+            }
         });
 
         prevButton.setOnAction(event -> {
@@ -177,6 +176,16 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         exitDialogCancelButton.setOnAction(event -> {
             exitDialogDimmer.setVisible(false);
             Animations.translateOut(exitNovelDialog, 300);
+        });
+
+        activateNowCloseIcon.setOnMouseClicked(event -> {
+            chaptersList.getSelectionModel().select(0);
+            viewModel.setSelectedChapter(chaptersList.getSelectionModel().getSelectedItem());
+            Animations.hideDialog(activateNowDialog, exitDialogDimmer);
+        });
+
+        activateNowButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
         });
 
 
@@ -428,6 +437,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
     }
 
+    private void showActivateDialog() {
+        Animations.showDialog(activateNowDialog, exitDialogDimmer);
+    }
+
     private void initializeViews() {
         backButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_back_button_icon.png").toString())));
         prevButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/novel_images/prev_icon.png").toString())));
@@ -438,7 +451,13 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         speakerImage.setImage(new Image(getClass().getResource("/drawable/novel_images/novel_quiz_speaker.png").toString()));
         exitQuestionMarkIcon.setImage(new Image(getClass().getResource("/drawable/dialog_question_mark.png").toString()));
         quitQuestionMarkIcon.setImage(new Image(getClass().getResource("/drawable/dialog_question_mark.png").toString()));
-
+        activateNowCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+        activateNowPadlockIcon.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/padlock_icon.png").toString()));
+        greenTickIcon1.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon2.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon3.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon4.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon5.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
 
         chaptersList.setBackground(Background.EMPTY);
         tryAgainButton.setBackground(Background.EMPTY);
@@ -446,10 +465,11 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     }
 
     private void initializeFont() {
-        chapterIndex.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        chapterTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        chapterContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
-        chapterCount.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+        chapterIndex.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        chapterTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
+        chapterContent.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+        chapterCount.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+        activateHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
     }
 
     private void initializeGestures() {
@@ -624,11 +644,15 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     }
 
     private void renderNovel(NovelChapter chapter) {
-
         viewModel.getChapterSections()
                 .get(chapter.getId())
                 .forEach(section -> {
-                    chapterContent.setText(section.getContent());
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        Map<String,Object> map = mapper.readValue(section.getContent(), Map.class);
+                        String content = map.get("text").toString();
+                        chapterContent.setText(content);
+                    } catch (JsonProcessingException ignored) { }
                 });
 
     }

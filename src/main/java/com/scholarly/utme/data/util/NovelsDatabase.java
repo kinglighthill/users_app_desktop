@@ -1,11 +1,10 @@
 package com.scholarly.utme.data.util;
 
-import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.MainApplication;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +14,7 @@ public class NovelsDatabase {
     /**
      * Location of database
      */
-    private static final String location = HelloApplication.class.getResource("/assets/novels.db").toExternalForm();
+    private static final String location = MainApplication.class.getResource("/assets/novels.db").toExternalForm();
 
     public static boolean isOK() {
         //if (!checkDrivers()) return false; //driver errors

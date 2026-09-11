@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class PracticeScreenVM implements ViewModel, SceneLifecycle {
-
     private static final String TAG = "PracticeScreenViewModel: ";
 
     private ObservableList<PQSubject> subjects = FXCollections.observableArrayList();
@@ -57,7 +56,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
 
     public void processInitialData(InitialData data) {
 
-        subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).collect(Collectors.toList()));
+        subjects.addAll(data.questionData.stream().map(SubjectState::getSubject).toList());
 
         data.questionData.forEach(subjectState -> {
 
@@ -92,6 +91,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         );
 
                 objectiveQuestionDescriptions.addAll(objectiveQuestionDescriptionList);
+                questionDescriptions.addAll(objectiveQuestionDescriptionList);
 
             } else if (subjectState.getType() == Type.THEORY) {
 
@@ -121,6 +121,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         );
 
                 theoryQuestionDescriptions.addAll(theoryQuestionDescriptionList);
+                questionDescriptions.addAll(theoryQuestionDescriptionList);
 
             }
 
@@ -231,9 +232,9 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         correctAnswers += 1;
                     }*/
                     if (questionState.getSelectedOptionId() == ((ObjectiveQuestion) questionState.getQuestion()).getQuestionAnswer().getId()) {
-//                        System.out.println(TAG + "Selected option ID -> " + questionState.getSelectedOptionId());
-//                        System.out.println(TAG + "Selected option answer ID -> " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestionAnswer().getId());
-                        correctAnswers += 1;
+//                        System.out.println(TAG + "Selected Option ID -> " + questionState.getSelectedOptionId());
+//                        System.out.println(TAG + "Selected Question answer ID -> " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestionAnswer().getId());
+                        correctAnswers ++;
                     }
                 }
 

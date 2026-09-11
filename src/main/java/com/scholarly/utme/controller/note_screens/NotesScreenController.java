@@ -3,9 +3,13 @@ package com.scholarly.utme.controller.note_screens;
 
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
+import com.scholarly.utme.data.model.ObjectiveQuestion;
+import com.scholarly.utme.data.model.listItems.UnorderedListItem;
 import com.scholarly.utme.data.model.newDb.*;
 import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
 import com.scholarly.utme.data.model.newDb.contentViewType.*;
+import com.scholarly.utme.ui.cellFactories.NoteContentListCellFactory;
+import com.scholarly.utme.ui.cellFactories.UnorderedListCellFactory;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.note_screens.NotesScreenVM;
@@ -17,12 +21,16 @@ import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.ListViewSkin;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -36,9 +44,14 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
@@ -77,6 +90,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private StackPane imageViewLayout, noteLayout, quizLayout;
 
     @FXML
+    private ListView<NoteSection> noteContentList;
+
+    @FXML
     private TilePane quizTilePane;
 
     @FXML
@@ -89,19 +105,19 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ComboBox<Font> fontDropdownList;
 
     @FXML
-    private VBox contentLayout, topicVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog, quizQuestionPane, exitNotesDialog, quizScorePane;
+    private VBox contentLayout, subtopicsVBox, noteOptions, settingsPane, onHyperlinkClickedOverlay, noteOptionsReportNoteLayout, noteOptionsLayout, noteSettingsLayout, refreshNoteLayout, refreshStatusContent, refreshNoteTextContent, noteOptionsNoteLayout, dictionaryMeaningOverlay, questionBox, quizPane, quizSubmitDialog, quizQuitDialog, quizQuestionPane, exitNotesDialog, quizScorePane;
 
     @FXML
-    private VBox quizExplanationSection, quizBackNextAndQuitButtonsSection;
+    private VBox quizExplanationSection, quizBackNextAndQuitButtonsSection, activateNowDialog;
 
     @FXML
     private HBox highlightColors, highlightColorsBox, addNoteButton, noteSettingsCloseButton, noteOptionsCloseButton, toastLayout, reportOptionsCloseButton, refreshNotesCancelButton, onWordClickedOverlay, dictionaryCloseButton, quizScoreCloseButton;
 
     @FXML
-    private Label pageTitle, subjectLabel, topicLabel, subtopicsText, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, refreshNotesCancelText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
+    private Label pageTitle, subjectLabel, topicLabel, noteTopicLabel, addNoteText, bookmarkText, highlightHeader, refreshStatusFirstText, refreshStatusSecondText, refreshNotesCancelText, toastText, newNoteText, dictionaryText, currentNoteSubject, currentNoteSubjectTopic, quizQuestion;
 
     @FXML
-    private Label fontText, fontSizeText, backgroundText, settingsCloseText, quizYourScoreText, quizScore, quizExplanationText, quizExplanationButton;
+    private Label fontText, fontSizeText, backgroundText, settingsCloseText, quizYourScoreText, quizScore, quizExplanationText, quizExplanationButton, activateHeaderText, noSubtopicsLabel;
 
     @FXML
     private ImageView notesImage, note_icon, bookmark_icon, closeIconImageViewLayout, closeIconNoteOptionLayout, imageViewLarge, settingsIcon, searchIcon, noteSettingsIcon, createNoteBackIcon, refreshStatusNoUpdateIcon, refreshIcon, refreshStatusUpdateFoundIcon, refreshStatusNoNetworkIcon;
@@ -110,11 +126,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ImageView noteOptionsNoteIcon, noteOptionsBookmarkIcon, noteOptionsShareIcon, noteOptionsReportIcon, noteOptionsAudioIcon, reportOptionReportIcon, notClearIcon, aLittleClearIcon, veryClearIcon, feedbackIcon, dictionarySpeakerIcon, dictionaryIcon;
 
     @FXML
-    private ImageView quizShareIcon, quizBookmarkIcon, quizReportIcon, quizSpeakerIcon, quizScoreBar;
+    private ImageView quizShareIcon, quizBookmarkIcon, quizReportIcon, quizSpeakerIcon, quizScoreBar, activateNowPadlockIcon, activateNowCloseIcon, greenTickIcon1, greenTickIcon2, greenTickIcon3, greenTickIcon4, greenTickIcon5;
 
     @FXML
-    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitOrCloseButton, submitDialogSubmitButton, submitDialogCancelButton, quizQuitButton, quitDialogQuitButton, quitDialogCancelButton, exitDialogExitButton, exitDialogCancelButton, notesBackButton, quizScoreQuitButton, quizScoreAnswersButton;
-
+    private Button backButton, prevButton, nextButton, practiceTopicButton, quizButton, noteCloseButton, noteSaveButton, quizBackButton, quizNextButton, quizSubmitOrCloseButton, submitDialogSubmitButton, submitDialogCancelButton, quizQuitButton, quitDialogQuitButton, quitDialogCancelButton, exitDialogExitButton, exitDialogCancelButton, notesBackButton, quizScoreQuitButton, quizScoreAnswersButton, activateNowButton;
     @FXML
     private ToggleButton fontSmallButton, fontMediumButton, fontLargeButton;
 
@@ -135,26 +150,74 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     private int defaultFontSize = 16;
 
+    Parser markdownParser = Parser.builder().build();
+
+    HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        initializeTextFont(FontSize.MEDIUM);
-
-        highlightColorsList.addAll(Arrays.stream(HighlightColors.values()).map(highlightColors1 -> highlightColors1.colorCode).collect(Collectors.toList()));
-
-//        imageViewLayout.setVisible(false);
-//        imageViewLayout.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web("#000000", 0.8), null, null)}, null));
+//        String latex = "\\\\begin{array}{l}";
+//        LaTeXConverter converter = new LaTeXConverter();
+//        try {
+//            File output = converter.convertToImage(latex);
+//            System.out.println(TAG + "Formatted Latex -> " + output.get);
+//        } catch (Exception e) {
+//            System.out.println(TAG + "Cannot parse Latex");
+//        }
 
         viewModel.initialize(getInitialData());
 
-        //topicLabel.setText(viewModel.getTopic().getTitle());
+        initializeViews();
+        initializeTextFont(FontSize.MEDIUM);
+        highlightColorsList.addAll(Arrays.stream(HighlightColors.values()).map(highlightColors1 -> highlightColors1.colorCode).toList());
 
-        ToggleGroup topicListToggleGroup = new ToggleGroup();
-        viewModel.getSubTopics().forEach(subTopic -> {
+        subjectLabel.setText(viewModel.getSubject().getTitle());
+        noteTopicLabel.setText(viewModel.getTopic().getTitle());
+
+        ObservableList<NoteSection> noteSections = viewModel.getNoteSections().get(viewModel.getTopic().getId());
+        noteContentList.setCellFactory(new NoteContentListCellFactory());
+        noteContentList.setItems(noteSections);
+        noteContentList.setSelectionModel(new NoSelectionModel<>());
+        noteContentList.setPadding(new Insets(10, 5, 5, 5));
+
+        if (viewModel.getSelectedSubtopicSection() != null) {
+            noteContentList.scrollTo(viewModel.getSelectedSubtopicSection());
+        }
+
+        if (viewModel.getSelectedSection() != null) {
+            int lastSectionIndex = noteSections.indexOf(noteSections.stream().filter(section ->
+                    section.getId() == viewModel.getSelectedSection().getId()).toList().get(0));
+            System.out.println(TAG + "Note Section Index -> " + lastSectionIndex);
+            noteContentList.scrollTo(lastSectionIndex);
+        }
+
+        noteContentList.setOnScrollFinished(event -> {
+            System.out.println(TAG + "Scroll Y-axis value -> " + event.getY());
+            System.out.println(TAG + "Scroll Screen-Y value -> " + event.getScreenY());
+            System.out.println(TAG + "Scroll Delta-Y value -> " + event.getDeltaY());
+            System.out.println(TAG + "Scroll Multiplier-Y value -> " + event.getMultiplierY());
+            System.out.println(TAG + "Scroll TextDelta-Y Units value -> " + event.getTextDeltaYUnits());
+            System.out.println(TAG + "Scroll TextDelta-Y value -> " + event.getTextDeltaY());
+            System.out.println(TAG + "Scroll Total Delta-Y value -> " + event.getTotalDeltaY());
+            System.out.println(TAG + "Scroll Scene-Y value -> " + event.getSceneY());
+
+        });
+
+//        noteContentList.skinProperty().addListener(((observable, oldValue, newValue) -> {
+//            if (newValue != null) {
+//                System.out.println(TAG + "New Skin value -> " + newValue);
+//                int firstVisibleIndex = getFirstVisibleIndex(newValue);
+//                System.out.println("First Visible Index: " + firstVisibleIndex);
+//            }
+//        }));
+
+        noSubtopicsLabel.setVisible(viewModel.getSubTopics().get(viewModel.getTopic().getId()).isEmpty());
+
+        ToggleGroup subtopicsListToggleGroup = new ToggleGroup();
+        viewModel.getSubTopics().get(viewModel.getSelectedTopic().getId()).forEach(subTopic -> {
             ToggleButton button = new ToggleButton();
             button.setUserData(subTopic);
-            topicListToggleGroup.getToggles().add(button);
-
+            subtopicsListToggleGroup.getToggles().add(button);
 
             button.setMinHeight(48);
             button.setMaxHeight(48);
@@ -181,42 +244,206 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                     button.setTextFill(Color.WHITE);
 
                     viewModel.setSelectedSubTopic(subTopic);
-                    renderNote(subTopic);
+                    noteContentList.scrollTo(viewModel.getNoteSubtopicSection(subTopic));
+//                    renderNote(subTopic);
 //                    topicLabel.setText(subTopic.getTitle());
                 } else {
                     button.setStyle(IDLE_BUTTON_STYLE);
                     button.setTextFill(Color.BLACK);
 
-//                    viewModel.setSelectedTopic(null);
+                    noteContentList.scrollTo(0);
+
+                    viewModel.setSelectedSubTopic(null);
                 }
             });
 
             if (subTopic == viewModel.getSelectedSubTopic()) {
-                topicListToggleGroup.selectToggle(button);
+                subtopicsListToggleGroup.selectToggle(button);
             }
 
             button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
 
-            topicVBox.getChildren().add(button);
+            subtopicsVBox.getChildren().add(button);
         });
 
-        ImageView noteBackIcon = new ImageView(new Image(getClass().getResource("/drawable/notes_back_icon_2x.png").toString()));
-        noteBackIcon.setFitWidth(20);
-        noteBackIcon.setFitHeight(20);
-        noteBackIcon.setPreserveRatio(true);
-        noteBackIcon.setPickOnBounds(true);
-        searchIcon.setImage(new Image(getClass().getResource("/drawable/note_search_icon_1.5x.png").toString()));
+        viewModel.selectedTopicProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                ObservableList<NoteSection> topicSections = viewModel.getNoteSections().get(newValue.getId());
+                noteContentList.setItems(topicSections);
+                noteContentList.scrollTo(0);
+                noteTopicLabel.setText(newValue.getTitle());
+                subtopicsListToggleGroup.getToggles().clear();
+                subtopicsVBox.getChildren().clear();
 
-        notesBackButton.setBackground(Background.EMPTY);
-        notesBackButton.setGraphic(noteBackIcon);
+                noSubtopicsLabel.setVisible(viewModel.getSubTopics().get(newValue.getId()).isEmpty());
+
+                System.out.println(TAG + "Selected topic Id -> " + newValue.getId());
+                viewModel.getSubTopics().get(newValue.getId()).forEach(subTopic -> {
+                    ToggleButton button = new ToggleButton();
+                    button.setUserData(subTopic);
+                    subtopicsListToggleGroup.getToggles().add(button);
+
+                    button.setMinHeight(48);
+                    button.setMaxHeight(48);
+                    button.setPadding(new Insets(0, 0, 0, 20));
+                    button.setAlignment(Pos.BASELINE_LEFT);
+                    button.setMaxWidth(Double.MAX_VALUE);
+                    button.setText(subTopic.getTitle());
+
+                    button.setStyle(IDLE_BUTTON_STYLE);
+                    button.setOnMouseEntered(e -> {
+                        if (!button.isSelected()) {
+                            button.setStyle(HOVERED_BUTTON_STYLE);
+                        }
+                    });
+                    button.setOnMouseExited(e -> {
+                        if (!button.isSelected()) {
+                            button.setStyle(IDLE_BUTTON_STYLE);
+                        }
+                    });
+
+                    button.selectedProperty().addListener((observe, old, newVal) -> {
+                        if (newVal) {
+                            button.setStyle(PRESSED_STYLE);
+                            button.setTextFill(Color.WHITE);
+
+                            viewModel.setSelectedSubTopic(subTopic);
+                            noteContentList.scrollTo(viewModel.getNoteSubtopicSection(subTopic));
+                        } else {
+                            button.setStyle(IDLE_BUTTON_STYLE);
+                            button.setTextFill(Color.BLACK);
+
+                            noteContentList.scrollTo(0);
+
+                            viewModel.setSelectedSubTopic(null);
+                        }
+                    });
+
+                    if (subTopic == viewModel.getSelectedSubTopic()) {
+                        subtopicsListToggleGroup.selectToggle(button);
+                    }
+
+                    button.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 12));
+
+                    subtopicsVBox.getChildren().add(button);
+                });
+            }
+        }));
+
+        prevButton.setOnAction(event -> {
+            nextButton.setDisable(false);
+            viewModel.setSelectedTopicIndex(viewModel.getSelectedTopicIndex() - 1);
+        });
+
+        nextButton.setOnAction(event -> {
+            prevButton.setDisable(false);
+            viewModel.setSelectedTopicIndex(viewModel.getSelectedTopicIndex() + 1);
+        });
+
+        if (viewModel.getSelectedTopicIndex() == 0) {
+            prevButton.setDisable(true);
+        }
+        viewModel.selectedTopicIndexProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue < viewModel.getNoteTopics().size()) {
+                viewModel.setSelectedTopic(viewModel.getNoteTopics().get(newValue));
+                if (newValue == viewModel.getNoteTopics().size()-1) {
+                    nextButton.setDisable(true);
+                }
+                if (newValue == 0) {
+                    prevButton.setDisable(true);
+                }
+            }
+        }));
+
+        viewModel.selectedTopicProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!newValue.isFree()) {
+                nextButton.setDisable(true);
+                Animations.showDialog(activateNowDialog, dialogDimmer);
+            }
+        }));
+
+        activateNowCloseIcon.setOnMouseClicked(event -> {
+            viewModel.setSelectedTopicIndex(viewModel.getSelectedTopicIndex() - 1);
+            Animations.hideDialog(activateNowDialog, dialogDimmer);
+        });
+
+        activateNowButton.setOnAction(event -> {
+            ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
+        });
+
         notesBackButton.setOnAction(event -> {
             Animations.translateIn(exitNotesDialog, 300);
             Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
         });
         exitDialogExitButton.setOnAction(event -> {
-//            ViewSwitcher.passData(new HomeScreenController.InitialData(NOTES_SCREEN));
-            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+            if (noteContentList.getSkin() != null) {
+                VirtualFlow<?> vf = (VirtualFlow<?>) ((ListViewSkin<?>) noteContentList.getSkin()).getChildren().get(0);
+
+                System.out.println(TAG + "Position -> " + vf.getPosition());
+                System.out.println(TAG + "Cell count -> " + vf.getCellCount());
+
+                double lastSectionIndex = vf.getPosition() * vf.getCellCount();
+                System.out.println(TAG + "Last Section Index -> " + lastSectionIndex);
+
+                if ((int)lastSectionIndex == noteContentList.getItems().size()) {
+                    lastSectionIndex = (int) lastSectionIndex - 1;
+                }
+                NoteSection lastSection = noteContentList.getItems().get((int) lastSectionIndex);
+                System.out.println(TAG + "Last Section -> " + Helper.toString(lastSection));
+
+                StringBuilder sectionTitle = new StringBuilder();
+                ContentViewType contentViewType = ContentViewTypes.convert(lastSection);
+                if (contentViewType instanceof HeaderViewType headerViewType) {
+                    if (headerViewType.getText() != null) {
+                        sectionTitle = new StringBuilder(headerViewType.getText());
+                    }
+                } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
+                    if (paragraphViewType.getText() != null) {
+                        sectionTitle = new StringBuilder(paragraphViewType.getText());
+                    }
+                } else if (contentViewType instanceof CBTViewType cbtViewType) {
+                    int yearId = cbtViewType.getYearId();
+                    int questionId = cbtViewType.getQuestionId();
+                    ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
+
+                    sectionTitle = new StringBuilder(question.getQuestion());
+                } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
+                    if (latexMathViewType.getKatex() != null) {
+                        sectionTitle = new StringBuilder(latexMathViewType.getKatex());
+                    }
+                } else if (contentViewType instanceof ListViewType listViewType) {
+                    sectionTitle = new StringBuilder(listViewType.getItems().get(0));
+                } else if (contentViewType instanceof ReferenceViewType referenceViewType) {
+                    sectionTitle = new StringBuilder(referenceViewType.getText());
+                } else if (contentViewType instanceof TableViewType tableViewType) {
+
+                    List<List<String>> content = tableViewType.getContent();
+
+                    for (int row = 0; row < 1; row++) {
+
+                        System.out.println("Row Content -> " + content.get(row));
+                        for (int col = 0; col < content.get(row).size(); col++) {
+                            System.out.println("Column content -> " + content.get(row).get(col));
+                            sectionTitle.append(" | ").append(content.get(row).get(col));
+                        }
+                    }
+                }
+                System.out.println(TAG + "Got Section title -> " + sectionTitle);
+
+
+                NoteLastSection noteLastSection = new NoteLastSection(
+                        viewModel.getUser().getId().hashCode(),
+                        lastSection.getId(),
+                        sectionTitle.toString(),
+                        viewModel.getUser().getId()
+                );
+
+                viewModel.putLastSession(noteLastSection);
+            }
+
+            ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
         });
+
         exitDialogCancelButton.setOnAction(event -> {
             Animations.translateOut(exitNotesDialog, 300);
             Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
@@ -224,22 +451,22 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
 
         /***************** Refresh Notes Section *******************/
-        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon_1.5x.png").toString()));
-        refreshIcon.setOnMouseClicked((event -> {
-            if (!refreshNoteLayout.isVisible()) {
-                refreshStatusContent.getChildren().remove(refreshNoteProgressIndicator);
-                refreshStatusContent.getChildren().remove(refreshStatusNoUpdateIcon);
-                refreshStatusContent.getChildren().remove(refreshStatusUpdateFoundIcon);
-                refreshStatusFirstText.setText("Network Unavailable");
-                refreshStatusFirstText.setTextFill(Paint.valueOf("#EE8989"));
-                refreshStatusFirstText.setPadding(new Insets(10, 0, 0, 0));
-                refreshStatusSecondText.setText("Connect your device and try again");
-                //refreshStatusSecondText.setTextFill(Paint.valueOf("#51C46B"));
-                //refreshNoteTextContent.getChildren().remove(refreshStatusSecondText);
-                Animations.translateIn(refreshNoteLayout, 200);
-            }
-
-        }));
+//        refreshIcon.setImage(new Image(getClass().getResource("/drawable/note_refresh_icon_1.5x.png").toString()));
+//        refreshIcon.setOnMouseClicked((event -> {
+//            if (!refreshNoteLayout.isVisible()) {
+//                refreshStatusContent.getChildren().remove(refreshNoteProgressIndicator);
+//                refreshStatusContent.getChildren().remove(refreshStatusNoUpdateIcon);
+//                refreshStatusContent.getChildren().remove(refreshStatusUpdateFoundIcon);
+//                refreshStatusFirstText.setText("Network Unavailable");
+//                refreshStatusFirstText.setTextFill(Paint.valueOf("#EE8989"));
+//                refreshStatusFirstText.setPadding(new Insets(10, 0, 0, 0));
+//                refreshStatusSecondText.setText("Connect your device and try again");
+//                //refreshStatusSecondText.setTextFill(Paint.valueOf("#51C46B"));
+//                //refreshNoteTextContent.getChildren().remove(refreshStatusSecondText);
+//                Animations.translateIn(refreshNoteLayout, 200);
+//            }
+//
+//        }));
         refreshNotesCancelButton.setOnMouseEntered(event -> {
             refreshNotesCancelButton.setStyle(HOVERED_BUTTON_STYLE);
         });
@@ -252,19 +479,19 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
 
         /**************** Note Settings Section ***************/
-        noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
+//        noteSettingsIcon.setImage(new Image(getClass().getResource("/drawable/note_settings_icon_2x.png").toString()));
         refreshStatusNoUpdateIcon.setImage(new Image(getClass().getResource("/drawable/no_update_found_icon_1x.png").toString()));
         refreshStatusUpdateFoundIcon.setImage(new Image(getClass().getResource("/drawable/updates_found_icon_1x.png").toString()));
         refreshStatusNoNetworkIcon.setImage(new Image(getClass().getResource("/drawable/no_network_icon_1x.png").toString()));
-        noteSettingsIcon.setOnMouseClicked(event -> {
-            if (!noteSettingsLayout.isVisible()) {
-                Animations.translateIn(noteSettingsLayout, 200);
-            }
-
-            int stackItems = noteLayout.getChildren().size();
-            System.out.println("StackPane Items -> " + stackItems);
-
-        });
+//        noteSettingsIcon.setOnMouseClicked(event -> {
+//            if (!noteSettingsLayout.isVisible()) {
+//                Animations.translateIn(noteSettingsLayout, 200);
+//            }
+//
+//            int stackItems = noteLayout.getChildren().size();
+//            System.out.println("StackPane Items -> " + stackItems);
+//
+//        });
         fontDropdownList.setItems(FXCollections.observableArrayList(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size)));
         fontDropdownList.valueProperty().addListener((observer, oldValue, newValue) -> {
             fontDropdownList.getSelectionModel().select(newValue);
@@ -387,94 +614,94 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Animations.fadeOut(dictionaryMeaningOverlay, 300);
         });
 
-        contentLayout.setOnMouseClicked(event -> {
-            /*if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
-                onWordClickedOverlay.setVisible(true);
-            }*/
-            if (!noteOptionsLayout.isVisible()) {
-                Animations.translateIn(noteOptionsLayout, 300);
-            }
-        });
+//        contentLayout.setOnMouseClicked(event -> {
+//            /*if (!onWordClickedOverlay.isVisible() && !dictionaryMeaningOverlay.isVisible()) {
+//                onWordClickedOverlay.setVisible(true);
+//            }*/
+//            if (!noteOptionsLayout.isVisible()) {
+//                Animations.translateIn(noteOptionsLayout, 300);
+//            }
+//        });
 
 
         /******************* Note Quiz Section *******************/
         //quizLayout.getChildren().remove(quizLayout.getChildren().get(0));
         //quizLayout.getChildren().remove(quizScorePane);
-        quizYourScoreText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.THIRTY.size));
-        currentNoteSubject.setText(currentNoteSubject.getText().toUpperCase());
+//        quizYourScoreText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.THIRTY.size));
+//        currentNoteSubject.setText(currentNoteSubject.getText().toUpperCase());
 
-        quizShareIcon.setImage(new Image(getClass().getResource("/drawable/quiz_share_icon_1x.png").toString()));
-        quizBookmarkIcon.setImage(new Image(getClass().getResource("/drawable/quiz_bookmark_icon_1x.png").toString()));
-        quizReportIcon.setImage(new Image(getClass().getResource("/drawable/quiz_report_icon_1x.png").toString()));
-        quizSpeakerIcon.setImage(new Image(getClass().getResource("/drawable/quiz_speaker_icon_1x.png").toString()));
+//        quizShareIcon.setImage(new Image(getClass().getResource("/drawable/quiz_share_icon_1x.png").toString()));
+//        quizBookmarkIcon.setImage(new Image(getClass().getResource("/drawable/quiz_bookmark_icon_1x.png").toString()));
+//        quizReportIcon.setImage(new Image(getClass().getResource("/drawable/quiz_report_icon_1x.png").toString()));
+//        quizSpeakerIcon.setImage(new Image(getClass().getResource("/drawable/quiz_speaker_icon_1x.png").toString()));
         ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/quiz_back_button_icon_1x.png").toString()));
         ImageView nextIcon = new ImageView(new Image(getClass().getResource("/drawable/quiz_next_button_icon_1x.png").toString()));
         backIcon.setFitHeight(12);
         backIcon.setFitWidth(12);
         backIcon.setPreserveRatio(true);
         backIcon.setPickOnBounds(true);
-        quizBackButton.setGraphicTextGap(10);
-        quizBackButton.setGraphic(backIcon);
-        quizBackButton.setOnMouseClicked(event -> {
-            if (quizQuestionPane.isVisible()) {
-                Animations.slideOut(quizQuestionPane);
-            }
-        });
+//        quizBackButton.setGraphicTextGap(10);
+//        quizBackButton.setGraphic(backIcon);
+//        quizBackButton.setOnMouseClicked(event -> {
+//            if (quizQuestionPane.isVisible()) {
+//                Animations.slideOut(quizQuestionPane);
+//            }
+//        });
 
         nextIcon.setFitHeight(12);
         nextIcon.setFitWidth(12);
         nextIcon.setPreserveRatio(true);
         nextIcon.setPickOnBounds(true);
-        quizNextButton.setGraphic(nextIcon);
-        quizNextButton.setGraphicTextGap(10);
-        quizNextButton.setOnMouseClicked(event -> {
-            if (quizQuestionPane.isVisible()) {
-                Animations.slideIn(quizQuestionPane);
-            }
-        });
-        quizButton.setOnAction(event -> {
-            quizSubmitOrCloseButton.setText("Submit");
-            quizSubmitOrCloseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
-            quizSubmitOrCloseButton.setTextFill(Paint.valueOf("#FFFFFF"));
-            quizSubmitOrCloseButton.setStyle("-fx-background-color: #51C46B; -fx-background-radius: 4");
-            quizExplanationSection.getChildren().remove(quizExplanationText);
-            quizExplanationButton.setVisible(false);
+//        quizNextButton.setGraphic(nextIcon);
+//        quizNextButton.setGraphicTextGap(10);
+//        quizNextButton.setOnMouseClicked(event -> {
+//            if (quizQuestionPane.isVisible()) {
+//                Animations.slideIn(quizQuestionPane);
+//            }
+//        });
+//        quizButton.setOnAction(event -> {
+//            quizSubmitOrCloseButton.setText("Submit");
+//            quizSubmitOrCloseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
+//            quizSubmitOrCloseButton.setTextFill(Paint.valueOf("#FFFFFF"));
+//            quizSubmitOrCloseButton.setStyle("-fx-background-color: #51C46B; -fx-background-radius: 4");
+//            quizExplanationSection.getChildren().remove(quizExplanationText);
+//            quizExplanationButton.setVisible(false);
 //            Animations.slideIn(quizPane);
-            if (!quizPane.isVisible()) {
-                Animations.slideIn(quizPane);
-            }
-        });
-        quizSubmitOrCloseButton.setOnAction(event -> {
-            if (quizSubmitOrCloseButton.getText().contains("Submit")) {
-                Animations.fadeIn(quizSubmitDialog, 100);
-            }else {
-                Animations.fadeIn(quizQuitDialog, 100);
-                if (!quizBackNextAndQuitButtonsSection.getChildren().contains(quizQuitButton)) {
-                    quizBackNextAndQuitButtonsSection.getChildren().add(quizQuitButton);
-                }
-            }
-            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
-
-        });
+//            if (!quizPane.isVisible()) {
+//                Animations.slideIn(quizPane);
+//            }
+//        });
+//        quizSubmitOrCloseButton.setOnAction(event -> {
+//            if (quizSubmitOrCloseButton.getText().contains("Submit")) {
+//                Animations.fadeIn(quizSubmitDialog, 100);
+//            }else {
+//                Animations.fadeIn(quizQuitDialog, 100);
+//                if (!quizBackNextAndQuitButtonsSection.getChildren().contains(quizQuitButton)) {
+//                    quizBackNextAndQuitButtonsSection.getChildren().add(quizQuitButton);
+//                }
+//            }
+//            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
+//
+//        });
         submitDialogCancelButton.setOnMouseClicked(event -> {
             Animations.fadeOut(quizSubmitDialog, 300);
             Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
         });
         submitDialogSubmitButton.setOnAction(event -> {
-            Animations.slideIn(quizScorePane);
+//            Animations.slideIn(quizScorePane);
             Animations.fadeOut(quizSubmitDialog, 300);
             Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
-            quizPane.setVisible(false);
+//            quizPane.setVisible(false);
             showQuizScore();
         });
-        quizQuitButton.setOnMouseClicked(event -> {
-            Animations.fadeIn(quizQuitDialog, 100);
-            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
-        });
+//        quizQuitButton.setOnMouseClicked(event -> {
+//            Animations.fadeIn(quizQuitDialog, 100);
+//            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
+//        });
         quitDialogQuitButton.setOnMouseClicked(event -> {
             Animations.fadeOut(quizQuitDialog, 300);
             Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
-            Animations.slideOut(quizPane);
+//            Animations.slideOut(quizPane);
         });
         quitDialogCancelButton.setOnMouseClicked(event -> {
             Animations.fadeOut(quizQuitDialog, 300);
@@ -510,7 +737,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         viewModel.getSubjectHighlights().addListener((ListChangeListener<? super Highlights>) c -> {
             System.out.println("Highlight list changed");
-            renderNote(viewModel.getSelectedSubTopic());
+//            renderNote(viewModel.getSelectedSubTopic());
         });
 
         notesImage.setImage(new Image(getClass().getResource("/drawable/notes.png").toString()));
@@ -549,23 +776,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
 //        backButton.setGraphic(view);
 
-        ImageView nextView = new ImageView(new Image(getClass().getResource("/drawable/next_icon.png").toString()));
-        nextView.setFitHeight(40);
-        nextView.setPreserveRatio(true);
 
-        nextButton.setGraphic(nextView);
-        nextButton.setShape(new Circle(60.0));
-        nextButton.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(0, 0, 0, 0.25), 0.6, 0.5, 0.0, 5.0));
-        nextButton.setBackground(Background.EMPTY);
-
-        ImageView prevView = new ImageView(new Image(getClass().getResource("/drawable/prev_icon.png").toString()));
-        prevView.setFitHeight(40);
-        prevView.setPreserveRatio(true);
-
-        prevButton.setGraphic(prevView);
-        prevButton.setShape(new Circle(60.0));
-        prevButton.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(0, 0, 0, 0.25), 0.6, 0.5, 0.0, 5.0));
-        prevButton.setBackground(Background.EMPTY);
 //        backButton.setBackground(Background.EMPTY);
 
         /*backButton.setOnAction(event -> {
@@ -598,6 +809,50 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     }
 
+    private void initializeViews() {
+        ImageView noteBackIcon = new ImageView(new Image(getClass().getResource("/drawable/notes_back_icon_2x.png").toString()));
+        noteBackIcon.setFitWidth(20);
+        noteBackIcon.setFitHeight(20);
+        noteBackIcon.setPreserveRatio(true);
+        noteBackIcon.setPickOnBounds(true);
+//        searchIcon.setImage(new Image(getClass().getResource("/drawable/note_search_icon_1.5x.png").toString()));
+
+        notesBackButton.setBackground(Background.EMPTY);
+        notesBackButton.setGraphic(noteBackIcon);
+
+        ImageView nextView = new ImageView(new Image(getClass().getResource("/drawable/next_icon.png").toString()));
+        nextView.setFitHeight(40);
+        nextView.setPreserveRatio(true);
+
+        nextButton.setGraphic(nextView);
+        nextButton.setShape(new Circle(60.0));
+        nextButton.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(0, 0, 0, 0.25), 0.6, 0.5, 0.0, 5.0));
+        nextButton.setBackground(Background.EMPTY);
+
+        ImageView prevView = new ImageView(new Image(getClass().getResource("/drawable/prev_icon.png").toString()));
+        prevView.setFitHeight(40);
+        prevView.setPreserveRatio(true);
+
+        prevButton.setGraphic(prevView);
+        prevButton.setShape(new Circle(60.0));
+        prevButton.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(0, 0, 0, 0.25), 0.6, 0.5, 0.0, 5.0));
+        prevButton.setBackground(Background.EMPTY);
+
+        activateHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
+        noSubtopicsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
+
+        activateNowCloseIcon.setImage(new Image(getClass().getResource("/drawable/close_icon.png").toString()));
+        activateNowPadlockIcon.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/padlock_icon.png").toString()));
+        greenTickIcon1.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon2.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon3.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon4.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+        greenTickIcon5.setImage(new Image(getClass().getResource("/drawable/activate_screen_images/green_tick_icon.png").toString()));
+
+//        imageViewLayout.setVisible(false);
+//        imageViewLayout.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web("#000000", 0.8), null, null)}, null));
+    }
+
     private void initializeTextFont(FontSize size) {
         switch (size) {
             case SMALL -> setFontSizesToSmall();
@@ -620,12 +875,12 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     private void setFontSizesToSmall() {
         subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.SIXTEEN.size));
-        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.TWELVE.size));
-        subtopicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.TWELVE.size));
+        noteTopicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
         // Quiz Section Texts
-        currentNoteSubject.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
-        currentNoteSubjectTopic.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
-        quizQuestion.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+//        currentNoteSubject.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+//        currentNoteSubjectTopic.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+//        quizQuestion.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
         //Note Update Texts
         refreshStatusFirstText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
         refreshStatusSecondText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
@@ -638,12 +893,12 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     }
     private void setFontSizesToMedium() {
         subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
-        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
-        subtopicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+//        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
+        noteTopicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
         // Quiz Section Texts
-        currentNoteSubject.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
-        currentNoteSubjectTopic.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
-        quizQuestion.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+//        currentNoteSubject.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+//        currentNoteSubjectTopic.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
+//        quizQuestion.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
         //Note Update Texts
         refreshStatusFirstText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
         refreshStatusSecondText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
@@ -656,12 +911,12 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     }
     private void setFontSizesToLarge() {
         subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.TWENTY.size));
-        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
-        subtopicsText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.EIGHTEEN.size));
+//        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.SIXTEEN.size));
+        noteTopicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.EIGHTEEN.size));
         // Quiz Section Texts
-        currentNoteSubject.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
-        currentNoteSubjectTopic.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
-        quizQuestion.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
+//        currentNoteSubject.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
+//        currentNoteSubjectTopic.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
+//        quizQuestion.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
         //Note Update Texts
         refreshStatusFirstText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.EIGHTEEN.size));
         refreshStatusSecondText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.SIXTEEN.size));
@@ -674,10 +929,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     }
 
     private void setupQuizTilePane() {
-        quizTilePane.getChildren().clear();
-
-        quizTilePane.setHgap(10);
-        quizTilePane.setVgap(10);
+//        quizTilePane.getChildren().clear();
+//
+//        quizTilePane.setHgap(10);
+//        quizTilePane.setVgap(10);
 
         for (int i = 1; i <= 30; i++) {
             Circle circle = new Circle(15);
@@ -693,12 +948,12 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             StackPane.setMargin(dot, new Insets(10, 0, 0, 0));
             s.getChildren().addAll(circle, questionNumber, dot);
 
-            quizTilePane.getChildren().add(s);
+//            quizTilePane.getChildren().add(s);
         }
     }
 
     private void setupQuizQuestion() {
-        quizQuestion.setText("This zygote undergoes meiosis to form spores. Each spore develops into a new organism.");
+//        quizQuestion.setText("This zygote undergoes meiosis to form spores. Each spore develops into a new organism.");
     }
 
     private void showQuizScore() {
@@ -710,7 +965,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
 
             quitDialogQuitButton.setOnAction(event1 -> {
-                Animations.slideOut(quizScorePane);
+//                Animations.slideOut(quizScorePane);
             });
             //TODO: Slide out Quiz Pane
         });
@@ -731,22 +986,57 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     }
 
     private void showQuizAnswers() {
-        quizSubmitOrCloseButton.setText("Close");
-        quizSubmitOrCloseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
-        quizSubmitOrCloseButton.setTextFill(Paint.valueOf("#EE8989"));
-        quizSubmitOrCloseButton.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 4");
-        quizExplanationButton.setVisible(true);
-        quizExplanationSection.getChildren().add(quizExplanationText);
-        quizExplanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
-        quizBackNextAndQuitButtonsSection.getChildren().remove(quizQuitButton);
+//        quizSubmitOrCloseButton.setText("Close");
+//        quizSubmitOrCloseButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
+//        quizSubmitOrCloseButton.setTextFill(Paint.valueOf("#EE8989"));
+//        quizSubmitOrCloseButton.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 4");
+//        quizExplanationButton.setVisible(true);
+//        quizExplanationSection.getChildren().add(quizExplanationText);
+//        quizExplanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.TWELVE.size));
+//        quizBackNextAndQuitButtonsSection.getChildren().remove(quizQuitButton);
 
-        Animations.slideIn(quizPane);
-        quizScorePane.setVisible(false);
+//        Animations.slideIn(quizPane);
+//        quizScorePane.setVisible(false);
+    }
+
+    private ScrollBar getVerticalScrollBar(ListView<?> listView) {
+        for (Node node : listView.lookupAll(".scroll-bar")) {
+            if (node instanceof ScrollBar) {
+                ScrollBar scrollBar = (ScrollBar) node;
+                if (scrollBar.getOrientation() == Orientation.VERTICAL) {
+                    return scrollBar;
+                }
+            }
+        }
+        return null;
+    }
+
+    private int getFirstVisibleIndex(Skin<?> skin) {
+        if (skin instanceof ListViewSkin) {
+            VirtualFlow<?> vf = (VirtualFlow<?>) ((ListViewSkin<?>) skin).getChildren().get(0);
+            System.out.println(TAG + "Got VirtualFlow -> " + vf);
+            System.out.println(TAG + "Position -> " + vf.getPosition());
+            System.out.println(TAG + "Cell count -> " + vf.getCellCount());
+//            System.out.println(TAG + "First Visible Cell -> " + vf.getLastVisibleCell().getIndex());
+//            return vf.getFirstVisibleCell().getIndex();
+        }
+        return -1;
+    }
+
+    public void getFirstAndLast(ListView<?> t) {
+        try {
+            ListViewSkin<?> ts = (ListViewSkin<?>) t.getSkin();
+            VirtualFlow<?> vf = (VirtualFlow<?>) ts.getChildren().get(0);
+            int first = vf.getFirstVisibleCell().getIndex();
+            int last = vf.getLastVisibleCell().getIndex();
+            System.out.println(TAG + "##### Scrolling first " + first + " last " + last);
+        } catch (Exception ex) {
+            System.out.println(TAG + "##### Scrolling: Exception " + ex);
+        }
     }
 
     private void renderNote(NoteSubTopic subTopic) {
         List<Node> contentElements = new ArrayList<>();
-
 
 //        viewModel.getSubTopicSections()
 //                .get(subTopic.getId())
@@ -1585,22 +1875,26 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                     ContentViewType contentViewType = ContentViewTypes.convert(section);
                     if (contentViewType instanceof HeaderViewType) {
-                        System.out.println(TAG + "ContentViewType -> HeaderViewType");
+//                        System.out.println(TAG + "ContentViewType -> HeaderViewType");
 
                         HeaderViewType headerViewType = (HeaderViewType) contentViewType;
                         if (headerViewType.getText() != null) {
-                            Label label = new Label(headerViewType.getText());
+                            Document doc = Jsoup.parse(headerViewType.getText());
+                            String formattedText = doc.body().text();
+                            Label label = new Label(formattedText);
                             label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                             label.setWrapText(true);
 
                             contentElements.add(label);
                         }
                     } else if (contentViewType instanceof ParagraphViewType) {
-                        System.out.println(TAG + "ContentViewType -> ParagraphViewType");
+//                        System.out.println(TAG + "ContentViewType -> ParagraphViewType");
 
                         ParagraphViewType paragraphViewType = (ParagraphViewType) contentViewType;
                         if (paragraphViewType.getText() != null) {
-                            Label label = new Label(paragraphViewType.getText());
+                            Document doc = Jsoup.parse(paragraphViewType.getText());
+                            String formattedText = doc.body().text();
+                            Label label = new Label(formattedText);
                             label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                             label.setWrapText(true);
 
@@ -1608,25 +1902,247 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                         }
                     } else if (contentViewType instanceof CBTViewType) {
                         System.out.println(TAG + "ContentViewType -> CBTViewType");
+                        CBTViewType cbtViewType = (CBTViewType) contentViewType;
+
+                        // Show the question
+
+                        int yearId = cbtViewType.getYearId();
+                        int questionId = cbtViewType.getQuestionId();
+
+                        ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
+
+                        VBox cbtVBox = new VBox();
+                        cbtVBox.setPadding(new Insets(20, 20, 30, 20));
+                        cbtVBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-color: #51C46B; -fx-border-radius: 10;");
+                        cbtVBox.setSpacing(10);
+                        VBox.setMargin(cbtVBox, new Insets(20, 0, 0, 0));
+
+                        Document doc = Jsoup.parse(question.getQuestion());
+                        String formattedText = doc.body().text();
+                        Label questionBox = new Label(formattedText);
+                        questionBox.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+                        questionBox.setWrapText(true);
+                        questionBox.setPadding(new Insets(10));
+                        questionBox.setStyle("-fx-background-color: #E7F7E9; -fx-border-color: #034801; -fx-border-radius: 5; ");
+
+                        RadioButton optionAButton = new RadioButton();
+                        optionAButton.setText(question.getOptionA().getText());
+                        optionAButton.setAlignment(Pos.CENTER);
+                        optionAButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+                        optionAButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+                        optionAButton.setPadding(new Insets(10));
+
+                        RadioButton optionBButton = new RadioButton();
+                        optionBButton.setText(question.getOptionB().getText());
+                        optionBButton.setAlignment(Pos.CENTER);
+                        optionBButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+                        optionBButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+                        optionBButton.setPadding(new Insets(10));
+
+                        RadioButton optionCButton = new RadioButton();
+                        optionCButton.setText(question.getOptionC().getText());
+                        optionCButton.setAlignment(Pos.CENTER);
+                        optionCButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+                        optionCButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+                        optionCButton.setPadding(new Insets(10));
+
+                        RadioButton optionDButton = new RadioButton();
+                        optionDButton.setText(question.getOptionD().getText());
+                        optionDButton.setAlignment(Pos.CENTER);
+                        optionDButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 14));
+                        optionDButton.setStyle("-fx-border-color: #233D2C; -fx-border-radius: 50;");
+                        optionDButton.setPadding(new Insets(10));
+
+                        questionBox.widthProperty().addListener(((observable, oldValue, newValue) -> {
+                            optionAButton.setMinWidth((Double) newValue);
+                            optionBButton.setMinWidth((Double) newValue);
+                            optionCButton.setMinWidth((Double) newValue);
+                            optionDButton.setMinWidth((Double) newValue);
+                        }));
+
+                        ToggleGroup optionsToggle = new ToggleGroup();
+                        optionsToggle.getToggles().addAll(optionAButton, optionBButton, optionCButton, optionDButton);
+
+                        optionAButton.setOnAction(event -> {
+                            if (question.getQuestionAnswer().getId() == 0) {
+                                optionAButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                            } else {
+                                optionAButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+
+                            }
+                        });
+                        optionBButton.setOnAction(event -> {
+                            if (question.getQuestionAnswer().getId() == 1) {
+                                optionBButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                            } else {
+                                optionBButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+                            }
+                        });
+                        optionCButton.setOnAction(event -> {
+                            if (question.getQuestionAnswer().getId() == 2) {
+                                optionCButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                            } else {
+                                optionCButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+                            }
+                        });
+                        optionDButton.setOnAction(event -> {
+                            if (question.getQuestionAnswer().getId() == 3) {
+                                optionDButton.setStyle("-fx-border-color: #51C42B; -fx-border-radius: 50;");
+                            } else {
+                                optionDButton.setStyle("-fx-border-color: #E90000; -fx-border-radius: 50;");
+                            }
+                        });
+
+                        HBox hBox = new HBox();
+                        VBox.setMargin(hBox, new Insets(15, 0, 0, 5));
+                        Label seeExplanation = new Label("See explanation");
+                        seeExplanation.setAlignment(Pos.CENTER_LEFT);
+                        seeExplanation.setTextFill(Paint.valueOf("#51C46B"));
+                        seeExplanation.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+                        ImageView showExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_show_explanation_icon_1x.png").toString()));
+                        showExplanation.setFitWidth(15);
+                        showExplanation.setFitHeight(15);
+                        showExplanation.setPreserveRatio(true);
+                        showExplanation.setPickOnBounds(true);
+                        ImageView hideExplanation = new ImageView(new Image(getClass().getResource("/drawable/cbtview_hide_explanation_icon_1x.png").toString()));
+                        hideExplanation.setFitWidth(15);
+                        hideExplanation.setFitHeight(15);
+                        hideExplanation.setPreserveRatio(true);
+                        hideExplanation.setPickOnBounds(true);
+                        Button showHideExplanation = new Button();
+                        showHideExplanation.setBackground(Background.EMPTY);
+                        showHideExplanation.setGraphic(showExplanation);
+                        HBox.setMargin(showHideExplanation, new Insets(0, 0, 0, 10));
+
+                        hBox.getChildren().addAll(seeExplanation, showHideExplanation);
+
+                        Label explanationText = new Label();
+                        explanationText.setText(question.getQuestionAnswer().getExplanation());
+                        explanationText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
+                        explanationText.setWrapText(true);
+                        explanationText.setPadding(new Insets(10));
+                        explanationText.setStyle("-fx-border-color: #034801; -fx-border-radius: 5; ");
+
+                        cbtVBox.getChildren().addAll(questionBox, optionAButton, optionBButton, optionCButton, optionDButton, hBox);
+
+                        showHideExplanation.setOnAction(event -> {
+                            if (showHideExplanation.getGraphic() == showExplanation){
+                                showHideExplanation.setGraphic(hideExplanation);
+                                seeExplanation.setText("Hide explanation");
+                                cbtVBox.getChildren().add(explanationText);
+                            }else {
+                                showHideExplanation.setGraphic(showExplanation);
+                                seeExplanation.setText("See explanation");
+                                cbtVBox.getChildren().remove(explanationText);
+                            }
+                        });
+
+                        VBox.setMargin(cbtVBox, new Insets(0, 100, 0, 0));
+
+                        contentElements.add(cbtVBox);
+
                     } else if (contentViewType instanceof LatexMathViewType) {
                         System.out.println(TAG + "ContentViewType -> LatexMathViewType");
+                        LatexMathViewType latexMathViewType = (LatexMathViewType) contentViewType;
+
+                        // Show the content
+
+                        if (latexMathViewType.getKatex() != null) {
+                            org.commonmark.node.Node document = markdownParser.parse(latexMathViewType.getKatex());
+                            String htmlKatex = htmlRenderer.render(document);
+
+                            Document doc = Jsoup.parse(htmlKatex);
+                            String formattedText = doc.body().text();
+
+                            Label label = new Label(formattedText);
+                            label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+                            label.setWrapText(true);
+
+                            contentElements.add(label);
+                        }
+
                     } else if (contentViewType instanceof ListViewType) {
                         System.out.println(TAG + "ContentViewType -> ListViewType");
+                        ListViewType listViewType = (ListViewType) contentViewType;
+
+                        // Show the first item in the List
+
+                        if (listViewType.getStyle().equalsIgnoreCase("unordered")) {
+
+                            ArrayList<UnorderedListItem> contentItems = new ArrayList<>();
+
+                            for (int i = 0; i < listViewType.getItems().size(); i++) {
+                                UnorderedListItem unorderedListItem = new UnorderedListItem(listViewType.getItems().get(i));
+                                contentItems.add(unorderedListItem);
+                            }
+
+                            ObservableList<UnorderedListItem> items = FXCollections.observableArrayList(contentItems);
+
+                            ListView<UnorderedListItem> contentList = new ListView<>();
+                            contentList.setItems(items);
+                            contentList.setBackground(Background.EMPTY);
+                            contentList.setCellFactory(new UnorderedListCellFactory());
+                            contentList.setSelectionModel(new NoSelectionModel<>());
+                            contentList.setPadding(new Insets(0, 0, 0, 10));
+
+                            contentElements.add(contentList);
+                        }
+
                     } else if (contentViewType instanceof NestedListViewType) {
                         System.out.println(TAG + "ContentViewType -> NestedListViewType");
                     } else if (contentViewType instanceof ReferenceViewType) {
                         System.out.println(TAG + "ContentViewType -> ReferenceViewType");
+
+                        // Show the Reference content
+
+                        ReferenceViewType referenceViewType = (ReferenceViewType) contentViewType;
+                        if (referenceViewType.getText() != null) {
+                            Document doc = Jsoup.parse(referenceViewType.getText());
+                            String formattedText = doc.body().text();
+
+                            Label label = new Label(formattedText);
+                            label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
+                            label.setWrapText(true);
+
+                            contentElements.add(label);
+                        }
                     } else if (contentViewType instanceof SimpleImageViewType) {
                         System.out.println(TAG + "ContentViewType -> SimpleImageViewType");
                     } else if (contentViewType instanceof TableViewType) {
                         System.out.println(TAG + "ContentViewType -> TableViewType");
+
+                        TableViewType tableViewType = (TableViewType) contentViewType;
+
+                        // Show the first two headers
+
+                        GridPane tableGrid = new GridPane();
+                        tableGrid.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #F4D242");
+
+                        List<List<String>> content = tableViewType.getContent();
+
+                        for (int row = 0; row < content.size(); row++) {
+
+                            System.out.println("Row Content -> " + content.get(row));
+                            for (int col = 0; col < content.get(row).size(); col++) {
+                                System.out.println("Column content -> " + content.get(row).get(col));
+                                Label grid = new Label(content.get(row).get(col));
+                                grid.setWrapText(true);
+                                grid.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+                                grid.setPadding(new Insets(5, 5, 5, 5));
+
+                                tableGrid.add(grid, col, row);
+                            }
+                        }
+
+                        contentElements.add(tableGrid);
+
                     }
 
                 });
 
-        contentLayout.setSpacing(20);
-        contentLayout.getChildren().clear();
-        contentLayout.getChildren().addAll(contentElements);
+//        contentLayout.setSpacing(20);
+//        contentLayout.getChildren().clear();
+//        contentLayout.getChildren().addAll(contentElements);
 //        contentLayout.setAlignment(Pos.CENTER);
     }
 
@@ -1828,29 +2344,37 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();
-        System.out.println(TAG + "Got data -> " + Helper.toString(data));
+//        System.out.println(TAG + "Got data -> " + Helper.toString(data));
         return data;
     }
 
     public static class InitialData {
         private NoteSubject subject;
-        private NoteTopic topic;
+        private List<NoteTopic> topics;
+        private NoteTopic selectedNoteTopic;
         private List<NoteSubTopic> subTopics;
         private NoteSubTopic selectedSubTopic;
+        private NoteSection selectedSection;
 
-        public InitialData(NoteSubject subject, NoteTopic topic, List<NoteSubTopic> subTopics, NoteSubTopic selectedSubTopic) {
+        public InitialData(NoteSubject subject, List<NoteTopic> topics, NoteTopic selectedNoteTopic, List<NoteSubTopic> subTopics, NoteSubTopic selectedSubTopic, NoteSection selectedSection) {
             this.subject = subject;
-            this.topic = topic;
+            this.topics = topics;
+            this.selectedNoteTopic = selectedNoteTopic;
             this.subTopics = subTopics;
             this.selectedSubTopic = selectedSubTopic;
+            this.selectedSection = selectedSection;
         }
 
         public NoteSubject getSubject() {
             return subject;
         }
 
-        public NoteTopic getTopic() {
-            return topic;
+        public List<NoteTopic> getTopics() {
+            return topics;
+        }
+
+        public NoteTopic getSelectedNoteTopic() {
+            return selectedNoteTopic;
         }
 
         public List<NoteSubTopic> getSubTopics() {
@@ -1859,6 +2383,10 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         public NoteSubTopic getSelectedSubTopic() {
             return selectedSubTopic;
+        }
+
+        public NoteSection getSelectedSection() {
+            return selectedSection;
         }
     }
 }

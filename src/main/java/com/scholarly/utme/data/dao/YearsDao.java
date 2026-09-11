@@ -1,8 +1,10 @@
 package com.scholarly.utme.data.dao;
 
 import com.scholarly.utme.data.DatabaseService;
+import com.scholarly.utme.data.model.FreeContent;
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.util.Tables;
+import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,11 +14,16 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
+import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
+import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class YearsDao {
     private static final String TAG = "YearsDao: ";
 
     private static final DatabaseService databaseService = new DatabaseService();
+    private static final Preferences preferences = AppPreferences.getPreferences();
 
     private static final String idColumn = "_id";
     private static final String yearColumn = "year";
@@ -26,20 +33,21 @@ public class YearsDao {
     private static final String isNewColumn = "is_new";
     private static final String availableColumn = "available";
 
-    private static final ObservableList<Year> years;
-
-    private static final ObservableList<Year> availableYears;
+    private static final ObservableList<Year> allYears;
+    private static final ObservableList<Year> subjectAvailableYears;
+    private static final ObservableList<FreeContent> freeContents;
+    private static final String userId;
 
     static {
-        years = FXCollections.observableArrayList();
-        availableYears = FXCollections.observableArrayList();
+        userId = preferences.get(PREF_KEY_USER_ID, "");
+        allYears = FXCollections.observableArrayList();
+        subjectAvailableYears = FXCollections.observableArrayList();
+        freeContents = FXCollections.observableArrayList();
         updateYearsFromDB();
-
+        updateFreeYearsColumn();
     }
 
     public static ObservableList<Year> getAvailableYearsForSubject(SubjectListItemVM.Type type, int subjectId) {
-        ObservableList<Year> subjectAvailableYears = FXCollections.observableArrayList();
-
         String query = "";
 
         if (type == SubjectListItemVM.Type.OBJECTIVE) {
@@ -50,23 +58,41 @@ public class YearsDao {
 
         }
 
-//        System.out.println(TAG + "Query -> " + query);
-
 //        System.out.println(TAG + "Available Years For Subject with id -> " + subjectId + " Query -> " + query + " AND Type -> " + type);
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
+            subjectAvailableYears.clear();
             while (rs.next()) {
-                subjectAvailableYears.add(
-                        new Year(
-                                rs.getInt(idColumn),
-                                rs.getString(yearColumn),
-                                rs.getString(shortDescriptionColumn),
-                                rs.getInt(isNewColumn),
-                                rs.getInt(availableColumn))
-                );
-
+                if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
+                    subjectAvailableYears.add(
+                            new Year(
+                                    rs.getInt(idColumn),
+                                    rs.getString(yearColumn),
+                                    rs.getString(shortDescriptionColumn),
+                                    rs.getInt(isNewColumn),
+                                    rs.getInt(availableColumn),
+                                    true)
+                    );
+                } else {
+                    subjectAvailableYears.add(
+                            new Year(
+                                    rs.getInt(idColumn),
+                                    rs.getString(yearColumn),
+                                    rs.getString(shortDescriptionColumn),
+                                    rs.getInt(isNewColumn),
+                                    rs.getInt(availableColumn),
+                                    false)
+                    );
+                    for (Year year : subjectAvailableYears) {
+                        for (FreeContent content : freeContents) {
+                            if (content.getYearId() == year.getId()) {
+                                year.setFree(true);
+                            }
+                        }
+                    }
+                }
             }
-           // System.out.println(subjectId + " available years -> " + subjectAvailableYears);
+
             return subjectAvailableYears;
 
         } catch (Exception e) {
@@ -83,40 +109,52 @@ public class YearsDao {
         String query = "SELECT * FROM " + Tables.YEARS;
 
         try (ResultSet rs = databaseService.executeQuery(query)) {
-            years.clear();
+            allYears.clear();
             while (rs.next()) {
-                years.add(new Year(
+                allYears.add(new Year(
                         rs.getInt(idColumn),
                         rs.getString(yearColumn),
                         rs.getString(shortDescriptionColumn),
                         rs.getInt(isNewColumn),
-                        rs.getInt(availableColumn)));
+                        rs.getInt(availableColumn),
+                        false));
             }
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
                     LocalDateTime.now() + ": Could not load Years from database because " + e.getMessage());
-            years.clear();
+            allYears.clear();
         }
     }
 
-    public static ObservableList<Year> getAvailableYears() {
-        return FXCollections.unmodifiableObservableList(availableYears);
-    }
+    private static void updateFreeYearsColumn() {
+        String query = "SELECT * FROM " + Tables.FREE_CONTENTS;
 
-    public static Optional<Boolean> isYearAvailable(int id) {
-        for (Year year : availableYears) {
-            if (year.getId() == id) return Optional.of(true);
+        try(ResultSet rs = databaseService.executeQuery(query)) {
+            freeContents.clear();
+            while (rs.next()) {
+                freeContents.add(new FreeContent(
+                        rs.getInt(idColumn),
+                        rs.getInt("subject_id"),
+                        rs.getInt("year_id"),
+                        rs.getInt("topic_id"),
+                        rs.getInt("chapter_id")));
+
+            }
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(
+                    Level.SEVERE,
+                    LocalDateTime.now() + ": Could not load Free Contents from database because " + e.getMessage());
+            freeContents.clear();
         }
-        return Optional.of(false);
     }
 
     public static ObservableList<Year> getYears() {
-        return FXCollections.unmodifiableObservableList(years);
+        return FXCollections.unmodifiableObservableList(subjectAvailableYears);
     }
 
     public static Optional<Year> getYear(int id) {
-        for (Year year : years) {
+        for (Year year : allYears) {
             if (year.getId() == id) return Optional.of(year);
         }
         return Optional.empty();

@@ -1,22 +1,13 @@
 package com.scholarly.utme.controller;
 
 
-import com.scholarly.utme.controller.audio_video_screens.AudioVideoSubjectListViewController;
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
-import com.scholarly.utme.controller.novel_screens.NovelScreenController;
-import com.scholarly.utme.ui.utils.Animations;
-import com.scholarly.utme.ui.utils.FontUtil;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.data.model.newDb.PQSubject;
+import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.*;
-import com.scholarly.utme.viewmodels.novel_screens.NovelScreenVM;
-import com.scholarly.utme.viewmodels.audio_video_screens.AudioVideoSubjectListViewVM;
 import de.saxsys.mvvmfx.*;
-import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,14 +20,12 @@ import javafx.scene.layout.StackPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.controller.SubjectListViewController.*;
-import static com.scholarly.utme.ui.utils.Screens.PAST_QUESTION_SCREEN;
-import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/HomeScreen.fxml")
 public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializable{
+    private static final String TAG = "HomeScreenController: ";
 
     @InjectViewModel
     private HomeScreenVM viewModel;
@@ -58,24 +47,46 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
 
-    private SubjectListViewController subjectListController;
+    private static SubjectListViewController subjectListController;
 
+    private static Parent subjectListView;
     private final ToggleGroup toggleGroup = new ToggleGroup();
-
-    private static final String TAG = "HomeScreenController: ";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
         subjectListController = subjectListViewTuple.getCodeBehind();
-        Parent subjectListView = subjectListViewTuple.getView();
-
+        subjectListView = subjectListViewTuple.getView();
 
         initializeViews();
         initializeFonts();
 
         viewModel.processInitialData(getInitialData());
 
+        if (viewModel.getSelectedScreen().equals(Screens.PRACTICE_SCREEN)) {
+            pageTitle.setText("CBT Practice");
+            toggleGroup.selectToggle(practiceButton);
+            subjectListController.setOption(SubjectListOption.PRACTICE);
+            subjectListController.setSelectedSubject(viewModel.getSelectedSubject());
+            selectButton(subjectListView, practiceButton);
+        } else if (viewModel.getSelectedScreen().equals(Screens.PAST_QUESTION_SCREEN)) {
+            pageTitle.setText("Study Past Questions");
+            toggleGroup.selectToggle(pastQuestionButton);
+            subjectListController.setOption(SubjectListOption.STUDY);
+            selectButton(subjectListView, pastQuestionButton);
+        } else if (viewModel.getSelectedScreen().equals(Screens.CBT_GAME_SCREEN)) {
+            pageTitle.setText("CBT Game");
+            toggleGroup.selectToggle(cbtGameButton);
+            subjectListController.setOption(SubjectListOption.CBT_GAME);
+            selectButton(subjectListView, cbtGameButton);
+        } else if (viewModel.getSelectedScreen().equals(Screens.VIDEOS_SCREEN)) {
+//            selectButton(audioVideoView, videosButton);
+        } else if (viewModel.getSelectedScreen().equals(Screens.AUDIOS_SCREEN)) {
+//            selectButton(audioVideoView, audiosButton);
+        } else if (viewModel.getSelectedScreen().equals(Screens.LEARNING_CENTER_SCREEN)) {
+//            selectButton(audioVideoView, learningCenterButton);
+        }
 
         toggleGroup.getToggles().addAll(practiceButton, pastQuestionButton, cbtGameButton);
 
@@ -83,10 +94,10 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             if (newValue) {
                 pageTitle.setText("CBT Practice");
                 subjectListController.setOption(SubjectListOption.PRACTICE);
-                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
-                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
-                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
-                }
+//                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
+//                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+//                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
+//                }
                 selectButton(subjectListView, practiceButton);
             }
         });
@@ -95,10 +106,10 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             if (newValue) {
                 pageTitle.setText("Study Past Questions");
                 subjectListController.setOption(SubjectListOption.STUDY);
-                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
-                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
-                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
-                }
+//                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
+//                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+//                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
+//                }
                 selectButton(subjectListView, pastQuestionButton);
             }
         });
@@ -107,33 +118,12 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             if (newValue) {
                 pageTitle.setText("CBT Game");
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
-                boolean removed = subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
-                if (removed)
-                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() * 2);
+//                boolean removed = subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
+//                if (removed)
+//                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() * 2);
                 selectButton(subjectListView, cbtGameButton);
             }
         });
-
-        if (viewModel.getSelectedScreen().equalsIgnoreCase(PRACTICE_SCREEN)) {
-            pageTitle.setText("CBT Practice");
-            subjectListController.setOption(SubjectListOption.PRACTICE);
-            selectButton(subjectListView, practiceButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(PAST_QUESTION_SCREEN)) {
-            pageTitle.setText("Study Past Questions");
-            subjectListController.setOption(SubjectListOption.STUDY);
-            selectButton(subjectListView, pastQuestionButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(CBT_GAME_SCREEN)) {
-            pageTitle.setText("CBT Game");
-            toggleGroup.selectToggle(cbtGameButton);
-            subjectListController.setOption(SubjectListOption.CBT_GAME);
-            selectButton(subjectListView, cbtGameButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(VIDEOS_SCREEN)) {
-//            selectButton(audioVideoView, videosButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(AUDIOS_SCREEN)) {
-//            selectButton(audioVideoView, audiosButton);
-        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(LEARNING_CENTER_SCREEN)) {
-//            selectButton(audioVideoView, learningCenterButton);
-        }
 
 
         /*videosButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
@@ -203,6 +193,9 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     }
 
+    private void showActivateDialog() {
+
+    }
 
     private void changeButtonStyle(ToggleButton pressedButton) {
         practiceButton.setStyle(null);
@@ -224,7 +217,7 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     public void homeTextClicked() {
         subjectListController.dispose();
-        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+        ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.HOME_SCREEN));
         ViewSwitcher.showScreen(View.LANDING_SCREEN);
     }
 
@@ -233,14 +226,20 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
     }
 
     public static class InitialData {
-        private String screen;
+        private Screens screen;
+        private PQSubject selectedSubject;
 
-        public InitialData(String screen) {
+        public InitialData(Screens screen, PQSubject selectedSubject) {
             this.screen = screen;
+            this.selectedSubject = selectedSubject;
         }
 
-        public String getScreen() {
+        public Screens getScreen() {
             return screen;
+        }
+
+        public PQSubject getSelectedSubject() {
+            return selectedSubject;
         }
     }
 }
