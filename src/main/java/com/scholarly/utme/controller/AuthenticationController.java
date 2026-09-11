@@ -224,13 +224,12 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
      */
     private void showSignUpUI() {
         Label headerLabel = new Label("Sign Up");
-        Button backButton = new Button("Back");
 
         HBox topBar = new HBox();
         topBar.setSpacing(15);
         topBar.setAlignment(Pos.CENTER_LEFT);
 
-        topBar.getChildren().addAll(backButton, headerLabel);
+        topBar.getChildren().addAll(headerLabel);
 
         VBox.setMargin(topBar, new Insets(40, 0, 0, 20));
 
@@ -262,23 +261,56 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
         signupInfoLabel = new Label();
         VBox.setMargin(signupInfoLabel, new Insets(20, 0, 0, 20));
 
-        Button signUpButton = new Button("Sign Up");
-        VBox.setMargin(signUpButton, new Insets(40, 0, 0, 20));
+        HBox backAndSignupButton = new HBox();
+        VBox.setMargin(backAndSignupButton, new Insets(40, 0, 0, 20));
 
+        Button backButton = new Button("Back");
+        HBox.setMargin(backButton, new Insets(0, 10, 0, 0));
+
+        Button signUpButton = new Button("Sign Up");
+        HBox.setMargin(signUpButton, new Insets(0, 0, 0, 10));
+
+        backAndSignupButton.getChildren().clear();
+        backAndSignupButton.getChildren().addAll(backButton, signUpButton);
 
 
         authenticationSection.getChildren().clear();
-        authenticationSection.getChildren().addAll(topBar, firstName, firstNameTextField, lastName, lastNameTextField, phone, phoneTextField, email, emailTextField, passwordLabel, passwordField, signupInfoLabel, signUpButton);
+        authenticationSection.getChildren().addAll(
+                topBar, firstName, firstNameTextField, lastName, lastNameTextField, phone, phoneTextField,
+                email, emailTextField, passwordLabel, passwordField, signupInfoLabel, backAndSignupButton);
 
 
         backButton.setOnAction(e -> {
             showDefaultAuthenticationSection();
         });
         signUpButton.setOnAction(e -> {
-            showLoginUI();
-           // validateSignupInput(firstNameTextField, lastNameTextField, phoneTextField, emailTextField, passwordField);
+            validateSignupInput(firstNameTextField, lastNameTextField, phoneTextField, emailTextField, passwordField);
 
         });
+    }
+
+    private void validateSignupInput(TextField firstNameText, TextField lastNameText, TextField phoneText, TextField emailText, PasswordField passwordText){
+        String firstName = firstNameText.getText().trim();
+        String lastName = lastNameText.getText().trim();
+        String phone = phoneText.getText().trim();
+        String email = emailText.getText().trim();
+        String password = passwordText.getText().trim();
+
+        if (!firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty() && !password.isEmpty()){
+            if (email.contains("@")){
+                User newUser = new User(firstName, lastName, phone, email, password);
+                authenticateUser(newUser);
+                signupInfoLabel.setText("Account created successfully!");
+            }else {
+                signupInfoLabel.setText("Please input a valid email address");
+            }
+
+        }else {
+            signupInfoLabel.setText("Kindly fill out all fields");
+            signupInfoLabel.setVisible(true);
+        }
+
+
     }
 
     private void showForgotPasswordUI() {
@@ -324,12 +356,11 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
             showLoginUI();
         });
         proceedButton.setOnAction(e -> {
-            showLoginUI();
-           // validateEmailInput(emailTextField);
+            validateEmailInput(emailTextField);
         });
     }
 
-    /*private void validateEmailInput(TextField emailText){
+    private void validateEmailInput(TextField emailText){
         String email = emailText.getText().trim();
 
         if (email.contains("@")) {
@@ -343,7 +374,6 @@ public class AuthenticationController implements FxmlView<AuthenticationVM>, Ini
 
         }
     }
-*/
     private void authenticateUser(User user){
         //TODO
     }

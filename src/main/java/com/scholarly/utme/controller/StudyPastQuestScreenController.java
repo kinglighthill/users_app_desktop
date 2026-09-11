@@ -7,24 +7,30 @@ import com.scholarly.utme.viewmodels.StudyPastScreenVM;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.QuestionState;
 import com.scholarly.utme.viewmodels.StudyPastScreenVM.SubjectQuestionsState;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
+import com.sun.speech.freetts.VoiceManager;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
 import java.net.URL;
 import java.util.List;
@@ -49,12 +55,16 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
     private Label questionOverviewLabel, questionLabel, optionA, optionB, optionC, optionD, explanationLabel, explanationTitle, correctAnswerTitle, correctAnswerLabel;
 
     @FXML
-    private Button prevButton, nextButton, exitButton, showCorrectAnswerButton, showExplanationButton;
+    private Button prevButton, nextButton, exitButton, showCorrectAnswerButton, showExplanationButton, hideAnswerButton;
 
     @FXML
     private ImageView bookmarkImage, flagImage, speakerImage, calculatorImage;
 
+    @FXML
+    private Pane dialogDimmer;
 
+    @FXML
+    private DialogPane exitDialogPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -133,11 +143,32 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             updateExplanationView();
         });
 
+        hideAnswerButton.setOnAction(event -> {
+
+            int selectedQuestion = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName())
+                    .getSelectedQuestion();
+
+            SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName());
+
+            questionsState.getQuestions().get(selectedQuestion - 1).setShowExplanation(false);
+
+            showCorrectAnswerButton.setVisible(true);
+            showExplanationButton.setVisible(true);
+            explanationTitle.setVisible(false);
+            explanationLabel.setVisible(false);
+            correctAnswerLabel.setVisible(false);
+            correctAnswerTitle.setVisible(false);
+            hideAnswerButton.setVisible(false);
+
+        });
+
         tilePane.setVgap(10);
         tilePane.setHgap(10);
 
         exitButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            showExitDialog();
         });
 
         try {
@@ -148,6 +179,42 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+
+        speakerImage.setOnMouseClicked(event -> {
+            int selectedQuestion = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName())
+                    .getSelectedQuestion();
+
+            SubjectQuestionsState questionsState = viewModel.getSubjectsQuestions()
+                    .get(viewModel.getSelectedSubject().getTableName());
+
+            String currentQuestion = questionsState.getQuestions().get(selectedQuestion - 1).getQuestion().getQuestion();
+
+            textToSpeech(currentQuestion);
+        });
+
+    }
+
+    private void textToSpeech(String text){
+        System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+
+        CompositeDisposable disposables = new CompositeDisposable();
+
+        // Using RxJava's Disposable to play the speech on a background thread to avoid blocking the UI
+        // 'doOnNext' runs its block of code on the specified background thread the disposable is subscribed on
+        disposables.add(
+                Observable.just(VoiceManager.getInstance().getVoice("kevin16"))
+                        .subscribeOn(Schedulers.io())
+                        .doOnNext(voice -> {
+                            voice.allocate();
+                            voice.speak(text);
+                        })
+                        .observeOn(JavaFxScheduler.platform())
+                        .subscribe()
+        );
+
+       // disposables.dispose();
     }
 
     public void onCalculatorClicked(MouseEvent mouseEvent) {
@@ -194,7 +261,10 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             correctAnswerLabel.setVisible(false);
             correctAnswerTitle.setVisible(false);
 
+            hideAnswerButton.setVisible(false);
+
         } else if (questionState.isShowExplanation()) {
+
             System.out.println("showing explanation and answer view");
             explanationTitle.setVisible(true);
             explanationLabel.setVisible(true);
@@ -204,11 +274,20 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
             correctAnswerTitle.setVisible(true);
             showCorrectAnswerButton.setVisible(false);
 
+            hideAnswerButton.setText("Hide Explanation");
+            hideAnswerButton.setVisible(true);
+
+
         } else if (questionState.isShowAnswer()) {
+
             System.out.println("showing show answer view alone");
             correctAnswerLabel.setVisible(true);
             correctAnswerTitle.setVisible(true);
             showCorrectAnswerButton.setVisible(false);
+            showExplanationButton.setVisible(true);
+
+            hideAnswerButton.setText("Hide Answer");
+            hideAnswerButton.setVisible(true);
         }
     }
 
@@ -274,6 +353,43 @@ public class StudyPastQuestScreenController implements FxmlView<StudyPastScreenV
 
         updateExplanationView();
     }
+
+    private void showExitDialog() {
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        // Change dialog icon
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(this.getClass().getResource("/drawable/app_logo.png").toString()));
+        dialog.setTitle("Confirm Exit");
+
+        exitDialogPane.setVisible(true);
+        dialogDimmer.setVisible(true);
+
+        dialog.getDialogPane().setContent(exitDialogPane);
+
+        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-background-radius: 10;");
+
+        dialog.getDialogPane().setMinSize(350, 80);
+
+        //Adding buttons to the dialog pane
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == ButtonType.YES){
+                dialogDimmer.setVisible(false);
+                ViewSwitcher.passData("pastQuestionsPanel");
+                ViewSwitcher.showScreen(View.HOME_SCREEN);
+            }else if (buttonType == ButtonType.NO){;
+                dialogDimmer.setVisible(false);
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+    }
+
 
     private InitialData getInitialData() {
         InitialData data = (InitialData) ViewSwitcher.retrieveData();

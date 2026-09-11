@@ -40,11 +40,13 @@ public class RecentlyViewedItemCell extends ListCell<Course> {
 
         if(empty || item == null) {
             setText(null);
+            setStyle("-fx-background-color: #259B24;");
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }
         else {
             itemButton.setText(item.getName());
             itemImage.setImage(new Image(item.getImageURL()));
+            setStyle("-fx-background-color: #259B24;");
 
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }

@@ -17,10 +17,7 @@ import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
@@ -71,9 +68,10 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .getQuestions(
                                 subjectState.getSubject().getTableName(),
                                 subjectState.getSelectedYear().getId(),
-                                false
+                                subjectState.getShuffleQuestions()
                         )
                         .stream()
+                        .limit(subjectState.getNumberOfQuestions())
                         .map(question -> new QuestionState(question, Type.OBJECTIVE, null))
                         .collect(Collectors.toList());
 
@@ -92,7 +90,7 @@ public class PracticeScreenVM implements ViewModel, SceneLifecycle {
                         .getQuestions(
                                 subjectState.getSubject().getTableName(),
                                 subjectState.getSelectedYear().getId(),
-                                false
+                                subjectState.getShuffleQuestions()
                         )
                         .stream()
                         .map(question -> new QuestionState(question, Type.THEORY, null))

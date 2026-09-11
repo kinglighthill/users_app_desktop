@@ -42,6 +42,7 @@ public class StudyPastScreenVM implements ViewModel {
                             subjectState.getSelectedYear().getId(),
                             false
                     ).stream()
+                    .limit(subjectState.getNumberOfQuestions())
                     .map(objectiveQuestion -> new QuestionState(objectiveQuestion, false, false))
                     .collect(Collectors.toList());
 
@@ -68,6 +69,10 @@ public class StudyPastScreenVM implements ViewModel {
 
     public void setSelectedSubject(Subject selectedSubject) {
         this.selectedSubject.set(selectedSubject);
+    }
+
+    public void hideAnswerAndExplanation() {
+
     }
 
     public static class SubjectQuestionsState {
