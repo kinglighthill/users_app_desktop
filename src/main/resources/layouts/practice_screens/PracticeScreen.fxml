@@ -200,12 +200,14 @@
 
                            <WebView fx:id="questionWebView" minHeight="200" prefHeight="200.0" prefWidth="200.0"/>
 
-                           <HBox fx:id="questionWithImageHBox" spacing="10" minHeight="200" prefHeight="200" prefWidth="300" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5">
-                              <ImageView fx:id="questionImage" fitHeight="200" fitWidth="400" StackPane.alignment="CENTER"/>
-                              <WebView fx:id="questionWithImageWebView" prefHeight="200"/>
-                              <padding>
-                                 <Insets topRightBottomLeft="10"/>
-                              </padding>
+                           <HBox fx:id="questionWithImageHBox" minHeight="250" prefHeight="200" prefWidth="300" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5">
+                              <VBox fx:id="questionWithImageVBox" spacing="10" minHeight="300" prefHeight="200" prefWidth="300" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5">
+                                 <ImageView fx:id="questionImage" fitHeight="200" fitWidth="400" StackPane.alignment="CENTER"/>
+                                 <WebView fx:id="questionWithImageWebView" prefHeight="200"/>
+                                 <padding>
+                                    <Insets topRightBottomLeft="10"/>
+                                 </padding>
+                              </VBox>
                            </HBox>
                            <padding>
                               <Insets topRightBottomLeft="10"/>
@@ -253,6 +255,9 @@
                               <Font size="14.0" />
                            </font>
                         </RadioButton>
+<!--                        <VBox fx:id="optionsVBox" spacing="10">-->
+<!--                           -->
+<!--                        </VBox>-->
 
                         <VBox spacing="15" alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
                            <children>

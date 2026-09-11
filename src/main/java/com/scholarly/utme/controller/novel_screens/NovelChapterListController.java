@@ -10,6 +10,7 @@ import com.scholarly.utme.viewmodels.novel_screens.NovelChapterListVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,6 +45,8 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
     @FXML
     private Button activateNowButton;
 
+    private SimpleObjectProperty<NovelChapter> previouslySelectedChapter = new SimpleObjectProperty<>();
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -65,6 +68,7 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
 
 
         chaptersList.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldValue, newValue) -> {
+            previouslySelectedChapter.set(oldValue);
             if (newValue.isFree()) {
                 readButton.setDisable(false);
                 viewModel.setSelectedChapter(newValue);
@@ -91,6 +95,7 @@ public class NovelChapterListController implements FxmlView<NovelChapterListVM>,
         });
 
         activateNowCloseIcon.setOnMouseClicked(event -> {
+            chaptersList.getSelectionModel().select(previouslySelectedChapter.get());
             dimmer.setVisible(false);
             Animations.translateOut(activateNowDialog, 300);
         });

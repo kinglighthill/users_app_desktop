@@ -373,4 +373,24 @@ public class Helper {
 
         return editable;
     }
+
+    public static String extractImageUrlFromText(String text) {
+        int startIndexOfImg = text.indexOf("<img");
+        int endIndexOfImg = text.indexOf("'100%'>", startIndexOfImg);
+
+        int startIndexOfImgPath = text.indexOf("/android_asset", startIndexOfImg);
+        int endIndexOfImgPath = text.indexOf("' width", startIndexOfImg);
+
+        String imagePath = text.substring(startIndexOfImgPath, endIndexOfImgPath);
+
+        return imagePath.replace("android_asset/images", "assets/images/pq");
+    }
+
+    public static String extractQuestionOrAnswerFromQuestionWithImage(Class<?> mClass, String text) {
+        String imageQuestion = text.substring(text.lastIndexOf("100%'")+6);
+        if (isWebView(imageQuestion)) {
+            imageQuestion = loadLatex(mClass, imageQuestion);
+        }
+        return imageQuestion;
+    }
 }

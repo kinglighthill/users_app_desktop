@@ -10,7 +10,9 @@ import com.scholarly.utme.data.model.newDb.NoteLastSession;
 import com.scholarly.utme.data.model.newDb.NovelLastSession;
 import com.scholarly.utme.ui.cellFactories.SubjectGridCellFactory;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.Helper;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenHomeVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -146,7 +148,8 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         selectSubjectsGrid.setCellFactory(new SubjectGridCellFactory());
         selectSubjectsGrid.setItems(viewModel.getSubjects());
 
-        if (viewModel.getFavoriteSubjects().isEmpty()) {
+        boolean showFavSubjectDialog = PreferencesManager.getBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, true);
+        if (viewModel.getFavoriteSubjects().isEmpty() && showFavSubjectDialog) {
             Animations.fadeIn(selectSubjectPane, 300);
             Animations.fadeIn(dimmer, 250);
         } else {
@@ -169,6 +172,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
         selectSubjectCloseIcon.setOnMouseClicked(event -> {
             Animations.fadeOut(selectSubjectPane, 300);
             Animations.fadeOut(dimmer, 250);
+            PreferencesManager.putBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, false);
         });
 
         completeEditSubjectsButton.setOnAction(event -> {
@@ -178,6 +182,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             displayFavoriteSubjects(updatedFavoriteSubjects);
             Animations.fadeOut(selectSubjectPane, 300);
             Animations.fadeOut(dimmer, 250);
+            PreferencesManager.putBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, false);
         });
 
         profileImage.setOnMouseClicked(event -> {
@@ -229,10 +234,10 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
             ViewSwitcher.showScreen(View.NOVEL_CONTENT_SCREEN);
         });
 
-        viewDesktopAppButton.setOnAction(event -> {
-            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.APPS_SCREEN));
-            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-        });
+//        viewDesktopAppButton.setOnAction(event -> {
+//            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.APPS_SCREEN));
+//            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+//        });
 
 
         /*videosPanel.setOnMouseClicked(e -> {
@@ -263,7 +268,7 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        notificationIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/bell_without_notification.png").toString()));
         handImage.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/hand_image.png").toString()));
         selectSubjectCloseIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/action_close_icon.png").toString()));
-        boyWithLaptop.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/boy_with_laptop.png").toString()));
+//        boyWithLaptop.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/boy_with_laptop.png").toString()));
 
 
         cbtPracticeIcon.setImage(new Image(getClass().getResource("/drawable/landing_screen_images/cbt_practice_icon.png").toString()));
@@ -347,9 +352,9 @@ public class LandingScreenHomeController implements FxmlView<LandingScreenHomeVM
 //        actionNovelsPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 //        actionAudioPracticeText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 
-        otherAppsTitleDesc.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
-        otherAppsShortDesc.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
-        viewDesktopAppButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+//        otherAppsTitleDesc.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 14));
+//        otherAppsShortDesc.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
+//        viewDesktopAppButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
         completeEditSubjectsButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 16));
 
     }

@@ -6,6 +6,7 @@ import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAccountVM;
@@ -146,6 +147,7 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
                     PreferencesManager.put(PREF_KEY_LAST_SELECTED_PRACTICE, Screens.PRACTICE_SCREEN.getName());
                     ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+                    PreferencesManager.putBoolean(Constants.PREF_KEY_SHOW_FAVORITE_SUBJECT_DIALOG, true);
                 } else {
                     dialogDimmer.setVisible(false);
                 }

@@ -24,7 +24,7 @@
                 <StackPane fx:id="centerStackPane" prefWidth="600" style="-fx-background-color: white;">
                     <VBox fx:id="centerVBox" spacing="30" prefWidth="500">
                         <VBox fx:id="novelPrompt" spacing="15" prefWidth="500" style="-fx-background-color: #F4FFF5; -fx-background-radius: 5;">
-                            <Label fx:id="infoText" text="NOTE: These books listed below represent both the new and old recommended literary texts. You are expected to study texts relevant to JAMB 2021 according to the JAMB syllabus" textFill="#053500" wrapText="true"/>
+                            <Label fx:id="infoText" text="NOTE: These books listed below represent both the new and old recommended literary texts. You are expected to study texts relevant to JAMB 2024 according to the JAMB syllabus" textFill="#053500" wrapText="true"/>
                             <HBox spacing="15" alignment="CENTER_LEFT">
                                 <RadioButton fx:id="dontShowButton" text="Don't show again" textFill="#053500" style="-fx-cursor: hand;"/>
                                 <Button fx:id="dismissButton" text="Dismiss" textFill="white" style="-fx-background-color: #12AF20; -fx-cursor: hand;"/>
