@@ -47,7 +47,7 @@
 
                <Button fx:id="nextButton" mnemonicParsing="false" prefWidth="50"
                        style="-fx-background-color: #ffffff; -fx-background-radius: 5px; "
-                       AnchorPane.rightAnchor="50.0" AnchorPane.bottomAnchor="30.0">
+                       AnchorPane.rightAnchor="80.0" AnchorPane.bottomAnchor="30.0">
                   <!--<StackPane.margin>
                      <Insets top="400.0" right="40.0"/>
                   </StackPane.margin>-->

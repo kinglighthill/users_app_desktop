@@ -44,7 +44,7 @@
                 <VBox spacing="10">
                     <VBox fx:id="bankTransferVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
                         <children>
-                            <Panel prefHeight="60">
+                            <Panel fx:id="bankTransferPanel" prefHeight="60">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="bankImage" preserveRatio="true" pickOnBounds="true"/>
@@ -69,7 +69,7 @@
                             </Panel>
                             <VBox fx:id="bankTransferDetailsPane" spacing="25">
                                 <Separator/>
-                                <Label text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper " wrapText="true">
+                                <Label text="Walk into any Bank branch mentioned below or POS Agent's shop around you to make a deposit of N2000 into any of our accounts below. You can also use your Mobile App or USSD code to make a transfer into any of the accounts below." wrapText="true">
                                     <font>
                                         <Font size="14"/>
                                     </font>
@@ -77,8 +77,12 @@
 
                                 <HBox alignment="CENTER">
                                     <VBox spacing="15">
-                                        <ImageView fx:id="zenithPaymentImage" preserveRatio="true" pickOnBounds="true"/>
-                                        <HBox spacing="5" alignment="CENTER">
+                                        <StackPane fx:id="paymentImagePane">
+                                            <ImageView fx:id="ubaPaymentImage" preserveRatio="true" pickOnBounds="true"/>
+                                            <ImageView fx:id="accessPaymentImage" preserveRatio="true" pickOnBounds="true" visible="false"/>
+                                            <ImageView fx:id="zenithPaymentImage" preserveRatio="true" pickOnBounds="true" visible="false"/>
+                                        </StackPane>
+                                        <HBox fx:id="currentPositionHBox" spacing="5" alignment="CENTER">
                                             <Line startX="-10" endX="10" strokeWidth="2.5" stroke="#12AF20"/>
                                             <Line startX="-10" endX="10" strokeWidth="2.5" stroke="#DFDFDF"/>
                                             <Line startX="-10" endX="10" strokeWidth="2.5" stroke="#DFDFDF"/>
@@ -86,14 +90,14 @@
                                     </VBox>
                                 </HBox>
 
-                                <Label text="After payment, send a WhatsApp message containing payment details to +2348136941462 using the format below:">
+                                <Label text="After payment, send an email containing you payment receipt/details to scholarlyng@gmail.com using the format below:">
                                     <font>
                                         <Font size="14"/>
                                     </font>
                                 </Label>
 
                                 <VBox spacing="10">
-                                    <Label text="1. Account name (belonging to account owner or POS agent)">
+                                    <Label text="1. Account name (belonging to the account owner or POS Agent)">
                                         <font>
                                             <Font size="14"/>
                                         </font>
@@ -118,7 +122,7 @@
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="6. CBT exam paid for (JAMB, WAEC etc.)">
+                                    <Label text="6. Exam App paid for (e.g JAMB, WAEC, Novels App etc.)">
                                         <font>
                                             <Font size="14"/>
                                         </font>
@@ -132,15 +136,15 @@
                                 </Label>
 
                                 <VBox spacing="30" alignment="CENTER">
-                                    <Button text="I have paid. Send WhatsApp Message" textFill="white" prefHeight="45" prefWidth="280" style="-fx-background-color: #12AF20; -fx-background-radius: 7">
+                                    <Button fx:id="whatsAppButton" text="I have paid. Send WhatsApp Message" textFill="white" prefHeight="45" prefWidth="280" style="-fx-background-color: #12AF20; -fx-background-radius: 7">
                                         <font>
                                             <Font size="15"/>
                                         </font>
                                     </Button>
 
-                                    <Label text="Receive activation pin after payment confirmation may take up to 20 minutes">
+                                    <Label text="Receive activation pin after payment confirmation (may take up to 20 minutes)">
                                         <font>
-                                            <Font size="13"/>
+                                            <Font size="14"/>
                                         </font>
                                     </Label>
                                 </VBox>
@@ -153,7 +157,7 @@
 
                     <VBox fx:id="paystackVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
                         <children>
-                            <Panel prefHeight="60">
+                            <Panel fx:id="paystackPanel" prefHeight="60">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="paystackImage" preserveRatio="true" pickOnBounds="true"/>
@@ -180,7 +184,7 @@
                             <VBox fx:id="paystackDetailsPane" spacing="25">
                                 <Separator/>
                                 <HBox alignment="CENTER">
-                                    <Button text="Pay with Paystack" textFill="white" prefHeight="40" prefWidth="200" style="-fx-background-color: #10AFD4;">
+                                    <Button fx:id="paystackButton" text="Pay with Paystack" textFill="white" prefHeight="40" prefWidth="200" style="-fx-background-color: #10AFD4;">
                                         <font>
                                             <Font size="14"/>
                                         </font>
@@ -193,7 +197,7 @@
                         </padding>
                     </VBox>
 
-                    <VBox fx:id="flutterwaveVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
+                    <!--<VBox fx:id="flutterwaveVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
                         <children>
                             <Panel prefHeight="60">
                                 <left>
@@ -273,11 +277,11 @@
                         <padding>
                             <Insets topRightBottomLeft="15"/>
                         </padding>
-                    </VBox>
+                    </VBox>-->
 
                     <VBox fx:id="noAccountVBox" spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-background-radius: 7; -fx-border-color: #F1F1F1; -fx-border-radius: 7;">
                         <children>
-                            <Panel prefHeight="60">
+                            <Panel fx:id="noAccountPanel" prefHeight="60">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
                                         <ImageView fx:id="noAccountImage" preserveRatio="true" pickOnBounds="true"/>
@@ -302,52 +306,70 @@
                             </Panel>
                             <VBox fx:id="noAccountDetailsPane" spacing="25">
                                 <Separator/>
-                                <Label text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper " wrapText="true">
+                                <Label text="For those who cannot make payment because they do not have a bank account, you can do any of the following:" wrapText="true">
                                     <font>
                                         <Font size="14"/>
                                     </font>
                                 </Label>
 
-                                <Label text="After payment, send a WhatsApp message containing payment details to +2348136941462 using the format below:">
+                                <Label text="1. Go to any POS Agent in your area, give them cash, provide them with any of our account numbers specified in the first payment option and ask them to do the transfer for you.">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+
+                                <Label text="2. Ask people who have accounts around you. You can ask from parents, friends or relatives to help you make the transfer to any of our account numbers.">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+
+                                <Label text="After they make payment, you will be required to send the details of payment on WhatsApp to +2348136941462">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                </Label>
+
+                                <Label text="Details to be sent includes:">
                                     <font>
                                         <Font size="14"/>
                                     </font>
                                 </Label>
 
                                 <VBox spacing="10">
-                                    <Label text="1. Account name (belonging to account owner or POS agent)">
+                                    <Label text="1. Account name (belonging to the account owner or POS agent)">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="2. Amount paid">
+                                    <Label text="2. Bank paid to">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="3. Your email address">
+                                    <Label text="3. Date of payment">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="4. Date of payment">
+                                    <Label text="4. Amount paid">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="5. Bank paid to">
+                                    <Label text="5. Your email address">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
-                                    <Label text="6. CBT exam paid for (JAMB, WAEC etc.)">
+                                    <Label text="6. Exam App paid for (e.g JAMB, WAEC, Novels App etc.)">
                                         <font>
                                             <Font size="14"/>
                                         </font>
                                     </Label>
                                 </VBox>
 
-                                <Label text="Once payment has been confirmed, an activation pin will be instantly sent to your inbox">
+                                <Label text="Once your payment is confirmed, we will send the activation pin to your email">
                                     <font>
                                         <Font size="14"/>
                                     </font>
@@ -361,7 +383,6 @@
 
                 </VBox>
             </ScrollPane>
-
         </AnchorPane>
     </center>
 
@@ -379,7 +400,7 @@
                                     <Font size="14"/>
                                 </font>
                             </Label>
-                            <Label text="Chat us" textFill="#12AF20">
+                            <Label fx:id="chatUsLabel" text="Chat us" textFill="#12AF20">
                                 <font>
                                     <Font size="14"/>
                                 </font>

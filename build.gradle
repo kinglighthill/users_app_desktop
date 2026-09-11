@@ -55,7 +55,7 @@ application {
 
 javafx {
     version = '18.0.2'
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web']
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing']
 }
 
 mainClassName = "$moduleName/com.scholarly.utme.MainApplication"
@@ -66,6 +66,13 @@ jlink {
         name = 'jamb utme'
     }
 }
+
+/*packagingOptions {
+    exclude 'META-INF/LICENSE-LGPL-2.1.txt'
+    exclude 'META-INF/LICENSE-LGPL-3.txt'
+    exclude 'META-INF/LICENSE-W3C-TEST'
+    exclude 'META-INF/DEPENDENCIES'
+}*/
 
 dependencies {
     implementation('org.controlsfx:controlsfx:11.1.2') {
@@ -93,6 +100,10 @@ dependencies {
     implementation('org.xerial:sqlite-jdbc:3.36.0.2') {
         exclude group: 'org.sqlite'
     }
+
+    implementation 'org.openjfx:javafx-controls:16'
+
+    implementation 'org.openjfx:javafx-swing:18.0.2'
 
     // SQL connector
 //    implementation 'io.github.willena:sqlite-jdbc:3.35.5.3'
@@ -129,7 +140,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
 
     // Markdown
-    implementation 'org.commonmark:commonmark:0.19.0'
+    implementation 'org.commonmark:commonmark:0.21.0'
+    implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
 
     // HTML to Text
     implementation 'org.jsoup:jsoup:1.15.4'
@@ -139,7 +151,7 @@ dependencies {
 //    implementation 'org.bytedeco:javacpp:1.7.6' // Use the latest version
 //    implementation 'org.bytedeco.javacpp-presets:webp:1.1.6'
 
-    implementation 'org.sejda.imageio:webp-imageio:0.1.6'
+    implementation 'com.twelvemonkeys.imageio:imageio-webp:3.9.4'
 
     // Katex
 //    implementation 'io.github.katexjava:katex-java:0.5.0'

@@ -6,7 +6,7 @@ import com.scholarly.utme.controller.practice_screens.PracticeScreenController;
 import com.scholarly.utme.controller.practice_screens.StudyPastQuestScreenController;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.*;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import com.scholarly.utme.viewmodels.SubjectListItemVM.SubjectState;
 import com.scholarly.utme.viewmodels.SubjectListViewVM;
@@ -25,8 +25,8 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.Constants.*;
 
@@ -38,11 +38,11 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     private SubjectListViewVM viewModel;
 
     @FXML
-    private ListView<SubjectListItemVM> objectiveList, theoryList;
+    private ListView<SubjectListItemVM> mySubjectsObjectiveList, objectiveList, theoryList;
     @FXML
-    private Label timeSettingsLabel;
+    private Label timeSettingsLabel, mySubjectsLabel, otherSubjectsLabel;
     @FXML
-    private VBox hoursSelector, minutesSelector, activateNowDialog, dimmer;
+    private VBox hoursSelector, minutesSelector, activateNowDialog, dimmer, subjectListVBox;
     @FXML
     ChoiceBox<Integer> hoursChoiceBox, minutesChoiceBox;
     @FXML
@@ -62,13 +62,11 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
     private ObservableList<SubjectState> selectedObjectiveSubjects = FXCollections.observableArrayList();
     private ObservableList<SubjectState> selectedTheorySubjects = FXCollections.observableArrayList();
 
-    private Preferences preferences;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        preferences = AppPreferences.getPreferences();
 
-        String lastSelectedTab = preferences.get(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
+        String lastSelectedTab = PreferencesManager.get(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
 
         if (lastSelectedTab.equalsIgnoreCase(PREF_VALUE_OBJECTIVE_TAB)){
             tabMenu.getSelectionModel().select(objectiveTab);
@@ -80,6 +78,13 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         initializeViews();
         initializeFonts();
 
+//        ObservableList<SubjectListItemVM> mySubjects = viewModel.getObjectiveSubjects().stream().filter(SubjectListItemVM::isFavoriteSubject).collect(Collectors.toCollection(FXCollections::observableArrayList));
+//        ObservableList<SubjectListItemVM> otherSubjects = viewModel.getObjectiveSubjects().stream().filter(subjectListItemVM -> !subjectListItemVM.isFavoriteSubject()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+
+//        if (mySubjects.isEmpty()) {
+//            subjectListVBox.getChildren().removeAll(mySubjectsLabel, mySubjectsObjectiveList);
+//        }
+//        mySubjectsObjectiveList.setItems(mySubjects);
         objectiveList.setItems(viewModel.getObjectiveSubjects());
 //        theoryList.setItems(viewModel.getTheorySubjects());
 
@@ -95,8 +100,12 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
             return FluentViewLoader.fxmlView(SubjectListItemController.class).viewModel(vm).load();
         });
 
+//        mySubjectsObjectiveList.setCellFactory(objectiveCellFactory);
         objectiveList.setCellFactory(objectiveCellFactory);
 //        theoryList.setCellFactory(theoryCellFactory);
+
+//        mySubjectsObjectiveList.setSelectionModel(new NoSelectionModel<>());
+//        mySubjectsObjectiveList.setFocusTraversable(false);
 
         objectiveList.setSelectionModel(new NoSelectionModel<>());
         objectiveList.setFocusTraversable(false);
@@ -146,12 +155,12 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
         tabMenu.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue.getText().equalsIgnoreCase(PREF_VALUE_OBJECTIVE_TAB)) {
                 tabMenu.getSelectionModel().select(objectiveTab);
-                preferences.put(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
+                PreferencesManager.put(PREF_KEY_SELECTED_TAB, PREF_VALUE_OBJECTIVE_TAB);
                 Animations.animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedObjectiveSubjects);
             } else {
                 tabMenu.getSelectionModel().select(theoryTab);
-                preferences.put(PREF_KEY_SELECTED_TAB, PREF_VALUE_THEORY_TAB);
+                PreferencesManager.put(PREF_KEY_SELECTED_TAB, PREF_VALUE_THEORY_TAB);
                 Animations.animate(newValue.getTabPane());
                 questionOverviewTable.setItems(selectedTheorySubjects);
             }
@@ -212,24 +221,39 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
                     ViewSwitcher.showScreen(View.CBT_GAME_SCREEN);
                 }
 
-                // Ensure time(hours and minutes) selected is greater than for CBT Practice
-                if (hoursChoiceBox.getValue() != 0 || minutesChoiceBox.getValue() != 0){
+                // Ensure that selected number of questions are greater than 0
+                 if (!viewModel.getSelectedSubjectNumberOfQuestions().containsValue(0)) {
 
-                    if (selectedOption == SubjectListOption.PRACTICE) {
-                        initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
-                        ViewSwitcher.passData(initialData);
-                        ViewSwitcher.showScreen(View.PRACTICE_SCREEN);
-                    }
+                     // Ensure time(hours and minutes) selected is greater than for CBT Practice
+                     if (hoursChoiceBox.getValue() != 0 || minutesChoiceBox.getValue() != 0){
 
-                } else {
-                    Alerts.info(
-                            this.getClass(),
-                                    "Message",
-                                    null,
-                                    "Select a time greater than 0"
-                            ).show();
-                }
+                         if (selectedOption == SubjectListOption.PRACTICE) {
+                             initialData = new PracticeScreenController.InitialData(subjectStates, hoursChoiceBox.getValue(), minutesChoiceBox.getValue());
+                             ViewSwitcher.passData(initialData);
+                             ViewSwitcher. showScreen(View.PRACTICE_SCREEN);
+                         }
 
+                     } else {
+                         Alerts.info(
+                                 this.getClass(),
+                                 "Message",
+                                 null,
+                                 "Select a time greater than 0"
+                         ).show();
+                     }
+
+                 } else {
+                     Integer value = 0;
+                     List<String> subjects = viewModel.getSelectedSubjectNumberOfQuestions().entrySet().stream().filter(entry -> value.equals(entry.getValue())).map(Map.Entry::getKey).toList();
+
+                     Alerts.info(
+                             this.getClass(),
+                             "Message",
+                             null,
+                             "Selected number of questions selected for Subject(s):" + subjects.toString().replace("[", "").replace("]", "") + " must be greater than 0"
+                     ).show();
+
+                 }
 
             } else {
                 Alerts.info(
@@ -255,6 +279,8 @@ public class SubjectListViewController implements FxmlView<SubjectListViewVM>, I
 
     private void initializeFonts() {
 //        startButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
+//        mySubjectsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
+//        otherSubjectsLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 20));
     }
 
     public void setOption(SubjectListOption option) {

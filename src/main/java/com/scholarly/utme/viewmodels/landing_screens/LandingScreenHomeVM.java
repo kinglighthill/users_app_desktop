@@ -1,32 +1,43 @@
 package com.scholarly.utme.viewmodels.landing_screens;
 
 import com.google.gson.Gson;
+import com.scholarly.utme.data.dao.NovelChapterDao;
+import com.scholarly.utme.data.dao.NovelsDao;
 import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.data.dao.newDb.SectionDao;
 import com.scholarly.utme.data.dao.newDb.SubTopicDao;
 import com.scholarly.utme.data.dao.newDb.TopicDao;
 import com.scholarly.utme.data.model.newDb.*;
+import com.scholarly.utme.data.model.novels.NovelChapter;
+import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.network.model.UserData;
-import com.scholarly.utme.util.AppPreferences;
-import com.scholarly.utme.util.Constants;
+import com.scholarly.utme.util.PreferencesManager;
 import de.saxsys.mvvmfx.ViewModel;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_DATA;
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
 
 public class LandingScreenHomeVM implements ViewModel {
     private static final String TAG = "LandingScreenHomeVM: ";
-    private final Preferences preferences = AppPreferences.getPreferences();
-    private final NoteLastSection noteLastSection;
-    private NoteSection noteSection;
+    private final NoteLastSession noteLastSession;
+    private NoteSection noteLastSection;
     private NoteSubject lastSectionSubject;
     private NoteTopic selectedNoteTopic;
+
+    private final NovelLastSession novelLastSession;
+    private NovelChapter lastSessionChapter;
+    private NovelModel lastSessionNovel;
+    private ObservableList<NovelChapter> lastSessionChapters;
 
     private final ObservableList<FavoriteSubject> subjects;
 
@@ -42,10 +53,14 @@ public class LandingScreenHomeVM implements ViewModel {
 
 
     public LandingScreenHomeVM() {
-        userId = preferences.get(PREF_KEY_USER_ID, "");
+        long startDisplay = System.currentTimeMillis();
+        NovelChapterDao novelChapterDao = new NovelChapterDao();
+        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
+        System.out.println(TAG + "Time taken to load NovelChapterDao -> " + (System.currentTimeMillis() - startDisplay) + "ms");
 
-        String userDataString = preferences.get(PREF_KEY_USER_DATA+userId, "");
+        String userDataString = PreferencesManager.get(PREF_KEY_USER_DATA+userId, "");
         userData = gson.fromJson(userDataString, UserData.class);
+
 
         favoriteSubjects = FXCollections.observableArrayList();
         subjects = SubjectDao.getFavoriteSubjects();
@@ -62,18 +77,64 @@ public class LandingScreenHomeVM implements ViewModel {
             });
         });
 
-        noteLastSection = SectionDao.retrieveLastSection(userData.getId());
-        if (noteLastSection != null) {
-            noteSection = SectionDao.getNoteSectionWithId(noteLastSection.getSectionId());
-            assert noteSection != null;
-            selectedNoteTopic = TopicDao.getTopic(noteSection.getTopicId());
-            lastSectionSubject = SubjectDao.getNoteSubject(noteSection.getSubjectId());
-            assert lastSectionSubject != null;
-            noteSubjectTopics.put(lastSectionSubject.getId(), TopicDao.getNoteTopicsForSubject(lastSectionSubject.getId()));
-            TopicDao.getNoteTopicsForSubject(lastSectionSubject.getId()).forEach(topic -> {
-                noteSubTopics.put(topic.getId(), SubTopicDao.getSubTopicsForTopic(topic.getId()));
-            });
+        System.out.println(TAG + "Time taken to load Favorite Subjects -> " + (System.currentTimeMillis() - startDisplay) + "ms");
+
+        noteLastSession = SectionDao.retrieveLastSession(userData.getId());
+
+        Task<Void> noteLastSessionTask = new Task<>() {
+            @Override
+            protected Void call() {
+                if (noteLastSession != null) {
+                    noteLastSection = SectionDao.getNoteSectionWithId(noteLastSession.getSectionId());
+                    assert noteLastSection != null;
+                    selectedNoteTopic = TopicDao.getTopic(noteLastSection.getTopicId());
+                    lastSectionSubject = SubjectDao.getNoteSubject(noteLastSection.getSubjectId());
+                    assert lastSectionSubject != null;
+                    noteSubjectTopics.put(lastSectionSubject.getId(), TopicDao.getNoteTopicsForSubject(lastSectionSubject.getId()));
+                    TopicDao.getNoteTopicsForSubject(lastSectionSubject.getId()).forEach(topic -> {
+                        noteSubTopics.put(topic.getId(), SubTopicDao.getSubTopicsForTopic(topic.getId()));
+                    });
+                }
+                return null;
+            }
+        };
+        Thread noteLastSessionThread = new Thread(noteLastSessionTask);
+        noteLastSessionThread.start();
+
+        System.out.println(TAG + "Time taken to load Note Last Session -> " + (System.currentTimeMillis() - startDisplay) + "ms");
+
+        novelLastSession = NovelChapterDao.retrieveLastSession(userData.getId());
+
+        if (novelLastSession != null) {
+            lastSessionChapter = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+                    novelChapter.getId() == novelLastSession.getChapterId()).toList().get(0);
+            assert lastSessionChapter != null;
+            System.out.println(TAG + "NovelLastSessionChapter -> " + lastSessionChapter);
+            lastSessionNovel = NovelsDao.getNovel(lastSessionChapter.getNovelId());
+            System.out.println(TAG + "NovelLastSessionNovel -> " + lastSessionNovel);
+            lastSessionChapters = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+                    novelChapter.getNovelId() == lastSessionNovel.getNovel().getId()).collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
+
+//        Task<Void> novelLastSessionTask = new Task<>() {
+//            @Override
+//            protected Void call() {
+//                if (novelLastSession != null) {
+//                    lastSessionChapter = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+//                            novelChapter.getId() == novelLastSession.getChapterId()).toList().get(0);
+//                    assert lastSessionChapter != null;
+//                    Platform.runLater(() -> {
+//                        lastSessionNovel = NovelsDao.getNovel(lastSessionChapter.getNovelId());
+//                        lastSessionChapters = novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
+//                                novelChapter.getNovelId() == lastSessionNovel.getNovel().getId()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+//                    });
+//                }
+//                return null;
+//            }
+//        };
+//        Thread novelLastSessionThread = new Thread(novelLastSessionTask);
+//        novelLastSessionThread.start();
+        System.out.println(TAG + "Time taken to load Novel Last Session -> " + (System.currentTimeMillis() - startDisplay) + "ms");
     }
 
     public String getUserId() {
@@ -92,12 +153,16 @@ public class LandingScreenHomeVM implements ViewModel {
         this.favoriteSubjects = favoriteSubjects;
     }
 
-    public NoteLastSection getLastSession() {
-        return noteLastSection;
+    public NoteLastSession getNoteLastSession() {
+        return noteLastSession;
     }
 
-    public NoteSection getNoteSection() {
-        return noteSection;
+    public NovelLastSession getNovelLastSession() {
+        return novelLastSession;
+    }
+
+    public NoteSection getNoteLastSection() {
+        return noteLastSection;
     }
 
     public NoteTopic getSelectedNoteTopic() {
@@ -141,5 +206,17 @@ public class LandingScreenHomeVM implements ViewModel {
 
     public HashMap<Integer, ObservableList<NoteSubTopic>> getNoteSubTopics() {
         return noteSubTopics;
+    }
+
+    public NovelChapter getLastSessionChapter() {
+        return lastSessionChapter;
+    }
+
+    public NovelModel getLastSessionNovel() {
+        return lastSessionNovel;
+    }
+
+    public ObservableList<NovelChapter> getLastSessionChapters() {
+        return lastSessionChapters;
     }
 }

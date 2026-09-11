@@ -3,6 +3,7 @@ module com.scholarly.utme {
     requires javafx.fxml;
     requires javafx.web;
     requires javafx.media;
+    requires javafx.swing;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
@@ -34,8 +35,18 @@ module com.scholarly.utme {
     requires latex.maven.plugin;
     requires latex.converter;
     requires com.sandec.mdfx;
+    requires flexmark;
+    requires flexmark.util.ast;
+    requires flexmark.util.data;
+    requires flexmark.all;
+    requires flexmark.ext.abbreviation;
 //    requires org.scilab.forge;
-    requires com.luciad.imageio.webp;
+    requires com.twelvemonkeys.imageio.core;
+    requires com.twelvemonkeys.common.image;
+    requires com.twelvemonkeys.common.io;
+    requires com.twelvemonkeys.common.lang;
+    requires com.twelvemonkeys.imageio.metadata;
+    requires com.twelvemonkeys.imageio.webp;
 
     requires webcam.capture;
     requires unirest.java;

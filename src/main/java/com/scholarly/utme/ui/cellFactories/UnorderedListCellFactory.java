@@ -8,8 +8,13 @@ import javafx.util.Callback;
 
 public class UnorderedListCellFactory implements Callback<ListView<UnorderedListItem>, ListCell<UnorderedListItem>> {
 
+    private final String subjectColor;
+    public UnorderedListCellFactory(String subjectColor) {
+        this.subjectColor = subjectColor;
+    }
+
     @Override
     public ListCell<UnorderedListItem> call(ListView<UnorderedListItem> param) {
-        return new UnorderedListItemCell();
+        return new UnorderedListItemCell(subjectColor);
     }
 }

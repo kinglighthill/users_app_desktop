@@ -1,8 +1,8 @@
 package com.scholarly.utme.controller.novel_screens;
 
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
-import com.scholarly.utme.data.model.novels.Novel;
-import com.scholarly.utme.data.model.novels.NovelCategory;
+import com.scholarly.utme.data.model.novels.NovelCategoryGenre;
+import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.ui.cellFactories.NovelListCellFactory;
 import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.Screens;
@@ -24,13 +24,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @FxmlPath("/layouts/novel_screens/NovelScreen.fxml")
@@ -64,72 +66,135 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         initializeViews();
         initializeFont();
 
-        viewModel.getGenres().forEach(genre -> {
-            List<NovelCategory> categories = viewModel.getGenreCategoryMap().get(genre);
+        Map<Integer, ListView<NovelModel>> listViews = new HashMap<>();
+        AtomicReference<VBox> selectNovelBox = new AtomicReference<>();
+        AtomicInteger selectedListViewIndex = new AtomicInteger();
 
-            categories.forEach(novelCategory -> {
+        for (Map.Entry<NovelCategoryGenre, List<NovelModel>> entry : viewModel.getGenresCategories().entrySet()) {
+            NovelCategoryGenre novelCategoryGenre = entry.getKey();
+            ObservableList<NovelModel> novelModels = FXCollections.observableArrayList(entry.getValue());
 
-                String categoryGenreTitle = novelCategory.getCategory() + " " + genre.getGenre();
-//                System.out.println(TAG + categoryGenreTitle);
+            String categoryGenreTitle = novelCategoryGenre.getTitle();
 
-                ObservableList<Novel> novels = viewModel.getNovels(novelCategory, genre);
+            if (!novelModels.isEmpty()) {
+                Panel panel = new Panel();
 
-                if (!novels.isEmpty()) {
-                    Panel panel = new Panel();
+                Label header = new Label(categoryGenreTitle);
+                header.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
 
-                    Label header = new Label(categoryGenreTitle);
-                    header.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
+                Button viewAllButton = new Button("View all");
+                viewAllButton.setTextFill(Paint.valueOf("#12AF20"));
+                viewAllButton.setStyle("-fx-border-color: #12AF20; -fx-border-radius: 5;");
+                viewAllButton.setPadding(new Insets(5, 10, 5, 10));
+                viewAllButton.setBackground(Background.EMPTY);
+                viewAllButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
+                viewAllButton.setOnAction(event -> {
+                    ViewSwitcher.passData(new NovelGridScreenController.InitialData(categoryGenreTitle, novelModels));
+                    ViewSwitcher.showScreen(View.NOVEL_GRID_SCREEN);
+                });
 
-                    Button viewAllButton = new Button("View all");
-                    viewAllButton.setTextFill(Paint.valueOf("#12AF20"));
-                    viewAllButton.setStyle("-fx-border-color: #12AF20; -fx-border-radius: 5;");
-                    viewAllButton.setPadding(new Insets(5, 10, 5, 10));
-                    viewAllButton.setBackground(Background.EMPTY);
-                    viewAllButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
-                    viewAllButton.setOnAction(event -> {
-                        ViewSwitcher.passData(new NovelGridScreenController.InitialData(categoryGenreTitle, novels));
-                        ViewSwitcher.showScreen(View.NOVEL_GRID_SCREEN);
+                ListView<NovelModel> listView = new ListView<>(FXCollections.observableArrayList(novelModels.stream().limit(4).collect(Collectors.toList())));
+                listView.setOrientation(Orientation.HORIZONTAL);
+                listView.setPrefSize(600, 270);
+                listView.setBackground(Background.EMPTY);
+                listView.setCellFactory(new NovelListCellFactory());
+                listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                    viewModel.setSelectedNovelModel(newValue);
+                });
+                listViews.put(novelCategoryGenre.hashCode(), listView);
+
+                TilePane tilePane = new TilePane(Orientation.HORIZONTAL, 15, 10);
+
+                novelModels.stream().limit(4).forEach(novelModel -> {
+                    VBox novelVBox = new VBox(10);
+                    novelVBox.setPadding(new Insets(10, 15, 10, 15));
+
+                    ImageView novelImage = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/drawable/novel_images/" + novelModel.getNovel().getImagePath())).toString()));
+                    novelImage.setFitHeight(150);
+                    novelImage.setFitWidth(90);
+
+                    StackPane stackPane = new StackPane(novelImage);
+                    stackPane.setStyle("-fx-background-color: #D7D7D7; -fx-background-radius: 8;");
+                    StackPane.setMargin(novelImage, new Insets(10));
+
+                    Label name = new Label("Name");
+                    name.setText(novelModel.getNovel().getName());
+                    name.setTextFill(Paint.valueOf("#000000"));
+                    name.setPrefWidth(120);
+                    name.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 12));
+
+                    Label chapters = new Label("Chapters");
+                    chapters.setText(novelModel.getChapterText());
+                    chapters.setTextFill(Paint.valueOf("#12AF20"));
+
+                    VBox bottomBox = new VBox(name, chapters);
+                    bottomBox.setPadding(new Insets(5, 0, 0, 0));
+
+                    novelVBox.getChildren().addAll(stackPane, bottomBox);
+                    novelVBox.setOnMouseClicked(event -> {
+                        ((TilePane) panel.getBottom()).getChildren().forEach(node -> node.setStyle(null));
+
+                        if (selectedListViewIndex.get() != 0 && selectedListViewIndex.get() !=  novelCategoryGenre.hashCode()) {
+                            ListView<NovelModel> selectedListView = listViews.get(selectedListViewIndex.get());
+
+                            if (selectedListView != null) {
+                                selectedListView.getSelectionModel().clearSelection();
+                                selectNovelBox.get().setStyle(null);
+                            }
+                        }
+
+                        if (viewModel.getSelectedNovelModel() == novelModel) {
+                            novelVBox.setStyle(null);
+                            viewModel.setSelectedNovelModel(null);
+                        } else {
+                            novelVBox.setStyle("-fx-border-color: #12AF20; -fx-border-radius: 8;");
+                            System.out.println(TAG + "NovelVbox -> " + novelVBox);
+                            viewModel.setSelectedNovelModel(novelModel);
+                        }
+
+                        selectedListViewIndex.set(novelCategoryGenre.hashCode());
+                        selectNovelBox.set(novelVBox);
                     });
 
-                    ListView<Novel> listView = new ListView<>(FXCollections.observableArrayList(novels.stream().limit(4).collect(Collectors.toList())));
-                    listView.setOrientation(Orientation.HORIZONTAL);
-                    listView.setPrefSize(600, 270);
-                    listView.setBackground(Background.EMPTY);
-                    listView.setCellFactory(new NovelListCellFactory());
-                    listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                        viewModel.setSelectedNovel(newValue);
-                    });
+                    tilePane.getChildren().add(novelVBox);
+                });
 
-                    panel.setLeft(header);
-                    panel.setRight(viewAllButton);
-                    panel.setBottom(listView);
+                panel.setLeft(header);
+                panel.setRight(viewAllButton);
+                panel.setBottom(tilePane);
 
-                    novelsVBox.getChildren().add(panel);
+                novelsVBox.getChildren().add(panel);
+            }
+        }
 
-                }
-//                System.out.println(TAG + "Novels with category: " + novelCategory.getCategory() + " AND genre: " + genre.getGenre() + " ARE -> " + novels);
-            });
-        });
+        viewModel.selectedNovelModelProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                authorIcon.setVisible(true);
+                chaptersIcon.setVisible(true);
+                timeIcon.setVisible(true);
+                readButton.setVisible(true);
+                timeText.setVisible(true);
 
+                novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getNovel().getImagePath()).toString()));
+                novelDescription.setText(newValue.getNovel().getAbout());
+                authorLabel.setText(viewModel.getAuthor(newValue.getNovel()).getName());
+                chaptersLabel.setText(newValue.getChapterText());
+            } else {
+                authorIcon.setVisible(false);
+                chaptersIcon.setVisible(false);
+                timeIcon.setVisible(false);
+                readButton.setVisible(false);
+                timeText.setVisible(false);
 
-        viewModel.selectedNovelProperty().addListener(((observable, oldValue, newValue) -> {
-            authorIcon.setVisible(true);
-            chaptersIcon.setVisible(true);
-            timeIcon.setVisible(true);
-            readButton.setVisible(true);
-            timeText.setVisible(true);
-
-            novelImage.setImage(new Image(getClass().getResource("/drawable/novel_images/" + newValue.getImagePath()).toString()));
-            novelDescription.setText(newValue.getAbout());
-            authorLabel.setText(viewModel.getAuthor(newValue).getName());
-            chaptersLabel.setText(newValue.getChaptersCount() + " chapters");
-
+                novelImage.setImage(null);
+                novelDescription.setText(null);
+                authorLabel.setText(null);
+                chaptersLabel.setText(null);
+            }
         }));
-
 
         dismissButton.setOnAction(event -> {
             if (dontShowButton.isSelected()) {
@@ -140,10 +205,9 @@ public class NovelScreenController implements FxmlView<NovelScreenVM>, Initializ
         });
 
         readButton.setOnAction(event -> {
-            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getSelectedNovel(), viewModel.getAuthor(viewModel.getSelectedNovel())));
+            ViewSwitcher.passData(new NovelChapterListController.InitialData(viewModel.getSelectedNovelModel()));
             ViewSwitcher.showScreen(View.NOVEL_CHAPTER_LIST_SCREEN);
         });
-
     }
 
     private void initializeViews() {

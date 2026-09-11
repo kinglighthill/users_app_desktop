@@ -37,7 +37,7 @@
 
     <center>
         <VBox spacing="10">
-            <Label text="Chapters">
+            <Label text="Text Breakdown">
                 <font>
                     <Font name="System Bold" size="20"/>
                 </font>

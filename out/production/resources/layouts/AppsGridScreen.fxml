@@ -9,6 +9,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.GridView?>
+<?import javafx.scene.image.ImageView?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.scholarly.utme.controller.AppsGridScreenController"
             prefHeight="400.0" prefWidth="600.0">
@@ -31,7 +32,19 @@
 
     <center>
         <AnchorPane style="-fx-background-color: white;">
-            <TextField prefHeight="40" minWidth="300" promptText="Enter a keyword" style="-fx-border-radius: 10;" AnchorPane.leftAnchor="40" AnchorPane.topAnchor="20"/>
+            <StackPane alignment="CENTER_LEFT" AnchorPane.leftAnchor="40" AnchorPane.topAnchor="20">
+                <TextField fx:id="searchTextField" prefHeight="40" minWidth="300" promptText="Enter a keyword" style="-fx-border-radius: 10;">
+                    <font>
+                        <Font size="15"/>
+                    </font>
+                </TextField>
+                <ImageView fx:id="searchIcon" preserveRatio="true" pickOnBounds="true" StackPane.alignment="CENTER_RIGHT">
+                    <StackPane.margin>
+                        <Insets right="20"/>
+                    </StackPane.margin>
+                </ImageView>
+            </StackPane>
+
             <GridView fx:id="appsGrid" cellWidth="250" cellHeight="200" verticalCellSpacing="10" horizontalCellSpacing="15"
                       AnchorPane.leftAnchor="30" AnchorPane.topAnchor="70" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="20"/>
         </AnchorPane>

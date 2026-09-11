@@ -4,12 +4,8 @@ import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.TheoryQuestionDao;
 import com.scholarly.utme.data.dao.YearsDao;
 import com.scholarly.utme.data.dao.newDb.TopicDao;
-import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.Year;
-import com.scholarly.utme.data.model.newDb.ObjectiveSubject;
-import com.scholarly.utme.data.model.newDb.PQSubject;
-import com.scholarly.utme.data.model.newDb.PQTopic;
-import com.scholarly.utme.data.model.newDb.Subject;
+import com.scholarly.utme.data.model.newDb.*;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -58,6 +54,10 @@ public class SubjectListItemVM implements ViewModel {
         this.shuffleQuestions.set(shuffleQuestions);
     }
 
+    public boolean isFavoriteSubject() {
+        return favoriteSubject.get();
+    }
+
     public enum Type {
         OBJECTIVE,
         THEORY
@@ -68,7 +68,7 @@ public class SubjectListItemVM implements ViewModel {
     private SimpleStringProperty subjectShortTitle = new SimpleStringProperty("");
     private SimpleStringProperty subjectColorName = new SimpleStringProperty("");
     private ObservableList<Year> years;
-    private ObservableList<PQTopic> topics;
+    private ObservableList<PQTopic> topics = FXCollections.observableArrayList();
 
     private ObservableList<Integer> questionNumbers = FXCollections.observableArrayList();
 
@@ -80,6 +80,7 @@ public class SubjectListItemVM implements ViewModel {
     private ObjectProperty<List<Integer>> selectedTopicsProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Year> selectedYearProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Integer> selectedNumberOfQuestions = new SimpleObjectProperty<>();
+    private SimpleBooleanProperty favoriteSubject = new SimpleBooleanProperty(false);
 
     private PQSubject subject;
     private BehaviorSubject<SubjectState> subjectState = BehaviorSubject.create();
@@ -88,10 +89,11 @@ public class SubjectListItemVM implements ViewModel {
         this.subject = subject;
         subjectName.set(subject.getTitle());
         subjectShortTitle.set(subject.getShortTitle());
-        subjectColorName.set(getColorName(subject.getShortTitle()));
+        subjectColorName.set(subject.getColorCode());
+        favoriteSubject.set(subject.isFavorite());
 
 //        years = YearsDao.getAvailableYearsForSubject(type, subject.getId());
-        topics = TopicDao.getTopicsForSubject(subject.getSubjectId());
+//        topics = TopicDao.getTopicsForSubject(subject.getSubjectId());
 
         subjectState.onNext(new SubjectState(subject, type, subjectSelected.get(), shuffleQuestions.get(), shuffleOptions.get(), selectedTopicsProperty.get(), selectedYearProperty.get(), selectedNumberOfQuestions.get()));
 
@@ -225,6 +227,9 @@ public class SubjectListItemVM implements ViewModel {
                     })
                     .blockingSubscribe(
                             numberList -> {
+                                if (numberList.size() == 0) {
+                                    questionNumbers.add(0);
+                                }
                                 questionNumbers.addAll(numberList);
                             },
                             error -> {}
@@ -243,11 +248,21 @@ public class SubjectListItemVM implements ViewModel {
                     })
                     .blockingSubscribe(
                             numberList -> {
+                                if (numberList.size() == 0) {
+                                    questionNumbers.add(0);
+                                }
                                 questionNumbers.addAll(numberList);
                             },
                             error -> {}
                     );
         }
+    }
+
+    public void loadTopicsForYear(Year year) {
+        topics.clear();
+        System.out.println(TAG + "Got Year -> " + year.getYear());
+        topics.addAll(Objects.requireNonNull(TopicDao.getPQTopicsForSubjectAndYear(subject.getId(), year.getId())));
+        System.out.println(TAG + "Got Topics -> " + topics);
     }
 
     public void loadQuestionNumbersList(List<Integer> topicIdsList) {
@@ -258,13 +273,26 @@ public class SubjectListItemVM implements ViewModel {
                     .subscribeOn(Schedulers.io())
                     .map(it -> {
                         List<Integer> numberList = new ArrayList<>();
-                        for ( int i = 10; i <= it.size(); i+=10) {
-                            numberList.add(i);
+                        if (it.size() > 50) {
+                            for ( int i = 10; i <= it.size(); i+=10) {
+                                numberList.add(i);
+                            }
+                        } else if (it.size() < 50 && it.size() > 10){
+                            for ( int i = 5; i <= it.size(); i+=5) {
+                                numberList.add(i);
+                            }
+                        } else {
+                            for ( int i = 0; i <= it.size(); i++) {
+                                numberList.add(i);
+                            }
                         }
                         return numberList;
                     })
                     .blockingSubscribe(
                             numberList -> {
+                                if (numberList.size() == 0) {
+                                    questionNumbers.add(0);
+                                }
                                 questionNumbers.addAll(numberList);
                             },
                             error -> {}
@@ -282,6 +310,9 @@ public class SubjectListItemVM implements ViewModel {
                     })
                     .blockingSubscribe(
                             numberList -> {
+                                if (numberList.size() == 0) {
+                                    questionNumbers.add(0);
+                                }
                                 questionNumbers.addAll(numberList);
                             },
                             error -> {}

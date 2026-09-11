@@ -1,6 +1,7 @@
 package com.scholarly.utme.ui.utils;
 
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -47,8 +48,15 @@ public class Alerts {
         dialog.setTitle(windowTitle);
         dialog.setHeaderText(header);
 
+        VBox content = new VBox();
+        Label contentText = new Label(description);
+        contentText.setFont(Font.font(13));
+
+        content.getChildren().add(contentText);
+
         DialogPane dialogPane = new DialogPane();
-        dialogPane.setContentText(description);
+//        dialogPane.setContentText(description);
+        dialogPane.setContent(content);
         dialogPane.setStyle("-fx-background-color: white; -fx-background-radius: 10;");
         dialogPane.setMinSize(350, 120);
         dialogPane.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
@@ -66,7 +74,7 @@ public class Alerts {
         dialog.setTitle(windowTitle);
         dialog.setHeaderText(header);
 
-        VBox activateDialog =new VBox(25);
+        VBox activateDialog = new VBox(25);
         activateDialog.setMaxSize(380, 450);
         activateDialog.setPrefSize(250, 400);
         activateDialog.setStyle("fx-background-color: white; -fx-background-radius: 8;");
@@ -142,7 +150,8 @@ public class Alerts {
         activateNowButton.setFont(new Font(16));
         activateNowButton.setOnAction(event -> {
             dialog.close();
-            ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
         activateDialog.getChildren().addAll(activateHeaderText, innerVBox, activateNowButton);

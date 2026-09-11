@@ -65,7 +65,7 @@ public class ObjectiveQuestionDao {
             query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE subject_id = " + subjectId + " AND year_id = " + yearId + topicIdClause + " ORDER BY RANDOM()";
         }
 
-//        System.out.println(TAG + "Query = " + query);
+//        System.out.println(TAG + "ObjectiveQuestion Query with topic ids query = " + query);
 
         try (ResultSet rs = databaseService.executeQuery(query)){
             questions.clear();
@@ -148,10 +148,10 @@ public class ObjectiveQuestionDao {
         }
     }
 
-    public static ObjectiveQuestion getQuestionWithYearAndQuestionNum(int yearId, int questionNum) {
+    public static ObjectiveQuestion getNoteCBTQuestion(int subjectId, int yearId, int questionNum) {
         ObservableList<ObjectiveQuestion> questions = FXCollections.observableArrayList();
 
-        String query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE " + yearIdColumn + " = " + yearId + " AND " + questionNumberColumn + " = " + questionNum;
+        String query = "SELECT * FROM " + Tables.PQ_OBJECTIVE_QUESTIONS + " WHERE " + yearIdColumn + " = " + yearId + " AND " + questionNumberColumn + " = " + questionNum + " AND " + subjectIdColumn + " = " + subjectId;
 
         System.out.println(TAG + "Objective Question Query getQuestionWithNoteSubjectId -> " + query);
 

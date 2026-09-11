@@ -7,7 +7,7 @@ import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import javafx.application.Application;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -20,15 +20,11 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.Constants.*;
 
 public class MainApplication extends Application {
     private static final String TAG = "MainApplication: ";
-
-    private final Preferences preferences = AppPreferences.getPreferences();
-
 
     private Webcam webcam;
 
@@ -59,22 +55,23 @@ public class MainApplication extends Application {
 
 
         stage.setOnCloseRequest(event -> {
-            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to exit?");
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm Exit", null, "Are you sure you want to exit the application?");
 
             dialog.showAndWait().filter(buttonType -> buttonType != ButtonType.YES).ifPresentOrElse(
                     buttonType -> event.consume(), () -> {
-                        System.out.println(TAG + "CurrentView: " + ViewSwitcher.getCurrentView());
-                        preferences.putBoolean(PREF_KEY_LOGGED_USER_OUT, ViewSwitcher.getCurrentView() == View.AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.WELCOME_SCREEN);
+                        System.out.println(TAG + "Screen showing before exit -> " + ViewSwitcher.getCurrentView());
+                        PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, ViewSwitcher.getCurrentView() == View.AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.PRE_AUTHENTICATION_SCREEN || ViewSwitcher.getCurrentView() == View.WELCOME_SCREEN);
                     }
             );
         });
 
-        boolean firstTimeUser = preferences.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
+        boolean firstTimeUser = PreferencesManager.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
         if (firstTimeUser) {
             ViewSwitcher.showScreen(View.WELCOME_SCREEN);
         } else {
-            boolean loggedUserOut = preferences.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
-            if (loggedUserOut) {
+            boolean userLoggedOut = PreferencesManager.getBoolean(PREF_KEY_LOGGED_USER_OUT, false);
+            System.out.println(TAG + "Logged Out User -> " + userLoggedOut);
+            if (userLoggedOut) {
                 ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                 ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
             } else {

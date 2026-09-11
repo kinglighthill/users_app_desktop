@@ -2,12 +2,13 @@ package com.scholarly.utme.data.dao.newDb;
 
 
 import com.scholarly.utme.data.DatabaseService;
-import com.scholarly.utme.data.model.newDb.NoteLastSection;
+import com.scholarly.utme.data.model.newDb.NoteLastSession;
 import com.scholarly.utme.data.model.newDb.NoteSection;
 import com.scholarly.utme.data.model.newDb.Section;
 import com.scholarly.utme.data.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.json.JSONObject;
 
 
 import java.sql.*;
@@ -59,7 +60,9 @@ public class SectionDao {
                         rs.getInt(parentSectionIdColumn),
                         rs.getInt(mainSectionOrderColumn),
                         rs.getInt(childSectionOrderColumn),
-                        rs.getInt(contentViewTypeColumn)
+                        rs.getInt(contentViewTypeColumn),
+                        new JSONObject()
+//                        rs.getObject(contentColumn, JSONObject.class)
                 );
 
                 noteSections.add(section);
@@ -93,7 +96,10 @@ public class SectionDao {
                         rs.getInt(parentSectionIdColumn),
                         rs.getInt(mainSectionOrderColumn),
                         rs.getInt(childSectionOrderColumn),
-                        rs.getInt(contentViewTypeColumn));
+                        rs.getInt(contentViewTypeColumn),
+                        new JSONObject()
+//                        rs.getObject(contentColumn, JSONObject.class)
+                );
             }
             return section;
         } catch (Exception e) {
@@ -105,9 +111,9 @@ public class SectionDao {
         }
     }
 
-    public static int insertLastSection(NoteLastSection section) {
+    public static int insertLastSection(NoteLastSession section) {
         String query = CRUDHelper.insertOrReplaceQuery(
-                Tables.NOTE_LAST_SECTION,
+                Tables.NOTE_LAST_SESSION,
                 new String[]{"_id", "section_id","section_title", "uid"},
                 new Object[]{section.getId(), section.getSectionId(), section.getSectionTitle(), section.getUserId()},
                 new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.VARCHAR});
@@ -125,13 +131,13 @@ public class SectionDao {
 
     }
 
-    public static NoteLastSection retrieveLastSection(String userId) {
-        NoteLastSection lastSection = null;
-        String query = "SELECT * FROM " + Tables.NOTE_LAST_SECTION + " WHERE " + userIdColumn + " = '" + userId + "'";
+    public static NoteLastSession retrieveLastSession(String userId) {
+        NoteLastSession lastSection = null;
+        String query = "SELECT * FROM " + Tables.NOTE_LAST_SESSION + " WHERE " + userIdColumn + " = '" + userId + "'";
 
         try(ResultSet rs = databaseService.executeQuery(query)) {
             while (rs.next()) {
-                lastSection = new NoteLastSection(
+                lastSection = new NoteLastSession(
                         rs.getInt(idColumn),
                         rs.getInt(sectionIdColumn),
                         rs.getString(sectionTitleColumn),

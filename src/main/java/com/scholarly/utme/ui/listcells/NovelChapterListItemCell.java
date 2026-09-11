@@ -18,7 +18,6 @@ import java.io.IOException;
 public class NovelChapterListItemCell extends ListCell<NovelChapter> {
 
     public Panel panel;
-    public Label chapterIndex;
     public Label chapterTitle;
     public ImageView padlockIcon;
 
@@ -28,11 +27,9 @@ public class NovelChapterListItemCell extends ListCell<NovelChapter> {
         selectedProperty().addListener(((observableValue, oldValue, newValue) -> {
             if (newValue) {
                 panel.setStyle("-fx-background-color: #12AF20; -fx-background-radius: 5;");
-                chapterIndex.setTextFill(Paint.valueOf("#FFFFFF"));
                 chapterTitle.setTextFill(Paint.valueOf("#FFFFFF"));
             } else {
                 panel.setStyle("-fx-background-color: #F1F1F1; -fx-background-radius: 5;");
-                chapterIndex.setTextFill(Paint.valueOf("#000000"));
                 chapterTitle.setTextFill(Paint.valueOf("#000000"));
             }
         }));
@@ -59,16 +56,7 @@ public class NovelChapterListItemCell extends ListCell<NovelChapter> {
             setBackground(Background.EMPTY);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            if (item.getPosition() > 0) {
-                chapterIndex.setText("Chapter " + item.getPosition());
-                if (item.getTitle() != null) {
-                    chapterIndex.setText("Chapter " + item.getPosition() + ": ");
-                }
-            } else {
-                chapterIndex.setText(null);
-            }
-
-            chapterTitle.setText(item.getTitle());
+            chapterTitle.setText(item.getChapterHeading());
 
             if (item.isFree()) {
                 padlockIcon.setImage(null);
@@ -76,7 +64,6 @@ public class NovelChapterListItemCell extends ListCell<NovelChapter> {
                 padlockIcon.setImage(new Image(getClass().getResource("/drawable/novel_images/padlock_icon.png").toString()));
             }
 
-            chapterIndex.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
             chapterTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.FOURTEEN.size));
 
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);

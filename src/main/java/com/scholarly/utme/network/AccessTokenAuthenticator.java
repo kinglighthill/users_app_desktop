@@ -4,32 +4,30 @@ import com.google.gson.Gson;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.network.model.RefreshRequest;
 import com.scholarly.utme.ui.utils.Alerts;
-import com.scholarly.utme.util.AppPreferences;
 import com.scholarly.utme.util.Constants;
+import com.scholarly.utme.util.PreferencesManager;
 import io.reactivex.rxjava3.annotations.NonNull;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
 import static com.scholarly.utme.util.Constants.*;
 
 public class AccessTokenAuthenticator implements Authenticator {
     private static final String TAG = "AccessTokenAuthenticator: ";
-    private static final Preferences preferences = AppPreferences.getPreferences();
     private static final OkHttpClient httpClient = NetworkService.getHttpClient();
     @Override
     public Request authenticate(Route route, Response response) throws IOException {
-        final String accessToken = preferences.get(Constants.PREF_KEY_ACCESS_TOKEN, "");
+        final String accessToken = PreferencesManager.get(Constants.PREF_KEY_ACCESS_TOKEN, "");
         if (isRequestWithAccessToken(response) || accessToken == null || accessToken.isEmpty()) {
             return null;
         }
 
         synchronized (this) {
-            final String newAccessToken = preferences.get(Constants.PREF_KEY_ACCESS_TOKEN, "");
+            final String newAccessToken = PreferencesManager.get(Constants.PREF_KEY_ACCESS_TOKEN, "");
             // Access Token is refreshed in another thread
             if (!accessToken.equals(newAccessToken)) {
                 return newRequestWithAccessToken(response.request(), newAccessToken);
@@ -37,7 +35,7 @@ public class AccessTokenAuthenticator implements Authenticator {
 
             // Need to refresh an Access Token
             refreshAccessToken(accessToken);
-            final String updatedAccessToken = preferences.get(PREF_KEY_ACCESS_TOKEN, "");
+            final String updatedAccessToken = PreferencesManager.get(PREF_KEY_ACCESS_TOKEN, "");
             return newRequestWithAccessToken(response.request(), updatedAccessToken);
         }
     }
@@ -58,8 +56,8 @@ public class AccessTokenAuthenticator implements Authenticator {
         String END_POINT = "/login/refresh";
 
         System.out.println(TAG + "Old Access Token -> " + accessToken);
-        System.out.println(TAG + "Old Refresh Token -> " + preferences.get(PREF_KEY_REFRESH_TOKEN, ""));
-        RefreshRequest refreshRequest = new RefreshRequest(preferences.get(PREF_KEY_REFRESH_TOKEN, ""));
+        System.out.println(TAG + "Old Refresh Token -> " + PreferencesManager.get(PREF_KEY_REFRESH_TOKEN, ""));
+        RefreshRequest refreshRequest = new RefreshRequest(PreferencesManager.get(PREF_KEY_REFRESH_TOKEN, ""));
 
         Gson gson = new Gson();
         String json = gson.toJson(refreshRequest);
@@ -83,10 +81,10 @@ public class AccessTokenAuthenticator implements Authenticator {
 
                     if (refreshResponse.getStatus().equalsIgnoreCase("success")) {
                         // TODO: Encrypt and Save token with Java Keystore
-                        preferences.put(PREF_KEY_ACCESS_TOKEN, refreshResponse.getData().getAccessToken());
-                        preferences.put(PREF_KEY_REFRESH_TOKEN, refreshResponse.getData().getRefreshToken());
-                        System.out.println(TAG + "New Access Token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN, ""));
-                        System.out.println(TAG + "New Refresh Token -> " + preferences.get(PREF_KEY_REFRESH_TOKEN, ""));
+                        PreferencesManager.put(PREF_KEY_ACCESS_TOKEN, refreshResponse.getData().getAccessToken());
+                        PreferencesManager.put(PREF_KEY_REFRESH_TOKEN, refreshResponse.getData().getRefreshToken());
+                        System.out.println(TAG + "New Access Token -> " + PreferencesManager.get(PREF_KEY_ACCESS_TOKEN, ""));
+                        System.out.println(TAG + "New Refresh Token -> " + PreferencesManager.get(PREF_KEY_REFRESH_TOKEN, ""));
 
                     } else if (refreshResponse.getStatus().equalsIgnoreCase("error")) {
                         Platform.runLater(() -> {

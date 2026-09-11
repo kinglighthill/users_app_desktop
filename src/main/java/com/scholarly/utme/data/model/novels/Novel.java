@@ -1,7 +1,6 @@
 package com.scholarly.utme.data.model.novels;
 
 public class Novel {
-
     private int id;
     private String imagePath;
     private String name;

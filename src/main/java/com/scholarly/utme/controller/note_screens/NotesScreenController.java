@@ -1,6 +1,8 @@
 package com.scholarly.utme.controller.note_screens;
 
 
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.data.dao.SubjectDao;
 import com.scholarly.utme.data.model.Highlights;
 import com.scholarly.utme.data.model.Note;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
@@ -11,7 +13,6 @@ import com.scholarly.utme.data.model.newDb.contentViewType.*;
 import com.scholarly.utme.ui.cellFactories.NoteContentListCellFactory;
 import com.scholarly.utme.ui.cellFactories.UnorderedListCellFactory;
 import com.scholarly.utme.ui.utils.*;
-import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.viewmodels.note_screens.NotesScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -51,7 +52,6 @@ import org.jsoup.nodes.Document;
 
 import java.net.URL;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
@@ -143,7 +143,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
     private ProgressIndicator refreshNoteProgressIndicator;
 
     final String IDLE_BUTTON_STYLE = "-fx-background-color: #ffffff; -fx-background-radius: 0; -fx-border-radius: 0;";
-    final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0;";
+    final String HOVERED_BUTTON_STYLE = "-fx-background-color: #ECF2EB; -fx-background-radius: 0; -fx-border-radius: 0; -fx-cursor: hand;";
     final String PRESSED_STYLE = "-fx-background-color: #759D6C; -fx-background-radius: 0; -fx-border-radius: 0;";
 
     private Section selectedSection;
@@ -173,12 +173,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
         subjectLabel.setText(viewModel.getSubject().getTitle());
         noteTopicLabel.setText(viewModel.getTopic().getTitle());
+        noteTopicLabel.setTextFill(Paint.valueOf(SubjectDao.getNoteSubjectColor(viewModel.getSubject().getId())));
 
         ObservableList<NoteSection> noteSections = viewModel.getNoteSections().get(viewModel.getTopic().getId());
         noteContentList.setCellFactory(new NoteContentListCellFactory());
         noteContentList.setItems(noteSections);
         noteContentList.setSelectionModel(new NoSelectionModel<>());
-        noteContentList.setPadding(new Insets(10, 5, 5, 5));
+        noteContentList.setPadding(new Insets(10, 20, 30, 15));
 
         if (viewModel.getSelectedSubtopicSection() != null) {
             noteContentList.scrollTo(viewModel.getSelectedSubtopicSection());
@@ -187,29 +188,21 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         if (viewModel.getSelectedSection() != null) {
             int lastSectionIndex = noteSections.indexOf(noteSections.stream().filter(section ->
                     section.getId() == viewModel.getSelectedSection().getId()).toList().get(0));
-            System.out.println(TAG + "Note Section Index -> " + lastSectionIndex);
+            System.out.println(TAG + "Note Last Section Index -> " + lastSectionIndex);
             noteContentList.scrollTo(lastSectionIndex);
         }
 
-        noteContentList.setOnScrollFinished(event -> {
-            System.out.println(TAG + "Scroll Y-axis value -> " + event.getY());
-            System.out.println(TAG + "Scroll Screen-Y value -> " + event.getScreenY());
-            System.out.println(TAG + "Scroll Delta-Y value -> " + event.getDeltaY());
-            System.out.println(TAG + "Scroll Multiplier-Y value -> " + event.getMultiplierY());
-            System.out.println(TAG + "Scroll TextDelta-Y Units value -> " + event.getTextDeltaYUnits());
-            System.out.println(TAG + "Scroll TextDelta-Y value -> " + event.getTextDeltaY());
-            System.out.println(TAG + "Scroll Total Delta-Y value -> " + event.getTotalDeltaY());
-            System.out.println(TAG + "Scroll Scene-Y value -> " + event.getSceneY());
-
-        });
-
-//        noteContentList.skinProperty().addListener(((observable, oldValue, newValue) -> {
-//            if (newValue != null) {
-//                System.out.println(TAG + "New Skin value -> " + newValue);
-//                int firstVisibleIndex = getFirstVisibleIndex(newValue);
-//                System.out.println("First Visible Index: " + firstVisibleIndex);
-//            }
-//        }));
+//        noteContentList.setOnScrollFinished(event -> {
+//            System.out.println(TAG + "Scroll Y-axis value -> " + event.getY());
+//            System.out.println(TAG + "Scroll Screen-Y value -> " + event.getScreenY());
+//            System.out.println(TAG + "Scroll Delta-Y value -> " + event.getDeltaY());
+//            System.out.println(TAG + "Scroll Multiplier-Y value -> " + event.getMultiplierY());
+//            System.out.println(TAG + "Scroll TextDelta-Y Units value -> " + event.getTextDeltaYUnits());
+//            System.out.println(TAG + "Scroll TextDelta-Y value -> " + event.getTextDeltaY());
+//            System.out.println(TAG + "Scroll Total Delta-Y value -> " + event.getTotalDeltaY());
+//            System.out.println(TAG + "Scroll Scene-Y value -> " + event.getSceneY());
+//
+//        });
 
         noSubtopicsLabel.setVisible(viewModel.getSubTopics().get(viewModel.getTopic().getId()).isEmpty());
 
@@ -225,6 +218,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             button.setAlignment(Pos.BASELINE_LEFT);
             button.setMaxWidth(Double.MAX_VALUE);
             button.setText(subTopic.getTitle());
+            if (subTopic.getTitle().length() > 40) {
+                button.setTooltip(new Tooltip(subTopic.getTitle()));
+            }
 
             button.setStyle(IDLE_BUTTON_STYLE);
             button.setOnMouseEntered(e -> {
@@ -343,6 +339,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         if (viewModel.getSelectedTopicIndex() == 0) {
             prevButton.setDisable(true);
         }
+        if (viewModel.getSelectedTopicIndex() == viewModel.getNoteTopics().size()-1) {
+            nextButton.setDisable(true);
+        }
         viewModel.selectedTopicIndexProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue < viewModel.getNoteTopics().size()) {
                 viewModel.setSelectedTopic(viewModel.getNoteTopics().get(newValue));
@@ -368,10 +367,93 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });
 
         activateNowButton.setOnAction(event -> {
-            ViewSwitcher.showScreen(View.ACTIVATE_PAYMENT_SCREEN);
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.ACTIVATE_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
         notesBackButton.setOnAction(event -> {
+            Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
+
+            Dialog<ButtonType> dialog = Alerts.dialog(getClass(), "Confirm", null, "Are you sure you want to exit?");
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    if (noteContentList.getSkin() != null) {
+                        VirtualFlow<?> vf = (VirtualFlow<?>) ((ListViewSkin<?>) noteContentList.getSkin()).getChildren().get(0);
+
+//                System.out.println(TAG + "Position -> " + vf.getPosition());
+//                System.out.println(TAG + "Cell count -> " + vf.getCellCount());
+
+                        double lastSectionIndex = vf.getPosition() * vf.getCellCount();
+                        System.out.println(TAG + "Last Section Index -> " + lastSectionIndex);
+
+                        if ((int)lastSectionIndex == noteContentList.getItems().size()) {
+                            lastSectionIndex = (int) lastSectionIndex - 1;
+                        }
+
+                        NoteSection lastSection = noteContentList.getItems().get((int) lastSectionIndex);
+
+                        StringBuilder sectionTitle = new StringBuilder();
+                        ContentViewType contentViewType = ContentViewTypes.convert(lastSection);
+                        if (contentViewType instanceof HeaderViewType headerViewType) {
+                            if (headerViewType.getText() != null) {
+                                sectionTitle = new StringBuilder(headerViewType.getText());
+                            }
+                        } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
+                            if (paragraphViewType.getText() != null) {
+                                sectionTitle = new StringBuilder(paragraphViewType.getText());
+                            }
+                        } else if (contentViewType instanceof CBTViewType cbtViewType) {
+                            int yearId = cbtViewType.getYearId();
+                            int questionId = cbtViewType.getQuestionId();
+                            int subjectId = cbtViewType.getSubjectId();
+                            ObjectiveQuestion question = viewModel.getQuestion(subjectId, yearId, questionId);
+
+                            sectionTitle = new StringBuilder(question.getQuestion());
+                        } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
+                            if (latexMathViewType.getKatex() != null) {
+                                sectionTitle = new StringBuilder(latexMathViewType.getKatex());
+                            }
+                        } else if (contentViewType instanceof ListViewType listViewType) {
+                            sectionTitle = new StringBuilder(listViewType.getItems().get(0));
+                        } else if (contentViewType instanceof ReferenceViewType referenceViewType) {
+                            sectionTitle = new StringBuilder(referenceViewType.getText());
+                        } else if (contentViewType instanceof TableViewType tableViewType) {
+
+                            List<List<String>> content = tableViewType.getContent();
+
+                            for (int row = 0; row < 1; row++) {
+
+                                System.out.println("Row Content -> " + content.get(row));
+                                for (int col = 0; col < content.get(row).size(); col++) {
+                                    System.out.println("Column content -> " + content.get(row).get(col));
+                                    sectionTitle.append(" | ").append(content.get(row).get(col));
+                                }
+                            }
+                        }
+                        System.out.println(TAG + "Got Section title -> " + sectionTitle);
+
+
+                        NoteLastSession noteLastSession = new NoteLastSession(
+                                viewModel.getUser().getId().hashCode(),
+                                lastSection.getId(),
+                                sectionTitle.toString(),
+                                viewModel.getUser().getId()
+                        );
+
+                        viewModel.putLastSession(noteLastSession);
+                    }
+
+                    ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
+
+                } else {
+                    Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
+                }
+                return buttonType;
+            });
+            dialog.show();
+        });
+
+        /*notesBackButton.setOnAction(event -> {
             Animations.translateIn(exitNotesDialog, 300);
             Animations.fadeIn(dialogDimmer, 300, 0.0, 0.5);
         });
@@ -379,8 +461,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             if (noteContentList.getSkin() != null) {
                 VirtualFlow<?> vf = (VirtualFlow<?>) ((ListViewSkin<?>) noteContentList.getSkin()).getChildren().get(0);
 
-                System.out.println(TAG + "Position -> " + vf.getPosition());
-                System.out.println(TAG + "Cell count -> " + vf.getCellCount());
+//                System.out.println(TAG + "Position -> " + vf.getPosition());
+//                System.out.println(TAG + "Cell count -> " + vf.getCellCount());
 
                 double lastSectionIndex = vf.getPosition() * vf.getCellCount();
                 System.out.println(TAG + "Last Section Index -> " + lastSectionIndex);
@@ -388,8 +470,8 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 if ((int)lastSectionIndex == noteContentList.getItems().size()) {
                     lastSectionIndex = (int) lastSectionIndex - 1;
                 }
+
                 NoteSection lastSection = noteContentList.getItems().get((int) lastSectionIndex);
-                System.out.println(TAG + "Last Section -> " + Helper.toString(lastSection));
 
                 StringBuilder sectionTitle = new StringBuilder();
                 ContentViewType contentViewType = ContentViewTypes.convert(lastSection);
@@ -431,14 +513,14 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 System.out.println(TAG + "Got Section title -> " + sectionTitle);
 
 
-                NoteLastSection noteLastSection = new NoteLastSection(
+                NoteLastSession noteLastSession = new NoteLastSession(
                         viewModel.getUser().getId().hashCode(),
                         lastSection.getId(),
                         sectionTitle.toString(),
                         viewModel.getUser().getId()
                 );
 
-                viewModel.putLastSession(noteLastSection);
+                viewModel.putLastSession(noteLastSession);
             }
 
             ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
@@ -447,7 +529,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         exitDialogCancelButton.setOnAction(event -> {
             Animations.translateOut(exitNotesDialog, 300);
             Animations.fadeOut(dialogDimmer, 300, 0.5, 0.0);
-        });
+        });*/
 
 
         /***************** Refresh Notes Section *******************/
@@ -512,7 +594,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                 return null;
             }
         });
-
 
         ToggleGroup fontSizeToggleGroup = new ToggleGroup();
         fontSizeToggleGroup.getToggles().addAll(fontSmallButton, fontMediumButton, fontLargeButton);
@@ -711,8 +792,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         setupQuizQuestion();
 
 
-
-
         highlightColors.getChildren().clear();
         highlightColors.getChildren().addAll(
                 highlightColorsList
@@ -730,8 +809,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                             });
 
                             return circle;
-                        })
-                        .collect(Collectors.toList())
+                        }).toList()
         );
 
 
@@ -784,7 +862,6 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         });*/
 
         addNoteButton.setOnMouseClicked(event -> {
-
             List<Note> notes = viewModel.getSubjectNotes();
 
             String currentNote = null;
@@ -892,7 +969,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
         settingsCloseText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.REGULAR, FontUtil.FontSize.FOURTEEN.size));
     }
     private void setFontSizesToMedium() {
-        subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, FontUtil.FontSize.EIGHTEEN.size));
+        subjectLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 20));
 //        quizButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, FontUtil.FontSize.FOURTEEN.size));
         noteTopicLabel.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, FontUtil.FontSize.SIXTEEN.size));
         // Quiz Section Texts
@@ -1908,8 +1985,9 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
 
                         int yearId = cbtViewType.getYearId();
                         int questionId = cbtViewType.getQuestionId();
+                        int subjectId = cbtViewType.getSubjectId();
 
-                        ObjectiveQuestion question = viewModel.getQuestion(yearId, questionId);
+                        ObjectiveQuestion question = viewModel.getQuestion(subjectId, yearId, questionId);
 
                         VBox cbtVBox = new VBox();
                         cbtVBox.setPadding(new Insets(20, 20, 30, 20));
@@ -2081,7 +2159,7 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
                             ListView<UnorderedListItem> contentList = new ListView<>();
                             contentList.setItems(items);
                             contentList.setBackground(Background.EMPTY);
-                            contentList.setCellFactory(new UnorderedListCellFactory());
+                            contentList.setCellFactory(new UnorderedListCellFactory(null));
                             contentList.setSelectionModel(new NoSelectionModel<>());
                             contentList.setPadding(new Insets(0, 0, 0, 10));
 
@@ -2192,13 +2270,13 @@ public class NotesScreenController implements FxmlView<NotesScreenVM>, Initializ
             fontSmallButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 5 0 0 5; -fx-border-radius: 5 0 0 5; -fx-text-fill: #FFFFFF;");
             fontMediumButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 0 0 0; -fx-text-fill: #000000;");
             fontLargeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 5 5 0; -fx-text-fill: #000000;");
-        }else if (newValue == fontMediumButton) {
+        } else if (newValue == fontMediumButton) {
             setFontSizesToMedium();
 
             fontSmallButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5 0 0 5; -fx-text-fill: #000000;");
             fontMediumButton.setStyle("-fx-background-color: #4BB036; -fx-background-radius: 0 0 0 0; -fx-border-radius: 0 0 0 0; -fx-text-fill: #FFFFFF;");
             fontLargeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 0 5 5 0; -fx-text-fill: #000000;");
-        }else if (newValue == fontLargeButton) {
+        } else if (newValue == fontLargeButton) {
             setFontSizesToLarge();
 
             fontSmallButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #B8B8B8; -fx-border-radius: 5 0 0 5; -fx-text-fill: #000000;");

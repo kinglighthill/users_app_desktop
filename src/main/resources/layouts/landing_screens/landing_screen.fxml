@@ -14,7 +14,7 @@
                 <left>
                     <HBox spacing="20" alignment="CENTER">
                         <ImageView fx:id="activateInfoIcon" fitHeight="20" fitWidth="20" preserveRatio="true" pickOnBounds="true"/>
-                        <Label text="Your app is not activated, Activate your App to access all locked Years and Novels" textFill="#5B4617">
+                        <Label fx:id="activateBarLabel" text="Your device is not activated." textFill="#5B4617">
                             <font>
                                 <Font size="13"/>
                             </font>
@@ -23,12 +23,12 @@
                 </left>
                 <right>
                     <HBox spacing="25" alignment="CENTER">
-                        <Button fx:id="topActivateButton" text="Activate now" textFill="#5B4617" style="-fx-border-color: #5B4617; -fx-border-radius: 5;">
+                        <Button fx:id="topActivateButton" text="Activate now" textFill="#5B4617" style="-fx-border-color: #5B4617; -fx-border-radius: 5; -fx-cursor: hand;">
                             <font>
                                 <Font size="10"/>
                             </font>
                         </Button>
-                        <ImageView fx:id="activateCloseIcon" fitHeight="15" fitWidth="15" preserveRatio="true" pickOnBounds="true"/>
+                        <ImageView fx:id="activateCloseIcon" fitHeight="15" fitWidth="15" preserveRatio="true" pickOnBounds="true" style="-fx-cursor: hand;"/>
                     </HBox>
                 </right>
                 <padding>
@@ -52,7 +52,7 @@
                     </VBox.margin>
                 </HBox>
 
-                <ToggleButton fx:id="homeButton" text="Home" alignment="CENTER_LEFT" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;">
+                <ToggleButton fx:id="homeButton" text="Home" alignment="CENTER_LEFT" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5; -fx-cursor: hand;">
                     <padding>
                         <Insets left="30"/>
                     </padding>

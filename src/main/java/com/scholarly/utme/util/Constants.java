@@ -3,11 +3,14 @@ package com.scholarly.utme.util;
 public class Constants {
 
     public static String BASE_URL = "https://staging.utme.scholarly.africa/api/v1/";
+    public static final String WHATSAPP_URL = "https://wa.me/2348136941462";
+    public static final String PAYSTACK_URL = "https://paystack.com/pay/utme-activation-pin-pc";
     public static String REFRESH_URL = BASE_URL + "login/refresh";
 
     // Network Preference Constants
     public static final String PREF_KEY_USER_ID = "USER_ID";
     public static final String PREF_KEY_ACTIVATION_STATE = "ACTIVATION_STATE";
+    public static final String PREF_KEY_ACTIVATE_MESSAGE = "ACTIVATION_MESSAGE";
     public static final String PREF_KEY_USER_DATA = "USER_DATA";
     public static final String PREF_KEY_REFRESH_TOKEN = "REFRESH_TOKEN";
     public static final String PREF_KEY_ACCESS_TOKEN = "ACCESS_TOKEN";

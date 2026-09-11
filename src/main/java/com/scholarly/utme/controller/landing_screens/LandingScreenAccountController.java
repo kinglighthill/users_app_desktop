@@ -6,10 +6,12 @@ import com.scholarly.utme.ui.utils.Alerts;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.landing_screens.LandingScreenAccountVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,10 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Base64;
 import java.util.ResourceBundle;
-import java.util.UUID;
-import org.unbrokendome.base62.Base62;
 
 import static com.scholarly.utme.util.Constants.*;
 
@@ -70,7 +69,8 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
         emailText.setText(viewModel.getUser().getEmail());
 
-        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+//        String encodedDeviceId = Base62.encodeUUID(UUID.fromString(DeviceInfo.getSystemProperties().getDeviceId()));
+        String encodedDeviceId = DeviceInfo.getSystemProperties().getDeviceId();
 
         deviceIdLabel.setText(encodedDeviceId.toUpperCase());
 
@@ -139,9 +139,9 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
 
             dialog.setResultConverter(buttonType -> {
                 if (buttonType == ButtonType.YES) {
-                    viewModel.getPreferences().putBoolean(PREF_KEY_LOGGED_USER_OUT, true);
-                    viewModel.getPreferences().putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
                     dialogDimmer.setVisible(true);
+                    PreferencesManager.putBoolean(PREF_KEY_LOGGED_USER_OUT, true);
+                    PreferencesManager.putBoolean(PREF_KEY_HOME_SCREEN_ACTIVATE_PROMPT_REMOVED+userId, false);
                     ViewSwitcher.passData(new AuthenticationController.InitialData(false));
                     ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
                 } else {
@@ -187,15 +187,25 @@ public class LandingScreenAccountController implements FxmlView<LandingScreenAcc
     }
 
     private void renderProfileImage(Image image) {
-        Circle clip = new Circle(40, 40, 40);
-        profileImage.setClip(clip);
-        Rectangle2D imageBounds = new Rectangle2D(0, 0, image.getWidth(), image.getHeight());
-        profileImage.setFitWidth(80);
-        profileImage.setFitHeight(80);
-        profileImage.setViewport(imageBounds);
-        profileImage.setSmooth(true);
-        profileImage.setCache(true);
-        profileImage.setImage(image);
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                Circle clip = new Circle(40, 40, 40);
+                profileImage.setClip(clip);
+                Rectangle2D imageBounds = new Rectangle2D(0, 0, image.getWidth(), image.getHeight());
+                profileImage.setFitWidth(80);
+                profileImage.setFitHeight(80);
+                profileImage.setViewport(imageBounds);
+                profileImage.setSmooth(true);
+                profileImage.setCache(true);
+                Platform.runLater(() -> {
+                    profileImage.setImage(image);
+                });
+                return null;
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
     }
 
     private void initializeFonts() {

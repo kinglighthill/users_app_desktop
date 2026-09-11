@@ -9,6 +9,7 @@ import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.data.model.newDb.TheoryQuestionDescription;
 import com.scholarly.utme.ui.cellFactories.PracticeSubjectListCellFactory;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.TextToSpeech;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM;
 import com.scholarly.utme.viewmodels.practice_screens.PracticeScreenVM.QuestionState;
@@ -33,6 +34,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.web.WebView;
@@ -46,9 +48,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Initializable, SceneLifecycle {
     private static final String TAG = "PracticeScreenController: ";
 
-    private final static double rectangleSelectedBorderWidth = 2.0;
+    private final static double rectangleSelectedBorderWidth = 1.0;
     private final static Color rectangleBorderSelectedColor = Color.ORANGE;
-    private final static Paint rectangleSelectedColor = Paint.valueOf("#12AF20");
+    private final static Paint rectangleSelectedColor = Paint.valueOf("#F3FBF4");
 
     @InjectViewModel
     private PracticeScreenVM viewModel;
@@ -58,21 +60,23 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
     @FXML
     private StackPane questionStackPane;
     @FXML
-    private ScrollPane tileScrollPane;
+    private ScrollPane tileScrollPane, questionScrollPane;
     @FXML
     private ListView<PQSubject> subjectList;
     @FXML
     private RadioButton optionAButton, optionBButton, optionCButton, optionDButton;
     @FXML
-    private Label questionOverviewLabel, timeLabel, scoreText, questionDescriptionHeader, readQuestionDesc, questionDescriptionText;
+    private Label questionOverviewLabel, timeLabel, scoreText, questionDescriptionHeader, readQuestionDesc, questionDescriptionText, questionLabel, appBarTitle, attemptedLabel;
     @FXML
     private TextField enterCorrectAnswerField;
     @FXML
+    private Line questionLine;
+    @FXML
     private CheckBox questionErrorCheckBox, incorrectAnswerCheckBox, okayCheckBox;
     @FXML
-    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog, centerVBox, questionDescriptionDialog, questionCenterVBox;
+    private VBox incorrectAnswerPane, reportDialog, testSummaryDialog, centerVBox, questionDescriptionDialog, questionCenterVBox, questionVBox;
     @FXML
-    private HBox quesDescriptionHBox, questionWithImageHBox;
+    private HBox quesDescriptionHBox, questionWithImageHBox, questionDescriptionHBox, questionLabelHBox;
     @FXML
     private Button prevButton, nextButton, exitButton, submitButton, submitReport, homePageButton, resultAnalysisButton, viewImageButton;
     @FXML
@@ -104,6 +108,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
                 PQSubject subject = change.getList().get(0);
                 System.out.println(TAG + "Content of change -> " + change);
                 viewModel.setSelectedSubject(subject);
+                appBarTitle.setText("CBT PRACTICE");
+                appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
             } else {
                 viewModel.setSelectedSubject(null);
             }
@@ -112,6 +118,8 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         viewModel.setSelectedSubject(subjectList.getSelectionModel().getSelectedItem());
         setupQuestionView(viewModel.getSelectedSubject());
         setupTilePane(viewModel.getSelectedSubject());
+
+        appBarTitle.setText(appBarTitle.getText() + "  " + viewModel.getSelectedSubjectYear().get(viewModel.getSelectedSubject().getTitle()).getYear());
 
         viewModel.selectedSubjectProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -398,9 +406,9 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             long secs = newValue.longValue() % 60;
 
             if (hours > 0) {
-                timeText = String.format(Locale.getDefault(), "%d:%02d:%02d", hours, minutes, secs);
+                timeText = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, secs);
             } else {
-                timeText = String.format(Locale.getDefault(), "%d:%02d", minutes, secs);
+                timeText = String.format(Locale.getDefault(), "%02d:%02d", minutes, secs);
             }
 
             timeLabel.setText(timeText);
@@ -483,21 +491,26 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
                // System.out.println("Question: " + ((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
-                TextToSpeech.play(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
+                StringBuilder textToRead = new StringBuilder(((ObjectiveQuestion) questionState.getQuestion()).getQuestion());
+                textToRead.append(" Option A ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionA().getText());
+                textToRead.append(" Option B ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionB().getText());
+                textToRead.append(" Option C ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionC().getText());
+                textToRead.append(" Option D ").append(((ObjectiveQuestion) questionState.getQuestion()).getOptionD().getText());
+                TextToSpeech.play(textToRead.toString());
             } else {
                 TextToSpeech.play(((TheoryQuestion) questionState.getQuestion()).getQuestion());
             }
         });
 
-        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
-            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
-        });
-        readQuestionDesc.setOnMouseEntered(event -> {
-            readQuestionDesc.setUnderline(true);
-        });
-        readQuestionDesc.setOnMouseExited(event -> {
-            readQuestionDesc.setUnderline(false);
-        });
+//        readQuestionDesc.setOnMouseClicked(mouseEvent -> {
+//            Animations.showDialog(questionDescriptionDialog, dialogDimmer);
+//        });
+//        readQuestionDesc.setOnMouseEntered(event -> {
+//            readQuestionDesc.setUnderline(true);
+//        });
+//        readQuestionDesc.setOnMouseExited(event -> {
+//            readQuestionDesc.setUnderline(false);
+//        });
 
         quesDescriptionCloseIcon.setOnMouseClicked(mouseEvent -> {
             Animations.hideDialog(questionDescriptionDialog, dialogDimmer);
@@ -599,39 +612,20 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         Label selectedQuestionText = (Label) selectedQuestionPane.getChildren().get(1);
 
         selectedQuestionRectangle.setFill(rectangleSelectedColor);
-        selectedQuestionText.setTextFill(Color.WHITE);
+//        selectedQuestionText.setTextFill(Color.WHITE);
+
+        updateAttemptedQuestions(optionAButton, optionBButton, optionCButton, optionDButton);
+
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+        attemptedLabel.setText("Attempted " + subjectQuestionsState.getNumOfAttempts() + " of " + questions.size());
 
     }
 
-    private void updateBookmarkIcon() {
+    private void updateAttemptedQuestions(RadioButton optionAButton, RadioButton optionBButton, RadioButton optionCButton, RadioButton optionDButton) {
         SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
-        List<QuestionState> questions = subjectQuestionsState.getQuestions();
-
-//        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
-
-        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
-            ObjectiveQuestion selectedQuestion = questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getObjectiveQuestion();
-
-            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks().get(viewModel.getSelectedSubject().getId());
-
-            bookmarks.forEach(bookmark -> {
-                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
-//                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-
-                }
-            });
-
-        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
-            TheoryQuestion selectedQuestion = questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getTheoryQuestion();
-
-            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks().get(viewModel.getSelectedSubject().getId());
-
-            bookmarks.forEach(bookmark -> {
-                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
-//                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
-
-                }
-            });
+        if (optionAButton.isSelected() || optionBButton.isSelected() || optionCButton.isSelected() || optionDButton.isSelected()) {
+            subjectQuestionsState.setNumOfAttempts(subjectQuestionsState.getNumOfAttempts() + 1);
         }
     }
 
@@ -641,9 +635,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         int selectedQuestionIndex = subjectQuestionsState.getSelectedQuestion();
 
         questionOverviewLabel.setText("Question " + selectedQuestionIndex + " of " + questions.size());
-
-        // prevButton.disableProperty().bind(Bindings.greaterThan(2, subjectQuestionsState.selectedQuestionProperty()));
-        // nextButton.disableProperty().bind(Bindings.equal(questions.size(), subjectQuestionsState.selectedQuestionProperty()));
+        attemptedLabel.setText("Attempted " + subjectQuestionsState.getNumOfAttempts() + " of " + questions.size());
 
         prevButton.setDisable(subjectList.getSelectionModel().getSelectedIndex() == 0 && selectedQuestionIndex == 1);
 
@@ -653,27 +645,47 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             List<ObjectiveQuestionDescription> quesDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getQuestionDescriptionId()).toList();
 
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+//            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+
+            String questionText = question.getQuestion().replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(questionText);
+
+            questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+
             if (!quesDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                }
+                questionVBox.getChildren().add(0, questionDescriptionHBox);
+                questionVBox.getChildren().add(1, questionLine);
+//                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+//                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            } else {
+                questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                }
             }
 
-            String questionText = question.getQuestion();
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
 
-            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+            if (questionText.contains("<sub>") || questionText.contains("<table") || questionText.contains("$")) {
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWithImageHBox);
+                if (!questionCenterVBox.getChildren().contains(questionWebView))
+                    questionCenterVBox.getChildren().add(questionWebView);
+
+                questionWebView.getEngine().loadContent(questionText);
+            }
 
             if (questionText.contains("<img")) {
-
-                questionStackPane.getChildren().add(questionWithImageHBox);
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
+                if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
+                    questionCenterVBox.getChildren().add(questionWithImageHBox);
 
                 showQuestionWithImage(questionText);
 
-            } else {
-                questionStackPane.getChildren().add(questionWebView);
-                questionWebView.getEngine().loadContent(questionText);
             }
 
             optionAButton.setText(" (A) " + question.getOptionA().getText());
@@ -701,13 +713,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             List<TheoryQuestionDescription> quesDescriptionInList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getQuestionDescriptionId()).toList();
 
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+//            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
             questionDescriptionHeader.setText("");
 
             if (!quesDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+//                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+//                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
 
@@ -729,29 +741,43 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             List<ObjectiveQuestionDescription> quesDescriptionInList = viewModel.getObjectiveQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getQuestionDescriptionId()).toList();
 
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
-            questionDescriptionHeader.setText("");
+//            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+
+            String questionText = question.getQuestion().replaceAll("<br>", System.lineSeparator());
+            questionLabel.setText(questionText);
+
+            questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
 
             if (!quesDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+                questionVBox.getChildren().add(0, questionDescriptionHBox);
+                questionVBox.getChildren().add(1, questionLine);
+//                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+//                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
+            } else {
+                questionVBox.getChildren().removeAll(questionDescriptionHBox, questionLine);
+                if (!questionCenterVBox.getChildren().contains(questionScrollPane)) {
+                    questionCenterVBox.getChildren().add(questionScrollPane);
+                }
             }
 
-            String questionText = question.getQuestion();
+            questionCenterVBox.getChildren().removeAll(questionWebView, questionWithImageHBox);
+            if (questionText.contains("<sub>") || questionText.contains("<table") || questionText.contains("$")) {
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWithImageHBox);
+                if (!questionCenterVBox.getChildren().contains(questionWebView))
+                    questionCenterVBox.getChildren().add(questionWebView);
 
-            questionStackPane.getChildren().removeAll(questionWebView, questionWithImageHBox);
+                questionWebView.getEngine().loadContent(questionText);
+            }
 
             if (questionText.contains("<img")) {
-                questionStackPane.getChildren().add(questionWithImageHBox);
+                questionCenterVBox.getChildren().removeAll(questionScrollPane, questionWebView);
+                if (!questionCenterVBox.getChildren().contains(questionWithImageHBox))
+                    questionCenterVBox.getChildren().add(questionWithImageHBox);
+
                 showQuestionWithImage(questionText);
 
-            } else {
-                questionStackPane.getChildren().add(questionWebView);
-                questionWebView.getEngine().loadContent(questionText);
-
-//                questionWebView.setMinHeight(questionWithImageHBox.heightProperty().get());
             }
 
             optionAButton.setText(" (A) " + question.getOptionA().getText());
@@ -780,13 +806,13 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             List<TheoryQuestionDescription> quesDescriptionInList = viewModel.getTheoryQuestionDescriptions().stream().filter(questionDescription ->
                     questionDescription.getId() == question.getQuestionDescriptionId()).toList();
 
-            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
+//            quesDescriptionHBox.getChildren().removeAll(questionDescriptionHeader, readQuestionDesc);
             questionDescriptionHeader.setText("");
 
             if (!quesDescriptionInList.isEmpty()) {
-                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
-                readQuestionDesc.setVisible(true);
-                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", " "));
+//                quesDescriptionHBox.getChildren().addAll(questionDescriptionHeader, readQuestionDesc);
+//                readQuestionDesc.setVisible(true);
+                questionDescriptionHeader.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
                 questionDescriptionText.setText(quesDescriptionInList.get(0).getDescription().replaceAll("<br>", System.lineSeparator()));
             }
 
@@ -804,7 +830,7 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         for (int i=1; i <= questions.size(); i++) {
             Rectangle r = new Rectangle(35, 35);
             r.setFill(Color.web("#FFFFFF"));
-            r.setStroke(Paint.valueOf("#12AF20"));
+            r.setStroke(Color.GRAY);
             r.setStrokeType(StrokeType.OUTSIDE);
 
             Label l = new Label(Integer.toString(i));
@@ -816,9 +842,10 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
 
             if (subjectQuestionsState.getSelectedQuestion() == i) {
                 r.setStroke(Color.ORANGE);
-                r.setStrokeWidth(2);
+                r.setStrokeWidth(1.0);
             }
             StackPane s = new StackPane(r, l);
+            s.setStyle("-fx-cursor: hand;");
             tilePane.getChildren().add(s);
 
             int finalI = i;
@@ -839,33 +866,45 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
         selectedQuestionRectangle.setStroke(rectangleBorderSelectedColor);
         selectedQuestionRectangle.setStrokeWidth(rectangleSelectedBorderWidth);
 
-        oldQuestionRectangle.setStroke(rectangleSelectedColor);
+        oldQuestionRectangle.setStroke(Color.GRAY);
         oldQuestionRectangle.setStrokeWidth(1.0);
 
     }
 
+    private void updateBookmarkIcon() {
+        SubjectQuestionsState subjectQuestionsState = viewModel.getSubjectsQuestions().get(viewModel.getSelectedSubject().getShortTitle());
+        List<QuestionState> questions = subjectQuestionsState.getQuestions();
+
+//        bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark2.png").toString()));
+
+        if (viewModel.getQuestionType() == SubjectListItemVM.Type.OBJECTIVE) {
+            ObjectiveQuestion selectedQuestion = questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getObjectiveQuestion();
+
+//            List<ObjectiveBookmark> bookmarks = viewModel.getObjectiveBookmarks().get(viewModel.getSelectedSubject().getId());
+//
+//            bookmarks.forEach(bookmark -> {
+//                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
+////                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+//
+//                }
+//            });
+
+        } else if (viewModel.getQuestionType() == SubjectListItemVM.Type.THEORY) {
+            TheoryQuestion selectedQuestion = questions.get(subjectQuestionsState.getSelectedQuestion() - 1).getTheoryQuestion();
+
+//            List<TheoryBookmark> bookmarks = viewModel.getTheoryBookmarks().get(viewModel.getSelectedSubject().getId());
+//
+//            bookmarks.forEach(bookmark -> {
+//                if (bookmark.getQuestionId() == selectedQuestion.getId()) {
+////                    bookmarkImage.setImage(new Image(getClass().getResource("/drawable/bookmark_filled.png").toString()));
+//
+//                }
+//            });
+        }
+    }
+
     private void showQuestionWithImage(String questionWithImageText) {
-        int startIndexOfImg = questionWithImageText.indexOf("<img");
-        int endIndexOfImg = questionWithImageText.indexOf("'100%'>", startIndexOfImg);
-
-        int startIndexOfImgPath = questionWithImageText.indexOf("/android_asset", startIndexOfImg);
-        int endIndexOfImgPath = questionWithImageText.indexOf("' width", startIndexOfImg);
-
-        String imagePath = questionWithImageText.substring(startIndexOfImgPath, endIndexOfImgPath);
-        questionImage.setImage(new Image(getClass().getResource(imagePath).toString()));
-
-        String imageQuestion = questionWithImageText.substring(questionWithImageText.lastIndexOf(">")+1);
-        questionWithImageWebView.getEngine().loadContent(imageQuestion);
-
-        StringBuilder builder = new StringBuilder(questionWithImageText);
-
-        URL url = getClass().getResource(imagePath);
-        String img = "<img src='"+url+"' width='100%'>";
-
-        builder.replace(startIndexOfImg, (endIndexOfImg + 7), img);
-
-        questionWithImageText = builder.toString();
-
+        questionWithImageText = Helper.loadPQImageUrl(getClass(), questionImage, questionWithImageWebView, questionWithImageText);
     }
 
     private void showSubmitDialog() {
@@ -983,6 +1022,12 @@ public class PracticeScreenController implements FxmlView<PracticeScreenVM>, Ini
             toggleGroup.selectToggle(optionCButton);
         } else if (keyEvent.getCode().toString().equalsIgnoreCase("D")) {
             toggleGroup.selectToggle(optionDButton);
+        } else if (keyEvent.getCode().toString().equalsIgnoreCase("N")) {
+            nextButton.fire();
+        } else if (keyEvent.getCode().toString().equalsIgnoreCase("P")) {
+            prevButton.fire();
+        } else if (keyEvent.getCode().toString().equalsIgnoreCase("S")) {
+            submitButton.fire();
         }
     }
 

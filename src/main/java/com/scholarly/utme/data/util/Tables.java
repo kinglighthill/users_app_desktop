@@ -24,6 +24,7 @@ public class Tables {
     public static final String NOVEL_AUTHORS = "novel_authors";
     public static final String NOVEL_CHAPTERS = "novel_chapters";
     public static final String NOVEL_GENRES = "novel_genres";
+    public static final String NOVEL_DIVISIONS = "novel_divisions";
     public static final String NOVEL_CATEGORIES = "novel_categories";
     public static final String NOVEL_SECTIONS = "novel_sections";
     public static final String NOVEL_OBJECTIVE_QUESTIONS = "novel_objective_questions";
@@ -33,7 +34,8 @@ public class Tables {
     public static final String NOTE_TOPICS = "note_topics";
     public static final String NOTE_SUB_TOPICS = "note_sub_topics";
     public static final String NOTE_SECTIONS = "note_sections";
-    public static final String NOTE_LAST_SECTION = "note_last_session";
+    public static final String NOTE_LAST_SESSION = "note_last_session";
+    public static final String NOVEL_LAST_SESSION = "novel_last_session";
 
     // Syllabus Tables
     public static final String SYLLABUS_SUBJECTS = "syllabus_subjects";

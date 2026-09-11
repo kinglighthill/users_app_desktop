@@ -3,9 +3,9 @@ package com.scholarly.utme.viewmodels.novel_screens;
 import com.scholarly.utme.controller.novel_screens.NovelChapterListController;
 import com.scholarly.utme.data.dao.NovelAuthorDao;
 import com.scholarly.utme.data.dao.NovelChapterDao;
-import com.scholarly.utme.data.model.novels.Novel;
 import com.scholarly.utme.data.model.novels.NovelAuthor;
 import com.scholarly.utme.data.model.novels.NovelChapter;
+import com.scholarly.utme.data.model.novels.NovelModel;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -13,35 +13,41 @@ import javafx.collections.ObservableList;
 
 public class NovelChapterListVM implements ViewModel {
 
-    private SimpleObjectProperty<Novel> novel = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<NovelModel> novelModel = new SimpleObjectProperty<>();
 
     private ObservableList<NovelChapter> chapters = FXCollections.observableArrayList();
 
-    private NovelAuthor author;
+    private ObservableList<NovelAuthor> authors = FXCollections.observableArrayList();
 
     private NovelChapter selectedChapter;
 
 
     public void processInitialData(NovelChapterListController.InitialData data) {
         NovelChapterDao novelChapterDao = new NovelChapterDao();
-        this.novel.set(data.getNovel());
-        author = data.getAuthor();
+        this.novelModel.set(data.getNovelModel());
+        authors.addAll(NovelAuthorDao.getAuthors());
 
         novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
-                novelChapter.getNovelId() == data.getNovel().getId()).forEach(novelChapter -> chapters.add(novelChapter));
+                novelChapter.getNovelId() == data.getNovelModel().getNovel().getId()).forEach(novelChapter -> chapters.add(novelChapter));
 
     }
 
-    public Novel getNovel() {
-        return novel.get();
+    public NovelModel getNovelModel() {
+        return novelModel.get();
     }
 
     public ObservableList<NovelChapter> getChapters() {
         return chapters;
     }
 
+
     public NovelAuthor getAuthor() {
-        return author;
+        for (NovelAuthor author : authors) {
+            if (author.getNovelId() == novelModel.get().getNovel().getId()) {
+                return author;
+            }
+        }
+        return null;
     }
 
     public void setSelectedChapter(NovelChapter selectedChapter) {

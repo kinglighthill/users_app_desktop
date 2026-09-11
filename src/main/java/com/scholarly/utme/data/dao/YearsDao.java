@@ -4,7 +4,7 @@ import com.scholarly.utme.data.DatabaseService;
 import com.scholarly.utme.data.model.FreeContent;
 import com.scholarly.utme.data.model.Year;
 import com.scholarly.utme.data.util.Tables;
-import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.SubjectListItemVM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.util.Constants.PREF_KEY_ACTIVATION_STATE;
 import static com.scholarly.utme.util.Constants.PREF_KEY_USER_ID;
@@ -23,7 +22,6 @@ public class YearsDao {
     private static final String TAG = "YearsDao: ";
 
     private static final DatabaseService databaseService = new DatabaseService();
-    private static final Preferences preferences = AppPreferences.getPreferences();
 
     private static final String idColumn = "_id";
     private static final String yearColumn = "year";
@@ -39,7 +37,7 @@ public class YearsDao {
     private static final String userId;
 
     static {
-        userId = preferences.get(PREF_KEY_USER_ID, "");
+        userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
         allYears = FXCollections.observableArrayList();
         subjectAvailableYears = FXCollections.observableArrayList();
         freeContents = FXCollections.observableArrayList();
@@ -51,10 +49,10 @@ public class YearsDao {
         String query = "";
 
         if (type == SubjectListItemVM.Type.OBJECTIVE) {
-            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_OBJECTIVE_QUESTIONS + " ON " + Tables.PQ_OBJECTIVE_QUESTIONS + "." + yearIdColumn + " = " + Tables.YEARS + "." + idColumn + " WHERE " + subjectIdColumn + " = " + subjectId + " ORDER BY " + yearIdColumn + " DESC";
+            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_OBJECTIVE_QUESTIONS + " ON " + Tables.PQ_OBJECTIVE_QUESTIONS + "." + yearIdColumn + " = " + Tables.YEARS + "." + idColumn + " WHERE " + subjectIdColumn + " = " + subjectId + " ORDER BY " + yearIdColumn + " ASC";
 
         } else if (type == SubjectListItemVM.Type.THEORY){
-            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_THEORY_QUESTIONS + " ON " + Tables.PQ_THEORY_QUESTIONS + "." + yearIdColumn + " = " + Tables.YEARS + "." + idColumn + " WHERE " + subjectIdColumn + " = " + subjectId + " ORDER BY " + yearIdColumn + " DESC";
+            query = "SELECT DISTINCT " + Tables.YEARS + "." + idColumn + ", " + yearColumn + ", " + shortDescriptionColumn + ", " + isNewColumn + ", " + availableColumn + " FROM " + Tables.YEARS + " JOIN " + Tables.PQ_THEORY_QUESTIONS + " ON " + Tables.PQ_THEORY_QUESTIONS + "." + yearIdColumn + " = " + Tables.YEARS + "." + idColumn + " WHERE " + subjectIdColumn + " = " + subjectId + " ORDER BY " + yearIdColumn + " ASC";
 
         }
 
@@ -63,7 +61,7 @@ public class YearsDao {
         try (ResultSet rs = databaseService.executeQuery(query)) {
             subjectAvailableYears.clear();
             while (rs.next()) {
-                if (preferences.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
+                if (PreferencesManager.getBoolean(PREF_KEY_ACTIVATION_STATE+userId, false)) {
                     subjectAvailableYears.add(
                             new Year(
                                     rs.getInt(idColumn),
@@ -135,7 +133,8 @@ public class YearsDao {
             while (rs.next()) {
                 freeContents.add(new FreeContent(
                         rs.getInt(idColumn),
-                        rs.getInt("subject_id"),
+                        rs.getInt("objective_subject_id"),
+                        rs.getInt("theory_subject_id"),
                         rs.getInt("year_id"),
                         rs.getInt("topic_id"),
                         rs.getInt("chapter_id")));

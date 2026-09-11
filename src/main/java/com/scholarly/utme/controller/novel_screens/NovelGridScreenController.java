@@ -1,7 +1,9 @@
 package com.scholarly.utme.controller.novel_screens;
 
 import com.scholarly.utme.controller.HomeScreenController;
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
 import com.scholarly.utme.data.model.novels.Novel;
+import com.scholarly.utme.data.model.novels.NovelModel;
 import com.scholarly.utme.ui.cellFactories.NovelGridCellFactory;
 import com.scholarly.utme.ui.utils.Screens;
 import com.scholarly.utme.ui.utils.View;
@@ -25,7 +27,7 @@ import java.util.ResourceBundle;
 public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, Initializable {
 
     @FXML
-    private GridView<Novel> novelGridView;
+    private GridView<NovelModel> novelGridView;
 
     @FXML
     private ImageView searchIcon;
@@ -52,12 +54,12 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
         pageTitle.setText(viewModel.getNovelType());
 
         novelGridView.setCellFactory(new NovelGridCellFactory());
-        novelGridView.setItems(viewModel.getNovels());
+        novelGridView.setItems(viewModel.getNovelModels());
 
 
         backButton.setOnAction(event -> {
-            ViewSwitcher.passData(new HomeScreenController.InitialData(Screens.NOVELS_SCREEN, null));
-            ViewSwitcher.showScreen(View.HOME_SCREEN);
+            ViewSwitcher.passData(new LandingScreenController.InitialData(Screens.NOVELS_SCREEN));
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
         });
 
 
@@ -81,19 +83,19 @@ public class NovelGridScreenController implements FxmlView<NovelGridScreenVM>, I
 
     public static class InitialData {
         private String categoryGenreTitle;
-        private ObservableList<Novel> novels;
+        private ObservableList<NovelModel> novelModels;
 
-        public InitialData(String categoryGenreTitle, ObservableList<Novel> novels) {
+        public InitialData(String categoryGenreTitle, ObservableList<NovelModel> novelModels) {
             this.categoryGenreTitle = categoryGenreTitle;
-            this.novels = novels;
+            this.novelModels = novelModels;
         }
 
         public String getCategoryGenreTitle() {
             return categoryGenreTitle;
         }
 
-        public ObservableList<Novel> getNovels() {
-            return novels;
+        public ObservableList<NovelModel> getNovelModels() {
+            return novelModels;
         }
     }
 }

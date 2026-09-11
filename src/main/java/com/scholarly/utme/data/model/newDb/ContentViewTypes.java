@@ -3,6 +3,7 @@ package com.scholarly.utme.data.model.newDb;
 import com.google.gson.Gson;
 import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
 import com.scholarly.utme.data.model.newDb.contentViewType.*;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -69,11 +70,11 @@ public enum ContentViewTypes {
     }
 
     public static ContentViewType convert(NoteSection section) {
-        List<ContentViewTypes> contentViewTypesList = Arrays.stream(ContentViewTypes.values()).collect(Collectors.toList());
+        List<ContentViewTypes> contentViewTypesList = Arrays.stream(ContentViewTypes.values()).toList();
 
-        for (int i = 0; i < contentViewTypesList.size(); i++) {
-            if (contentViewTypesList.get(i).id == section.getContentViewTypeId()) {
-                return contentViewTypesList.get(i).getContentType(section.getContent());
+        for (ContentViewTypes contentViewTypes : contentViewTypesList) {
+            if (contentViewTypes.id == section.getContentViewTypeId()) {
+                return contentViewTypes.getContentType(section.getContent());
             }
         }
 
@@ -81,7 +82,7 @@ public enum ContentViewTypes {
     }
 
     public static ContentViewType convert(SyllabusSection section) {
-        List<ContentViewTypes> contentViewTypesList = Arrays.stream(ContentViewTypes.values()).collect(Collectors.toList());
+        List<ContentViewTypes> contentViewTypesList = Arrays.stream(ContentViewTypes.values()).toList();
 
         return contentViewTypesList.get(0).getContentType(section.getContent());
 
