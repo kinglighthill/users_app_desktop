@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.settings_screens.SettingsAboutUsScreenController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <HBox spacing="10" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+            <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+            <Label text="About Us" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT Bold" size="24"/>
+                </font>
+            </Label>
+            <padding>
+                <Insets left="30"/>
+            </padding>
+        </HBox>
+    </top>
+
+    <center>
+        <AnchorPane style="-fx-background-color: white;">
+            <VBox spacing="40" AnchorPane.rightAnchor="100" AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.bottomAnchor="20">
+                <StackPane>
+                    <ImageView fx:id="cbtCentreImage" preserveRatio="true" pickOnBounds="true"/>
+                    <Pane opacity="0.5" style="-fx-background-color: #000000;">
+                        <StackPane.margin>
+                            <Insets left="67" right="67"/>
+                        </StackPane.margin>
+                    </Pane>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <ImageView fx:id="scholarlyLogo" preserveRatio="true" pickOnBounds="true"/>
+                        <Label fx:id="scholarlyLabel" text="Scholarly" textFill="white"/>
+                        <StackPane.margin>
+                            <Insets left="100"/>
+                        </StackPane.margin>
+                    </HBox>
+                    <Button fx:id="contactButton" text="Contact Us" textFill="white" prefWidth="180" prefHeight="35" StackPane.alignment="CENTER_RIGHT" style="-fx-background-color: #12AF20; -fx-background-radius: 7;">
+                        <StackPane.margin>
+                            <Insets right="120"/>
+                        </StackPane.margin>
+                    </Button>
+                    <Label fx:id="versionLabel" text="Version 1.0" textFill="white" StackPane.alignment="BOTTOM_LEFT">
+                        <StackPane.margin>
+                            <Insets left="110" bottom="20"/>
+                        </StackPane.margin>
+                    </Label>
+                </StackPane>
+
+                <ScrollPane fitToWidth="true" prefHeight="300" style="-fx-background-color: white;">
+                    <VBox spacing="15">
+                        <VBox fx:id="appDetailsVBox" spacing="20">
+                            <children>
+                                <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                    <left>
+                                        <Label text="See app details" textFill="#053500">
+                                            <font>
+                                                <Font size="16"/>
+                                            </font>
+                                        </Label>
+                                    </left>
+                                    <right>
+                                        <ToggleButton fx:id="appDetailsDropdown"/>
+                                    </right>
+                                    <padding>
+                                        <Insets top="20" bottom="20" left="30" right="25"/>
+                                    </padding>
+                                </Panel>
+                                <Label fx:id="appDetails" wrapText="true" lineSpacing="5" style="-fx-background-color: white;" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac cursus etiam morbi semper Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit malesuada donec vel mi, vitae. Sed tellus, lectus tempor vestibulum sem morbi purus elit. Lorem ut ac ">
+                                    <font>
+                                        <Font size="14"/>
+                                    </font>
+                                    <padding>
+                                        <Insets left="30" right="30"/>
+                                    </padding>
+                                </Label>
+                            </children>
+                        </VBox>
+                        <VBox fx:id="teamVBox" spacing="20">
+                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <left>
+                                    <Label text="Our Team" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <ToggleButton fx:id="teamDropdown"/>
+                                </right>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="25"/>
+                                </padding>
+                            </Panel>
+                        </VBox>
+                        <VBox fx:id="missionVBox" spacing="20">
+                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <left>
+                                    <Label text="Mission" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <ToggleButton fx:id="missionDropdown"/>
+                                </right>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="25"/>
+                                </padding>
+                            </Panel>
+                        </VBox>
+                        <VBox fx:id="visionVBox" spacing="20">
+                            <Panel style="-fx-background-color: rgba(18, 175, 32, 0.2);">
+                                <left>
+                                    <Label text="Vision" textFill="#053500">
+                                        <font>
+                                            <Font size="16"/>
+                                        </font>
+                                    </Label>
+                                </left>
+                                <right>
+                                    <ToggleButton fx:id="visionDropdown"/>
+                                </right>
+                                <padding>
+                                    <Insets top="20" bottom="20" left="30" right="25"/>
+                                </padding>
+                            </Panel>
+                        </VBox>
+                    </VBox>
+                    <padding>
+                        <Insets right="15"/>
+                    </padding>
+                    <VBox.margin>
+                        <Insets left="70" right="70"/>
+                    </VBox.margin>
+                </ScrollPane>
+
+            </VBox>
+        </AnchorPane>
+    </center>
+
+</BorderPane>

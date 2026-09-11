@@ -1,34 +1,41 @@
 package com.scholarly.utme;
 
-import com.scholarly.utme.controller.HomeScreenController;
-import com.scholarly.utme.controller.PracticeScreenController;
+import com.scholarly.utme.data.dao.NovelObjectiveBookmarkDao;
+import com.scholarly.utme.data.dao.ObjectiveBookmarkDao;
+import com.scholarly.utme.data.dao.TheoryBookmarkDao;
 import com.scholarly.utme.data.util.Database;
+import com.scholarly.utme.data.util.NewDatabase;
+import com.scholarly.utme.data.util.NovelsDatabase;
 import com.scholarly.utme.data.util.UserDataDatabase;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.HomeScreenVM;
-import com.scholarly.utme.viewmodels.PracticeScreenVM;
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.ViewTuple;
+import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.util.Constants;
 import javafx.application.Application;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.prefs.Preferences;
+
+import static com.scholarly.utme.util.Constants.PREF_KEY_FIRST_TIME_USER;
 
 public class HelloApplication extends Application {
+    private final Preferences preferences = AppPreferences.getPreferences();
+
+    private static HelloApplication application;
+
     @Override
     public void start(Stage stage) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/layouts/authentication_screen.fxml"));
+//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/layouts/PreAuthenticationScreen.fxml"));
 ////        Scene scene = new Scene(fxmlLoader.load());
 ////        stage.setTitle("Scholarly UTME");
 ////        stage.setScene(scene);
 
-        System.out.println("Databases are ok..." + (Database.isOK() && UserDataDatabase.isOK()));
+        System.out.println("Databases are ok..." + (NewDatabase.isOK() && Database.isOK() && UserDataDatabase.isOK() && NovelsDatabase.isOK()));
+
+        System.out.println("Create tables are ok..." + (ObjectiveBookmarkDao.createTable() && TheoryBookmarkDao.createTable() && NovelObjectiveBookmarkDao.createTable()));
 
         try {
             InputStream iconStream = HelloApplication.class.getResourceAsStream("/drawable/app_logo.png");
@@ -40,8 +47,15 @@ public class HelloApplication extends Application {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
         ViewSwitcher.setStage(stage);
-        ViewSwitcher.showScreen(View.AUTHENTICATION_SCREEN);
+        boolean firstTimeUser = preferences.getBoolean(PREF_KEY_FIRST_TIME_USER, true);
+        if (firstTimeUser) {
+            ViewSwitcher.showScreen(View.WELCOME_SCREEN);
+        } else {
+            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+        }
+
 
 //        ViewTuple viewTuple = FluentViewLoader.fxmlView(PracticeScreenController.class).load();
 //
@@ -49,6 +63,11 @@ public class HelloApplication extends Application {
 //        stage.setMaximized(true);
 //        stage.setScene(new Scene(root));
 //        stage.show();
+    }
+
+    public void openBrowser(String uri) {
+        System.out.println("Browser");
+        getHostServices().showDocument(uri);
     }
 
     public static void main(String[] args) {

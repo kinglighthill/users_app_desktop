@@ -1,25 +1,27 @@
 package com.scholarly.utme.ui.utils;
 
-import com.scholarly.utme.controller.PracticeScreenController;
+import com.scholarly.utme.HelloApplication;
 import de.saxsys.mvvmfx.FluentViewLoader;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class ViewSwitcher {
 
     private static Stage stage;
-    private static Scene rootScene = new Scene(new Pane());
+    private static final Scene rootScene = new Scene(new Pane());
 
     public static void showScreen(View view) {
         try {
             Parent root = FluentViewLoader.fxmlView(view.getControllerClass()).load().getView();
 
+            String cssResource = HelloApplication.class.getResource("/styles/main.css").toExternalForm();
+            root.getStylesheets().add(cssResource);
+//            root.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+
             rootScene.setRoot(root);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

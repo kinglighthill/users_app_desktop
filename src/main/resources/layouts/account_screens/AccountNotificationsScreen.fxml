@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.account_screens.AccountNotificationsScreenController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <HBox spacing="15" prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+            <Button fx:id="backButton" maxHeight="30" maxWidth="30"/>
+            <Label text="Notifications" textFill="#053500">
+                <font>
+                    <Font name="Gill Sans MT Bold" size="24"/>
+                </font>
+            </Label>
+            <padding>
+                <Insets left="20"/>
+            </padding>
+        </HBox>
+    </top>
+
+    <center>
+        <AnchorPane style="-fx-background-color: white;">
+            <ListView fx:id="notificationsList" style="-fx-background-color: white;"
+                      AnchorPane.leftAnchor="40" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="100" AnchorPane.bottomAnchor="30"/>
+        </AnchorPane>
+    </center>
+
+</BorderPane>

@@ -24,7 +24,7 @@ public class RecentlyViewedItemCell extends ListCell<Course> {
 
     private void loadFXML() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/recently_viewed_item.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/list_items/recently_viewed_item.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             loader.load();

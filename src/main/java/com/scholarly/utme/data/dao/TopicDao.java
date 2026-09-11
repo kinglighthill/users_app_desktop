@@ -35,12 +35,12 @@ public class TopicDao {
                         rs.getString(titleColumn)));
             }
 
-
             return topics;
+
         } catch (SQLException e) {
             Logger.getAnonymousLogger().log(
                     Level.SEVERE,
-                    LocalDateTime.now() + ": Could not load topics from database ");
+                    LocalDateTime.now() + ": Could not load topics from database because + " + e.getMessage());
             topics.clear();
 
             return null;

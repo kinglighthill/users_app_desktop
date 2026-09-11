@@ -1,384 +1,814 @@
 package com.scholarly.utme.controller;
 
-import com.scholarly.utme.data.model.User;
-import com.scholarly.utme.ui.utils.View;
-import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.AuthenticationVM;
+import com.google.gson.Gson;
+import com.scholarly.utme.HelloApplication;
+import com.scholarly.utme.network.NetworkService;
+import com.scholarly.utme.network.model.*;
+import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
+import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+import javafx.scene.paint.Paint;
+import okhttp3.*;
+import org.apache.commons.lang3.RandomStringUtils;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.*;
+import java.util.*;
+import java.util.prefs.Preferences;
 
-@FxmlPath("/layouts/authentication_screen.fxml")
-public class AuthenticationController implements FxmlView<AuthenticationVM>, Initializable {
+import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
+import static com.scholarly.utme.network.model.DeviceInfo.getSystemProperties;
+import static com.scholarly.utme.util.Constants.*;
 
-    @FXML
-    public HBox root;
-
-    @FXML
-    public VBox imageSliderSection;
-
-    @FXML
-    public Pane pane;
-
-    @FXML
-    public Separator separator;
+@FxmlPath("/layouts/AuthenticationScreen.fxml")
+public class AuthenticationController implements FxmlView<AuthenticationScreenVM>, Initializable {
+    private static final String TAG = "AuthenticationController: ";
 
     @FXML
-    public VBox authenticationSection;
+    private StackPane authenticationSection;
 
-    Label loginInfoLabel, resetInfoLabel, signupInfoLabel;
+    @FXML
+    private VBox dimmer, signUpSection, loginSection, recoverPasswordSection, signUpNameSection, signUpEmailSection, signUpPasswordSection, signUpPhoneSection, loginEmailSection, loginPasswordSection;
 
-    // Global ImageView array variable;
-    ImageView[] imgView = new ImageView[3];
-    int imgIndex = 0;
+    @FXML
+    private ImageView imageView, appIcon;
 
+    @FXML
+    private ProgressIndicator progressBar;
+
+    @FXML
+    private Label scholarlyText, beTheBestText, signUpHeaderText, signUpNameText, signUpEmailText, signUpPasswordText, signUpPhoneText, signUpContinueText, signUpHaveAccountText, signUpLoginText, forgotPasswordText, resetText;
+
+    @FXML
+    private Label signUpEmailError, loginHeaderText, loginEmailText, loginPasswordText, loginContinueText, loginHaveAcctText, loginSignUpText, recoverHeaderText, recoverEmailText, recoverEmailPrompt, recoverLoginText;
+
+    @FXML
+    private Button signUpProceedButton, signUpGoogleButton, signUpFacebookButton, loginProceedButton, loginGoogleButton, loginFacebookButton, recoverProceedButton;
+
+    @FXML
+    private TextField signUpNameField, signUpEmailField, signUpPasswordField, loginEmailField, loginPasswordField, recoverEmailField;
+
+    @FXML
+    private CustomNumberField signUpPhoneField;
+
+
+    private Preferences preferences;
+    OkHttpClient httpClient;
+
+    interface ServerCallback {
+        void stopServer();
+        void redirect();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        HBox.setMargin(separator, new Insets(0, 30, 0, 30));
-        initializeImageSliderSection();
-        showDefaultAuthenticationSection();
-    }
-
-    private void initializeImageSliderSection() {
-        VBox.setMargin(pane, new Insets(40, 40, 40, 40));
-        for (int i = 1; i <= 3; i++) {
-            imgView[i-1] = new ImageView(new Image(getClass().getResource("/drawable/image" + i + ".jpg").toString()));
-            imgView[i-1].setFitWidth(800);
-            imgView[i-1].setFitHeight(800);
-        }
-
-        pane.getChildren().add(imgView[imgIndex]);
-
-        EventHandler<ActionEvent> eventHandler = e -> {
-            if (imgIndex < 2) {
-                // Adding Children
-                pane.getChildren().remove(imgView[imgIndex]);
-                imgIndex++;
-                pane.getChildren().add(imgView[imgIndex]);
-                FadeTransition ft = new FadeTransition(Duration.millis(1000), imgView[imgIndex]);
-                ft.setFromValue(0);
-                ft.setToValue(1);
-                ft.play();
-            }
-            else if (imgIndex == 2) {
-                imgIndex = 0;
-                pane.getChildren().remove(imgView[2]);
-                pane.getChildren().add(imgView[imgIndex]);
-                FadeTransition ft = new FadeTransition(Duration.millis(1000), imgView[imgIndex]);
-                ft.setFromValue(0);
-                ft.setToValue(1);
-                ft.play();
-            }
-        };
-
-        // Timeline Animation
-        Timeline animation = new Timeline(new KeyFrame(Duration.millis(5000), eventHandler));
-        animation.setCycleCount(Timeline.INDEFINITE);
-        animation.play();
-    }
-
-    private void showDefaultAuthenticationSection() {
-
-        Label headerLabel = new Label("Welcome to Scholarly Jamb E-learning app");
-        VBox.setMargin(headerLabel, new Insets(40, 0, 0, 20));
-
-        VBox buttonBox = new VBox();
-        buttonBox.setSpacing(30);
-        Button loginButton = new Button("Login");
-        HBox buttonSeparator = new HBox();
-        VBox.setMargin(buttonSeparator, new Insets(0, 20, 0, 20));
-        buttonSeparator.setSpacing(10);
-        buttonSeparator.setAlignment(Pos.CENTER);
-        Separator separator1 = new Separator();
-        Separator separator2 = new Separator();
-        Label orLabel = new Label("OR");
-
-        HBox.setHgrow(separator1, Priority.ALWAYS);
-        HBox.setHgrow(separator2, Priority.ALWAYS);
-
-        buttonSeparator.getChildren().addAll(separator1, orLabel, separator2);
-
-        Button signUpButton = new Button("Sign Up");
-
-        buttonBox.getChildren().addAll(loginButton, buttonSeparator, signUpButton);
-        buttonBox.setAlignment(Pos.CENTER);
-
-
-        VBox.setVgrow(buttonBox, Priority.ALWAYS);
-
-        authenticationSection.getChildren().clear();
-        authenticationSection.getChildren().addAll(headerLabel, buttonBox);
-
-        loginButton.setOnAction(e -> {
-            showLoginUI();
-        });
-
-        signUpButton.setOnAction(e -> {
-            showSignUpUI();
-        });
-    }
-
-
-    /**
-     * Shows login UI for authentication
-     */
-    private void showLoginUI() {
-        Label headerLabel = new Label("Login");
-
-
-        HBox topBar = new HBox();
-        topBar.setSpacing(15);
-        topBar.setAlignment(Pos.CENTER_LEFT);
-
-        topBar.getChildren().addAll(headerLabel);
-
-        VBox.setMargin(topBar, new Insets(40, 0, 0, 20));
-
-        Label credential = new Label("Email or Username");
-        VBox.setMargin(credential, new Insets(60, 0, 0, 20));
-        TextField credentialTextField = new TextField();
-        VBox.setMargin(credentialTextField, new Insets(10, 0, 0, 20));
-
-        Label passwordLabel = new Label("Password");
-        VBox.setMargin(passwordLabel, new Insets(20, 0, 0, 20));
-        PasswordField passwordField = new PasswordField();
-        VBox.setMargin(passwordField, new Insets(10, 0, 0, 20));
-
-        loginInfoLabel = new Label();
-        loginInfoLabel.setVisible(false);
-        VBox.setMargin(loginInfoLabel, new Insets(15, 0, 0, 20));
-
-        Button loginButton = new Button("Login");
-        VBox.setMargin(loginButton, new Insets(40, 0, 0, 20));
-
-        HBox backAndForgotPassButton = new HBox();
-        VBox.setMargin(backAndForgotPassButton, new Insets(20, 0, 0, 20));
-
-
-        Button backButton = new Button("Back");
-        HBox.setMargin(backButton, new Insets(0, 10, 0, 0));
-
-        Button forgotPasswordButton = new Button("Forgot Password?");
-        HBox.setMargin(forgotPasswordButton, new Insets(0, 0, 0, 10));
-
-        backAndForgotPassButton.getChildren().clear();
-        backAndForgotPassButton.getChildren().addAll(backButton, forgotPasswordButton);
-
-
-
-        authenticationSection.getChildren().clear();
-        authenticationSection.getChildren().addAll(topBar, credential, credentialTextField, passwordLabel, passwordField, loginInfoLabel, loginButton, backAndForgotPassButton);
-
-
-        loginButton.setOnAction(e -> {
-            validateLoginInput(credentialTextField, passwordField);
-
-        });
-        backButton.setOnAction(e -> {
-            showDefaultAuthenticationSection();
-        });
-        forgotPasswordButton.setOnAction(e -> {
-            showForgotPasswordUI();
-        });
-    }
-
-    /**
-     * Validates user authentication details before login
-     * @param credentialField the email address or username entered
-     * @param passwordField the user's password
-     */
-    private void validateLoginInput(TextField credentialField, PasswordField passwordField) {
-        String credential = credentialField.getText().trim();
-        String password = passwordField.getText().trim();
-
-        if (credential.contains("@") && !password.isEmpty()){
-            ViewSwitcher.showScreen(View.LANDING_SCREEN);
-        }else {
-            loginInfoLabel.setText("Please enter a valid email or password");
-            loginInfoLabel.setVisible(true);
-        }
-    }
-
-    /**
-     * Shows sign up UI for authentication
-     */
-    private void showSignUpUI() {
-        Label headerLabel = new Label("Sign Up");
-
-        HBox topBar = new HBox();
-        topBar.setSpacing(15);
-        topBar.setAlignment(Pos.CENTER_LEFT);
-
-        topBar.getChildren().addAll(headerLabel);
-
-        VBox.setMargin(topBar, new Insets(40, 0, 0, 20));
-
-        Label firstName = new Label("First Name");
-        VBox.setMargin(firstName, new Insets(60, 0, 0, 20));
-        TextField firstNameTextField = new TextField();
-        VBox.setMargin(firstNameTextField, new Insets(10, 0, 0, 20));
-
-        Label lastName = new Label("Last Name");
-        VBox.setMargin(lastName, new Insets(20, 0, 0, 20));
-        TextField lastNameTextField = new TextField();
-        VBox.setMargin(lastNameTextField, new Insets(10, 0, 0, 20));
-
-        Label phone = new Label("Phone number");
-        VBox.setMargin(phone, new Insets(20, 0, 0, 20));
-        TextField phoneTextField = new TextField();
-        VBox.setMargin(phoneTextField, new Insets(10, 0, 0, 20));
-
-        Label email = new Label("Email");
-        VBox.setMargin(email, new Insets(20, 0, 0, 20));
-        TextField emailTextField = new TextField();
-        VBox.setMargin(emailTextField, new Insets(10, 0, 0, 20));
-
-        Label passwordLabel = new Label("Password");
-        VBox.setMargin(passwordLabel, new Insets(20, 0, 0, 20));
-        PasswordField passwordField = new PasswordField();
-        VBox.setMargin(passwordField, new Insets(10, 0, 0, 20));
-
-        signupInfoLabel = new Label();
-        VBox.setMargin(signupInfoLabel, new Insets(20, 0, 0, 20));
-
-        HBox backAndSignupButton = new HBox();
-        VBox.setMargin(backAndSignupButton, new Insets(40, 0, 0, 20));
-
-        Button backButton = new Button("Back");
-        HBox.setMargin(backButton, new Insets(0, 10, 0, 0));
-
-        Button signUpButton = new Button("Sign Up");
-        HBox.setMargin(signUpButton, new Insets(0, 0, 0, 10));
-
-        backAndSignupButton.getChildren().clear();
-        backAndSignupButton.getChildren().addAll(backButton, signUpButton);
-
-
-        authenticationSection.getChildren().clear();
-        authenticationSection.getChildren().addAll(
-                topBar, firstName, firstNameTextField, lastName, lastNameTextField, phone, phoneTextField,
-                email, emailTextField, passwordLabel, passwordField, signupInfoLabel, backAndSignupButton);
-
-
-        backButton.setOnAction(e -> {
-            showDefaultAuthenticationSection();
-        });
-        signUpButton.setOnAction(e -> {
-            validateSignupInput(firstNameTextField, lastNameTextField, phoneTextField, emailTextField, passwordField);
-
-        });
-    }
-
-    private void validateSignupInput(TextField firstNameText, TextField lastNameText, TextField phoneText, TextField emailText, PasswordField passwordText){
-        String firstName = firstNameText.getText().trim();
-        String lastName = lastNameText.getText().trim();
-        String phone = phoneText.getText().trim();
-        String email = emailText.getText().trim();
-        String password = passwordText.getText().trim();
-
-        if (!firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty() && !password.isEmpty()){
-            if (email.contains("@")){
-                User newUser = new User(firstName, lastName, phone, email, password);
-                authenticateUser(newUser);
-                signupInfoLabel.setText("Account created successfully!");
-            }else {
-                signupInfoLabel.setText("Please input a valid email address");
-            }
-
-        }else {
-            signupInfoLabel.setText("Kindly fill out all fields");
-            signupInfoLabel.setVisible(true);
-        }
-
-
-    }
-
-    private void showForgotPasswordUI() {
-        Label headerLabel = new Label("Forgot Password");
-
-
-        HBox topBar = new HBox();
-        topBar.setSpacing(15);
-        topBar.setAlignment(Pos.CENTER_LEFT);
-
-        topBar.getChildren().addAll(headerLabel);
-
-        VBox.setMargin(topBar, new Insets(40, 0, 0, 20));
-
-        Label description = new Label("Enter your email address below. An email with a reset link will be sent shortly.");
-        VBox.setMargin(description, new Insets(20, 0, 0, 20));
-
-        Label email = new Label("Email");
-        VBox.setMargin(email, new Insets(60, 0, 0, 20));
-        TextField emailTextField = new TextField();
-        VBox.setMargin(emailTextField, new Insets(10, 0, 0, 20));
-
-        resetInfoLabel = new Label();
-        VBox.setMargin(resetInfoLabel, new Insets(10, 0, 0, 20));
-        resetInfoLabel.setVisible(false);
-
-        HBox hbox = new HBox();
-        VBox.setMargin(hbox, new Insets(40, 0, 0, 20));
-
-        Button backButton = new Button("Back");
-        HBox.setMargin(backButton, new Insets(0, 10, 0, 0));
-
-        Button proceedButton = new Button("Proceed");
-        VBox.setMargin(proceedButton, new Insets(0, 10, 0, 20));
-
-        hbox.getChildren().clear();
-        hbox.getChildren().addAll(backButton, proceedButton);
-
-        authenticationSection.getChildren().clear();
-        authenticationSection.getChildren().addAll(topBar, description, email, emailTextField, resetInfoLabel, hbox);
-
-        backButton.setOnAction(e -> {
-            showLoginUI();
-        });
-        proceedButton.setOnAction(e -> {
-            validateEmailInput(emailTextField);
-        });
-    }
-
-    private void validateEmailInput(TextField emailText){
-        String email = emailText.getText().trim();
-
-        if (email.contains("@")) {
-            resetPassword(email);
-            resetInfoLabel.setText("A password reset link has been sent to the above email address");
-            resetInfoLabel.setVisible(true);
-
+        preferences = AppPreferences.getPreferences();
+        httpClient = NetworkService.getHttpClient();
+
+        boolean showSignUpScreen = (boolean) ViewSwitcher.retrieveData();
+        if (showSignUpScreen) {
+            Animations.fadeIn(signUpSection, 300);
         } else {
-            resetInfoLabel.setText("Please enter a valid email address");
-            resetInfoLabel.setVisible(true);
-
+            Animations.fadeIn(loginSection, 300);
         }
-    }
-    private void authenticateUser(User user){
-        //TODO
+
+        initializeViews();
+        initializeFonts();
+
+        signUpLoginText.setOnMouseClicked(event -> {
+            Animations.fadeOut(signUpSection, 200);
+            Animations.fadeIn(loginSection, 300);
+        });
+
+        loginSignUpText.setOnMouseClicked(event -> {
+            Animations.fadeOut(loginSection, 200);
+            Animations.fadeIn(signUpSection, 300);
+        });
+
+        resetText.setOnMouseClicked(event -> {
+            recoverEmailPrompt.setVisible(false);
+            recoverEmailPrompt.setText("Please enter a valid email address");
+            recoverEmailPrompt.setTextFill(Paint.valueOf("#FF0000"));
+            recoverEmailField.setText("");
+            recoverProceedButton.setText("Proceed");
+            Animations.fadeOut(loginSection, 300);
+            Animations.fadeIn(recoverPasswordSection, 300);
+
+        });
+
+        recoverLoginText.setOnMouseClicked(event -> {
+            Animations.fadeOut(recoverPasswordSection, 300);
+            Animations.fadeIn(loginSection, 300);
+        });
+
+
+        Label signUpNameError = getNameErrorText();
+        Label signUpEmailError = getEmailErrorText();
+        Label signUpPasswordError = getPasswordErrorText();
+        Label signUpPhoneError = getPhoneErrorText();
+
+        signUpProceedButton.setOnAction(event -> {
+
+            String fullName = signUpNameField.getText();
+            signUpNameSection.getChildren().remove(signUpNameError);
+            if (fullName.split(" ").length == 1) {
+                signUpNameSection.getChildren().add(signUpNameError);
+                return;
+            }
+
+            String email = signUpEmailField.getText();
+            signUpEmailSection.getChildren().remove(signUpEmailError);
+            if (!email.contains("@")) {
+                signUpEmailSection.getChildren().add(signUpEmailError);
+                return;
+            }
+
+            String password = signUpPasswordField.getText();
+            signUpPasswordSection.getChildren().remove(signUpPasswordError);
+            if (password.length() < 6) {
+                if (!signUpPasswordSection.getChildren().contains(signUpPasswordError)) {
+                    signUpPasswordSection.getChildren().add(signUpPasswordError);
+                }
+                return;
+            }
+
+            String phoneNumber = signUpPhoneField.getCharacters().toString();
+            signUpPhoneSection.getChildren().remove(signUpPhoneError);
+            if (phoneNumber.length() < 11) {
+                if (!signUpPhoneSection.getChildren().contains(signUpPhoneError)) {
+                    signUpPhoneSection.getChildren().add(signUpPhoneError);
+                }
+                return;
+            }
+
+            signUpProceedButton.setDisable(true);
+            showProgressBar();
+
+            signUpEmailSection.getChildren().remove(signUpNameError);
+            signUpEmailSection.getChildren().remove(signUpEmailError);
+            signUpPasswordSection.getChildren().remove(signUpPasswordError);
+            signUpPhoneSection.getChildren().remove(signUpPhoneError);
+
+            DeviceInfo deviceInfo = getSystemProperties();
+            ReferrerInfo referrerInfo = new ReferrerInfo();
+            SignupUser signupUser = new SignupUser(fullName, email, phoneNumber, password, "nigeria", "fcm-token", "utme", false, "empty", deviceInfo, referrerInfo);
+
+            // Check for internet connectivity
+            try {
+                URL url = new URL(BASE_URL);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+                Task<Void> signupTask = new Task<>() {
+                    @Override
+                    protected Void call() {
+                        signupUser(signupUser);
+                        return null;
+                    }
+                };
+                Thread signupThread = new Thread(signupTask);
+                signupThread.start();
+
+            } catch (Exception e) {
+                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                alertDialog.show();
+                hideProgressBar();
+                System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
+            }
+
+        });
+
+
+        Label loginEmailError = getEmailErrorText();
+        Label loginPasswordError = getPasswordErrorText();
+
+        loginProceedButton.setOnAction(event -> {
+
+            String email = loginEmailField.getText();
+            loginEmailSection.getChildren().remove(loginEmailError);
+            if (!loginEmailField.getText().contains("@")) {
+                loginEmailSection.getChildren().add(loginEmailError);
+                return;
+            }
+
+            String password = loginPasswordField.getText();
+            loginPasswordSection.getChildren().remove(loginPasswordError);
+            if (loginPasswordField.getCharacters().length() < 6) {
+                if (!loginPasswordSection.getChildren().contains(loginPasswordError)) {
+                    loginPasswordSection.getChildren().add(loginPasswordError);
+                }
+                return;
+            }
+
+            loginProceedButton.setDisable(true);
+            showProgressBar();
+
+            loginEmailSection.getChildren().remove(loginEmailError);
+            loginPasswordSection.getChildren().remove(loginPasswordError);
+
+
+            DeviceInfo deviceInfo = getSystemProperties();
+            LoginUser user = new LoginUser();
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setAppSlug("utme");
+            user.setDeviceInfo(deviceInfo);
+
+            // Check for internet connectivity
+            try {
+                URL url = new URL(BASE_URL);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+                Task<Void> loginTask = new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        loginUser(user);
+                        return null;
+                    }
+                };
+                Thread loginThread = new Thread(loginTask);
+                loginThread.start();
+
+            } catch (Exception e) {
+                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                alertDialog.show();
+                hideProgressBar();
+                System.out.println(TAG + "Cannot create connection to -> " + e.getMessage());
+            }
+
+        });
+
+        recoverProceedButton.setOnAction(event -> {
+
+            if (!recoverEmailField.getText().contains("@")) {
+                recoverEmailPrompt.setVisible(true);
+            } else {
+
+                recoverProceedButton.setDisable(true);
+                showProgressBar();
+
+                String email = recoverEmailField.getText();
+                SignupUser signupUser = new SignupUser();
+                signupUser.setEmail(email);
+                signupUser.setAppSlug("utme");
+
+                // Check for internet connectivity
+                try {
+                    URL url = new URL(BASE_URL);
+                    URLConnection connection = url.openConnection();
+                    connection.connect();
+
+                    Task<Void> recoverTask = new Task<>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            recoverPassword(signupUser);
+                            return null;
+                        }
+                    };
+                    Thread recoverThread = new Thread(recoverTask);
+                    recoverThread.start();
+
+                } catch (Exception e) {
+                    Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                    alertDialog.show();
+                    hideProgressBar();
+                    System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
+                }
+
+            }
+        });
+
+        signUpGoogleButton.setOnAction(event -> {
+
+            signUpGoogleButton.setDisable(true);
+            showProgressBar();
+
+            // Check for internet connectivity
+            try {
+                URL url = new URL(BASE_URL);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+                Task<Void> signInGoogleTask = new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        signInWithGoogle();
+                        return null;
+                    }
+                };
+                Thread background = new Thread(signInGoogleTask);
+                background.start();
+
+            } catch (Exception e) {
+                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                alertDialog.show();
+                hideProgressBar();
+                System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
+            }
+        });
+
+        loginGoogleButton.setOnAction(event -> {
+
+            loginGoogleButton.setDisable(true);
+            showProgressBar();
+
+            // Check for internet connectivity
+            try {
+                URL url = new URL(BASE_URL);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+                Task<Void> loginGoogleTask = new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        signInWithGoogle();
+                        return null;
+                    }
+                };
+                Thread background = new Thread(loginGoogleTask);
+                background.start();
+
+            } catch (Exception e) {
+                Alert alertDialog = Alerts.info(getClass(), "No Internet", "Check your internet connection and try again", "");
+                alertDialog.show();
+                hideProgressBar();
+                System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
+
+            }
+        });
+
     }
 
-    private void resetPassword(String email){
-        // TODO
+    private void signupUser(SignupUser newUser) {
+        String END_POINT = "signup";
+
+        Gson gson = new Gson();
+        String json = gson.toJson(newUser);
+
+        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + END_POINT)
+                .addHeader("platform", newUser.getDeviceInfo().getPlatform())
+                .post(requestBody)
+                .build();
+
+        Call call = httpClient.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                System.out.println(TAG + "Signup: Got response code -> " + response.code());
+                try (ResponseBody responseBody = response.body()) {
+                    assert responseBody != null;
+                    BaseResponse signupResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+
+                    if (signupResponse.getStatus().equalsIgnoreCase("success")) {
+                        // TODO: Encrypt and Save token with Java Keystore
+                        preferences.put(PREF_KEY_ACCESS_TOKEN, signupResponse.getData().getAccessToken());
+                        System.out.println(TAG + "Signed up user with Access token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN, " "));
+
+                        String userData = gson.toJson(signupResponse.getData().getUserData());
+                        preferences.put(PREF_KEY_USER_DATA, userData);
+                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE, signupResponse.getData().getActivationState().isActivationActive());
+
+                        Platform.runLater(() -> {
+                            hideProgressBar();
+//                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                        });
+
+                    } else if (signupResponse.getStatus().equalsIgnoreCase("error")) {
+                        Platform.runLater(() -> {
+                            Alert alertDialog = Alerts.info(getClass(), "Error", signupResponse.getMessage(), "");
+                            alertDialog.show();
+                            hideProgressBar();
+                        });
+
+                    }
+
+                } catch (Exception e) {
+                    System.out.println(TAG + "Cannot parse response body to data class because -> " + e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Platform.runLater(() -> {
+                    Alert alertDialog = Alerts.info(getClass(), "Error", "Could not sign up because " + e.getMessage(), "");
+                    alertDialog.show();
+                    hideProgressBar();
+                });
+                System.out.println("Request failed with exception -> " + e.getMessage());
+            }
+        });
+
     }
+
+    private void signupUser(String authCode, String redirectUri, ServerCallback callback) {
+        String END_POINT = "signup/google";
+
+        DeviceInfo deviceInfo = getSystemProperties();
+        ReferrerInfo referrerInfo = new ReferrerInfo();
+        GoogleUser user = new GoogleUser("nigeria", "fcm-token", "utme", authCode, redirectUri, deviceInfo, referrerInfo);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + END_POINT)
+                .addHeader("platform", user.getDeviceInfo().getPlatform())
+                .post(requestBody)
+                .build();
+
+        Call call = httpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                System.out.println(TAG + "SignupWithGoogle: Got response with code -> " + response.code());
+                try (ResponseBody responseBody = response.body()) {
+                    assert responseBody != null;
+                    BaseResponse signupResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+
+                    if (signupResponse.getStatus().equalsIgnoreCase("success")) {
+                        // TODO: Encrypt and Save token with Java Keystore
+                        preferences.put(PREF_KEY_ACCESS_TOKEN, signupResponse.getData().getAccessToken());
+                        preferences.put(PREF_KEY_REFRESH_TOKEN, signupResponse.getData().getRefreshToken());
+
+                        String userData = gson.toJson(signupResponse.getData().getUserData());
+                        preferences.put(PREF_KEY_USER_DATA, userData);
+                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE, signupResponse.getData().getActivationState().isActivationActive());
+
+                        System.out.println(TAG + "Signed up user with User data -> " + preferences.get(PREF_KEY_USER_DATA, " "));
+                        callback.redirect();
+
+                        Platform.runLater(() -> {
+                            hideProgressBar();
+//                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                        });
+
+                    } else if (signupResponse.getStatus().equalsIgnoreCase("error")) {
+                        Platform.runLater(() -> {
+                            Alert alertDialog = Alerts.info(getClass(), "Error", signupResponse.getMessage(), "");
+                            alertDialog.show();
+                            hideProgressBar();
+                        });
+                        callback.stopServer();
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
+                }
+
+                callback.stopServer();
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.stopServer();
+                Platform.runLater(() -> {
+                    Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                    alertDialog.show();
+                    hideProgressBar();
+                });
+                System.out.println("Request failed with exception -> " + e.getMessage());
+            }
+        });
+    }
+
+    private void loginUser(LoginUser user) {
+        String END_POINT = "login";
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + END_POINT)
+                .addHeader("platform", user.getDeviceInfo().getPlatform())
+                .post(requestBody)
+                .build();
+
+        Call call = httpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                System.out.println(TAG + "Login: Got response code -> " + response.code());
+                try (ResponseBody responseBody = response.body()) {
+                    assert responseBody != null;
+                    BaseResponse loginResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+
+                    if (loginResponse.getStatus().equalsIgnoreCase("success")) {
+                        // TODO: Encrypt and Save token with Java Keystore
+                        preferences.put(PREF_KEY_ACCESS_TOKEN, loginResponse.getData().getAccessToken());
+                        System.out.println(TAG + "Logged in user with Access token -> " + preferences.get(PREF_KEY_ACCESS_TOKEN, " "));
+
+                        String userData = gson.toJson(loginResponse.getData().getUserData());
+                        preferences.put(PREF_KEY_USER_DATA, userData);
+                        preferences.putBoolean(PREF_KEY_ACTIVATION_STATE, loginResponse.getData().getActivationState().isActivationActive());
+
+                        Platform.runLater(() -> {
+                            hideProgressBar();
+//                            ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
+                            ViewSwitcher.showScreen(View.LANDING_SCREEN);
+                        });
+
+                    } else if (loginResponse.getStatus().equalsIgnoreCase("error")) {
+                        Platform.runLater(() -> {
+                            Alert alertDialog = Alerts.info(getClass(), "Error", loginResponse.getMessage(), "");
+                            alertDialog.show();
+                            hideProgressBar();
+                        });
+
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Platform.runLater(() -> {
+                    Alert alertDialog = Alerts.info(getClass(), "Error", "Could not connect because " + e.getMessage(), "");
+                    alertDialog.show();
+                    hideProgressBar();
+                });
+                System.out.println("Request failed with exception -> " + e.getMessage());
+            }
+        });
+
+    }
+
+    private void recoverPassword(SignupUser signupUser) {
+        String END_POINT = "password-reset/send-email";
+
+        Gson gson = new Gson();
+        String json = gson.toJson(signupUser);
+
+        RequestBody requestBody = RequestBody.create(JSON_BODY_TYPE, json);
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + END_POINT)
+                .post(requestBody)
+                .build();
+
+        Call call = httpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                System.out.println(TAG + "RecoverPassword: Got response with code -> " + response.code());
+                try (ResponseBody responseBody = response.body()) {
+                    assert responseBody != null;
+                    BaseResponse baseResponse = gson.fromJson(responseBody.string(), BaseResponse.class);
+
+                    if (baseResponse.getStatus().equalsIgnoreCase("success")) {
+
+                        Platform.runLater(() -> {
+                            recoverEmailPrompt.setVisible(true);
+                            recoverEmailPrompt.setText(baseResponse.getMessage());
+                            recoverEmailPrompt.setTextFill(Paint.valueOf("#053500"));
+
+                            hideProgressBar();
+                        });
+
+                    } else if (baseResponse.getStatus().equalsIgnoreCase("error")) {
+
+                        Platform.runLater(() -> {
+                            recoverEmailPrompt.setVisible(true);
+                            recoverEmailPrompt.setText(baseResponse.getMessage());
+                            hideProgressBar();
+                        });
+
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Cannot parse response body to data class because -> " + e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Platform.runLater(() -> {
+                    Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                    alertDialog.show();
+                    hideProgressBar();
+                });
+                System.out.println("Request failed with exception -> " + e.getMessage());
+            }
+        });
+
+    }
+
+    private void signInWithGoogle() {
+        final HttpServer server;
+        HelloApplication application = new HelloApplication();
+        InetAddress ipaddress = InetAddress.getLoopbackAddress(); // returns 127.0.0.1
+
+        String state = RandomStringUtils.random(6, true, false);
+        String scope = "email profile";
+        String responseType = "code";
+        String clientId = "671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
+
+        try {
+            server = HttpServer.create(new InetSocketAddress(ipaddress, 0), 0);
+
+            String redirectUri = "http://" + server.getAddress().getHostName() + ":" + server.getAddress().getPort();
+
+            server.start();
+
+            String authorizationRequest = "https://accounts.google.com/o/oauth2/v2/auth?scope=" + scope + "&response_type=" + responseType + "&state=" + state + "&redirect_uri=" + redirectUri + "&client_id=" + clientId;
+            System.out.println(TAG + "Auth request -> " + authorizationRequest);
+
+            application.openBrowser(authorizationRequest);
+
+            HttpContext responseContext = server.createContext("/");
+            responseContext.setHandler(new HttpHandler() {
+                @Override
+                public void handle(HttpExchange exchange) throws IOException {
+                    String uriResponse = exchange.getRequestURI().getQuery();
+                    System.out.println(TAG + "HttpContext UriResponse -> " + uriResponse);
+
+                    if (uriResponse.contains("code")) {
+                        String code = uriResponse.substring(uriResponse.indexOf("code"), uriResponse.indexOf("scope")-1);
+                        String authCode = code.substring(uriResponse.indexOf("="));
+
+                        signupUser(authCode, redirectUri, new ServerCallback() {
+                            @Override
+                            public void stopServer() {
+                                server.stop(60);
+                            }
+
+                            @Override
+                            public void redirect() {
+                                try {
+                                    byte[] response = "<html><body>Login successful. Go back to the app</body></html>".getBytes();
+                                    exchange.sendResponseHeaders(200, response.length);
+                                    OutputStream os = exchange.getResponseBody();
+                                    os.write(response);
+                                    os.close();
+                                } catch (IOException exception) {
+                                    System.out.println(exception.getMessage());
+                                }
+                            }
+                        });
+
+                    } else {
+                        server.stop(60);
+                        Platform.runLater(() -> {
+                            Alert alertDialog = Alerts.info(getClass(), "Error", "Could not sign in with Google", "");
+                            alertDialog.show();
+                            hideProgressBar();
+                        });
+                    }
+                }
+            });
+
+        } catch (IOException e) {
+            Platform.runLater(() -> {
+                Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
+                alertDialog.show();
+                hideProgressBar();
+            });
+            System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
+        }
+
+    }
+
+    private void hideProgressBar() {
+        signUpProceedButton.setDisable(false);
+        loginProceedButton.setDisable(false);
+        signUpGoogleButton.setDisable(false);
+        loginGoogleButton.setDisable(false);
+        recoverProceedButton.setDisable(false);
+        dimmer.setVisible(false);
+        progressBar.setVisible(false);
+    }
+
+    private void showProgressBar() {
+        dimmer.setVisible(true);
+        progressBar.setVisible(true);
+        AnchorPane.setTopAnchor(progressBar, dimmer.getHeight()/2);
+        AnchorPane.setLeftAnchor(progressBar, dimmer.getWidth()/2);
+    }
+
+    private Label getNameErrorText() {
+        Label error = new Label("Enter your first name and last name separated by a space");
+        error.setTextFill(Paint.valueOf("#FF0000"));
+        error.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        return error;
+    }
+
+    private Label getEmailErrorText() {
+        Label error = new Label("Please enter a valid email address");
+        error.setTextFill(Paint.valueOf("#FF0000"));
+        error.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        return error;
+    }
+
+    private Label getPasswordErrorText() {
+        Label error = new Label("Your password must be more than 6 characters");
+        error.setTextFill(Paint.valueOf("#FF0000"));
+        error.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        return error;
+    }
+
+    private Label getPhoneErrorText() {
+        Label error = new Label("Your phone number must be more than 11 characters");
+        error.setTextFill(Paint.valueOf("#FF0000"));
+        error.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        return error;
+    }
+
+    private void initializeViews() {
+        imageView.setImage(new Image(getClass().getResource("/drawable/signup_screen_image.jpg").toString()));
+        appIcon.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
+
+        ImageView googleImage = new ImageView(new Image(getClass().getResource("/drawable/google_icon.png").toString()));
+        signUpGoogleButton.setGraphic(googleImage);
+        signUpGoogleButton.setGraphicTextGap(20);
+        signUpGoogleButton.setBackground(Background.EMPTY);
+        ImageView googleImage2 = new ImageView(new Image(getClass().getResource("/drawable/google_icon.png").toString()));
+        loginGoogleButton.setGraphic(googleImage2);
+        loginGoogleButton.setGraphicTextGap(20);
+        loginGoogleButton.setBackground(Background.EMPTY);
+
+        /*ImageView facebookImage = new ImageView(new Image(getClass().getResource("/drawable/facebook_icon.png").toString()));
+        signUpFacebookButton.setGraphic(facebookImage);
+        signUpFacebookButton.setGraphicTextGap(20);
+        signUpFacebookButton.setBackground(Background.EMPTY);
+        ImageView facebookImage2 = new ImageView(new Image(getClass().getResource("/drawable/facebook_icon.png").toString()));
+        loginFacebookButton.setGraphic(facebookImage2);
+        loginFacebookButton.setGraphicTextGap(20);
+        loginFacebookButton.setBackground(Background.EMPTY);*/
+    }
+
+    private void initializeFonts() {
+        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 30));
+        beTheBestText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 26));
+
+        signUpHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
+        signUpNameText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpNameField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpPasswordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpPhoneText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpPhoneField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpProceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        signUpContinueText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        signUpGoogleButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+//        signUpFacebookButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        signUpHaveAccountText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        signUpLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        recoverLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+
+
+        loginHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
+        loginEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        loginEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        loginPasswordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        loginProceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        loginContinueText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        loginGoogleButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+//        loginFacebookButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        loginHaveAcctText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        loginSignUpText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        forgotPasswordText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        resetText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+
+
+        recoverProceedButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        recoverHeaderText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 24));
+        recoverEmailText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        recoverLoginText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        recoverEmailField.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+        recoverEmailPrompt.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 15));
+    }
+
 }

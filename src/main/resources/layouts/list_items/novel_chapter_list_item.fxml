@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<?import javafx.scene.image.ImageView?>
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+    <graphic>
+        <Panel fx:id="panel" style="-fx-background-color: #F1F1F1; -fx-background-radius: 5;">
+            <left>
+                <HBox>
+                    <Label fx:id="chapterIndex"/>
+                    <Label fx:id="chapterTitle"/>
+                </HBox>
+            </left>
+            <right>
+                <ImageView fx:id="padlockIcon" preserveRatio="true" pickOnBounds="true"/>
+            </right>
+            <padding>
+                <Insets topRightBottomLeft="15"/>
+            </padding>
+        </Panel>
+    </graphic>
+</fx:root>

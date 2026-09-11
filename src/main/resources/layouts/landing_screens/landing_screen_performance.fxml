@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.WorldMapView?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenPerformanceController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <VBox>
+            <HBox prefHeight="60" alignment="CENTER_LEFT" style="-fx-background-color: white;">
+                <Label text="Performance" textFill="#053500">
+                    <font>
+                        <Font name="Gill Sans MT Bold" size="24"/>
+                    </font>
+                </Label>
+                <padding>
+                    <Insets left="30"/>
+                </padding>
+            </HBox>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <AnchorPane prefWidth="500">
+            <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="20" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="30">
+                <VBox spacing="10" style="-fx-background-color: white;">
+                    <Label text="All time test graph" textFill="#053500">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </Label>
+                    <StackPane prefHeight="400" style="-fx-background-color: white; -fx-border-color: #F1F1F1; -fx-border-radius: 5;">
+                        <VBox StackPane.alignment="CENTER">
+                            <LineChart fx:id="lineChart" style="-fx-background-color: white;">
+                                <xAxis>
+                                    <CategoryAxis fx:id="xAxis" side="BOTTOM"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis  fx:id="yAxis" side="LEFT" autoRanging="false"/>
+                                </yAxis>
+                            </LineChart>
+                            <HBox spacing="5" alignment="CENTER_LEFT">
+                                <Label text="Average Performance:" textFill="#053500">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                                <Label text="57.87%" textFill="#12AF20">
+                                    <font>
+                                        <Font size="16"/>
+                                    </font>
+                                </Label>
+                            </HBox>
+                            <StackPane.margin>
+                                <Insets top="30"/>
+                            </StackPane.margin>
+                        </VBox>
+                        <ChoiceBox fx:id="practiceChoiceBox" StackPane.alignment="TOP_RIGHT"/>
+                        <padding>
+                            <Insets top="20" bottom="20" left="20" right="30"/>
+                        </padding>
+                    </StackPane>
+
+                    <StackPane prefHeight="280">
+                        <ListView fx:id="testPerformancesList" orientation="HORIZONTAL" style="-fx-background-color: #FFFFFF;" StackPane.alignment="CENTER">
+                            <StackPane.margin>
+                                <Insets top="35"/>
+                            </StackPane.margin>
+                        </ListView>
+                        <Label text="All tests" textFill="#053500" StackPane.alignment="TOP_LEFT">
+                            <font>
+                                <Font size="16"/>
+                            </font>
+                        </Label>
+                        <Button text="View all tests" style="-fx-background-color: #F4FFF5; -fx-background-radius: 7" StackPane.alignment="TOP_RIGHT"/>
+                        <VBox.margin>
+                            <Insets top="30"/>
+                        </VBox.margin>
+                    </StackPane>
+                </VBox>
+                <padding>
+                    <Insets right="20" bottom="20"/>
+                </padding>
+            </ScrollPane>
+        </AnchorPane>
+    </center>
+
+    <right>
+        <AnchorPane prefWidth="350">
+            <VBox spacing="30" style="-fx-background-color: #F4FFF5; -fx-background-radius: 5;" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="30" AnchorPane.rightAnchor="30" AnchorPane.bottomAnchor="30">
+                <VBox spacing="20">
+                    <Label fx:id="pointsHeader" text="Your Points" textFill="#053500"/>
+                    <Label fx:id="pointsText" text="500 pts" textFill="#12AF20"/>
+                </VBox>
+                <Separator/>
+                <VBox spacing="20">
+                    <Label fx:id="totalTestHeader" text="Total Test taken" textFill="#053500"/>
+                    <Label fx:id="totalTestText" text="25" textFill="#12AF20"/>
+                </VBox>
+                <Separator/>
+                <Label fx:id="topSubjectsHeader" text="Top performing subjects" textFill="#053500"/>
+                <VBox spacing="10">
+                    <Label text="English Language" textFill="#053500">
+                        <font>
+                            <Font size="15"/>
+                        </font>
+                    </Label>
+                    <Label text="Mathematics" textFill="#053500">
+                        <font>
+                            <Font size="15"/>
+                        </font>
+                    </Label>
+                    <Label text="Physics" textFill="#053500">
+                        <font>
+                            <Font size="15"/>
+                        </font>
+                    </Label>
+                    <Label text="Chemistry" textFill="#053500">
+                        <font>
+                            <Font size="15"/>
+                        </font>
+                    </Label>
+                </VBox>
+                <padding>
+                    <Insets top="40" left="25" right="25"/>
+                </padding>
+            </VBox>
+        </AnchorPane>
+    </right>
+
+</BorderPane>

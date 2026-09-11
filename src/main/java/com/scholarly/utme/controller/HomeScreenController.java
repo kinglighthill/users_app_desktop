@@ -1,141 +1,246 @@
 package com.scholarly.utme.controller;
 
 
+import com.scholarly.utme.controller.audio_video_screens.AudioVideoSubjectListViewController;
+import com.scholarly.utme.controller.landing_screens.LandingScreenController;
+import com.scholarly.utme.controller.novel_screens.NovelScreenController;
+import com.scholarly.utme.ui.utils.Animations;
+import com.scholarly.utme.ui.utils.FontUtil;
 import com.scholarly.utme.ui.utils.View;
 import com.scholarly.utme.ui.utils.ViewSwitcher;
-import com.scholarly.utme.viewmodels.HomeScreenVM;
-import com.scholarly.utme.viewmodels.SubjectListItemVM;
-import com.scholarly.utme.viewmodels.SubjectListViewVM;
+import com.scholarly.utme.util.AppPreferences;
+import com.scholarly.utme.viewmodels.*;
+import com.scholarly.utme.viewmodels.novel_screens.NovelScreenVM;
+import com.scholarly.utme.viewmodels.audio_video_screens.AudioVideoSubjectListViewVM;
 import de.saxsys.mvvmfx.*;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
-import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import static com.scholarly.utme.controller.SubjectListViewController.*;
+import static com.scholarly.utme.ui.utils.Screens.PAST_QUESTION_SCREEN;
+import static com.scholarly.utme.util.Constants.*;
 
 @FxmlPath("/layouts/HomeScreen.fxml")
-public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializable {
+public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializable{
+
+    @InjectViewModel
+    private HomeScreenVM viewModel;
 
     @FXML
-    public ToggleButton practiceButton, lessonNoteButton, cbtGameButton, videosButton, audiosButton, learningCenterButton, studyNotesButton;
+    private ToggleButton practiceButton, pastQuestionButton, cbtGameButton, videosButton, audiosButton, learningCenterButton;
+
+    @FXML
+    private ImageView appImage;
+
+    @FXML
+    private Button backButton;
+
+    @FXML
+    private Label pageTitle, scholarlyText;
 
     @FXML
     private StackPane contentPane;
 
+    private static final String PRESSED_BUTTON_STYLE = "-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;";
+
+    private SubjectListViewController subjectListController;
+
+    private final ToggleGroup toggleGroup = new ToggleGroup();
+
+    private static final String TAG = "HomeScreenController: ";
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ViewTuple<SubjectListViewController, SubjectListViewVM> viewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
-        SubjectListViewController subjectListController = viewTuple.getCodeBehind();
-
-        contentPane.getChildren().add(viewTuple.getView());
-
-        ToggleGroup toggleGroup = new ToggleGroup();
+        ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
+        subjectListController = subjectListViewTuple.getCodeBehind();
+        Parent subjectListView = subjectListViewTuple.getView();
 
 
-        toggleGroup.getToggles().addAll(practiceButton, cbtGameButton, lessonNoteButton, videosButton, audiosButton, learningCenterButton, studyNotesButton);
+        initializeViews();
+        initializeFonts();
+
+        viewModel.processInitialData(getInitialData());
+
+
+        toggleGroup.getToggles().addAll(practiceButton, pastQuestionButton, cbtGameButton);
 
         practiceButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                animate(contentPane);
+                pageTitle.setText("CBT Practice");
                 subjectListController.setOption(SubjectListOption.PRACTICE);
+                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
+                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
+                }
+                selectButton(subjectListView, practiceButton);
             }
         });
-        practiceButton.setFocusTraversable(false);
 
-        lessonNoteButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+        pastQuestionButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                animate(contentPane);
+                pageTitle.setText("Study Past Questions");
                 subjectListController.setOption(SubjectListOption.STUDY);
+                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
+                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
+                }
+                selectButton(subjectListView, pastQuestionButton);
             }
         });
-        lessonNoteButton.setFocusTraversable(false);
 
         cbtGameButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                animate(contentPane);
+                pageTitle.setText("CBT Game");
                 subjectListController.setOption(SubjectListOption.CBT_GAME);
-            }
-        });
-        cbtGameButton.setFocusTraversable(false);
-
-        studyNotesButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                animate(contentPane);
-                ViewSwitcher.showScreen(View.SELECT_NOTE_SCREEN);
+                boolean removed = subjectListController.tabMenu.getTabs().remove(subjectListController.theoryTab);
+                if (removed)
+                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() * 2);
+                selectButton(subjectListView, cbtGameButton);
             }
         });
 
-        studyNotesButton.setFocusTraversable(false);
-
-        videosButton.setFocusTraversable(false);
-
-        audiosButton.setFocusTraversable(false);
-
-        learningCenterButton.setFocusTraversable(false);
-
-        studyNotesButton.setFocusTraversable(false);
-
-        if (ViewSwitcher.retrieveData() instanceof  Panel){
-            Panel selectedMenuOption = (Panel) ViewSwitcher.retrieveData();
-            String optionId = selectedMenuOption.getId();
-            ToggleButton selectedToggle = selectToggle(optionId);
-
-            toggleGroup.selectToggle(selectedToggle);
-            toggleGroup.getSelectedToggle().setSelected(true);
-
-        }else if (ViewSwitcher.retrieveData() instanceof String){
-            String selectedMenuOption = (String) ViewSwitcher.retrieveData();
-            ToggleButton selectedToggle = selectToggle(selectedMenuOption);
-
-            toggleGroup.selectToggle(selectedToggle);
-            // We're using 'false' because the studyNotesButton selectedProperty's was initially toggled to 'true' when user navigated from the HOME_SCREEN to SELECT_NOTE_SCREEN
-            // This will make the button toggle when clicked thus switching selectedProperty to true
-            toggleGroup.getSelectedToggle().setSelected(false);
+        if (viewModel.getSelectedScreen().equalsIgnoreCase(PRACTICE_SCREEN)) {
+            pageTitle.setText("CBT Practice");
+            subjectListController.setOption(SubjectListOption.PRACTICE);
+            selectButton(subjectListView, practiceButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(PAST_QUESTION_SCREEN)) {
+            pageTitle.setText("Study Past Questions");
+            subjectListController.setOption(SubjectListOption.STUDY);
+            selectButton(subjectListView, pastQuestionButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(CBT_GAME_SCREEN)) {
+            pageTitle.setText("CBT Game");
+            toggleGroup.selectToggle(cbtGameButton);
+            subjectListController.setOption(SubjectListOption.CBT_GAME);
+            selectButton(subjectListView, cbtGameButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(VIDEOS_SCREEN)) {
+//            selectButton(audioVideoView, videosButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(AUDIOS_SCREEN)) {
+//            selectButton(audioVideoView, audiosButton);
+        } else if (viewModel.getSelectedScreen().equalsIgnoreCase(LEARNING_CENTER_SCREEN)) {
+//            selectButton(audioVideoView, learningCenterButton);
         }
 
+
+        /*videosButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue) {
+                pageTitle.setText("Videos");
+                audioVideoSubjectListViewController.setType(AudioVideoSubjectListViewVM.Type.VIDEO);
+                selectButton(audioVideoView, videosButton);
+            }
+        }));*/
+
+        /*audiosButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue) {
+                pageTitle.setText("Audios");
+                audioVideoSubjectListViewController.setType(AudioVideoSubjectListViewVM.Type.AUDIO);
+                selectButton(audioVideoView, audiosButton);
+            }
+        }));*/
+
+        /*learningCenterButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            changeButtonStyle(learningCenterButton);
+        }));*/
+
     }
 
-    /**
-     * Accepts a Button ID and retrieves the corresponding ToggleButton
-     * @param buttonId the id of the Button
-     * @return a ToggleButton corresponding to the Button ID
-     */
-    private ToggleButton selectToggle(String buttonId){
-        return switch (buttonId) {
-            case "practicePanel" -> practiceButton;
-            case "pastQuestionsPanel" -> lessonNoteButton;
-            case "cbtGamePanel" -> cbtGameButton;
-            case "videosPanel" -> videosButton;
-            case "audioPanel" -> audiosButton;
-            case "learningCenterPanel" -> learningCenterButton;
-            case "studyNotesPanel" -> studyNotesButton;
-            default -> null;
-        };
+    private void initializeViews() {
+        ImageView backIcon = new ImageView(new Image(getClass().getResource("/drawable/practice_back_button_icon.png").toString()));
+        backButton.setGraphic(backIcon);
+
+        appImage.setImage(new Image(getClass().getResource("/drawable/app_logo.png").toString()));
+
+        practiceButton.setBackground(Background.EMPTY);
+        practiceButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/cbt_practice_icon.png").toString())));
+        practiceButton.setGraphicTextGap(20);
+
+        pastQuestionButton.setBackground(Background.EMPTY);
+        pastQuestionButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/past_quest_icon.png").toString())));
+        pastQuestionButton.setGraphicTextGap(20);
+
+        cbtGameButton.setBackground(Background.EMPTY);
+        cbtGameButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/cbt_game_icon.png").toString())));
+        cbtGameButton.setGraphicTextGap(20);
+
+        /*videosButton.setBackground(Background.EMPTY);
+        videosButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/videos_icon.png").toString())));
+        videosButton.setGraphicTextGap(20);*/
+
+        /*audiosButton.setBackground(Background.EMPTY);
+        audiosButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/audios_icon.png").toString())));
+        audiosButton.setGraphicTextGap(20);*/
+
+        /*learningCenterButton.setBackground(Background.EMPTY);
+        learningCenterButton.setGraphic(new ImageView(new Image(getClass().getResource("/drawable/practice_screen_images/syllabus_icon.png").toString())));
+        learningCenterButton.setGraphicTextGap(20);*/
+
     }
 
-    /**
-     * Shows a screen change effect when selected menu option changes
-     * @param node on which the effect is displayed
-     */
-    public void animate(Node node){
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), node);
+    private void initializeFonts() {
+        scholarlyText.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 20));
+        pageTitle.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.BOLD, 18));
 
-        fadeTransition.setFromValue(0.1);
-        fadeTransition.setToValue(1.0);
+        practiceButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        pastQuestionButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+        cbtGameButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+//        videosButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+//        audiosButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
+//        learningCenterButton.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 13));
 
-        fadeTransition.play();
+    }
+
+
+    private void changeButtonStyle(ToggleButton pressedButton) {
+        practiceButton.setStyle(null);
+        pastQuestionButton.setStyle(null);
+        cbtGameButton.setStyle(null);
+//        videosButton.setStyle(null);
+//        audiosButton.setStyle(null);
+//        learningCenterButton.setStyle(null);
+
+        pressedButton.setStyle(PRESSED_BUTTON_STYLE);
+    }
+
+    private void selectButton(Parent view, ToggleButton toggleButton) {
+        Animations.animate(contentPane);
+        contentPane.getChildren().clear();
+        contentPane.getChildren().add(view);
+        changeButtonStyle(toggleButton);
     }
 
     public void homeTextClicked() {
+        subjectListController.dispose();
+        ViewSwitcher.passData(new LandingScreenController.InitialData("homeScreen"));
         ViewSwitcher.showScreen(View.LANDING_SCREEN);
+    }
+
+    private InitialData getInitialData() {
+        return (InitialData) ViewSwitcher.retrieveData();
+    }
+
+    public static class InitialData {
+        private String screen;
+
+        public InitialData(String screen) {
+            this.screen = screen;
+        }
+
+        public String getScreen() {
+            return screen;
+        }
     }
 }

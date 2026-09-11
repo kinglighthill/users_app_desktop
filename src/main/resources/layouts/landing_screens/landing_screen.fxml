@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.landing_screens.LandingScreenController">
+
+    <left>
+        <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="180.0" style="-fx-background-color: #006B17;">
+            <children>
+                <HBox spacing="5">
+                    <ImageView fx:id="appImage" fitHeight="30" fitWidth="30" preserveRatio="true" pickOnBounds="true"/>
+                    <Label fx:id="scholarlyText" text="Scholarly" textFill="#FFFFFF">
+                        <!--<font>
+                            <Font name="Yu Gothic UI Bold" size="20"/>
+                        </font>-->
+                    </Label>
+                    <VBox.margin>
+                        <Insets left="20" top="30" bottom="80"/>
+                    </VBox.margin>
+                </HBox>
+
+                <ToggleButton fx:id="homeButton" text="Home" alignment="CENTER_LEFT" textFill="#FFFFFF" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FF9900; -fx-border-width: 0 0 0 5;">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="accountButton" text="Account" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="activateButton" text="Activate" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="appsButton" text="Apps" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <!--<ToggleButton fx:id="triviaButton" text="Trivia" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>-->
+
+                <ToggleButton fx:id="performanceButton" text="Performance" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="updatesButton" text="Updates" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+
+                <ToggleButton fx:id="settingsButton" text="Settings" textFill="#FFFFFF" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="44.0" prefWidth="263.0">
+                    <padding>
+                        <Insets left="30"/>
+                    </padding>
+                </ToggleButton>
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="homeContentPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="592.0" style="-fx-background-color: #FFFFFF" HBox.hgrow="ALWAYS"/>
+    </center>
+
+</BorderPane>
+

@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BookmarkDao {
+    private static final String TAG = "BookmarkDao: ";
 
     private static final String tableName = "question_bookmarks";
 
@@ -26,7 +27,8 @@ public class BookmarkDao {
 
     static {
         bookmarks = FXCollections.observableArrayList();
-        updateSubjectsFromDB();
+        updateBookmarksFromDB();
+        System.out.println(TAG + "static initializer called");
     }
 
 
@@ -48,7 +50,7 @@ public class BookmarkDao {
                         rs.getInt(yearIdColumn)));
             }
 
-            System.out.println("Got bookmarks of length -> " + bookmarks.size());
+            System.out.println(TAG+"Got bookmarks of length -> " + bookmarks.size());
 
             return bookmarks;
         } catch (SQLException e) {
@@ -80,7 +82,7 @@ public class BookmarkDao {
         return id;
     }
 
-    private static void updateSubjectsFromDB() {
+    private static void updateBookmarksFromDB() {
 
         String query = "SELECT * FROM " + tableName;
 

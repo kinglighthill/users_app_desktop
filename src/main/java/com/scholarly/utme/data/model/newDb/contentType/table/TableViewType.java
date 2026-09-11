@@ -1,11 +1,9 @@
 package com.scholarly.utme.data.model.newDb.contentType.table;
 
-import com.scholarly.utme.data.model.newDb.contentType.ContentType;
+import com.scholarly.utme.data.model.newDb.contentType.ContentViewType;
 import com.scholarly.utme.data.model.newDb.contentType.Title;
 
-import java.util.List;
-
-public class TableViewType extends ContentType {
+public class TableViewType extends ContentViewType {
     private Title title;
     private TableBody body;
 
