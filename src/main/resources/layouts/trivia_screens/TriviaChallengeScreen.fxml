@@ -11,7 +11,7 @@
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.text.Font?>
 <StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.scholarly.utme.controller.trivia_screens.TriviaChallengeScreenController"
+           fx:controller="com.scholarly.controller.trivia_screens.TriviaChallengeScreenController"
            prefHeight="800.0" prefWidth="1000.0">
 
     <BorderPane>

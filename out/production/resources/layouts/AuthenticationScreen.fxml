@@ -10,10 +10,10 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.shape.Line?>
 <?import jidefx.scene.control.field.NumberField?>
-<?import com.scholarly.utme.ui.utils.CustomNumberField?>
+<?import com.scholarly.ui.utils.CustomNumberField?>
 <?import org.controlsfx.control.TaskProgressView?>
 <AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefHeight="800.0" prefWidth="1000.0"
-            fx:controller="com.scholarly.utme.controller.AuthenticationController" style="-fx-background-color: #FFFFFF">
+            fx:controller="com.scholarly.controller.AuthenticationController" style="-fx-background-color: #FFFFFF">
 
     <BorderPane prefWidth="800" prefHeight="600"
                 AnchorPane.topAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10">

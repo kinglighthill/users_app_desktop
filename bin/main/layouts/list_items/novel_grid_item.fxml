@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<fx:root type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" >
+
+    <graphic>
+        <VBox fx:id="novelBox" spacing="10" alignment="CENTER" >
+
+            <StackPane style="-fx-background-color: #D7D7D7; -fx-background-radius: 8;">
+                <ImageView fx:id="novelImage" fitHeight="180" fitWidth="120">
+                    <StackPane.margin>
+                        <Insets topRightBottomLeft="10"/>
+                    </StackPane.margin>
+                </ImageView>
+            </StackPane>
+
+            <VBox>
+                <Label fx:id="name" prefWidth="120" />
+                <Label fx:id="chapters"/>
+                <padding>
+                    <Insets left="5"/>
+                </padding>
+            </VBox>
+
+        </VBox>
+    </graphic>
+</fx:root>

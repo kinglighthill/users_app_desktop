@@ -8,7 +8,7 @@
 
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.image.ImageView?>
-<StackPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.note_screens.SelectNoteController">
+<StackPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.controller.note_screens.SelectNoteController">
     <BorderPane>
         <top>
             <ToolBar prefHeight="75.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER">
@@ -222,7 +222,7 @@
         </VBox>
 
         <HBox alignment="CENTER">
-            <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N2000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8; -fx-cursor: hand;">
+            <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N3000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8; -fx-cursor: hand;">
                 <font>
                     <Font size="16"/>
                 </font>

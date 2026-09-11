@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <graphic>
+        <Panel fx:id="subjectBox" style="-fx-background-color: rgba(255, 255, 255, 0.8); -fx-background-radius: 5;">
+            <left>
+                <Label fx:id="subjectName" textFill="#053500"/>
+            </left>
+            <right>
+                <RadioButton fx:id="radioButton" />
+            </right>
+
+            <padding>
+                <Insets topRightBottomLeft="10"/>
+            </padding>
+        </Panel>
+    </graphic>
+
+</fx:root>

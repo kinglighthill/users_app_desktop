@@ -9,7 +9,7 @@
 <?import javafx.scene.web.*?>
 
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleKeyPressed" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.practice_screens.PracticeScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleKeyPressed" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.controller.practice_screens.PracticeScreenController">
 
    <StackPane AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
 
@@ -163,7 +163,7 @@
                            </font>
                         </Label>
 
-                        <VBox fx:id="questionCenterVBox" prefHeight="200" style="-fx-background-color: #ffffff;">
+                        <VBox fx:id="objQuestionCenterVBox" prefHeight="200" style="-fx-background-color: #ffffff;">
                            <!--<HBox fx:id="quesDescriptionHBox">
                               <Label fx:id="questionDescriptionHeader" text="COMPREHENSION: Read the passage...">
                                  <font>
@@ -180,7 +180,7 @@
                               </padding>
                            </HBox>-->
 
-                           <ScrollPane fx:id="questionScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
+                           <ScrollPane fx:id="objScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
                               <VBox fx:id="questionVBox" spacing="15" alignment="CENTER">
                                  <HBox fx:id="questionDescriptionHBox">
                                     <Label fx:id="questionDescriptionLabel" wrapText="true" text="COMPREHENSION: Read the passage...">

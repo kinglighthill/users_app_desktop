@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">PUTME</string>
+    <string name="app_name">Scholarlyoau</string>
+    <string name="app_image_directory_name">Scholarly OAU PUTME Images</string>
+
+    <string name="client_server_id">616523094012-nend4jo42jod90sdha8sfsibmoa7b9t9.apps.googleusercontent.com</string>
+    <string name="staging_client_server_id">924499222398-ne5djajgfceotaqcaj8pi1jabqbd5idn.apps.googleusercontent.com</string>
+
+    <string name="facebook_app_id" translatable="false">485163399197831</string>
+    <string name="facebook_client_token" translatable="false">52a20e6a69782f56d46ea2c0a4d92646</string>
+    <string name="fb_login_protocol_scheme">fb485163399197831</string>
+
+    <string name="slide_1_title">Access Thousands Of Real OAU Post UTME Past Questions</string>
+    <string name="slide_4_title">Get Latest OAU Updates</string>
+
+    <!--    <string name="slide_1_desc">The easiest way to order food from your favourite restaurant!</string>-->
+    <!--    <string name="slide_4_desc">Book tickets of any transportation and travel the world!</string>-->
+
+    <string name="txt_store_appname">Scholarly OAU Post UTME \nApp</string>
+
+    <string name="txt_select_subject_info">NOTE: All candidates sitting for OAU Post UTME would write 4 subjects \n(Based on their course of study)</string>
+
+    <string name="txt_benefits_more">✔ Access thousands of REAL Post UTME past questions, answers and explanation from OAU\n\n✔ No Internet/Data required: App can work completely OFFLINE!!!\n\n✔ No annoying ads: There is not even a single advertisement in this app.\n\n✔ Pay once: Activation is once, No recurrent or monthly payment. Superb!!!\n\n✔ Listen to questions: an intelligent assistant can read out questions, answers and explanations to you. Great!!!\n\n✔ Results: view a detailed breakdown of CBT scores by subjects.\n\n✔ Retrieve your activation: get back your activated account in cases of new or flashed device\n\n✔ Learning options: You can study past questions, take CBT exams and even play fun-filled games\n\n✔ Get important info: get latest information relating to admissions or school of choice\n\n✔ Bookmarks: Save questions, answers or explanations you want to see later\n\n✔ Preferences/Settings: App is fully customizable to suit your needs. Personalize the app settings as you want them\n\n✔ Customer service: Our customer service ensures that every problem encountered by our users is resolved in almost 0 second!!!\n\n✔ User interface: App offers a clean and intuitive user interface that guarantees a quality user experience\n\n✔ Calculator: A built-in JAMB-like calculator that helps with basic calculations\n\n ✔ And lots more&#8230; What are you waiting for?</string>
+    <string name="txt_benefits">✔ Access thousands of REAL Post UTME past questions, answers and explanation from OAU\n\n✔ No Internet/Data required: App can work completely OFFLINE!!!\n\n✔ No annoying ads: There is not even a single advertisement in this app.\n\n✔ Pay once: Activation is once, No recurrent or monthly payment. Superb!!!\n\n✔ Click here for more</string>
+
+    <string name="txt_fb_extra_text_result">👆👆👆\nHello, See what I scored using the *Scholarly OAU Post UTME app*\n\n*https://postutmepq.web.app/result*</string>
+    <string name="txt_whatsapp_extra_text_result">👆👆👆\nHello, See what I scored using the *Scholarly OAU Post UTME app*\n\n*https://postutmepq.web.app/result*</string>
+    <string name="txt_whatsapp_extra_text_question">👆👆👆\nHello, I need you to attempt this past OAU Post UTME question I found in the Scholarly app. Thanks&#8230;\n\n*https://postutmepq.web.app/pastQuestion*</string>
+    <string name="txt_fb_extra_text_question">👆👆👆\nHello, I need you to attempt this past OAU Post UTME question I found in the Scholarly app. Thanks&#8230;\n\n*https://postutmepq.web.app/pastQuestion*</string>
+    <string name="txt_result_screenshot_title">Scholarly OAU Post UTME CBT Result 2020</string>
+    <string name="txt_share_question_option_title">OAU Post UTME %1$s, Question %2$s</string>
+
+    <string name="txt_sch_website">OAU Updates</string>
+    <string name="txt_desc_study_pq">Study and understand OAU past questions and answers</string>
+    <string name="txt_desc_update">See the latest admissions update from OAU</string>
+    <string name="school_website">https://oauife.edu.ng</string>
+
+    <string name="server_base_url_prod">https://putme.scholarly.africa</string>
+    <string name="server_base_url_staging">https://staging.putme.scholarly.africa</string>
+
+    <string-array name="home_items">
+        <item>cbt_practice</item>
+        <item>study_pq</item>
+        <item>cbt_game</item>
+        <item>website</item>
+        <item>novel</item>
+        <item>faq</item>
+        <item>other_apps</item>
+    </string-array>
+
+    <string-array name="faq_titles">
+        <item>"About Scholarly OAU Post UTME App"</item>
+        <item>"Activation"</item>
+        <item>"How to use Scholarly OAU Post UTME App"</item>
+    </string-array>
+
+    <string-array name="faq_about_names">
+        <item>"What is Scholarly OAU Post UTME App"</item>
+        <item>"How can I get Scholarly OAU Post UTME App"</item>
+        <item>"What is the difference between Scholarly OAU Post UTME App and past question booklets"</item>
+        <item>"What is the difference between Scholarly OAU Post UTME App and other apps"</item>
+        <item>"Who is Scholarly OAU Post UTME App for"</item>
+    </string-array>
+
+    <string-array name="faq_about_description">
+        <item>"Scholarly OAU Post UTME app is an android application that is designed to help students learn, pass exams and gain admission into OAU"</item>
+        <item>"You can download the app from google play store or collect the app from your friends through bluetooth or xender."</item>
+        <item>"1. Mobility: you can carry your phone anywhere and study wherever you are.\n\n2. CBT: with this app you can time yourself and take exams just like JAMB CBT\n\n3. All in one: Rather than having different booklets for different subjects. In this app all your OAU Post UTME subjects are in one app.\n\n4. Customer support: with this app, you have people to go to if you have questions or complaints.\n\n5. Audio question/answers: questions/answers and explanation can be read to you, meaning you can learn by listening rather than reading.\n\n6. Save questions for later: you can save questions that matter to you so that you can easily find them later.\n\n7. Detailed result breakdown: see how you performed at various subjects, visual representations like bar chart and tables.\n\n8. Built in scientific calculator: use the app's JAMB like calculator without having to use an external device or calculator.\n\n9. Practice one or more subjects at once: take a test or exam in more than one subjects at a time.\n\n10. Shuffle questions/options: test your remembering ability by rearranging the questions and options order.\n\n11. Profile: personalize your app using our feature rich profile screen. update your picture, email, fullname, phone etc."</item>
+        <item>"1. Explanation to every question: This app provides concise explanation to every question be it mathematical or non mathematical.\n\n2. Interactive learning: with features like CBT game and study past questions, you learn in a fun filled and interactive manner\n\n3.Customizable: Customize the app features to suit your needs with its preference setting.\n\n4. Easy to use: This app has been designed with you in mind. It affords users a wonderful user experience with its intuitive user interface.\n\n5. Notifications/SMS: Get notified and alerted with the latest information on admissions.\n\n6. Share questions/score: with this app you can share difficult questions you encountered to your friends via different social media platform. Also share your results to friends"</item>
+        <item>"Any student who wants to learn, pass exam and gain admission into OAU"</item>
+    </string-array>
+</resources>

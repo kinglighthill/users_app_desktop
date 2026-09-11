@@ -7,7 +7,7 @@
 
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.image.ImageView?>
-<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.SubjectListViewController">
+<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.controller.SubjectListViewController">
     <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" >
         <right>
             <HBox prefHeight="448.0" prefWidth="300.0" BorderPane.alignment="TOP_CENTER">
@@ -207,7 +207,7 @@
         </VBox>
 
         <HBox alignment="CENTER">
-            <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N2000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8;">
+            <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N3000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8;">
                 <font>
                     <Font size="16"/>
                 </font>

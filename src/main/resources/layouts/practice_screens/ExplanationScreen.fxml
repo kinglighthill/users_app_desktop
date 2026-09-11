@@ -9,7 +9,7 @@
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 <?import javafx.scene.web.WebView?>
 <?import javafx.scene.shape.Line?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.utme.controller.practice_screens.ExplanationScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scholarly.controller.practice_screens.ExplanationScreenController">
     <StackPane AnchorPane.topAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0">
         <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <top>
@@ -105,9 +105,9 @@
             </top>
 
             <right>
-                <AnchorPane prefHeight="513.0" prefWidth="300.0" style="-fx-background-color: #FFFFFF;"
+                <AnchorPane prefHeight="513.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF;"
                             BorderPane.alignment="CENTER" >
-                    <HBox fx:id="toggleBox" prefWidth="200" alignment="CENTER" AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0">
+                    <HBox fx:id="toggleBox" prefWidth="300" alignment="CENTER" AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0">
                         <ToggleButton fx:id="textExplanation" prefWidth="200" text="Explanation" textFill="white" style="-fx-background-color: #12AF20; -fx-border-color: #12AF20; -fx-cursor: hand;">
                             <font>
                                 <Font name="Gill Sans MT" size="16.0"/>
@@ -126,20 +126,25 @@
                         </VBox.margin>
                     </HBox>
 
-                    <StackPane fx:id="explanationPane" AnchorPane.topAnchor="60.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.bottomAnchor="10">
-                        <Label fx:id="explanationLabel" wrapText="true" StackPane.alignment="TOP_CENTER" style="-fx-background-color: white;"/>
-                        <WebView fx:id="explanationWebView" visible="false"/>
+                    <ScrollPane fx:id="explanationPane" fitToWidth="true" AnchorPane.topAnchor="60.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.bottomAnchor="5.0" style="-fx-background-color: white;">
+                        <VBox fx:id="explanationVBox" style="-fx-background-color: white;">
+                            <Label fx:id="explanationLabel" wrapText="true" StackPane.alignment="TOP_CENTER" style="-fx-background-color: white;"/>
+                            <WebView fx:id="explanationWebView"/>
 
-                        <VBox fx:id="explanationWithImageVbox" spacing="5" minHeight="210" prefHeight="200" prefWidth="300" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5">
-                            <ImageView fx:id="explanationImage" fitHeight="200" fitWidth="300" StackPane.alignment="CENTER"/>
-                            <WebView fx:id="explanationWithImageWebView"/>
+                            <VBox fx:id="explanationWithImageVbox" spacing="5" minHeight="210" prefHeight="200" prefWidth="300" StackPane.alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5">
+                                <ImageView fx:id="explanationImage" fitHeight="200" fitWidth="300" StackPane.alignment="CENTER"/>
+                                <WebView fx:id="explanationWithImageWebView"/>
+                                <padding>
+                                    <Insets topRightBottomLeft="10"/>
+                                </padding>
+                            </VBox>
                             <padding>
-                                <Insets topRightBottomLeft="10"/>
+                                <Insets topRightBottomLeft="15"/>
                             </padding>
                         </VBox>
 
 <!--                        <StackPane fx:id="explanationVideo" visible="false"/>-->
-                    </StackPane>
+                    </ScrollPane>
 
                     <padding>
                         <Insets topRightBottomLeft="5"/>
@@ -150,7 +155,7 @@
             <center>
                 <AnchorPane prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #FFFFFF;" BorderPane.alignment="CENTER">
                     <ScrollPane fitToWidth="true" AnchorPane.topAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.bottomAnchor="1.0" style="-fx-background-color: white;">
-                        <VBox fx:id="centerVBox" spacing="10" prefWidth="300.0" prefHeight="300" style="-fx-background-color: #ffffff;">
+                        <VBox fx:id="centerVBox" spacing="10" prefWidth="250.0" prefHeight="300" style="-fx-background-color: #ffffff;">
                             <Label fx:id="questionOverviewLabel" text="Question 3 of 40">
                                 <VBox.margin>
                                     <Insets top="20.0"/>
@@ -160,7 +165,7 @@
                                 </font>
                             </Label>
 
-                            <VBox fx:id="questionCenterVBox" prefHeight="200" style="-fx-background-color: #ffffff;">
+                            <VBox fx:id="objQuestionCenterVBox" prefHeight="200" style="-fx-background-color: #ffffff;">
 
                                 <ScrollPane fx:id="questionScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
                                     <VBox fx:id="questionVBox" spacing="15" alignment="CENTER">
@@ -207,6 +212,18 @@
                                 </padding>
                             </VBox>
 
+                            <VBox fx:id="theoryQuestionCenterVBox" prefHeight="200" style="-fx-background-color: #ffffff;">
+                                <ScrollPane fx:id="theoryScrollPane" fitToWidth="true" minHeight="200" style="-fx-background-color: white;">
+                                    <VBox>
+                                        <Label fx:id="theoryQuestionLabel" wrapText="true" minHeight="150">
+                                            <font>
+                                                <Font name="Times New Roman" size="18.0"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                </ScrollPane>
+                            </VBox>
+
                             <Panel fx:id="optionAPanel" prefHeight="17.0" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">
@@ -229,7 +246,6 @@
                                     <Insets left="10" top="10" right="20" bottom="10"/>
                                 </padding>
                             </Panel>
-
                             <Panel fx:id="optionBPanel"  prefHeight="17.0" style="-fx-background-color: #F3FBF4; -fx-background-radius: 8;">
                                 <left>
                                     <HBox spacing="30" alignment="CENTER">

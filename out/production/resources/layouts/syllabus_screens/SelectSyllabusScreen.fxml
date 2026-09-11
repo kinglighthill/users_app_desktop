@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
-<BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.utme.controller.syllabus_screens.SelectSyllabusController">
+<BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.scholarly.controller.syllabus_screens.SelectSyllabusController">
 
     <top>
         <ToolBar prefHeight="75.0" prefWidth="1000.0" style="-fx-background-color: #105801;" BorderPane.alignment="CENTER">

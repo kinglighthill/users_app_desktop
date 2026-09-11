@@ -3,8 +3,8 @@
 .idea
 build/
 local.properties
-*.db
 secret.key
 logging.log
 scholarly_profile_image.jpg
 stat.txt
+*.log

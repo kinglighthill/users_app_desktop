@@ -13,7 +13,7 @@
 <?import org.controlsfx.dialog.FontSelectorDialog.FontPanel?>
 <?import javafx.scene.shape.Line?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.ActivatePaymentScreenController"
+            fx:controller="com.scholarly.controller.ActivatePaymentScreenController"
             prefHeight="400.0" prefWidth="600.0">
 
     <top>
@@ -69,7 +69,7 @@
                             </Panel>
                             <VBox fx:id="bankTransferDetailsPane" spacing="25">
                                 <Separator/>
-                                <Label text="Walk into any Bank branch mentioned below or POS Agent's shop around you to make a deposit of N2000 into any of our accounts below. You can also use your Mobile App or USSD code to make a transfer into any of the accounts below." wrapText="true">
+                                <Label text="Walk into any Bank branch mentioned below or POS Agent's shop around you to make a deposit of N3000 into any of our accounts below. You can also use your Mobile App or USSD code to make a transfer into any of the accounts below." wrapText="true">
                                     <font>
                                         <Font size="14"/>
                                     </font>

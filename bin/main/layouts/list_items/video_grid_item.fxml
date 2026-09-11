@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<fx:root type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" >
+
+    <graphic>
+        <VBox prefWidth="100" prefHeight="300" spacing="10" alignment="CENTER" style="-fx-background-color: #F4FFF5; -fx-background-radius: 8;">
+
+            <Panel>
+                <center>
+                    <StackPane>
+                        <ImageView fx:id="videoImage" fitHeight="120" fitWidth="180">
+                            <StackPane.margin>
+                                <Insets left="5" right="5"/>
+                            </StackPane.margin>
+                        </ImageView>
+                        <Pane opacity="0.5" style="-fx-background-color: #121212;">
+                            <StackPane.margin>
+                                <Insets left="5" right="5"/>
+                            </StackPane.margin>
+                        </Pane>
+                        <ImageView fx:id="playIcon" fitHeight="45" fitWidth="45" StackPane.alignment="CENTER"/>
+                    </StackPane>
+                </center>
+            </Panel>
+
+            <Panel>
+                <left>
+
+                    <VBox spacing="15">
+                        <Label fx:id="videoTitle" text="Central Nervous System" textFill="#053500"/>
+
+                        <HBox spacing="5">
+                            <ImageView fx:id="clockIcon" fitWidth="15" fitHeight="15" />
+                            <Label fx:id="timeLabel" text="45 mins"/>
+                        </HBox>
+                        <Label fx:id="videoDescription" prefWidth="200" prefHeight="80"
+                               text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae he this thing doesn't want to work" wrapText="true"/>
+                    </VBox>
+                </left>
+                <right>
+                    <ImageView fx:id="optionsIcon" />
+                </right>
+            </Panel>
+            <!--<Panel>
+                <left>
+                   <VBox>
+                       <HBox spacing="5">
+                           <ImageView fx:id="clockIcon" fitWidth="15" fitHeight="15" />
+                           <Label fx:id="timeLabel" text="45 mins"/>
+                       </HBox>
+                       <Label fx:id="videoDescription" prefWidth="200" prefHeight="80"
+                              text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id vitae faucibus sit  vitae he this thing doesn't want to work"/>
+                   </VBox>
+                </left>
+            </Panel>-->
+
+            <padding>
+                <Insets topRightBottomLeft="15"/>
+            </padding>
+        </VBox>
+    </graphic>
+</fx:root>

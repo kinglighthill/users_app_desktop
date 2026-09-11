@@ -12,7 +12,7 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <BorderPane prefHeight="1000.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.scholarly.utme.controller.trivia_screens.TriviaQuizResultScreenController">
+            fx:controller="com.scholarly.controller.trivia_screens.TriviaQuizResultScreenController">
     <top>
         <VBox prefHeight="60.0" prefWidth="600.0" BorderPane.alignment="CENTER" style="-fx-background-color: white;">
             <children>

@@ -8,7 +8,7 @@
 <?import javafx.scene.text.*?>
 <?import org.kordamp.bootstrapfx.scene.layout.*?>
 <AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.scholarly.utme.controller.novel_screens.NovelContentScreenController">
+            fx:controller="com.scholarly.controller.novel_screens.NovelContentScreenController">
 
     <StackPane AnchorPane.topAnchor="1.0" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.leftAnchor="1.0">
 
@@ -23,7 +23,7 @@
                                         <Insets top="8" right="13" bottom="8" left="13"/>
                                     </padding>
                                 </Button>
-                                <Label fx:id="pageTitle" text="JAMB Prose" textFill="#034801">
+                                <Label fx:id="pageTitle" textFill="#034801">
                                     <font>
                                         <Font name="System Bold" size="22"/>
                                     </font>
@@ -486,7 +486,7 @@
             </VBox>
 
             <HBox alignment="CENTER">
-                <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N2000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8; -fx-cursor: hand;">
+                <Button fx:id="activateNowButton" prefHeight="45" prefWidth="200" text="Activate Now (N3000)" textFill="white" style="-fx-background-color: #12AF20; -fx-background-radius: 8; -fx-cursor: hand;">
                     <font>
                         <Font size="16"/>
                     </font>
