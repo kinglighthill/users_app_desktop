@@ -1,5 +1,6 @@
 package com.scholarly.utme.viewmodels.novel_screens;
 
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.novel_screens.NovelChapterListController;
 import com.scholarly.utme.data.dao.NovelAuthorDao;
 import com.scholarly.utme.data.dao.NovelChapterDao;
@@ -13,11 +14,11 @@ import javafx.collections.ObservableList;
 
 public class NovelChapterListVM implements ViewModel {
 
-    private SimpleObjectProperty<NovelModel> novelModel = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<NovelModel> novelModel = new SimpleObjectProperty<>();
 
-    private ObservableList<NovelChapter> chapters = FXCollections.observableArrayList();
+    private final ObservableList<NovelChapter> chapters = FXCollections.observableArrayList();
 
-    private ObservableList<NovelAuthor> authors = FXCollections.observableArrayList();
+    private final ObservableList<NovelAuthor> authors = FXCollections.observableArrayList();
 
     private NovelChapter selectedChapter;
 
@@ -27,9 +28,10 @@ public class NovelChapterListVM implements ViewModel {
         this.novelModel.set(data.getNovelModel());
         authors.addAll(NovelAuthorDao.getAuthors());
 
-        novelChapterDao.getNovelChapters().stream().filter(novelChapter ->
-                novelChapter.getNovelId() == data.getNovelModel().getNovel().getId()).forEach(novelChapter -> chapters.add(novelChapter));
-
+        novelChapterDao.getNovelChapters().stream().filter(
+                novelChapter -> novelChapter.getNovelId() == data.getNovelModel().getNovel().getId()
+        ).forEach(chapters::add);
+        MainApplication.timeTakenTo("Chapters num: " + chapters.size());
     }
 
     public NovelModel getNovelModel() {

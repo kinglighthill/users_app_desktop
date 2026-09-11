@@ -8,12 +8,12 @@ import com.scholarly.utme.network.model.*;
 import com.scholarly.utme.network.model.request.UserRequest;
 import com.scholarly.utme.network.model.response.BaseResponse;
 import com.scholarly.utme.ui.utils.*;
+import com.scholarly.utme.util.Constants;
 import com.scholarly.utme.util.Helper;
 import com.scholarly.utme.util.PreferencesManager;
 import com.scholarly.utme.viewmodels.AuthenticationScreenVM;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
@@ -31,9 +31,9 @@ import okhttp3.*;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.scholarly.utme.network.NetworkService.JSON_BODY_TYPE;
@@ -133,7 +133,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             Label signUpPhoneError = getPhoneErrorText();
 
             signUpProceedButton.setOnAction(event -> {
-
                 String fullName = signUpNameField.getText();
                 signUpNameSection.getChildren().remove(signUpNameError);
                 if (fullName.split(" ").length == 1) {
@@ -191,7 +190,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
                     Thread signupThread = new Thread(signupTask);
                     signupThread.start();
                 }
-
             });
 
 
@@ -252,7 +250,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             });
 
             recoverProceedButton.setOnAction(event -> {
-
                 if (!recoverEmailField.getText().contains("@")) {
                     recoverEmailPrompt.setText("Please enter a valid email address");
                     recoverEmailPrompt.setTextFill(Paint.valueOf("#FF0000"));
@@ -306,7 +303,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             recoverEmailField.setTextFormatter(recoverTextFormatter);
 
             signUpGoogleButton.setOnAction(event -> {
-
                 signUpGoogleButton.setDisable(true);
                 showProgressBar();
 
@@ -335,7 +331,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             });
 
             loginGoogleButton.setOnAction(event -> {
-
                 loginGoogleButton.setDisable(true);
                 showProgressBar();
 
@@ -729,32 +724,48 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     }
 
     private void signInWithGoogle() {
-        final HttpServer server;
+        HttpServer server;
         MainApplication application = new MainApplication();
         InetAddress ipaddress = InetAddress.getLoopbackAddress(); // returns 127.0.0.1
 
         String state = RandomStringUtils.random(6, true, false);
         String scope = "email profile";
         String responseType = "code";
-        String clientId = "671999041043-p3grlgbnvrn3ph5fvkf4b52h5vq1oii7.apps.googleusercontent.com";
+        String clientId = CLIENT_ID;
 
         try {
-            server = HttpServer.create(new InetSocketAddress(ipaddress, 0), 0);
+            InetSocketAddress socketAddress = new InetSocketAddress(ipaddress, 2020);
+            server = HttpServer.create(socketAddress, 0);
 
-            String redirectUri = "http://" + server.getAddress().getHostName() + ":" + server.getAddress().getPort();
-
+            String redirectUri = "http://" + server.getAddress().getHostString() + ":" + server.getAddress().getPort();
             server.start();
 
             String authorizationRequest = "https://accounts.google.com/o/oauth2/v2/auth?scope=" + scope + "&response_type=" + responseType + "&state=" + state + "&redirect_uri=" + redirectUri + "&client_id=" + clientId;
-
             application.openBrowser(authorizationRequest);
 
-            HttpContext responseContext = server.createContext("/");
-            responseContext.setHandler(new HttpHandler() {
-                @Override
-                public void handle(HttpExchange exchange) throws IOException {
-                    String uriResponse = exchange.getRequestURI().getQuery();
+            AtomicBoolean keepAlive = new AtomicBoolean(false);
 
+            Timer timer = new Timer();
+            TimerTask myTask = new TimerTask() {
+                @Override
+                public void run() {
+                    if (progressBar.isVisible() && !keepAlive.get()) {
+                        Platform.runLater(() -> {
+                            Alert alertDialog = Alerts.info(getClass(), "Error", "Something went wrong. Try again later!", "");
+                            alertDialog.show();
+                            hideProgressBar();
+                            server.stop(0);
+                        });
+                    }
+                }
+            };
+            timer.schedule(myTask, 1000 * 30);
+
+            HttpContext responseContext = server.createContext("/");
+            responseContext.setHandler(exchange -> {
+                keepAlive.set(true);
+                String uriResponse = exchange.getRequestURI().getQuery();
+                try {
                     if (uriResponse.contains("code")) {
                         String code = uriResponse.substring(uriResponse.indexOf("code"), uriResponse.indexOf("scope")-1);
                         String authCode = code.substring(uriResponse.indexOf("="));
@@ -767,29 +778,22 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
 
                             @Override
                             public void redirect() {
-                                try {
-                                    byte[] response = "<html><body>Login successful. Go back to the app</body></html>".getBytes();
-                                    exchange.sendResponseHeaders(200, response.length);
-                                    OutputStream os = exchange.getResponseBody();
-                                    os.write(response);
-                                    os.close();
-                                } catch (IOException exception) {
-                                    System.out.println(exception.getMessage());
-                                }
+                                showSuccessWebPage(exchange);
+                                server.stop(60);
                             }
                         });
 
                     } else {
+                        hideProgressBar();
+                        showFailureWebPage(exchange);
                         server.stop(60);
-                        Platform.runLater(() -> {
-                            Alert alertDialog = Alerts.info(getClass(), "Error", "Could not sign in with Google", "");
-                            alertDialog.show();
-                            hideProgressBar();
-                        });
                     }
+                } catch (Exception e) {
+                    hideProgressBar();
+                    showFailureWebPage(exchange);
+                    server.stop(60);
                 }
             });
-
         } catch (IOException e) {
             Platform.runLater(() -> {
                 Alert alertDialog = Alerts.info(getClass(), "Error", e.getMessage(), "");
@@ -798,7 +802,6 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
             });
             System.out.println(TAG + "Cannot create connection because -> " + e.getMessage());
         }
-
     }
 
     private void hideProgressBar() {
@@ -929,7 +932,7 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
     }
 
     public static class InitialData {
-        private boolean showSignUpScreen;
+        private final boolean showSignUpScreen;
 
         public InitialData(boolean showSignUpScreen) {
             this.showSignUpScreen = showSignUpScreen;
@@ -938,6 +941,68 @@ public class AuthenticationController implements FxmlView<AuthenticationScreenVM
         public boolean isShowSignUpScreen() {
             return showSignUpScreen;
         }
+    }
+
+    private void showSuccessWebPage(HttpExchange exchange) {
+        String webContent = """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Login Success</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #FFFFFF;
+                            color: #4CAF50;
+                            text-align: center;
+                            padding: 50px;
+                        }
+
+                        h1 {
+                            font-size: 2em;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>Login Successful!</h1>
+                    <p>Congratulations! You have successfully logged in.</p>
+                    <p>Kindly go back to the app to continue.</p>
+                </body>
+                </html>""";
+        Helper.showWebpage(exchange, webContent, this::hideProgressBar);
+    }
+
+    private void showFailureWebPage(HttpExchange exchange) {
+        String webContent = """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Login Failure</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #FFFFFF;
+                            color: #E74C3C;
+                            text-align: center;
+                            padding: 50px;
+                        }
+
+                        h1 {
+                            font-size: 2em;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>Login Failed</h1>
+                    <p>Oops! Something went wrong.</p>
+                    <p>Kindly go back to the app and try again!</p>
+                </body>
+                </html>""";
+        Helper.showWebpage(exchange, webContent, this::hideProgressBar);
     }
 
 }

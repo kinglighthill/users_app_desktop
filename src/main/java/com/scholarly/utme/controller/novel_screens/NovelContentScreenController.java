@@ -12,9 +12,11 @@ import com.scholarly.utme.viewmodels.novel_screens.NovelContentScreenVM;
 import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -40,6 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @FxmlPath("/layouts/novel_screens/NovelContentScreen.fxml")
 public class NovelContentScreenController implements FxmlView<NovelContentScreenVM>, Initializable {
@@ -68,9 +72,12 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
     @FXML
     private HBox chapterHeader;
     @FXML
-    private VBox chaptersListPane, chapterQuizPane, answerPane, questionPane, chapterQuizQuestionPane;
+    private VBox novelContentVBox, novelChaptersVBox, chaptersListPane, chapterQuizPane, answerPane, questionPane, chapterQuizQuestionPane;
     @FXML
     private ImageView bookmarkImage, reportImage, speakerImage, exitQuestionMarkIcon, quitQuestionMarkIcon, activateNowCloseIcon, activateNowPadlockIcon, greenTickIcon1, greenTickIcon2, greenTickIcon3, greenTickIcon4, greenTickIcon5;
+
+    @FXML
+    private ProgressIndicator progressBar;
 
     @InjectViewModel
     private NovelContentScreenVM viewModel;
@@ -89,6 +96,37 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        showProgressBar();
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+        Task<Boolean> contentTask = new Task<>() {
+            @Override
+            protected Boolean call() {
+                viewModel.processInitialData(getInitialData());
+                return true;
+            }
+        };
+        contentTask.setOnSucceeded(
+                event -> Platform.runLater(() -> {
+                    chaptersList.setCellFactory(new NovelChapterListCellFactory());
+                    chaptersList.setItems(viewModel.getChapters());
+                    chaptersList.getSelectionModel().select(viewModel.getSelectedChapter());
+
+                    chaptersList.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldValue, newValue) -> {
+                        viewModel.setSelectedChapter(newValue);
+                    }));
+
+                    pageTitle.setText(viewModel.getNovelModel().getNovel().getName());
+                    chapterCount.setText(viewModel.getSelectedChapter().getOrder() + " of " + chaptersList.getItems().size());
+                    chapterTitle.setText(viewModel.getSelectedChapter().getChapterHeading());
+                    renderNovel(viewModel.getSelectedChapter());
+                    hideProgressBar();
+                })
+        );
+
+        executorService.execute(contentTask);
+        executorService.shutdown();
+
         options = new ArrayList<>();
         options.add(optionAButton);
         options.add(optionBButton);
@@ -96,25 +134,10 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         options.add(optionDButton);
         options.add(optionEButton);
 
-        viewModel.processInitialData(getInitialData());
-
         initializeViews();
         initializeFont();
         initializeGestures();
 //        setupQuizView();
-
-        chaptersList.setCellFactory(new NovelChapterListCellFactory());
-        chaptersList.setItems(viewModel.getChapters());
-        chaptersList.getSelectionModel().select(viewModel.getSelectedChapter());
-
-        chaptersList.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldValue, newValue) -> {
-            viewModel.setSelectedChapter(newValue);
-        }));
-
-        pageTitle.setText(viewModel.getNovelModel().getNovel().getName());
-        chapterCount.setText(viewModel.getSelectedChapter().getOrder() + " of " + chaptersList.getItems().size());
-        chapterTitle.setText(viewModel.getSelectedChapter().getChapterHeading());
-        renderNovel(viewModel.getSelectedChapter());
 
         viewModel.selectedChapterProperty().addListener(((observableValue, oldValue, newValue) -> {
             previouslySelectedChapter.set(oldValue);
@@ -455,7 +478,6 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
         speakerImage.setOnMouseClicked(event -> {
             System.out.println(TAG + "Novel Question Speaker Image clicked!");
         });
-
     }
 
     private void showActivateDialog() {
@@ -683,6 +705,18 @@ public class NovelContentScreenController implements FxmlView<NovelContentScreen
                         System.out.println(TAG + e.getMessage());
                     }
                 });
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisible(false);
+        novelContentVBox.setVisible(true);
+        novelChaptersVBox.setVisible(true);
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisible(true);
+        novelContentVBox.setVisible(false);
+        novelChaptersVBox.setVisible(false);
     }
 
     private InitialData getInitialData() {

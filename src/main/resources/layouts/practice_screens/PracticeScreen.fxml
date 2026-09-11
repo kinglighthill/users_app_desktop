@@ -13,7 +13,7 @@
 
    <StackPane AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
 
-      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <BorderPane fx:id="practiceContentPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <top>
             <VBox prefHeight="50.0" prefWidth="389.0" style="-fx-background-color: #FFFFFF;">
                <children>
@@ -336,6 +336,8 @@
             </HBox>
          </left>
       </BorderPane>
+
+      <ProgressIndicator fx:id="progressBar" maxWidth="150" maxHeight="50" StackPane.alignment="CENTER" visible="false"/>
 
       <Pane fx:id="dialogDimmer" opacity="0.5" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" visible="false" />
       <Pane fx:id="exitDialogDimmer" opacity="0.5" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" visible="false" />

@@ -4,9 +4,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,14 +18,16 @@ import com.fasterxml.jackson.databind.*;
 import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.data.model.ObjectiveQuestion;
 import com.scholarly.utme.data.model.TheoryQuestion;
+import com.sun.net.httpserver.HttpExchange;
 import io.reactivex.rxjava3.annotations.Nullable;
+import javafx.concurrent.Worker;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
-import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 import javax.imageio.ImageIO;
@@ -321,6 +325,29 @@ public class Helper {
         return latexContent.replace("{formula}", content);
     }
 
+    public static WebView setUpWebView(String content) {
+        WebView webView = new WebView();
+        webView.setPrefHeight(25);
+        WebEngine webEngine = webView.getEngine();
+        webEngine.loadContent(content);
+
+        AtomicBoolean heightLoaded = new AtomicBoolean(false);
+
+        webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
+            if (newState == Worker.State.SUCCEEDED && !heightLoaded.get()) {
+                int contentHeight = (Integer) webEngine.executeScript(
+                        "Math.max( document.body.scrollHeight, document.body.offsetHeight, " +
+                                "document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight)"
+                );
+                System.out.println("Height: " + contentHeight);
+                webView.setPrefHeight(contentHeight);
+                heightLoaded.set(true);
+            }
+        });
+
+        return webView;
+    }
+
     public static boolean checkNetworkConnectivity() {
         try {
             URL url = new URL(BASE_URL);
@@ -374,6 +401,7 @@ public class Helper {
         return editable;
     }
 
+
     public static String extractImageUrlFromText(String text) {
         int startIndexOfImg = text.indexOf("<img");
         int endIndexOfImg = text.indexOf("'100%'>", startIndexOfImg);
@@ -387,10 +415,27 @@ public class Helper {
     }
 
     public static String extractQuestionOrAnswerFromQuestionWithImage(Class<?> mClass, String text) {
-        String imageQuestion = text.substring(text.lastIndexOf("100%'")+6);
+        String imageQuestion = text.substring(text.lastIndexOf("100%'") + 6);
         if (isWebView(imageQuestion)) {
             imageQuestion = loadLatex(mClass, imageQuestion);
         }
         return imageQuestion;
+    }
+
+    public static void showWebpage(HttpExchange exchange, String webContent, ErrorCallback callback) {
+        try {
+            byte[] response = webContent.getBytes();
+            exchange.sendResponseHeaders(200, response.length);
+            OutputStream os = exchange.getResponseBody();
+            os.write(response);
+            os.close();
+        } catch (IOException exception) {
+            MainApplication.log(exception);
+            callback.callback();
+        }
+    }
+
+    public interface ErrorCallback {
+        void callback();
     }
 }

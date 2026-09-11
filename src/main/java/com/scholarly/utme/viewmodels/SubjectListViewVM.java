@@ -7,39 +7,42 @@ import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.concurrent.Task;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class SubjectListViewVM implements ViewModel, SceneLifecycle {
     private static final String TAG = "SubjectListViewVM: ";
 
+    private final ObservableList<SubjectListItemVM> objectiveSubjects = FXCollections.observableArrayList();
+    private final ObservableList<SubjectListItemVM> theorySubjects = FXCollections.observableArrayList();
 
-    private ObservableList<SubjectListItemVM> objectiveSubjects = FXCollections.observableArrayList();
-    private ObservableList<SubjectListItemVM> theorySubjects = FXCollections.observableArrayList();
-
-    private Map<String, SubjectState> objectiveHashMap = new LinkedHashMap<>();
-    private ObservableMap<String, SubjectState> selectedObjectiveSubjects = FXCollections.observableMap(objectiveHashMap); // LinkedHashMap because it maintains insertion order
+    private final Map<String, SubjectState> objectiveHashMap = new LinkedHashMap<>();
+    private final ObservableMap<String, SubjectState> selectedObjectiveSubjects = FXCollections.observableMap(objectiveHashMap); // LinkedHashMap because it maintains insertion order
 
     public ObservableMap<String, SubjectState> getSelectedObjectiveSubjects() {
         return selectedObjectiveSubjects;
     }
 
-    private Map<String, SubjectState> theoryHashMap = new LinkedHashMap<>();
+    private final Map<String, SubjectState> theoryHashMap = new LinkedHashMap<>();
 
-    private ObservableMap<String, SubjectState> selectedTheorySubjects = FXCollections.observableMap(theoryHashMap);
+    private final ObservableMap<String, SubjectState> selectedTheorySubjects = FXCollections.observableMap(theoryHashMap);
 
     public ObservableMap<String, SubjectState> getSelectedTheorySubjects() {
         return selectedTheorySubjects;
     }
 
-    private ObservableMap<String, Integer> selectedSubjectAllottedTime = FXCollections.observableHashMap();
-    private ObservableMap<String, Integer> selectedSubjectNumberOfQuestions = FXCollections.observableHashMap();
+    private final ObservableMap<String, Integer> selectedSubjectAllottedTime = FXCollections.observableHashMap();
+    private final ObservableMap<String, Integer> selectedSubjectNumberOfQuestions = FXCollections.observableHashMap();
 
     public ObservableMap<String, Integer> getSelectedSubjectAllottedTime() {
         return selectedSubjectAllottedTime;
@@ -48,68 +51,76 @@ public class SubjectListViewVM implements ViewModel, SceneLifecycle {
         return selectedSubjectNumberOfQuestions;
     }
 
-    private CompositeDisposable disposables = new CompositeDisposable();
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
+    private final SimpleBooleanProperty subjectLoaded = new SimpleBooleanProperty();
 
     public SubjectListViewVM() {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
 
-        objectiveSubjects.addAll(SubjectDao.getFavoriteSubjects().stream().map(favoriteSubject -> new SubjectListItemVM(new PQSubject(favoriteSubject.getId(), favoriteSubject.getSubjectId(), favoriteSubject.getMinutesAllotted(), favoriteSubject.getOrder(), favoriteSubject.getTitle(), favoriteSubject.getShortTitle(), favoriteSubject.getColorCode(), favoriteSubject.isSelected()))).toList());
+        Task<Boolean> subjectTask = new Task<>() {
+            @Override
+            protected Boolean call() {
+                objectiveSubjects.addAll(SubjectDao.getFavoriteSubjects().stream().map(favoriteSubject -> new SubjectListItemVM(new PQSubject(favoriteSubject.getId(), favoriteSubject.getSubjectId(), favoriteSubject.getMinutesAllotted(), favoriteSubject.getOrder(), favoriteSubject.getTitle(), favoriteSubject.getShortTitle(), favoriteSubject.getColorCode(), favoriteSubject.isSelected()))).toList());
 
-        theorySubjects.addAll(SubjectDao.getTheorySubjects().stream().map(SubjectListItemVM::new).toList());
+                theorySubjects.addAll(SubjectDao.getTheorySubjects().stream().map(SubjectListItemVM::new).toList());
 
-        objectiveSubjects.forEach(vm -> {
-            disposables.add(
-                    vm.getSubjectState()
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(JavaFxScheduler.platform())
-                            .subscribe(
-                                    subjectState -> {
-                                        if (subjectState.getSelected()) {
-                                            System.out.println(TAG + "subject obj: " + subjectState.getSubject() + " selected.. adding to selected list in map with allotted time -> " + subjectState.getSubject().getMinutesAllotted());
-                                            selectedObjectiveSubjects.put(subjectState.getSubject().getShortTitle(), subjectState);
-                                            selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAllotted());
+                objectiveSubjects.forEach(vm -> disposables.add(
+                        vm.getSubjectState()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(JavaFxScheduler.platform())
+                                .subscribe(subjectState -> {
+                                            if (subjectState.getSelected()) {
+                                                System.out.println(TAG + "subject obj: " + subjectState.getSubject() + " selected.. adding to selected list in map with allotted time -> " + subjectState.getSubject().getMinutesAllotted());
+                                                selectedObjectiveSubjects.put(subjectState.getSubject().getShortTitle(), subjectState);
+                                                selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAllotted());
 
-                                            selectedSubjectNumberOfQuestions.put(subjectState.getSubject().getTitle(), subjectState.getNumberOfQuestions());
+                                                selectedSubjectNumberOfQuestions.put(subjectState.getSubject().getTitle(), subjectState.getNumberOfQuestions());
 
-                                            System.out.println(TAG + "Selected Objective Subjects: (Key Set) -> " + selectedObjectiveSubjects.keySet());
+                                                System.out.println(TAG + "Selected Objective Subjects: (Key Set) -> " + selectedObjectiveSubjects.keySet());
 //                                            System.out.println(TAG + "Selected Objective Subjects Time Map: (Key Set) -> " + selectedSubjectAllottedTime.keySet() + " with values -> " + selectedSubjectAllottedTime.values());
 
-                                          //  System.out.println("SubjectStates (shuffleQuestion): " + subjectState.getShuffleQuestions());
+                                                //  System.out.println("SubjectStates (shuffleQuestion): " + subjectState.getShuffleQuestions());
 
-                                        } else {
+                                            } else {
 //                                            System.out.println(TAG + "subject obj: " + subjectState.getSubject() + " unselected.. removing from selected list");
-                                            selectedObjectiveSubjects.remove(subjectState.getSubject().getShortTitle());
-                                            selectedSubjectAllottedTime.remove(subjectState.getSubject().getShortTitle());
-                                        }
-                                    }
-                            )
-            );
-        });
+                                                selectedObjectiveSubjects.remove(subjectState.getSubject().getShortTitle());
+                                                selectedSubjectAllottedTime.remove(subjectState.getSubject().getShortTitle());
+                                            }
+                                        })
+                ));
 
-        theorySubjects.forEach(vm -> {
-            disposables.add(
-                    vm.getSubjectState()
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(JavaFxScheduler.platform())
-                            .subscribe(
-                                    subjectState -> {
-                                        if (subjectState.getSelected()) {
-                                            System.out.println(TAG + "subject theory: " + subjectState.getSubject() + " selected.. adding to selected list in map");
-                                            selectedTheorySubjects.put(subjectState.getSubject().getShortTitle(), subjectState);
+                theorySubjects.forEach(vm -> disposables.add(
+                        vm.getSubjectState()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(JavaFxScheduler.platform())
+                                .subscribe(subjectState -> {
+                                            if (subjectState.getSelected()) {
+                                                System.out.println(TAG + "subject theory: " + subjectState.getSubject() + " selected.. adding to selected list in map");
+                                                selectedTheorySubjects.put(subjectState.getSubject().getShortTitle(), subjectState);
 
-                                            selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAllotted());
-                                            selectedSubjectNumberOfQuestions.put(subjectState.getSubject().getTitle(), subjectState.getNumberOfQuestions());
+                                                selectedSubjectAllottedTime.put(subjectState.getSubject().getShortTitle(), subjectState.getSubject().getMinutesAllotted());
+                                                selectedSubjectNumberOfQuestions.put(subjectState.getSubject().getTitle(), subjectState.getNumberOfQuestions());
 
-                                            System.out.println(TAG + "Selected Theory Subjects: (Key Set) -> " + selectedTheorySubjects.keySet());
-                                        } else {
+                                                System.out.println(TAG + "Selected Theory Subjects: (Key Set) -> " + selectedTheorySubjects.keySet());
+                                            } else {
 //                                            System.out.println(TAG + "subject theory unselected.. removing from selected list");
-                                            selectedTheorySubjects.remove(subjectState.getSubject().getShortTitle());
-                                            selectedSubjectAllottedTime.remove(subjectState.getSubject().getShortTitle());
-                                        }
-                                    }
-                            )
-            );
-        });
+                                                selectedTheorySubjects.remove(subjectState.getSubject().getShortTitle());
+                                                selectedSubjectAllottedTime.remove(subjectState.getSubject().getShortTitle());
+                                            }
+                                        })
+                ));
+                return true;
+            }
+        };
+        subjectLoaded.bind(subjectTask.valueProperty());
+
+        executorService.execute(subjectTask);
+        executorService.shutdown();
+    }
+
+    public SimpleBooleanProperty getSubjectLoaded() {
+        return subjectLoaded;
     }
 
     /**

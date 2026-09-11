@@ -124,8 +124,6 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
         ContentViewType contentViewType = ContentViewTypes.convert(section);
         Parent contentElement = null;
         if (contentViewType instanceof HeaderViewType headerViewType) {
-//            System.out.println(TAG + "ContentViewType -> HeaderViewType");
-
             if (headerViewType.getText() != null) {
                 Document doc = Jsoup.parse(headerViewType.getText());
                 String formattedText = doc.body().text();
@@ -142,13 +140,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                     label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.MEDIUM, 16));
                 }
 
-//                if (section.getSubtopicId() != 0 || section.getMainSectionOrder() != 0) {
-//                    label.setPadding(new Insets(10, 0, 0, 0));
-//                    label.setFont(FontUtil.getFont(FontUtil.GilroyFontFamily.SEMI_BOLD, 18));
-//                }
-
                 contentElement = label;
-//                System.out.println(TAG + "HeaderViewType text -> " + label.getText());
             }
 
         } else if (contentViewType instanceof ParagraphViewType paragraphViewType) {
@@ -166,11 +158,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                     contentElement = label;
                 } else {
                     String content = Helper.loadLatex(getClass(), contentText);
-                    WebView webView = new WebView();
-                    webView.setPrefHeight(200);
-                    WebEngine webEngine = webView.getEngine();
-                    webEngine.loadContent(content);
-
+                    WebView webView = Helper.setUpWebView(content);
                     VBox vBox = new VBox();
                     vBox.getChildren().addAll(webView);
                     contentElement = vBox;
@@ -320,10 +308,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
         } else if (contentViewType instanceof LatexMathViewType latexMathViewType) {
             if (latexMathViewType.getKatex() != null) {
                 String content = Helper.loadLatex(getClass(), latexMathViewType.getKatex());
-                WebView webView = new WebView();
-                webView.setPrefHeight(200);
-                WebEngine webEngine = webView.getEngine();
-                webEngine.loadContent(content);
+                WebView webView = Helper.setUpWebView(content);
 
                 VBox vBox = new VBox();
                 vBox.getChildren().addAll(webView);
@@ -380,10 +365,7 @@ public class NoteContentListItemCell extends ListCell<NoteSection> {
                     contentElement = label;
                 } else {
                     String content = Helper.loadLatex(getClass(), contentText);
-                    WebView webView = new WebView();
-                    webView.setPrefHeight(200);
-                    WebEngine webEngine = webView.getEngine();
-                    webEngine.loadContent(content);
+                    WebView webView = Helper.setUpWebView(content);
 
                     VBox vBox = new VBox();
                     vBox.getChildren().addAll(webView);

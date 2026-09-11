@@ -62,6 +62,10 @@ public class DeviceInfo {
     }
 
     public String getDeviceId() {
+        return formatDeviceId(deviceId);
+    }
+
+    private static String formatDeviceId(String deviceId) {
         return deviceId.replaceAll("-", "").substring(0, 16);
     }
 
@@ -122,7 +126,7 @@ public class DeviceInfo {
         deviceInfo.setName(deviceName);
         deviceInfo.setPlatform(platform);
         deviceInfo.setFormFactor("desktop");
-        deviceInfo.setDeviceId(deviceId);
+        deviceInfo.setDeviceId(formatDeviceId(deviceId));
         deviceInfo.setAppVersionName("1.0.0");
 
 //        System.out.println(TAG + "Got device ID with OS name -> " + properties.getProperty("os.name") + " AND arch -> " + properties.getProperty("os.arch") + " AND username -> " + properties.getProperty("user.name"));

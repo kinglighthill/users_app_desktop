@@ -2,7 +2,6 @@ package com.scholarly.utme.controller;
 
 
 import com.scholarly.utme.controller.landing_screens.LandingScreenController;
-import com.scholarly.utme.data.model.Subject;
 import com.scholarly.utme.data.model.newDb.PQSubject;
 import com.scholarly.utme.ui.utils.*;
 import com.scholarly.utme.viewmodels.*;
@@ -24,8 +23,8 @@ import java.util.ResourceBundle;
 
 import static com.scholarly.utme.controller.SubjectListViewController.*;
 
-@FxmlPath("/layouts/HomeScreen.fxml")
-public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializable{
+@FxmlPath("/layouts/PQScreen.fxml")
+public class PQScreenController implements FxmlView<HomeScreenVM>, Initializable{
     private static final String TAG = "HomeScreenController: ";
 
     @InjectViewModel
@@ -56,10 +55,21 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         ViewTuple<SubjectListViewController, SubjectListViewVM> subjectListViewTuple = FluentViewLoader.fxmlView(SubjectListViewController.class).load();
         subjectListController = subjectListViewTuple.getCodeBehind();
         subjectListView = subjectListViewTuple.getView();
+
+        practiceButton.setDisable(true);
+        pastQuestionButton.setDisable(true);
+        cbtGameButton.setDisable(true);
+
+        subjectListController.getIsLoadingDone().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                practiceButton.setDisable(false);
+                pastQuestionButton.setDisable(false);
+                cbtGameButton.setDisable(false);
+            }
+        });
 
         initializeViews();
         initializeFonts();
@@ -95,10 +105,10 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             if (newValue) {
                 pageTitle.setText("CBT Practice");
                 subjectListController.setOption(SubjectListOption.PRACTICE);
-//                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
-//                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
-//                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
-//                }
+                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
+                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
+                }
                 selectButton(subjectListView, practiceButton);
             }
         });
@@ -107,10 +117,10 @@ public class HomeScreenController implements FxmlView<HomeScreenVM>, Initializab
             if (newValue) {
                 pageTitle.setText("Study Past Questions");
                 subjectListController.setOption(SubjectListOption.STUDY);
-//                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
-//                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
-//                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
-//                }
+                if (!subjectListController.tabMenu.getTabs().contains(subjectListController.theoryTab)){
+                    subjectListController.tabMenu.getTabs().add(subjectListController.theoryTab);
+                    subjectListController.tabMenu.setTabMinWidth(subjectListController.tabMenu.getTabMinWidth() / 2);
+                }
                 selectButton(subjectListView, pastQuestionButton);
             }
         });

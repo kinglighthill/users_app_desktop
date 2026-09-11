@@ -1,6 +1,7 @@
 package com.scholarly.utme.viewmodels.note_screens;
 
 import com.google.gson.Gson;
+import com.scholarly.utme.MainApplication;
 import com.scholarly.utme.controller.note_screens.NotesScreenController.InitialData;
 import com.scholarly.utme.data.dao.ObjectiveQuestionDao;
 import com.scholarly.utme.data.dao.SubjectDao;
@@ -52,7 +53,6 @@ public class NotesScreenVM implements ViewModel {
     public NotesScreenVM() {
         userId = PreferencesManager.get(PREF_KEY_USER_ID, "");
         String userDataString = PreferencesManager.get(PREF_KEY_USER_DATA+userId, "");
-
         userData = gson.fromJson(userDataString, UserData.class);
     }
 
@@ -63,10 +63,6 @@ public class NotesScreenVM implements ViewModel {
         selectedTopic.set(noteTopic);
         selectedSubTopic.set(data.getSelectedSubTopic());
         selectedSection.set(data.getSelectedSection());
-//        subTopics.addAll(data.getSubTopics());
-//        System.out.println(TAG + "Got questions for subject with id -> " + getPQSubjectId(data.getSubject().getSubjectId()) + ObjectiveQuestionDao.getQuestionsWithNoteSubjectId(getPQSubjectId(data.getSubject().getSubjectId())));
-//        noteSubjectQuestions.addAll(ObjectiveQuestionDao.getQuestionsWithNoteSubjectId(getPQSubjectId(data.getSubject().getSubjectId())));
-
         selectedTopicIndex.set(data.getSelectedNoteTopic().getOrder()-1);
 
         noteTopics.forEach(topic -> {
@@ -76,7 +72,6 @@ public class NotesScreenVM implements ViewModel {
 
         if (selectedSubTopic.get() != null) {
             List<NoteSection> selectedNoteSection = noteSections.get(selectedTopic.get().getId()).stream().filter(section -> section.getSubtopicId() == selectedSubTopic.get().getId()).toList();
-//            System.out.println(TAG + "SelectedSubtopic Section -> " + selectedNoteSection);
             selectedSubtopicSection.set(selectedNoteSection.get(0));
         }
     }
@@ -85,33 +80,6 @@ public class NotesScreenVM implements ViewModel {
         int id = SectionDao.insertLastSection(lastSession);
         System.out.println(TAG + "Inserted last session with id -> " + id);
     }
-
-//    public void handleHighlight(Section selectedSection, String colorCode) {
-//
-//        boolean highlighted = false;
-//
-//        for (int i = 0; i < subjectHighlights.size(); i++) {
-//            Highlights currentHighlight = subjectHighlights.get(i);
-//            if (subjectHighlights.get(i).getNoteId() == selectedSection.getId()) {
-//                if (subjectHighlights.get(i).getColor().equals(colorCode)) {
-//                    HighlightsDao.deleteHighlight(subjectHighlights.get(i).getId());
-//                    subjectHighlights.remove(i);
-//                } else {
-//                    HighlightsDao.updateHighlight(new Highlights(currentHighlight.getId(), currentHighlight.getNoteTableName(), currentHighlight.getNoteId(), colorCode));
-//                    subjectHighlights.clear();
-//                    subjectHighlights.addAll(HighlightsDao.getHighlights("note_" + subject.getTableName() + "_sections"));
-//                }
-//                highlighted = true;
-//                break;
-//            }
-//        }
-//
-//        if (!highlighted) {
-//            HighlightsDao.createHighlight("note_" + subject.getTableName() + "_sections", selectedSection.getId(), colorCode);
-//            subjectHighlights.clear();
-//            subjectHighlights.addAll(HighlightsDao.getHighlights("note_" + subject.getTableName() + "_sections"));
-//        }
-//    }
 
     public NoteSubject getSubject() {
         return subject;
@@ -136,10 +104,6 @@ public class NotesScreenVM implements ViewModel {
     public ObservableList<NoteTopic> getNoteTopics() {
         return noteTopics;
     }
-
-//    public void setSubTopics(ObservableList<NoteSubTopic> subTopics) {
-//        this.subTopics = subTopics;
-//    }
 
     public NoteSubTopic getSelectedSubTopic() {
         return selectedSubTopic.get();
@@ -203,31 +167,6 @@ public class NotesScreenVM implements ViewModel {
         return userData;
     }
 
-    //    public void addNote(Section selectedSection, String note) {
-//
-//        boolean noted = false;
-//
-//        for (int i = 0; i < subjectNotes.size(); i++) {
-//            Note currentNote = subjectNotes.get(i);
-//            if (subjectNotes.get(i).getNoteId() == selectedSection.getId()) {
-//                {
-//                    NoteDao.updateNote(new Note(currentNote.getId(), currentNote.getNoteTableName(), currentNote.getNoteId(), note));
-//                    subjectNotes.clear();
-//                    subjectNotes.addAll(NoteDao.getNotes("note_" + subject.getTableName() + "_sections"));
-//                }
-//                noted = true;
-//                break;
-//            }
-//        }
-//
-//        if (!noted) {
-//            NoteDao.createNote("note_" + subject.getTableName() + "_sections", selectedSection.getId(), note);
-//            subjectNotes.clear();
-//            subjectNotes.addAll(NoteDao.getNotes("note_" + subject.getTableName() + "_sections"));
-//        }
-//    }
-
-
     public ObservableList<Highlights> getSubjectHighlights() {
         return subjectHighlights;
     }
@@ -241,16 +180,11 @@ public class NotesScreenVM implements ViewModel {
     }
 
     public NoteSection getNoteSubtopicSection(NoteSubTopic subTopic) {
-//        System.out.println(TAG + "getNoteSubtopicSection Subtopic Id -> " + subTopic.getId());
-//        System.out.println(TAG + "getNoteSubtopicSection selectedTopic Id -> " + selectedTopic.get().getId());
         return noteSections.get(selectedTopic.get().getId()).stream().filter(section -> section.getSubtopicId() == subTopic.getId()).toList().get(0);
     }
 
     public ObjectiveQuestion getQuestion(int subjectId, int yearId, int questionNum) {
         return ObjectiveQuestionDao.getNoteCBTQuestion(subjectId, yearId, questionNum);
-//        return noteSubjectQuestions.stream().filter(objectiveQuestion ->
-//                objectiveQuestion.getYearId() == yearId && objectiveQuestion.getQuestionNumber() == questionNum
-//        ).toList().get(0);
     }
 
     private int getPQSubjectId(int noteSubjectId) {
